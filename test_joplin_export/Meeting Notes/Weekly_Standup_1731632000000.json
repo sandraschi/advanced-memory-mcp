@@ -1,0 +1,33 @@
+{
+  "id": "def456ghi789jkl012",
+  "title": "Weekly Standup - January 15, 2024",
+  "body": "# Weekly Standup - January 15, 2024\n\n## Attendees\n- Alice (Product Manager)\n- Bob (Lead Developer)\n- Charlie (Designer)\n- Dana (QA Lead)\n\n## Yesterday's Progress\n- Alice: Completed user research analysis\n- Bob: Implemented new authentication system\n- Charlie: Finished mockups for login flow\n- Dana: Updated test cases for auth module\n\n## Today's Focus\n- Alice: Stakeholder presentation preparation\n- Bob: Database optimization\n- Charlie: User feedback integration\n- Dana: Automated testing setup\n\n## Blockers\n- Bob: Waiting for database access credentials\n- Charlie: Awaiting design system updates\n\n## Action Items\n- [ ] Send database credentials to Bob\n- [ ] Review and approve design system changes\n- [x] Schedule architecture review meeting\n- [x] Update project timeline\n\n## Next Meeting\n- January 22, 2024 at 10:00 AM\n- Location: Conference Room A",
+  "parent_id": "meetings456",
+  "created_time": 1731632000000,
+  "updated_time": 1731632000000,
+  "user_created_time": 1731632000000,
+  "user_updated_time": 1731632000000,
+  "encryption_cipher_text": "",
+  "encryption_applied": 0,
+  "markup_language": 1,
+  "is_shared": 0,
+  "type_": 1,
+  "source": "joplin",
+  "source_application": "joplin",
+  "application_data": "{}",
+  "author": "",
+  "source_url": "",
+  "is_todo": 0,
+  "todo_due": 0,
+  "todo_completed": 0,
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "altitude": 0.0,
+  "order": 0,
+  "tags": [
+    "meeting",
+    "standup",
+    "weekly",
+    "project"
+  ]
+}

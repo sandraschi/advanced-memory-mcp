@@ -1,0 +1,60 @@
+{
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "text",
+      "text": "Project Overview\n\nThis is the main project canvas showing relationships between different components.",
+      "x": 100,
+      "y": 100,
+      "width": 300,
+      "height": 200
+    },
+    {
+      "id": "node2",
+      "type": "file",
+      "file": "docs/architecture.md",
+      "x": 500,
+      "y": 100,
+      "width": 250,
+      "height": 150
+    },
+    {
+      "id": "node3",
+      "type": "link",
+      "url": "https://github.com/example/project",
+      "x": 100,
+      "y": 400,
+      "width": 200,
+      "height": 100
+    },
+    {
+      "id": "node4",
+      "type": "group",
+      "label": "Backend Components",
+      "x": 800,
+      "y": 100,
+      "width": 400,
+      "height": 300
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge1",
+      "fromNode": "node1",
+      "toNode": "node2",
+      "label": "references"
+    },
+    {
+      "id": "edge2",
+      "fromNode": "node2",
+      "toNode": "node3",
+      "label": "links to"
+    },
+    {
+      "id": "edge3",
+      "fromNode": "node4",
+      "toNode": "node2",
+      "label": "contains"
+    }
+  ]
+}

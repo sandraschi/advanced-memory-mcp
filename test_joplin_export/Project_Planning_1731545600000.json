@@ -1,0 +1,32 @@
+{
+  "id": "abc123def456ghi789",
+  "title": "Project Planning",
+  "body": "# Project Planning\n\nThis is a comprehensive project planning document for our upcoming initiative.\n\n## Objectives\n- Complete the project on time\n- Stay within budget\n- Meet all requirements\n\n## Timeline\n- Phase 1: Research and Planning (2 weeks)\n- Phase 2: Development (6 weeks)\n- Phase 3: Testing and Deployment (2 weeks)\n\n## Resources Needed\n- Development team: 4 members\n- Design resources: 2 members\n- Testing team: 3 members\n\n## Risk Assessment\n- Technical challenges\n- Resource availability\n- Timeline constraints\n\n## Next Steps\n1. Schedule kickoff meeting\n2. Assign team roles\n3. Create detailed task breakdown",
+  "parent_id": "notebook123",
+  "created_time": 1731545600000,
+  "updated_time": 1731545600000,
+  "user_created_time": 1731545600000,
+  "user_updated_time": 1731545600000,
+  "encryption_cipher_text": "",
+  "encryption_applied": 0,
+  "markup_language": 1,
+  "is_shared": 0,
+  "type_": 1,
+  "source": "joplin",
+  "source_application": "joplin",
+  "application_data": "{}",
+  "author": "",
+  "source_url": "",
+  "is_todo": 0,
+  "todo_due": 0,
+  "todo_completed": 0,
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "altitude": 0.0,
+  "order": 0,
+  "tags": [
+    "project",
+    "planning",
+    "management"
+  ]
+}

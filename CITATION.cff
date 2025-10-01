@@ -1,0 +1,10 @@
+cff-version: 1.0.3
+message: "If you use this project, please cite it as follows:"
+authors:
+  - family-names: "Hernandez"
+    given-names: "Paul"
+    affiliation: "Basic Machines"
+title: "Basic Memory"
+version: "0.0.1"
+date-released: "2025-02-03"
+url: "https://github.com/basicmachines-co/basic-memory"
