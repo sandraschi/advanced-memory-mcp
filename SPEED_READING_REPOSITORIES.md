@@ -360,7 +360,7 @@ def analyze_repo_issues(owner, repo, query=""):
 
 **Master this skill and you'll:**
 - **Understand any repository** in minutes instead of hours
-- **Make informed decisions** about contributions and forks
+- **Make informed decisions** about contributions and derived projects
 - **Identify opportunities** that others miss
 - **Build better relationships** with maintainers through informed engagement
 

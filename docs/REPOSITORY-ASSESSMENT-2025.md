@@ -1,7 +1,7 @@
 # Basic Memory Repository Assessment - September 2025
 
 **Assessment Date:** September 29, 2025  
-**Repository:** sandraschi/basic-memory (Enhanced Fork)  
+**Repository:** sandraschi/advanced-memory-mcp (Independent Project Derived from Basic Memory)  
 **Branch:** feature/safer-file-operations  
 **Version:** 0.14.4  
 **Assessor:** AI Code Analysis  
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This enhanced fork of Basic Memory represents a **substantial advancement** over the original implementation, transforming a functional personal knowledge management tool into a **professional-grade knowledge orchestration platform**. With **53+ MCP tools** (vs. original's ~20), intelligent file filtering, comprehensive export capabilities, and visual knowledge representation, this fork addresses real-world needs while maintaining backward compatibility.
+Advanced Memory represents a **substantial advancement** over the original Basic Memory implementation, transforming a functional personal knowledge management tool into a **professional-grade knowledge orchestration platform**. With **53+ MCP tools** (vs. original's ~20), intelligent file filtering, comprehensive export capabilities, and visual knowledge representation, this derived project addresses real-world needs while maintaining backward compatibility.
 
 ### Key Metrics
 - **Total MCP Tools:** 53+ tools across 40 implementation files
@@ -484,7 +484,7 @@ IGNORE_PATTERNS = {
 
 ### 2.2 Tool Innovation Analysis
 
-**Major Fork Enhancements:**
+**Major Project Enhancements:**
 
 1. **Pandoc Export Engine** (tools 22-23)
    - **Impact:** Professional document generation without commercial tools
@@ -889,7 +889,7 @@ docker run -d \
   ghcr.io/basicmachines-co/basic-memory:latest
 ```
 
-**Git (Enhanced Fork):**
+**Git (Advanced Memory):**
 ```bash
 uvx git+https://github.com/sandraschi/basic-memory.git@feature/safer-file-operations mcp
 ```
@@ -1191,7 +1191,7 @@ pytest test-int/
 - Update CHANGELOG.md
 
 **Pull Request Process:**
-1. Fork the repository
+1. Clone the repository
 2. Create feature branch
 3. Make changes with tests
 4. Update documentation
@@ -1353,7 +1353,7 @@ refactor: Extract common patterns
 
 **Rating: ⭐⭐⭐⭐⭐ (5/5 - Exceptional)**
 
-This enhanced fork of Basic Memory represents a **transformational advancement** in AI-native knowledge management. With 53+ tools, intelligent file filtering, professional export capabilities, and visual knowledge representation, it addresses real-world professional needs while maintaining the simplicity and local-first philosophy of the original.
+Advanced Memory represents a **transformational advancement** in AI-native knowledge management. With 53+ tools, intelligent file filtering, professional export capabilities, and visual knowledge representation, it addresses real-world professional needs while maintaining the simplicity and local-first philosophy of the original.
 
 **Key Achievements:**
 1. ✅ **Production-Ready:** Stable, tested, documented
@@ -1364,7 +1364,7 @@ This enhanced fork of Basic Memory represents a **transformational advancement**
 
 ### 10.2 Critical Success Factors
 
-**What Makes This Fork Special:**
+**What Makes Advanced Memory Special:**
 
 1. **Safer File Operations** - Prevents catastrophic issues that plagued original
 2. **Professional Export** - FREE Pandoc engine vs. commercial alternatives
@@ -1445,7 +1445,7 @@ This enhanced fork of Basic Memory represents a **transformational advancement**
 
 ### 10.4 Final Thoughts
 
-This enhanced fork of Basic Memory has **successfully evolved** from a personal knowledge management tool into a **professional knowledge orchestration platform**. The combination of:
+Advanced Memory has **successfully evolved** from a personal knowledge management tool into a **professional knowledge orchestration platform**. The combination of:
 
 - ✅ Intelligent file filtering (preventing system failures)
 - ✅ Professional export capabilities (FREE Pandoc vs. commercial tools)
@@ -1463,7 +1463,7 @@ This enhanced fork of Basic Memory has **successfully evolved** from a personal 
 4. **Maintain quality** and documentation excellence
 5. **Grow sustainably** without compromising principles
 
-**This is not just a fork—it's a vision realized.**
+**This is not just a derived project—it's a vision realized.**
 
 ---
 
@@ -1579,4 +1579,4 @@ basic-memory/
 **Assessment Depth:** Comprehensive  
 
 **Prepared by:** AI Code Analysis System  
-**For:** Basic Memory Enhanced Fork Repository Assessment  
+**For:** Advanced Memory Repository Assessment  

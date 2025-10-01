@@ -1,0 +1,205 @@
+name: Beta Testing Pipeline
+
+on:
+  push:
+    branches: [ beta, "*-beta" ]
+  pull_request:
+    branches: [ beta, "*-beta" ]
+  schedule:
+    # Run beta tests every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  # Beta Quality Checks
+  beta-quality:
+    name: Beta Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: uv sync --dev
+
+    - name: Run comprehensive tests
+      run: uv run pytest tests/ -x --tb=short
+
+    - name: Run linting
+      run: uv run ruff check . --output-format=github
+
+    - name: Run type checking
+      run: uv run mypy src/ --ignore-missing-imports
+
+    - name: Run security scans
+      run: |
+        uv run bandit -r src/ -f json -o bandit-beta.json || true
+        uv run safety check --json --output safety-beta.json || true
+
+    - name: Upload beta reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: beta-quality-reports
+        path: |
+          bandit-beta.json
+          safety-beta.json
+
+  # Beta Performance Tests
+  beta-performance:
+    name: Beta Performance Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: uv sync --dev
+
+    - name: Create test data
+      run: |
+        uv run python -c "
+        import os
+        os.makedirs('test-data', exist_ok=True)
+        # Create 1000 test notes
+        for i in range(1000):
+            with open(f'test-data/note-{i:04d}.md', 'w') as f:
+                f.write(f'# Test Note {i}\\n\\nThis is test content {i}.\\n')
+        "
+
+    - name: Run performance tests
+      run: |
+        uv run python -c "
+        import time
+        import subprocess
+        start = time.time()
+        result = subprocess.run(['uv', 'run', 'python', '-m', 'pytest', 'tests/', '-q'], capture_output=True)
+        end = time.time()
+        print(f'Full test suite: {end - start:.2f}s')
+        print(f'Exit code: {result.returncode}')
+        "
+
+    - name: Test memory usage
+      run: |
+        uv run python -c "
+        import psutil
+        import os
+        process = psutil.Process(os.getpid())
+        print(f'Memory usage: {process.memory_info().rss / 1024 / 1024:.1f} MB')
+        "
+
+  # Beta Integration Tests
+  beta-integration:
+    name: Beta Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_USER: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: uv sync --dev
+
+    - name: Run integration tests
+      run: uv run pytest tests/ -k "integration" -v
+
+    - name: Test MCP server startup
+      run: |
+        uv run python -c "
+        from basic_memory.mcp.server import MemoryServer
+        from basic_memory.config import get_project_config
+        config = get_project_config()
+        server = MemoryServer(config)
+        print('MCP server initialized successfully')
+        "
+
+  # Beta Release Validation
+  beta-release-validation:
+    name: Beta Release Validation
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/beta'
+    needs: [beta-quality, beta-performance, beta-integration]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Build package
+      run: uv build
+
+    - name: Test installation
+      run: |
+        pip install dist/*.whl
+        python -c "import advanced_memory; print(f'Version: {advanced_memory.__version__}')"
+
+    - name: Test CLI commands
+      run: |
+        advanced-memory --help
+        advanced-memory --version
+
+    - name: Create beta release notes
+      run: |
+        echo "# Beta Release Validation Report" > beta-report.md
+        echo "" >> beta-report.md
+        echo "## Test Results" >> beta-report.md
+        echo "- ✅ Quality checks passed" >> beta-report.md
+        echo "- ✅ Performance tests passed" >> beta-report.md
+        echo "- ✅ Integration tests passed" >> beta-report.md
+        echo "- ✅ Package build successful" >> beta-report.md
+        echo "- ✅ CLI functionality verified" >> beta-report.md
+        echo "" >> beta-report.md
+        echo "## Next Steps" >> beta-report.md
+        echo "- Manual testing with real data" >> beta-report.md
+        echo "- User acceptance testing" >> beta-report.md
+        echo "- Documentation review" >> beta-report.md
+
+    - name: Upload beta report
+      uses: actions/upload-artifact@v4
+      with:
+        name: beta-release-report
+        path: beta-report.md

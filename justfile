@@ -1,4 +1,4 @@
-# Basic Memory - Modern Command Runner
+# Advanced Memory - Modern Command Runner
 
 # Install dependencies
 install:
@@ -118,7 +118,7 @@ release version:
     
     echo "✅ Release {{version}} created successfully!"
     echo "📦 GitHub Actions will build and publish to PyPI"
-    echo "🔗 Monitor at: https://github.com/basicmachines-co/basic-memory/actions"
+    echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
 
 # Create a beta release (e.g., just beta v0.13.2b1)
 beta version:
@@ -177,8 +177,8 @@ beta version:
     
     echo "✅ Beta release {{version}} created successfully!"
     echo "📦 GitHub Actions will build and publish to PyPI as pre-release"
-    echo "🔗 Monitor at: https://github.com/basicmachines-co/basic-memory/actions"
-    echo "📥 Install with: uv tool install basic-memory --pre"
+    echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
+    echo "📥 Install with: uv tool install advanced-memory --pre"
 
 # List all available recipes
 default:

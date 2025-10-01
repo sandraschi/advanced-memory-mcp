@@ -2,7 +2,7 @@
 
 ## 🎯 Executive Summary
 
-This document outlines the ethical migration strategy for transitioning from a basic-memory fork to a standalone Enhanced Memory MCP project while maintaining proper attribution and community benefit.
+This document outlines the ethical migration strategy for transitioning from a basic-memory derived project to a standalone Advanced Memory MCP project while maintaining proper attribution and community benefit.
 
 ## 🤝 Ethical Framework
 
@@ -13,8 +13,8 @@ This document outlines the ethical migration strategy for transitioning from a b
 - **User Choice**: Allow users to choose enhancement level
 
 ### GitHub/OSS Ethics Compliance
-- ✅ **Forking is encouraged** in open source development
-- ✅ **Enhancement is expected** - forks typically add value
+- ✅ **Derived projects are encouraged** in open source development
+- ✅ **Enhancement is expected** - derived projects typically add value
 - ✅ **Attribution required** - must acknowledge original work
 - ✅ **Community contribution** - sharing improvements benefits everyone
 
@@ -76,7 +76,7 @@ git checkout -b feature/enhanced-search
 #### Step 2.2: Code Migration
 ```bash
 # Copy enhanced codebase
-cp -r current-enhanced-fork/* new-repo/
+cp -r current-derived-project/* new-repo/
 
 # Update package identity
 mv src/basic_memory src/enhanced_memory

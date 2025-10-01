@@ -7,7 +7,7 @@ Open source development exists on a spectrum between **pure contribution** and *
 ```
 Pure Contribution ←─────────────────┬─────────────────→ Complete Independence
 (Submit PRs only)                   Hybrid              (New standalone project)
-                                 (Enhanced fork)
+                                 (Derived project)
 ```
 
 ## 📊 Decision Framework
@@ -38,12 +38,12 @@ Pure Contribution ←─────────────────┬─�
 
 ## 🤝 The Hybrid Approach (Sweet Spot)
 
-### **Enhanced Fork Strategy**
+### **Derived Project Strategy**
 This is often the most ethical path for significant enhancements:
 
 ```mermaid
 graph LR
-    A[Original Project] --> B[Enhanced Fork]
+    A[Original Project] --> B[Derived Project]
     B --> C[Contribute Core Back]
     C --> D[Keep Advanced Separate]
     D --> E[Clear Attribution]
@@ -60,7 +60,7 @@ graph LR
    # Submit individual PRs
    ```
 
-2. **Maintain Enhanced Fork**
+2. **Maintain Derived Project**
    ```bash
    # Keep massive toolkit features
    # Brand as "Enhanced Edition"
@@ -69,7 +69,7 @@ graph LR
 
 3. **Provide User Choice**
    - Original project: Basic features
-   - Enhanced fork: Advanced capabilities
+   - Derived project: Advanced capabilities
    - Clear migration path between them
 
 ## ⚖️ Ethical Considerations by Scale
@@ -91,7 +91,7 @@ graph LR
 ┌─────────────────────────────────────┐
 │         HYBRID APPROACH             │
 │   • Core improvements → PRs         │
-│   • Major features → Enhanced fork  │
+│   • Major features → Derived project │
 │   • Clear separation of concerns    │
 └─────────────────────────────────────┘
 ```
@@ -138,7 +138,7 @@ graph LR
 
 ### **Hybrid Approach Success**
 - **Core PRs accepted** and merged
-- **Enhanced fork adoption** by target users
+- **Derived project adoption** by target users
 - **Positive maintainer relationship** maintained
 - **Clear user understanding** of differences
 
@@ -152,8 +152,8 @@ graph LR
 
 ### **❌ Anti-Patterns to Avoid:**
 
-1. **"Surprise Fork"** - Creating standalone without attempting contribution
-2. **"Claim Washing"** - Presenting fork as completely original work
+1. **"Surprise Project"** - Creating standalone without attempting contribution
+2. **"Claim Washing"** - Presenting derived project as completely original work
 3. **"Abandonment"** - Leaving original contributors out of success story
 4. **"Scope Creep"** - Gradually taking over original project direction
 
@@ -168,13 +168,13 @@ graph LR
 
 ### **Current Situation:**
 - **Original**: Active development, LLM PRs, v15 planned
-- **Your Fork**: 50+ major enhancements, massive scope expansion
+- **Your Project**: 50+ major enhancements, massive scope expansion
 - **Overlap**: File filtering (.gitignore honoring) already discussed
 
 ### **Recommended Path:**
 ```mermaid
 graph TD
-    A[Your Current Fork] --> B[Contribute Core: File Filtering]
+    A[Your Current Project] --> B[Contribute Core: File Filtering]
     B --> C[Contribute Core: Sanitization]
     C --> D[Keep Advanced: 50+ Tools]
     D --> E[Enhanced Standalone Project]

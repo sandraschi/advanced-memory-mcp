@@ -1,4 +1,4 @@
-"""Configuration management for advanced-memory."""
+"""Configuration management for Advanced Memory - an independent knowledge management system derived from Basic Memory."""
 
 import json
 import os
@@ -25,7 +25,7 @@ Environment = Literal["test", "dev", "user"]
 
 @dataclass
 class ProjectConfig:
-    """Configuration for a specific advanced-memory project."""
+    """Configuration for a specific Advanced Memory project - independent knowledge management system."""
 
     name: str
     home: Path
@@ -163,7 +163,7 @@ class AdvancedMemoryConfig(BaseSettings):
 
 
 class ConfigManager:
-    """Manages Advanced Memory configuration."""
+    """Manages Advanced Memory configuration - independent knowledge management system."""
 
     def __init__(self) -> None:
         """Initialize the configuration manager."""

@@ -1,0 +1,86 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Run security scans weekly
+    - cron: '0 6 * * 0'
+  workflow_dispatch:
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: uv sync --dev
+
+    - name: Run Safety (Python vulnerability scanner)
+      run: uv run safety check --json --output safety-report.json || true
+
+    - name: Run Bandit (Python security linter)
+      run: uv run bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Run Semgrep (Static analysis)
+      run: |
+        uv run semgrep --config=auto --json --output=semgrep-report.json src/ || true
+
+    - name: Upload security reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports
+        path: |
+          safety-report.json
+          bandit-report.json
+          semgrep-report.json
+
+    - name: Comment PR with security results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+
+          let comment = '## 🔒 Security Scan Results\n\n';
+
+          try {
+            if (fs.existsSync('bandit-report.json')) {
+              const bandit = JSON.parse(fs.readFileSync('bandit-report.json', 'utf8'));
+              comment += `**Bandit Issues:** ${bandit.metrics.total_issues || 0}\n`;
+            }
+          } catch (e) {
+            comment += '**Bandit:** Error reading report\n';
+          }
+
+          try {
+            if (fs.existsSync('safety-report.json')) {
+              const safety = JSON.parse(fs.readFileSync('safety-report.json', 'utf8'));
+              comment += `**Safety Vulnerabilities:** ${safety.length || 0}\n`;
+            }
+          } catch (e) {
+            comment += '**Safety:** Error reading report\n';
+          }
+
+          comment += '\n*Automated security scan completed*';
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

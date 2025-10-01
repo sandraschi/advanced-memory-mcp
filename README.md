@@ -7,17 +7,32 @@
 ![](https://badge.mcpx.dev?type=dev 'MCP Dev')
 [![smithery badge](https://smithery.ai/badge/@basicmachines-co/basic-memory)](https://smithery.ai/server/@basicmachines-co/basic-memory)
 
-# Advanced Memory (Enhanced Fork)
+# Advanced Memory
 
-**🚀 Enhanced Version with Mermaid Diagrams & Extended Tools**
+**🚀 Independent Knowledge Management System with Enhanced Capabilities**
 
 Advanced Memory lets you build persistent knowledge through natural conversations with Large Language Models (LLMs) like
 Claude, while keeping everything in simple Markdown files on your computer. It uses the Model Context Protocol (MCP) to
 enable any compatible LLM to read and write to your local knowledge base.
 
-**This is an enhanced fork of [Basic Memory](https://github.com/basicmachines-co/basic-memory) with significant improvements.**
+**Advanced Memory is an independent project derived from [Basic Memory](https://github.com/basicmachines-co/basic-memory) with significant enhancements and improvements. While inspired by the original work, it has evolved into a standalone solution with its own development roadmap and community.**
 
-**This enhanced fork adds:**
+## 📊 Project Status
+
+[![CI/CD Pipeline](https://github.com/advanced-memory/advanced-memory/workflows/CI/badge.svg)](https://github.com/advanced-memory/advanced-memory/actions)
+[![codecov](https://codecov.io/gh/advanced-memory/advanced-memory/branch/master/graph/badge.svg)](https://codecov.io/gh/advanced-memory/advanced-memory)
+[![PyPI version](https://badge.fury.io/py/advanced-memory.svg)](https://badge.fury.io/py/advanced-memory)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![](https://badge.mcpx.dev?type=server 'MCP Server')
+![](https://badge.mcpx.dev?type=dev 'MCP Dev')
+
+**Release Status:** 🚧 **1.0.0 Beta** - Feature complete, under active development and testing
+
+📋 **[Product Requirements Document](PRD-1.0.0.md)** | 📝 **[Changelog](CHANGELOG.md)** | 🏗️ **[Development Status](https://github.com/advanced-memory/advanced-memory/projects)**
+
+**Advanced Memory enhances the original concept with:**
 - 🛡️ **Safer File Operations** - Prevents choking on node_modules, build artifacts, and large directories through intelligent filtering
 - 🎨 **Mermaid diagram support** - Visual diagrams that render in HTML exports
 - 🐧 **Pandoc export engine** - FREE CLI-based export to PDF, Word, HTML, and 40+ formats
@@ -77,7 +92,7 @@ You can view shared context via files in `~/advanced-memory` (default directory 
 
 ## Enhanced Version with Mermaid Diagrams & Extended Tools
 
-This fork includes significant enhancements including:
+This derived project includes significant enhancements including:
 - **Mermaid diagram support** - Add visual diagrams to your notes that render in HTML exports
 - **Typora integration** - Rich editing with round-trip workflow
 - **Extended import/export** - Joplin, Docsify, and enhanced HTML export tools
@@ -92,7 +107,7 @@ You can use [Smithery](https://smithery.ai/server/@advanced-memory/advanced-memo
 npx -y @smithery/cli install @advanced-memory/advanced-memory --client claude
 ```
 
-#### Enhanced Installation (This Fork)
+#### Enhanced Installation (This Derived Project)
 To install this enhanced version with Mermaid diagrams and extended tools:
 
 **Manual Installation (Latest Enhanced Version):**
@@ -137,7 +152,7 @@ pip install -e .
 ```
 
 **Smithery Installation:**
-For Smithery users, you can install from this enhanced fork:
+For Smithery users, you can install from this derived project:
 
 ```bash
 npx -y @smithery/cli install @advanced-memory/advanced-memory --client claude
@@ -256,7 +271,7 @@ To customize these patterns, modify the `IGNORE_PATTERNS` set in the source code
 - **Extensible patterns** - Easy to add custom exclusions
 - **Cross-platform** - Works on Windows, macOS, and Linux
 
-These enhancements were originally developed to prevent Basic Memory from becoming unresponsive when working in development environments with large dependency trees.
+These enhancements were originally developed to address performance and reliability issues when working in development environments with large dependency trees, and have evolved into a comprehensive knowledge management solution.
 
 ## Mermaid Diagram Support
 
@@ -720,7 +735,7 @@ See [Docker Setup Guide](docs/Docker.md) for detailed configuration options, mul
 
 ## Acknowledgments
 
-This project is an enhanced fork of [Basic Memory](https://github.com/basicmachines-co/basic-memory) created by Basic Machines. We extend our gratitude to the original authors for their foundational work in building persistent knowledge systems through natural conversations with Large Language Models.
+Advanced Memory is an independent project derived from the foundational work of [Basic Memory](https://github.com/basicmachines-co/basic-memory) created by Basic Machines. We extend our gratitude to the original authors for their pioneering work in building persistent knowledge systems through natural conversations with Large Language Models. While Advanced Memory has evolved into a standalone solution with its own development roadmap, we acknowledge the important role that Basic Memory played in inspiring this enhanced implementation.
 
 ## License
 
@@ -739,4 +754,4 @@ and submitting PRs.
  </picture>
 </a>
 
-Built with ♥️ by the Advanced Memory community, based on the original work by Basic Machines
+Built with ♥️ by the Advanced Memory community, inspired by the original work by Basic Machines

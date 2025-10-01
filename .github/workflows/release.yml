@@ -1,0 +1,128 @@
+name: Release Management
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  # Create GitHub Release
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Generate Release Notes
+      id: release-notes
+      run: |
+        # Generate release notes based on recent commits
+        echo "## What's Changed" > release-notes.md
+        git log --oneline --since="1 month ago" --pretty=format:"- %s" >> release-notes.md
+        echo "" >> release-notes.md
+        echo "## Full Changelog" >> release-notes.md
+        echo "See [full changelog](https://github.com/${{ github.repository }}/compare/v$(git describe --tags --abbrev=0 HEAD^)..HEAD)" >> release-notes.md
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        release_name: Release v${{ github.event.inputs.version }}
+        body_path: release-notes.md
+        draft: false
+        prerelease: ${{ contains(github.event.inputs.version, 'alpha') || contains(github.event.inputs.version, 'beta') || contains(github.event.inputs.version, 'rc') }}
+
+  # Automated Release Process
+  automated-release:
+    name: Automated Release Process
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install build tools
+      run: uv sync
+
+    - name: Build package
+      run: uv build
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
+    - name: Determine if pre-release
+      id: release-type
+      run: |
+        if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
+          echo "prerelease=true" >> $GITHUB_OUTPUT
+        else
+          echo "prerelease=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}:latest
+          ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
+        labels: |
+          org.opencontainers.image.title=Advanced Memory
+          org.opencontainers.image.description=${{ github.event.release.body }}
+          org.opencontainers.image.url=${{ github.event.release.html_url }}
+          org.opencontainers.image.source=${{ github.event.release.html_url }}
+          org.opencontainers.image.version=${{ github.event.release.tag_name }}
+          org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.ref.name=${{ github.ref_name }}
+
+    - name: Build and push Docker image (Beta)
+      if: steps.release-type.outputs.prerelease == 'true'
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}:beta
+        labels: |
+          org.opencontainers.image.title=Advanced Memory (Beta)
+          org.opencontainers.image.description=${{ github.event.release.body }}
+          org.opencontainers.image.url=${{ github.event.release.html_url }}
+          org.opencontainers.image.source=${{ github.event.release.html_url }}
+          org.opencontainers.image.version=${{ github.event.release.tag_name }}
+          org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.ref.name=${{ github.ref_name }}
+
+    - name: Update Docker Hub Description
+      run: |
+        # Optional: Update Docker Hub repository description
+        echo "Docker image published to ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}"
+
+    - name: Create Release Assets
+      run: |
+        # Generate additional release assets if needed
+        echo "Release assets generated for ${{ github.event.release.tag_name }}"

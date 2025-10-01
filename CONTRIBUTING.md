@@ -45,7 +45,7 @@ project and how to get started as a developer.
 
 ### Development Workflow
 
-1. **Fork the Repo**: Fork the repository on GitHub and clone your copy.
+1. **Clone the Repo**: Clone the repository on GitHub to your local machine.
 2. **Create a Branch**: Create a new branch for your feature or fix.
    ```bash
    git checkout -b feature/your-feature-name
