@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Advanced Memory MCP Community Discussions
+    url: https://github.com/sandraschi/advanced-memory-mcp/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: Documentation
+    url: https://github.com/sandraschi/advanced-memory-mcp/blob/main/README.md
+    about: Check our comprehensive documentation and guides

@@ -1,0 +1,25 @@
+# Global code owners
+* @sandraschi
+
+# Core MCP tools and portmanteau tools
+/src/advanced_memory/mcp/tools/ @sandraschi
+/manifest.json @sandraschi
+/server/ @sandraschi
+
+# Documentation
+/README.md @sandraschi
+/docs/ @sandraschi
+/prompts/ @sandraschi
+
+# CI/CD and workflows
+/.github/ @sandraschi
+
+# Configuration files
+/pyproject.toml @sandraschi
+/justfile @sandraschi
+/Makefile @sandraschi
+
+# Security and compliance
+/SECURITY.md @sandraschi
+/CODE_OF_CONDUCT.md @sandraschi
+/LICENSE @sandraschi

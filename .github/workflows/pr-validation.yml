@@ -1,0 +1,125 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-validation:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR title
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ ! "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .+ ]]; then
+            echo "❌ PR title does not follow conventional commits format"
+            echo "Expected format: type(scope): description"
+            echo "Examples:"
+            echo "  feat: add new portmanteau tool"
+            echo "  fix(content): resolve issue with note creation"
+            echo "  docs: update installation guide"
+            echo "Current title: $PR_TITLE"
+            exit 1
+          fi
+          echo "✅ PR title follows conventional commits format"
+
+      - name: Check PR description
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          if [[ -z "$PR_BODY" || "$PR_BODY" == "null" ]]; then
+            echo "❌ PR description is empty"
+            echo "Please provide a detailed description of your changes"
+            exit 1
+          fi
+          
+          # Check for required sections
+          if [[ ! "$PR_BODY" =~ "## 📋 Description" ]]; then
+            echo "❌ PR description missing 'Description' section"
+            exit 1
+          fi
+          
+          if [[ ! "$PR_BODY" =~ "## 🔗 Related Issues" ]]; then
+            echo "❌ PR description missing 'Related Issues' section"
+            exit 1
+          fi
+          
+          echo "✅ PR description is complete"
+
+      - name: Check for breaking changes
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          if [[ "$PR_BODY" =~ "breaking change" || "$PR_BODY" =~ "Breaking Change" ]]; then
+            echo "⚠️  Breaking change detected"
+            if [[ ! "$PR_BODY" =~ "## 🎯 Breaking Changes" ]]; then
+              echo "❌ Breaking change PR must include 'Breaking Changes' section"
+              exit 1
+            fi
+            echo "✅ Breaking changes section found"
+          else
+            echo "✅ No breaking changes detected"
+          fi
+
+      - name: Check file changes
+        run: |
+          # Check for changes to critical files
+          if git diff --name-only HEAD~1 | grep -E "^(src/advanced_memory/mcp/tools/|manifest\.json|server/)" > /dev/null; then
+            echo "📝 Changes detected in core MCP files"
+            
+            # Check if tests are updated
+            if ! git diff --name-only HEAD~1 | grep -E "^tests/" > /dev/null; then
+              echo "⚠️  Warning: Core MCP changes detected but no test updates found"
+              echo "Consider adding or updating tests for your changes"
+            else
+              echo "✅ Test updates found"
+            fi
+          fi
+
+      - name: Validate MCPB manifest
+        run: |
+          if [[ -f "manifest.json" ]]; then
+            echo "📋 Validating MCPB manifest..."
+            
+            # Check if Node.js is available for MCPB validation
+            if command -v node >/dev/null 2>&1; then
+              npm install -g @anthropic-ai/mcpb
+              if mcpb validate manifest.json; then
+                echo "✅ MCPB manifest is valid"
+              else
+                echo "❌ MCPB manifest validation failed"
+                exit 1
+              fi
+            else
+              echo "⚠️  Node.js not available, skipping MCPB validation"
+            fi
+          fi
+
+      - name: Check documentation updates
+        run: |
+          # Check if any MCP tools were modified
+          if git diff --name-only HEAD~1 | grep -E "^src/advanced_memory/mcp/tools/" > /dev/null; then
+            echo "🔧 MCP tools modified, checking documentation..."
+            
+            # Check if prompt templates were updated
+            if git diff --name-only HEAD~1 | grep -E "^prompts/" > /dev/null; then
+              echo "✅ Prompt templates updated"
+            else
+              echo "⚠️  Warning: MCP tools modified but no prompt template updates found"
+              echo "Consider updating the documentation for your changes"
+            fi
+          fi
+
+      - name: Summary
+        run: |
+          echo "## 📋 PR Validation Summary"
+          echo "✅ PR title follows conventional commits format"
+          echo "✅ PR description is complete"
+          echo "✅ File changes reviewed"
+          echo "✅ Documentation check completed"
+          echo ""
+          echo "🎉 PR validation passed! Ready for review."

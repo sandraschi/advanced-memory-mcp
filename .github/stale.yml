@@ -1,0 +1,61 @@
+# Configuration for probot/stale
+
+# Number of days of inactivity before an issue becomes stale
+daysUntilStale: 60
+
+# Number of days of inactivity before a stale issue gets closed
+daysUntilClose: 7
+
+# Issues with these labels will never be considered stale
+exemptLabels:
+  - pinned
+  - security
+  - bug
+  - enhancement
+  - documentation
+
+# Set to true to ignore issues in a project (defaults to false)
+exemptProjects: false
+
+# Set to true to ignore issues in a milestone (defaults to false)
+exemptMilestones: false
+
+# Set to true to ignore issues with an assignee (defaults to false)
+exemptAssignees: false
+
+# Label to use when marking an issue as stale
+staleLabel: stale
+
+# Comment to post when marking an issue as stale. Set to `false` to disable
+markComment: >
+  This issue has been automatically marked as stale because it has not had
+  recent activity. It will be closed if no further activity occurs. Thank you
+  for your contributions.
+
+# Comment to post when closing a stale issue. Set to `false` to disable
+closeComment: >
+  This issue has been automatically closed due to inactivity. If you think
+  this issue should remain open, please comment with a reason why it's still
+  relevant.
+
+# Limit to only `issues` or `pulls`
+# only: issues
+
+# Optionally, specify configuration settings that are specific to just 'pulls':
+pulls:
+  # Number of days of inactivity before a PR becomes stale
+  daysUntilStale: 90
+  # Number of days of inactivity before a stale PR gets closed
+  daysUntilClose: 7
+  # Label to use when marking a PR as stale
+  staleLabel: stale
+  # Comment to post when marking a PR as stale. Set to `false` to disable
+  markComment: >
+    This pull request has been automatically marked as stale because it has not had
+    recent activity. It will be closed if no further activity occurs. Thank you
+    for your contributions.
+  # Comment to post when closing a stale PR. Set to `false` to disable
+  closeComment: >
+    This pull request has been automatically closed due to inactivity. If you think
+    this pull request should remain open, please comment with a reason why it's still
+    relevant.

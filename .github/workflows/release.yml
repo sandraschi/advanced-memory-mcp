@@ -1,12 +1,13 @@
-name: Release Management
+name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 1.2.3)'
+        description: 'Version to release (e.g., v1.0.0)'
         required: true
         type: string
 
@@ -14,44 +15,18 @@ env:
   PYTHON_VERSION: "3.12"
 
 jobs:
-  # Create GitHub Release
-  create-release:
-    name: Create GitHub Release
+  release:
+    name: Create Release
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Generate Release Notes
-      id: release-notes
-      run: |
-        # Generate release notes based on recent commits
-        echo "## What's Changed" > release-notes.md
-        git log --oneline --since="1 month ago" --pretty=format:"- %s" >> release-notes.md
-        echo "" >> release-notes.md
-        echo "## Full Changelog" >> release-notes.md
-        echo "See [full changelog](https://github.com/${{ github.repository }}/compare/v$(git describe --tags --abbrev=0 HEAD^)..HEAD)" >> release-notes.md
-
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
       with:
-        tag_name: v${{ github.event.inputs.version }}
-        release_name: Release v${{ github.event.inputs.version }}
-        body_path: release-notes.md
-        draft: false
-        prerelease: ${{ contains(github.event.inputs.version, 'alpha') || contains(github.event.inputs.version, 'beta') || contains(github.event.inputs.version, 'rc') }}
-
-  # Automated Release Process
-  automated-release:
-    name: Automated Release Process
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-
-    steps:
-    - uses: actions/checkout@v4
+          fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -60,69 +35,152 @@ jobs:
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
 
-    - name: Install build tools
-      run: uv sync
+      - name: Install build dependencies
+        run: uv add --dev build twine
 
     - name: Build package
-      run: uv build
+        run: uv run python -m build
+
+      - name: Check package
+        run: uv run twine check dist/*
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install MCPB CLI
+        run: npm install -g @anthropic-ai/mcpb
+
+      - name: Build MCPB package
+        run: mcpb pack . advanced-memory-mcp.mcpb
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if git describe --tags --abbrev=0 HEAD^ >/dev/null 2>&1; then
+            PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+            CHANGELOG=$(git log --pretty=format:"- %s" $PREVIOUS_TAG..HEAD)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s" --reverse)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_number=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Advanced Memory MCP ${{ steps.version.outputs.version }}
+          body: |
+            ## 🚀 What's New in Advanced Memory MCP ${{ steps.version.outputs.version }}
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## 📦 Installation
+            
+            ### Claude Desktop Extension
+            1. Download `advanced-memory-mcp.mcpb` from the assets below
+            2. Open Claude Desktop
+            3. Go to Settings > Extensions
+            4. Drop the `.mcpb` file into the extensions page
+            
+            ### Python Package
+            ```bash
+            pip install advanced-memory-mcp==${{ steps.version.outputs.version_number }}
+            ```
+            
+            ## 📚 Documentation
+            - [Complete Guide](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/advanced-memory-guide.md)
+            - [Quick Start](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/quick-start.md)
+            - [Examples](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/examples.md)
+            - [Troubleshooting](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/troubleshooting.md)
+            
+            ## 🎯 Portmanteau Tools
+            This release includes 8 consolidated portmanteau tools:
+            - `adn_content` - Content management (write, read, edit, move, delete)
+            - `adn_project` - Project management (create, switch, list, etc.)
+            - `adn_export` - Export to various formats (PDF, HTML, Docsify, etc.)
+            - `adn_import` - Import from external systems (Obsidian, Notion, etc.)
+            - `adn_search` - Search across knowledge base and external systems
+            - `adn_knowledge` - Advanced knowledge operations and analytics
+            - `adn_navigation` - Navigate and explore your knowledge base
+            - `adn_editor` - Editor integration (Typora, Notepad++, etc.)
+            
+            ## 🔧 Cursor IDE Compatibility
+            The portmanteau tools reduce 40+ individual tools to just 8, making Advanced Memory MCP fully compatible with Cursor IDE's 50-tool limit.
+            
+            ## 🐛 Bug Reports
+            Found a bug? Please [report it](https://github.com/sandraschi/advanced-memory-mcp/issues/new?template=bug_report.md).
+            
+            ## 💡 Feature Requests
+            Have an idea? [Suggest a feature](https://github.com/sandraschi/advanced-memory-mcp/issues/new?template=feature_request.md).
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+
+      - name: Upload MCPB Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./advanced-memory-mcp.mcpb
+          asset_name: advanced-memory-mcp.mcpb
+          asset_content_type: application/octet-stream
+
+      - name: Upload Python Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/advanced_memory_mcp-${{ steps.version.outputs.version_number }}-py3-none-any.whl
+          asset_name: advanced_memory_mcp-${{ steps.version.outputs.version_number }}-py3-none-any.whl
+          asset_content_type: application/zip
+
+      - name: Upload Source Distribution
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/advanced-memory-mcp-${{ steps.version.outputs.version_number }}.tar.gz
+          asset_name: advanced-memory-mcp-${{ steps.version.outputs.version_number }}.tar.gz
+          asset_content_type: application/gzip
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc')
+    environment: pypi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
-
-    - name: Determine if pre-release
-      id: release-type
-      run: |
-        if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
-          echo "prerelease=true" >> $GITHUB_OUTPUT
-        else
-          echo "prerelease=false" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository }}:latest
-          ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
-        labels: |
-          org.opencontainers.image.title=Advanced Memory
-          org.opencontainers.image.description=${{ github.event.release.body }}
-          org.opencontainers.image.url=${{ github.event.release.html_url }}
-          org.opencontainers.image.source=${{ github.event.release.html_url }}
-          org.opencontainers.image.version=${{ github.event.release.tag_name }}
-          org.opencontainers.image.created=${{ steps.meta.outputs.created }}
-          org.opencontainers.image.revision=${{ github.sha }}
-          org.opencontainers.image.ref.name=${{ github.ref_name }}
-
-    - name: Build and push Docker image (Beta)
-      if: steps.release-type.outputs.prerelease == 'true'
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository }}:beta
-        labels: |
-          org.opencontainers.image.title=Advanced Memory (Beta)
-          org.opencontainers.image.description=${{ github.event.release.body }}
-          org.opencontainers.image.url=${{ github.event.release.html_url }}
-          org.opencontainers.image.source=${{ github.event.release.html_url }}
-          org.opencontainers.image.version=${{ github.event.release.tag_name }}
-          org.opencontainers.image.created=${{ steps.meta.outputs.created }}
-          org.opencontainers.image.revision=${{ github.sha }}
-          org.opencontainers.image.ref.name=${{ github.ref_name }}
-
-    - name: Update Docker Hub Description
-      run: |
-        # Optional: Update Docker Hub repository description
-        echo "Docker image published to ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}"
-
-    - name: Create Release Assets
-      run: |
-        # Generate additional release assets if needed
-        echo "Release assets generated for ${{ github.event.release.tag_name }}"
