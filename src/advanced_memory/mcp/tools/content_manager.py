@@ -252,7 +252,7 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
         return "# Error\n\nRead operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.read_note import read_note
-    return await read_note(identifier, page, page_size, active_project.name)
+    return await read_note.fn(identifier, page, page_size, active_project.name)
 
 
 async def _view_operation(active_project, identifier: str, page: int, page_size: int) -> str:
@@ -261,7 +261,7 @@ async def _view_operation(active_project, identifier: str, page: int, page_size:
         return "# Error\n\nView operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.view_note import view_note
-    return await view_note(identifier, page, page_size, active_project.name)
+    return await view_note.fn(identifier, page, page_size, active_project.name)
 
 
 async def _edit_operation(
@@ -372,7 +372,7 @@ async def _move_operation(active_project, identifier: str, destination_path: str
         return "# Error\n\nMove operation requires: identifier and destination_path parameters"
 
     from advanced_memory.mcp.tools.move_note import move_note
-    return await move_note(identifier, destination_path, active_project.name)
+    return await move_note.fn(identifier, destination_path, active_project.name)
 
 
 async def _delete_operation(active_project, identifier: str) -> str:
@@ -381,4 +381,4 @@ async def _delete_operation(active_project, identifier: str) -> str:
         return "# Error\n\nDelete operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.delete_note import delete_note
-    return await delete_note(identifier, active_project.name)
+    return await delete_note.fn(identifier, active_project.name)

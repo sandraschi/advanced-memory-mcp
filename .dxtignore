@@ -1,0 +1,90 @@
+# DXT Package Ignore File
+# Files and directories to exclude from the DXT package
+
+# Development files
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+.pytest_cache/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Git
+.git/
+.gitignore
+
+# Documentation build
+docs/_build/
+docs/build/
+
+# Test files
+tests/
+test_*.py
+*_test.py
+htmlcov/
+.coverage
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Large data files
+*.db
+*.sqlite
+*.sqlite3
+
+# Node modules (if any)
+node_modules/
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Lock files (keep uv.lock for reproducibility)
+# uv.lock
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
