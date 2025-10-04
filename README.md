@@ -41,6 +41,7 @@ enable any compatible LLM to read and write to your local knowledge base.
 - 📊 **Professional document generation** - Templates, TOC, syntax highlighting
 - 📖 **PDF book creation** - Complete books with title pages and chapters
 - ✏️ **FREE Notepad++ editing** - Professional markdown editing with syntax highlighting
+- 🎯 **Portmanteau Tools** - Complete consolidated MCP tool suite (reduces 40+ tools to just 8) with `adn_` prefix to avoid naming collisions
 
 - Website: https://basicmemory.com
 - Company: https://basicmachines.co
@@ -589,6 +590,69 @@ Advanced Memory will sync the files in your project in real time if you make man
 
 3. In Claude Desktop, the LLM can now use these tools:
 
+## 🎯 Portmanteau Tools (Recommended for Cursor IDE)
+**Reduces 40+ individual tools to just 8 consolidated tools for Cursor IDE compatibility:**
+
+> **Why Portmanteau Tools?** Cursor IDE has a 50-tool limit, but Advanced Memory has 40+ individual tools. Portmanteau tools consolidate related functionality into single tools with operation parameters, maintaining full functionality while staying under the limit.
+
+```
+# Complete Portmanteau Tool Suite (8 tools total)
+
+## Content Management (consolidates 6 tools)
+adn_content(operation, identifier, content, folder, tags, ...) - All content operations
+  - operation: "write", "read", "view", "edit", "move", "delete"
+  - Consolidates: write_note, read_note, view_note, edit_note, move_note, delete_note
+
+## Project Management (consolidates 6 tools)  
+adn_project(operation, project_name, project_path, ...) - All project operations
+  - operation: "create", "switch", "delete", "set_default", "get_current", "list"
+  - Consolidates: create_memory_project, switch_project, get_current_project, set_default_project, delete_project, list_memory_projects
+
+## Export Management (consolidates 8 tools)
+adn_export(operation, export_path, format_type, ...) - All export operations
+  - operation: "pandoc", "docsify", "html", "joplin", "pdf_book", "archive", "evernote", "notion"
+  - Consolidates: export_pandoc, export_docsify, export_html_notes, export_joplin_notes, make_pdf_book, export_to_archive, export_evernote_compatible, export_notion_compatible
+
+## Import Management (consolidates 6 tools)
+adn_import(operation, source_path, destination_folder, ...) - All import operations
+  - operation: "obsidian", "joplin", "notion", "evernote", "archive", "canvas"
+  - Consolidates: load_obsidian_vault, load_joplin_vault, load_notion_export, load_evernote_export, import_from_archive, load_obsidian_canvas
+
+## Search Management (consolidates 5 tools)
+adn_search(operation, query, source_path, ...) - All search operations
+  - operation: "notes", "obsidian", "joplin", "notion", "evernote"
+  - Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault
+
+## Knowledge Management (consolidates 2 tools)
+adn_knowledge(operation, filters, action, topic, ...) - All knowledge operations
+  - operation: "bulk_update", "tag_analytics", "research_plan", "research_methodology", "research_questions", "note_blueprint", "research_workflow", "consolidate_tags", "validate_content", "project_stats", "find_duplicates"
+  - Consolidates: knowledge_operations, research_orchestrator
+
+## Navigation Management (consolidates 5 tools)
+adn_navigation(operation, url, dir_name, depth, ...) - All navigation operations
+  - operation: "build_context", "recent_activity", "list_directory", "status", "sync_status"
+  - Consolidates: build_context, recent_activity, list_directory, status, sync_status
+
+## Editor Management (consolidates 5 tools)
+adn_editor(operation, note_identifier, workspace_path, ...) - All editor operations
+  - operation: "notepadpp_edit", "notepadpp_import", "typora_control", "canvas_create", "read_content"
+  - Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
+
+# Usage Examples:
+adn_content("write", identifier="Meeting Notes", content="# Meeting Summary...", folder="meetings")
+adn_content("read", identifier="Meeting Notes")
+adn_project("list")
+adn_project("switch", project_name="work-project")
+adn_export("pandoc", export_path="output.pdf", format_type="pdf", source_folder="/notes")
+adn_import("obsidian", source_path="/path/to/vault", destination_folder="imported/obsidian")
+adn_search("notes", query="machine learning", page=1, page_size=10)
+adn_knowledge("tag_analytics", action={"analyze_usage": True})
+adn_navigation("build_context", url="memory://projects/ai", depth=2, timeframe="7d")
+adn_editor("notepadpp_edit", note_identifier="Meeting Notes", workspace_path="temp/")
+```
+
+## 🔧 Individual Tools (Legacy - for backward compatibility)
+
 ```
 write_note(title, content, folder, tags) - Create or update notes
 read_note(identifier, page, page_size) - Read notes by title or permalink
@@ -606,15 +670,6 @@ create_memory_project(name, path, set_default) - Create new projects
 delete_project(name) - Delete projects from configuration
 set_default_project(name) - Set default project
 sync_status() - Check file synchronization status
-
-# Core Tools
-write_note(title, content, folder, tags) - Create new notes with metadata
-read_note(identifier, page, page_size, project) - Read notes by title/permalink
-edit_note(identifier, content) - Update existing note content
-delete_note(identifier) - Remove notes from knowledge base
-search_notes(query, page, page_size, search_type, types, entity_types, after_date, project) - Full-text search with filters
-list_directory(path, project) - Browse folder structure
-recent_activity(timeframe, project) - View recent content changes
 
 # System & Status Tools
 sync_status(project) - Check file synchronization progress
