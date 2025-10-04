@@ -46,11 +46,19 @@ jobs:
 
       - name: Run Bandit security linter
         run: |
-          uv run bandit -r src/ -f json -o bandit-results.json || true
+          if command -v bandit >/dev/null 2>&1; then
+            uv run bandit -r src/ -f json -o bandit-results.json || echo "Bandit scan completed with warnings"
+          else
+            echo "Bandit not available, skipping security scan"
+          fi
 
       - name: Run Safety check
         run: |
-          uv run safety check --json --output safety-results.json || true
+          if command -v safety >/dev/null 2>&1; then
+            uv run safety check --json --output safety-results.json || echo "Safety check completed with warnings"
+          else
+            echo "Safety not available, skipping dependency scan"
+          fi
 
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@v1

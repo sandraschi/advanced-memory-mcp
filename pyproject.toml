@@ -3,7 +3,7 @@ name = "advanced-memory"
 version = "1.0.0b1"
 description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Basic Memory with significant enhancements"
 readme = "README.md"
-requires-python = ">=3.12.1"
+requires-python = ">=3.11"
 license = { text = "AGPL-3.0-or-later" }
 authors = [
     { name = "Advanced Memory Community", email = "hello@advanced-memory.com" }
@@ -30,7 +30,7 @@ dependencies = [
     "alembic>=1.14.1",
     "pillow>=11.1.0",
     "pybars3>=0.9.7",
-    "fastmcp==2.10.1",
+    "fastmcp>=2.10.1",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
@@ -38,9 +38,9 @@ dependencies = [
 
 
 [project.urls]
-Homepage = "https://github.com/advanced-memory/advanced-memory"
-Repository = "https://github.com/advanced-memory/advanced-memory"
-Documentation = "https://github.com/advanced-memory/advanced-memory#readme"
+Homepage = "https://github.com/sandraschi/advanced-memory-mcp"
+Repository = "https://github.com/sandraschi/advanced-memory-mcp"
+Documentation = "https://github.com/sandraschi/advanced-memory-mcp#readme"
 
 [project.scripts]
 advanced-memory = "advanced_memory.cli.main:app"
@@ -60,7 +60,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py311"
 extend-exclude = ["migrations"]
 
 [tool.ruff.lint]
@@ -123,10 +123,10 @@ ignore = ["test/"]
 defineConstant = { DEBUG = true }
 reportMissingImports = "error"
 reportMissingTypeStubs = false
-pythonVersion = "3.12"
+pythonVersion = "3.11"
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
