@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from basic_memory.api.template_loader import TemplateLoader
+from advanced_memory.api.template_loader import TemplateLoader
 
 
 @pytest.fixture

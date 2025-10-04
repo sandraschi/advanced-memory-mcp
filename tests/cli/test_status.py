@@ -4,14 +4,14 @@ from unittest.mock import patch, AsyncMock
 
 from typer.testing import CliRunner
 
-from basic_memory.cli.app import app
-from basic_memory.cli.commands.status import (
+from advanced_memory.cli.app import app
+from advanced_memory.cli.commands.status import (
     add_files_to_tree,
     build_directory_summary,
     group_changes_by_directory,
     display_changes,
 )
-from basic_memory.sync.sync_service import SyncReport
+from advanced_memory.sync.sync_service import SyncReport
 
 # Set up CLI runner
 runner = CliRunner()

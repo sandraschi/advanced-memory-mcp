@@ -7,8 +7,8 @@ import pytest_asyncio
 from sqlalchemy import text
 
 from basic_memory import db
-from basic_memory.schemas import Entity as EntitySchema
-from basic_memory.schemas.search import SearchItemType, SearchResponse
+from advanced_memory.schemas import Entity as EntitySchema
+from advanced_memory.schemas.search import SearchItemType, SearchResponse
 
 
 @pytest_asyncio.fixture

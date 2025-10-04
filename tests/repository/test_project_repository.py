@@ -8,8 +8,8 @@ import pytest_asyncio
 from sqlalchemy import select
 
 from basic_memory import db
-from basic_memory.models.project import Project
-from basic_memory.repository.project_repository import ProjectRepository
+from advanced_memory.models.project import Project
+from advanced_memory.repository.project_repository import ProjectRepository
 
 
 @pytest_asyncio.fixture

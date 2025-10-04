@@ -4,12 +4,12 @@ from textwrap import dedent
 
 import pytest
 
-from basic_memory.mcp.tools import write_note, read_note
+from advanced_memory.mcp.tools import write_note, read_note
 
 import pytest_asyncio
 from unittest.mock import MagicMock, patch
 
-from basic_memory.schemas.search import SearchResponse, SearchItemType
+from advanced_memory.schemas.search import SearchResponse, SearchItemType
 
 
 @pytest_asyncio.fixture

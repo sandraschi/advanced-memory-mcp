@@ -3,7 +3,7 @@
 from textwrap import dedent
 import pytest
 
-from basic_memory.mcp.tools import write_note, read_note, delete_note
+from advanced_memory.mcp.tools import write_note, read_note, delete_note
 
 
 @pytest.mark.asyncio

@@ -3,9 +3,9 @@
 import datetime
 import pytest
 
-from basic_memory.api.template_loader import TemplateLoader
-from basic_memory.schemas.memory import EntitySummary
-from basic_memory.schemas.search import SearchItemType
+from advanced_memory.api.template_loader import TemplateLoader
+from advanced_memory.schemas.memory import EntitySummary
+from advanced_memory.schemas.search import SearchItemType
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def entity_summary():
 @pytest.fixture
 def context_with_results(entity_summary):
     """Create a sample context with results for testing."""
-    from basic_memory.schemas.memory import ObservationSummary, ContextResult
+    from advanced_memory.schemas.memory import ObservationSummary, ContextResult
 
     # Create an observation for the entity
     observation = ObservationSummary(

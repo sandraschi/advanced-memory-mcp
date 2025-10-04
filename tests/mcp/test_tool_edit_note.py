@@ -2,8 +2,8 @@
 
 import pytest
 
-from basic_memory.mcp.tools.edit_note import edit_note
-from basic_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.tools.edit_note import edit_note
+from advanced_memory.mcp.tools.write_note import write_note
 
 
 @pytest.mark.asyncio

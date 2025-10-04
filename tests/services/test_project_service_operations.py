@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from basic_memory.services.project_service import ProjectService
+from advanced_memory.services.project_service import ProjectService
 
 
 @pytest.mark.asyncio

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastapi import FastAPI
 
-from basic_memory.api.routers.management_router import (
+from advanced_memory.api.routers.management_router import (
     WatchStatusResponse,
     get_watch_status,
     start_watch_service,
@@ -159,7 +159,7 @@ async def test_stop_watch_service_when_running():
 
     This test directly tests parts of the code without actually awaiting the task.
     """
-    from basic_memory.api.routers.management_router import WatchStatusResponse
+    from advanced_memory.api.routers.management_router import WatchStatusResponse
 
     # Create a response object directly
     response = WatchStatusResponse(running=False)

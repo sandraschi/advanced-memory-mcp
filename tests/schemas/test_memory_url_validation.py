@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from basic_memory.schemas.memory import (
+from advanced_memory.schemas.memory import (
     normalize_memory_url,
     validate_memory_url_path,
     memory_url,

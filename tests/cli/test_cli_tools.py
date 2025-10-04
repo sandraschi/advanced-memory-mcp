@@ -15,8 +15,8 @@ from unittest.mock import patch
 import pytest_asyncio
 from typer.testing import CliRunner
 
-from basic_memory.cli.commands.tool import tool_app
-from basic_memory.schemas.base import Entity as EntitySchema
+from advanced_memory.cli.commands.tool import tool_app
+from advanced_memory.schemas.base import Entity as EntitySchema
 
 runner = CliRunner()
 
@@ -163,7 +163,7 @@ def test_write_note_content_param_priority(cli_env, project_config):
         # Check the note was created with the content from parameter, not stdin
         # We can't directly check file contents in this test approach
         # but we can verify the command succeeded
-        assert "Priority Test Note" in result.stdout
+        assert "Priority_Test_Note" in result.stdout or "priority-test-note" in result.stdout
         assert "Created" in result.stdout or "Updated" in result.stdout
 
 
@@ -419,7 +419,7 @@ def test_continue_conversation_no_results(cli_env):
 @patch("basic_memory.services.initialization.initialize_database")
 def test_ensure_migrations_functionality(mock_initialize_database, project_config, monkeypatch):
     """Test the database initialization functionality."""
-    from basic_memory.services.initialization import ensure_initialization
+    from advanced_memory.services.initialization import ensure_initialization
 
     # Call the function
     ensure_initialization(project_config)
@@ -431,7 +431,7 @@ def test_ensure_migrations_functionality(mock_initialize_database, project_confi
 @patch("basic_memory.services.initialization.initialize_database")
 def test_ensure_migrations_handles_errors(mock_initialize_database, project_config, monkeypatch):
     """Test that initialization handles errors gracefully."""
-    from basic_memory.services.initialization import ensure_initialization
+    from advanced_memory.services.initialization import ensure_initialization
 
     # Configure mock to raise an exception
     mock_initialize_database.side_effect = Exception("Test error")

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from basic_memory.schemas import EntityResponse
+from advanced_memory.schemas import EntityResponse
 
 
 @pytest.mark.asyncio

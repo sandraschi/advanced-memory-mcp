@@ -3,10 +3,10 @@
 import pytest
 from unittest.mock import AsyncMock
 
-from basic_memory.importers.base import Importer
-from basic_memory.markdown.markdown_processor import MarkdownProcessor
-from basic_memory.markdown.schemas import EntityMarkdown
-from basic_memory.schemas.importer import ImportResult
+from advanced_memory.importers.base import Importer
+from advanced_memory.markdown.markdown_processor import MarkdownProcessor
+from advanced_memory.markdown.schemas import EntityMarkdown
+from advanced_memory.schemas.importer import ImportResult
 
 
 # Create a concrete implementation of the abstract class for testing

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from basic_memory.schemas.search import (
+from advanced_memory.schemas.search import (
     SearchItemType,
     SearchQuery,
     SearchResult,

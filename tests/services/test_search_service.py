@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy import text
 
 from basic_memory import db
-from basic_memory.schemas.search import SearchQuery, SearchItemType
+from advanced_memory.schemas.search import SearchQuery, SearchItemType
 
 
 @pytest.mark.asyncio
@@ -201,7 +201,7 @@ async def test_search_entity_type(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_exception_handling(search_service):
     """Test the _extract_entity_tags method exception handling (lines 147-151)."""
-    from basic_memory.models.knowledge import Entity
+    from advanced_memory.models.knowledge import Entity
 
     # Create entity with string tags that will cause parsing to fail and fall back to single tag
     entity_with_invalid_tags = Entity(
@@ -395,7 +395,7 @@ async def test_boolean_operators_detection(search_service):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_list_format(search_service, session_maker):
     """Test tag extraction from list format in entity metadata."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -413,7 +413,7 @@ async def test_extract_entity_tags_list_format(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_string_format(search_service, session_maker):
     """Test tag extraction from string format in entity metadata."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -431,7 +431,7 @@ async def test_extract_entity_tags_string_format(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_empty_list(search_service, session_maker):
     """Test tag extraction from empty list in entity metadata."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -449,7 +449,7 @@ async def test_extract_entity_tags_empty_list(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_empty_string(search_service, session_maker):
     """Test tag extraction from empty string in entity metadata."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -467,7 +467,7 @@ async def test_extract_entity_tags_empty_string(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_no_metadata(search_service, session_maker):
     """Test tag extraction when entity has no metadata."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -485,7 +485,7 @@ async def test_extract_entity_tags_no_metadata(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_extract_entity_tags_no_tags_key(search_service, session_maker):
     """Test tag extraction when metadata exists but has no tags key."""
-    from basic_memory.models import Entity
+    from advanced_memory.models import Entity
 
     entity = Entity(
         title="Test Entity",
@@ -503,7 +503,7 @@ async def test_extract_entity_tags_no_tags_key(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_search_by_frontmatter_tags(search_service, session_maker, test_project):
     """Test that entities can be found by searching for their frontmatter tags."""
-    from basic_memory.repository import EntityRepository
+    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
@@ -559,7 +559,7 @@ async def test_search_by_frontmatter_tags_string_format(
     search_service, session_maker, test_project
 ):
     """Test that entities with string format tags can be found in search."""
-    from basic_memory.repository import EntityRepository
+    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
@@ -602,7 +602,7 @@ async def test_search_by_frontmatter_tags_string_format(
 @pytest.mark.asyncio
 async def test_search_special_characters_in_title(search_service, session_maker, test_project):
     """Test that entities with special characters in titles can be searched without FTS5 syntax errors."""
-    from basic_memory.repository import EntityRepository
+    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
@@ -663,7 +663,7 @@ async def test_search_special_characters_in_title(search_service, session_maker,
 @pytest.mark.asyncio
 async def test_search_title_with_parentheses_specific(search_service, session_maker, test_project):
     """Test searching specifically for title with parentheses to reproduce FTS5 error."""
-    from basic_memory.repository import EntityRepository
+    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
@@ -703,7 +703,7 @@ async def test_search_title_with_parentheses_specific(search_service, session_ma
 @pytest.mark.asyncio
 async def test_search_title_via_repository_direct(search_service, session_maker, test_project):
     """Test searching via search repository directly to isolate the FTS5 error."""
-    from basic_memory.repository import EntityRepository
+    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)

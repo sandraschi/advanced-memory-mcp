@@ -4,14 +4,14 @@ import os
 
 import pytest
 
-from basic_memory.schemas import (
+from advanced_memory.schemas import (
     ProjectInfoResponse,
     ProjectStatistics,
     ActivityMetrics,
     SystemStatus,
 )
-from basic_memory.services.project_service import ProjectService
-from basic_memory.config import ConfigManager
+from advanced_memory.services.project_service import ProjectService
+from advanced_memory.config import ConfigManager
 
 
 def test_projects_property(project_service: ProjectService):

@@ -3,9 +3,9 @@
 import pytest
 from datetime import datetime, timezone
 
-from basic_memory.models.knowledge import Entity
-from basic_memory.repository.entity_repository import EntityRepository
-from basic_memory.repository.project_repository import ProjectRepository
+from advanced_memory.models.knowledge import Entity
+from advanced_memory.repository.entity_repository import EntityRepository
+from advanced_memory.repository.project_repository import ProjectRepository
 
 
 @pytest.mark.asyncio

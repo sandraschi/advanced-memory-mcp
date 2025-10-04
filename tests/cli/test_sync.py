@@ -3,16 +3,16 @@
 import pytest
 from typer.testing import CliRunner
 
-from basic_memory.cli.app import app
-from basic_memory.cli.commands.sync import (
+from advanced_memory.cli.app import app
+from advanced_memory.cli.commands.sync import (
     display_sync_summary,
     display_detailed_sync_results,
     run_sync,
     group_issues_by_directory,
     ValidationIssue,
 )
-from basic_memory.config import get_project_config
-from basic_memory.sync.sync_service import SyncReport
+from advanced_memory.config import get_project_config
+from advanced_memory.sync.sync_service import SyncReport
 
 # Set up CLI runner
 runner = CliRunner()

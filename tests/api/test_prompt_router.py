@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient
 
-from basic_memory.services.context_service import ContextService
+from advanced_memory.services.context_service import ContextService
 
 
 @pytest_asyncio.fixture

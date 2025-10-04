@@ -5,11 +5,11 @@ from urllib.parse import quote
 import pytest
 from httpx import AsyncClient
 
-from basic_memory.schemas import (
+from advanced_memory.schemas import (
     Entity,
     EntityResponse,
 )
-from basic_memory.schemas.search import SearchItemType, SearchResponse
+from advanced_memory.schemas.search import SearchItemType, SearchResponse
 
 
 @pytest.mark.asyncio
@@ -35,7 +35,7 @@ async def test_create_entity(client: AsyncClient, file_service, project_url):
     entity = EntityResponse.model_validate(response.json())
 
     assert entity.permalink == "test/test-entity"
-    assert entity.file_path == "test/TestEntity.md"
+    assert str(entity.file_path).replace("\\", "/") == "test/TestEntity.md"
     assert entity.entity_type == data["entity_type"]
     assert entity.content_type == "text/markdown"
 
@@ -68,7 +68,7 @@ async def test_create_entity_observations_relations(client: AsyncClient, file_se
     entity = EntityResponse.model_validate(response.json())
 
     assert entity.permalink == "test/test-entity"
-    assert entity.file_path == "test/TestEntity.md"
+    assert str(entity.file_path).replace("\\", "/") == "test/TestEntity.md"
     assert entity.entity_type == "note"
     assert entity.content_type == "text/markdown"
 

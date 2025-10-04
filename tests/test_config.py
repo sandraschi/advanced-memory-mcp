@@ -1,17 +1,17 @@
 """Test configuration management."""
 
-from basic_memory.config import BasicMemoryConfig
+from advanced_memory.config import AdvancedMemoryConfig
 
 
-class TestBasicMemoryConfig:
-    """Test BasicMemoryConfig behavior with BASIC_MEMORY_HOME environment variable."""
+class TestAdvancedMemoryConfig:
+    """Test AdvancedMemoryConfig behavior with BASIC_MEMORY_HOME environment variable."""
 
     def test_default_behavior_without_basic_memory_home(self, config_home, monkeypatch):
         """Test that config uses default path when BASIC_MEMORY_HOME is not set."""
         # Ensure BASIC_MEMORY_HOME is not set
         monkeypatch.delenv("BASIC_MEMORY_HOME", raising=False)
 
-        config = BasicMemoryConfig()
+        config = AdvancedMemoryConfig()
 
         # Should use the default path (home/basic-memory)
         expected_path = str(config_home / "basic-memory")
@@ -22,7 +22,7 @@ class TestBasicMemoryConfig:
         custom_path = str(config_home / "app" / "data")
         monkeypatch.setenv("BASIC_MEMORY_HOME", custom_path)
 
-        config = BasicMemoryConfig()
+        config = AdvancedMemoryConfig()
 
         # Should use the custom path from environment variable
         assert config.projects["main"] == custom_path
@@ -34,7 +34,7 @@ class TestBasicMemoryConfig:
 
         # Create config without main project
         other_path = str(config_home / "some" / "path")
-        config = BasicMemoryConfig(projects={"other": other_path})
+        config = AdvancedMemoryConfig(projects={"other": other_path})
 
         # model_post_init should have added main project with BASIC_MEMORY_HOME
         assert "main" in config.projects
@@ -47,7 +47,7 @@ class TestBasicMemoryConfig:
 
         # Create config without main project
         other_path = str(config_home / "some" / "path")
-        config = BasicMemoryConfig(projects={"other": other_path})
+        config = AdvancedMemoryConfig(projects={"other": other_path})
 
         # model_post_init should have added main project with default path
         expected_path = str(config_home / "basic-memory")
@@ -59,7 +59,7 @@ class TestBasicMemoryConfig:
         relative_path = "relative/memory/path"
         monkeypatch.setenv("BASIC_MEMORY_HOME", relative_path)
 
-        config = BasicMemoryConfig()
+        config = AdvancedMemoryConfig()
 
         # Should use the exact value from environment variable
         assert config.projects["main"] == relative_path
@@ -71,7 +71,7 @@ class TestBasicMemoryConfig:
 
         # Try to create config with a different main project path
         original_path = str(config_home / "original" / "path")
-        config = BasicMemoryConfig(projects={"main": original_path})
+        config = AdvancedMemoryConfig(projects={"main": original_path})
 
         # The default_factory should override with BASIC_MEMORY_HOME value
         # Note: This tests the current behavior where default_factory takes precedence

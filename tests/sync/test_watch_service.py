@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 from watchfiles import Change
 
-from basic_memory.models.project import Project
-from basic_memory.sync.watch_service import WatchService, WatchServiceState
+from advanced_memory.models.project import Project
+from advanced_memory.sync.watch_service import WatchService, WatchServiceState
 
 
 async def create_test_file(path: Path, content: str = "test content") -> None:

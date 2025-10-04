@@ -1,6 +1,6 @@
 """Tests for delete_note MCP tool."""
 
-from basic_memory.mcp.tools.delete_note import _format_delete_error_response
+from advanced_memory.mcp.tools.delete_note import _format_delete_error_response
 
 
 class TestDeleteNoteErrorFormatting:

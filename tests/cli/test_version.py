@@ -2,7 +2,7 @@
 
 from typer.testing import CliRunner
 
-from basic_memory.cli.app import app
+from advanced_memory.cli.app import app
 
 # Set up CLI runner
 runner = CliRunner()

@@ -4,9 +4,9 @@ import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from basic_memory.mcp.tools import write_note
-from basic_memory.mcp.tools.search import search_notes, _format_search_error_response
-from basic_memory.schemas.search import SearchResponse
+from advanced_memory.mcp.tools import write_note
+from advanced_memory.mcp.tools.search import search_notes, _format_search_error_response
+from advanced_memory.schemas.search import SearchResponse
 
 
 @pytest.mark.asyncio

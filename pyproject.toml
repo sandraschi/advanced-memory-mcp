@@ -43,8 +43,8 @@ Repository = "https://github.com/advanced-memory/advanced-memory"
 Documentation = "https://github.com/advanced-memory/advanced-memory#readme"
 
 [project.scripts]
-advanced-memory = "basic_memory.cli.main:app"
-am = "basic_memory.cli.main:app"
+advanced-memory = "advanced_memory.cli.main:app"
+am = "advanced_memory.cli.main:app"
 release = "scripts.release:main"
 
 [build-system]
@@ -151,7 +151,7 @@ ignore_missing_imports = true
 
 
 [tool.coverage.run]
-concurrency = ["thread", "gevent"]
+concurrency = ["thread"]
 
 [tool.coverage.report]
 exclude_lines = [

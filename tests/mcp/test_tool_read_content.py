@@ -4,8 +4,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 
-from basic_memory.mcp.tools.read_content import read_content
-from basic_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.tools.read_content import read_content
+from advanced_memory.mcp.tools.write_note import write_note
 
 
 class TestReadContentSecurityValidation:

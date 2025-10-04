@@ -7,8 +7,8 @@ from PIL import Image as PILImage
 import pytest
 from mcp.server.fastmcp.exceptions import ToolError
 
-from basic_memory.mcp.tools import read_content, write_note
-from basic_memory.mcp.tools.read_content import (
+from advanced_memory.mcp.tools import read_content, write_note
+from advanced_memory.mcp.tools.read_content import (
     calculate_target_params,
     resize_image,
     optimize_image,

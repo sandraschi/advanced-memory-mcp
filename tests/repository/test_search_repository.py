@@ -7,10 +7,10 @@ import pytest_asyncio
 from sqlalchemy import text
 
 from basic_memory import db
-from basic_memory.models import Entity
-from basic_memory.models.project import Project
-from basic_memory.repository.search_repository import SearchRepository, SearchIndexRow
-from basic_memory.schemas.search import SearchItemType
+from advanced_memory.models import Entity
+from advanced_memory.models.project import Project
+from advanced_memory.repository.search_repository import SearchRepository, SearchIndexRow
+from advanced_memory.schemas.search import SearchItemType
 
 
 @pytest_asyncio.fixture

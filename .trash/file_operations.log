@@ -2047,3 +2047,315 @@ did not find expected alphabetic or numeric character
 2025-10-01 16:51:14 | INFO     | Advanced Memory 0.14.4 (Project: main)
 2025-10-01 16:51:27 | INFO     | Advanced Memory 0.14.4 (Project: main)
 2025-10-01 16:52:08 | INFO     | Advanced Memory 0.14.4 (Project: main)
+2025-10-01 20:06:10 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:06:10 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:06:10 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:06:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:06:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:06:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:07:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:07:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:07:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:09:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:09:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:09:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:09:28 | INFO     | Using in-memory SQLite database
+2025-10-01 20:09:28 | INFO     | Using in-memory SQLite database
+2025-10-01 20:09:28 | INFO     | Initializing search index
+2025-10-01 20:09:28 | INFO     | Initializing search index
+2025-10-01 20:09:28 | INFO     | Initializing search index
+2025-10-01 20:09:28 | INFO     | Initializing search index
+2025-10-01 20:09:28 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:09:28 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:09:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:09:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:09:28 | INFO     | Writing file: test\Git_Workflow_Guide.md, is_markdown=True
+2025-10-01 20:09:28 | INFO     | Writing file: test\Git_Workflow_Guide.md, is_markdown=True
+2025-10-01 20:09:47 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:09:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:09:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:10:58 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:10:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:10:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:10:59 | INFO     | Using in-memory SQLite database
+2025-10-01 20:10:59 | INFO     | Using in-memory SQLite database
+2025-10-01 20:11:00 | INFO     | Initializing search index
+2025-10-01 20:11:00 | INFO     | Initializing search index
+2025-10-01 20:11:00 | INFO     | Initializing search index
+2025-10-01 20:11:00 | INFO     | Initializing search index
+2025-10-01 20:11:00 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:11:00 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:11:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:11:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:11:00 | INFO     | Writing file: test\Git_Workflow_Guide.md, is_markdown=True
+2025-10-01 20:11:00 | INFO     | Writing file: test\Git_Workflow_Guide.md, is_markdown=True
+2025-10-01 20:12:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:12:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:12:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:13:18 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:13:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:13:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:13:19 | INFO     | Using in-memory SQLite database
+2025-10-01 20:13:19 | INFO     | Using in-memory SQLite database
+2025-10-01 20:13:19 | INFO     | Initializing search index
+2025-10-01 20:13:19 | INFO     | Initializing search index
+2025-10-01 20:13:19 | INFO     | Initializing search index
+2025-10-01 20:13:19 | INFO     | Initializing search index
+2025-10-01 20:13:19 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:13:19 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:13:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:13:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:13:19 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:13:19 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:13:20 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:13:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:13:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:13:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:13:57 | INFO     | Using in-memory SQLite database
+2025-10-01 20:13:57 | INFO     | Using in-memory SQLite database
+2025-10-01 20:13:57 | INFO     | Initializing search index
+2025-10-01 20:13:57 | INFO     | Initializing search index
+2025-10-01 20:13:57 | INFO     | Initializing search index
+2025-10-01 20:13:57 | INFO     | Initializing search index
+2025-10-01 20:13:57 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:13:57 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:13:57 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:13:57 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:13:57 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:13:57 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:13:58 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:14:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:14:38 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:14:38 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:14:39 | INFO     | Using in-memory SQLite database
+2025-10-01 20:14:39 | INFO     | Using in-memory SQLite database
+2025-10-01 20:14:39 | INFO     | Initializing search index
+2025-10-01 20:14:39 | INFO     | Initializing search index
+2025-10-01 20:14:39 | INFO     | Initializing search index
+2025-10-01 20:14:39 | INFO     | Initializing search index
+2025-10-01 20:14:39 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:14:39 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:14:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:14:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:14:39 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:14:39 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:14:40 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:15:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:15:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:15:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:15:13 | INFO     | Using in-memory SQLite database
+2025-10-01 20:15:13 | INFO     | Using in-memory SQLite database
+2025-10-01 20:15:13 | INFO     | Initializing search index
+2025-10-01 20:15:13 | INFO     | Initializing search index
+2025-10-01 20:15:13 | INFO     | Initializing search index
+2025-10-01 20:15:13 | INFO     | Initializing search index
+2025-10-01 20:15:13 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:15:13 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:15:13 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:15:13 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:15:13 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:15:13 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:15:14 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:16:37 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:16:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:16:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:16:38 | INFO     | Using in-memory SQLite database
+2025-10-01 20:16:38 | INFO     | Using in-memory SQLite database
+2025-10-01 20:16:38 | INFO     | Initializing search index
+2025-10-01 20:16:38 | INFO     | Initializing search index
+2025-10-01 20:16:38 | INFO     | Initializing search index
+2025-10-01 20:16:38 | INFO     | Initializing search index
+2025-10-01 20:16:38 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:16:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:16:38 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:16:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:16:38 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:16:38 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:16:39 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:16:39 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:17:04 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:17:04 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:17:04 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:17:06 | INFO     | Using in-memory SQLite database
+2025-10-01 20:17:06 | INFO     | Using in-memory SQLite database
+2025-10-01 20:17:06 | INFO     | Initializing search index
+2025-10-01 20:17:06 | INFO     | Initializing search index
+2025-10-01 20:17:06 | INFO     | Initializing search index
+2025-10-01 20:17:06 | INFO     | Initializing search index
+2025-10-01 20:17:06 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:17:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:17:06 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:17:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:17:06 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:17:06 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:17:32 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:17:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:17:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:17:33 | INFO     | Using in-memory SQLite database
+2025-10-01 20:17:33 | INFO     | Using in-memory SQLite database
+2025-10-01 20:17:34 | INFO     | Initializing search index
+2025-10-01 20:17:34 | INFO     | Initializing search index
+2025-10-01 20:17:34 | INFO     | Initializing search index
+2025-10-01 20:17:34 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:17:34 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:17:34 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:17:34 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:17:34 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:17:34 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:36:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:36:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:36:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:36:01 | INFO     | Using in-memory SQLite database
+2025-10-01 20:36:01 | INFO     | Using in-memory SQLite database
+2025-10-01 20:36:01 | INFO     | Initializing search index
+2025-10-01 20:36:01 | INFO     | Initializing search index
+2025-10-01 20:36:01 | INFO     | Initializing search index
+2025-10-01 20:36:01 | INFO     | Initializing search index
+2025-10-01 20:36:01 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:36:01 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:36:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:36:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:36:01 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:36:01 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:36:01 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:36:01 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:36:02 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:36:32 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:36:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:36:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:36:34 | INFO     | Using in-memory SQLite database
+2025-10-01 20:36:34 | INFO     | Using in-memory SQLite database
+2025-10-01 20:36:34 | INFO     | Initializing search index
+2025-10-01 20:36:34 | INFO     | Initializing search index
+2025-10-01 20:36:34 | INFO     | Initializing search index
+2025-10-01 20:36:34 | INFO     | Initializing search index
+2025-10-01 20:36:34 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:36:34 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:36:34 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:36:34 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:37:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:37:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:37:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:37:22 | INFO     | Using in-memory SQLite database
+2025-10-01 20:37:22 | INFO     | Using in-memory SQLite database
+2025-10-01 20:37:22 | INFO     | Initializing search index
+2025-10-01 20:37:22 | INFO     | Initializing search index
+2025-10-01 20:37:22 | INFO     | Initializing search index
+2025-10-01 20:37:22 | INFO     | Initializing search index
+2025-10-01 20:37:22 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:37:22 | INFO     | Initialized project session with default project: test-project
+2025-10-01 20:37:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:37:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-01 20:37:23 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:37:23 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-01 20:37:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:37:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:37:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:39:06 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:39:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:39:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:39:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:39:46 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:39:46 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:40:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-01 20:40:04 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-01 20:40:04 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)

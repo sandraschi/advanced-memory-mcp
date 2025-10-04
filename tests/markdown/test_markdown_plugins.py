@@ -4,7 +4,7 @@ from textwrap import dedent
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
-from basic_memory.markdown.plugins import (
+from advanced_memory.markdown.plugins import (
     observation_plugin,
     relation_plugin,
     is_observation,

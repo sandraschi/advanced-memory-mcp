@@ -4,9 +4,9 @@ from datetime import timezone, datetime
 
 import pytest
 
-from basic_memory.mcp.prompts.continue_conversation import continue_conversation
-from basic_memory.mcp.prompts.search import search_prompt
-from basic_memory.mcp.prompts.recent_activity import recent_activity_prompt
+from advanced_memory.mcp.prompts.continue_conversation import continue_conversation
+from advanced_memory.mcp.prompts.search import search_prompt
+from advanced_memory.mcp.prompts.recent_activity import recent_activity_prompt
 
 
 @pytest.mark.asyncio
@@ -107,12 +107,12 @@ async def test_search_prompt_no_results(client):
 
 def test_prompt_context_with_file_path_no_permalink():
     """Test format_prompt_context with items that have file_path but no permalink."""
-    from basic_memory.mcp.prompts.utils import (
+    from advanced_memory.mcp.prompts.utils import (
         format_prompt_context,
         PromptContext,
         PromptContextItem,
     )
-    from basic_memory.schemas.memory import EntitySummary
+    from advanced_memory.schemas.memory import EntitySummary
 
     # Create a mock context with a file that has no permalink (like a binary file)
     test_entity = EntitySummary(

@@ -4,7 +4,7 @@ import os
 from unittest.mock import patch, MagicMock
 from typer.testing import CliRunner
 
-from basic_memory.cli.main import app as cli_app
+from advanced_memory.cli.main import app as cli_app
 
 
 @patch("basic_memory.cli.commands.project.asyncio.run")

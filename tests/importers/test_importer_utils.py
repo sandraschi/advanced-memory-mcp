@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from basic_memory.importers.utils import clean_filename, format_timestamp
+from advanced_memory.importers.utils import clean_filename, format_timestamp
 
 
 def test_clean_filename():

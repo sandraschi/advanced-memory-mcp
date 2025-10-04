@@ -4,13 +4,13 @@ import pytest
 
 from mcp.server.fastmcp.exceptions import ToolError
 
-from basic_memory.mcp.tools import recent_activity
-from basic_memory.schemas.memory import (
+from advanced_memory.mcp.tools import recent_activity
+from advanced_memory.schemas.memory import (
     EntitySummary,
     ObservationSummary,
     RelationSummary,
 )
-from basic_memory.schemas.search import SearchItemType
+from advanced_memory.schemas.search import SearchItemType
 
 # Test data for different timeframe formats
 valid_timeframes = [

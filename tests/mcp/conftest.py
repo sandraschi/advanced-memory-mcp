@@ -8,10 +8,10 @@ from fastapi import FastAPI
 from httpx import AsyncClient, ASGITransport
 from mcp.server import FastMCP
 
-from basic_memory.api.app import app as fastapi_app
-from basic_memory.deps import get_project_config, get_engine_factory, get_app_config
-from basic_memory.services.search_service import SearchService
-from basic_memory.mcp.server import mcp as mcp_server
+from advanced_memory.api.app import app as fastapi_app
+from advanced_memory.deps import get_project_config, get_engine_factory, get_app_config
+from advanced_memory.services.search_service import SearchService
+from advanced_memory.mcp.server import mcp as mcp_server
 
 
 @pytest.fixture(scope="function")

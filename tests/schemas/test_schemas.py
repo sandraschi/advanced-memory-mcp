@@ -4,7 +4,7 @@ import pytest
 from datetime import datetime, time, timedelta
 from pydantic import ValidationError, BaseModel
 
-from basic_memory.schemas import (
+from advanced_memory.schemas import (
     Entity,
     EntityResponse,
     Relation,
@@ -12,8 +12,8 @@ from basic_memory.schemas import (
     GetEntitiesRequest,
     RelationResponse,
 )
-from basic_memory.schemas.request import EditEntityRequest
-from basic_memory.schemas.base import to_snake_case, TimeFrame, parse_timeframe, validate_timeframe
+from advanced_memory.schemas.request import EditEntityRequest
+from advanced_memory.schemas.base import to_snake_case, TimeFrame, parse_timeframe, validate_timeframe
 
 
 def test_entity_project_name():

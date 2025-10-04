@@ -6,8 +6,8 @@ from unittest.mock import patch, AsyncMock
 
 from typer.testing import CliRunner
 
-from basic_memory.cli.main import app as cli_app
-from basic_memory.schemas.project_info import (
+from advanced_memory.cli.main import app as cli_app
+from advanced_memory.schemas.project_info import (
     ProjectInfoResponse,
     ProjectStatistics,
     ActivityMetrics,

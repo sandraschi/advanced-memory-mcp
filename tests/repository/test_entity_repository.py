@@ -7,9 +7,9 @@ import pytest_asyncio
 from sqlalchemy import select
 
 from basic_memory import db
-from basic_memory.models import Entity, Observation, Relation, Project
-from basic_memory.repository.entity_repository import EntityRepository
-from basic_memory.utils import generate_permalink
+from advanced_memory.models import Entity, Observation, Relation, Project
+from advanced_memory.repository.entity_repository import EntityRepository
+from advanced_memory.utils import generate_permalink
 
 
 @pytest_asyncio.fixture

@@ -5,8 +5,8 @@ from unittest.mock import patch, MagicMock
 import pytest
 from httpx import Response
 
-from basic_memory.mcp.resources.project_info import project_info
-from basic_memory.schemas import (
+from advanced_memory.mcp.resources.project_info import project_info
+from advanced_memory.schemas import (
     ProjectInfoResponse,
 )
 

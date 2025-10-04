@@ -3,7 +3,7 @@
 import pytest
 from pathlib import Path
 
-from basic_memory.utils import validate_project_path
+from advanced_memory.utils import validate_project_path
 
 
 class TestValidateProjectPathSafety:

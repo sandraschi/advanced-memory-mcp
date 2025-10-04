@@ -2,8 +2,8 @@
 
 from markdown_it import MarkdownIt
 
-from basic_memory.markdown.plugins import observation_plugin, parse_observation
-from basic_memory.markdown.schemas import Observation
+from advanced_memory.markdown.plugins import observation_plugin, parse_observation
+from advanced_memory.markdown.schemas import Observation
 
 
 def test_empty_input():

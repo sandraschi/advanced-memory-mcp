@@ -1,7 +1,7 @@
 """Test sync status service functionality."""
 
 import pytest
-from basic_memory.services.sync_status_service import SyncStatusTracker, SyncStatus
+from advanced_memory.services.sync_status_service import SyncStatusTracker, SyncStatus
 
 
 @pytest.fixture

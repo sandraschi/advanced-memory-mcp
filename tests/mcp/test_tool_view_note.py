@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 import pytest_asyncio
 
-from basic_memory.mcp.tools import write_note, view_note
-from basic_memory.schemas.search import SearchResponse, SearchItemType
+from advanced_memory.mcp.tools import write_note, view_note
+from advanced_memory.schemas.search import SearchResponse, SearchItemType
 
 
 @pytest_asyncio.fixture

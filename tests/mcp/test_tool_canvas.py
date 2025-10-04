@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from basic_memory.mcp.tools import canvas
+from advanced_memory.mcp.tools import canvas
 
 
 @pytest.mark.asyncio

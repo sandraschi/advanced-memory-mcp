@@ -3,7 +3,7 @@
 import pytest
 
 from basic_memory import file_utils
-from basic_memory.file_utils import compute_checksum, write_file_atomic
+from advanced_memory.file_utils import compute_checksum, write_file_atomic
 
 
 @pytest.mark.asyncio

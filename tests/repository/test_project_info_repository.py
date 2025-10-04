@@ -3,8 +3,8 @@
 import pytest
 from sqlalchemy import text
 
-from basic_memory.repository.project_info_repository import ProjectInfoRepository
-from basic_memory.models.project import Project  # Add a model reference
+from advanced_memory.repository.project_info_repository import ProjectInfoRepository
+from advanced_memory.models.project import Project  # Add a model reference
 
 
 @pytest.mark.asyncio

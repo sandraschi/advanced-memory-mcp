@@ -3,8 +3,8 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from basic_memory.mcp.tools.sync_status import sync_status
-from basic_memory.services.sync_status_service import (
+from advanced_memory.mcp.tools.sync_status import sync_status
+from advanced_memory.services.sync_status_service import (
     SyncStatus,
     ProjectSyncStatus,
     SyncStatusTracker,

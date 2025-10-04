@@ -7,7 +7,7 @@ For CI/CD, these would be integration tests that require Typora setup.
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from basic_memory.mcp.tools.typora_control import (
+from advanced_memory.mcp.tools.typora_control import (
     typora_control,
     TyporaRPCClient,
     check_typora_connection,

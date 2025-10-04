@@ -10,31 +10,31 @@ import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-import basic_memory.mcp.project_session
-from basic_memory import db
-from basic_memory.config import ProjectConfig, BasicMemoryConfig, ConfigManager
-from basic_memory.db import DatabaseType
-from basic_memory.markdown import EntityParser
-from basic_memory.markdown.markdown_processor import MarkdownProcessor
-from basic_memory.models import Base
-from basic_memory.models.knowledge import Entity
-from basic_memory.models.project import Project
-from basic_memory.repository.entity_repository import EntityRepository
-from basic_memory.repository.observation_repository import ObservationRepository
-from basic_memory.repository.project_repository import ProjectRepository
-from basic_memory.repository.relation_repository import RelationRepository
-from basic_memory.repository.search_repository import SearchRepository
-from basic_memory.schemas.base import Entity as EntitySchema
-from basic_memory.services import (
+import advanced_memory.mcp.project_session
+from advanced_memory import db
+from advanced_memory.config import ProjectConfig, AdvancedMemoryConfig, ConfigManager
+from advanced_memory.db import DatabaseType
+from advanced_memory.markdown import EntityParser
+from advanced_memory.markdown.markdown_processor import MarkdownProcessor
+from advanced_memory.models import Base
+from advanced_memory.models.knowledge import Entity
+from advanced_memory.models.project import Project
+from advanced_memory.repository.entity_repository import EntityRepository
+from advanced_memory.repository.observation_repository import ObservationRepository
+from advanced_memory.repository.project_repository import ProjectRepository
+from advanced_memory.repository.relation_repository import RelationRepository
+from advanced_memory.repository.search_repository import SearchRepository
+from advanced_memory.schemas.base import Entity as EntitySchema
+from advanced_memory.services import (
     EntityService,
     ProjectService,
 )
-from basic_memory.services.directory_service import DirectoryService
-from basic_memory.services.file_service import FileService
-from basic_memory.services.link_resolver import LinkResolver
-from basic_memory.services.search_service import SearchService
-from basic_memory.sync.sync_service import SyncService
-from basic_memory.sync.watch_service import WatchService
+from advanced_memory.services.directory_service import DirectoryService
+from advanced_memory.services.file_service import FileService
+from advanced_memory.services.link_resolver import LinkResolver
+from advanced_memory.services.search_service import SearchService
+from advanced_memory.sync.sync_service import SyncService
+from advanced_memory.sync.watch_service import WatchService
 
 
 @pytest.fixture
@@ -51,17 +51,17 @@ def project_root() -> Path:
 def config_home(tmp_path, monkeypatch) -> Path:
     # Patch HOME environment variable for the duration of the test
     monkeypatch.setenv("HOME", str(tmp_path))
-    # Set BASIC_MEMORY_HOME to the test directory
-    monkeypatch.setenv("BASIC_MEMORY_HOME", str(tmp_path / "basic-memory"))
+    # Set ADVANCED_MEMORY_HOME to the test directory
+    monkeypatch.setenv("ADVANCED_MEMORY_HOME", str(tmp_path / "advanced-memory"))
     return tmp_path
 
 
 @pytest.fixture(scope="function", autouse=True)
-def app_config(config_home, tmp_path, monkeypatch) -> BasicMemoryConfig:
+def app_config(config_home, tmp_path, monkeypatch) -> AdvancedMemoryConfig:
     """Create test app configuration."""
     # Create a basic config without depending on test_project to avoid circular dependency
     projects = {"test-project": str(config_home)}
-    app_config = BasicMemoryConfig(
+    app_config = AdvancedMemoryConfig(
         env="test",
         projects=projects,
         default_project="test-project",
@@ -73,12 +73,12 @@ def app_config(config_home, tmp_path, monkeypatch) -> BasicMemoryConfig:
 
 @pytest.fixture(autouse=True)
 def config_manager(
-    app_config: BasicMemoryConfig, project_config: ProjectConfig, config_home: Path, monkeypatch
+    app_config: AdvancedMemoryConfig, project_config: ProjectConfig, config_home: Path, monkeypatch
 ) -> ConfigManager:
     # Create a new ConfigManager that uses the test home directory
     config_manager = ConfigManager()
     # Update its paths to use the test directory
-    config_manager.config_dir = config_home / ".basic-memory"
+    config_manager.config_dir = config_home / ".advanced-memory"
     config_manager.config_file = config_manager.config_dir / "config.json"
     config_manager.config_dir.mkdir(parents=True, exist_ok=True)
 
@@ -90,10 +90,10 @@ def config_manager(
 @pytest.fixture(autouse=True)
 def project_session(test_project: Project):
     # initialize the project session with the test project
-    basic_memory.mcp.project_session.session.initialize(test_project.name)
+    advanced_memory.mcp.project_session.session.initialize(test_project.name)
     # Explicitly set current project as well to ensure it's used
-    basic_memory.mcp.project_session.session.set_current_project(test_project.name)
-    return basic_memory.mcp.project_session.session
+    advanced_memory.mcp.project_session.session.set_current_project(test_project.name)
+    return advanced_memory.mcp.project_session.session
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -112,7 +112,7 @@ def project_config(test_project):
 class TestConfig:
     config_home: Path
     project_config: ProjectConfig
-    app_config: BasicMemoryConfig
+    app_config: AdvancedMemoryConfig
     config_manager: ConfigManager
 
 
@@ -246,7 +246,7 @@ def entity_parser(project_config):
 
 @pytest_asyncio.fixture
 async def sync_service(
-    app_config: BasicMemoryConfig,
+    app_config: AdvancedMemoryConfig,
     entity_service: EntityService,
     entity_parser: EntityParser,
     entity_repository: EntityRepository,
@@ -438,7 +438,7 @@ async def test_graph(
 
 
 @pytest.fixture
-def watch_service(app_config: BasicMemoryConfig, project_repository) -> WatchService:
+def watch_service(app_config: AdvancedMemoryConfig, project_repository) -> WatchService:
     return WatchService(app_config=app_config, project_repository=project_repository)
 
 

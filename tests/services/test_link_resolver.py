@@ -6,9 +6,9 @@ import pytest
 
 import pytest_asyncio
 
-from basic_memory.schemas.base import Entity as EntitySchema
-from basic_memory.services.link_resolver import LinkResolver
-from basic_memory.models.knowledge import Entity as EntityModel
+from advanced_memory.schemas.base import Entity as EntitySchema
+from advanced_memory.services.link_resolver import LinkResolver
+from advanced_memory.models.knowledge import Entity as EntityModel
 
 
 @pytest_asyncio.fixture
@@ -292,13 +292,17 @@ async def test_exact_match_types_in_strict_mode(link_resolver, test_entities):
     assert result is not None
     assert result.permalink == "components/core-service"
 
-    # 3. Exact file path match
-    result = await link_resolver.resolve_link("components/Core Service.md", strict=True)
+    # 3. Exact file path match (use correct path separator for platform)
+    import os
+    file_path = os.path.join("components", "Core_Service.md")
+    result = await link_resolver.resolve_link(file_path, strict=True)
     assert result is not None
     assert result.permalink == "components/core-service"
 
-    # 4. Folder/title pattern with .md extension added
-    result = await link_resolver.resolve_link("components/Core Service", strict=True)
+    # 4. Folder/title pattern with .md extension added (use correct filename with underscores)
+    import os
+    folder_path = os.path.join("components", "Core_Service")
+    result = await link_resolver.resolve_link(folder_path, strict=True)
     assert result is not None
     assert result.permalink == "components/core-service"
 

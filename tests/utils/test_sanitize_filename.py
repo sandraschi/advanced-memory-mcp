@@ -2,7 +2,7 @@
 
 import pytest
 
-from basic_memory.utils import sanitize_filename
+from advanced_memory.utils import sanitize_filename
 
 
 @pytest.mark.parametrize(

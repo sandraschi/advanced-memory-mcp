@@ -6,7 +6,7 @@ import pytest
 from httpx import AsyncClient, HTTPStatusError
 from mcp.server.fastmcp.exceptions import ToolError
 
-from basic_memory.mcp.tools.utils import (
+from advanced_memory.mcp.tools.utils import (
     call_get,
     call_post,
     call_put,

@@ -2,8 +2,8 @@
 
 from markdown_it import MarkdownIt
 
-from basic_memory.markdown.plugins import relation_plugin, parse_relation, parse_inline_relations
-from basic_memory.markdown.schemas import Relation
+from advanced_memory.markdown.plugins import relation_plugin, parse_relation, parse_inline_relations
+from advanced_memory.markdown.schemas import Relation
 
 
 def test_empty_targets():

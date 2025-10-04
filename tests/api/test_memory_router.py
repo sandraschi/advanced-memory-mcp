@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 
-from basic_memory.schemas.memory import GraphContext
+from advanced_memory.schemas.memory import GraphContext
 
 
 @pytest.mark.asyncio

@@ -5,7 +5,7 @@ from textwrap import dedent
 
 import pytest
 
-from basic_memory.markdown.entity_parser import EntityParser
+from advanced_memory.markdown.entity_parser import EntityParser
 
 
 @pytest.mark.asyncio
