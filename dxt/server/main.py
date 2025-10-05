@@ -27,4 +27,5 @@ except ImportError:
 from advanced_memory.mcp.server import mcp_server
 
 if __name__ == "__main__":
-    mcp_server.run()
+    import asyncio
+    asyncio.run(mcp_server.run_stdio_async())

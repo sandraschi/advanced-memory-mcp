@@ -59,7 +59,12 @@ def configure_mcp_logging():
 configure_mcp_logging()
 
 # Create the shared server instance
-mcp = FastMCP(
-    name="Basic Memory",
+mcp_server = FastMCP(
+    name="Advanced Memory MCP",
     lifespan=app_lifespan,
 )
+
+# Add stdio runner for MCP protocol
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(mcp_server.run_stdio_async())
