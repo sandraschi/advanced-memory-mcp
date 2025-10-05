@@ -19,59 +19,7 @@ from advanced_memory.schemas.project_info import ProjectList, ProjectStatusRespo
 from advanced_memory.utils import generate_permalink
 
 
-@mcp.tool(
-    description="""Comprehensive project management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all project operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **create**: Create new projects with specified name and path
-- **switch**: Change active project context for all subsequent operations
-- **delete**: Remove projects from configuration while preserving files on disk
-- **set_default**: Configure which project loads by default on startup
-- **get_current**: Display currently active project with comprehensive statistics
-- **list**: List all available projects with status indicators
-
-PROJECT CONTEXT IMPACT:
-- All file operations target the active project
-- Search operations are scoped to the active project
-- Directory listings show the active project's structure
-- New notes are created in the active project
-- Sync status reflects the active project's state
-
-PARAMETERS:
-- operation (str, REQUIRED): Operation type (create, switch, delete, set_default, get_current, list)
-- project_name (str): Name of the project for most operations
-- project_path (str): File system path for create operations
-- set_default (bool, default=False): Whether to set new project as default for create operations
-- ctx (Context, optional): MCP context for progress reporting
-
-VALIDATION:
-- Projects must exist in configuration for most operations
-- Project paths must be accessible
-- Cannot delete currently active project (switch first)
-- Automatic project initialization when needed
-
-USAGE EXAMPLES:
-Create project: adn_project("create", project_name="my-research", project_path="~/Documents/research")
-Switch project: adn_project("switch", project_name="work-project")
-List projects: adn_project("list")
-Get current: adn_project("get_current")
-Set default: adn_project("set_default", project_name="personal-notes")
-Delete project: adn_project("delete", project_name="old-project")
-
-RETURNS:
-Operation-specific results with project details, statistics, and configuration status.
-
-PROJECT PERSISTENCE:
-- Project context persists for the current session
-- All tools automatically use the active project
-- Default project settings persist across server restarts
-- No need to specify project parameter repeatedly in other tools
-
-NOTE: This tool provides all project management functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_project(
     operation: str,
     project_name: Optional[str] = None,
@@ -79,15 +27,25 @@ async def adn_project(
     set_default: bool = False,
     ctx: Context | None = None,
 ) -> str:
-    """Comprehensive project management for Advanced Memory knowledge base.
+    """Comprehensive project management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all project operations:
+    This portmanteau tool consolidates all project operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
     - create: Create new projects with specified name and path
-    - switch: Change active project context
-    - delete: Remove projects from configuration
-    - set_default: Configure default project for startup
-    - get_current: Display current project with statistics
-    - list: List all available projects with status
+    - switch: Change active project context for all subsequent operations
+    - delete: Remove projects from configuration while preserving files on disk
+    - set_default: Configure which project loads by default on startup
+    - get_current: Display currently active project with comprehensive statistics
+    - list: List all available projects with status indicators
+
+    PROJECT CONTEXT IMPACT:
+    - All file operations target the active project
+    - Search operations are scoped to the active project
+    - Directory listings show the active project's structure
+    - New notes are created in the active project
+    - Sync status reflects the active project's state
 
     Args:
         operation: The operation to perform (create, switch, delete, set_default, get_current, list)

@@ -11,54 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.server import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive export management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all export operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **pandoc**: Export to PDF, Word, HTML, and 40+ formats using Pandoc
-- **docsify**: Export to Docsify documentation website with navigation
-- **html**: Export to standalone HTML website with Mermaid diagram rendering
-- **joplin**: Export to Joplin-compatible format for cross-platform access
-- **pdf_book**: Create professional PDF books with title pages and chapters
-- **archive**: Export complete Advanced Memory archive for migration/backup
-- **evernote**: Export to Evernote-compatible format
-- **notion**: Export to Notion-compatible format
-
-EXPORT FEATURES:
-- Multiple format support (PDF, HTML, DOCX, EPUB, etc.)
-- Professional document generation with templates
-- Mermaid diagram rendering in HTML exports
-- Cross-platform compatibility for various note-taking apps
-- Complete archive creation for backup/migration
-
-PARAMETERS:
-- operation (str, REQUIRED): Export operation type (pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion)
-- export_path (str, REQUIRED): Path where exported files will be saved
-- format_type (str, default="pdf"): Output format for pandoc operations
-- source_folder (str, default="/"): Source folder to export from
-- include_subfolders (bool, default=True): Include subfolders recursively
-- site_title (str, optional): Title for docsify/html exports
-- site_description (str, optional): Description for docsify/html exports
-- book_title (str, optional): Title for PDF book exports
-- tag_filter (str, optional): Filter notes by tag for exports
-- pdf_engine (str, default="pdflatex"): PDF generation engine
-- project (str, optional): Specific project to export from
-
-USAGE EXAMPLES:
-Pandoc export: adn_export("pandoc", export_path="output.pdf", format_type="pdf", source_folder="/notes")
-Docsify export: adn_export("docsify", export_path="website/", site_title="My Knowledge Base")
-HTML export: adn_export("html", export_path="static-site/", include_index=True)
-PDF book: adn_export("pdf_book", export_path="book.pdf", book_title="My Research", tag_filter="research")
-Archive export: adn_export("archive", export_path="backup.zip", include_projects=["work", "personal"])
-
-RETURNS:
-Operation-specific results with export details, file counts, and processing information.
-
-NOTE: This tool provides all export functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_export(
     operation: str,
     export_path: str,
@@ -72,17 +25,27 @@ async def adn_export(
     pdf_engine: str = "pdflatex",
     project: Optional[str] = None,
 ) -> str:
-    """Comprehensive export management for Advanced Memory knowledge base.
+    """Comprehensive export management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all export operations:
-    - pandoc: Export to various formats using Pandoc
-    - docsify: Export to Docsify documentation website
-    - html: Export to standalone HTML website
-    - joplin: Export to Joplin-compatible format
-    - pdf_book: Create professional PDF books
-    - archive: Export complete system archive
+    This portmanteau tool consolidates all export operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
+    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc
+    - docsify: Export to Docsify documentation website with navigation
+    - html: Export to standalone HTML website with Mermaid diagram rendering
+    - joplin: Export to Joplin-compatible format for cross-platform access
+    - pdf_book: Create professional PDF books with title pages and chapters
+    - archive: Export complete Advanced Memory archive for migration/backup
     - evernote: Export to Evernote-compatible format
     - notion: Export to Notion-compatible format
+
+    EXPORT FEATURES:
+    - Multiple format support (PDF, HTML, DOCX, EPUB, etc.)
+    - Professional document generation with templates
+    - Mermaid diagram rendering in HTML exports
+    - Cross-platform compatibility for various note-taking apps
+    - Complete archive creation for backup/migration
 
     Args:
         operation: The export operation to perform

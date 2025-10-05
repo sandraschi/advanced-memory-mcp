@@ -21,55 +21,7 @@ from advanced_memory.mcp.tools.search import search_notes
 TagType = Union[List[str], str, None]
 
 
-@mcp.tool(
-    description="""Comprehensive content management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all content operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **write**: Create new notes or update existing ones with semantic processing
-- **read**: Retrieve complete note content with intelligent lookup strategies
-- **view**: Display notes as formatted artifacts for better readability
-- **edit**: Perform targeted edits (append, prepend, find_replace, replace_section)
-- **move**: Relocate notes while preserving relationships and updating references
-- **delete**: Remove notes from knowledge base with relationship cleanup
-
-CONTENT PROCESSING:
-- Automatic entity recognition and linking ([[Entity Name]] syntax)
-- Relationship extraction and graph building
-- Tag processing and categorization
-- Folder organization and hierarchy
-- Markdown rendering and syntax validation
-
-PARAMETERS:
-- operation (str, REQUIRED): Operation type (write, read, view, edit, move, delete)
-- identifier (str): Note title, permalink, or memory:// URL
-- content (str): Full markdown content for write/edit operations
-- folder (str): Target folder path for write/move operations
-- tags (optional): Tags as string, list of strings, or None for categorization
-- entity_type (str, default="note"): Content type (note, entity, observation, etc.)
-- destination_path (str): New path for move operations
-- edit_operation (str): Edit type (append, prepend, find_replace, replace_section)
-- find_text (str): Text to find for find_replace operations
-- expected_replacements (int, default=1): Expected replacement count for validation
-- section (str): Target section for replace_section operations
-- page (int, default=1): Pagination page for read operations
-- page_size (int, default=10): Items per page for paginated content
-- project (str, optional): Specific project to operate on (defaults to active project)
-
-USAGE EXAMPLES:
-Write note: adn_content("write", identifier="Meeting Notes", content="# Meeting Summary...", folder="meetings")
-Read note: adn_content("read", identifier="Meeting Notes")
-Edit note: adn_content("edit", identifier="Meeting Notes", edit_operation="append", content="\\n## New Section...")
-Move note: adn_content("move", identifier="Meeting Notes", destination_path="archive/old-meetings.md")
-Delete note: adn_content("delete", identifier="Meeting Notes")
-
-RETURNS:
-Operation-specific results with semantic content summaries, file paths, and processing details.
-
-NOTE: This tool provides all content management functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_content(
     operation: str,
     identifier: Optional[str] = None,
@@ -86,20 +38,30 @@ async def adn_content(
     page_size: int = 10,
     project: Optional[str] = None,
 ) -> str:
-    """Comprehensive content management for Advanced Memory knowledge base.
+    """Comprehensive content management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all content operations:
-    - write: Create/update notes with semantic processing
-    - read: Retrieve notes with intelligent lookup
-    - view: Display formatted note artifacts
-    - edit: Targeted content modifications
-    - move: Relocate notes with relationship preservation
-    - delete: Remove notes with cleanup
+    This portmanteau tool consolidates all content operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
+    - write: Create new notes or update existing ones with semantic processing
+    - read: Retrieve complete note content with intelligent lookup strategies
+    - view: Display notes as formatted artifacts for better readability
+    - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
+    - move: Relocate notes while preserving relationships and updating references
+    - delete: Remove notes from knowledge base with relationship cleanup
+
+    CONTENT PROCESSING:
+    - Automatic entity recognition and linking ([[Entity Name]] syntax)
+    - Relationship extraction and graph building
+    - Tag processing and categorization
+    - Folder organization and hierarchy
+    - Markdown rendering and syntax validation
 
     Args:
-        operation: The operation to perform (write, read, view, edit, move, delete)
+        operation: Operation type (write, read, view, edit, move, delete)
         identifier: Note title, permalink, or memory:// URL
-        content: Markdown content for write/edit operations
+        content: Full markdown content for write/edit operations
         folder: Target folder path for write/move operations
         tags: Tags for categorization (string, list, or None)
         entity_type: Content type (default: "note")

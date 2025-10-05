@@ -11,54 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.server import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive import management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all import operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **obsidian**: Import complete Obsidian vaults with full feature preservation
-- **joplin**: Import Joplin knowledge bases with metadata preservation
-- **notion**: Import Notion workspaces and pages with intelligent conversion
-- **evernote**: Import Evernote ENEX files with complete content preservation
-- **archive**: Import complete Advanced Memory archive from migration/backup
-- **canvas**: Import Obsidian Canvas visual mind maps as structured knowledge
-
-IMPORT FEATURES:
-- Full metadata preservation (tags, timestamps, relationships)
-- Intelligent content conversion (HTML to Markdown, etc.)
-- Folder hierarchy preservation and conversion
-- Entity relationship extraction and linking
-- Attachment and media file handling
-- Cross-platform compatibility
-
-PARAMETERS:
-- operation (str, REQUIRED): Import operation type (obsidian, joplin, notion, evernote, archive, canvas)
-- source_path (str, REQUIRED): Path to source files (vault, export, archive, etc.)
-- destination_folder (str, default="imported/[type]"): Advanced Memory folder for imported content
-- preserve_structure (bool, default=True): Maintain original folder hierarchy
-- convert_links (bool, default=True): Convert internal links to entity references
-- include_attachments (bool, default=True): Import images and media files
-- skip_existing (bool, default=True): Skip notes that already exist
-- create_missing_files (bool, default=False): Create placeholder notes for missing references
-- restore_mode (str, default="overwrite"): Archive restore mode (overwrite, merge, skip_existing)
-- backup_existing (bool, default=True): Backup current data before restore
-- project (str, optional): Target Advanced Memory project
-
-USAGE EXAMPLES:
-Obsidian import: adn_import("obsidian", source_path="/path/to/vault", destination_folder="imported/obsidian")
-Joplin import: adn_import("joplin", source_path="/path/to/export", destination_folder="imported/joplin")
-Notion import: adn_import("notion", source_path="Notion-Export.zip", destination_folder="imported/notion")
-Evernote import: adn_import("evernote", source_path="notes.enex", destination_folder="imported/evernote")
-Archive import: adn_import("archive", source_path="backup.zip", restore_mode="merge")
-Canvas import: adn_import("canvas", source_path="mindmap.canvas", destination_folder="imported/canvases")
-
-RETURNS:
-Operation-specific results with import details, file counts, and processing information.
-
-NOTE: This tool provides all import functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_import(
     operation: str,
     source_path: str,
