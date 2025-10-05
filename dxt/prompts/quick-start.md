@@ -2,10 +2,13 @@
 
 ## 🚀 Get Started in 5 Minutes
 
+### Why Portmanteau Tools?
+Advanced Memory solves the "tool explosion" problem for clients like Cursor IDE (50-tool limit) by consolidating 40+ tools into just 8 comprehensive **Portmanteau Tools** with `adn_` prefix. This maintains full functionality while ensuring compatibility with tool-limited clients.
+
 ### 1. Install the Package
 - Drop `advanced-memory-mcp.mcpb` into Claude Desktop extensions
 - Configure your project path in settings
-- Enable portmanteau tools (recommended)
+- **Portmanteau tools are enabled by default** (recommended for Cursor IDE compatibility)
 
 ### 2. Create Your First Note
 ```python

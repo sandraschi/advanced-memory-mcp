@@ -41,7 +41,7 @@ enable any compatible LLM to read and write to your local knowledge base.
 - 📊 **Professional document generation** - Templates, TOC, syntax highlighting
 - 📖 **PDF book creation** - Complete books with title pages and chapters
 - ✏️ **FREE Notepad++ editing** - Professional markdown editing with syntax highlighting
-- 🎯 **Portmanteau Tools** - Complete consolidated MCP tool suite (reduces 40+ tools to just 8) with `adn_` prefix to avoid naming collisions
+- 🎯 **Portmanteau Tools** - Solves "tool explosion" problem for Cursor IDE and other tool-limited clients by consolidating 40+ tools into just 8 comprehensive tools with `adn_` prefix
 
 - Website: https://basicmemory.com
 - Company: https://basicmachines.co
@@ -590,10 +590,33 @@ Advanced Memory will sync the files in your project in real time if you make man
 
 3. In Claude Desktop, the LLM can now use these tools:
 
-## 🎯 Portmanteau Tools (Recommended for Cursor IDE)
-**Reduces 40+ individual tools to just 8 consolidated tools for Cursor IDE compatibility:**
+## 🎯 Portmanteau Tools (Essential for Cursor IDE & Tool-Limited Clients)
 
-> **Why Portmanteau Tools?** Cursor IDE has a 50-tool limit, but Advanced Memory has 40+ individual tools. Portmanteau tools consolidate related functionality into single tools with operation parameters, maintaining full functionality while staying under the limit.
+**Solves the "Tool Number Explosion" Problem for Clients with Strict Tool Limits**
+
+### The Problem: Tool Number Explosion
+Advanced Memory provides comprehensive knowledge management with **40+ individual MCP tools** covering every aspect of note-taking, import/export, search, and organization. However, many MCP clients impose strict limits on the number of tools they can handle:
+
+- **Cursor IDE**: Hard limit of **50 tools maximum**
+- **Other IDEs**: Often limit to 25-100 tools for performance reasons
+- **Mobile clients**: May have even stricter limits (10-20 tools)
+
+Without portmanteau tools, Advanced Memory would **exceed these limits**, making it unusable in Cursor IDE and other tool-stingy clients.
+
+### The Solution: Portmanteau Tool Consolidation
+Portmanteau tools solve this by consolidating related functionality into **8 comprehensive tools** with operation parameters:
+
+- **Before**: 40+ individual tools → **Tool explosion, client incompatibility**
+- **After**: 8 portmanteau tools → **Full functionality, client compatibility**
+
+Each portmanteau tool uses an `operation` parameter to specify which functionality to use, maintaining **100% feature parity** while dramatically reducing tool count.
+
+### Why This Matters
+- **✅ Cursor IDE Compatible**: Stays well under the 50-tool limit
+- **✅ Performance**: Fewer tools = faster client startup and tool discovery
+- **✅ User Experience**: Cleaner tool palette, easier navigation
+- **✅ Full Functionality**: No features lost in consolidation
+- **✅ Future-Proof**: Scalable approach for adding new features
 
 ```
 # Complete Portmanteau Tool Suite (8 tools total)
