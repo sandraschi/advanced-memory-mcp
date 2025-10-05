@@ -30,8 +30,8 @@
     "type": "python",
     "entry_point": "server/main.py",
     "mcp_config": {
-      "command": "uv",
-      "args": ["run", "python", "server/main.py"]
+      "command": "python",
+      "args": ["server/main.py"]
     }
   },
   "user_config": {
@@ -52,7 +52,7 @@
       "default": true
     },
     "max_tools": {
-      "type": "number",
+      "type": "integer",
       "title": "Maximum Tools",
       "description": "Maximum number of tools to expose (for IDE compatibility)",
       "required": false,
@@ -60,7 +60,7 @@
       "default": 50
     }
   },
-  "documentation": "https://github.com/advanced-memory-mcp/advanced-memory-mcp/blob/main/README.md",
+  "documentation": "https://github.com/sandraschi/advanced-memory-mcp/blob/main/README.md",
   "prompts": [
     {
       "name": "advanced-memory-guide",
