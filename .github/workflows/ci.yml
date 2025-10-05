@@ -20,7 +20,7 @@ jobs:
   lint:
     name: Lint and Format Check
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_full_ci == 'true' || github.event_name != 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_ci == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
   test:
     name: Test Suite
     runs-on: ${{ matrix.os }}
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_full_ci == 'true' || github.event_name != 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_ci == 'true' }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -87,7 +87,7 @@ jobs:
   security:
     name: Security Scan
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_full_ci == 'true' || github.event_name != 'workflow_dispatch' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_ci == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
