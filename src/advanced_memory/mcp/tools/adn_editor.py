@@ -11,66 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.server import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive editor management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all editor operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **notepadpp_edit**: Export notes to Notepad++ for professional markdown editing
-- **notepadpp_import**: Import edited notes back from Notepad++ workspace
-- **typora_control**: Full Typora API control via json_rpc plugin
-- **canvas_create**: Create Obsidian canvas files for knowledge graph visualization
-- **read_content**: Read raw file content (text, images, binaries) without processing
-
-EDITOR FEATURES:
-- FREE Notepad++ integration with syntax highlighting
-- Professional markdown editing with full feature set
-- Typora automation via plugins (export, import, theme control)
-- Visual knowledge graph creation with Obsidian Canvas
-- Raw file content access for images and binaries
-- Cross-platform compatibility and backup support
-
-PARAMETERS:
-- operation (str, REQUIRED): Editor operation type (notepadpp_edit, notepadpp_import, typora_control, canvas_create, read_content)
-- note_identifier (str, optional): Note title or permalink for Notepad++ operations
-- workspace_path (str, optional): Workspace directory for Notepad++ operations
-- create_backup (bool, default=True): Create backup of original content
-- keep_workspace (bool, default=False): Keep workspace files after import
-- typora_operation (str, optional): Typora operation (export, get_content, set_content, insert_text, etc.)
-- typora_format (str, optional): Output format for Typora operations
-- typora_output_path (str, optional): Output path for Typora operations
-- typora_text (str, optional): Text content for Typora operations
-- typora_file_path (str, optional): File path for Typora operations
-- typora_content (str, optional): Content for Typora operations
-- typora_position (str, optional): Position for Typora operations
-- typora_find_text (str, optional): Find text for Typora operations
-- typora_replace_text (str, optional): Replace text for Typora operations
-- typora_files (List[str], optional): File list for Typora operations
-- typora_theme (str, optional): Theme for Typora operations
-- typora_visible (bool, optional): Visibility for Typora operations
-- typora_template_name (str, optional): Template name for Typora operations
-- typora_options (Dict, optional): Additional options for Typora operations
-- nodes (List[Dict], optional): Canvas nodes for canvas creation
-- edges (List[Dict], optional): Canvas edges for canvas creation
-- canvas_title (str, optional): Title for canvas creation
-- canvas_folder (str, optional): Folder for canvas creation
-- path (str, optional): File path for read_content operation
-- project (str, optional): Target project for operations
-
-USAGE EXAMPLES:
-Notepad++ edit: adn_editor("notepadpp_edit", note_identifier="Meeting Notes", workspace_path="temp/")
-Notepad++ import: adn_editor("notepadpp_import", note_identifier="Meeting Notes", keep_workspace=False)
-Typora export: adn_editor("typora_control", typora_operation="export", typora_format="pdf", typora_output_path="/exports/doc.pdf")
-Canvas create: adn_editor("canvas_create", nodes=[...], edges=[...], canvas_title="Project Overview", canvas_folder="visuals")
-Read content: adn_editor("read_content", path="images/diagram.png")
-
-RETURNS:
-Operation-specific results with editing details, file paths, and processing information.
-
-NOTE: This tool provides all editor functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_editor(
     operation: str,
     note_identifier: Optional[str] = None,
@@ -98,14 +39,25 @@ async def adn_editor(
     path: Optional[str] = None,
     project: Optional[str] = None,
 ) -> str:
-    """Comprehensive editor management for Advanced Memory knowledge base.
+    """Comprehensive editor management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all editor operations:
-    - notepadpp_edit: Export notes to Notepad++ for editing
-    - notepadpp_import: Import edited notes back from Notepad++
-    - typora_control: Full Typora API control via plugins
-    - canvas_create: Create Obsidian canvas files for visualization
-    - read_content: Read raw file content without processing
+    This portmanteau tool consolidates all editor operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
+    - notepadpp_edit: Export notes to Notepad++ for professional markdown editing
+    - notepadpp_import: Import edited notes back from Notepad++ workspace
+    - typora_control: Full Typora API control via json_rpc plugin
+    - canvas_create: Create Obsidian canvas files for knowledge graph visualization
+    - read_content: Read raw file content (text, images, binaries) without processing
+
+    EDITOR FEATURES:
+    - FREE Notepad++ integration with syntax highlighting
+    - Professional markdown editing with full feature set
+    - Typora automation via plugins (export, import, theme control)
+    - Visual knowledge graph creation with Obsidian Canvas
+    - Raw file content access for images and binaries
+    - Cross-platform compatibility and backup support
 
     Args:
         operation: The editor operation to perform

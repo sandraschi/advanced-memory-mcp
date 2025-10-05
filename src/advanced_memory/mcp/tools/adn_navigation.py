@@ -11,54 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.server import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive navigation management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all navigation operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **build_context**: Navigate the knowledge graph via memory:// URLs for conversation continuity
-- **recent_activity**: Get recently updated information with specified timeframe
-- **list_directory**: List directory contents with filtering and depth control
-- **status**: Comprehensive system status and diagnostic monitoring
-- **sync_status**: Monitor file synchronization status and background operations
-
-NAVIGATION FEATURES:
-- Knowledge graph traversal with relationship exploration
-- Recent activity filtering by type and timeframe
-- Directory listing with recursive depth control
-- System health monitoring and diagnostics
-- File synchronization status tracking
-- Background process monitoring
-
-PARAMETERS:
-- operation (str, REQUIRED): Navigation operation type (build_context, recent_activity, list_directory, status, sync_status)
-- url (str, optional): Memory URL or pattern for context building
-- dir_name (str, default="/"): Directory path to list
-- depth (int, default=1): Relationship exploration depth or directory recursion depth
-- timeframe (str, default="7d"): Time window for activity filtering
-- page (int, default=1): Pagination page for results
-- page_size (int, default=10): Results per page
-- max_related (int, default=10): Maximum related items to include
-- file_name_glob (str, optional): Glob pattern for file filtering
-- type_filter (str, optional): Type filter for recent activity
-- level (str, default="basic"): Status detail level (basic/intermediate/advanced/diagnostic)
-- focus (str, optional): Specific area to focus on (sync/tools/system/projects)
-- project (str, optional): Target project for operations
-
-USAGE EXAMPLES:
-Build context: adn_navigation("build_context", url="memory://projects/ai", depth=2, timeframe="7d")
-Recent activity: adn_navigation("recent_activity", timeframe="today", type_filter="notes")
-List directory: adn_navigation("list_directory", dir_name="/projects", depth=2)
-System status: adn_navigation("status", level="intermediate", focus="sync")
-Sync status: adn_navigation("sync_status", project="work")
-
-RETURNS:
-Operation-specific results with navigation details, activity information, and system status.
-
-NOTE: This tool provides all navigation functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_navigation(
     operation: str,
     url: Optional[str] = None,
@@ -74,14 +27,25 @@ async def adn_navigation(
     focus: Optional[str] = None,
     project: Optional[str] = None,
 ) -> str:
-    """Comprehensive navigation management for Advanced Memory knowledge base.
+    """Comprehensive navigation management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all navigation operations:
-    - build_context: Navigate the knowledge graph via memory:// URLs
-    - recent_activity: Get recently updated information
-    - list_directory: List directory contents with filtering
-    - status: System status and diagnostic monitoring
-    - sync_status: File synchronization status tracking
+    This portmanteau tool consolidates all navigation operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
+    - build_context: Navigate the knowledge graph via memory:// URLs for conversation continuity
+    - recent_activity: Get recently updated information with specified timeframe
+    - list_directory: List directory contents with filtering and depth control
+    - status: Comprehensive system status and diagnostic monitoring
+    - sync_status: Monitor file synchronization status and background operations
+
+    NAVIGATION FEATURES:
+    - Knowledge graph traversal with relationship exploration
+    - Recent activity filtering by type and timeframe
+    - Directory listing with recursive depth control
+    - System health monitoring and diagnostics
+    - File synchronization status tracking
+    - Background process monitoring
 
     Args:
         operation: The navigation operation to perform

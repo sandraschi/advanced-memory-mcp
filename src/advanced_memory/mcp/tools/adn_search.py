@@ -11,59 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.server import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive search management tool for Advanced Memory knowledge base.
-
-This portmanteau tool consolidates all search operations into a single interface,
-reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-SUPPORTED OPERATIONS:
-- **notes**: Full-text search across Advanced Memory knowledge base
-- **obsidian**: Search through external Obsidian vaults without importing
-- **joplin**: Search through external Joplin exports without importing
-- **notion**: Search through external Notion exports without importing
-- **evernote**: Search through external Evernote exports without importing
-
-SEARCH FEATURES:
-- Full-text content search with relevance ranking
-- Metadata search (titles, tags, notebooks)
-- Boolean operators (AND, OR, NOT) for complex queries
-- Phrase matching with quotes for exact phrases
-- Wildcard support for pattern matching
-- Case-sensitive and case-insensitive options
-- Pagination support for large result sets
-- Content previews and context highlighting
-
-PARAMETERS:
-- operation (str, REQUIRED): Search operation type (notes, obsidian, joplin, notion, evernote)
-- query (str, REQUIRED): Search terms with boolean operators and phrases
-- source_path (str, optional): Path to external vault/export for external searches
-- search_type (str, default="text"): Search scope (text, metadata, combined, file, path)
-- page (int, default=1): Result page for pagination
-- page_size (int, default=10): Results per page (max 100)
-- max_results (int, default=20): Maximum number of results to return
-- case_sensitive (bool, default=False): Whether search should be case-sensitive
-- include_content (bool, default=False): Include content previews in results
-- types (List[str], optional): Content type filters for notes search
-- entity_types (List[str], optional): Entity category filters for notes search
-- after_date (str, optional): Date filter (ISO format or relative like "7d")
-- file_type (str, optional): File type filter for external searches
-- notebook_filter (str, optional): Filter results to specific notebook
-- tag_filter (str, optional): Filter results by tag name
-- project (str, optional): Project scope for notes search
-
-USAGE EXAMPLES:
-Notes search: adn_search("notes", query="machine learning", page=1, page_size=10)
-Obsidian search: adn_search("obsidian", query="project planning", source_path="/path/to/vault")
-Joplin search: adn_search("joplin", query="meeting notes", source_path="/path/to/export")
-Notion search: adn_search("notion", query="database design", source_path="/path/to/notion-export")
-Evernote search: adn_search("evernote", query="research", source_path="/path/to/exports")
-
-RETURNS:
-Operation-specific results with search details, match counts, and content previews.
-
-NOTE: This tool provides all search functionality in a single interface for better MCP client compatibility.""",
-)
+@mcp.tool
 async def adn_search(
     operation: str,
     query: str,
@@ -82,14 +30,27 @@ async def adn_search(
     tag_filter: Optional[str] = None,
     project: Optional[str] = None,
 ) -> str:
-    """Comprehensive search management for Advanced Memory knowledge base.
+    """Comprehensive search management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all search operations:
+    This portmanteau tool consolidates all search operations into a single interface,
+    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    SUPPORTED OPERATIONS:
     - notes: Full-text search across Advanced Memory knowledge base
-    - obsidian: Search through external Obsidian vaults
-    - joplin: Search through external Joplin exports
-    - notion: Search through external Notion exports
-    - evernote: Search through external Evernote exports
+    - obsidian: Search through external Obsidian vaults without importing
+    - joplin: Search through external Joplin exports without importing
+    - notion: Search through external Notion exports without importing
+    - evernote: Search through external Evernote exports without importing
+
+    SEARCH FEATURES:
+    - Full-text content search with relevance ranking
+    - Metadata search (titles, tags, notebooks)
+    - Boolean operators (AND, OR, NOT) for complex queries
+    - Phrase matching with quotes for exact phrases
+    - Wildcard support for pattern matching
+    - Case-sensitive and case-insensitive options
+    - Pagination support for large result sets
+    - Content previews and context highlighting
 
     Args:
         operation: The search operation to perform
