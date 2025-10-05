@@ -19,15 +19,15 @@ async def test_unicode_content(tmp_path):
         modified: 2024-12-21T14:00:00Z
         tags: [unicode, 测试]
         ---
-        
+
         # Unicode Test 🧪
-        
+
         ## Observations
         - [test] Emoji test 👍 #emoji #test (Testing emoji)
         - [中文] Chinese text 测试 #language (Script test)
         - [русский] Russian привет #language (More scripts)
         - [note] Emoji in text 😀 #meta (Category test)
-        
+
         ## Relations
         - tested_by [[测试组件]] (Unicode test)
         - depends_on [[компонент]] (Another test)
@@ -76,7 +76,7 @@ async def test_missing_sections(tmp_path):
         modified: 2024-01-09
         tags: []
         ---
-        
+
         Just some content
         with [[links]] but no sections
         """)
@@ -128,17 +128,17 @@ async def test_nested_content(tmp_path):
         modified: 2024-01-09
         tags: []
         ---
-        
+
         # Test
-        
+
         ## Level 1
         - [test] Level 1 #test (First level)
         - implements [[One]]
-            
+
             ### Level 2
             - [test] Level 2 #test (Second level)
             - uses [[Two]]
-                
+
                 #### Level 3
                 - [test] Level 3 #test (Third level)
                 - needs [[Three]]
@@ -164,7 +164,7 @@ async def test_malformed_frontmatter(tmp_path):
         ---
         type: test
         ---
-        
+
         # Test
         """)
 

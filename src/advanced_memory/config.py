@@ -4,15 +4,14 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Literal, Optional, List, Tuple
+from typing import Any, Literal
 
 from loguru import logger
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import advanced_memory
-from advanced_memory.utils import setup_logging, generate_permalink
-
+from advanced_memory.utils import generate_permalink, setup_logging
 
 DATABASE_NAME = "memory.db"
 APP_DATABASE_NAME = "memory.db"  # Using the same name but in the app directory
@@ -38,13 +37,18 @@ class ProjectConfig:
     def project_url(self) -> str:  # pragma: no cover
         return f"/{generate_permalink(self.name)}"
 
+    @property
+    def database_path(self) -> Path:
+        """Get SQLite database path for this project."""
+        return self.home / DATA_DIR_NAME / DATABASE_NAME
+
 
 class AdvancedMemoryConfig(BaseSettings):
     """Pydantic model for Advanced Memory global configuration."""
 
     env: Environment = Field(default="dev", description="Environment name")
 
-    projects: Dict[str, str] = Field(
+    projects: dict[str, str] = Field(
         default_factory=lambda: {
             "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory")))
         },
@@ -56,7 +60,7 @@ class AdvancedMemoryConfig(BaseSettings):
     )
 
     # Legacy support for basic-memory environment variables
-    legacy_basic_memory_home: Optional[str] = Field(
+    legacy_basic_memory_home: str | None = Field(
         default_factory=lambda: os.getenv("BASIC_MEMORY_HOME"),
         description="Legacy environment variable support",
         exclude=True,
@@ -82,7 +86,7 @@ class AdvancedMemoryConfig(BaseSettings):
     )
 
     # API connection configuration
-    api_url: Optional[str] = Field(
+    api_url: str | None = Field(
         default=None,
         description="URL of remote Advanced Memory API. If set, MCP will connect to this API instead of using local ASGI transport.",
     )
@@ -95,7 +99,7 @@ class AdvancedMemoryConfig(BaseSettings):
         env_nested_delimiter="__",
     )
 
-    def get_project_path(self, project_name: Optional[str] = None) -> Path:  # pragma: no cover
+    def get_project_path(self, project_name: str | None = None) -> Path:  # pragma: no cover
         """Get the path for a specific project or the default project."""
         name = project_name or self.default_project
 
@@ -123,7 +127,9 @@ class AdvancedMemoryConfig(BaseSettings):
         This is the single database that will store all knowledge data
         across all projects.
         """
-        database_path = Path.home() / DATA_DIR_NAME / APP_DATABASE_NAME
+        # Use ADVANCED_MEMORY_HOME if set, otherwise use home directory
+        base_path = Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory"))
+        database_path = base_path / DATA_DIR_NAME / APP_DATABASE_NAME
         if not database_path.exists():  # pragma: no cover
             database_path.parent.mkdir(parents=True, exist_ok=True)
             database_path.touch()
@@ -143,15 +149,15 @@ class AdvancedMemoryConfig(BaseSettings):
         return config.app_database_path  # pragma: no cover
 
     @property
-    def project_list(self) -> List[ProjectConfig]:  # pragma: no cover
+    def project_list(self) -> list[ProjectConfig]:  # pragma: no cover
         """Get all configured projects as ProjectConfig objects."""
         return [ProjectConfig(name=name, home=Path(path)) for name, path in self.projects.items()]
 
     @field_validator("projects")
     @classmethod
-    def ensure_project_paths_exists(cls, v: Dict[str, str]) -> Dict[str, str]:  # pragma: no cover
+    def ensure_project_paths_exists(cls, v: dict[str, str]) -> dict[str, str]:  # pragma: no cover
         """Ensure project path exists."""
-        for name, path_value in v.items():
+        for _name, path_value in v.items():
             path = Path(path_value)
             if not Path(path).exists():
                 try:
@@ -204,7 +210,7 @@ class ConfigManager:
         save_advanced_memory_config(self.config_file, config)
 
     @property
-    def projects(self) -> Dict[str, str]:
+    def projects(self) -> dict[str, str]:
         """Get all configured projects."""
         return self.config.projects.copy()
 
@@ -255,7 +261,7 @@ class ConfigManager:
         config.default_project = name
         self.save_config(config)
 
-    def get_project(self, name: str) -> Tuple[str, str] | Tuple[None, None]:
+    def get_project(self, name: str) -> tuple[str, str] | tuple[None, None]:
         """Look up a project from the configuration by name or permalink"""
         project_permalink = generate_permalink(name)
         app_config = self.config
@@ -265,7 +271,7 @@ class ConfigManager:
         return None, None
 
 
-def get_project_config(project_name: Optional[str] = None) -> ProjectConfig:
+def get_project_config(project_name: str | None = None) -> ProjectConfig:
     """
     Get the project configuration for the current session.
     If project_name is provided, it will be used instead of the default project.
@@ -358,7 +364,7 @@ def setup_advanced_memory_logging():  # pragma: no cover
     global _LOGGING_SETUP
     if _LOGGING_SETUP:
         # We can't log before logging is set up
-        # print("Skipping duplicate logging setup")
+        # logger.debug("Skipping duplicate logging setup")
         return
 
     # Check for console logging environment variable

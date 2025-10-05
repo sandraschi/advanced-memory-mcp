@@ -132,6 +132,8 @@ async def test_rapid_atomic_writes(watch_service, project_config, test_project, 
     assert content1 == "First version"
 
     # Simulate the second atomic write
+    # On Windows, we need to delete the existing file first
+    final_path.unlink()
     tmp2_path.rename(final_path)
 
     # Verify content was updated

@@ -1,6 +1,6 @@
 """Tests for context service."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 import pytest
 import pytest_asyncio

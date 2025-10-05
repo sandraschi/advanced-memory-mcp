@@ -5,18 +5,19 @@ table of contents, and chapter organization using Pandoc.
 """
 
 import asyncio
-import tempfile
-from pathlib import Path
-from typing import List, Optional, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-from advanced_memory.mcp.server import mcp
+from loguru import logger
+
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery, SearchResponse
 
 
 @mcp.tool(
-    description="""📖 Create Professional PDF Books from Basic Memory Notes
+    description="""[BOOK] Create Professional PDF Books from Basic Memory Notes
 
 Generates a complete PDF book with title page, table of contents, and chapters
 from your Basic Memory notes. Perfect for creating documentation, research papers,
@@ -60,13 +61,13 @@ NOTE: Requires Pandoc and LaTeX (MiKTeX/TinyTeX) for PDF generation.
 async def make_pdf_book(
     book_title: str,
     source_folder: str = "/",
-    tag_filter: Optional[str] = None,
-    output_path: Optional[str] = None,
+    tag_filter: str | None = None,
+    output_path: str | None = None,
     author: str = "Basic Memory",
     include_subfolders: bool = True,
     toc_depth: int = 2,
     paper_size: str = "a4",
-    project: Optional[str] = None
+    project: str | None = None
 ) -> str:
     """
     Create a professional PDF book from Basic Memory notes.
@@ -98,7 +99,7 @@ async def make_pdf_book(
         # Get notes for the book
         notes_data = await _get_book_notes(source_folder, tag_filter, include_subfolders, project)
         if not notes_data:
-            return f"❌ No notes found in folder '{source_folder}' for book creation."
+            return f"[UNICODE] No notes found in folder '{source_folder}' for book creation."
 
         # Create temporary book markdown file
         book_md_path = await _create_book_markdown(
@@ -118,9 +119,9 @@ async def make_pdf_book(
             total_pages = _estimate_page_count(notes_data)
             total_words = sum(len(note['content'].split()) for note in notes_data)
 
-            return f"""✅ **PDF Book Created Successfully!**
+            return f"""[UNICODE] **PDF Book Created Successfully!**
 
-📖 **Book Details:**
+[BOOK] **Book Details:**
 - **Title:** {book_title}
 - **Author:** {author}
 - **Chapters:** {len(notes_data)}
@@ -128,31 +129,31 @@ async def make_pdf_book(
 - **Word Count:** {total_words:,}
 - **Paper Size:** {paper_size.upper()}
 
-📁 **Files:**
+[FOLDER] **Files:**
 - **PDF Location:** `{pdf_path}`
 - **Size:** {_get_file_size(pdf_path)}
 
-📚 **Book Features:**
-- ✅ Professional title page
-- ✅ Table of contents (depth: {toc_depth})
-- ✅ Chapter-based organization
-- ✅ Proper page formatting
-- ✅ Book-style layout
+[BOOKS] **Book Features:**
+- [UNICODE] Professional title page
+- [UNICODE] Table of contents (depth: {toc_depth})
+- [UNICODE] Chapter-based organization
+- [UNICODE] Proper page formatting
+- [UNICODE] Book-style layout
 
-**Ready to share your knowledge book!** 🎉📖"""
+**Ready to share your knowledge book!** [SUCCESS][BOOK]"""
         else:
-            return "❌ PDF book creation failed. Check that Pandoc and LaTeX are installed."
+            return "[UNICODE] PDF book creation failed. Check that Pandoc and LaTeX are installed."
 
     except Exception as e:
-        return f"❌ Error creating PDF book: {str(e)}"
+        return f"[UNICODE] Error creating PDF book: {str(e)}"
 
 
 async def _get_book_notes(
     source_folder: str,
-    tag_filter: Optional[str],
+    tag_filter: str | None,
     include_subfolders: bool,
-    project: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    project: str | None = None
+) -> list[dict[str, Any]]:
     """
     Get notes for the book, sorted by title for chapter order.
     """
@@ -169,16 +170,16 @@ async def _get_book_notes(
         return notes_data
 
     except Exception as e:
-        print(f"Error getting book notes: {e}")
+        logger.error(f"Error getting book notes: {e}")
         return []
 
 
 async def _get_notes_from_folder(
     source_folder: str,
-    tag_filter: Optional[str],
+    tag_filter: str | None,
     include_subfolders: bool,
-    project: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    project: str | None = None
+) -> list[dict[str, Any]]:
     """
     Retrieve all notes from the specified folder using the search API.
     """
@@ -228,11 +229,11 @@ async def _get_notes_from_folder(
         return notes_data
 
     except Exception as e:
-        print(f"Error retrieving notes: {e}")
+        logger.error(f"Error retrieving notes: {e}")
         return []
 
 
-async def _get_note_content(note) -> Optional[str]:
+async def _get_note_content(note) -> str | None:
     """
     Retrieve the full content of a note.
     """
@@ -250,12 +251,12 @@ async def _get_note_content(note) -> Optional[str]:
         return content if content else None
 
     except Exception as e:
-        print(f"Error reading note content: {e}")
+        logger.error(f"Error reading note content: {e}")
         return None
 
 
 async def _create_book_markdown(
-    notes_data: List[Dict[str, Any]],
+    notes_data: list[dict[str, Any]],
     book_title: str,
     author: str,
     output_dir: Path
@@ -385,15 +386,15 @@ async def _generate_pdf_book(
             return True
         else:
             error_msg = stderr.decode('utf-8', errors='ignore')
-            print(f"Pandoc PDF book error: {error_msg}")
+            logger.error(f"Pandoc PDF book error: {error_msg}")
             return False
 
     except Exception as e:
-        print(f"Error generating PDF book: {e}")
+        logger.error(f"Error generating PDF book: {e}")
         return False
 
 
-def _estimate_page_count(notes_data: List[Dict[str, Any]]) -> int:
+def _estimate_page_count(notes_data: list[dict[str, Any]]) -> int:
     """
     Estimate the number of pages based on content length.
     Rough estimate: ~500 words per page.

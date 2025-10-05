@@ -1,14 +1,14 @@
 """Service for managing entities in the database."""
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import List, Optional, Sequence, Tuple, Union
 
 import frontmatter
 import yaml
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
 
-from advanced_memory.config import ProjectConfig, AdvancedMemoryConfig
+from advanced_memory.config import AdvancedMemoryConfig, ProjectConfig
 from advanced_memory.file_utils import has_frontmatter, parse_frontmatter, remove_frontmatter
 from advanced_memory.markdown import EntityMarkdown
 from advanced_memory.markdown.entity_parser import EntityParser
@@ -19,7 +19,8 @@ from advanced_memory.repository import ObservationRepository, RelationRepository
 from advanced_memory.repository.entity_repository import EntityRepository
 from advanced_memory.schemas import Entity as EntitySchema
 from advanced_memory.schemas.base import Permalink
-from advanced_memory.services import BaseService, FileService
+from advanced_memory.services.service import BaseService
+from advanced_memory.services.file_service import FileService
 from advanced_memory.services.exceptions import EntityCreationError, EntityNotFoundError
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.utils import generate_permalink
@@ -45,7 +46,7 @@ class EntityService(BaseService[EntityModel]):
         self.link_resolver = link_resolver
 
     async def resolve_permalink(
-        self, file_path: Permalink | Path, markdown: Optional[EntityMarkdown] = None
+        self, file_path: Permalink | Path, markdown: EntityMarkdown | None = None
     ) -> str:
         """Get or generate unique permalink for an entity.
 
@@ -61,11 +62,15 @@ class EntityService(BaseService[EntityModel]):
             existing = await self.repository.get_by_permalink(desired_permalink)
 
             # If no conflict or it's our own file, use as is
-            if not existing or existing.file_path == str(file_path):
+            from advanced_memory.sync.sync_service import normalize_file_path
+            normalized_path = normalize_file_path(str(file_path))
+            if not existing or existing.file_path == normalized_path:
                 return desired_permalink
 
         # For existing files, try to find current permalink
-        existing = await self.repository.get_by_file_path(str(file_path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+        normalized_path = normalize_file_path(str(file_path))
+        existing = await self.repository.get_by_file_path(normalized_path)
         if existing:
             return existing.permalink
 
@@ -85,7 +90,7 @@ class EntityService(BaseService[EntityModel]):
 
         return permalink
 
-    async def create_or_update_entity(self, schema: EntitySchema) -> Tuple[EntityModel, bool]:
+    async def create_or_update_entity(self, schema: EntitySchema) -> tuple[EntityModel, bool]:
         """Create new entity or update existing one.
         Returns: (entity, is_new) where is_new is True if a new entity was created
         """
@@ -281,19 +286,20 @@ class EntityService(BaseService[EntityModel]):
             raise EntityNotFoundError(f"Entity not found: {permalink}")
         return db_entity
 
-    async def get_entities_by_id(self, ids: List[int]) -> Sequence[EntityModel]:
+    async def get_entities_by_id(self, ids: list[int]) -> Sequence[EntityModel]:
         """Get specific entities and their relationships."""
         logger.debug(f"Getting entities: {ids}")
         return await self.repository.find_by_ids(ids)
 
-    async def get_entities_by_permalinks(self, permalinks: List[str]) -> Sequence[EntityModel]:
+    async def get_entities_by_permalinks(self, permalinks: list[str]) -> Sequence[EntityModel]:
         """Get specific nodes and their relationships."""
         logger.debug(f"Getting entities permalinks: {permalinks}")
         return await self.repository.find_by_permalinks(permalinks)
 
-    async def delete_entity_by_file_path(self, file_path: Union[str, Path]) -> None:
+    async def delete_entity_by_file_path(self, file_path: str | Path) -> None:
         """Delete entity by file path."""
-        await self.repository.delete_by_file_path(str(file_path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+        await self.repository.delete_by_file_path(normalize_file_path(str(file_path)))
 
     async def create_entity_from_markdown(
         self, file_path: Path, markdown: EntityMarkdown
@@ -328,7 +334,8 @@ class EntityService(BaseService[EntityModel]):
         """
         logger.debug(f"Updating entity and observations: {file_path}")
 
-        db_entity = await self.repository.get_by_file_path(str(file_path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+        db_entity = await self.repository.get_by_file_path(normalize_file_path(str(file_path)))
 
         # Clear observations for entity
         await self.observation_repository.delete_by_fields(entity_id=db_entity.id)
@@ -407,8 +414,8 @@ class EntityService(BaseService[EntityModel]):
         identifier: str,
         operation: str,
         content: str,
-        section: Optional[str] = None,
-        find_text: Optional[str] = None,
+        section: str | None = None,
+        find_text: str | None = None,
         expected_replacements: int = 1,
     ) -> EntityModel:
         """Edit an existing entity's content using various operations.
@@ -464,8 +471,8 @@ class EntityService(BaseService[EntityModel]):
         current_content: str,
         operation: str,
         content: str,
-        section: Optional[str] = None,
-        find_text: Optional[str] = None,
+        section: str | None = None,
+        find_text: str | None = None,
         expected_replacements: int = 1,
     ) -> str:
         """Apply the specified edit operation to the current content."""

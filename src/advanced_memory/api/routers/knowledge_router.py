@@ -2,28 +2,28 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends, Query, Response
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response
 from loguru import logger
 
 from advanced_memory.deps import (
-    EntityServiceDep,
-    get_search_service,
-    SearchServiceDep,
-    LinkResolverDep,
-    ProjectPathDep,
-    FileServiceDep,
-    ProjectConfigDep,
     AppConfigDep,
+    EntityServiceDep,
+    FileServiceDep,
+    LinkResolverDep,
+    ProjectConfigDep,
+    ProjectPathDep,
+    SearchServiceDep,
     SyncServiceDep,
+    get_search_service,
 )
 from advanced_memory.schemas import (
+    DeleteEntitiesRequest,
+    DeleteEntitiesResponse,
     EntityListResponse,
     EntityResponse,
-    DeleteEntitiesResponse,
-    DeleteEntitiesRequest,
 )
+from advanced_memory.schemas.base import Entity, Permalink
 from advanced_memory.schemas.request import EditEntityRequest, MoveEntityRequest
-from advanced_memory.schemas.base import Permalink, Entity
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
@@ -152,7 +152,7 @@ async def edit_entity(
 
     except Exception as e:
         logger.error(f"Error editing entity: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.post("/move")
@@ -199,7 +199,7 @@ async def move_entity(
 
     except Exception as e:
         logger.error(f"Error moving entity: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 ## Read endpoints

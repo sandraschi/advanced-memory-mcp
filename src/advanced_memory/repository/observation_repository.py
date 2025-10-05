@@ -1,6 +1,6 @@
 """Repository for managing Observation objects."""
 
-from typing import Dict, List, Sequence
+from collections.abc import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -9,7 +9,7 @@ from advanced_memory.models import Observation
 from advanced_memory.repository.repository import Repository
 
 
-class ObservationRepository(Repository[Observation]):
+class ObservationRepository(Repository):
     """Repository for Observation model with memory-specific operations."""
 
     def __init__(self, session_maker: async_sessionmaker, project_id: int):
@@ -45,7 +45,7 @@ class ObservationRepository(Repository[Observation]):
         result = await self.execute_query(query, use_query_options=False)
         return result.scalars().all()
 
-    async def find_by_entities(self, entity_ids: List[int]) -> Dict[int, List[Observation]]:
+    async def find_by_entities(self, entity_ids: list[int]) -> dict[int, list[Observation]]:
         """Find all observations for multiple entities in a single query.
 
         Args:

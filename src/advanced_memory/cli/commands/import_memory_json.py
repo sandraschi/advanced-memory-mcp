@@ -6,13 +6,14 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from loguru import logger
+from rich.console import Console
+from rich.panel import Panel
+
 from advanced_memory.cli.app import import_app
 from advanced_memory.config import get_project_config
 from advanced_memory.importers.memory_json_importer import MemoryJsonImporter
 from advanced_memory.markdown import EntityParser, MarkdownProcessor
-from loguru import logger
-from rich.console import Console
-from rich.panel import Panel
 
 console = Console()
 
@@ -86,4 +87,4 @@ def memory_json(
     except Exception as e:
         logger.error("Import failed")
         typer.echo(f"Error during import: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e

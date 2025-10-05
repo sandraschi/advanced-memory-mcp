@@ -6,6 +6,7 @@ and memory:// URL handling via the complete MCP client-server flow.
 """
 
 import json
+
 import pytest
 from fastmcp import Client
 from fastmcp.exceptions import ToolError
@@ -234,7 +235,7 @@ async def test_read_content_missing_file(mcp_server, app):
                 },
             )
             # Should not reach here - expecting an error
-            assert False, "Expected error for missing file"
+            raise AssertionError("Expected error for missing file")
         except ToolError as e:
             # Should get an appropriate error message
             error_msg = str(e).lower()
@@ -286,14 +287,14 @@ async def test_read_content_large_file(mcp_server, app):
             large_content += f"""
 ## Section {i + 1}
 
-This is section {i + 1} with substantial content. Lorem ipsum dolor sit amet, 
-consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
+This is section {i + 1} with substantial content. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
 dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
 
 - [note] This is observation {i + 1}
 - related_to [[Section {i}]]
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
 
 """

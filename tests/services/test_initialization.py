@@ -1,20 +1,20 @@
 """Tests for the initialization service."""
 
 from pathlib import Path
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from advanced_memory.services.initialization import (
     ensure_initialization,
     initialize_database,
-    reconcile_projects_with_config,
     initialize_file_sync,
+    reconcile_projects_with_config,
 )
 
 
 @pytest.mark.asyncio
-@patch("basic_memory.services.initialization.db.get_or_create_db")
+@patch("advanced_memory.services.initialization.db.get_or_create_db")
 async def test_initialize_database(mock_get_or_create_db, app_config):
     """Test initializing the database."""
     mock_get_or_create_db.return_value = (MagicMock(), MagicMock())
@@ -23,7 +23,7 @@ async def test_initialize_database(mock_get_or_create_db, app_config):
 
 
 @pytest.mark.asyncio
-@patch("basic_memory.services.initialization.db.get_or_create_db")
+@patch("advanced_memory.services.initialization.db.get_or_create_db")
 async def test_initialize_database_error(mock_get_or_create_db, app_config):
     """Test handling errors during database initialization."""
     mock_get_or_create_db.side_effect = Exception("Test error")
@@ -31,7 +31,7 @@ async def test_initialize_database_error(mock_get_or_create_db, app_config):
     mock_get_or_create_db.assert_called_once_with(app_config.database_path)
 
 
-@patch("basic_memory.services.initialization.asyncio.run")
+@patch("advanced_memory.services.initialization.asyncio.run")
 def test_ensure_initialization(mock_run, project_config):
     """Test synchronous initialization wrapper."""
     ensure_initialization(project_config)
@@ -39,7 +39,7 @@ def test_ensure_initialization(mock_run, project_config):
 
 
 @pytest.mark.asyncio
-@patch("basic_memory.services.initialization.db.get_or_create_db")
+@patch("advanced_memory.services.initialization.db.get_or_create_db")
 async def test_reconcile_projects_with_config(mock_get_db, app_config):
     """Test reconciling projects from config with database using ProjectService."""
     # Setup mocks
@@ -52,9 +52,9 @@ async def test_reconcile_projects_with_config(mock_get_db, app_config):
 
     # Mock the repository and project service
     with (
-        patch("basic_memory.services.initialization.ProjectRepository") as mock_repo_class,
+        patch("advanced_memory.services.initialization.ProjectRepository") as mock_repo_class,
         patch(
-            "basic_memory.services.project_service.ProjectService",
+            "advanced_memory.services.project_service.ProjectService",
             return_value=mock_project_service,
         ),
     ):
@@ -78,7 +78,7 @@ async def test_reconcile_projects_with_config(mock_get_db, app_config):
 
 
 @pytest.mark.asyncio
-@patch("basic_memory.services.initialization.db.get_or_create_db")
+@patch("advanced_memory.services.initialization.db.get_or_create_db")
 async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
     """Test error handling during project synchronization."""
     # Setup mocks
@@ -93,12 +93,12 @@ async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
 
     # Mock the repository and project service
     with (
-        patch("basic_memory.services.initialization.ProjectRepository") as mock_repo_class,
+        patch("advanced_memory.services.initialization.ProjectRepository") as mock_repo_class,
         patch(
-            "basic_memory.services.project_service.ProjectService",
+            "advanced_memory.services.project_service.ProjectService",
             return_value=mock_project_service,
         ),
-        patch("basic_memory.services.initialization.logger") as mock_logger,
+        patch("advanced_memory.services.initialization.logger") as mock_logger,
     ):
         mock_repo_class.return_value = mock_repository
 
@@ -124,9 +124,9 @@ async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
 
 
 @pytest.mark.asyncio
-@patch("basic_memory.services.initialization.db.get_or_create_db")
-@patch("basic_memory.cli.commands.sync.get_sync_service")
-@patch("basic_memory.sync.WatchService")
+@patch("advanced_memory.services.initialization.db.get_or_create_db")
+@patch("advanced_memory.cli.commands.sync.get_sync_service")
+@patch("advanced_memory.sync.WatchService")
 async def test_initialize_file_sync_sequential(
     mock_watch_service_class, mock_get_sync_service, mock_get_db, app_config
 ):
@@ -155,7 +155,7 @@ async def test_initialize_file_sync_sequential(
     mock_get_sync_service.return_value = mock_sync_service
 
     # Mock the repository
-    with patch("basic_memory.services.initialization.ProjectRepository") as mock_repo_class:
+    with patch("advanced_memory.services.initialization.ProjectRepository") as mock_repo_class:
         mock_repo_class.return_value = mock_repository
         mock_repository.get_active_projects.return_value = [mock_project1, mock_project2]
 

@@ -1,17 +1,17 @@
 """Repository for managing projects in Basic Memory."""
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional, Sequence, Union
 
+from advanced_memory import db
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from basic_memory import db
 from advanced_memory.models.project import Project
 from advanced_memory.repository.repository import Repository
 
 
-class ProjectRepository(Repository[Project]):
+class ProjectRepository(Repository):
     """Repository for Project model.
 
     Projects represent collections of knowledge entities grouped together.
@@ -22,7 +22,7 @@ class ProjectRepository(Repository[Project]):
         """Initialize with session maker."""
         super().__init__(session_maker, Project)
 
-    async def get_by_name(self, name: str) -> Optional[Project]:
+    async def get_by_name(self, name: str) -> Project | None:
         """Get project by name.
 
         Args:
@@ -31,7 +31,7 @@ class ProjectRepository(Repository[Project]):
         query = self.select().where(Project.name == name)
         return await self.find_one(query)
 
-    async def get_by_permalink(self, permalink: str) -> Optional[Project]:
+    async def get_by_permalink(self, permalink: str) -> Project | None:
         """Get project by permalink.
 
         Args:
@@ -40,16 +40,18 @@ class ProjectRepository(Repository[Project]):
         query = self.select().where(Project.permalink == permalink)
         return await self.find_one(query)
 
-    async def get_by_path(self, path: Union[Path, str]) -> Optional[Project]:
+    async def get_by_path(self, path: Path | str) -> Project | None:
         """Get project by filesystem path.
 
         Args:
             path: Path to the project directory (will be converted to string internally)
         """
-        query = self.select().where(Project.path == str(path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+        normalized_path = normalize_file_path(str(path))
+        query = self.select().where(Project.path == normalized_path)
         return await self.find_one(query)
 
-    async def get_default_project(self) -> Optional[Project]:
+    async def get_default_project(self) -> Project | None:
         """Get the default project (the one marked as is_default=True)."""
         query = self.select().where(Project.is_default.is_not(None))
         return await self.find_one(query)
@@ -60,7 +62,7 @@ class ProjectRepository(Repository[Project]):
         result = await self.execute_query(query)
         return list(result.scalars().all())
 
-    async def set_as_default(self, project_id: int) -> Optional[Project]:
+    async def set_as_default(self, project_id: int) -> Project | None:
         """Set a project as the default and unset previous default.
 
         Args:

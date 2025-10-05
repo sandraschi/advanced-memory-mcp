@@ -1,12 +1,11 @@
 """Utility functions for basic-memory."""
 
-import os
-
 import logging
+import os
 import re
 import unicodedata
 from pathlib import Path
-from typing import Optional, Protocol, Union, runtime_checkable, List, Any
+from typing import Any, Protocol, runtime_checkable
 
 from loguru import logger
 
@@ -20,13 +19,13 @@ class PathLike(Protocol):
 
 # In type annotations, use Union[Path, str] instead of FilePath for now
 # This preserves compatibility with existing code while we migrate
-FilePath = Union[Path, str]
+FilePath = Path | str
 
 # Disable the "Queue is full" warning
 logging.getLogger("opentelemetry.sdk.metrics._internal.instrument").setLevel(logging.ERROR)
 
 
-def generate_permalink(file_path: Union[Path, str, Any]) -> str:
+def generate_permalink(file_path: Path | str | Any) -> str:
     """
     Generate a permalink from a file path.
 
@@ -90,15 +89,6 @@ def generate_permalink(file_path: Union[Path, str, Any]) -> str:
     # Handle special punctuation cases for apostrophes
     result = result.replace("'", "")
 
-    # Insert dash between camelCase
-    # This regex finds boundaries between lowercase and uppercase letters
-    result = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", result)
-
-    # Insert dash between Chinese and Latin character boundaries
-    # This is needed for cases like "中文English" -> "中文-english"
-    result = re.sub(r"([\u4e00-\u9fff])([a-zA-Z])", r"\1-\2", result)
-    result = re.sub(r"([a-zA-Z])([\u4e00-\u9fff])", r"\1-\2", result)
-
     # Convert ASCII letters to lowercase, preserve non-ASCII characters
     lower_text = "".join(c.lower() if c.isascii() and c.isalpha() else c for c in result)
 
@@ -108,7 +98,7 @@ def generate_permalink(file_path: Union[Path, str, Any]) -> str:
     # Replace spaces and unsafe ASCII characters with hyphens, but preserve non-ASCII characters
     # Include common Chinese character ranges and other non-ASCII characters
     clean_text = re.sub(
-        r"[^a-z0-9\u4e00-\u9fff\u3000-\u303f\u3400-\u4dbf/\-]", "-", text_with_hyphens
+        r"[^a-z0-9\u4e00-\u9fff/\-]", "-", text_with_hyphens
     )
 
     # Collapse multiple hyphens
@@ -117,6 +107,11 @@ def generate_permalink(file_path: Union[Path, str, Any]) -> str:
     # Remove hyphens between adjacent Chinese characters only
     # This handles cases like "你好-世界" -> "你好世界"
     clean_text = re.sub(r"([\u4e00-\u9fff])-([\u4e00-\u9fff])", r"\1\2", clean_text)
+
+    # NOW insert dash between Chinese and Latin character boundaries (after cleanup)
+    # This handles cases like "中文english" -> "中文-english" and "english中文" -> "english-中文"
+    clean_text = re.sub(r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
+    clean_text = re.sub(r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
 
     # Clean each path segment
     segments = clean_text.split("/")
@@ -128,7 +123,7 @@ def generate_permalink(file_path: Union[Path, str, Any]) -> str:
 def setup_logging(
     env: str,
     home_dir: Path,
-    log_file: Optional[str] = None,
+    log_file: str | None = None,
     log_level: str = "INFO",
     console: bool = True,
 ) -> None:  # pragma: no cover
@@ -181,7 +176,7 @@ def setup_logging(
         logging.getLogger(logger_name).setLevel(level)
 
 
-def parse_tags(tags: Union[List[str], str, None]) -> List[str]:
+def parse_tags(tags: list[str] | str | None) -> list[str]:
     """Parse tags from various input formats into a consistent list.
 
     Args:
@@ -220,23 +215,23 @@ def validate_project_path(path: str, project_path: Path) -> bool:
     # Allow empty strings as they resolve to the project root
     if not path:
         return True
-    
+
     # Check for obvious path traversal patterns first
     if ".." in path or "~" in path:
         return False
-    
+
     # Check for Windows-style path traversal (even on Unix systems)
     if "\\.." in path or path.startswith("\\"):
         return False
-    
+
     # Block absolute paths (Unix-style starting with / or Windows-style with drive letters)
     if path.startswith("/") or (len(path) >= 2 and path[1] == ":"):
         return False
-    
+
     # Block paths with control characters (but allow whitespace that will be stripped)
     if path.strip() and any(ord(c) < 32 and c not in [' ', '\t'] for c in path):
         return False
-    
+
     try:
         resolved = (project_path / path).resolve()
         return resolved.is_relative_to(project_path.resolve())

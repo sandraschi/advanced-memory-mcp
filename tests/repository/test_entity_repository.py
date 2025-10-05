@@ -1,13 +1,13 @@
 """Tests for the EntityRepository."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import select
 
-from basic_memory import db
-from advanced_memory.models import Entity, Observation, Relation, Project
+from advanced_memory import db
+from advanced_memory.models import Entity, Observation, Project, Relation
 from advanced_memory.repository.entity_repository import EntityRepository
 from advanced_memory.utils import generate_permalink
 
@@ -41,8 +41,8 @@ async def related_results(session_maker, test_project: Project):
             permalink="source/source",
             file_path="source/source.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         target = Entity(
             project_id=test_project.id,
@@ -51,8 +51,8 @@ async def related_results(session_maker, test_project: Project):
             permalink="target/target",
             file_path="target/target.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(source)
         session.add(target)
@@ -79,8 +79,8 @@ async def test_create_entity(entity_repository: EntityRepository):
         "permalink": "test/test",
         "file_path": "test/test.md",
         "content_type": "text/markdown",
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
+        "updated_at": datetime.now(UTC),
     }
     entity = await entity_repository.create(entity_data)
 
@@ -113,8 +113,8 @@ async def test_create_all(entity_repository: EntityRepository):
             "permalink": "test/test-1",
             "file_path": "test/test_1.md",
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         },
         {
             "project_id": entity_repository.project_id,
@@ -123,8 +123,8 @@ async def test_create_all(entity_repository: EntityRepository):
             "permalink": "test/test-2",
             "file_path": "test/test_2.md",
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         },
     ]
     entities = await entity_repository.create_all(entity_data)
@@ -263,8 +263,8 @@ async def test_entities(session_maker, test_project: Project):
                 permalink="type1/entity1",
                 file_path="type1/entity1.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             Entity(
                 project_id=test_project.id,
@@ -273,8 +273,8 @@ async def test_entities(session_maker, test_project: Project):
                 permalink="type1/entity2",
                 file_path="type1/entity2.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             Entity(
                 project_id=test_project.id,
@@ -283,8 +283,8 @@ async def test_entities(session_maker, test_project: Project):
                 permalink="type2/entity3",
                 file_path="type2/entity3.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
         ]
         session.add_all(entities)
@@ -358,8 +358,8 @@ async def test_get_by_title(entity_repository: EntityRepository, session_maker):
                 permalink="test/unique-title",
                 file_path="test/unique-title.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             Entity(
                 project_id=entity_repository.project_id,
@@ -368,8 +368,8 @@ async def test_get_by_title(entity_repository: EntityRepository, session_maker):
                 permalink="test/another-title",
                 file_path="test/another-title.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             Entity(
                 project_id=entity_repository.project_id,
@@ -378,8 +378,8 @@ async def test_get_by_title(entity_repository: EntityRepository, session_maker):
                 permalink="test/another-title-1",
                 file_path="test/another-title-1.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
         ]
         session.add_all(entities)
@@ -417,8 +417,8 @@ async def test_get_by_file_path(entity_repository: EntityRepository, session_mak
                 permalink="test/unique-title",
                 file_path="test/unique-title.md",
                 content_type="text/markdown",
-                created_at=datetime.now(timezone.utc),
-                updated_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
         ]
         session.add_all(entities)

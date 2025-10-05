@@ -1,12 +1,11 @@
-from pathlib import Path
-from typing import Optional
 from collections import OrderedDict
+from pathlib import Path
 
 import frontmatter
+from advanced_memory import file_utils
 from frontmatter import Post
 from loguru import logger
 
-from basic_memory import file_utils
 from advanced_memory.markdown.entity_parser import EntityParser
 from advanced_memory.markdown.schemas import EntityMarkdown, Observation, Relation
 
@@ -51,7 +50,7 @@ class MarkdownProcessor:
         self,
         path: Path,
         markdown: EntityMarkdown,
-        expected_checksum: Optional[str] = None,
+        expected_checksum: str | None = None,
     ) -> str:
         """Write EntityMarkdown schema back to file.
 

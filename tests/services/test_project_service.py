@@ -4,14 +4,14 @@ import os
 
 import pytest
 
+from advanced_memory.config import ConfigManager
 from advanced_memory.schemas import (
+    ActivityMetrics,
     ProjectInfoResponse,
     ProjectStatistics,
-    ActivityMetrics,
     SystemStatus,
 )
 from advanced_memory.services.project_service import ProjectService
-from advanced_memory.config import ConfigManager
 
 
 def test_projects_property(project_service: ProjectService):
@@ -420,7 +420,7 @@ async def test_ensure_single_default_project_enforcement_logic(project_service: 
     """Test that _ensure_single_default_project logic works correctly."""
     # Test that the method exists and is callable
     assert hasattr(project_service, "_ensure_single_default_project")
-    assert callable(getattr(project_service, "_ensure_single_default_project"))
+    assert callable(project_service._ensure_single_default_project)
 
     # Call the enforcement method - should work without error
     await project_service._ensure_single_default_project()

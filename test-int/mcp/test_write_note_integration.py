@@ -136,11 +136,11 @@ async def test_write_note_custom_permalink(mcp_server, app):
             ---
             permalink: custom/my-special-permalink
             ---
-            
+
             # Custom Permalink Note
-            
+
             This note has a custom permalink in frontmatter.
-            
+
             - [note] Testing custom permalink preservation
         """).strip()
 
@@ -197,21 +197,21 @@ async def test_write_note_complex_content_with_observations_relations(mcp_server
     async with Client(mcp_server) as client:
         complex_content = dedent("""
             # Complex Note
-            
+
             This note demonstrates the full knowledge format.
-            
+
             ## Observations
             - [tech] Uses Python and FastAPI
             - [design] Follows MCP protocol specification
             - [note] Integration tests are comprehensive
-            
+
             ## Relations
             - implements [[MCP Protocol]]
             - depends_on [[FastAPI Framework]]
             - tested_by [[Integration Tests]]
-            
+
             ## Additional Content
-            
+
             Some more regular markdown content here.
         """).strip()
 
@@ -259,9 +259,9 @@ async def test_write_note_preserve_frontmatter(mcp_server, app):
             author: Test Author
             status: draft
             ---
-            
+
             # Frontmatter Note
-            
+
             This note has custom frontmatter that should be preserved.
         """).strip()
 

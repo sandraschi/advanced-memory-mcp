@@ -6,8 +6,8 @@ from textwrap import dedent
 
 import pytest
 
-from advanced_memory.markdown.schemas import EntityMarkdown, EntityFrontmatter, Relation
 from advanced_memory.markdown.entity_parser import parse
+from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown, Relation
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def valid_entity_content():
         ---
 
         Core authentication service that handles user authentication.
-        
+
         some [[Random Link]]
         another [[Random Link with Title|Titled Link]]
 
@@ -227,7 +227,7 @@ async def test_parse_file_with_absolute_path(project_config, entity_parser):
         ---
 
         # Absolute Path Test
-        
+
         A file with an absolute path.
         """)
 

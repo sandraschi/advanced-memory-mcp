@@ -2,7 +2,7 @@
 
 from markdown_it import MarkdownIt
 
-from advanced_memory.markdown.plugins import relation_plugin, parse_relation, parse_inline_relations
+from advanced_memory.markdown.plugins import parse_inline_relations, parse_relation, relation_plugin
 from advanced_memory.markdown.schemas import Relation
 
 

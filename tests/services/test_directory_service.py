@@ -47,15 +47,15 @@ async def test_directory_tree(directory_service: DirectoryService, test_graph):
 
     # assert one file node
     node_file = node_0.children[0]
-    assert node_file.name == "Deeper Entity.md"
+    assert node_file.name == "Deeper_Entity.md"
     assert node_file.type == "file"
     assert node_file.content_type == "text/markdown"
     assert node_file.entity_id == 1
     assert node_file.entity_type == "deeper"
     assert node_file.title == "Deeper Entity"
     assert node_file.permalink == "test/deeper-entity"
-    assert node_file.directory_path == "/test/Deeper Entity.md"
-    assert node_file.file_path == "test/Deeper Entity.md"
+    assert node_file.directory_path == "/test/Deeper_Entity.md"
+    assert node_file.file_path == "test/Deeper_Entity.md"
     assert node_file.has_children is False
     assert len(node_file.children) == 0
 
@@ -88,10 +88,10 @@ async def test_list_directory_specific_path(directory_service: DirectoryService,
     assert len(result) == 5
     file_names = {node.name for node in result}
     expected_files = {
-        "Connected Entity 1.md",
-        "Connected Entity 2.md",
-        "Deep Entity.md",
-        "Deeper Entity.md",
+        "Connected_Entity_1.md",
+        "Connected_Entity_2.md",
+        "Deep_Entity.md",
+        "Deeper_Entity.md",
         "Root.md",
     }
     assert file_names == expected_files
@@ -116,7 +116,7 @@ async def test_list_directory_with_glob_filter(directory_service: DirectoryServi
 
     assert len(result) == 2
     file_names = {node.name for node in result}
-    assert file_names == {"Connected Entity 1.md", "Connected Entity 2.md"}
+    assert file_names == {"Connected_Entity_1.md", "Connected_Entity_2.md"}
 
 
 @pytest.mark.asyncio

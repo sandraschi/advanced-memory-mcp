@@ -1,7 +1,6 @@
-from advanced_memory.mcp.prompts.ai_assistant_guide import ai_assistant_guide
-
-
 import pytest
+
+from advanced_memory.mcp.prompts.ai_assistant_guide import ai_assistant_guide
 
 
 @pytest.mark.asyncio

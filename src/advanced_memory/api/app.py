@@ -3,12 +3,12 @@
 import asyncio
 from contextlib import asynccontextmanager
 
+from advanced_memory import __version__ as version
+from advanced_memory import db
 from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 from loguru import logger
 
-from basic_memory import __version__ as version
-from basic_memory import db
 from advanced_memory.api.routers import (
     directory_router,
     importer_router,
@@ -16,9 +16,9 @@ from advanced_memory.api.routers import (
     management,
     memory,
     project,
+    prompt_router,
     resource,
     search,
-    prompt_router,
 )
 from advanced_memory.config import ConfigManager
 from advanced_memory.services.initialization import initialize_app, initialize_file_sync

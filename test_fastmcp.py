@@ -19,9 +19,9 @@ if tools:
     desc = tool.description or ''
     print(f'Tool name: {tool.name}')
     print(f'Description length: {len(desc)}')
-    print(f'Description contains newlines: {"\\n" in desc}')
+    print(f'Description contains newlines: {chr(10) in desc}')
     print(f'Description preview: {desc[:100]}...')
-    print(f'Full description:')
+    print('Full description:')
     print(repr(desc))
 else:
     print('No tools registered')

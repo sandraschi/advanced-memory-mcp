@@ -1,10 +1,10 @@
 """Common test fixtures."""
 
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from textwrap import dedent
-from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 import advanced_memory.mcp.project_session
 from advanced_memory import db
-from advanced_memory.config import ProjectConfig, AdvancedMemoryConfig, ConfigManager
+from advanced_memory.config import AdvancedMemoryConfig, ConfigManager, ProjectConfig
 from advanced_memory.db import DatabaseType
 from advanced_memory.markdown import EntityParser
 from advanced_memory.markdown.markdown_processor import MarkdownProcessor
@@ -51,6 +51,8 @@ def project_root() -> Path:
 def config_home(tmp_path, monkeypatch) -> Path:
     # Patch HOME environment variable for the duration of the test
     monkeypatch.setenv("HOME", str(tmp_path))
+    # On Windows, also patch USERPROFILE since Path.home() uses it
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
     # Set ADVANCED_MEMORY_HOME to the test directory
     monkeypatch.setenv("ADVANCED_MEMORY_HOME", str(tmp_path / "advanced-memory"))
     return tmp_path
@@ -307,8 +309,8 @@ async def sample_entity(entity_repository: EntityRepository) -> Entity:
         "permalink": "test/test-entity",
         "file_path": "test/test_entity.md",
         "content_type": "text/markdown",
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
+        "updated_at": datetime.now(UTC),
     }
     return await entity_repository.create(entity_data)
 

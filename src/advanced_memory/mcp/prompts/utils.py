@@ -6,28 +6,27 @@ user-friendly markdown summaries.
 
 from dataclasses import dataclass
 from textwrap import dedent
-from typing import List
 
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import (
-    normalize_memory_url,
     EntitySummary,
-    RelationSummary,
     ObservationSummary,
+    RelationSummary,
+    normalize_memory_url,
 )
 
 
 @dataclass
 class PromptContextItem:
-    primary_results: List[EntitySummary]
-    related_results: List[EntitySummary | RelationSummary | ObservationSummary]
+    primary_results: list[EntitySummary]
+    related_results: list[EntitySummary | RelationSummary | ObservationSummary]
 
 
 @dataclass
 class PromptContext:
     timeframe: TimeFrame
     topic: str
-    results: List[PromptContextItem]
+    results: list[PromptContextItem]
 
 
 def format_prompt_context(context: PromptContext) -> str:
@@ -39,38 +38,38 @@ def format_prompt_context(context: PromptContext) -> str:
         return dedent(f"""
             # Continuing conversation on: {context.topic}
 
-            This is a memory retrieval session. 
+            This is a memory retrieval session.
             The supplied query did not return any information specifically on this topic.
-            
+
             ## Opportunity to Capture New Knowledge!
-            
+
             This is an excellent chance to start documenting this topic:
-            
+
             ```python
             await write_note(
                 title="{context.topic}",
                 content=f'''
                 # {context.topic}
-                
+
                 ## Overview
                 [Summary of what we know about {context.topic}]
-                
+
                 ## Key Points
                 [Main aspects or components of {context.topic}]
-                
+
                 ## Observations
                 - [category] [First important observation about {context.topic}]
                 - [category] [Second observation about {context.topic}]
-                
+
                 ## Relations
                 - relates_to [[Related Topic]]
                 - part_of [[Broader Context]]
                 '''
             )
             ```
-            
+
             ## Other Options
-            
+
             Please use the available basic-memory tools to gather relevant context before responding.
             You can also:
             - Try a different search term
@@ -81,13 +80,13 @@ def format_prompt_context(context: PromptContext) -> str:
     summary = dedent(f"""
         # Continuing conversation on: {context.topic}
 
-        This is a memory retrieval session. 
-        
-        Please use the available basic-memory tools to gather relevant context before responding. 
+        This is a memory retrieval session.
+
+        Please use the available basic-memory tools to gather relevant context before responding.
         Start by executing one of the suggested commands below to retrieve content.
 
         Here's what I found from previous conversations:
-        
+
         > **Knowledge Capture Recommendation:** As you continue this conversation, actively look for opportunities to record new information, decisions, or insights that emerge. Use `write_note()` to document important context.
         """)
 
@@ -96,8 +95,8 @@ def format_prompt_context(context: PromptContext) -> str:
     sections = []
 
     # Process each context
-    for context in context.results:  # pyright: ignore
-        for primary in context.primary_results:  # pyright: ignore
+    for context_item in context.results:  # pyright: ignore
+        for primary in context_item.primary_results:  # pyright: ignore
             if primary.permalink not in added_permalinks:
                 primary_permalink = primary.permalink
 
@@ -106,7 +105,7 @@ def format_prompt_context(context: PromptContext) -> str:
                 memory_url = normalize_memory_url(primary_permalink)
                 section = dedent(f"""
                     --- {memory_url}
-                
+
                     ## {primary.title}
                     - **Type**: {primary.type}
                     """)
@@ -120,15 +119,22 @@ def format_prompt_context(context: PromptContext) -> str:
                     if content:
                         section += f"\n**Excerpt**:\n{content}\n"
 
-                section += dedent(f"""
-    
-                    You can read this document with: `read_note("{primary_permalink}")`
-                    """)
+                # Use file_path if permalink is None
+                if primary_permalink:
+                    section += dedent(f"""
+
+                        You can read this document with: `read_note("{primary_permalink}")`
+                        """)
+                else:
+                    section += dedent(f"""
+
+                        You can read this file with: `read_file("{primary.file_path}")`
+                        """)
                 sections.append(section)
 
-        if context.related_results:  # pyright: ignore
+        if hasattr(context, 'related_results') and context.related_results:  # pyright: ignore
             section += dedent(  # pyright: ignore
-                """   
+                """
                 ## Related Context
                 """
             )

@@ -1,43 +1,40 @@
 """Knowledge Operations - Swiss Army Knife tool for bulk operations and content management."""
 
-import json
-import re
-from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Union
-from collections import defaultdict, Counter
+from collections import Counter
+from typing import Any
 
 from loguru import logger
 
 from advanced_memory.config import ConfigManager
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery, SearchResponse
 
 
 @mcp.tool(
-    description="""🛠️ Knowledge Operations - Swiss Army Knife for Bulk Operations
+    description="""[UNICODE][UNICODE][UNICODE] Knowledge Operations - Swiss Army Knife for Bulk Operations
 
 Comprehensive tool for bulk content management, tag operations, and knowledge base maintenance.
 Handles multiple operations in one tool to reduce complexity and improve efficiency.
 
 OPERATIONS:
-• bulk_update: Batch update multiple notes (tags, content, metadata)
-• bulk_move: Move multiple notes between folders
-• bulk_delete: Delete multiple notes with confirmation
-• tag_analytics: Analyze tag usage and statistics
-• consolidate_tags: Merge similar tags (including semantic similarity)
-• tag_maintenance: Clean up tags (remove duplicates, standardize case)
-• validate_content: Check note quality and fix issues
-• project_stats: Analyze project content and activity
-• find_duplicates: Identify duplicate or similar content
+[UNICODE] bulk_update: Batch update multiple notes (tags, content, metadata)
+[UNICODE] bulk_move: Move multiple notes between folders
+[UNICODE] bulk_delete: Delete multiple notes with confirmation
+[UNICODE] tag_analytics: Analyze tag usage and statistics
+[UNICODE] consolidate_tags: Merge similar tags (including semantic similarity)
+[UNICODE] tag_maintenance: Clean up tags (remove duplicates, standardize case)
+[UNICODE] validate_content: Check note quality and fix issues
+[UNICODE] project_stats: Analyze project content and activity
+[UNICODE] find_duplicates: Identify duplicate or similar content
 
 FILTERING:
-• folder: Limit to specific folder
-• tags: Filter by existing tags
-• created_after/before: Date range filtering
-• content_match: Text search in content
-• limit: Maximum items to process
+[UNICODE] folder: Limit to specific folder
+[UNICODE] tags: Filter by existing tags
+[UNICODE] created_after/before: Date range filtering
+[UNICODE] content_match: Text search in content
+[UNICODE] limit: Maximum items to process
 
 EXAMPLES:
 # Bulk tag management
@@ -54,11 +51,11 @@ knowledge_operations("project_stats", project="work")
 )
 async def knowledge_operations(
     operation: str,
-    filters: Optional[Dict[str, Any]] = None,
-    action: Optional[Dict[str, Any]] = None,
+    filters: dict[str, Any] | None = None,
+    action: dict[str, Any] | None = None,
     dry_run: bool = True,
     limit: int = 100,
-    project: Optional[str] = None
+    project: str | None = None
 ) -> str:
     """
     Comprehensive knowledge operations tool.
@@ -75,7 +72,7 @@ async def knowledge_operations(
         Operation results and statistics
     """
     try:
-        config_manager = ConfigManager()
+        ConfigManager()
 
         # Route to appropriate handler
         if operation == "tag_analytics":
@@ -97,14 +94,14 @@ async def knowledge_operations(
         elif operation == "bulk_delete":
             return await _handle_bulk_delete(filters or {}, dry_run, limit, project)
         else:
-            return f"❌ Unknown operation: {operation}\n\nAvailable operations: tag_analytics, consolidate_tags, tag_maintenance, bulk_update, validate_content, project_stats, find_duplicates, bulk_move, bulk_delete"
+            return f"[UNICODE] Unknown operation: {operation}\n\nAvailable operations: tag_analytics, consolidate_tags, tag_maintenance, bulk_update, validate_content, project_stats, find_duplicates, bulk_move, bulk_delete"
 
     except Exception as e:
         logger.error(f"Error in knowledge_operations: {e}")
-        return f"❌ Operation failed: {str(e)}"
+        return f"[UNICODE] Operation failed: {str(e)}"
 
 
-async def _handle_tag_analytics(action: Dict[str, Any], project: Optional[str]) -> str:
+async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> str:
     """Analyze tag usage and provide statistics."""
     try:
         # Get all entities from search API
@@ -118,7 +115,7 @@ async def _handle_tag_analytics(action: Dict[str, Any], project: Optional[str]) 
         response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
 
         if not response or not hasattr(response, 'results'):
-            return "❌ No results found for tag analysis"
+            return "[UNICODE] No results found for tag analysis"
 
         # Extract tags from all entities
         tag_counter = Counter()
@@ -149,7 +146,7 @@ async def _handle_tag_analytics(action: Dict[str, Any], project: Optional[str]) 
             "frequent": len([tag for tag, count in tag_counter.items() if count > 20])
         }
 
-        return f"""📊 **Tag Analytics Report**
+        return f"""[CHART] **Tag Analytics Report**
 
 **Overall Statistics:**
 - Total entities: {total_entities}
@@ -173,49 +170,50 @@ async def _handle_tag_analytics(action: Dict[str, Any], project: Optional[str]) 
 
     except Exception as e:
         logger.error(f"Error in tag analytics: {e}")
-        return f"❌ Tag analytics failed: {str(e)}"
+        return f"[UNICODE] Tag analytics failed: {str(e)}"
 
 
-def _generate_tag_recommendations(tag_counter: Counter, distribution: Dict[str, int]) -> List[str]:
+def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, int]) -> list[str]:
     """Generate recommendations based on tag analysis."""
     recommendations = []
 
     if distribution['single_use'] > 20:
-        recommendations.append(f"• Consider consolidating {distribution['single_use']} single-use tags")
+        recommendations.append(f"[UNICODE] Consider consolidating {distribution['single_use']} single-use tags")
     if distribution['rare'] < 5:
-        recommendations.append("• Good tag diversity - most tags are being reused")
+        recommendations.append("[UNICODE] Good tag diversity - most tags are being reused")
     if len(tag_counter) > 100:
-        recommendations.append("• Large tag vocabulary - consider tag consolidation")
+        recommendations.append("[UNICODE] Large tag vocabulary - consider tag consolidation")
 
-    return recommendations or ["• Tag usage looks healthy"]
+    return recommendations or ["[UNICODE] Tag usage looks healthy"]
 
 
-async def _handle_tag_consolidation(action: Dict[str, Any], dry_run: bool, project: Optional[str]) -> str:
+async def _handle_tag_consolidation(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
     """Consolidate similar tags, including semantic similarity."""
     semantic_groups = action.get('semantic_groups', [])
     auto_detect = action.get('auto_detect', False)
 
     if not semantic_groups and not auto_detect:
-        return "❌ Must provide either semantic_groups or enable auto_detect"
+        return "[UNICODE] Must provide either semantic_groups or enable auto_detect"
 
     results = []
 
     if semantic_groups:
-        results.append(f"📝 **Manual Tag Consolidation**")
+        results.append("[NOTE] **Manual Tag Consolidation**")
         for group in semantic_groups:
             if len(group) < 2:
                 continue
             primary_tag = group[0]
             aliases = group[1:]
-            results.append(f"  • '{primary_tag}' ← {', '.join(f'\"{tag}\"' for tag in aliases)}")
+            alias_list = ', '.join(f'"{tag}"' for tag in aliases)
+            results.append(f"  [UNICODE] '{primary_tag}' [UNICODE] {alias_list}")
 
     if auto_detect:
-        results.append(f"🤖 **AI-Powered Tag Similarity Detection**")
-        results.append("  • Feature not yet implemented - would analyze tag similarity using embeddings")
+        results.append("[UNICODE][UNICODE] **AI-Powered Tag Similarity Detection**")
+        results.append("  [UNICODE] Feature not yet implemented - would analyze tag similarity using embeddings")
 
     action_summary = "DRY RUN - No changes made" if dry_run else "CHANGES APPLIED"
 
-    return f"""🏷️ **Tag Consolidation Results**
+    return f"""[UNICODE][UNICODE][UNICODE] **Tag Consolidation Results**
 
 {chr(10).join(results)}
 
@@ -230,7 +228,7 @@ async def _handle_tag_consolidation(action: Dict[str, Any], dry_run: bool, proje
 """
 
 
-async def _handle_tag_maintenance(action: Dict[str, Any], dry_run: bool, project: Optional[str]) -> str:
+async def _handle_tag_maintenance(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
     """Clean up tags - remove duplicates, standardize case, etc."""
     actions = action.get('actions', ['remove_empty', 'standardize_case', 'remove_duplicates'])
 
@@ -240,17 +238,17 @@ async def _handle_tag_maintenance(action: Dict[str, Any], dry_run: bool, project
     # Simulate maintenance operations
     for maintenance_action in actions:
         if maintenance_action == 'remove_empty':
-            results.append("  • Removed 0 empty tags")
+            results.append("  [UNICODE] Removed 0 empty tags")
         elif maintenance_action == 'standardize_case':
-            results.append("  • Standardized 0 tag cases")
+            results.append("  [UNICODE] Standardized 0 tag cases")
         elif maintenance_action == 'remove_duplicates':
-            results.append("  • Removed 0 duplicate tags")
+            results.append("  [UNICODE] Removed 0 duplicate tags")
         elif maintenance_action == 'remove_special_chars':
-            results.append("  • Cleaned 0 tags with special characters")
+            results.append("  [UNICODE] Cleaned 0 tags with special characters")
 
     status = "DRY RUN - No changes made" if dry_run else f"APPLIED {total_changes} changes"
 
-    return f"""🧹 **Tag Maintenance Results**
+    return f"""[UNICODE][UNICODE] **Tag Maintenance Results**
 
 **Actions Performed:**
 {chr(10).join(results)}
@@ -258,25 +256,25 @@ async def _handle_tag_maintenance(action: Dict[str, Any], dry_run: bool, project
 **Status:** {status}
 
 **Available Maintenance Actions:**
-• remove_empty: Remove empty/null tags
-• standardize_case: Convert to lowercase
-• remove_duplicates: Remove duplicate tags on same entity
-• remove_special_chars: Clean invalid characters
+[UNICODE] remove_empty: Remove empty/null tags
+[UNICODE] standardize_case: Convert to lowercase
+[UNICODE] remove_duplicates: Remove duplicate tags on same entity
+[UNICODE] remove_special_chars: Clean invalid characters
 
 **Example:** knowledge_operations("tag_maintenance", action={"actions": ["standardize_case", "remove_duplicates"]})
 """
 
 
-async def _handle_bulk_update(filters: Dict[str, Any], action: Dict[str, Any], dry_run: bool, limit: int, project: Optional[str]) -> str:
+async def _handle_bulk_update(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
     """Bulk update multiple notes based on filters."""
     if not action:
-        return "❌ Must specify action to perform (add_tags, remove_tags, etc.)"
+        return "[UNICODE] Must specify action to perform (add_tags, remove_tags, etc.)"
 
     # Get notes matching filters
     matching_notes = await _find_notes_with_filters(filters, limit, project)
 
     if not matching_notes:
-        return f"❌ No notes found matching filters: {filters}"
+        return f"[UNICODE] No notes found matching filters: {filters}"
 
     operations = []
     total_changes = 0
@@ -300,14 +298,14 @@ async def _handle_bulk_update(filters: Dict[str, Any], action: Dict[str, Any], d
         if 'replace_text' in action and 'find_text' in action:
             find_text = action['find_text']
             replace_text = action['replace_text']
-            note_changes.append(f"Replace '{find_text}' → '{replace_text}'")
+            note_changes.append(f"Replace '{find_text}' [UNICODE] '{replace_text}'")
             total_changes += 1
 
-        operations.append(f"  • {note.get('title', 'Unknown')}: {', '.join(note_changes)}")
+        operations.append(f"  [UNICODE] {note.get('title', 'Unknown')}: {', '.join(note_changes)}")
 
     status = "DRY RUN - No changes applied" if dry_run else f"APPLIED {total_changes} changes to {len(matching_notes)} notes"
 
-    return f"""🔄 **Bulk Update Results**
+    return f"""[UNICODE][UNICODE] **Bulk Update Results**
 
 **Filters Applied:** {filters}
 **Action:** {action}
@@ -323,7 +321,7 @@ async def _handle_bulk_update(filters: Dict[str, Any], action: Dict[str, Any], d
 """
 
 
-async def _handle_content_validation(filters: Dict[str, Any], action: Dict[str, Any], dry_run: bool, limit: int, project: Optional[str]) -> str:
+async def _handle_content_validation(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
     """Validate content quality and identify issues."""
     checks = action.get('checks', ['broken_links', 'formatting', 'missing_tags'])
 
@@ -340,11 +338,11 @@ async def _handle_content_validation(filters: Dict[str, Any], action: Dict[str, 
     }
 
     # Simulate validation (in real implementation, would analyze actual content)
-    for note in notes_to_check:
+    for _note in notes_to_check:
         # Placeholder validation logic
         validation_results['issues_found'] += 1  # Simulate finding issues
 
-    return f"""✅ **Content Validation Results**
+    return f"""[UNICODE] **Content Validation Results**
 
 **Validation Scope:**
 - Notes checked: {validation_results['total_notes']}
@@ -364,7 +362,7 @@ async def _handle_content_validation(filters: Dict[str, Any], action: Dict[str, 
 """
 
 
-async def _handle_project_stats(action: Dict[str, Any], project: Optional[str]) -> str:
+async def _handle_project_stats(action: dict[str, Any], project: str | None) -> str:
     """Generate comprehensive project statistics."""
     target_project = project or (await get_active_project())
 
@@ -379,7 +377,7 @@ async def _handle_project_stats(action: Dict[str, Any], project: Optional[str]) 
     response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
 
     if not response or not hasattr(response, 'results'):
-        return "❌ Could not retrieve project statistics"
+        return "[UNICODE] Could not retrieve project statistics"
 
     # Analyze results
     total_notes = len(response.results)
@@ -400,7 +398,7 @@ async def _handle_project_stats(action: Dict[str, Any], project: Optional[str]) 
     top_tags = tag_counter.most_common(10)
     top_folders = folder_counter.most_common(10)
 
-    return f"""📈 **Project Statistics: {target_project}**
+    return f"""[GRAPH] **Project Statistics: {target_project}**
 
 **Content Overview:**
 - Total notes: {total_notes}
@@ -408,10 +406,10 @@ async def _handle_project_stats(action: Dict[str, Any], project: Optional[str]) 
 - Active folders: {len(folder_counter)}
 
 **Most Used Tags:**
-{chr(10).join(f"  • {tag}: {count} notes" for tag, count in top_tags)}
+{chr(10).join(f"  [UNICODE] {tag}: {count} notes" for tag, count in top_tags)}
 
 **Content Distribution:**
-{chr(10).join(f"  • {folder}: {count} notes" for folder, count in top_folders)}
+{chr(10).join(f"  [UNICODE] {folder}: {count} notes" for folder, count in top_folders)}
 
 **Tag Usage Insights:**
 - Average tags per note: {sum(tag_counter.values()) / total_notes:.1f}
@@ -423,21 +421,21 @@ async def _handle_project_stats(action: Dict[str, Any], project: Optional[str]) 
 """
 
 
-def _generate_project_recommendations(tag_counter: Counter, folder_counter: Counter, total_notes: int) -> List[str]:
+def _generate_project_recommendations(tag_counter: Counter, folder_counter: Counter, total_notes: int) -> list[str]:
     """Generate project recommendations based on statistics."""
     recommendations = []
 
     if len(tag_counter) < total_notes * 0.1:
-        recommendations.append("• Consider adding more tags for better organization")
+        recommendations.append("[UNICODE] Consider adding more tags for better organization")
     if len(folder_counter) > 20:
-        recommendations.append("• Large number of folders - consider consolidating")
+        recommendations.append("[UNICODE] Large number of folders - consider consolidating")
     if len([t for t, c in tag_counter.items() if c == 1]) > len(tag_counter) * 0.5:
-        recommendations.append("• Many single-use tags - consider consolidation")
+        recommendations.append("[UNICODE] Many single-use tags - consider consolidation")
 
-    return recommendations or ["• Project structure looks good"]
+    return recommendations or ["[UNICODE] Project structure looks good"]
 
 
-async def _handle_find_duplicates(filters: Dict[str, Any], limit: int, project: Optional[str]) -> str:
+async def _handle_find_duplicates(filters: dict[str, Any], limit: int, project: str | None) -> str:
     """Find duplicate or similar content."""
     # Get notes to analyze
     notes = await _find_notes_with_filters(filters, limit * 2, project)
@@ -451,52 +449,52 @@ async def _handle_find_duplicates(filters: Dict[str, Any], limit: int, project: 
         duplicates_found.append("Found 2 notes with similar titles")
         similarity_groups.append(["Meeting Notes 2024-01", "Meeting Notes January"])
 
-    return f"""🔍 **Duplicate Content Analysis**
+    return f"""[SEARCH] **Duplicate Content Analysis**
 
 **Analysis Scope:**
 - Notes analyzed: {len(notes)}
 - Filters applied: {filters}
 
 **Duplicates Found:**
-{chr(10).join(f"  • {dup}" for dup in duplicates_found) if duplicates_found else "  • No exact duplicates found"}
+{chr(10).join(f"  [UNICODE] {dup}" for dup in duplicates_found) if duplicates_found else "  [UNICODE] No exact duplicates found"}
 
 **Similar Content Groups:**
-{chr(10).join(f"  • Group: {', '.join(group)}" for group in similarity_groups) if similarity_groups else "  • No similar content groups identified"}
+{chr(10).join(f"  [UNICODE] Group: {', '.join(group)}" for group in similarity_groups) if similarity_groups else "  [UNICODE] No similar content groups identified"}
 
 **Similarity Methods Available:**
-• Exact title matches
-• Content hashing (identical content)
-• Text similarity (cosine similarity)
-• Semantic similarity (embedding-based)
+[UNICODE] Exact title matches
+[UNICODE] Content hashing (identical content)
+[UNICODE] Text similarity (cosine similarity)
+[UNICODE] Semantic similarity (embedding-based)
 
 **Next Steps:**
-• Review identified duplicates
-• Use bulk operations to merge or remove duplicates
-• Consider setting up automatic duplicate prevention
+[UNICODE] Review identified duplicates
+[UNICODE] Use bulk operations to merge or remove duplicates
+[UNICODE] Consider setting up automatic duplicate prevention
 """
 
 
-async def _handle_bulk_move(filters: Dict[str, Any], action: Dict[str, Any], dry_run: bool, limit: int, project: Optional[str]) -> str:
+async def _handle_bulk_move(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
     """Move multiple notes to a new folder."""
     destination = action.get('destination_folder')
     if not destination:
-        return "❌ Must specify destination_folder in action"
+        return "[UNICODE] Must specify destination_folder in action"
 
     # Get notes to move
     notes_to_move = await _find_notes_with_filters(filters, limit, project)
 
     if not notes_to_move:
-        return f"❌ No notes found matching filters: {filters}"
+        return f"[UNICODE] No notes found matching filters: {filters}"
 
     operations = []
     for note in notes_to_move:
         old_path = note.get('file_path', '')
         new_path = f"{destination}/{old_path.split('/')[-1]}"
-        operations.append(f"  • {old_path} → {new_path}")
+        operations.append(f"  [UNICODE] {old_path} [UNICODE] {new_path}")
 
     status = f"DRY RUN - Would move {len(notes_to_move)} notes" if dry_run else f"MOVED {len(notes_to_move)} notes"
 
-    return f"""📁 **Bulk Move Results**
+    return f"""[FOLDER] **Bulk Move Results**
 
 **Filters:** {filters}
 **Destination:** {destination}
@@ -512,23 +510,23 @@ async def _handle_bulk_move(filters: Dict[str, Any], action: Dict[str, Any], dry
 """
 
 
-async def _handle_bulk_delete(filters: Dict[str, Any], dry_run: bool, limit: int, project: Optional[str]) -> str:
+async def _handle_bulk_delete(filters: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
     """Delete multiple notes with confirmation."""
     # Get notes to delete
     notes_to_delete = await _find_notes_with_filters(filters, limit, project)
 
     if not notes_to_delete:
-        return f"❌ No notes found matching filters: {filters}"
+        return f"[UNICODE] No notes found matching filters: {filters}"
 
     if len(notes_to_delete) > 10 and dry_run:
-        return f"""⚠️ **Bulk Delete Warning**
+        return f"""[UNICODE][UNICODE] **Bulk Delete Warning**
 
 Found {len(notes_to_delete)} notes matching filters: {filters}
 
 **This is a DESTRUCTIVE operation!**
 
 **Notes that would be deleted:**
-{chr(10).join(f"  • {note.get('title', 'Unknown')} ({note.get('file_path', '')})" for note in notes_to_delete[:5])}
+{chr(10).join(f"  [UNICODE] {note.get('title', 'Unknown')} ({note.get('file_path', '')})" for note in notes_to_delete[:5])}
 {f"  ... and {len(notes_to_delete)-5} more" if len(notes_to_delete) > 5 else ""}
 
 **To proceed:** Add `confirm_deletion=True` to action parameters
@@ -537,7 +535,7 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 
     status = f"DRY RUN - Would delete {len(notes_to_delete)} notes" if dry_run else f"DELETED {len(notes_to_delete)} notes"
 
-    return f"""🗑️ **Bulk Delete Results**
+    return f"""[UNICODE][UNICODE][UNICODE] **Bulk Delete Results**
 
 **Filters:** {filters}
 **Notes Found:** {len(notes_to_delete)}
@@ -548,7 +546,7 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 """
 
 
-async def _find_notes_with_filters(filters: Dict[str, Any], limit: int, project: Optional[str]) -> List[Dict[str, Any]]:
+async def _find_notes_with_filters(filters: dict[str, Any], limit: int, project: str | None) -> list[dict[str, Any]]:
     """Find notes matching the given filters."""
     try:
         # Build search query from filters
@@ -587,7 +585,7 @@ async def _find_notes_with_filters(filters: Dict[str, Any], limit: int, project:
         return []
 
 
-def _matches_filters(result, filters: Dict[str, Any]) -> bool:
+def _matches_filters(result, filters: dict[str, Any]) -> bool:
     """Check if a result matches the given filters."""
     # Folder filter
     if 'folder' in filters:

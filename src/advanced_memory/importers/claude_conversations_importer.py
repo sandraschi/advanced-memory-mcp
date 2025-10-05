@@ -3,17 +3,17 @@
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
-from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
 from advanced_memory.importers.base import Importer
-from advanced_memory.schemas.importer import ChatImportResult
 from advanced_memory.importers.utils import clean_filename, format_timestamp
+from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
+from advanced_memory.schemas.importer import ChatImportResult
 
 logger = logging.getLogger(__name__)
 
 
-class ClaudeConversationsImporter(Importer[ChatImportResult]):
+class ClaudeConversationsImporter(Importer):
     """Service for importing Claude conversations."""
 
     async def import_data(
@@ -71,7 +71,7 @@ class ClaudeConversationsImporter(Importer[ChatImportResult]):
         self,
         base_path: Path,
         name: str,
-        messages: List[Dict[str, Any]],
+        messages: list[dict[str, Any]],
         created_at: str,
         modified_at: str,
     ) -> EntityMarkdown:
@@ -120,7 +120,7 @@ class ClaudeConversationsImporter(Importer[ChatImportResult]):
     def _format_chat_markdown(
         self,
         name: str,
-        messages: List[Dict[str, Any]],
+        messages: list[dict[str, Any]],
         created_at: str,
         modified_at: str,
         permalink: str,

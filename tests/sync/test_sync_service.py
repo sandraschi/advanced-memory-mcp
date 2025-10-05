@@ -1,13 +1,13 @@
 """Test general sync behavior."""
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from textwrap import dedent
 
 import pytest
 
-from advanced_memory.config import ProjectConfig, AdvancedMemoryConfig
+from advanced_memory.config import AdvancedMemoryConfig, ProjectConfig
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.schemas.search import SearchQuery
@@ -111,8 +111,8 @@ A test concept.
         file_path="concept/other.md",
         checksum="12345678",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     await entity_service.repository.add(other)
 
@@ -345,7 +345,7 @@ modified: 2024-01-01
 - [random category] This is fine
 - [ a space category] Should default to note
 - This one is not an observation, should be ignored
-- [design] This is valid 
+- [design] This is valid
 """
     await create_test_file(project_dir / "concept/invalid_category.md", content)
 
@@ -632,10 +632,10 @@ Testing file timestamps
     file_entity = await entity_service.get_by_permalink("file-dates")
     file_stats = file_path.stat()
     assert (
-        abs((file_entity.created_at.timestamp() - file_stats.st_ctime)) < 1
+        abs(file_entity.created_at.timestamp() - file_stats.st_ctime) < 1
     )  # Allow 1s difference
     assert (
-        abs((file_entity.updated_at.timestamp() - file_stats.st_mtime)) < 1
+        abs(file_entity.updated_at.timestamp() - file_stats.st_mtime) < 1
     )  # Allow 1s difference
 
 
@@ -674,7 +674,9 @@ Content for move test
     # Check search index has updated path
     results = await search_service.search(SearchQuery(text="Content for move test"))
     assert len(results) == 1
-    assert results[0].file_path == str(new_path.relative_to(project_dir))
+    # Normalize path separators for cross-platform compatibility
+    expected_path = str(new_path.relative_to(project_dir)).replace("\\", "/")
+    assert results[0].file_path == expected_path
 
 
 @pytest.mark.asyncio
@@ -693,8 +695,8 @@ async def test_sync_null_checksum_cleanup(
         file_path="concept/incomplete.md",
         checksum=None,  # Null checksum
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     await entity_service.repository.add(entity)
 
@@ -940,8 +942,8 @@ async def test_sync_non_markdown_files(sync_service, project_config, test_files)
     assert report.total == 2
 
     # Check files were detected
-    assert test_files["pdf"].name in [f for f in report.new]
-    assert test_files["image"].name in [f for f in report.new]
+    assert test_files["pdf"].name in list(report.new)
+    assert test_files["image"].name in list(report.new)
 
     # Verify entities were created
     pdf_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["pdf"].name))
@@ -963,8 +965,8 @@ async def test_sync_non_markdown_files_modified(
     assert report.total == 2
 
     # Check files were detected
-    assert test_files["pdf"].name in [f for f in report.new]
-    assert test_files["image"].name in [f for f in report.new]
+    assert test_files["pdf"].name in list(report.new)
+    assert test_files["image"].name in list(report.new)
 
     test_files["pdf"].write_text("New content")
     test_files["image"].write_text("New content")
@@ -991,8 +993,8 @@ async def test_sync_non_markdown_files_move(sync_service, project_config, test_f
     assert report.total == 2
 
     # Check files were detected
-    assert test_files["pdf"].name in [f for f in report.new]
-    assert test_files["image"].name in [f for f in report.new]
+    assert test_files["pdf"].name in list(report.new)
+    assert test_files["image"].name in list(report.new)
 
     test_files["pdf"].rename(project_config.home / "moved_pdf.pdf")
     report2 = await sync_service.sync(project_config.home)
@@ -1011,8 +1013,8 @@ async def test_sync_non_markdown_files_deleted(sync_service, project_config, tes
     assert report.total == 2
 
     # Check files were detected
-    assert test_files["pdf"].name in [f for f in report.new]
-    assert test_files["image"].name in [f for f in report.new]
+    assert test_files["pdf"].name in list(report.new)
+    assert test_files["image"].name in list(report.new)
 
     test_files["pdf"].unlink()
     report2 = await sync_service.sync(project_config.home)
@@ -1096,9 +1098,10 @@ async def test_sync_regular_file_race_condition_handling(
     sync_service: SyncService, project_config: ProjectConfig
 ):
     """Test that sync_regular_file handles race condition with IntegrityError (lines 380-401)."""
+    from datetime import datetime
     from unittest.mock import patch
+
     from sqlalchemy.exc import IntegrityError
-    from datetime import datetime, timezone
 
     # Create a test file
     test_file = project_config.home / "test_race.md"
@@ -1137,8 +1140,8 @@ This is a test file for race condition handling.
             permalink="test-race-condition",
             content_type="text/markdown",
             checksum="old_checksum",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
     # Mock update to return the updated entity
@@ -1153,8 +1156,8 @@ This is a test file for race condition handling.
             permalink="test-race-condition",
             content_type="text/markdown",
             checksum=updates["checksum"],
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
     with (
@@ -1187,6 +1190,7 @@ async def test_sync_regular_file_integrity_error_reraise(
 ):
     """Test that sync_regular_file re-raises IntegrityError for non-race-condition cases."""
     from unittest.mock import patch
+
     from sqlalchemy.exc import IntegrityError
 
     # Create a test file
@@ -1221,6 +1225,7 @@ async def test_sync_regular_file_race_condition_entity_not_found(
 ):
     """Test handling when entity is not found after IntegrityError (pragma: no cover case)."""
     from unittest.mock import patch
+
     from sqlalchemy.exc import IntegrityError
 
     # Create a test file
@@ -1260,9 +1265,10 @@ async def test_sync_regular_file_race_condition_update_failed(
     sync_service: SyncService, project_config: ProjectConfig
 ):
     """Test handling when update fails after IntegrityError (pragma: no cover case)."""
+    from datetime import datetime
     from unittest.mock import patch
+
     from sqlalchemy.exc import IntegrityError
-    from datetime import datetime, timezone
 
     # Create a test file
     test_file = project_config.home / "test_update_fail.md"
@@ -1291,8 +1297,8 @@ This is a test file for update failure after constraint violation.
             permalink="test-update-fail",
             content_type="text/markdown",
             checksum="old_checksum",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
     # Mock update to return None (failure)

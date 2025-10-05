@@ -1,8 +1,9 @@
 """Tests for the template loader functionality."""
 
 import datetime
-import pytest
 from pathlib import Path
+
+import pytest
 
 from advanced_memory.api.template_loader import TemplateLoader
 
@@ -194,7 +195,7 @@ async def test_nested_dedent_helper(custom_template_loader, temp_template_dir):
 {{#each items}}
     {{#dedent}}
         --- Item {{this}}
-        
+
         Details for item {{this}}
           - Indented detail 1
           - Indented detail 2

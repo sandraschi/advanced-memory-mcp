@@ -2,15 +2,15 @@
 
 import json
 from datetime import datetime
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
 from typer.testing import CliRunner
 
 from advanced_memory.cli.main import app as cli_app
 from advanced_memory.schemas.project_info import (
+    ActivityMetrics,
     ProjectInfoResponse,
     ProjectStatistics,
-    ActivityMetrics,
     SystemStatus,
 )
 
@@ -48,7 +48,7 @@ def test_info_stats():
 
     # Mock the async project_info function
     with patch(
-        "basic_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock
+        "advanced_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock
     ) as mock_func:
         mock_func.return_value = mock_info
 
@@ -97,7 +97,7 @@ def test_info_stats_json():
 
     # Mock the async project_info function
     with patch(
-        "basic_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock
+        "advanced_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock
     ) as mock_func:
         mock_func.return_value = mock_info
 

@@ -1,17 +1,22 @@
 """Memory JSON import service for Basic Memory."""
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from advanced_memory.config import get_project_config
-from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown, Observation, Relation
 from advanced_memory.importers.base import Importer
+from advanced_memory.markdown.schemas import (
+    EntityFrontmatter,
+    EntityMarkdown,
+    Observation,
+    Relation,
+)
 from advanced_memory.schemas.importer import EntityImportResult
 
 logger = logging.getLogger(__name__)
 
 
-class MemoryJsonImporter(Importer[EntityImportResult]):
+class MemoryJsonImporter(Importer):
     """Service for importing memory.json format data."""
 
     async def import_data(
@@ -30,8 +35,8 @@ class MemoryJsonImporter(Importer[EntityImportResult]):
         config = get_project_config()
         try:
             # First pass - collect all relations by source entity
-            entity_relations: Dict[str, List[Relation]] = {}
-            entities: Dict[str, Dict[str, Any]] = {}
+            entity_relations: dict[str, list[Relation]] = {}
+            entities: dict[str, dict[str, Any]] = {}
 
             # Ensure the base path exists
             base_path = config.home  # pragma: no cover

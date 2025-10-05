@@ -8,7 +8,7 @@ def test_task_token_type():
     md = MarkdownIt()
     content = """
     - [ ] Unchecked task
-    - [x] Completed task 
+    - [x] Completed task
     - [-] In progress task
     """
 

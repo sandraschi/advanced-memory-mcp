@@ -1,7 +1,6 @@
 """Tests for discussion context MCP tool."""
 
 import pytest
-
 from mcp.server.fastmcp.exceptions import ToolError
 
 from advanced_memory.mcp.tools import recent_activity

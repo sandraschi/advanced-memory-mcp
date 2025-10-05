@@ -1,12 +1,11 @@
 """Service for resolving markdown links to permalinks."""
 
-from typing import Optional, Tuple
 
 from loguru import logger
 
 from advanced_memory.models import Entity
 from advanced_memory.repository.entity_repository import EntityRepository
-from advanced_memory.schemas.search import SearchQuery, SearchItemType
+from advanced_memory.schemas.search import SearchItemType, SearchQuery
 from advanced_memory.services.search_service import SearchService
 
 
@@ -28,7 +27,7 @@ class LinkResolver:
 
     async def resolve_link(
         self, link_text: str, use_search: bool = True, strict: bool = False
-    ) -> Optional[Entity]:
+    ) -> Entity | None:
         """Resolve a markdown link to a permalink.
 
         Args:
@@ -63,25 +62,40 @@ class LinkResolver:
 
         # 4. Try file path with .md extension if not already present
         if not clean_text.endswith(".md") and "/" in clean_text:
-            # Don't normalize the case, just add .md extension
-            file_path_with_md = f"{clean_text}.md"
-            # Only normalize path separators for cross-platform compatibility
-            import os
-            file_path_with_md = os.path.normpath(file_path_with_md)
-            logger.debug(f"Trying to find entity with normalized path: {file_path_with_md}")
-            found_path_md = await self.entity_repository.get_by_file_path(file_path_with_md)
-            if found_path_md:
-                logger.debug(f"Found entity with path (with .md): {found_path_md.file_path}")
-                return found_path_md
-            else:
-                logger.debug(f"No entity found with path: {file_path_with_md}")
-                # Try case-insensitive search by looking up all entities and matching file paths
-                # This handles cases where the input case doesn't match the stored case
-                all_entities = await self.entity_repository.find_all()
-                for entity in all_entities:
-                    if entity.file_path and entity.file_path.lower() == file_path_with_md.lower():
-                        logger.debug(f"Found entity with case-insensitive path match: {entity.file_path}")
-                        return entity
+            # Try different variations of the file path
+            variations = [
+                f"{clean_text}.md",  # Original with .md
+                f"{clean_text.replace(' ', '_')}.md",  # Spaces to underscores with .md
+            ]
+            
+            # Also try converting the last part (filename) to underscore format
+            if "/" in clean_text:
+                parts = clean_text.split("/")
+                if len(parts) > 1:
+                    # Convert only the last part (filename) to underscore format
+                    last_part = parts[-1].replace(" ", "_")
+                    folder_path = "/".join(parts[:-1])
+                    variations.append(f"{folder_path}/{last_part}.md")
+            
+            # Normalize path separators for cross-platform compatibility
+            from advanced_memory.sync.sync_service import normalize_file_path
+            
+            for file_path_variant in variations:
+                file_path_normalized = normalize_file_path(file_path_variant)
+                logger.debug(f"Trying to find entity with normalized path: {file_path_normalized}")
+                found_path_md = await self.entity_repository.get_by_file_path(file_path_normalized)
+                if found_path_md:
+                    logger.debug(f"Found entity with path (with .md): {found_path_md.file_path}")
+                    return found_path_md
+                else:
+                    logger.debug(f"No entity found with path: {file_path_normalized}")
+                    # Try case-insensitive search by looking up all entities and matching file paths
+                    # This handles cases where the input case doesn't match the stored case
+                    all_entities = await self.entity_repository.find_all()
+                    for entity in all_entities:
+                        if entity.file_path and entity.file_path.lower() == file_path_normalized.lower():
+                            logger.debug(f"Found entity with case-insensitive path match: {entity.file_path}")
+                            return entity
 
         # In strict mode, don't try fuzzy search - return None if no exact match found
         if strict:
@@ -105,7 +119,7 @@ class LinkResolver:
         # if we couldn't find anything then return None
         return None
 
-    def _normalize_link_text(self, link_text: str) -> Tuple[str, Optional[str]]:
+    def _normalize_link_text(self, link_text: str) -> tuple[str, str | None]:
         """Normalize link text and extract alias if present.
 
         Args:
@@ -130,5 +144,8 @@ class LinkResolver:
         else:
             # Strip whitespace from text even if no alias
             text = text.strip()
+
+        # Normalize path separators for cross-platform compatibility
+        text = text.replace("\\", "/")
 
         return text, alias

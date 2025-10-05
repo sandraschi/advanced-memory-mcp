@@ -5,16 +5,16 @@ import os
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Set
 
-from advanced_memory.config import AdvancedMemoryConfig, WATCH_STATUS_JSON
-from advanced_memory.models import Project
-from advanced_memory.repository import ProjectRepository
 from loguru import logger
 from pydantic import BaseModel
 from rich.console import Console
 from watchfiles import awatch
-from watchfiles.main import FileChange, Change
+from watchfiles.main import Change, FileChange
+
+from advanced_memory.config import WATCH_STATUS_JSON, AdvancedMemoryConfig
+from advanced_memory.models import Project
+from advanced_memory.repository import ProjectRepository
 
 # Common directories to ignore during file watching and sync
 IGNORE_PATTERNS = {
@@ -38,8 +38,8 @@ class WatchEvent(BaseModel):
     path: str
     action: str  # new, delete, etc
     status: str  # success, error
-    checksum: Optional[str]
-    error: Optional[str] = None
+    checksum: str | None
+    error: str | None = None
 
 
 class WatchServiceState(BaseModel):
@@ -50,22 +50,22 @@ class WatchServiceState(BaseModel):
 
     # Stats
     error_count: int = 0
-    last_error: Optional[datetime] = None
-    last_scan: Optional[datetime] = None
+    last_error: datetime | None = None
+    last_scan: datetime | None = None
 
     # File counts
     synced_files: int = 0
 
     # Recent activity
-    recent_events: List[WatchEvent] = []  # Use directly with Pydantic model
+    recent_events: list[WatchEvent] = []  # Use directly with Pydantic model
 
     def add_event(
         self,
         path: str,
         action: str,
         status: str,
-        checksum: Optional[str] = None,
-        error: Optional[str] = None,
+        checksum: str | None = None,
+        error: str | None = None,
     ) -> WatchEvent:
         event = WatchEvent(
             timestamp=datetime.now(),
@@ -142,7 +142,7 @@ class WatchService:
                 # process changes
                 await asyncio.gather(*change_handlers)
 
-        except Exception as e:
+        except (OSError, PermissionError, asyncio.CancelledError) as e:
             logger.exception("Watch service error", error=str(e))
 
             self.state.record_error(str(e))
@@ -170,7 +170,7 @@ class WatchService:
         for part in path_parts:
             if part.startswith("."):
                 return False
-            
+
             # Skip common ignore patterns (node_modules, build dirs, etc.)
             if part in IGNORE_PATTERNS:
                 return False
@@ -193,10 +193,9 @@ class WatchService:
         sub_path = Path(path).resolve()
         return project_path in sub_path.parents
 
-    async def handle_changes(self, project: Project, changes: Set[FileChange]) -> None:
+    async def handle_changes(self, project: Project, changes: set[FileChange]) -> None:
         """Process a batch of file changes"""
         import time
-        from typing import List, Set
 
         # Lazily initialize sync service for project changes
         from advanced_memory.cli.commands.sync import get_sync_service
@@ -211,9 +210,9 @@ class WatchService:
         )
 
         # Group changes by type
-        adds: List[str] = []
-        deletes: List[str] = []
-        modifies: List[str] = []
+        adds: list[str] = []
+        deletes: list[str] = []
+        modifies: list[str] = []
 
         for change, path in changes:
             # convert to relative path
@@ -235,7 +234,7 @@ class WatchService:
         )
 
         # because of our atomic writes on updates, an add may be an existing file
-        for added_path in adds:  # pragma: no cover TODO add test
+        for added_path in adds:  # pragma: no cover
             entity = await sync_service.entity_repository.get_by_file_path(added_path)
             if entity is not None:
                 logger.debug(f"Existing file will be processed as modified, path={added_path}")
@@ -243,7 +242,7 @@ class WatchService:
                 modifies.append(added_path)
 
         # Track processed files to avoid duplicates
-        processed: Set[str] = set()
+        processed: set[str] = set()
 
         # First handle potential moves
         for added_path in adds:
@@ -282,7 +281,7 @@ class WatchService:
                                 action="moved",
                                 status="success",
                             )
-                            self.console.print(f"[blue]→[/blue] {deleted_path} → {added_path}")
+                            self.console.print(f"[blue]->[/blue] {deleted_path} -> {added_path}")
                             logger.info(f"move: {deleted_path} -> {added_path}")
                             processed.add(added_path)
                             processed.add(deleted_path)
@@ -307,7 +306,7 @@ class WatchService:
                 logger.debug("Processing deleted file", path=path)
                 await sync_service.handle_delete(path)
                 self.state.add_event(path=path, action="deleted", status="success")
-                self.console.print(f"[red]✕[/red] {path}")
+                self.console.print(f"[red]X[/red] {path}")
                 logger.info(f"deleted: {path}")
                 processed.add(path)
                 delete_count += 1
@@ -330,7 +329,7 @@ class WatchService:
                     self.state.add_event(
                         path=path, action="new", status="success", checksum=checksum
                     )
-                    self.console.print(f"[green]✓[/green] {path}")
+                    self.console.print(f"[green]OK[/green] {path}")
                     logger.info(
                         "new file processed",
                         f"path={path}",
@@ -373,7 +372,7 @@ class WatchService:
                         )  # pragma: no cover
                 else:
                     # haven't processed this file
-                    self.console.print(f"[yellow]✎[/yellow] {path}")
+                    self.console.print(f"[yellow]EDIT[/yellow] {path}")
                     logger.info(f"modified: {path}")
                     last_modified_path = path
                     repeat_count = 0

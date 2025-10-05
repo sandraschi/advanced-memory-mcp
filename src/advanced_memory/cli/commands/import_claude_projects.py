@@ -6,13 +6,14 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from loguru import logger
+from rich.console import Console
+from rich.panel import Panel
+
 from advanced_memory.cli.app import claude_app
 from advanced_memory.config import get_project_config
 from advanced_memory.importers.claude_projects_importer import ClaudeProjectsImporter
 from advanced_memory.markdown import EntityParser, MarkdownProcessor
-from loguru import logger
-from rich.console import Console
-from rich.panel import Panel
 
 console = Console()
 
@@ -82,4 +83,4 @@ def import_projects(
     except Exception as e:
         logger.error("Import failed")
         typer.echo(f"Error during import: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e

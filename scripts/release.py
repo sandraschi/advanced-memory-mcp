@@ -13,9 +13,7 @@ import argparse
 import re
 import subprocess
 import sys
-from datetime import datetime
 from pathlib import Path
-from typing import Optional, Tuple
 
 
 def get_current_version() -> str:
@@ -200,11 +198,11 @@ def main():
         # Create and push tag
         create_git_tag(new_version)
 
-        print("
-🎉 Release preparation complete!"        print(f"Version: {new_version}")
+        print("🎉 Release preparation complete!")
+        print(f"Version: {new_version}")
         print(f"Tag: v{new_version}")
-        print("
-Next steps:"        print("1. Push the commit: git push origin main")
+        print("Next steps:")
+        print("1. Push the commit: git push origin main")
         print("2. Create a GitHub release with the tag")
         print("3. The CI/CD will automatically publish to PyPI and build Docker images")
 

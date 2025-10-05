@@ -4,16 +4,15 @@ This tool searches through external Joplin exports using Joplin-specific
 search patterns and metadata.
 """
 
-import os
-import re
 import json
-from pathlib import Path
-from typing import Optional, List, Dict, Any
+import re
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from loguru import logger
 
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
@@ -155,7 +154,7 @@ async def search_joplin_vault(
         return f"# Joplin Search Failed\n\nError: {e}"
 
 
-async def _find_joplin_files(vault_path: Path) -> List[Dict[str, Path]]:
+async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
     """Find all Joplin note files (markdown + JSON pairs)."""
     joplin_files = []
 
@@ -164,7 +163,7 @@ async def _find_joplin_files(vault_path: Path) -> List[Dict[str, Path]]:
         try:
             from mcp_filesystem import list_directory
 
-            async def scan_recursive(current_path: str) -> List[Dict[str, str]]:
+            async def scan_recursive(current_path: str) -> list[dict[str, str]]:
                 files = []
                 try:
                     dir_contents = await list_directory(current_path)
@@ -172,11 +171,11 @@ async def _find_joplin_files(vault_path: Path) -> List[Dict[str, Path]]:
                     # Group files by base name (without extension)
                     file_groups = {}
                     for line in dir_contents.split('\n'):
-                        if '📄' in line:
+                        if '[DOC]' in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                                file_path = str(Path(current_path) / filename)
 
                                 if filename.endswith('.md'):
                                     base_name = filename[:-3]  # Remove .md
@@ -189,12 +188,12 @@ async def _find_joplin_files(vault_path: Path) -> List[Dict[str, Path]]:
                                         file_groups[base_name] = {}
                                     file_groups[base_name]['json'] = file_path
 
-                        elif '📁' in line and not line.strip().endswith('.'):
+                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
                             # Directory - recurse
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
+                                subdir_path = str(Path(current_path) / dirname)
                                 subfiles = await scan_recursive(subdir_path)
                                 files.extend(subfiles)
 
@@ -251,7 +250,7 @@ async def _find_joplin_files(vault_path: Path) -> List[Dict[str, Path]]:
     return joplin_files
 
 
-async def _search_text(joplin_files: List[Dict[str, Path]], query: str) -> List[Dict[str, Any]]:
+async def _search_text(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for text content in Joplin notes."""
     results = []
     search_terms = _parse_search_query(query)
@@ -308,7 +307,7 @@ async def _search_text(joplin_files: List[Dict[str, Path]], query: str) -> List[
     return results
 
 
-async def _search_tags(joplin_files: List[Dict[str, Path]], query: str) -> List[Dict[str, Any]]:
+async def _search_tags(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for tags in Joplin notes."""
     results = []
 
@@ -346,7 +345,7 @@ async def _search_tags(joplin_files: List[Dict[str, Path]], query: str) -> List[
     return results
 
 
-async def _search_notebooks(joplin_files: List[Dict[str, Path]], query: str) -> List[Dict[str, Any]]:
+async def _search_notebooks(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for notes in specific notebooks/folders."""
     results = []
     query_lower = query.lower()
@@ -377,7 +376,7 @@ async def _search_notebooks(joplin_files: List[Dict[str, Path]], query: str) -> 
     return results
 
 
-async def _search_titles(joplin_files: List[Dict[str, Path]], query: str) -> List[Dict[str, Any]]:
+async def _search_titles(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for notes by title."""
     results = []
     query_lower = query.lower()
@@ -406,7 +405,7 @@ async def _search_titles(joplin_files: List[Dict[str, Path]], query: str) -> Lis
     return results
 
 
-async def _search_ids(joplin_files: List[Dict[str, Path]], query: str) -> List[Dict[str, Any]]:
+async def _search_ids(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for notes by Joplin ID."""
     results = []
 
@@ -436,10 +435,10 @@ async def _search_ids(joplin_files: List[Dict[str, Path]], query: str) -> List[D
     return results
 
 
-def _read_joplin_metadata(json_path: Path) -> Dict[str, Any]:
+def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
     """Read and parse Joplin JSON metadata."""
     try:
-        with open(json_path, 'r', encoding='utf-8') as f:
+        with open(json_path, encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
         logger.warning(f"Error reading Joplin metadata {json_path}: {e}")
@@ -459,14 +458,14 @@ def _extract_title_from_content(content: str) -> str:
     return lines[0].strip() if lines else "Untitled"
 
 
-def _get_notebook_path(md_path: Path, metadata: Dict[str, Any]) -> str:
+def _get_notebook_path(md_path: Path, metadata: dict[str, Any]) -> str:
     """Get the notebook/folder path for a Joplin note."""
     # Joplin stores parent relationships in metadata
     # For simplicity, we'll use the relative path from the export root
     return str(md_path.parent)
 
 
-def _parse_search_query(query: str) -> List[str]:
+def _parse_search_query(query: str) -> list[str]:
     """Parse search query into individual search terms."""
     # Handle quoted phrases
     terms = []
@@ -500,13 +499,13 @@ def _parse_search_query(query: str) -> List[str]:
     return [term for term in terms if term]
 
 
-def _format_search_results(results: List[Dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
+def _format_search_results(results: list[dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
     """Format search results into readable output."""
     if not results:
         return f"# Joplin Search Complete\n\nNo results found for '{query}' in vault: {vault_path}"
 
     output_lines = [
-        f"# Joplin Search Results",
+        "# Joplin Search Results",
         f"Query: '{query}' (type: {search_type})",
         f"Export: {vault_path}",
         f"Found {len(results)} matching notes",
@@ -533,14 +532,14 @@ def _format_search_results(results: List[Dict[str, Any]], vault_path: str, query
             try:
                 created_dt = datetime.fromtimestamp(metadata['created_time'] / 1000)
                 output_lines.append(f"**Created:** {created_dt.strftime('%Y-%m-%d %H:%M')}")
-            except:
+            except Exception:
                 pass
 
         if 'updated_time' in metadata:
             try:
                 updated_dt = datetime.fromtimestamp(metadata['updated_time'] / 1000)
                 output_lines.append(f"**Updated:** {updated_dt.strftime('%Y-%m-%d %H:%M')}")
-            except:
+            except Exception:
                 pass
 
         # Add notebook info

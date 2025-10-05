@@ -50,25 +50,21 @@ The `app` fixture ensures FastAPI dependency overrides are active, and
 `mcp_server` provides the MCP server with proper project session initialization.
 """
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
+from pathlib import Path
 
 import pytest
 import pytest_asyncio
-from pathlib import Path
-
-from httpx import AsyncClient, ASGITransport
-
-from basic_memory.config import BasicMemoryConfig, ProjectConfig, ConfigManager
-from basic_memory.db import engine_session_factory, DatabaseType
-from basic_memory.models import Project
-from basic_memory.repository.project_repository import ProjectRepository
-from fastapi import FastAPI
-
-from basic_memory.deps import get_project_config, get_engine_factory, get_app_config
-
+from basic_memory.config import BasicMemoryConfig, ConfigManager, ProjectConfig
+from basic_memory.db import DatabaseType, engine_session_factory
+from basic_memory.deps import get_app_config, get_engine_factory, get_project_config
 
 # Import MCP tools so they're available for testing
 from basic_memory.mcp import tools  # noqa: F401
+from basic_memory.models import Project
+from basic_memory.repository.project_repository import ProjectRepository
+from fastapi import FastAPI
+from httpx import ASGITransport, AsyncClient
 
 
 @pytest_asyncio.fixture(scope="function")
@@ -182,12 +178,12 @@ def app(
 @pytest_asyncio.fixture(scope="function")
 async def search_service(engine_factory, test_project):
     """Create and initialize search service for integration tests."""
-    from basic_memory.repository.search_repository import SearchRepository
+    from basic_memory.markdown import EntityParser
+    from basic_memory.markdown.markdown_processor import MarkdownProcessor
     from basic_memory.repository.entity_repository import EntityRepository
+    from basic_memory.repository.search_repository import SearchRepository
     from basic_memory.services.file_service import FileService
     from basic_memory.services.search_service import SearchService
-    from basic_memory.markdown.markdown_processor import MarkdownProcessor
-    from basic_memory.markdown import EntityParser
 
     engine, session_maker = engine_factory
 
@@ -209,13 +205,12 @@ async def search_service(engine_factory, test_project):
 @pytest.fixture(scope="function")
 def mcp_server(config_manager, search_service, project_session):
     # Import mcp instance
-    from basic_memory.mcp.server import mcp as server
+    # Import prompts to register them
+    import basic_memory.mcp.prompts  # noqa: F401
 
     # Import mcp tools to register them
     import basic_memory.mcp.tools  # noqa: F401
-
-    # Import prompts to register them
-    import basic_memory.mcp.prompts  # noqa: F401
+    from basic_memory.mcp.server import mcp as server
 
     return server
 

@@ -4,18 +4,17 @@ This tool imports Joplin exports into Basic Memory, preserving
 folder structure, metadata, and relationships.
 """
 
-import os
-import re
 import json
-from pathlib import Path
-from typing import Optional, Dict, List, Any, Set
+import re
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from loguru import logger
 
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.search import search_notes
+from advanced_memory.mcp.tools.write_note import write_note
 
 
 @mcp.tool(
@@ -64,7 +63,7 @@ async def load_joplin_vault(
     preserve_structure: bool = True,
     convert_links: bool = True,
     skip_existing: bool = True,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Import a Joplin export into Basic Memory.
 
@@ -146,12 +145,12 @@ async def load_joplin_vault(
         return f"# Joplin Import Failed\n\nUnexpected error: {e}"
 
 
-async def _find_joplin_files(export_path: Path) -> List[Dict[str, Path]]:
+async def _find_joplin_files(export_path: Path) -> list[dict[str, Path]]:
     """Find all Joplin note files (markdown + JSON pairs)."""
     return await _find_joplin_files_recursive(export_path)
 
 
-async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path]]:
+async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path]]:
     """Recursively find all Joplin note files."""
     joplin_files = []
 
@@ -160,7 +159,7 @@ async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path
         try:
             from mcp_filesystem import list_directory
 
-            async def scan_recursive(current_path: str) -> List[Dict[str, str]]:
+            async def scan_recursive(current_path: str) -> list[dict[str, str]]:
                 files = []
                 try:
                     dir_contents = await list_directory(current_path)
@@ -168,11 +167,11 @@ async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path
                     # Group files by base name (without extension)
                     file_groups = {}
                     for line in dir_contents.split('\n'):
-                        if '📄' in line:
+                        if '[DOC]' in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                                file_path = str(Path(current_path) / filename)
 
                                 if filename.endswith('.md'):
                                     base_name = filename[:-3]  # Remove .md
@@ -185,12 +184,12 @@ async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path
                                         file_groups[base_name] = {}
                                     file_groups[base_name]['json'] = file_path
 
-                        elif '📁' in line and not line.strip().endswith('.'):
+                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
                             # Directory - recurse
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
+                                subdir_path = str(Path(current_path) / dirname)
                                 subfiles = await scan_recursive(subdir_path)
                                 files.extend(subfiles)
 
@@ -243,7 +242,7 @@ async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path
                         file_groups[key]['json'] = file_path
 
             # Only include complete pairs
-            for key, file_dict in file_groups.items():
+            for _key, file_dict in file_groups.items():
                 if 'md' in file_dict and 'json' in file_dict:
                     md_path = file_dict['md']
                     joplin_files.append({
@@ -259,7 +258,7 @@ async def _find_joplin_files_recursive(export_path: Path) -> List[Dict[str, Path
     return joplin_files
 
 
-async def _build_notebook_mapping(joplin_files: List[Dict[str, Path]]) -> Dict[str, str]:
+async def _build_notebook_mapping(joplin_files: list[dict[str, Path]]) -> dict[str, str]:
     """Build mapping from notebook IDs to folder paths."""
     notebook_mapping = {}
 
@@ -285,13 +284,13 @@ async def _build_notebook_mapping(joplin_files: List[Dict[str, Path]]) -> Dict[s
 
 async def _process_joplin_import(
     export_path: Path,
-    joplin_files: List[Dict[str, Path]],
-    notebook_mapping: Dict[str, str],
+    joplin_files: list[dict[str, Path]],
+    notebook_mapping: dict[str, str],
     destination_folder: str,
     preserve_structure: bool,
     convert_links: bool,
     skip_existing: bool,
-    project: Optional[str]
+    project: str | None
 ) -> str:
     """Process the Joplin export import with all files."""
 
@@ -347,7 +346,7 @@ async def _process_joplin_import(
             stats['converted_links'] += link_conversions
 
             # Create the note
-            result = await write_note.fn(
+            await write_note.fn(
                 title=title,
                 content=processed_content,
                 folder=dest_path,
@@ -381,10 +380,10 @@ async def _process_joplin_import(
     return _generate_import_report(stats, processed_files, export_path, destination_folder)
 
 
-def _read_joplin_metadata(json_path: Path) -> Dict[str, Any]:
+def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
     """Read and parse Joplin JSON metadata."""
     try:
-        with open(json_path, 'r', encoding='utf-8') as f:
+        with open(json_path, encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
         logger.warning(f"Error reading Joplin metadata {json_path}: {e}")
@@ -406,10 +405,10 @@ def _extract_title_from_content(content: str) -> str:
 
 async def _build_file_mapping(
     export_path: Path,
-    joplin_files: List[Dict[str, Path]],
+    joplin_files: list[dict[str, Path]],
     destination_folder: str,
     preserve_structure: bool
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Build mapping from Joplin IDs to new Basic Memory paths for link conversion."""
     mapping = {}
 
@@ -437,11 +436,11 @@ async def _build_file_mapping(
 
 
 def _calculate_destination_path(
-    file_info: Dict[str, Path],
+    file_info: dict[str, Path],
     export_path: Path,
     destination_folder: str,
     preserve_structure: bool,
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 ) -> str:
     """Calculate the destination path for a Joplin note."""
     if not preserve_structure:
@@ -459,8 +458,8 @@ def _calculate_destination_path(
 def _process_content(
     content: str,
     convert_links: bool,
-    file_mapping: Dict[str, str],
-    metadata: Dict[str, Any]
+    file_mapping: dict[str, str],
+    metadata: dict[str, Any]
 ) -> tuple[str, int]:
     """Process note content for import."""
     conversions = 0
@@ -490,7 +489,7 @@ def _process_content(
     return processed_content, conversions
 
 
-def _convert_joplin_links(content: str, file_mapping: Dict[str, str]) -> tuple[str, int]:
+def _convert_joplin_links(content: str, file_mapping: dict[str, str]) -> tuple[str, int]:
     """Convert Joplin links to Basic Memory format."""
     conversions = 0
 
@@ -517,7 +516,7 @@ def _convert_joplin_links(content: str, file_mapping: Dict[str, str]) -> tuple[s
     return converted_content, conversions
 
 
-def _format_timestamp(timestamp_ms: Optional[int]) -> str:
+def _format_timestamp(timestamp_ms: int | None) -> str:
     """Format timestamp from milliseconds to readable date."""
     if not timestamp_ms:
         return "unknown"
@@ -530,14 +529,14 @@ def _format_timestamp(timestamp_ms: Optional[int]) -> str:
 
 
 def _generate_import_report(
-    stats: Dict[str, Any],
-    processed_files: List[Dict[str, Any]],
+    stats: dict[str, Any],
+    processed_files: list[dict[str, Any]],
     export_path: str,
     destination_folder: str
 ) -> str:
     """Generate a comprehensive import report."""
     lines = [
-        f"# Joplin Export Import Complete",
+        "# Joplin Export Import Complete",
         f"**Source export:** {export_path}",
         f"**Destination folder:** {destination_folder}",
         f"**Import completed:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
@@ -568,10 +567,10 @@ def _generate_import_report(
         lines.append("## Processed Notes")
         for file_info in processed_files[:20]:  # Limit to first 20
             if 'error' in file_info:
-                lines.append(f"- ❌ **{file_info['original_path']}** - Error: {file_info['error']}")
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
             else:
                 links_text = f" ({file_info['links_converted']} links converted)" if file_info.get('links_converted', 0) > 0 else ""
-                lines.append(f"- ✅ **{file_info['original_path']}** → {file_info['destination_path']}{links_text}")
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}")
 
         if len(processed_files) > 20:
             lines.append(f"- ... and {len(processed_files) - 20} more notes")

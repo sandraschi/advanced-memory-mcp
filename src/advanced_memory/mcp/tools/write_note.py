@@ -1,22 +1,21 @@
 """Write note tool for Basic Memory MCP server."""
 
-from typing import List, Union, Optional
 
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.utils import call_put
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.utils import call_put
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
 from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[List[str], str, None]
+TagType = list[str] | str | None
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[List[str], str, None]
+TagType = list[str] | str | None
 
 
 @mcp.tool(
@@ -69,7 +68,7 @@ async def write_note(
     folder: str,
     tags=None,  # Remove type hint completely to avoid schema issues
     entity_type: str = "note",
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Write a markdown note to the knowledge base.
 

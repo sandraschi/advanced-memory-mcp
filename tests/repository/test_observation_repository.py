@@ -1,13 +1,13 @@
 """Tests for the ObservationRepository."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 import pytest_asyncio
 import sqlalchemy
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from basic_memory import db
+from advanced_memory import db
 from advanced_memory.models import Entity, Observation, Project
 from advanced_memory.repository.observation_repository import ObservationRepository
 
@@ -96,8 +96,8 @@ async def test_delete_observations(session_maker: async_sessionmaker, repo, test
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -136,8 +136,8 @@ async def test_delete_observation_by_id(
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -172,8 +172,8 @@ async def test_delete_observation_by_content(
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -211,8 +211,8 @@ async def test_find_by_category(session_maker: async_sessionmaker, repo, test_pr
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -242,7 +242,7 @@ async def test_find_by_category(session_maker: async_sessionmaker, repo, test_pr
     tech_obs = await repo.find_by_category("tech")
     assert len(tech_obs) == 2
     assert all(obs.category == "tech" for obs in tech_obs)
-    assert set(obs.content for obs in tech_obs) == {"Tech observation", "Another tech observation"}
+    assert {obs.content for obs in tech_obs} == {"Tech observation", "Another tech observation"}
 
     # Find design observations
     design_obs = await repo.find_by_category("design")
@@ -269,8 +269,8 @@ async def test_observation_categories(
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -333,8 +333,8 @@ async def test_find_by_category_case_sensitivity(
             permalink="test/test-entity",
             file_path="test/test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()

@@ -2,7 +2,6 @@
 
 import ast
 from datetime import datetime
-from typing import List, Optional, Set
 
 from dateparser import parse
 from fastapi import BackgroundTasks
@@ -11,9 +10,9 @@ from sqlalchemy import text
 
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
-from advanced_memory.repository.search_repository import SearchRepository, SearchIndexRow
-from advanced_memory.schemas.search import SearchQuery, SearchItemType
-from advanced_memory.services import FileService
+from advanced_memory.repository.search_repository import SearchIndexRow, SearchRepository
+from advanced_memory.schemas.search import SearchItemType, SearchQuery
+from advanced_memory.services.file_service import FileService
 
 
 class SearchService:
@@ -39,7 +38,7 @@ class SearchService:
         """Create FTS5 virtual table if it doesn't exist."""
         await self.repository.init_search_index()
 
-    async def reindex_all(self, background_tasks: Optional[BackgroundTasks] = None) -> None:
+    async def reindex_all(self, background_tasks: BackgroundTasks | None = None) -> None:
         """Reindex all content from database."""
 
         logger.info("Starting full reindex")
@@ -55,7 +54,7 @@ class SearchService:
 
         logger.info("Reindex complete")
 
-    async def search(self, query: SearchQuery, limit=10, offset=0) -> List[SearchIndexRow]:
+    async def search(self, query: SearchQuery, limit=10, offset=0) -> list[SearchIndexRow]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -95,7 +94,7 @@ class SearchService:
         return results
 
     @staticmethod
-    def _generate_variants(text: str) -> Set[str]:
+    def _generate_variants(text: str) -> set[str]:
         """Generate text variants for better fuzzy matching.
 
         Creates variations of the text to improve match chances:
@@ -118,7 +117,7 @@ class SearchService:
 
         return variants
 
-    def _extract_entity_tags(self, entity: Entity) -> List[str]:
+    def _extract_entity_tags(self, entity: Entity) -> list[str]:
         """Extract tags from entity metadata for search indexing.
 
         Handles multiple tag formats:
@@ -153,7 +152,7 @@ class SearchService:
     async def index_entity(
         self,
         entity: Entity,
-        background_tasks: Optional[BackgroundTasks] = None,
+        background_tasks: BackgroundTasks | None = None,
     ) -> None:
         if background_tasks:
             background_tasks.add_task(self.index_entity_data, entity)
@@ -291,7 +290,7 @@ class SearchService:
         for rel in entity.outgoing_relations:
             # Create descriptive title showing the relationship
             relation_title = (
-                f"{rel.from_entity.title} → {rel.to_entity.title}"
+                f"{rel.from_entity.title} -> {rel.to_entity.title}"
                 if rel.to_entity
                 else f"{rel.from_entity.title}"
             )

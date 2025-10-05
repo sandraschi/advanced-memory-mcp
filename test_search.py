@@ -1,7 +1,10 @@
 import sys
+
 sys.path.insert(0, 'src')
 import asyncio
+
 from basic_memory.mcp.tools.search import search_notes
+
 
 async def test_search():
     try:

@@ -7,9 +7,9 @@ to ensure consistent application startup across all entry points.
 import asyncio
 from pathlib import Path
 
+from advanced_memory import db
 from loguru import logger
 
-from basic_memory import db
 from advanced_memory.config import AdvancedMemoryConfig
 from advanced_memory.repository import ProjectRepository
 

@@ -3,7 +3,7 @@
 import logging
 from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Optional, TypeVar
+from typing import Any, TypeVar
 
 from advanced_memory.markdown.markdown_processor import MarkdownProcessor
 from advanced_memory.markdown.schemas import EntityMarkdown
@@ -13,8 +13,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=ImportResult)
 
-
-class Importer[T: ImportResult]:
+class Importer:
     """Base class for all import services."""
 
     def __init__(self, base_path: Path, markdown_processor: MarkdownProcessor):
@@ -65,7 +64,7 @@ class Importer[T: ImportResult]:
 
     @abstractmethod
     def handle_error(
-        self, message: str, error: Optional[Exception] = None
+        self, message: str, error: Exception | None = None
     ) -> T:  # pragma: no cover
         """Handle errors during import.
 

@@ -133,7 +133,7 @@ async def test_error_handling(client: AsyncClient, monkeypatch, project_url):
         raise Exception("Template error")
 
     # Apply the patch
-    monkeypatch.setattr("basic_memory.api.template_loader.TemplateLoader.render", mock_render)
+    monkeypatch.setattr("advanced_memory.api.template_loader.TemplateLoader.render", mock_render)
 
     # Test continue_conversation error handling
     response = await client.post(

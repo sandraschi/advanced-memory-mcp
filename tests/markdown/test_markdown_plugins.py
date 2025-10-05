@@ -1,16 +1,17 @@
 """Tests for markdown plugins."""
 
 from textwrap import dedent
+
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from advanced_memory.markdown.plugins import (
-    observation_plugin,
-    relation_plugin,
-    is_observation,
     is_explicit_relation,
-    parse_relation,
+    is_observation,
+    observation_plugin,
     parse_inline_relations,
+    parse_relation,
+    relation_plugin,
 )
 
 
@@ -140,7 +141,7 @@ def test_combined_plugins():
         - [design] Observation with [[Link]] #tag (context)
         - implements [[Component]] (details)
         - Just a [[Reference]] in text
-        
+
         Some text with a [[Link]] reference.
         """)
 

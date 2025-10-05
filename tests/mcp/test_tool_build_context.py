@@ -1,8 +1,8 @@
 """Tests for discussion context MCP tool."""
 
-import pytest
 from datetime import datetime
 
+import pytest
 from mcp.server.fastmcp.exceptions import ToolError
 
 from advanced_memory.mcp.tools import build_context

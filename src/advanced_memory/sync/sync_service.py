@@ -5,7 +5,6 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional, Set, Tuple
 
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
@@ -17,7 +16,7 @@ from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository, RelationRepository
 from advanced_memory.services import EntityService, FileService
 from advanced_memory.services.search_service import SearchService
-from advanced_memory.services.sync_status_service import sync_status_tracker, SyncStatus
+from advanced_memory.services.sync_status_service import SyncStatus, sync_status_tracker
 
 
 def normalize_file_path(path: str) -> str:
@@ -67,11 +66,11 @@ class SyncReport:
     """
 
     # We keep paths as strings in sets/dicts for easier serialization
-    new: Set[str] = field(default_factory=set)
-    modified: Set[str] = field(default_factory=set)
-    deleted: Set[str] = field(default_factory=set)
-    moves: Dict[str, str] = field(default_factory=dict)  # old_path -> new_path
-    checksums: Dict[str, str] = field(default_factory=dict)  # path -> checksum
+    new: set[str] = field(default_factory=set)
+    modified: set[str] = field(default_factory=set)
+    deleted: set[str] = field(default_factory=set)
+    moves: dict[str, str] = field(default_factory=dict)  # old_path -> new_path
+    checksums: dict[str, str] = field(default_factory=dict)  # path -> checksum
 
     @property
     def total(self) -> int:
@@ -84,13 +83,13 @@ class ScanResult:
     """Result of scanning a directory."""
 
     # file_path -> checksum
-    files: Dict[str, str] = field(default_factory=dict)
+    files: dict[str, str] = field(default_factory=dict)
 
     # checksum -> file_path
-    checksums: Dict[str, str] = field(default_factory=dict)
+    checksums: dict[str, str] = field(default_factory=dict)
 
     # file_path -> error message
-    errors: Dict[str, str] = field(default_factory=dict)
+    errors: dict[str, str] = field(default_factory=dict)
 
 
 class SyncService:
@@ -114,7 +113,7 @@ class SyncService:
         self.search_service = search_service
         self.file_service = file_service
 
-    async def sync(self, directory: Path, project_name: Optional[str] = None) -> SyncReport:
+    async def sync(self, directory: Path, project_name: str | None = None) -> SyncReport:
         """Sync all files with database."""
 
         start_time = time.time()
@@ -262,7 +261,7 @@ class SyncService:
         logger.info(f"Completed scan for directory {directory}, found {report.total} changes.")
         return report
 
-    async def get_db_file_state(self) -> Dict[str, str]:
+    async def get_db_file_state(self) -> dict[str, str]:
         """Get file_path and checksums from database.
         Args:
             db_records: database records
@@ -276,7 +275,7 @@ class SyncService:
 
     async def sync_file(
         self, path: str, new: bool = True
-    ) -> Tuple[Optional[Entity], Optional[str]]:
+    ) -> tuple[Entity | None, str | None]:
         """Sync a single file.
 
         Args:
@@ -324,7 +323,7 @@ class SyncService:
             # Return None to indicate sync failure, but don't crash the entire process
             return None, None
 
-    async def validate_file_frontmatter(self, path: str) -> Tuple[bool, Optional[str]]:
+    async def validate_file_frontmatter(self, path: str) -> tuple[bool, str | None]:
         """Validate YAML frontmatter in a markdown file.
 
         Args:
@@ -347,7 +346,7 @@ class SyncService:
                 return True, None  # No frontmatter to validate
 
             # Try to parse frontmatter - parse_frontmatter handles YAML errors gracefully
-            frontmatter_data = parse_frontmatter(content)
+            parse_frontmatter(content)
 
             # Additional validation could go here (e.g., required fields, data types)
 
@@ -358,7 +357,7 @@ class SyncService:
             logger.warning(error_msg)
             return False, error_msg
 
-    async def validate_project_files(self, paths: Optional[Set[str]] = None) -> Dict[str, str]:
+    async def validate_project_files(self, paths: set[str] | None = None) -> dict[str, str]:
         """Validate frontmatter in multiple files.
 
         Args:
@@ -392,7 +391,7 @@ class SyncService:
 
         return invalid_files
 
-    async def sync_markdown_file(self, path: str, new: bool = True) -> Tuple[Optional[Entity], str]:
+    async def sync_markdown_file(self, path: str, new: bool = True) -> tuple[Entity | None, str]:
         """Sync a markdown file with full processing.
 
         Args:
@@ -457,7 +456,7 @@ class SyncService:
         # Return the final checksum to ensure everything is consistent
         return entity, final_checksum
 
-    async def sync_regular_file(self, path: str, new: bool = True) -> Tuple[Optional[Entity], str]:
+    async def sync_regular_file(self, path: str, new: bool = True) -> tuple[Entity | None, str]:
         """Sync a non-markdown file with basic tracking.
 
         Args:
@@ -505,7 +504,7 @@ class SyncService:
                     entity = await self.entity_repository.get_by_file_path(path)
                     if entity is None:  # pragma: no cover
                         logger.error(f"Entity not found after constraint violation, path={path}")
-                        raise ValueError(f"Entity not found after constraint violation: {path}")
+                        raise ValueError(f"Entity not found after constraint violation: {path}") from e
 
                     updated = await self.entity_repository.update(
                         entity.id, {"file_path": path, "checksum": checksum}
@@ -513,7 +512,7 @@ class SyncService:
 
                     if updated is None:  # pragma: no cover
                         logger.error(f"Failed to update entity, entity_id={entity.id}, path={path}")
-                        raise ValueError(f"Failed to update entity with ID {entity.id}")
+                        raise ValueError(f"Failed to update entity with ID {entity.id}") from e
 
                     return updated, checksum
                 else:

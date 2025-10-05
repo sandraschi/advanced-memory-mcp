@@ -1,19 +1,18 @@
 """Repository for managing Relation objects."""
 
-from sqlalchemy import and_, delete
-from typing import Sequence, List, Optional
+from collections.abc import Sequence
 
-from sqlalchemy import select
+from advanced_memory import db
+from sqlalchemy import and_, delete, select
 from sqlalchemy.ext.asyncio import async_sessionmaker
-from sqlalchemy.orm import selectinload, aliased
+from sqlalchemy.orm import aliased, selectinload
 from sqlalchemy.orm.interfaces import LoaderOption
 
-from basic_memory import db
-from advanced_memory.models import Relation, Entity
+from advanced_memory.models import Entity, Relation
 from advanced_memory.repository.repository import Repository
 
 
-class RelationRepository(Repository[Relation]):
+class RelationRepository(Repository):
     """Repository for Relation model with memory-specific operations."""
 
     def __init__(self, session_maker: async_sessionmaker, project_id: int):
@@ -27,7 +26,7 @@ class RelationRepository(Repository[Relation]):
 
     async def find_relation(
         self, from_permalink: str, to_permalink: str, relation_type: str
-    ) -> Optional[Relation]:
+    ) -> Relation | None:
         """Find a relation by its from and to path IDs."""
         from_entity = aliased(Entity)
         to_entity = aliased(Entity)
@@ -73,5 +72,5 @@ class RelationRepository(Repository[Relation]):
         result = await self.execute_query(query)
         return result.scalars().all()
 
-    def get_load_options(self) -> List[LoaderOption]:
+    def get_load_options(self) -> list[LoaderOption]:
         return [selectinload(Relation.from_entity), selectinload(Relation.to_entity)]

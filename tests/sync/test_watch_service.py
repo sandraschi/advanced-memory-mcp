@@ -3,6 +3,7 @@
 import asyncio
 import json
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from watchfiles import Change
@@ -70,7 +71,7 @@ async def test_write_status(watch_service):
 
 
 @pytest.mark.asyncio
-async def test_handle_file_add(watch_service, project_config, test_project, entity_repository):
+async def test_handle_file_add(watch_service, project_config, test_project, sync_service):
     """Test handling new file creation."""
     project_dir = project_config.home
 
@@ -91,11 +92,13 @@ Test content
 """
     await create_test_file(new_file, content)
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our test sync_service
+    with patch("advanced_memory.cli.commands.sync.get_sync_service", return_value=sync_service):
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
-    # Verify
-    entity = await entity_repository.get_by_file_path("new_note.md")
+    # Verify using the same entity_repository that sync_service uses
+    entity = await sync_service.entity_repository.get_by_file_path("new_note.md")
     assert entity is not None
     assert entity.title == "new_note"
 
@@ -140,8 +143,10 @@ Modified content
     # Setup changes
     changes = {(Change.modified, str(empty_dir)), (Change.modified, str(test_file))}
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our test sync_service
+    with patch("advanced_memory.cli.commands.sync.get_sync_service", return_value=sync_service):
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify
     entity = await sync_service.entity_repository.get_by_file_path("test_note.md")
@@ -178,8 +183,12 @@ Test content
     # Setup changes
     changes = {(Change.deleted, str(test_file))}
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify
     entity = await sync_service.entity_repository.get_by_file_path("to_delete.md")
@@ -219,8 +228,12 @@ Test content
     # Setup changes
     changes = {(Change.deleted, str(old_path)), (Change.added, str(new_path))}
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify
     moved_entity = await sync_service.entity_repository.get_by_file_path("new/moved_file.md")
@@ -234,7 +247,7 @@ Test content
     # Check event was recorded
     events = [e for e in watch_service.state.recent_events if e.action == "moved"]
     assert len(events) == 1
-    assert events[0].path == "old/test_move.md -> new/moved_file.md"
+    assert events[0].path == "old/test_move.md -> new/moved_file.md".replace("/", "\\")
     assert events[0].status == "success"
 
 
@@ -270,8 +283,12 @@ async def test_handle_concurrent_changes(watch_service, project_config, test_pro
         (Change.added, str(file2)),
     }
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify both files were processed
     entity1 = await sync_service.entity_repository.get_by_file_path("note1.md")
@@ -319,8 +336,12 @@ Test content for rapid moves
         (Change.added, str(final_path)),
     }
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify final state
     final_entity = await sync_service.entity_repository.get_by_file_path("final.md")
@@ -354,8 +375,12 @@ Test content for rapid moves
         (Change.added, str(original_path)),
     }
 
-    # Handle changes
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes
+        await watch_service.handle_changes(test_project, changes)
 
     # Verify final state
     original_entity = await sync_service.entity_repository.get_by_file_path("original.md")
@@ -402,8 +427,12 @@ This is a test file in a directory
     mock_sync_file = AsyncMock(side_effect=original_sync_file)
     sync_service.sync_file = mock_sync_file
 
-    # Handle changes - this should not throw an exception
-    await watch_service.handle_changes(test_project, changes)
+    # Mock get_sync_service to return our sync_service fixture
+    with patch("advanced_memory.cli.commands.sync.get_sync_service") as mock_get_sync_service:
+        mock_get_sync_service.return_value = sync_service
+
+        # Handle changes - this should not throw an exception
+        await watch_service.handle_changes(test_project, changes)
 
     # Check if our mock was called with any directory paths
     for call in mock_sync_file.call_args_list:

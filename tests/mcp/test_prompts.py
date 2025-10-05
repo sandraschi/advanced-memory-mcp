@@ -1,12 +1,12 @@
 """Tests for MCP prompts."""
 
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 
 import pytest
 
 from advanced_memory.mcp.prompts.continue_conversation import continue_conversation
-from advanced_memory.mcp.prompts.search import search_prompt
 from advanced_memory.mcp.prompts.recent_activity import recent_activity_prompt
+from advanced_memory.mcp.prompts.search import search_prompt
 
 
 @pytest.mark.asyncio
@@ -108,9 +108,9 @@ async def test_search_prompt_no_results(client):
 def test_prompt_context_with_file_path_no_permalink():
     """Test format_prompt_context with items that have file_path but no permalink."""
     from advanced_memory.mcp.prompts.utils import (
-        format_prompt_context,
         PromptContext,
         PromptContextItem,
+        format_prompt_context,
     )
     from advanced_memory.schemas.memory import EntitySummary
 
@@ -120,7 +120,7 @@ def test_prompt_context_with_file_path_no_permalink():
         title="Test File",
         permalink=None,  # No permalink
         file_path="test_file.pdf",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
     )
 
     context = PromptContext(

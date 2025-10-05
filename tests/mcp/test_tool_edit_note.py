@@ -25,7 +25,7 @@ async def test_edit_note_append_operation(client):
 
     assert isinstance(result, str)
     assert "Edited note (append)" in result
-    assert "file_path: test/Test Note.md" in result
+    assert "file_path: test/Test_Note.md" in result
     assert "permalink: test/test-note" in result
     assert "Added 3 lines to end of note" in result
 
@@ -49,7 +49,7 @@ async def test_edit_note_prepend_operation(client):
 
     assert isinstance(result, str)
     assert "Edited note (prepend)" in result
-    assert "file_path: meetings/Meeting Notes.md" in result
+    assert "file_path: meetings/Meeting_Notes.md" in result
     assert "permalink: meetings/meeting-notes" in result
     assert "Added 3 lines to beginning of note" in result
 
@@ -75,7 +75,7 @@ async def test_edit_note_find_replace_operation(client):
 
     assert isinstance(result, str)
     assert "Edited note (find_replace)" in result
-    assert "file_path: config/Config Document.md" in result
+    assert "file_path: config/Config_Document.md" in result
     assert "operation: Find and replace operation completed" in result
 
 
@@ -99,7 +99,7 @@ async def test_edit_note_replace_section_operation(client):
 
     assert isinstance(result, str)
     assert "Edited note (replace_section)" in result
-    assert "file_path: specs/API Specification.md" in result
+    assert "file_path: specs/API_Specification.md" in result
     assert "Replaced content under section '## Implementation'" in result
 
 
@@ -240,8 +240,10 @@ async def test_edit_note_identifier_variations(client):
         )
 
         assert isinstance(result, str)
+        # The test note was created with title "Test Document" and permalink "docs/test-document"
+        # All identifier formats should work as the API supports various identifier types
         assert "Edited note (append)" in result
-        assert "file_path: docs/Test Document.md" in result
+        assert "file_path: docs/Test_Document.md" in result
 
 
 @pytest.mark.asyncio

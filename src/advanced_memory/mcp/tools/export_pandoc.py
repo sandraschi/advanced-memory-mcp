@@ -8,13 +8,12 @@ Supports: PDF, HTML, DOCX, ODT, RTF, LaTeX, EPUB, and more.
 """
 
 import asyncio
-import os
-import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Any
-from urllib.parse import quote
+from typing import Any
 
-from advanced_memory.mcp.server import mcp
+from loguru import logger
+
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery, SearchResponse
 
@@ -26,13 +25,13 @@ async def export_pandoc(
     source_folder: str = "/",
     include_subfolders: bool = True,
     pdf_engine: str = "pdflatex",
-    template_path: Optional[str] = None,
-    css_path: Optional[str] = None,
+    template_path: str | None = None,
+    css_path: str | None = None,
     toc: bool = False,
     highlight_style: str = "tango",
     standalone: bool = True,
     self_contained: bool = False,
-    project: Optional[str] = None
+    project: str | None = None
 ) -> str:
     """
     Export Basic Memory notes to various formats using Pandoc.
@@ -126,8 +125,8 @@ async def export_pandoc(
 async def _get_notes_from_folder(
     source_folder: str,
     include_subfolders: bool,
-    project: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    project: str | None = None
+) -> list[dict[str, Any]]:
     """
     Retrieve all notes from the specified folder using the search API.
     """
@@ -173,11 +172,11 @@ async def _get_notes_from_folder(
         return notes_data
 
     except Exception as e:
-        print(f"Error retrieving notes: {e}")
+        logger.error(f"Error retrieving notes: {e}")
         return []
 
 
-async def _get_note_content(note) -> Optional[str]:
+async def _get_note_content(note) -> str | None:
     """
     Retrieve the full content of a note.
     """
@@ -195,22 +194,22 @@ async def _get_note_content(note) -> Optional[str]:
         return content if content else None
 
     except Exception as e:
-        print(f"Error reading note content: {e}")
+        logger.error(f"Error reading note content: {e}")
         return None
 
 
 async def _export_single_note(
-    note_info: Dict[str, Any],
+    note_info: dict[str, Any],
     export_dir: Path,
     format_type: str,
     pdf_engine: str,
-    template_path: Optional[str],
-    css_path: Optional[str],
+    template_path: str | None,
+    css_path: str | None,
     toc: bool,
     highlight_style: str,
     standalone: bool,
     self_contained: bool
-) -> Optional[str]:
+) -> str | None:
     """
     Export a single note using Pandoc.
     """
@@ -256,11 +255,11 @@ async def _export_single_note(
             return str(output_path)
         else:
             error_msg = stderr.decode('utf-8', errors='ignore')
-            print(f"Pandoc error for {note_info['title']}: {error_msg}")
+            logger.error(f"Pandoc error for {note_info['title']}: {error_msg}")
             return None
 
     except Exception as e:
-        print(f"Error exporting note {note_info['title']}: {e}")
+        logger.error(f"Error exporting note {note_info['title']}: {e}")
         return None
 
 
@@ -269,13 +268,13 @@ def _build_pandoc_command(
     output_path: str,
     format_type: str,
     pdf_engine: str,
-    template_path: Optional[str],
-    css_path: Optional[str],
+    template_path: str | None,
+    css_path: str | None,
     toc: bool,
     highlight_style: str,
     standalone: bool,
     self_contained: bool
-) -> List[str]:
+) -> list[str]:
     """
     Build the Pandoc command with all specified options.
     """
@@ -349,8 +348,8 @@ def _sanitize_filename(title: str) -> str:
 
 
 def _generate_export_summary(
-    exported_files: List[str],
-    errors: List[str],
+    exported_files: list[str],
+    errors: list[str],
     format_type: str,
     export_path: str
 ) -> str:
@@ -359,12 +358,12 @@ def _generate_export_summary(
     """
     lines = [
         "# Pandoc Export Summary",
-        f"",
+        "",
         f"**Format:** {format_type.upper()}",
         f"**Output Directory:** {export_path}",
         f"**Files Exported:** {len(exported_files)}",
         f"**Errors:** {len(errors)}",
-        f""
+        ""
     ]
 
     if exported_files:
@@ -383,10 +382,10 @@ def _generate_export_summary(
         "## Next Steps:",
         f"- Check the `{export_path}` directory for exported files",
         f"- Open {format_type.upper()} files with appropriate applications",
-        f"- For PDF: Requires PDF viewer (Adobe Reader, etc.)",
-        f"- For DOCX: Requires Word or compatible viewer",
-        f"- For HTML: Open in any web browser",
-        f""
+        "- For PDF: Requires PDF viewer (Adobe Reader, etc.)",
+        "- For DOCX: Requires Word or compatible viewer",
+        "- For HTML: Open in any web browser",
+        ""
     ])
 
     return "\n".join(lines)

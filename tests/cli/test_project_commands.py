@@ -1,13 +1,14 @@
 """Tests for the project CLI commands."""
 
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from typer.testing import CliRunner
 
 from advanced_memory.cli.main import app as cli_app
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 def test_project_list_command(mock_run, cli_env):
     """Test the 'project list' command with mocked API."""
     # Mock the API response
@@ -27,7 +28,7 @@ def test_project_list_command(mock_run, cli_env):
     assert result.exit_code == 0
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 def test_project_add_command(mock_run, cli_env):
     """Test the 'project add' command with mocked API."""
     # Mock the API response
@@ -47,7 +48,7 @@ def test_project_add_command(mock_run, cli_env):
     assert result.exit_code == 0
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 def test_project_remove_command(mock_run, cli_env):
     """Test the 'project remove' command with mocked API."""
     # Mock the API response
@@ -67,7 +68,7 @@ def test_project_remove_command(mock_run, cli_env):
     assert result.exit_code == 0
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 @patch("importlib.reload")
 def test_project_default_command(mock_reload, mock_run, cli_env):
     """Test the 'project default' command with mocked API."""
@@ -85,9 +86,9 @@ def test_project_default_command(mock_reload, mock_run, cli_env):
     # Patching call_put directly since it's imported at the module level
 
     # Patch the os.environ for checking
-    with patch.dict(os.environ, {}, clear=True):
+    with patch.dict(os.environ, {"HOME": "/tmp", "USERPROFILE": "/tmp"}, clear=False):
         # Patch ConfigManager.set_default_project to prevent validation error
-        with patch("basic_memory.config.ConfigManager.set_default_project"):
+        with patch("advanced_memory.config.ConfigManager.set_default_project"):
             runner = CliRunner()
             result = runner.invoke(cli_app, ["project", "default", "test-project"])
 
@@ -95,7 +96,7 @@ def test_project_default_command(mock_reload, mock_run, cli_env):
             assert result.exit_code == 0
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 def test_project_sync_command(mock_run, cli_env):
     """Test the 'project sync' command with mocked API."""
     # Mock the API response
@@ -115,7 +116,7 @@ def test_project_sync_command(mock_run, cli_env):
     assert result.exit_code == 0
 
 
-@patch("basic_memory.cli.commands.project.asyncio.run")
+@patch("advanced_memory.cli.commands.project.asyncio.run")
 def test_project_failure_exits_with_error(mock_run, cli_env):
     """Test that CLI commands properly exit with error code on API failures."""
     # Mock an exception being raised

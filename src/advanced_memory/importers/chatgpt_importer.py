@@ -2,17 +2,17 @@
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
-from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
 from advanced_memory.importers.base import Importer
-from advanced_memory.schemas.importer import ChatImportResult
 from advanced_memory.importers.utils import clean_filename, format_timestamp
+from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
+from advanced_memory.schemas.importer import ChatImportResult
 
 logger = logging.getLogger(__name__)
 
 
-class ChatGPTImporter(Importer[ChatImportResult]):
+class ChatGPTImporter(Importer):
     """Service for importing ChatGPT conversations."""
 
     async def import_data(
@@ -70,7 +70,7 @@ class ChatGPTImporter(Importer[ChatImportResult]):
             return self.handle_error("Failed to import ChatGPT conversations", e)  # pyright: ignore [reportReturnType]
 
     def _format_chat_content(
-        self, folder: str, conversation: Dict[str, Any]
+        self, folder: str, conversation: dict[str, Any]
     ) -> EntityMarkdown:  # pragma: no cover
         """Convert chat conversation to Basic Memory entity.
 
@@ -124,8 +124,8 @@ class ChatGPTImporter(Importer[ChatImportResult]):
     def _format_chat_markdown(
         self,
         title: str,
-        mapping: Dict[str, Any],
-        root_id: Optional[str],
+        mapping: dict[str, Any],
+        root_id: str | None,
         created_at: float,
         modified_at: float,
     ) -> str:  # pragma: no cover
@@ -145,7 +145,7 @@ class ChatGPTImporter(Importer[ChatImportResult]):
         lines = [f"# {title}\n"]
 
         # Traverse message tree
-        seen_msgs: Set[str] = set()
+        seen_msgs: set[str] = set()
         messages = self._traverse_messages(mapping, root_id, seen_msgs)
 
         # Format each message
@@ -171,7 +171,7 @@ class ChatGPTImporter(Importer[ChatImportResult]):
 
         return "\n".join(lines)
 
-    def _get_message_content(self, message: Dict[str, Any]) -> str:  # pragma: no cover
+    def _get_message_content(self, message: dict[str, Any]) -> str:  # pragma: no cover
         """Extract clean message content.
 
         Args:
@@ -191,8 +191,8 @@ class ChatGPTImporter(Importer[ChatImportResult]):
         return ""
 
     def _traverse_messages(
-        self, mapping: Dict[str, Any], root_id: Optional[str], seen: Set[str]
-    ) -> List[Dict[str, Any]]:  # pragma: no cover
+        self, mapping: dict[str, Any], root_id: str | None, seen: set[str]
+    ) -> list[dict[str, Any]]:  # pragma: no cover
         """Traverse message tree and return messages in order.
 
         Args:

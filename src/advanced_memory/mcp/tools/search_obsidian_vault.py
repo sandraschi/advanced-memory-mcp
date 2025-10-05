@@ -4,15 +4,13 @@ This tool searches through external Obsidian vaults using Obsidian-specific
 search patterns and syntax.
 """
 
-import os
 import re
 from pathlib import Path
-from typing import Optional, List, Dict, Any
-from datetime import datetime
+from typing import Any
 
 from loguru import logger
 
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
@@ -152,7 +150,7 @@ async def search_obsidian_vault(
         return f"# Vault Search Failed\n\nError: {e}"
 
 
-async def _find_markdown_files(vault_path: Path) -> List[Path]:
+async def _find_markdown_files(vault_path: Path) -> list[Path]:
     """Find all markdown files in the vault."""
     markdown_files = []
 
@@ -160,7 +158,7 @@ async def _find_markdown_files(vault_path: Path) -> List[Path]:
     try:
         from mcp_filesystem import list_directory
 
-        async def find_recursive(current_path: str) -> List[str]:
+        async def find_recursive(current_path: str) -> list[str]:
             """Recursively find markdown files."""
             files = []
             try:
@@ -170,19 +168,19 @@ async def _find_markdown_files(vault_path: Path) -> List[Path]:
                 # Parse the directory listing (it's returned as formatted text)
                 lines = dir_contents.split('\n')
                 for line in lines:
-                    if '📄' in line and '.md' in line:
+                    if '[DOC]' in line and '.md' in line:
                         # Extract filename from the formatted line
                         parts = line.split()
                         if len(parts) >= 2:
                             filename = parts[1].strip()
                             if filename.endswith('.md'):
-                                files.append(os.path.join(current_path, filename))
-                    elif '📁' in line and not line.strip().endswith('.'):
+                                files.append(str(Path(current_path) / filename))
+                    elif '[FOLDER]' in line and not line.strip().endswith('.'):
                         # Directory - recurse
                         parts = line.split()
                         if len(parts) >= 2:
                             dirname = parts[1].strip()
-                            subdir_path = os.path.join(current_path, dirname)
+                            subdir_path = str(Path(current_path) / dirname)
                             subfiles = await find_recursive(subdir_path)
                             files.extend(subfiles)
 
@@ -203,7 +201,7 @@ async def _find_markdown_files(vault_path: Path) -> List[Path]:
     return markdown_files
 
 
-async def _search_text(markdown_files: List[Path], query: str) -> List[Dict[str, Any]]:
+async def _search_text(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for text content in markdown files."""
     results = []
     search_terms = _parse_search_query(query)
@@ -256,7 +254,7 @@ async def _search_text(markdown_files: List[Path], query: str) -> List[Dict[str,
     return results
 
 
-async def _search_tags(markdown_files: List[Path], query: str) -> List[Dict[str, Any]]:
+async def _search_tags(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for tags in markdown files."""
     results = []
 
@@ -290,7 +288,7 @@ async def _search_tags(markdown_files: List[Path], query: str) -> List[Dict[str,
     return results
 
 
-async def _search_files(markdown_files: List[Path], query: str) -> List[Dict[str, Any]]:
+async def _search_files(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for files by filename."""
     results = []
     query_lower = query.lower()
@@ -323,7 +321,7 @@ async def _search_files(markdown_files: List[Path], query: str) -> List[Dict[str
     return results
 
 
-async def _search_links(markdown_files: List[Path], query: str) -> List[Dict[str, Any]]:
+async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for wikilinks in markdown files."""
     results = []
 
@@ -360,7 +358,7 @@ async def _search_links(markdown_files: List[Path], query: str) -> List[Dict[str
     return results
 
 
-async def _search_frontmatter(markdown_files: List[Path], query: str) -> List[Dict[str, Any]]:
+async def _search_frontmatter(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search in YAML frontmatter of markdown files."""
     results = []
 
@@ -400,7 +398,7 @@ async def _search_frontmatter(markdown_files: List[Path], query: str) -> List[Di
     return results
 
 
-def _parse_search_query(query: str) -> List[str]:
+def _parse_search_query(query: str) -> list[str]:
     """Parse search query into individual search terms."""
     # Handle quoted phrases
     terms = []
@@ -447,7 +445,7 @@ def _extract_title(content: str, file_path: Path) -> str:
     return file_path.stem
 
 
-def _extract_frontmatter(content: str) -> Dict[str, Any]:
+def _extract_frontmatter(content: str) -> dict[str, Any]:
     """Extract YAML frontmatter from markdown content."""
     if not content.startswith('---'):
         return {}
@@ -487,13 +485,13 @@ def _extract_frontmatter(content: str) -> Dict[str, Any]:
     return frontmatter
 
 
-def _format_search_results(results: List[Dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
+def _format_search_results(results: list[dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
     """Format search results into readable output."""
     if not results:
         return f"# Vault Search Complete\n\nNo results found for '{query}' in vault: {vault_path}"
 
     output_lines = [
-        f"# Vault Search Results",
+        "# Vault Search Results",
         f"Query: '{query}' (type: {search_type})",
         f"Vault: {vault_path}",
         f"Found {len(results)} matching files",

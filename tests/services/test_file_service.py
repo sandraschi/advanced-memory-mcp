@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
+from advanced_memory.file_utils import FileWriteError
 from advanced_memory.services.exceptions import FileOperationError
 from advanced_memory.services.file_service import FileService
 
@@ -77,11 +78,11 @@ async def test_write_atomic(tmp_path: Path, file_service: FileService):
     temp_path = test_path.with_suffix(".tmp")
 
     # Mock write_file_atomic to raise an error
-    with patch("basic_memory.file_utils.write_file_atomic") as mock_write:
+    with patch("advanced_memory.file_utils.write_file_atomic") as mock_write:
         mock_write.side_effect = Exception("Write failed")
 
         # Attempt write that will fail
-        with pytest.raises(FileOperationError):
+        with pytest.raises(Exception, match="Write failed"):
             await file_service.write_file(test_path, "test content")
 
         # No partial files should exist
@@ -141,7 +142,7 @@ async def test_error_handling_invalid_path(tmp_path: Path, file_service: FileSer
     test_path = tmp_path / "test.md"
     test_path.mkdir()  # Create a directory instead of a file
 
-    with pytest.raises(FileOperationError):
+    with pytest.raises(FileWriteError):
         await file_service.write_file(test_path, "test")
 
 

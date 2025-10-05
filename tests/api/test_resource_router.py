@@ -1,7 +1,7 @@
 """Tests for resource router endpoints."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -26,8 +26,8 @@ async def test_get_resource_content(client, project_config, entity_repository, p
             "permalink": "test/test",
             "file_path": "test/test.md",  # Relative to config.home
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         }
     )
 
@@ -35,7 +35,7 @@ async def test_get_resource_content(client, project_config, entity_repository, p
     response = await client.get(f"{project_url}/resource/{entity.permalink}")
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
-    assert response.text == content
+    assert response.text.replace('\r\n', '\n') == content
 
 
 @pytest.mark.asyncio
@@ -55,8 +55,8 @@ async def test_get_resource_pagination(client, project_config, entity_repository
             "permalink": "test/test",
             "file_path": "test/test.md",  # Relative to config.home
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         }
     )
 
@@ -66,7 +66,7 @@ async def test_get_resource_pagination(client, project_config, entity_repository
     )
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
-    assert response.text == content
+    assert response.text.replace('\r\n', '\n') == content
 
 
 @pytest.mark.asyncio
@@ -86,8 +86,8 @@ async def test_get_resource_by_title(client, project_config, entity_repository, 
             "permalink": "test/test",
             "file_path": "test/test.md",  # Relative to config.home
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         }
     )
 
@@ -115,8 +115,8 @@ async def test_get_resource_missing_file(client, project_config, entity_reposito
             "permalink": "test/missing",
             "file_path": "test/missing.md",
             "content_type": "text/markdown",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         }
     )
 
@@ -159,7 +159,7 @@ permalink: test/test-entity
 
 - [note] an observation.
     """.strip()
-        in response.text
+        in response.text.replace('\r\n', '\n')
     )
 
 
@@ -207,7 +207,7 @@ async def test_get_resource_entities(client, project_config, entity_repository, 
 - links to [[Test Entity]]
 
     """.strip()
-        in response.text
+        in response.text.replace('\r\n', '\n')
     )
 
 
@@ -258,8 +258,8 @@ permalink: test/related-entity
 
 # Related Content
 - links to [[Test Entity]]
-""".strip()
-        in response.text
+    """.strip()
+        in response.text.replace('\r\n', '\n')
     )
 
 
@@ -306,9 +306,9 @@ async def test_get_resource_relation(client, project_config, entity_repository, 
 
 # Related Content
 - links to [[Test Entity]]
-    
+
     """.strip()
-        in response.text
+        in response.text.replace('\r\n', '\n')
     )
 
 
@@ -402,8 +402,8 @@ async def test_put_resource_update_existing(client, project_config, entity_repos
             "file_path": file_path,
             "content_type": "application/json",
             "checksum": "initial123",
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc),
+            "created_at": datetime.now(UTC),
+            "updated_at": datetime.now(UTC),
         }
     )
 

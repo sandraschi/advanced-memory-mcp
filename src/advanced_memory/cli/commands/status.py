@@ -1,15 +1,14 @@
 """Status command for basic-memory CLI."""
 
 import asyncio
-from typing import Set, Dict
 
 import typer
+from advanced_memory import db
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.tree import Tree
 
-from basic_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.cli.commands.sync import get_sync_service
 from advanced_memory.config import ConfigManager, get_project_config
@@ -21,7 +20,7 @@ console = Console()
 
 
 def add_files_to_tree(
-    tree: Tree, paths: Set[str], style: str, checksums: Dict[str, str] | None = None
+    tree: Tree, paths: set[str], style: str, checksums: dict[str, str] | None = None
 ):
     """Add files to tree, grouped by directory."""
     # Group by directory
@@ -47,7 +46,7 @@ def add_files_to_tree(
                 branch.add(f"[{style}]{file_name}[/{style}]")
 
 
-def group_changes_by_directory(changes: SyncReport) -> Dict[str, Dict[str, int]]:
+def group_changes_by_directory(changes: SyncReport) -> dict[str, dict[str, int]]:
     """Group changes by directory for summary view."""
     by_dir = {}
     for change_type, paths in [
@@ -73,7 +72,7 @@ def group_changes_by_directory(changes: SyncReport) -> Dict[str, Dict[str, int]]
     return by_dir
 
 
-def build_directory_summary(counts: Dict[str, int]) -> str:
+def build_directory_summary(counts: dict[str, int]) -> str:
     """Build summary string for directory changes."""
     parts = []
     if counts["new"]:
@@ -81,7 +80,7 @@ def build_directory_summary(counts: Dict[str, int]) -> str:
     if counts["modified"]:
         parts.append(f"[yellow]~{counts['modified']} modified[/yellow]")
     if counts["moved"]:
-        parts.append(f"[blue]↔{counts['moved']} moved[/blue]")
+        parts.append(f"[blue]<->{counts['moved']} moved[/blue]")
     if counts["deleted"]:
         parts.append(f"[red]-{counts['deleted']} deleted[/red]")
     return " ".join(parts)
@@ -107,7 +106,7 @@ def display_changes(project_name: str, title: str, changes: SyncReport, verbose:
         if changes.moves:
             move_branch = tree.add("[blue]Moved[/blue]")
             for old_path, new_path in sorted(changes.moves.items()):
-                move_branch.add(f"[blue]{old_path}[/blue] → [blue]{new_path}[/blue]")
+                move_branch.add(f"[blue]{old_path}[/blue] -> [blue]{new_path}[/blue]")
         if changes.deleted:
             del_branch = tree.add("[red]Deleted[/red]")
             add_files_to_tree(del_branch, changes.deleted, "red")
@@ -152,4 +151,4 @@ def status(
     except Exception as e:
         logger.error(f"Error checking status: {e}")
         typer.echo(f"Error checking status: {e}", err=True)
-        raise typer.Exit(code=1)  # pragma: no cover
+        raise typer.Exit(code=1) from e  # pragma: no cover

@@ -5,27 +5,26 @@ to the Basic Memory API, with improved error handling and logging.
 """
 
 import typing
-from typing import Optional
 
-from httpx import Response, URL, AsyncClient, HTTPStatusError
-from httpx._client import UseClientDefault, USE_CLIENT_DEFAULT
+from httpx import URL, AsyncClient, HTTPStatusError, Response
+from httpx._client import USE_CLIENT_DEFAULT, UseClientDefault
 from httpx._types import (
+    AuthTypes,
+    CookieTypes,
+    HeaderTypes,
+    QueryParamTypes,
     RequestContent,
     RequestData,
-    RequestFiles,
-    QueryParamTypes,
-    HeaderTypes,
-    CookieTypes,
-    AuthTypes,
-    TimeoutTypes,
     RequestExtensions,
+    RequestFiles,
+    TimeoutTypes,
 )
 from loguru import logger
 from mcp.server.fastmcp.exceptions import ToolError
 
 
 def get_error_message(
-    status_code: int, url: URL | str, method: str, msg: Optional[str] = None
+    status_code: int, url: URL | str, method: str, msg: str | None = None
 ) -> str:
     """Get a friendly error message based on the HTTP status code.
 
@@ -508,7 +507,7 @@ async def call_delete(
         raise ToolError(error_message) from e
 
 
-def check_migration_status() -> Optional[str]:
+def check_migration_status() -> str | None:
     """Check if sync/migration is in progress and return status message if so.
 
     Returns:
@@ -526,8 +525,8 @@ def check_migration_status() -> Optional[str]:
 
 
 async def wait_for_migration_or_return_status(
-    timeout: float = 5.0, project_name: Optional[str] = None
-) -> Optional[str]:
+    timeout: float = 5.0, project_name: str | None = None
+) -> str | None:
     """Wait briefly for sync/migration to complete, or return status message.
 
     Args:
@@ -540,8 +539,9 @@ async def wait_for_migration_or_return_status(
         Status message if sync is still in progress, None if ready
     """
     try:
-        from advanced_memory.services.sync_status_service import sync_status_tracker
         import asyncio
+
+        from advanced_memory.services.sync_status_service import sync_status_tracker
 
         # Check if we should use project-specific or global status
         def is_ready() -> bool:
@@ -557,7 +557,10 @@ async def wait_for_migration_or_return_status(
         while (asyncio.get_event_loop().time() - start_time) < timeout:
             if is_ready():
                 return None
-            await asyncio.sleep(0.1)  # Check every 100ms
+            # Configurable polling interval
+            import os
+            poll_interval = float(os.getenv("SYNC_POLL_INTERVAL", "0.1"))
+            await asyncio.sleep(poll_interval)
 
         # Still not ready after timeout
         if project_name:
@@ -583,11 +586,11 @@ def sanitize_unicode_content(content: str) -> str:
     Sanitize Unicode characters that cause JSON parsing issues in Claude Desktop.
     """
     replacements = {
-        '✅': '[OK]', '❌': '[ERROR]', '⚠️': '[WARNING]', '🚨': '[ALERT]',
-        '🎯': '[TARGET]', '🔧': '[FIX]', '⚡': '[FAST]', '🚀': '[LAUNCH]', '🎉': '[SUCCESS]',
-        '📁': '[FOLDER]', '📝': '[NOTE]', '📋': '[LIST]',
-        'ÐYZî': '[TARGET]', 'ÐY"õ': '[FIX]', 'ÐY"<': '[INFO]', 'ÐYs?': '[STATUS]',
-        'ÐY"^': '[METRIC]', 's­': '[NEXT]', 'o.': '[OK]', '?': '[CHECK]'
+        '[UNICODE]': '[OK]', '[UNICODE][UNICODE]': '[WARNING]',
+        '[TARGET]': '[TARGET]', '[FIX]': '[FIX]', '[FAST]': '[FAST]', '[LAUNCH]': '[LAUNCH]', '[SUCCESS]': '[SUCCESS]',
+        '[FOLDER]': '[FOLDER]', '[NOTE]': '[NOTE]', '[LIST]': '[LIST]',
+        '[UNICODE]YZ[UNICODE]': '[TARGET]', '[UNICODE]Y"[UNICODE]': '[FIX]', '[UNICODE]Y"<': '[INFO]', '[UNICODE]Ys?': '[STATUS]',
+        '[UNICODE]Y"^': '[METRIC]', 's[UNICODE]': '[NEXT]', 'o.': '[OK]', '?': '[CHECK]'
     }
     sanitized = content
     for unicode_char, ascii_replacement in replacements.items():

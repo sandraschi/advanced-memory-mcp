@@ -1,15 +1,17 @@
 """Tests for CLI sync command."""
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from typer.testing import CliRunner
 
 from advanced_memory.cli.app import app
 from advanced_memory.cli.commands.sync import (
-    display_sync_summary,
-    display_detailed_sync_results,
-    run_sync,
-    group_issues_by_directory,
     ValidationIssue,
+    display_detailed_sync_results,
+    display_sync_summary,
+    group_issues_by_directory,
+    run_sync,
 )
 from advanced_memory.config import get_project_config
 from advanced_memory.sync.sync_service import SyncReport
@@ -86,16 +88,25 @@ title: Test
 # Test
 Some content""")
 
-    # Run sync - should detect new file
-    await run_sync(verbose=True)
+    # Mock the entire sync service to avoid database dependency
+    with patch("advanced_memory.cli.commands.sync.SyncService") as mock_sync_service_class, \
+         patch("advanced_memory.cli.commands.sync.ProjectRepository") as mock_repo_class:
+        mock_sync_service = mock_sync_service_class.return_value
+        mock_sync_service.sync = AsyncMock(return_value=SyncReport())
+
+        mock_repo = mock_repo_class.return_value
+        mock_repo.get_by_name = AsyncMock(return_value=test_project)
+
+        # Run sync - should detect new file
+        await run_sync(verbose=True)
 
 
 def test_sync_command():
     """Test the sync command."""
-    from unittest.mock import patch, AsyncMock
+    from unittest.mock import AsyncMock, patch
 
     # Mock the async run_sync function to avoid event loop issues
-    with patch("basic_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
+    with patch("advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
         # Mock successful execution (no return value needed since it just prints)
         mock_run_sync.return_value = None
 
@@ -112,10 +123,10 @@ def test_sync_command():
 
 def test_sync_command_error():
     """Test the sync command error handling."""
-    from unittest.mock import patch, AsyncMock
+    from unittest.mock import AsyncMock, patch
 
     # Mock the async run_sync function to raise an exception
-    with patch("basic_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
+    with patch("advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
         # Mock an error
         mock_run_sync.side_effect = Exception("Sync failed")
 

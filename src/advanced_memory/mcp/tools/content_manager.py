@@ -4,39 +4,37 @@ This tool consolidates all content operations: write, read, view, edit, move, an
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-from typing import List, Union, Optional, Dict, Any
 
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.utils import call_put, call_get, call_patch, call_delete
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.utils import call_patch, call_put
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
-from advanced_memory.utils import parse_tags, validate_project_path, sanitize_filename
-from advanced_memory.mcp.tools.search import search_notes
+from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[List[str], str, None]
+TagType = list[str] | str | None
 
 
 @mcp.tool
 async def adn_content(
     operation: str,
-    identifier: Optional[str] = None,
-    content: Optional[str] = None,
-    folder: Optional[str] = None,
-    tags: Optional[TagType] = None,
+    identifier: str | None = None,
+    content: str | None = None,
+    folder: str | None = None,
+    tags: TagType | None = None,
     entity_type: str = "note",
-    destination_path: Optional[str] = None,
-    edit_operation: Optional[str] = None,
-    find_text: Optional[str] = None,
+    destination_path: str | None = None,
+    edit_operation: str | None = None,
+    find_text: str | None = None,
     expected_replacements: int = 1,
-    section: Optional[str] = None,
+    section: str | None = None,
     page: int = 1,
     page_size: int = 10,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
 
@@ -145,7 +143,7 @@ async def _write_operation(
 
     # Process tags using the helper function
     tag_list = parse_tags(tags)
-    
+
     # Create the entity request
     metadata = {"tags": tag_list} if tag_list else None
     entity = Entity(
@@ -227,8 +225,8 @@ async def _view_operation(active_project, identifier: str, page: int, page_size:
 
 
 async def _edit_operation(
-    active_project, identifier: str, edit_operation: str, content: str, 
-    find_text: Optional[str], expected_replacements: int, section: Optional[str]
+    active_project, identifier: str, edit_operation: str, content: str,
+    find_text: str | None, expected_replacements: int, section: str | None
 ) -> str:
     """Handle edit operation."""
     if not identifier or not edit_operation or not content:

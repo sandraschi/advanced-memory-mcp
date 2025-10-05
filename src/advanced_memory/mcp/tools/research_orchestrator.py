@@ -1,21 +1,21 @@
 """Research Orchestrator - Guides AI-powered research and note creation workflows."""
 
 import json
-from datetime import datetime
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any
 
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 
 
 @dataclass
 class ResearchPlan:
     """Structured research plan for AI-guided execution."""
     topic: str
-    research_questions: List[str]
-    search_queries: List[str]
-    sources_to_check: List[str]
-    note_structure: Dict[str, Any]
+    research_questions: list[str]
+    search_queries: list[str]
+    sources_to_check: list[str]
+    note_structure: dict[str, Any]
     estimated_steps: int
     methodology: str
 
@@ -27,30 +27,30 @@ class ResearchStep:
     action: str
     description: str
     expected_output: str
-    tools_to_use: List[str]
-    parameters: Dict[str, Any]
+    tools_to_use: list[str]
+    parameters: dict[str, Any]
 
 
 @mcp.tool(
-    description="""🧠 Research Orchestrator - AI-Guided Research & Note Creation
+    description="""[UNICODE][UNICODE] Research Orchestrator - AI-Guided Research & Note Creation
 
 Creates structured research plans and guides Claude/Sonnet through comprehensive
 knowledge building. While the MCP server can't directly control the AI client,
 this tool provides detailed research methodologies and workflows.
 
 WORKFLOWS:
-• research_plan: Create detailed research roadmap with questions, sources, methodology
-• research_methodology: Get proven research approaches for different topics
-• research_questions: Generate focused research questions and sub-questions
-• note_blueprint: Design optimal note structure for research findings
-• research_workflow: Step-by-step research execution guide
+[UNICODE] research_plan: Create detailed research roadmap with questions, sources, methodology
+[UNICODE] research_methodology: Get proven research approaches for different topics
+[UNICODE] research_questions: Generate focused research questions and sub-questions
+[UNICODE] note_blueprint: Design optimal note structure for research findings
+[UNICODE] research_workflow: Step-by-step research execution guide
 
 METHODOLOGIES:
-• Exploratory Research: Broad topic investigation
-• Deep Dive Analysis: Focused expert-level research
-• Comparative Studies: Multiple approach analysis
-• Problem-Solution Research: Issue-focused investigation
-• Trend Analysis: Temporal pattern research
+[UNICODE] Exploratory Research: Broad topic investigation
+[UNICODE] Deep Dive Analysis: Focused expert-level research
+[UNICODE] Comparative Studies: Multiple approach analysis
+[UNICODE] Problem-Solution Research: Issue-focused investigation
+[UNICODE] Trend Analysis: Temporal pattern research
 
 USAGE PATTERNS:
 1. Plan research: research_orchestrator("research_plan", topic="quantum computing")
@@ -64,11 +64,11 @@ well-linked research notes in your knowledge base.
 )
 async def research_orchestrator(
     operation: str,
-    topic: Optional[str] = None,
-    topic_type: Optional[str] = None,
-    research_type: Optional[str] = None,
-    step: Optional[int] = None,
-    parameters: Optional[Dict[str, Any]] = None
+    topic: str | None = None,
+    topic_type: str | None = None,
+    research_type: str | None = None,
+    step: int | None = None,
+    parameters: dict[str, Any] | None = None
 ) -> str:
     """
     Research orchestrator tool for AI-guided knowledge building.
@@ -99,13 +99,13 @@ async def research_orchestrator(
             return _get_available_operations()
 
     except Exception as e:
-        return f"❌ Research orchestration failed: {str(e)}"
+        return f"[UNICODE] Research orchestration failed: {str(e)}"
 
 
-async def _create_research_plan(topic: str, params: Dict[str, Any]) -> str:
+async def _create_research_plan(topic: str, params: dict[str, Any]) -> str:
     """Create a comprehensive research plan for a topic."""
     if not topic:
-        return "❌ Topic required for research planning"
+        return "[UNICODE] Topic required for research planning"
 
     depth = params.get("depth", "comprehensive")
     time_frame = params.get("time_frame", "current")
@@ -122,73 +122,73 @@ async def _create_research_plan(topic: str, params: Dict[str, Any]) -> str:
         methodology=_select_methodology(topic, depth)
     )
 
-    return f"""🧠 **Research Plan: {topic}**
+    return f"""[UNICODE][UNICODE] **Research Plan: {topic}**
 
 **Overview:**
-• **Topic**: {topic}
-• **Depth**: {depth}
-• **Scope**: {scope}
-• **Time Frame**: {time_frame}
-• **Methodology**: {plan.methodology}
-• **Estimated Steps**: {plan.estimated_steps}
+[UNICODE] **Topic**: {topic}
+[UNICODE] **Depth**: {depth}
+[UNICODE] **Scope**: {scope}
+[UNICODE] **Time Frame**: {time_frame}
+[UNICODE] **Methodology**: {plan.methodology}
+[UNICODE] **Estimated Steps**: {plan.estimated_steps}
 
-**🔍 Research Questions:**
-{chr(10).join(f"• {q}" for q in plan.research_questions)}
+**[SEARCH] Research Questions:**
+{chr(10).join(f"[UNICODE] {q}" for q in plan.research_questions)}
 
-**🔎 Search Queries to Execute:**
-{chr(10).join(f"• \"{q}\"" for q in plan.search_queries)}
+**[UNICODE][UNICODE] Search Queries to Execute:**
+{chr(10).join(f"[UNICODE] {q}" for q in plan.search_queries)}
 
-**📚 Sources to Investigate:**
-{chr(10).join(f"• {source}" for source in plan.sources_to_check)}
+**[BOOKS] Sources to Investigate:**
+{chr(10).join(f"[UNICODE] {source}" for source in plan.sources_to_check)}
 
-**📝 Note Structure Blueprint:**
+**[NOTE] Note Structure Blueprint:**
 ```json
 {json.dumps(plan.note_structure, indent=2)}
 ```
 
-**🎯 Next Steps for Claude:**
+**[TARGET] Next Steps for Claude:**
 1. **Execute searches** using the search queries above
 2. **Review sources** and extract key information
 3. **Create main topic note** using the blueprint structure
 4. **Create linked sub-notes** for each research question
 5. **Establish relationships** between concepts and findings
 
-**💡 Research Tips:**
-• Start with broad searches, then narrow down
-• Cross-reference information from multiple sources
-• Note contradictions and areas needing clarification
-• Link related concepts within your knowledge base
+**[UNICODE][UNICODE] Research Tips:**
+[UNICODE] Start with broad searches, then narrow down
+[UNICODE] Cross-reference information from multiple sources
+[UNICODE] Note contradictions and areas needing clarification
+[UNICODE] Link related concepts within your knowledge base
 
-**Ready to begin research execution?** 🚀
+**Ready to begin research execution?** [LAUNCH]
 
 Use: `research_orchestrator("research_workflow", topic="{topic}", step=1)`
 """
 
 
-async def _get_research_methodology(topic_type: str, params: Dict[str, Any]) -> str:
+async def _get_research_methodology(topic_type: str, params: dict[str, Any]) -> str:
     """Provide research methodology guidance."""
     methodologies = {
         "technical": {
             "name": "Technical Deep Dive",
-            "approach": "Specification → Implementation → Applications → Limitations",
+            "approach": "Specification [UNICODE] Implementation [UNICODE] Applications [UNICODE] Limitations",
             "tools": ["Official documentation", "GitHub repositories", "Technical papers", "API references"],
             "validation": ["Code examples", "Performance benchmarks", "Security analysis"]
         },
         "business": {
             "name": "Business Analysis",
-            "approach": "Market → Competition → Strategy → Implementation",
+            "approach": "Market [UNICODE] Competition [UNICODE] Strategy [UNICODE] Implementation",
             "tools": ["Industry reports", "Financial data", "Competitor analysis", "Trend analysis"],
             "validation": ["Case studies", "ROI analysis", "Risk assessment"]
         },
         "academic": {
             "name": "Academic Research",
-            "approach": "Literature Review → Methodology → Findings → Implications",
+            "approach": "Literature Review [UNICODE] Methodology [UNICODE] Findings [UNICODE] Implications",
             "tools": ["Academic databases", "Citation analysis", "Peer review", "Meta-analysis"],
             "validation": ["Statistical significance", "Peer review", "Reproducibility"]
         },
         "general": {
             "name": "Comprehensive Research",
-            "approach": "Overview → Deep Analysis → Applications → Future Directions",
+            "approach": "Overview [UNICODE] Deep Analysis [UNICODE] Applications [UNICODE] Future Directions",
             "tools": ["Web search", "Expert interviews", "Data analysis", "Trend monitoring"],
             "validation": ["Multiple sources", "Fact-checking", "Expert consensus"]
         }
@@ -196,53 +196,53 @@ async def _get_research_methodology(topic_type: str, params: Dict[str, Any]) -> 
 
     method = methodologies.get(topic_type, methodologies["general"])
 
-    return f"""📋 **Research Methodology: {method['name']}**
+    return f"""[LIST] **Research Methodology: {method['name']}**
 
-**🎯 Approach:**
+**[TARGET] Approach:**
 {method['approach']}
 
-**🛠️ Recommended Tools & Sources:**
-{chr(10).join(f"• {tool}" for tool in method['tools'])}
+**[UNICODE][UNICODE][UNICODE] Recommended Tools & Sources:**
+{chr(10).join(f"[UNICODE] {tool}" for tool in method['tools'])}
 
-**✅ Validation Methods:**
-{chr(10).join(f"• {validation}" for validation in method['validation'])}
+**[UNICODE] Validation Methods:**
+{chr(10).join(f"[UNICODE] {validation}" for validation in method['validation'])}
 
-**📊 Research Phases:**
+**[CHART] Research Phases:**
 
 **Phase 1: Foundation**
-• Define research scope and objectives
-• Gather preliminary information
-• Identify key stakeholders and experts
+[UNICODE] Define research scope and objectives
+[UNICODE] Gather preliminary information
+[UNICODE] Identify key stakeholders and experts
 
 **Phase 2: Investigation**
-• Execute systematic information gathering
-• Cross-reference multiple sources
-• Identify patterns and contradictions
+[UNICODE] Execute systematic information gathering
+[UNICODE] Cross-reference multiple sources
+[UNICODE] Identify patterns and contradictions
 
 **Phase 3: Analysis**
-• Synthesize findings
-• Evaluate credibility and relevance
-• Draw evidence-based conclusions
+[UNICODE] Synthesize findings
+[UNICODE] Evaluate credibility and relevance
+[UNICODE] Draw evidence-based conclusions
 
 **Phase 4: Application**
-• Identify practical implications
-• Create actionable recommendations
-• Plan implementation strategies
+[UNICODE] Identify practical implications
+[UNICODE] Create actionable recommendations
+[UNICODE] Plan implementation strategies
 
-**📝 Note-Taking Strategy:**
-• Create main topic overview note
-• Link to detailed sub-notes for each aspect
-• Tag with research phase and confidence level
-• Include source citations and credibility ratings
+**[NOTE] Note-Taking Strategy:**
+[UNICODE] Create main topic overview note
+[UNICODE] Link to detailed sub-notes for each aspect
+[UNICODE] Tag with research phase and confidence level
+[UNICODE] Include source citations and credibility ratings
 
-**Ready to start with this methodology?** 🎯
+**Ready to start with this methodology?** [TARGET]
 """
 
 
-async def _generate_research_questions(topic: str, params: Dict[str, Any]) -> str:
+async def _generate_research_questions(topic: str, params: dict[str, Any]) -> str:
     """Generate focused research questions."""
     if not topic:
-        return "❌ Topic required for question generation"
+        return "[UNICODE] Topic required for question generation"
 
     question_categories = {
         "definition": [
@@ -278,49 +278,49 @@ async def _generate_research_questions(topic: str, params: Dict[str, Any]) -> st
     }
 
     all_questions = []
-    for category, questions in question_categories.items():
+    for _category, questions in question_categories.items():
         all_questions.extend([q.replace("[topic]", topic) for q in questions])
 
-    return f"""❓ **Research Questions for: {topic}**
+    return f"""[UNICODE] **Research Questions for: {topic}**
 
-**📋 Generated Questions:**
+**[LIST] Generated Questions:**
 
 **Definition & Fundamentals:**
-{chr(10).join(f"• {q}" for q in all_questions[:3])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[:3])}
 
 **Historical Context:**
-{chr(10).join(f"• {q}" for q in all_questions[3:6])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[3:6])}
 
 **Current State:**
-{chr(10).join(f"• {q}" for q in all_questions[6:9])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[6:9])}
 
 **Applications & Use Cases:**
-{chr(10).join(f"• {q}" for q in all_questions[9:12])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[9:12])}
 
 **Limitations & Challenges:**
-{chr(10).join(f"• {q}" for q in all_questions[12:15])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[12:15])}
 
 **Future Outlook:**
-{chr(10).join(f"• {q}" for q in all_questions[15:18])}
+{chr(10).join(f"[UNICODE] {q}" for q in all_questions[15:18])}
 
-**🎯 Research Strategy:**
+**[TARGET] Research Strategy:**
 1. **Start with definition questions** to build foundation
 2. **Move to current state** for context
 3. **Explore applications** for practical understanding
 4. **Analyze limitations** for balanced perspective
 5. **Consider future outlook** for strategic thinking
 
-**📝 Note Creation Approach:**
-• Create one note per major question category
-• Link questions to findings and sources
-• Use tags like #research, #[topic], #question_[category]
-• Include confidence levels and source quality ratings
+**[NOTE] Note Creation Approach:**
+[UNICODE] Create one note per major question category
+[UNICODE] Link questions to findings and sources
+[UNICODE] Use tags like #research, #[topic], #question_[category]
+[UNICODE] Include confidence levels and source quality ratings
 
-**Ready to begin systematic research?** 🔍
+**Ready to begin systematic research?** [SEARCH]
 """
 
 
-async def _create_note_blueprint(research_type: str, topic: str, params: Dict[str, Any]) -> str:
+async def _create_note_blueprint(research_type: str, topic: str, params: dict[str, Any]) -> str:
     """Design optimal note structure for research findings."""
     blueprints = {
         "analysis": {
@@ -383,31 +383,31 @@ async def _create_note_blueprint(research_type: str, topic: str, params: Dict[st
 
     blueprint = blueprints.get(research_type, blueprints["analysis"])
 
-    return f"""📋 **Note Blueprint: {blueprint['title']}**
+    return f"""[LIST] **Note Blueprint: {blueprint['title']}**
 
-**🏗️ Structure:**
-{chr(10).join(f"• **{section}**" for section in blueprint['sections'])}
+**[UNICODE][UNICODE][UNICODE] Structure:**
+{chr(10).join(f"[UNICODE] **{section}**" for section in blueprint['sections'])}
 
-**🏷️ Recommended Tags:**
-{chr(10).join(f"• `{tag}`" for tag in blueprint['tags'])}
+**[UNICODE][UNICODE][UNICODE] Recommended Tags:**
+{chr(10).join(f"[UNICODE] `{tag}`" for tag in blueprint['tags'])}
 
-**🔗 Relationship Suggestions:**
-{chr(10).join(f"• {rel}" for rel in blueprint['relationships'])}
+**[LINK] Relationship Suggestions:**
+{chr(10).join(f"[UNICODE] {rel}" for rel in blueprint['relationships'])}
 
-**📝 Content Guidelines:**
+**[NOTE] Content Guidelines:**
 
 **Headers & Formatting:**
-• Use H2 (##) for main sections
-• Use H3 (###) for subsections
-• Use bullet points for lists
-• Use **bold** for key terms
-• Use `code` for technical terms
+[UNICODE] Use H2 (##) for main sections
+[UNICODE] Use H3 (###) for subsections
+[UNICODE] Use bullet points for lists
+[UNICODE] Use **bold** for key terms
+[UNICODE] Use `code` for technical terms
 
 **Metadata to Include:**
-• Research date: {datetime.now().strftime('%Y-%m-%d')}
-• Confidence level: High/Medium/Low
-• Source quality: Primary/Secondary/Tertiary
-• Last updated: Auto-updated on changes
+[UNICODE] Research date: {datetime.now().strftime('%Y-%m-%d')}
+[UNICODE] Confidence level: High/Medium/Low
+[UNICODE] Source quality: Primary/Secondary/Tertiary
+[UNICODE] Last updated: Auto-updated on changes
 
 **Quality Checklist:**
 - [ ] Clear, concise title
@@ -418,21 +418,21 @@ async def _create_note_blueprint(research_type: str, topic: str, params: Dict[st
 - [ ] Appropriate tags applied
 - [ ] Proofread for clarity
 
-**🎯 Next Steps:**
+**[TARGET] Next Steps:**
 1. Create the main note with this structure
 2. Fill in each section with research findings
 3. Add links to source materials
 4. Create sub-notes for detailed sections
 5. Review and refine based on new information
 
-**Ready to create this note structure?** 📝
+**Ready to create this note structure?** [NOTE]
 """
 
 
-async def _execute_research_workflow(topic: str, current_step: int, params: Dict[str, Any]) -> str:
+async def _execute_research_workflow(topic: str, current_step: int, params: dict[str, Any]) -> str:
     """Execute step-by-step research workflow."""
     if not topic:
-        return "❌ Topic required for research workflow"
+        return "[UNICODE] Topic required for research workflow"
 
     workflow_steps = [
         ResearchStep(
@@ -486,21 +486,21 @@ async def _execute_research_workflow(topic: str, current_step: int, params: Dict
     ]
 
     if current_step > len(workflow_steps):
-        return f"""✅ **Research Workflow Complete for: {topic}**
+        return f"""[UNICODE] **Research Workflow Complete for: {topic}**
 
-**🎉 Congratulations!** You have completed a comprehensive research workflow.
+**[SUCCESS] Congratulations!** You have completed a comprehensive research workflow.
 
 **Summary of Work:**
-• Created structured research notes
-• Established knowledge connections
-• Validated findings across sources
-• Built comprehensive understanding
+[UNICODE] Created structured research notes
+[UNICODE] Established knowledge connections
+[UNICODE] Validated findings across sources
+[UNICODE] Built comprehensive understanding
 
 **Next Steps:**
-• Review and refine your notes
-• Share findings with others
-• Plan follow-up research as needed
-• Consider creating summary documents
+[UNICODE] Review and refine your notes
+[UNICODE] Share findings with others
+[UNICODE] Plan follow-up research as needed
+[UNICODE] Consider creating summary documents
 
 **Research Quality Check:**
 - [ ] All major questions answered
@@ -509,7 +509,7 @@ async def _execute_research_workflow(topic: str, current_step: int, params: Dict
 - [ ] Conclusions are evidence-based
 - [ ] Gaps and uncertainties noted
 
-**Want to research another topic?** 🔄
+**Want to research another topic?** [UNICODE][UNICODE]
 Use: `research_orchestrator("research_plan", topic="new_topic")`
 """
 
@@ -517,59 +517,59 @@ Use: `research_orchestrator("research_plan", topic="new_topic")`
 
     next_step = workflow_steps[current_step] if current_step < len(workflow_steps) else None
 
-    return f"""🔬 **Research Workflow: {topic}**
+    return f"""[UNICODE][UNICODE] **Research Workflow: {topic}**
 **Step {current_step_data.step_number} of {len(workflow_steps)}**
 
-**🎯 Current Step: {current_step_data.action.replace('_', ' ').title()}**
+**[TARGET] Current Step: {current_step_data.action.replace('_', ' ').title()}**
 
-**📝 Description:**
+**[NOTE] Description:**
 {current_step_data.description}
 
-**🎯 Expected Output:**
+**[TARGET] Expected Output:**
 {current_step_data.expected_output}
 
-**🛠️ Tools to Use:**
-{chr(10).join(f"• `{tool}`" for tool in current_step_data.tools_to_use)}
+**[UNICODE][UNICODE][UNICODE] Tools to Use:**
+{chr(10).join(f"[UNICODE] `{tool}`" for tool in current_step_data.tools_to_use)}
 
-**📋 Detailed Instructions:**
+**[LIST] Detailed Instructions:**
 
 **Focus Area:** {current_step_data.parameters.get('focus', 'General research')}
 
 **Specific Actions:**
-{chr(10).join(f"• {action}" for action in _get_step_actions(current_step_data.action, topic))}
+{chr(10).join(f"[UNICODE] {action}" for action in _get_step_actions(current_step_data.action, topic))}
 
 **Quality Guidelines:**
-• Ensure information is from credible sources
-• Cross-reference multiple perspectives
-• Note uncertainties and conflicting information
-• Create clear, well-structured notes
+[UNICODE] Ensure information is from credible sources
+[UNICODE] Cross-reference multiple perspectives
+[UNICODE] Note uncertainties and conflicting information
+[UNICODE] Create clear, well-structured notes
 
 {f'''
-**➡️ Next Step Preview:**
+**[UNICODE][UNICODE] Next Step Preview:**
 **Step {next_step.step_number}:** {next_step.action.replace('_', ' ').title()}
 {next_step.description}
 
 Use: `research_orchestrator("research_workflow", topic="{topic}", step={next_step.step_number})`
-''' if next_step else '**🎉 Final Step!**'}
+''' if next_step else '**[SUCCESS] Final Step!**'}
 
-**📊 Progress:** {'█' * current_step + '░' * (len(workflow_steps) - current_step)} ({current_step}/{len(workflow_steps)})
+**[CHART] Progress:** {'[UNICODE]' * current_step + '[UNICODE]' * (len(workflow_steps) - current_step)} ({current_step}/{len(workflow_steps)})
 
-**Ready to execute this step?** 🚀
+**Ready to execute this step?** [LAUNCH]
 """
 
 
 def _get_available_operations() -> str:
     """Return list of available operations."""
-    return """🧠 **Research Orchestrator - Available Operations**
+    return """[UNICODE][UNICODE] **Research Orchestrator - Available Operations**
 
 **Planning & Design:**
-• `research_plan` - Create comprehensive research roadmap
-• `research_methodology` - Get proven research approaches
-• `research_questions` - Generate focused research questions
-• `note_blueprint` - Design optimal note structure
+[UNICODE] `research_plan` - Create comprehensive research roadmap
+[UNICODE] `research_methodology` - Get proven research approaches
+[UNICODE] `research_questions` - Generate focused research questions
+[UNICODE] `note_blueprint` - Design optimal note structure
 
 **Execution & Workflow:**
-• `research_workflow` - Step-by-step research execution guide
+[UNICODE] `research_workflow` - Step-by-step research execution guide
 
 **Examples:**
 ```python
@@ -589,10 +589,10 @@ await research_orchestrator.fn("note_blueprint", research_type="analysis", topic
 await research_orchestrator.fn("research_workflow", topic="blockchain", step=1)
 ```
 
-**Each operation returns structured guidance for Claude to execute comprehensive research and create well-linked knowledge notes.** 📚🔗"""
+**Each operation returns structured guidance for Claude to execute comprehensive research and create well-linked knowledge notes.** [BOOKS][LINK]"""
 
 
-def _generate_topic_questions(topic: str, depth: str) -> List[str]:
+def _generate_topic_questions(topic: str, depth: str) -> list[str]:
     """Generate research questions based on topic and depth."""
     base_questions = [
         f"What is {topic} and how does it work?",
@@ -614,7 +614,7 @@ def _generate_topic_questions(topic: str, depth: str) -> List[str]:
     return base_questions
 
 
-def _generate_search_queries(topic: str, scope: str) -> List[str]:
+def _generate_search_queries(topic: str, scope: str) -> list[str]:
     """Generate effective search queries."""
     queries = [
         f'"{topic}" overview',
@@ -633,19 +633,19 @@ def _generate_search_queries(topic: str, scope: str) -> List[str]:
     return queries
 
 
-def _get_relevant_sources(topic: str) -> List[str]:
+def _get_relevant_sources(topic: str) -> list[str]:
     """Get relevant sources for research."""
     return [
         f"Wikipedia: {topic}",
         f"Scholarly articles on {topic}",
-        f"Official documentation/websites",
-        f"Expert blogs and publications",
-        f"GitHub repositories (if technical)",
-        f"Industry reports and whitepapers"
+        "Official documentation/websites",
+        "Expert blogs and publications",
+        "GitHub repositories (if technical)",
+        "Industry reports and whitepapers"
     ]
 
 
-def _design_note_structure(topic: str, depth: str) -> Dict[str, Any]:
+def _design_note_structure(topic: str, depth: str) -> dict[str, Any]:
     """Design note structure based on topic and depth."""
     structure = {
         "title": f"{topic} Research",
@@ -680,16 +680,16 @@ def _design_note_structure(topic: str, depth: str) -> Dict[str, Any]:
 def _select_methodology(topic: str, depth: str) -> str:
     """Select appropriate research methodology."""
     if "technical" in topic.lower() or "software" in topic.lower():
-        return "Technical Deep Dive: Documentation → Code → Applications → Limitations"
+        return "Technical Deep Dive: Documentation [UNICODE] Code [UNICODE] Applications [UNICODE] Limitations"
     elif "business" in topic.lower() or "market" in topic.lower():
-        return "Business Analysis: Market → Competition → Strategy → Implementation"
+        return "Business Analysis: Market [UNICODE] Competition [UNICODE] Strategy [UNICODE] Implementation"
     elif depth == "comprehensive":
-        return "Comprehensive Research: Overview → Analysis → Synthesis → Validation"
+        return "Comprehensive Research: Overview [UNICODE] Analysis [UNICODE] Synthesis [UNICODE] Validation"
     else:
-        return "Exploratory Research: Broad investigation → Key insights → Deep dives"
+        return "Exploratory Research: Broad investigation [UNICODE] Key insights [UNICODE] Deep dives"
 
 
-def _get_step_actions(step_action: str, topic: str) -> List[str]:
+def _get_step_actions(step_action: str, topic: str) -> list[str]:
     """Get detailed actions for a workflow step."""
     actions = {
         "topic_overview": [
@@ -706,26 +706,26 @@ def _get_step_actions(step_action: str, topic: str) -> List[str]:
         ],
         "deep_analysis": [
             f"Research technical details and specifications of {topic}",
-            f"Analyze real-world applications and use cases",
-            f"Identify limitations and challenges",
+            "Analyze real-world applications and use cases",
+            "Identify limitations and challenges",
             "Create detailed analysis notes for each major aspect"
         ],
         "relationship_mapping": [
             f"Identify how {topic} relates to other concepts",
-            f"Map dependencies and prerequisites",
-            f"Note complementary and competing technologies/concepts",
+            "Map dependencies and prerequisites",
+            "Note complementary and competing technologies/concepts",
             "Update notes with cross-references and relationship links"
         ],
         "synthesis": [
-            f"Combine findings into coherent overview",
-            f"Identify key insights and conclusions",
-            f"Note areas of agreement and disagreement across sources",
+            "Combine findings into coherent overview",
+            "Identify key insights and conclusions",
+            "Note areas of agreement and disagreement across sources",
             "Update main topic note with comprehensive synthesis"
         ],
         "validation": [
-            f"Cross-check facts across multiple sources",
-            f"Identify gaps in current understanding",
-            f"Assess confidence levels for different claims",
+            "Cross-check facts across multiple sources",
+            "Identify gaps in current understanding",
+            "Assess confidence levels for different claims",
             "Create validation note with quality assessment"
         ]
     }

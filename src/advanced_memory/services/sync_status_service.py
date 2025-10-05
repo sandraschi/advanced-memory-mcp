@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Optional
 
 
 class SyncStatus(Enum):
@@ -25,14 +24,14 @@ class ProjectSyncStatus:
     message: str = ""
     files_total: int = 0
     files_processed: int = 0
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class SyncStatusTracker:
     """Global tracker for all sync operations."""
 
     def __init__(self):
-        self._project_statuses: Dict[str, ProjectSyncStatus] = {}
+        self._project_statuses: dict[str, ProjectSyncStatus] = {}
         self._global_status: SyncStatus = SyncStatus.IDLE
 
     def start_project_sync(self, project_name: str, files_total: int = 0) -> None:
@@ -52,7 +51,7 @@ class SyncStatusTracker:
         status: SyncStatus,
         message: str = "",
         files_processed: int = 0,
-        files_total: Optional[int] = None,
+        files_total: int | None = None,
     ) -> None:
         """Update progress for a project."""
         if project_name not in self._project_statuses:  # pragma: no cover
@@ -148,27 +147,27 @@ class SyncStatusTracker:
 
         return project_status.status in (SyncStatus.COMPLETED, SyncStatus.WATCHING, SyncStatus.IDLE)
 
-    def get_project_status(self, project_name: str) -> Optional[ProjectSyncStatus]:
+    def get_project_status(self, project_name: str) -> ProjectSyncStatus | None:
         """Get status for a specific project."""
         return self._project_statuses.get(project_name)
 
-    def get_all_projects(self) -> Dict[str, ProjectSyncStatus]:
+    def get_all_projects(self) -> dict[str, ProjectSyncStatus]:
         """Get all project statuses."""
         return self._project_statuses.copy()
 
     def get_summary(self) -> str:  # pragma: no cover
         """Get a user-friendly summary of sync status."""
         if self._global_status == SyncStatus.IDLE:
-            return "✅ System ready"
+            return "OK System ready"
         elif self._global_status == SyncStatus.COMPLETED:
-            return "✅ All projects synced successfully"
+            return "OK All projects synced successfully"
         elif self._global_status == SyncStatus.FAILED:
             failed_projects = [
                 p.project_name
                 for p in self._project_statuses.values()
                 if p.status == SyncStatus.FAILED
             ]
-            return f"❌ Sync failed for: {', '.join(failed_projects)}"
+            return f"ERROR Sync failed for: {', '.join(failed_projects)}"
         else:
             active_projects = [
                 p.project_name
@@ -180,9 +179,9 @@ class SyncStatusTracker:
 
             if total_files > 0:
                 progress_pct = (processed_files / total_files) * 100
-                return f"🔄 Syncing {len(active_projects)} projects ({processed_files}/{total_files} files, {progress_pct:.0f}%)"
+                return f"SYNCING {len(active_projects)} projects ({processed_files}/{total_files} files, {progress_pct:.0f}%)"
             else:
-                return f"🔄 Syncing {len(active_projects)} projects"
+                return f"SYNCING {len(active_projects)} projects"
 
     def clear_completed(self) -> None:
         """Remove completed project statuses to clean up memory."""

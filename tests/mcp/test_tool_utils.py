@@ -1,18 +1,18 @@
 """Tests for MCP tool utilities."""
 
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from httpx import AsyncClient, HTTPStatusError
 from mcp.server.fastmcp.exceptions import ToolError
 
 from advanced_memory.mcp.tools.utils import (
+    call_delete,
     call_get,
     call_post,
     call_put,
-    call_delete,
-    get_error_message,
     check_migration_status,
+    get_error_message,
     wait_for_migration_or_return_status,
 )
 
@@ -194,7 +194,7 @@ class TestMigrationStatus:
         mock_tracker = MagicMock()
         mock_tracker.is_ready = True
 
-        with patch("basic_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
+        with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
             result = check_migration_status()
             assert result is None
 
@@ -204,7 +204,7 @@ class TestMigrationStatus:
         mock_tracker.is_ready = False
         mock_tracker.get_summary.return_value = "Sync in progress..."
 
-        with patch("basic_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
+        with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
             result = check_migration_status()
             assert result == "Sync in progress..."
             mock_tracker.get_summary.assert_called_once()
@@ -222,7 +222,7 @@ class TestMigrationStatus:
         mock_tracker = MagicMock()
         mock_tracker.is_ready = True
 
-        with patch("basic_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
+        with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
             result = await wait_for_migration_or_return_status()
             assert result is None
 
@@ -232,7 +232,7 @@ class TestMigrationStatus:
         mock_tracker = MagicMock()
         mock_tracker.is_ready = False
 
-        with patch("basic_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
+        with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
             # Mock asyncio.sleep to make tracker ready after first check
             async def mock_sleep(delay):
                 mock_tracker.is_ready = True
@@ -248,7 +248,7 @@ class TestMigrationStatus:
         mock_tracker.is_ready = False
         mock_tracker.get_summary.return_value = "Still syncing..."
 
-        with patch("basic_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
+        with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
             with patch("asyncio.sleep", new_callable=AsyncMock):
                 result = await wait_for_migration_or_return_status(timeout=0.1)
                 assert result == "Still syncing..."
@@ -258,7 +258,7 @@ class TestMigrationStatus:
     async def test_wait_for_migration_exception(self):
         """Test wait_for_migration with exception during checking."""
         with patch(
-            "basic_memory.services.sync_status_service.sync_status_tracker",
+            "advanced_memory.services.sync_status_service.sync_status_tracker",
             side_effect=Exception("Test error"),
         ):
             result = await wait_for_migration_or_return_status()

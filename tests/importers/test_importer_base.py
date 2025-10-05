@@ -1,7 +1,8 @@
 """Tests for the base importer class."""
 
-import pytest
 from unittest.mock import AsyncMock
+
+import pytest
 
 from advanced_memory.importers.base import Importer
 from advanced_memory.markdown.markdown_processor import MarkdownProcessor
@@ -10,7 +11,7 @@ from advanced_memory.schemas.importer import ImportResult
 
 
 # Create a concrete implementation of the abstract class for testing
-class TestImporter(Importer[ImportResult]):
+class ConcreteImporter(Importer):
     """Test implementation of Importer base class."""
 
     async def import_data(self, source_data, destination_folder: str, **kwargs):
@@ -54,8 +55,8 @@ def mock_markdown_processor():
 
 @pytest.fixture
 def test_importer(tmp_path, mock_markdown_processor):
-    """Create a TestImporter instance for testing."""
-    return TestImporter(tmp_path, mock_markdown_processor)
+    """Create a ConcreteImporter instance for testing."""
+    return ConcreteImporter(tmp_path, mock_markdown_processor)
 
 
 @pytest.mark.asyncio

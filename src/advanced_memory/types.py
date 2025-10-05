@@ -4,10 +4,10 @@ This module contains type definitions used throughout the application to avoid c
 """
 
 from pathlib import Path
-from typing import Union, TypeVar, Any, Optional
+from typing import TypeVar
 
 # Define PathLike and FilePath types
-PathLike = Union[str, Path]
+PathLike = str | Path
 FilePath = TypeVar('FilePath', str, Path)
 
 __all__ = [

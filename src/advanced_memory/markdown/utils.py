@@ -1,18 +1,18 @@
 """Utilities for converting between markdown and entity models."""
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from frontmatter import Post
 
-from advanced_memory.file_utils import has_frontmatter, remove_frontmatter, parse_frontmatter
+from advanced_memory.file_utils import has_frontmatter, parse_frontmatter, remove_frontmatter
 from advanced_memory.markdown import EntityMarkdown
 from advanced_memory.models import Entity
 from advanced_memory.models import Observation as ObservationModel
 
 
 def entity_model_from_markdown(
-    file_path: Path, markdown: EntityMarkdown, entity: Optional[Entity] = None
+    file_path: Path, markdown: EntityMarkdown, entity: Entity | None = None
 ) -> Entity:
     """
     Convert markdown entity to model. Does not include relations.
@@ -41,7 +41,9 @@ def entity_model_from_markdown(
     # Only update permalink if it exists in frontmatter, otherwise preserve existing
     if markdown.frontmatter.permalink is not None:
         model.permalink = markdown.frontmatter.permalink
-    model.file_path = str(file_path)
+    # Normalize path for cross-platform consistency
+    from advanced_memory.sync.sync_service import normalize_file_path
+    model.file_path = normalize_file_path(str(file_path))
     model.content_type = "text/markdown"
     model.created_at = markdown.created
     model.updated_at = markdown.modified

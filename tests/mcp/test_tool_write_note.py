@@ -1,9 +1,10 @@
 """Tests for note tools that exercise the full stack with SQLite."""
 
 from textwrap import dedent
+
 import pytest
 
-from advanced_memory.mcp.tools import write_note, read_note, delete_note
+from advanced_memory.mcp.tools import delete_note, read_note, write_note
 
 
 @pytest.mark.asyncio
@@ -25,7 +26,7 @@ async def test_write_note(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: test\\Test_Note.md" in result
+    assert "file_path: test/Test_Note.md" in result
     assert "permalink: test/test-note" in result
     assert "## Tags" in result
     assert "- test, documentation" in result
@@ -58,22 +59,22 @@ async def test_write_note_no_tags(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: test/Simple Note.md" in result
+    assert "file_path: test/Simple_Note.md" in result
     assert "permalink: test/simple-note" in result
     # Should be able to read it back
     content = await read_note.fn("test/simple-note")
-    assert (
-        dedent("""
-        ---
-        title: Simple Note
-        type: note
-        permalink: test/simple-note
-        ---
-        
-        Just some text
-        """).strip()
-        in content
-    )
+    expected_content = dedent("""
+    ---
+    title: Simple Note
+    type: note
+    permalink: test/simple-note
+    ---
+
+    Just some text
+    """).strip()
+    # Normalize line endings for cross-platform compatibility
+    expected_content = expected_content.replace('\n', '\r\n')
+    assert expected_content in content
 
 
 @pytest.mark.asyncio
@@ -95,7 +96,7 @@ async def test_write_note_update_existing(app):
 
     assert result  # Got a valid permalink
     assert "# Created note" in result
-    assert "file_path: test\\Test_Note.md" in result
+    assert "file_path: test/Test_Note.md" in result
     assert "permalink: test/test-note" in result
     assert "## Tags" in result
     assert "- test, documentation" in result
@@ -107,16 +108,15 @@ async def test_write_note_update_existing(app):
         tags=["test", "documentation"],
     )
     assert "# Updated note" in result
-    assert "file_path: test\\Test_Note.md" in result
+    assert "file_path: test/Test_Note.md" in result
     assert "permalink: test/test-note" in result
     assert "## Tags" in result
     assert "- test, documentation" in result
 
     # Try reading it back
     content = await read_note.fn("test/test-note")
-    assert (
-        dedent(
-            """
+    expected_content = dedent(
+        """
         ---
         title: Test Note
         type: note
@@ -125,13 +125,14 @@ async def test_write_note_update_existing(app):
         - test
         - documentation
         ---
-        
+
         # Test
         This is an updated note
         """
-        ).strip()
-        == content
-    )
+    ).strip()
+    # Normalize line endings for cross-platform compatibility
+    expected_content = expected_content.replace('\n', '\r\n')
+    assert expected_content == content
 
 
 @pytest.mark.asyncio
@@ -141,13 +142,13 @@ async def test_issue_93_write_note_respects_custom_permalink_new_note(app):
     # Create a note with custom permalink in frontmatter
     content_with_custom_permalink = dedent("""
         ---
-        permalink: custom/my-desired-permalink  
+        permalink: custom/my-desired-permalink
         ---
-        
+
         # My New Note
-        
+
         This note has a custom permalink specified in frontmatter.
-        
+
         - [note] Testing if custom permalink is respected
     """).strip()
 
@@ -159,7 +160,7 @@ async def test_issue_93_write_note_respects_custom_permalink_new_note(app):
 
     # Verify the custom permalink is respected
     assert "# Created note" in result
-    assert "file_path: notes/My New Note.md" in result
+    assert "file_path: notes/My_New_Note.md" in result
     assert "permalink: custom/my-desired-permalink" in result
 
 
@@ -190,11 +191,11 @@ async def test_issue_93_write_note_respects_custom_permalink_existing_note(app):
         ---
         permalink: custom/new-permalink
         ---
-        
+
         # Existing Note
-        
+
         Updated content with custom permalink in frontmatter.
-        
+
         - [note] Custom permalink should be respected on update
     """).strip()
 
@@ -292,7 +293,7 @@ async def test_write_note_verbose(app):
     )
 
     assert "# Created note" in result
-    assert "file_path: test\\Test_Note.md" in result
+    assert "file_path: test/Test_Note.md" in result
     assert "permalink: test/test-note" in result
     assert "## Observations" in result
     assert "- note: 1" in result
@@ -328,7 +329,7 @@ async def test_write_note_preserves_custom_metadata(app, project_config):
     # We need to use a direct file update to add custom frontmatter
     import frontmatter
 
-    file_path = project_config.home / "test" / "Custom Metadata Note.md"
+    file_path = project_config.home / "test" / "Custom_Metadata_Note.md"
     post = frontmatter.load(file_path)
 
     # Add custom frontmatter
@@ -349,7 +350,7 @@ async def test_write_note_preserves_custom_metadata(app, project_config):
     )
 
     # Verify the update was successful
-    assert ("Updated note\nfile_path: test/Custom Metadata Note.md") in result
+    assert ("Updated note\nfile_path: test/Custom_Metadata_Note.md") in result
 
     # Read the note back and check if custom frontmatter is preserved
     content = await read_note.fn("test/custom-metadata-note")
@@ -380,11 +381,11 @@ async def test_write_note_preserves_content_frontmatter(app):
             ---
             title: Test Note
             type: note
-            version: 1.0 
+            version: 1.0
             author: name
             ---
             # Test
-            
+
             This is a test note
             """
         ),
@@ -393,27 +394,27 @@ async def test_write_note_preserves_content_frontmatter(app):
 
     # Try reading it back via permalink
     content = await read_note.fn("test/test-note")
-    assert (
-        dedent(
-            """
-            ---
-            title: Test Note
-            type: note
-            permalink: test/test-note
-            version: 1.0
-            author: name
-            tags:
-            - test
-            - documentation
-            ---
-            
-            # Test
-            
-            This is a test note
-            """
-        ).strip()
-        in content
-    )
+    expected_content = dedent(
+        """
+        ---
+        title: Test Note
+        type: note
+        permalink: test/test-note
+        version: 1.0
+        author: name
+        tags:
+        - test
+        - documentation
+        ---
+
+        # Test
+
+        This is a test note
+        """
+    ).strip()
+    # Normalize line endings for cross-platform compatibility
+    expected_content = expected_content.replace('\n', '\r\n')
+    assert expected_content in content
 
 
 @pytest.mark.asyncio
@@ -490,29 +491,29 @@ async def test_write_note_with_custom_entity_type(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: guides/Test Guide.md" in result
+    assert "file_path: guides/Test_Guide.md" in result
     assert "permalink: guides/test-guide" in result
     assert "## Tags" in result
     assert "- guide, documentation" in result
 
     # Verify the entity type is correctly set in the frontmatter
     content = await read_note.fn("guides/test-guide")
-    assert (
-        dedent("""
-        ---
-        title: Test Guide
-        type: guide
-        permalink: guides/test-guide
-        tags:
-        - guide
-        - documentation
-        ---
-        
-        # Guide Content
-        This is a guide
-        """).strip()
-        in content
-    )
+    expected_content = dedent("""
+    ---
+    title: Test Guide
+    type: guide
+    permalink: guides/test-guide
+    tags:
+    - guide
+    - documentation
+    ---
+
+    # Guide Content
+    This is a guide
+    """).strip()
+    # Normalize line endings for cross-platform compatibility
+    expected_content = expected_content.replace('\n', '\r\n')
+    assert expected_content in content
 
 
 @pytest.mark.asyncio
@@ -528,7 +529,7 @@ async def test_write_note_with_report_entity_type(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: reports/Monthly Report.md" in result
+    assert "file_path: reports/Monthly_Report.md" in result
     assert "permalink: reports/monthly-report" in result
 
     # Verify the entity type is correctly set in the frontmatter
@@ -549,7 +550,7 @@ async def test_write_note_with_config_entity_type(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: config/System Config.md" in result
+    assert "file_path: config/System_Config.md" in result
     assert "permalink: config/system-config" in result
 
     # Verify the entity type is correctly set in the frontmatter
@@ -574,7 +575,7 @@ async def test_write_note_entity_type_default_behavior(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: test/Default Type Test.md" in result
+    assert "file_path: test/Default_Type_Test.md" in result
     assert "permalink: test/default-type-test" in result
 
     # Verify the entity type defaults to "note"
@@ -634,7 +635,7 @@ async def test_write_note_respects_frontmatter_entity_type(app):
         - guide
         - documentation
         ---
-        
+
         # Guide Content
         This is a guide
         """).strip()
@@ -644,7 +645,7 @@ async def test_write_note_respects_frontmatter_entity_type(app):
 
     assert result
     assert "# Created note" in result
-    assert "file_path: guides/Test Guide.md" in result
+    assert "file_path: guides/Test_Guide.md" in result
     assert "permalink: guides/test-guide" in result
 
     # Verify the entity type from frontmatter is respected (should be "guide", not "note")
@@ -865,7 +866,7 @@ class TestWriteNoteSecurityValidation:
         # Test current directory references (should be safe)
         safe_folders = [
             "./notes",
-            "folder/./subfolder", 
+            "folder/./subfolder",
             "./folder/subfolder",
         ]
 
@@ -913,7 +914,7 @@ class TestWriteNoteSecurityValidation:
 
         assert "# Error" in result
         assert "paths must stay within project boundaries" in result
-        
+
         # Check that security violation was logged
         # Note: This test may need adjustment based on the actual logging setup
         # The security validation should generate a warning log entry
@@ -927,17 +928,17 @@ class TestWriteNoteSecurityValidation:
             folder="security-tests",
             content=dedent("""
                 # Full Feature Security Test
-                
+
                 This note tests that security validation doesn't break normal functionality.
-                
+
                 ## Observations
                 - [security] Path validation working correctly #security
                 - [feature] All features still functional #test
-                
+
                 ## Relations
                 - relates_to [[Security Implementation]]
                 - depends_on [[Path Validation]]
-                
+
                 Additional content with various formatting.
             """).strip(),
             tags=["security", "test", "full-feature"],
@@ -949,18 +950,18 @@ class TestWriteNoteSecurityValidation:
         assert "# Error" not in result
         assert "paths must stay within project boundaries" not in result
         assert "# Created note" in result
-        assert "file_path: security-tests/Full Feature Security Test.md" in result
+        assert "file_path: security-tests/Full_Feature_Security_Test.md" in result
         assert "permalink: security-tests/full-feature-security-test" in result
-        
+
         # Should process observations and relations
         assert "## Observations" in result
         assert "## Relations" in result
         assert "## Tags" in result
-        
+
         # Should show proper counts
         assert "security: 1" in result
         assert "feature: 1" in result
-        
+
 
 class TestWriteNoteSecurityEdgeCases:
     """Test edge cases for write_note security validation."""
@@ -991,7 +992,7 @@ class TestWriteNoteSecurityEdgeCases:
         """Test handling of very long attack folder paths."""
         # Create a very long path traversal attack
         long_attack_folder = "../" * 1000 + "etc/malicious"
-        
+
         result = await write_note.fn(
             title="Long Attack Test",
             folder=long_attack_folder,

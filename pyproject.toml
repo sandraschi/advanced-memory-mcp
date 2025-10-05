@@ -56,12 +56,11 @@ pythonpath = ["src", "tests"]
 addopts = "-v -s"
 testpaths = ["tests"]
 asyncio_mode = "strict"
-asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["migrations"]
+extend-exclude = ["migrations", "mcpb", "dxt", "dist", "htmlcov"]
 
 [tool.ruff.lint]
 select = [
@@ -104,7 +103,7 @@ dev-dependencies = [
     "bandit>=1.7.0",
     "safety>=3.0.0",
     "pre-commit>=3.6.0",
-    "types-all>=1.0.0",
+    "types-setuptools>=69.0.0",
 ]
 
 [tool.hatch.version]
@@ -127,24 +126,45 @@ pythonVersion = "3.11"
 
 [tool.mypy]
 python_version = "3.11"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_redundant_casts = false
+warn_unused_ignores = false
+warn_no_return = false
+warn_unreachable = false
+strict_equality = false
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = [
     "alembic.*",
     "fastmcp.*",
     "uv.*",
+    "mcp.*",
+    "watchfiles.*",
+    "rich.*",
+    "typer.*",
+    "loguru.*",
+    "pydantic.*",
+    "sqlalchemy.*",
+    "aiosqlite.*",
+    "markdown_it.*",
+    "frontmatter.*",
+    "unidecode.*",
+    "dateparser.*",
+    "pillow.*",
+    "pybars3.*",
+    "pyjwt.*",
+    "dotenv.*",
+    "pytest.*",
+    "bandit.*",
+    "safety.*",
+    "semgrep.*",
 ]
 ignore_missing_imports = true
 

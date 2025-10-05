@@ -1,20 +1,20 @@
 """Repository for managing entities in the knowledge graph."""
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import List, Optional, Sequence, Union
 
+from advanced_memory import db
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.interfaces import LoaderOption
 
-from basic_memory import db
 from advanced_memory.models.knowledge import Entity, Observation, Relation
 from advanced_memory.repository.repository import Repository
 
 
-class EntityRepository(Repository[Entity]):
+class EntityRepository(Repository):
     """Repository for Entity model.
 
     Note: All file paths are stored as strings in the database. Convert Path objects
@@ -30,7 +30,7 @@ class EntityRepository(Repository[Entity]):
         """
         super().__init__(session_maker, Entity, project_id=project_id)
 
-    async def get_by_permalink(self, permalink: str) -> Optional[Entity]:
+    async def get_by_permalink(self, permalink: str) -> Entity | None:
         """Get entity by permalink.
 
         Args:
@@ -49,28 +49,30 @@ class EntityRepository(Repository[Entity]):
         result = await self.execute_query(query)
         return list(result.scalars().all())
 
-    async def get_by_file_path(self, file_path: Union[Path, str]) -> Optional[Entity]:
+    async def get_by_file_path(self, file_path: Path | str) -> Entity | None:
         """Get entity by file_path.
 
         Args:
             file_path: Path to the entity file (will be converted to string internally)
         """
+        from advanced_memory.sync.sync_service import normalize_file_path
         query = (
             self.select()
-            .where(Entity.file_path == str(file_path))
+            .where(Entity.file_path == normalize_file_path(str(file_path)))
             .options(*self.get_load_options())
         )
         return await self.find_one(query)
 
-    async def delete_by_file_path(self, file_path: Union[Path, str]) -> bool:
+    async def delete_by_file_path(self, file_path: Path | str) -> bool:
         """Delete entity with the provided file_path.
 
         Args:
             file_path: Path to the entity file (will be converted to string internally)
         """
-        return await self.delete_by_fields(file_path=str(file_path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+        return await self.delete_by_fields(file_path=normalize_file_path(str(file_path)))
 
-    def get_load_options(self) -> List[LoaderOption]:
+    def get_load_options(self) -> list[LoaderOption]:
         """Get SQLAlchemy loader options for eager loading relationships."""
         return [
             selectinload(Entity.observations).selectinload(Observation.entity),
@@ -82,7 +84,7 @@ class EntityRepository(Repository[Entity]):
             selectinload(Entity.incoming_relations).selectinload(Relation.to_entity),
         ]
 
-    async def find_by_permalinks(self, permalinks: List[str]) -> Sequence[Entity]:
+    async def find_by_permalinks(self, permalinks: list[str]) -> Sequence[Entity]:
         """Find multiple entities by their permalink.
 
         Args:
@@ -212,7 +214,7 @@ class EntityRepository(Repository[Entity]):
                     if not found:  # pragma: no cover
                         raise RuntimeError(
                             f"Failed to retrieve entity after race condition update: {entity.file_path}"
-                        )
+                        ) from None
                     return found
                 else:
                     # Must be permalink conflict - generate unique permalink

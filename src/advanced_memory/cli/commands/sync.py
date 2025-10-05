@@ -4,14 +4,13 @@ import asyncio
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict
 
 import typer
+from advanced_memory import db
 from loguru import logger
 from rich.console import Console
 from rich.tree import Tree
 
-from basic_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager, get_project_config
 from advanced_memory.markdown import EntityParser
@@ -20,8 +19,8 @@ from advanced_memory.models import Project
 from advanced_memory.repository import (
     EntityRepository,
     ObservationRepository,
-    RelationRepository,
     ProjectRepository,
+    RelationRepository,
 )
 from advanced_memory.repository.search_repository import SearchRepository
 from advanced_memory.services import EntityService, FileService
@@ -86,7 +85,7 @@ async def get_sync_service(project: Project) -> SyncService:  # pragma: no cover
     return sync_service
 
 
-def group_issues_by_directory(issues: List[ValidationIssue]) -> Dict[str, List[ValidationIssue]]:
+def group_issues_by_directory(issues: list[ValidationIssue]) -> dict[str, list[ValidationIssue]]:
     """Group validation issues by directory."""
     grouped = defaultdict(list)
     for issue in issues:
@@ -151,7 +150,7 @@ def display_detailed_sync_results(knowledge: SyncReport):
             moved = knowledge_tree.add("[blue]Moved[/blue]")
             for old_path, new_path in sorted(knowledge.moves.items()):
                 checksum = knowledge.checksums.get(new_path, "")
-                moved.add(f"[blue]{old_path}[/blue] → [blue]{new_path}[/blue] ({checksum[:8]})")
+                moved.add(f"[blue]{old_path}[/blue] -> [blue]{new_path}[/blue] ({checksum[:8]})")
         if knowledge.deleted:
             deleted = knowledge_tree.add("[red]Deleted[/red]")
             for path in sorted(knowledge.deleted):
@@ -307,5 +306,5 @@ def sync(
                 f"directory={str(config.home)}",
             )
             typer.echo(f"Error during sync: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise

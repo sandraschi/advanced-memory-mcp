@@ -1,17 +1,17 @@
 """Claude projects import service for Basic Memory."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
-from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
 from advanced_memory.importers.base import Importer
-from advanced_memory.schemas.importer import ProjectImportResult
 from advanced_memory.importers.utils import clean_filename
+from advanced_memory.markdown.schemas import EntityFrontmatter, EntityMarkdown
+from advanced_memory.schemas.importer import ProjectImportResult
 
 logger = logging.getLogger(__name__)
 
 
-class ClaudeProjectsImporter(Importer[ProjectImportResult]):
+class ClaudeProjectsImporter(Importer):
     """Service for importing Claude projects."""
 
     async def import_data(
@@ -71,7 +71,7 @@ class ClaudeProjectsImporter(Importer[ProjectImportResult]):
             return self.handle_error("Failed to import Claude projects", e)  # pyright: ignore [reportReturnType]
 
     def _format_project_markdown(
-        self, project: Dict[str, Any], doc: Dict[str, Any]
+        self, project: dict[str, Any], doc: dict[str, Any]
     ) -> EntityMarkdown:
         """Format a project document as a Basic Memory entity.
 
@@ -109,7 +109,7 @@ class ClaudeProjectsImporter(Importer[ProjectImportResult]):
 
         return entity
 
-    def _format_prompt_markdown(self, project: Dict[str, Any]) -> Optional[EntityMarkdown]:
+    def _format_prompt_markdown(self, project: dict[str, Any]) -> EntityMarkdown | None:
         """Format project prompt template as a Basic Memory entity.
 
         Args:

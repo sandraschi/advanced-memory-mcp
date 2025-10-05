@@ -1,12 +1,12 @@
 """Tests for search router."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import text
 
-from basic_memory import db
+from advanced_memory import db
 from advanced_memory.schemas import Entity as EntitySchema
 from advanced_memory.schemas.search import SearchItemType, SearchResponse
 
@@ -91,7 +91,7 @@ async def test_search_with_type_filter(client, indexed_entity, project_url):
 async def test_search_with_date_filter(client, indexed_entity, project_url):
     """Test search with date filter."""
     # Should find with past date
-    past_date = datetime(2020, 1, 1, tzinfo=timezone.utc)
+    past_date = datetime(2020, 1, 1, tzinfo=UTC)
     response = await client.post(
         f"{project_url}/search/", json={"text": "test", "after_date": past_date.isoformat()}
     )
@@ -99,7 +99,7 @@ async def test_search_with_date_filter(client, indexed_entity, project_url):
     search_results = SearchResponse.model_validate(response.json())
 
     # Should not find with future date
-    future_date = datetime(2030, 1, 1, tzinfo=timezone.utc)
+    future_date = datetime(2030, 1, 1, tzinfo=UTC)
     response = await client.post(
         f"{project_url}/search/", json={"text": "test", "after_date": future_date.isoformat()}
     )
@@ -159,7 +159,7 @@ async def test_multiple_filters(client, indexed_entity, project_url):
             "text": "test",
             "entity_types": [SearchItemType.ENTITY.value],
             "types": ["test"],
-            "after_date": datetime(2020, 1, 1, tzinfo=timezone.utc).isoformat(),
+            "after_date": datetime(2020, 1, 1, tzinfo=UTC).isoformat(),
         },
     )
     assert response.status_code == 200

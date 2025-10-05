@@ -4,75 +4,80 @@ from advanced_memory.config import AdvancedMemoryConfig
 
 
 class TestAdvancedMemoryConfig:
-    """Test AdvancedMemoryConfig behavior with BASIC_MEMORY_HOME environment variable."""
+    """Test AdvancedMemoryConfig behavior with ADVANCED_MEMORY_HOME environment variable."""
 
-    def test_default_behavior_without_basic_memory_home(self, config_home, monkeypatch):
-        """Test that config uses default path when BASIC_MEMORY_HOME is not set."""
-        # Ensure BASIC_MEMORY_HOME is not set
-        monkeypatch.delenv("BASIC_MEMORY_HOME", raising=False)
+    def test_default_behavior_without_advanced_memory_home(self, config_home, monkeypatch):
+        """Test that config uses default path when ADVANCED_MEMORY_HOME is not set."""
+        # Ensure ADVANCED_MEMORY_HOME is not set
+        monkeypatch.delenv("ADVANCED_MEMORY_HOME", raising=False)
 
         config = AdvancedMemoryConfig()
 
-        # Should use the default path (home/basic-memory)
-        expected_path = str(config_home / "basic-memory")
+        # Should use the default path (home/advanced-memory)
+        # Note: config_home fixture sets HOME to tmp_path, so Path.home() returns tmp_path
+        expected_path = str(config_home / "advanced-memory")
         assert config.projects["main"] == expected_path
 
-    def test_respects_basic_memory_home_environment_variable(self, config_home, monkeypatch):
-        """Test that config respects BASIC_MEMORY_HOME environment variable."""
+    def test_respects_advanced_memory_home_environment_variable(self, config_home, monkeypatch):
+        """Test that config respects ADVANCED_MEMORY_HOME environment variable."""
         custom_path = str(config_home / "app" / "data")
-        monkeypatch.setenv("BASIC_MEMORY_HOME", custom_path)
+        monkeypatch.setenv("ADVANCED_MEMORY_HOME", custom_path)
 
         config = AdvancedMemoryConfig()
 
         # Should use the custom path from environment variable
         assert config.projects["main"] == custom_path
 
-    def test_model_post_init_respects_basic_memory_home(self, config_home, monkeypatch):
-        """Test that model_post_init creates main project with BASIC_MEMORY_HOME when missing."""
+    def test_model_post_init_respects_advanced_memory_home(self, config_home, monkeypatch):
+        """Test that model_post_init creates main project with ADVANCED_MEMORY_HOME when missing."""
         custom_path = str(config_home / "custom" / "memory" / "path")
-        monkeypatch.setenv("BASIC_MEMORY_HOME", custom_path)
+        monkeypatch.setenv("ADVANCED_MEMORY_HOME", custom_path)
 
         # Create config without main project
         other_path = str(config_home / "some" / "path")
         config = AdvancedMemoryConfig(projects={"other": other_path})
 
-        # model_post_init should have added main project with BASIC_MEMORY_HOME
+        # model_post_init should have added main project with ADVANCED_MEMORY_HOME
         assert "main" in config.projects
         assert config.projects["main"] == custom_path
 
-    def test_model_post_init_fallback_without_basic_memory_home(self, config_home, monkeypatch):
-        """Test that model_post_init falls back to default when BASIC_MEMORY_HOME is not set."""
-        # Ensure BASIC_MEMORY_HOME is not set
-        monkeypatch.delenv("BASIC_MEMORY_HOME", raising=False)
+    def test_model_post_init_fallback_without_advanced_memory_home(self, config_home, monkeypatch):
+        """Test that model_post_init falls back to default when ADVANCED_MEMORY_HOME is not set."""
+        # Ensure ADVANCED_MEMORY_HOME is not set
+        monkeypatch.delenv("ADVANCED_MEMORY_HOME", raising=False)
 
         # Create config without main project
         other_path = str(config_home / "some" / "path")
         config = AdvancedMemoryConfig(projects={"other": other_path})
 
         # model_post_init should have added main project with default path
-        expected_path = str(config_home / "basic-memory")
+        # Note: config_home fixture sets HOME to tmp_path, so Path.home() returns tmp_path
+        expected_path = str(config_home / "advanced-memory")
         assert "main" in config.projects
         assert config.projects["main"] == expected_path
 
-    def test_basic_memory_home_with_relative_path(self, config_home, monkeypatch):
-        """Test that BASIC_MEMORY_HOME works with relative paths."""
+    def test_advanced_memory_home_with_relative_path(self, config_home, monkeypatch):
+        """Test that ADVANCED_MEMORY_HOME works with relative paths."""
         relative_path = "relative/memory/path"
-        monkeypatch.setenv("BASIC_MEMORY_HOME", relative_path)
+        monkeypatch.setenv("ADVANCED_MEMORY_HOME", relative_path)
 
         config = AdvancedMemoryConfig()
 
         # Should use the exact value from environment variable
-        assert config.projects["main"] == relative_path
+        # Note: Path conversion may change separators on Windows
+        import os
+        expected_path = os.path.normpath(relative_path)
+        assert config.projects["main"] == expected_path
 
-    def test_basic_memory_home_overrides_existing_main_project(self, config_home, monkeypatch):
-        """Test that BASIC_MEMORY_HOME is not used when a map is passed in the constructor."""
+    def test_advanced_memory_home_overrides_existing_main_project(self, config_home, monkeypatch):
+        """Test that ADVANCED_MEMORY_HOME is not used when a map is passed in the constructor."""
         custom_path = str(config_home / "override" / "memory" / "path")
-        monkeypatch.setenv("BASIC_MEMORY_HOME", custom_path)
+        monkeypatch.setenv("ADVANCED_MEMORY_HOME", custom_path)
 
         # Try to create config with a different main project path
         original_path = str(config_home / "original" / "path")
         config = AdvancedMemoryConfig(projects={"main": original_path})
 
-        # The default_factory should override with BASIC_MEMORY_HOME value
+        # The default_factory should override with ADVANCED_MEMORY_HOME value
         # Note: This tests the current behavior where default_factory takes precedence
         assert config.projects["main"] == original_path

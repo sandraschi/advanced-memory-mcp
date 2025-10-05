@@ -1,26 +1,26 @@
 """Routes for getting entity content."""
 
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks, Body
+from fastapi import APIRouter, BackgroundTasks, Body, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from loguru import logger
 
 from advanced_memory.deps import (
-    ProjectConfigDep,
-    LinkResolverDep,
-    SearchServiceDep,
+    EntityRepositoryDep,
     EntityServiceDep,
     FileServiceDep,
-    EntityRepositoryDep,
+    LinkResolverDep,
+    ProjectConfigDep,
+    SearchServiceDep,
 )
+from advanced_memory.models.knowledge import Entity as EntityModel
 from advanced_memory.repository.search_repository import SearchIndexRow
 from advanced_memory.schemas.memory import normalize_memory_url
-from advanced_memory.schemas.search import SearchQuery, SearchItemType
-from advanced_memory.models.knowledge import Entity as EntityModel
-from datetime import datetime
+from advanced_memory.schemas.search import SearchItemType, SearchQuery
 
 router = APIRouter(prefix="/resource", tags=["resources"])
 
@@ -222,4 +222,4 @@ async def write_resource(
         )
     except Exception as e:  # pragma: no cover
         logger.error(f"Error writing resource {file_path}: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to write resource: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to write resource: {str(e)}") from e

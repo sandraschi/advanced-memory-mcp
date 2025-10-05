@@ -2432,3 +2432,2000 @@ did not find expected alphabetic or numeric character
 2025-10-04 19:54:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
 2025-10-04 19:54:24 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
 2025-10-04 19:54:24 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:05:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:05:42 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:05:42 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:10:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:10:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:10:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:23:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:23:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:23:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:25:01 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:25:01 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:25:01 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:41:16 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:41:17 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:41:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 08:41:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 08:41:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 09:55:06 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 09:55:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 09:55:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:00:35 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:00:35 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:00:35 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:01:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:01:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:01:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:01:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:01:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:01:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:07 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:02:07 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:07 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:02:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:02:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:53 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:02:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:02:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:04:17 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:17 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:04:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:52 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:04:52 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:04:52 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:05:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:05:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:05:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:05:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:05:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:05:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:06:16 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:06:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:06:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:08:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:34 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:08:34 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:34 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:58 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:08:58 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:08:58 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:28:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:32 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:28:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:32 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:28:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:28:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:29:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:29:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:29:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:30:55 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:30:55 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:30:55 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:31:07 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:31:07 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:31:07 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:31:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:31:38 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:31:38 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:32:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:32:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:32:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:32:19 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:32:19 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:32:19 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:33:25 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:33:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:33:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:33:26 | INFO     | Using in-memory SQLite database
+2025-10-05 10:33:26 | INFO     | Using in-memory SQLite database
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:26 | INFO     | Writing file: test\Git Workflow Guide.md, is_markdown=True
+2025-10-05 10:33:26 | INFO     | Writing file: test\Git Workflow Guide.md, is_markdown=True
+2025-10-05 10:33:26 | INFO     | Using in-memory SQLite database
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:26 | INFO     | Using in-memory SQLite database
+2025-10-05 10:33:26 | INFO     | Using in-memory SQLite database
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initializing search index
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:33:27 | INFO     | API request
+2025-10-05 10:33:27 | INFO     | API request
+2025-10-05 10:33:27 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:33:27 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:33:27 | INFO     | API response: endpoint='create_entity' title=Test Note, permalink=test/test-note, status_code=201
+2025-10-05 10:33:27 | INFO     | API response: endpoint='create_entity' title=Test Note, permalink=test/test-note, status_code=201
+2025-10-05 10:33:27 | INFO     | API request: endpoint='edit_entity', identifier='test/test-note', operation='prepend'
+2025-10-05 10:33:27 | INFO     | API request: endpoint='edit_entity', identifier='test/test-note', operation='prepend'
+2025-10-05 10:33:27 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:33:27 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:33:27 | INFO     | API response
+2025-10-05 10:33:27 | INFO     | API response
+2025-10-05 10:33:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:33:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:33:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:36:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:36:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:36:50 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:36:50 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:37:08 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:37:08 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:37:08 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:37:28 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:37:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:37:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:37:40 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:37:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:38:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:33 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:38:33 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:33 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:38:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:38:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:39:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:39:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:39:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:39:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:39:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:39:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:40:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:14 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:40:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:40:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:42 | INFO     | Writing file: test\Git Workflow Guide.md, is_markdown=True
+2025-10-05 10:40:42 | INFO     | Writing file: test\Git Workflow Guide.md, is_markdown=True
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Using in-memory SQLite database
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initializing search index
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 10:40:43 | INFO     | API request
+2025-10-05 10:40:43 | INFO     | API request
+2025-10-05 10:40:43 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:40:43 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:40:43 | INFO     | API response: endpoint='create_entity' title=Test Note, permalink=test/test-note, status_code=201
+2025-10-05 10:40:43 | INFO     | API request: endpoint='edit_entity', identifier='test/test-note', operation='prepend'
+2025-10-05 10:40:43 | INFO     | API request: endpoint='edit_entity', identifier='test/test-note', operation='prepend'
+2025-10-05 10:40:43 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:40:43 | INFO     | Writing file: test\Test_Note.md, is_markdown=True
+2025-10-05 10:40:43 | INFO     | API response
+2025-10-05 10:40:43 | INFO     | API response
+2025-10-05 10:56:08 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 10:56:09 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 10:56:09 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 11:01:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 11:01:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 11:01:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:20:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:20:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:20:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:21:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:21:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:21:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:22:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:22:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:22:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:22:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:22:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:22:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:28:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:28:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:28:30 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:28:43 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 13:28:43 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 13:28:43 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:04:14 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:04:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:04:14 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:04:15 | INFO     | Using in-memory SQLite database
+2025-10-05 14:04:15 | INFO     | Using in-memory SQLite database
+2025-10-05 14:04:15 | INFO     | Initializing search index
+2025-10-05 14:04:15 | INFO     | Initializing search index
+2025-10-05 14:04:15 | INFO     | Initializing search index
+2025-10-05 14:04:15 | INFO     | Initializing search index
+2025-10-05 14:04:15 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:04:15 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:04:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:04:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:04:15 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:04:15 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:04:15 | ERROR    | Failed to write file
+2025-10-05 14:04:15 | ERROR    | Failed to write file
+2025-10-05 14:04:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:04:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:04:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:04:58 | INFO     | Using in-memory SQLite database
+2025-10-05 14:04:58 | INFO     | Using in-memory SQLite database
+2025-10-05 14:04:58 | INFO     | Initializing search index
+2025-10-05 14:04:58 | INFO     | Initializing search index
+2025-10-05 14:04:58 | INFO     | Initializing search index
+2025-10-05 14:04:58 | INFO     | Initializing search index
+2025-10-05 14:04:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:04:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:04:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:04:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:04:58 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:04:58 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:05:43 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:05:44 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:05:44 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:06:43 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:06:43 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:06:43 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:07:07 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:07:07 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:07:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:07:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:07:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:06 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:08:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:06 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:08:29 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:29 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:44 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:08:44 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:44 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:45 | INFO     | Using in-memory SQLite database
+2025-10-05 14:08:45 | INFO     | Using in-memory SQLite database
+2025-10-05 14:08:45 | INFO     | Initializing search index
+2025-10-05 14:08:45 | INFO     | Initializing search index
+2025-10-05 14:08:45 | INFO     | Initializing search index
+2025-10-05 14:08:45 | INFO     | Initializing search index
+2025-10-05 14:08:45 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:08:45 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:08:45 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:08:45 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:08:45 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:08:45 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:08:55 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:08:55 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:08:55 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:09:18 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:09:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:09:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:10:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:00 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:10:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:13 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:10:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:10:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:11:37 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:11:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:11:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:11:52 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:11:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:11:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:20 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:39:20 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:20 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:21 | INFO     | Using in-memory SQLite database
+2025-10-05 14:39:21 | INFO     | Using in-memory SQLite database
+2025-10-05 14:39:21 | INFO     | Initializing search index
+2025-10-05 14:39:21 | INFO     | Initializing search index
+2025-10-05 14:39:21 | INFO     | Initializing search index
+2025-10-05 14:39:21 | INFO     | Initializing search index
+2025-10-05 14:39:21 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:39:21 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:39:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:39:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:39:21 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:39:21 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:39:22 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:39:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:39:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:46 | INFO     | Using in-memory SQLite database
+2025-10-05 14:39:46 | INFO     | Using in-memory SQLite database
+2025-10-05 14:39:46 | INFO     | Initializing search index
+2025-10-05 14:39:46 | INFO     | Initializing search index
+2025-10-05 14:39:46 | INFO     | Initializing search index
+2025-10-05 14:39:46 | INFO     | Initializing search index
+2025-10-05 14:39:46 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:39:46 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:39:46 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:39:46 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:39:46 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:39:46 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:39:58 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:39:58 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:39:58 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:40:12 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:40:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:25 | INFO     | Using in-memory SQLite database
+2025-10-05 14:40:25 | INFO     | Using in-memory SQLite database
+2025-10-05 14:40:26 | INFO     | Initializing search index
+2025-10-05 14:40:26 | INFO     | Initializing search index
+2025-10-05 14:40:26 | INFO     | Initializing search index
+2025-10-05 14:40:26 | INFO     | Initializing search index
+2025-10-05 14:40:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:40:26 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:40:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:40:26 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:40:26 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:40:26 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 14:40:35 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:40:35 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:35 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:40:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:40:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:41:18 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:41:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:41:18 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:41:19 | INFO     | Using in-memory SQLite database
+2025-10-05 14:41:19 | INFO     | Using in-memory SQLite database
+2025-10-05 14:41:19 | INFO     | Initializing search index
+2025-10-05 14:41:19 | INFO     | Initializing search index
+2025-10-05 14:41:19 | INFO     | Initializing search index
+2025-10-05 14:41:19 | INFO     | Initializing search index
+2025-10-05 14:41:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:41:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:41:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:41:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:41:19 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 14:41:19 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 14:41:19 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 14:41:19 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 14:41:19 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 14:41:19 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 14:41:20 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 14:42:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:42:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:42:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:42:12 | INFO     | Using in-memory SQLite database
+2025-10-05 14:42:12 | INFO     | Using in-memory SQLite database
+2025-10-05 14:42:12 | INFO     | Initializing search index
+2025-10-05 14:42:12 | INFO     | Initializing search index
+2025-10-05 14:42:12 | INFO     | Initializing search index
+2025-10-05 14:42:12 | INFO     | Initializing search index
+2025-10-05 14:42:12 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:42:12 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:42:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:42:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:42:12 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 14:42:12 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 14:43:44 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:43:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:43:45 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:43:58 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:43:58 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:43:59 | INFO     | Using in-memory SQLite database
+2025-10-05 14:43:59 | INFO     | Using in-memory SQLite database
+2025-10-05 14:43:59 | INFO     | Initializing search index
+2025-10-05 14:43:59 | INFO     | Initializing search index
+2025-10-05 14:43:59 | INFO     | Initializing search index
+2025-10-05 14:43:59 | INFO     | Initializing search index
+2025-10-05 14:43:59 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:43:59 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:43:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:43:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:44:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:44:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:44:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:44:28 | INFO     | Using in-memory SQLite database
+2025-10-05 14:44:28 | INFO     | Using in-memory SQLite database
+2025-10-05 14:44:28 | INFO     | Initializing search index
+2025-10-05 14:44:28 | INFO     | Initializing search index
+2025-10-05 14:44:28 | INFO     | Initializing search index
+2025-10-05 14:44:28 | INFO     | Initializing search index
+2025-10-05 14:44:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:44:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:44:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:44:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:44:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:44:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:44:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:45:19 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:45:19 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:45:19 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:45:19 | INFO     | Using in-memory SQLite database
+2025-10-05 14:45:19 | INFO     | Using in-memory SQLite database
+2025-10-05 14:45:19 | INFO     | Initializing search index
+2025-10-05 14:45:19 | INFO     | Initializing search index
+2025-10-05 14:45:19 | INFO     | Initializing search index
+2025-10-05 14:45:19 | INFO     | Initializing search index
+2025-10-05 14:45:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:45:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:45:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:45:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:45:20 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:45:20 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:45:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:45:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:45:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:46:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:46:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:46:27 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:46:28 | INFO     | Using in-memory SQLite database
+2025-10-05 14:46:28 | INFO     | Using in-memory SQLite database
+2025-10-05 14:46:28 | INFO     | Initializing search index
+2025-10-05 14:46:28 | INFO     | Initializing search index
+2025-10-05 14:46:28 | INFO     | Initializing search index
+2025-10-05 14:46:28 | INFO     | Initializing search index
+2025-10-05 14:46:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:46:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:46:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:46:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:46:28 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:46:28 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 14:49:01 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:49:01 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:49:01 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:53:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:53:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:53:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:53:04 | INFO     | Using in-memory SQLite database
+2025-10-05 14:53:04 | INFO     | Using in-memory SQLite database
+2025-10-05 14:53:04 | INFO     | Initializing search index
+2025-10-05 14:53:04 | INFO     | Initializing search index
+2025-10-05 14:53:04 | INFO     | Initializing search index
+2025-10-05 14:53:04 | INFO     | Initializing search index
+2025-10-05 14:53:04 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:53:04 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:53:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:53:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:53:31 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:53:31 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:53:31 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:53:32 | INFO     | Using in-memory SQLite database
+2025-10-05 14:53:32 | INFO     | Using in-memory SQLite database
+2025-10-05 14:53:32 | INFO     | Initializing search index
+2025-10-05 14:53:32 | INFO     | Initializing search index
+2025-10-05 14:53:32 | INFO     | Initializing search index
+2025-10-05 14:53:32 | INFO     | Initializing search index
+2025-10-05 14:53:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:53:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:53:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:53:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:54:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:54:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:54:11 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:54:12 | INFO     | Using in-memory SQLite database
+2025-10-05 14:54:12 | INFO     | Using in-memory SQLite database
+2025-10-05 14:54:12 | INFO     | Initializing search index
+2025-10-05 14:54:12 | INFO     | Initializing search index
+2025-10-05 14:54:12 | INFO     | Initializing search index
+2025-10-05 14:54:12 | INFO     | Initializing search index
+2025-10-05 14:54:12 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:54:12 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:54:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:54:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:57:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:57:46 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:57:46 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:57:47 | INFO     | Using in-memory SQLite database
+2025-10-05 14:57:47 | INFO     | Using in-memory SQLite database
+2025-10-05 14:57:47 | INFO     | Initializing search index
+2025-10-05 14:57:47 | INFO     | Initializing search index
+2025-10-05 14:57:47 | INFO     | Initializing search index
+2025-10-05 14:57:47 | INFO     | Initializing search index
+2025-10-05 14:57:47 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:57:47 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:57:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:57:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:59:16 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:59:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:59:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:59:17 | INFO     | Using in-memory SQLite database
+2025-10-05 14:59:17 | INFO     | Using in-memory SQLite database
+2025-10-05 14:59:17 | INFO     | Initializing search index
+2025-10-05 14:59:17 | INFO     | Initializing search index
+2025-10-05 14:59:17 | INFO     | Initializing search index
+2025-10-05 14:59:17 | INFO     | Initializing search index
+2025-10-05 14:59:17 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:59:17 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:59:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:59:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:59:37 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:59:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:59:37 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:59:38 | INFO     | Using in-memory SQLite database
+2025-10-05 14:59:38 | INFO     | Using in-memory SQLite database
+2025-10-05 14:59:38 | INFO     | Initializing search index
+2025-10-05 14:59:38 | INFO     | Initializing search index
+2025-10-05 14:59:38 | INFO     | Initializing search index
+2025-10-05 14:59:38 | INFO     | Initializing search index
+2025-10-05 14:59:38 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:59:38 | INFO     | Initialized project session with default project: test-project
+2025-10-05 14:59:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:59:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 14:59:54 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 14:59:54 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 14:59:54 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:07:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:07:42 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:07:42 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:07:43 | INFO     | Using in-memory SQLite database
+2025-10-05 15:07:43 | INFO     | Using in-memory SQLite database
+2025-10-05 15:07:43 | INFO     | Initializing search index
+2025-10-05 15:07:43 | INFO     | Initializing search index
+2025-10-05 15:07:43 | INFO     | Initializing search index
+2025-10-05 15:07:43 | INFO     | Initializing search index
+2025-10-05 15:07:43 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:07:43 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:07:43 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:07:43 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:07:43 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0
+2025-10-05 15:07:43 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0
+2025-10-05 15:07:43 | INFO     | Found 0 db records
+2025-10-05 15:07:43 | INFO     | Found 0 db records
+2025-10-05 15:07:43 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0. Found 0 db paths
+2025-10-05 15:07:43 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0. Found 0 db paths
+2025-10-05 15:07:43 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0, found 1 changes.
+2025-10-05 15:07:43 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0, found 1 changes.
+2025-10-05 15:07:43 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:07:43 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:07:43 | INFO     | Updating permalink for path: test_note.md, old_permalink: None, new_permalink: test-note
+2025-10-05 15:07:43 | INFO     | Updating permalink for path: test_note.md, old_permalink: None, new_permalink: test-note
+2025-10-05 15:07:43 | INFO     | Resolving forward references
+2025-10-05 15:07:43 | INFO     | Resolving forward references
+2025-10-05 15:07:43 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0, total_changes=1, duration_ms=115
+2025-10-05 15:07:43 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-147\test_handle_file_modify_asynci0, total_changes=1, duration_ms=115
+2025-10-05 15:07:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:07:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:07:57 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:10 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:08:10 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:10 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:11 | INFO     | Using in-memory SQLite database
+2025-10-05 15:08:11 | INFO     | Using in-memory SQLite database
+2025-10-05 15:08:11 | INFO     | Initializing search index
+2025-10-05 15:08:11 | INFO     | Initializing search index
+2025-10-05 15:08:11 | INFO     | Initializing search index
+2025-10-05 15:08:11 | INFO     | Initializing search index
+2025-10-05 15:08:11 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:08:11 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:08:11 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:08:11 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:08:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:08:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:08:36 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:36 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:08:37 | INFO     | Using in-memory SQLite database
+2025-10-05 15:08:37 | INFO     | Using in-memory SQLite database
+2025-10-05 15:08:37 | INFO     | Initializing search index
+2025-10-05 15:08:37 | INFO     | Initializing search index
+2025-10-05 15:08:37 | INFO     | Initializing search index
+2025-10-05 15:08:37 | INFO     | Initializing search index
+2025-10-05 15:08:37 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:08:37 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:08:37 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:08:37 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:08:38 | INFO     | API request
+2025-10-05 15:08:38 | INFO     | API request
+2025-10-05 15:08:38 | INFO     | Writing file: test\Test_Entity.md, is_markdown=True
+2025-10-05 15:08:38 | INFO     | API response: endpoint='create_entity' title=Test Entity, permalink=test/test-entity, status_code=201
+2025-10-05 15:08:38 | INFO     | API response: endpoint='create_entity' title=Test Entity, permalink=test/test-entity, status_code=201
+2025-10-05 15:11:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:11:29 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:11:29 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:11:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:11:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:11:30 | INFO     | Initializing search index
+2025-10-05 15:11:30 | INFO     | Initializing search index
+2025-10-05 15:11:30 | INFO     | Initializing search index
+2025-10-05 15:11:30 | INFO     | Initializing search index
+2025-10-05 15:11:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:11:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:11:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:11:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:11:41 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:11:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:11:41 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:11:42 | INFO     | Using in-memory SQLite database
+2025-10-05 15:11:42 | INFO     | Using in-memory SQLite database
+2025-10-05 15:11:42 | INFO     | Initializing search index
+2025-10-05 15:11:42 | INFO     | Initializing search index
+2025-10-05 15:11:42 | INFO     | Initializing search index
+2025-10-05 15:11:42 | INFO     | Initializing search index
+2025-10-05 15:11:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:11:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:11:42 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:11:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:11:42 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0
+2025-10-05 15:11:42 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0
+2025-10-05 15:11:42 | INFO     | Found 0 db records
+2025-10-05 15:11:42 | INFO     | Found 0 db records
+2025-10-05 15:11:42 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0. Found 0 db paths
+2025-10-05 15:11:42 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0. Found 0 db paths
+2025-10-05 15:11:42 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0, found 1 changes.
+2025-10-05 15:11:42 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0, found 1 changes.
+2025-10-05 15:11:42 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:11:42 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:11:42 | INFO     | Updating permalink for path: to_delete.md, old_permalink: None, new_permalink: to-delete
+2025-10-05 15:11:42 | INFO     | Updating permalink for path: to_delete.md, old_permalink: None, new_permalink: to-delete
+2025-10-05 15:11:42 | INFO     | Resolving forward references
+2025-10-05 15:11:42 | INFO     | Resolving forward references
+2025-10-05 15:11:42 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0, total_changes=1, duration_ms=109
+2025-10-05 15:11:42 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-153\test_handle_file_delete_asynci0, total_changes=1, duration_ms=109
+2025-10-05 15:12:09 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:12:09 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:09 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:10 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:10 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:10 | INFO     | Initializing search index
+2025-10-05 15:12:10 | INFO     | Initializing search index
+2025-10-05 15:12:10 | INFO     | Initializing search index
+2025-10-05 15:12:10 | INFO     | Initializing search index
+2025-10-05 15:12:10 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:10 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:10 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:10 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:10 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0
+2025-10-05 15:12:10 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0
+2025-10-05 15:12:10 | INFO     | Found 0 db records
+2025-10-05 15:12:10 | INFO     | Found 0 db records
+2025-10-05 15:12:10 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0. Found 0 db paths
+2025-10-05 15:12:10 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0. Found 0 db paths
+2025-10-05 15:12:10 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0, found 1 changes.
+2025-10-05 15:12:10 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:10 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:10 | INFO     | Updating permalink for path: to_delete.md, old_permalink: None, new_permalink: to-delete
+2025-10-05 15:12:10 | INFO     | Updating permalink for path: to_delete.md, old_permalink: None, new_permalink: to-delete
+2025-10-05 15:12:10 | INFO     | Resolving forward references
+2025-10-05 15:12:10 | INFO     | Resolving forward references
+2025-10-05 15:12:10 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0, total_changes=1, duration_ms=112
+2025-10-05 15:12:10 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-154\test_handle_file_delete_asynci0, total_changes=1, duration_ms=112
+2025-10-05 15:12:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:12:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:23 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:24 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:24 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:24 | INFO     | Initializing search index
+2025-10-05 15:12:24 | INFO     | Initializing search index
+2025-10-05 15:12:24 | INFO     | Initializing search index
+2025-10-05 15:12:24 | INFO     | Initializing search index
+2025-10-05 15:12:24 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:24 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:24 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:24 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:24 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0
+2025-10-05 15:12:24 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0
+2025-10-05 15:12:24 | INFO     | Found 0 db records
+2025-10-05 15:12:24 | INFO     | Found 0 db records
+2025-10-05 15:12:24 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:12:24 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:12:24 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:12:24 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:12:24 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:24 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:24 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:12:24 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:12:24 | INFO     | Resolving forward references
+2025-10-05 15:12:24 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=143
+2025-10-05 15:12:24 | INFO     | Resolving forward references
+2025-10-05 15:12:24 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-155\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=143
+2025-10-05 15:12:53 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:12:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:53 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 15:12:54 | INFO     | Initializing search index
+2025-10-05 15:12:54 | INFO     | Initializing search index
+2025-10-05 15:12:54 | INFO     | Initializing search index
+2025-10-05 15:12:54 | INFO     | Initializing search index
+2025-10-05 15:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:12:54 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0
+2025-10-05 15:12:54 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0
+2025-10-05 15:12:54 | INFO     | Found 0 db records
+2025-10-05 15:12:54 | INFO     | Found 0 db records
+2025-10-05 15:12:54 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:12:54 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:12:54 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:12:54 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:12:54 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:54 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:12:54 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:12:54 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:12:54 | INFO     | Resolving forward references
+2025-10-05 15:12:54 | INFO     | Resolving forward references
+2025-10-05 15:12:54 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=110
+2025-10-05 15:12:54 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-156\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=110
+2025-10-05 15:13:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:13:15 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:13:15 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:13:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:13:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:13:16 | INFO     | Initializing search index
+2025-10-05 15:13:16 | INFO     | Initializing search index
+2025-10-05 15:13:16 | INFO     | Initializing search index
+2025-10-05 15:13:16 | INFO     | Initializing search index
+2025-10-05 15:13:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:13:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:13:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:13:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:13:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0
+2025-10-05 15:13:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0
+2025-10-05 15:13:16 | INFO     | Found 0 db records
+2025-10-05 15:13:16 | INFO     | Found 0 db records
+2025-10-05 15:13:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:13:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:13:16 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:13:16 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:13:16 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:13:16 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:13:16 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:13:16 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:13:16 | INFO     | Resolving forward references
+2025-10-05 15:13:16 | INFO     | Resolving forward references
+2025-10-05 15:13:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=111
+2025-10-05 15:13:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-157\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=111
+2025-10-05 15:13:28 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:13:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:13:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:13:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:13:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:13:29 | INFO     | Initializing search index
+2025-10-05 15:13:29 | INFO     | Initializing search index
+2025-10-05 15:13:29 | INFO     | Initializing search index
+2025-10-05 15:13:29 | INFO     | Initializing search index
+2025-10-05 15:13:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:13:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:13:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:13:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:13:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:13:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:13:59 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:14:00 | INFO     | Using in-memory SQLite database
+2025-10-05 15:14:00 | INFO     | Initializing search index
+2025-10-05 15:14:00 | INFO     | Initializing search index
+2025-10-05 15:14:00 | INFO     | Initializing search index
+2025-10-05 15:14:00 | INFO     | Initializing search index
+2025-10-05 15:14:00 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:00 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:14:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:14:16 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:14:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:14:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:14:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initializing search index
+2025-10-05 15:14:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:14:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:14:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0
+2025-10-05 15:14:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0
+2025-10-05 15:14:16 | INFO     | Found 0 db records
+2025-10-05 15:14:16 | INFO     | Found 0 db records
+2025-10-05 15:14:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0. Found 0 db paths
+2025-10-05 15:14:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0. Found 0 db paths
+2025-10-05 15:14:17 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0, found 1 changes.
+2025-10-05 15:14:17 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0, found 1 changes.
+2025-10-05 15:14:17 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:14:17 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:14:17 | INFO     | Updating permalink for path: original.md, old_permalink: None, new_permalink: original
+2025-10-05 15:14:17 | INFO     | Updating permalink for path: original.md, old_permalink: None, new_permalink: original
+2025-10-05 15:14:17 | INFO     | Resolving forward references
+2025-10-05 15:14:17 | INFO     | Resolving forward references
+2025-10-05 15:14:17 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0, total_changes=1, duration_ms=106
+2025-10-05 15:14:17 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-160\test_handle_rapid_move_asyncio0, total_changes=1, duration_ms=106
+2025-10-05 15:17:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:17:38 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:17:39 | INFO     | Using in-memory SQLite database
+2025-10-05 15:17:39 | INFO     | Using in-memory SQLite database
+2025-10-05 15:17:39 | INFO     | Initializing search index
+2025-10-05 15:17:39 | INFO     | Initializing search index
+2025-10-05 15:17:39 | INFO     | Initializing search index
+2025-10-05 15:17:39 | INFO     | Initializing search index
+2025-10-05 15:17:39 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:17:39 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:17:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:17:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:17:39 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0
+2025-10-05 15:17:39 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0
+2025-10-05 15:17:39 | INFO     | Found 0 db records
+2025-10-05 15:17:39 | INFO     | Found 0 db records
+2025-10-05 15:17:39 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0. Found 0 db paths
+2025-10-05 15:17:39 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0. Found 0 db paths
+2025-10-05 15:17:39 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0, found 1 changes.
+2025-10-05 15:17:39 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0, found 1 changes.
+2025-10-05 15:17:39 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:17:39 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:17:39 | INFO     | Updating permalink for path: original.md, old_permalink: None, new_permalink: original
+2025-10-05 15:17:39 | INFO     | Updating permalink for path: original.md, old_permalink: None, new_permalink: original
+2025-10-05 15:17:39 | INFO     | Resolving forward references
+2025-10-05 15:17:39 | INFO     | Resolving forward references
+2025-10-05 15:17:39 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0, total_changes=1, duration_ms=163
+2025-10-05 15:17:39 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-161\test_handle_rapid_move_asyncio0, total_changes=1, duration_ms=163
+2025-10-05 15:17:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:17:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:17:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:17:51 | INFO     | Using in-memory SQLite database
+2025-10-05 15:17:51 | INFO     | Using in-memory SQLite database
+2025-10-05 15:17:51 | INFO     | Initializing search index
+2025-10-05 15:17:51 | INFO     | Initializing search index
+2025-10-05 15:17:51 | INFO     | Initializing search index
+2025-10-05 15:17:51 | INFO     | Initializing search index
+2025-10-05 15:17:51 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:17:51 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:17:51 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:17:51 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:18:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:18:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:18:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:18:04 | INFO     | Using in-memory SQLite database
+2025-10-05 15:18:04 | INFO     | Using in-memory SQLite database
+2025-10-05 15:18:04 | INFO     | Initializing search index
+2025-10-05 15:18:04 | INFO     | Initializing search index
+2025-10-05 15:18:04 | INFO     | Initializing search index
+2025-10-05 15:18:04 | INFO     | Initializing search index
+2025-10-05 15:18:04 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:18:04 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:18:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:18:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:18:04 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0
+2025-10-05 15:18:04 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0
+2025-10-05 15:18:04 | INFO     | Found 0 db records
+2025-10-05 15:18:04 | INFO     | Found 0 db records
+2025-10-05 15:18:04 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0. Found 0 db paths
+2025-10-05 15:18:04 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0. Found 0 db paths
+2025-10-05 15:18:04 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0, found 1 changes.
+2025-10-05 15:18:04 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0, found 1 changes.
+2025-10-05 15:18:04 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:18:04 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:18:04 | INFO     | Updating permalink for path: old_dir\test_file.md, old_permalink: None, new_permalink: old-dir/test-file
+2025-10-05 15:18:04 | INFO     | Updating permalink for path: old_dir\test_file.md, old_permalink: None, new_permalink: old-dir/test-file
+2025-10-05 15:18:04 | INFO     | Resolving forward references
+2025-10-05 15:18:04 | INFO     | Resolving forward references
+2025-10-05 15:18:04 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0, total_changes=1, duration_ms=119
+2025-10-05 15:18:04 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-163\test_handle_directory_rename_a0, total_changes=1, duration_ms=119
+2025-10-05 15:18:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:18:15 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:18:15 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:18:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:18:16 | INFO     | Using in-memory SQLite database
+2025-10-05 15:18:16 | INFO     | Initializing search index
+2025-10-05 15:18:16 | INFO     | Initializing search index
+2025-10-05 15:18:16 | INFO     | Initializing search index
+2025-10-05 15:18:16 | INFO     | Initializing search index
+2025-10-05 15:18:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:18:16 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:18:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:18:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:18:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0
+2025-10-05 15:18:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0
+2025-10-05 15:18:16 | INFO     | Found 0 db records
+2025-10-05 15:18:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:18:16 | INFO     | Found 0 db records
+2025-10-05 15:18:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 15:18:16 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:18:16 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 15:18:16 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:18:16 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 15:18:16 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:18:16 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 15:18:16 | INFO     | Resolving forward references
+2025-10-05 15:18:16 | INFO     | Resolving forward references
+2025-10-05 15:18:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=109
+2025-10-05 15:18:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-164\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=109
+2025-10-05 15:20:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:20:40 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:20:40 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:22:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:22:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:22:39 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:22:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:22:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:22:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:23:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:23:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:23:03 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:23:28 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:23:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:23:28 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initializing search index
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:29 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:30 | INFO     | Using in-memory SQLite database
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initializing search index
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:23:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:24:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:24:51 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Using in-memory SQLite database
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initializing search index
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:24:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:27:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:27:48 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:27:49 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:49 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:49 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:49 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initializing search index
+2025-10-05 15:27:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Using in-memory SQLite database
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initializing search index
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:27:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:28:22 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:28:22 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Using in-memory SQLite database
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initializing search index
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Initialized project session with default project: test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 15:28:33 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:28:33 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:28:33 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:29:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:29:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:29:21 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:33:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:33:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:33:56 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:34:25 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:34:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:34:25 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:34:47 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 15:34:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 15:34:47 | INFO     | Basic Memory 0.14.4 (Project: claude-depot-consolidated)
+2025-10-05 16:10:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:10:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:11:01 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:11:47 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:12:05 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:12:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:12:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:15:02 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:15:19 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:15:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:16:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:16:20 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:16:21 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:21 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:21 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initializing search index
+2025-10-05 16:16:21 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:21 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:22 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initializing search index
+2025-10-05 16:16:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initializing search index
+2025-10-05 16:16:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:58 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:59 | INFO     | Initializing search index
+2025-10-05 16:16:59 | INFO     | Initializing search index
+2025-10-05 16:16:59 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:16:59 | INFO     | Using in-memory SQLite database
+2025-10-05 16:16:59 | INFO     | Initializing search index
+2025-10-05 16:16:59 | INFO     | Initializing search index
+2025-10-05 16:16:59 | INFO     | Initialized project session with default project: test-project
+2025-10-05 16:16:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 16:19:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:24:43 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:25:18 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:25:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:26:07 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:28:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:29:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:30:06 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:30:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:30:54 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:31:06 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:38:18 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:38:44 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:39:20 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:39:33 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:39:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:40:25 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:40:37 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:47:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:47:54 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:48:09 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:50:34 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:51:09 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:51:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:57:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 16:57:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:00:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:00:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:06:19 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:06:31 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:09:05 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:09:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:16:09 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:16:10 | INFO     | Using in-memory SQLite database
+2025-10-05 17:16:10 | INFO     | Initializing search index
+2025-10-05 17:16:10 | INFO     | Initializing search index
+2025-10-05 17:16:10 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:16:10 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:16:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:16:31 | INFO     | Using in-memory SQLite database
+2025-10-05 17:16:31 | INFO     | Initializing search index
+2025-10-05 17:16:31 | INFO     | Initializing search index
+2025-10-05 17:16:31 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:16:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:16:40 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:18:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:19:00 | INFO     | Using in-memory SQLite database
+2025-10-05 17:19:00 | INFO     | Initializing search index
+2025-10-05 17:19:00 | INFO     | Initializing search index
+2025-10-05 17:19:00 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:19:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:19:00 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:19:00 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:19:00 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:19:00 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:19:00 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 17:23:14 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:23:26 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:23:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:23:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:24:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:24:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:24:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:24:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:24:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:29:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:29:31 | INFO     | Using in-memory SQLite database
+2025-10-05 17:29:31 | INFO     | Initializing search index
+2025-10-05 17:29:31 | INFO     | Initializing search index
+2025-10-05 17:29:31 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:29:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:29:31 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:29:31 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:29:31 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:29:32 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:29:32 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 17:29:32 | INFO     | Using in-memory SQLite database
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:29:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:29:32 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 17:29:32 | INFO     | Using in-memory SQLite database
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:29:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:29:32 | INFO     | Writing file: test.md, is_markdown=True
+2025-10-05 17:29:32 | ERROR    | Failed to write file
+2025-10-05 17:29:32 | INFO     | Using in-memory SQLite database
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initializing search index
+2025-10-05 17:29:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:29:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:34:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:34:13 | INFO     | Using in-memory SQLite database
+2025-10-05 17:34:13 | INFO     | Initializing search index
+2025-10-05 17:34:13 | INFO     | Initializing search index
+2025-10-05 17:34:13 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:34:13 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:34:13 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 17:34:13 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 17:34:14 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 17:34:14 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 17:34:14 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 17:34:14 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 17:34:14 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 17:34:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:34:30 | INFO     | Using in-memory SQLite database
+2025-10-05 17:34:30 | INFO     | Initializing search index
+2025-10-05 17:34:30 | INFO     | Initializing search index
+2025-10-05 17:34:30 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:34:30 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:34:30 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 17:34:30 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 17:34:30 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 17:34:30 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 17:34:30 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 17:34:31 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 17:34:31 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 17:34:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:34:58 | INFO     | Using in-memory SQLite database
+2025-10-05 17:34:58 | INFO     | Initializing search index
+2025-10-05 17:34:58 | INFO     | Initializing search index
+2025-10-05 17:34:58 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:34:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:34:58 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 17:34:58 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 17:39:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:39:43 | INFO     | Using in-memory SQLite database
+2025-10-05 17:39:43 | INFO     | Initializing search index
+2025-10-05 17:39:43 | INFO     | Initializing search index
+2025-10-05 17:39:43 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:39:43 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:39:43 | INFO     | Writing file: components\Core_Service.md, is_markdown=True
+2025-10-05 17:39:43 | INFO     | Writing file: config\Service_Config.md, is_markdown=True
+2025-10-05 17:39:43 | INFO     | Writing file: components\Auth_Service.md, is_markdown=True
+2025-10-05 17:39:43 | INFO     | Writing file: specs\Core_Features.md, is_markdown=True
+2025-10-05 17:39:43 | INFO     | Writing file: specs\subspec\Sub_Features_1.md, is_markdown=True
+2025-10-05 17:39:44 | INFO     | Writing file: specs\subspec\Sub_Features_2.md, is_markdown=True
+2025-10-05 17:39:44 | INFO     | Writing file: components2\Core_Service.md, is_markdown=True
+2025-10-05 17:39:55 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:50:08 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:51:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:51:18 | INFO     | Using in-memory SQLite database
+2025-10-05 17:51:18 | INFO     | Initializing search index
+2025-10-05 17:51:18 | INFO     | Initializing search index
+2025-10-05 17:51:18 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:51:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:51:18 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:51:18 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:51:18 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:51:18 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:51:18 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 17:51:31 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:51:31 | INFO     | Using in-memory SQLite database
+2025-10-05 17:51:32 | INFO     | Initializing search index
+2025-10-05 17:51:32 | INFO     | Initializing search index
+2025-10-05 17:51:32 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:51:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:51:32 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:51:32 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:51:32 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:51:32 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:51:33 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 17:56:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:56:52 | INFO     | Using in-memory SQLite database
+2025-10-05 17:56:52 | INFO     | Initializing search index
+2025-10-05 17:56:52 | INFO     | Initializing search index
+2025-10-05 17:56:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:56:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:56:52 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:56:52 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:56:52 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:56:52 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:56:52 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 17:57:34 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 17:57:36 | INFO     | Using in-memory SQLite database
+2025-10-05 17:57:36 | INFO     | Initializing search index
+2025-10-05 17:57:36 | INFO     | Initializing search index
+2025-10-05 17:57:36 | INFO     | Initialized project session with default project: test-project
+2025-10-05 17:57:36 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 17:57:36 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 17:57:36 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 17:57:36 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 17:57:36 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 17:57:36 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 18:01:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:02 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:14 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:26 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:02:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:03:00 | INFO     | Using in-memory SQLite database
+2025-10-05 18:03:00 | INFO     | Initializing search index
+2025-10-05 18:03:00 | INFO     | Initializing search index
+2025-10-05 18:03:00 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:03:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:03:00 | INFO     | Writing file: test\Deeper_Entity.md, is_markdown=True
+2025-10-05 18:03:00 | INFO     | Writing file: test\Deep_Entity.md, is_markdown=True
+2025-10-05 18:03:00 | INFO     | Writing file: test\Connected_Entity_2.md, is_markdown=True
+2025-10-05 18:03:00 | INFO     | Writing file: test\Connected_Entity_1.md, is_markdown=True
+2025-10-05 18:03:01 | INFO     | Writing file: test\Root.md, is_markdown=True
+2025-10-05 18:03:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:03:13 | INFO     | Using in-memory SQLite database
+2025-10-05 18:03:13 | INFO     | Initializing search index
+2025-10-05 18:03:13 | INFO     | Initializing search index
+2025-10-05 18:03:13 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:03:13 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:03:14 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-231\test_handle_file_move_asyncio_0
+2025-10-05 18:03:14 | INFO     | Found 0 db records
+2025-10-05 18:03:14 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-231\test_handle_file_move_asyncio_0. Found 0 db paths
+2025-10-05 18:03:14 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-231\test_handle_file_move_asyncio_0, found 1 changes.
+2025-10-05 18:03:14 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 18:03:14 | INFO     | Updating permalink for path: old\test_move.md, old_permalink: None, new_permalink: old/test-move
+2025-10-05 18:03:14 | INFO     | Resolving forward references
+2025-10-05 18:03:14 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-231\test_handle_file_move_asyncio_0, total_changes=1, duration_ms=133
+2025-10-05 18:03:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:12:53 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:54 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initializing search index
+2025-10-05 18:12:54 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:54 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:55 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:55 | INFO     | Initializing search index
+2025-10-05 18:12:55 | INFO     | Initializing search index
+2025-10-05 18:12:55 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:55 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:12:55 | INFO     | Using in-memory SQLite database
+2025-10-05 18:12:55 | INFO     | Initializing search index
+2025-10-05 18:12:55 | INFO     | Initializing search index
+2025-10-05 18:12:55 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:12:55 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:13:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:13:49 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:49 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:49 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:49 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:49 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initializing search index
+2025-10-05 18:13:49 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:49 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:50 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:50 | INFO     | Initializing search index
+2025-10-05 18:13:50 | INFO     | Initializing search index
+2025-10-05 18:13:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:13:50 | INFO     | Using in-memory SQLite database
+2025-10-05 18:13:50 | INFO     | Initializing search index
+2025-10-05 18:13:50 | INFO     | Initializing search index
+2025-10-05 18:13:50 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:13:50 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:16:51 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:51 | INFO     | Initializing search index
+2025-10-05 18:16:51 | INFO     | Initializing search index
+2025-10-05 18:16:51 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:51 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:51 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-236\test_permalink_formatting_asyn0
+2025-10-05 18:16:51 | INFO     | Found 0 db records
+2025-10-05 18:16:51 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-236\test_permalink_formatting_asyn0. Found 0 db paths
+2025-10-05 18:16:51 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-236\test_permalink_formatting_asyn0, found 5 changes.
+2025-10-05 18:16:51 | INFO     | Sync changes detected: new_files=5, modified_files=0, deleted_files=0, moved_files=0
+2025-10-05 18:16:51 | INFO     | Updating permalink for path: my_awesome_feature.md, old_permalink: None, new_permalink: my-awesome-feature
+2025-10-05 18:16:51 | INFO     | Updating permalink for path: MIXED_CASE_NAME.md, old_permalink: None, new_permalink: mixed-case-name
+2025-10-05 18:16:51 | INFO     | Updating permalink for path: spaces and_underscores.md, old_permalink: None, new_permalink: spaces-and-underscores
+2025-10-05 18:16:52 | INFO     | Updating permalink for path: test\multiple_word_directory\feature_name.md, old_permalink: None, new_permalink: test/multiple-word-directory/feature-name
+2025-10-05 18:16:52 | INFO     | Updating permalink for path: design\model_refactor.md, old_permalink: None, new_permalink: design/model-refactor
+2025-10-05 18:16:52 | INFO     | Resolving forward references
+2025-10-05 18:16:52 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-236\test_permalink_formatting_asyn0, total_changes=5, duration_ms=348
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:52 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:52 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:52 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:53 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:53 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:53 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:53 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:53 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:53 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:53 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:16:53 | INFO     | Using in-memory SQLite database
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initializing search index
+2025-10-05 18:16:53 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:16:53 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:21:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initializing search index
+2025-10-05 18:21:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:21:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:24:40 | INFO     | Using in-memory SQLite database
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initializing search index
+2025-10-05 18:24:40 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:24:40 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:17 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:25:18 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:18 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:18 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initializing search index
+2025-10-05 18:25:18 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:19 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:19 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:19 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:25:19 | INFO     | Using in-memory SQLite database
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initializing search index
+2025-10-05 18:25:19 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:25:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:27:22 | INFO     | Using in-memory SQLite database
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initializing search index
+2025-10-05 18:27:22 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:27:22 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-05 18:28:28 | INFO     | Using in-memory SQLite database
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initializing search index
+2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
+2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project

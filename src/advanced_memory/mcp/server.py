@@ -4,21 +4,22 @@ Basic Memory FastMCP server with console output suppression.
 
 import asyncio
 import sys
-import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import AsyncIterator, Optional, Any
+from typing import Any
 
 from fastmcp import FastMCP
 
 from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.initialization import initialize_app
 
 
 @dataclass
 class AppContext:
-    watch_task: Optional[asyncio.Task]
-    migration_manager: Optional[Any] = None
+    watch_task: asyncio.Task | None
+    migration_manager: Any | None = None
 
 
 @asynccontextmanager
@@ -58,13 +59,10 @@ def configure_mcp_logging():
 # Apply logging configuration
 configure_mcp_logging()
 
-# Create the shared server instance
-mcp_server = FastMCP(
-    name="Advanced Memory MCP",
-    lifespan=app_lifespan,
-)
+# Use the shared MCP instance as the server
+server = mcp
 
 # Add stdio runner for MCP protocol
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(mcp_server.run_stdio_async())
+    asyncio.run(server.run_stdio_async())

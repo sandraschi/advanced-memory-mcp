@@ -243,7 +243,7 @@ The API provides REST endpoints for data access.
 - [tech] Built with FastAPI framework
 - [status] Currently in beta testing
 
-## Relations  
+## Relations
 - implements [[Authentication System]]
 - documented_in [[API Guide]]
 - depends_on [[Database Schema]]
@@ -493,7 +493,7 @@ async def test_edit_note_special_characters_in_content(mcp_server, app):
 ## Unicode Section 🚀
 
 This section contains:
-- Emojis: 🎉 💡 ⚡ 🔥 
+- Emojis: 🎉 💡 ⚡ 🔥
 - Languages: 测试中文 Tëst Übër
 - Math symbols: ∑∏∂∇∆Ω ≠≤≥ ∞
 - Special markdown: `code` **bold** *italic*

@@ -89,7 +89,7 @@ async def test_get_directory_tree_mocked(client, project_url):
 
     # Patch the directory service
     with patch(
-        "basic_memory.services.directory_service.DirectoryService.get_directory_tree",
+        "advanced_memory.services.directory_service.DirectoryService.get_directory_tree",
         return_value=mock_tree,
     ):
         # Call the endpoint
@@ -183,7 +183,7 @@ async def test_list_directory_endpoint_with_glob(test_graph, client, project_url
     assert len(data) == 2
 
     file_names = {item["name"] for item in data}
-    assert file_names == {"Connected Entity 1.md", "Connected Entity 2.md"}
+    assert file_names == {"Connected_Entity_1.md", "Connected_Entity_2.md"}
 
 
 @pytest.mark.asyncio
@@ -251,7 +251,7 @@ async def test_list_directory_endpoint_mocked(client, project_url):
 
     # Patch the directory service
     with patch(
-        "basic_memory.services.directory_service.DirectoryService.list_directory",
+        "advanced_memory.services.directory_service.DirectoryService.list_directory",
         return_value=mock_nodes,
     ):
         # Call the endpoint

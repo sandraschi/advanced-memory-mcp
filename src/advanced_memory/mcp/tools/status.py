@@ -3,9 +3,8 @@
 import os
 import platform
 from pathlib import Path
-from typing import Optional
 
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
 
@@ -49,7 +48,7 @@ MONITORS:
 - Memory usage and resource consumption
 - Background process status and health""",
 )
-async def status(level: str = "basic", focus: Optional[str] = None) -> str:
+async def status(level: str = "basic", focus: str | None = None) -> str:
     """Get comprehensive status information about Basic Memory system.
 
     This enhanced status tool provides different levels of diagnostic information:
@@ -195,8 +194,9 @@ async def _get_advanced_status() -> str:
     # Performance metrics
     status_lines.append("## Performance Metrics")
     try:
-        import psutil
         import os
+
+        import psutil
 
         process = psutil.Process(os.getpid())
         memory_mb = process.memory_info().rss / 1024 / 1024
@@ -260,6 +260,8 @@ async def _get_diagnostic_status() -> str:
     status_lines = ["# Basic Memory Status - Diagnostic", ""]
 
     # Basic sync status
+    from advanced_memory.services.sync_status_service import SyncStatusTracker
+    sync_status_tracker = SyncStatusTracker()
     sync_info = sync_status_tracker.get_summary()
     status_lines.extend([sync_info, "", "---", ""])
 

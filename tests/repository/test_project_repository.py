@@ -1,13 +1,13 @@
 """Tests for the ProjectRepository."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import select
 
-from basic_memory import db
+from advanced_memory import db
 from advanced_memory.models.project import Project
 from advanced_memory.repository.project_repository import ProjectRepository
 
@@ -18,11 +18,11 @@ async def sample_project(project_repository: ProjectRepository) -> Project:
     project_data = {
         "name": "Sample Project",
         "description": "A sample project",
-        "path": "/sample/project/path",
+        "path": "sample/project/path",  # Use normalized path (no leading slash)
         "is_active": True,
         "is_default": False,
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
+        "updated_at": datetime.now(UTC),
     }
     return await project_repository.create(project_data)
 
@@ -33,7 +33,7 @@ async def test_create_project(project_repository: ProjectRepository):
     project_data = {
         "name": "Sample Project",
         "description": "A sample project",
-        "path": "/sample/project/path",
+        "path": "sample/project/path",  # Use normalized path (no leading slash)
         "is_active": True,
         "is_default": False,
     }
@@ -43,7 +43,7 @@ async def test_create_project(project_repository: ProjectRepository):
     assert project.id is not None
     assert project.name == "Sample Project"
     assert project.description == "A sample project"
-    assert project.path == "/sample/project/path"
+    assert project.path == "sample/project/path"
     assert project.is_active is True
     assert project.is_default is False
     assert isinstance(project.created_at, datetime)
@@ -111,7 +111,7 @@ async def test_get_by_path(project_repository: ProjectRepository, sample_project
     assert found.path == sample_project.path
 
     # Test non-existent path
-    found = await project_repository.get_by_path("/non/existent/path")
+    found = await project_repository.get_by_path("non/existent/path")
     assert found is None
 
 

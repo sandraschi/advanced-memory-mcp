@@ -4,9 +4,11 @@ import mimetypes
 import shutil
 import time
 from datetime import datetime
-from os import stat_result, stat
+from os import stat_result
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union, TypeVar
+from typing import Any
+
+from loguru import logger
 
 # Import file utilities with explicit module path to avoid type checking issues
 import advanced_memory.file_utils as file_utils
@@ -15,10 +17,9 @@ from advanced_memory.models import Entity as EntityModel
 from advanced_memory.schemas import Entity as EntitySchema
 from advanced_memory.services.exceptions import FileOperationError
 from advanced_memory.utils import file_safety
-from loguru import logger
 
 # Type alias for file paths that can be either a string or a Path object
-FilePath = Union[str, Path]
+FilePath = str | Path
 
 
 class FileService:
@@ -43,7 +44,7 @@ class FileService:
         self.base_path = base_path.resolve()  # Get absolute path
         self.markdown_processor = markdown_processor
 
-    def get_entity_path(self, entity: Union[EntityModel, EntitySchema]) -> Path:
+    def get_entity_path(self, entity: EntityModel | EntitySchema) -> Path:
         """Generate absolute filesystem path for entity.
 
         Args:
@@ -110,9 +111,9 @@ class FileService:
                 return path_obj.exists()
             else:
                 return (self.base_path / path_obj).exists()
-        except Exception as e:
+        except (OSError, PermissionError, ValueError) as e:
             logger.error("Failed to check file existence", path=str(path), error=str(e))
-            raise FileOperationError(f"Failed to check file existence: {e}")
+            raise FileOperationError(f"Failed to check file existence: {e}") from e
 
     async def write_file(self, path: FilePath, content: str, overwrite: bool = True) -> str:
         """Safely write content to file and return checksum.
@@ -140,19 +141,19 @@ class FileService:
             if full_path.exists():
                 if not overwrite:
                     raise FileOperationError(f"File already exists and overwrite=False: {full_path}")
-                
+
                 # Create backup before overwriting
                 backup_path = full_path.with_suffix(f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.bak")
             # Ensure the parent directory exists
             parent_dir = full_path.parent
             await file_utils.ensure_directory(parent_dir)
-            
+
             # Create a backup if the file exists and we're not forcing overwrite
             if full_path.exists() and not overwrite:
                 backup_path = full_path.with_suffix(f".{int(time.time())}.bak")
                 shutil.copy2(str(full_path), str(backup_path))
                 logger.info(f"Created backup at {backup_path}")
-            
+
             # Log the write operation
             logger.info(
                 f"Writing file: {full_path.relative_to(self.base_path)}, "
@@ -167,13 +168,13 @@ class FileService:
             logger.debug(f"File write completed: {full_path}, checksum={checksum}")
             return checksum
 
-        except Exception as e:
+        except (OSError, PermissionError, ValueError, UnicodeEncodeError) as e:
             error_msg = f"Failed to write file {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 
-    # TODO remove read_file
-    async def read_file(self, path: FilePath) -> Tuple[str, str]:
+    # Note: read_file method is deprecated, use read_content instead
+    async def read_file(self, path: FilePath) -> tuple[str, str]:
         """Safely read file and compute checksum.
 
         Handles both absolute and relative paths. Relative paths are resolved
@@ -196,10 +197,10 @@ class FileService:
             # Check if file exists and is accessible
             if not full_path.exists():
                 raise FileOperationError(f"File does not exist: {full_path}")
-                
+
             if not full_path.is_file():
                 raise FileOperationError(f"Path is not a file: {full_path}")
-                
+
             # Check file size to prevent reading extremely large files
             file_size = full_path.stat().st_size
             MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
@@ -209,7 +210,7 @@ class FileService:
                 )
 
             logger.debug(f"Reading file: {full_path.relative_to(self.base_path)}")
-            
+
             # Read file with explicit encoding
             try:
                 content = full_path.read_text(encoding="utf-8")
@@ -218,22 +219,22 @@ class FileService:
                 try:
                     content = full_path.read_text(encoding="latin-1")
                     logger.warning(f"Read file with latin-1 encoding: {full_path}")
-                except Exception as e:
+                except (UnicodeDecodeError, OSError) as e:
                     raise FileOperationError(f"Failed to decode file {full_path}: {str(e)}") from ude
-            
+
             # Compute checksum of the file content
             checksum = await file_utils.compute_checksum(content)
             logger.debug(
                 f"File read completed: {full_path.relative_to(self.base_path)}, "
                 f"size={len(content)} bytes, checksum={checksum}"
             )
-            
+
             return content, checksum
 
         except FileOperationError:
             raise  # Re-raise our own exceptions
-            
-        except Exception as e:
+
+        except (OSError, PermissionError, ValueError, UnicodeDecodeError) as e:
             error_msg = f"Failed to read file {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
@@ -285,12 +286,12 @@ class FileService:
 
             return True
 
-        except Exception as e:
+        except (OSError, PermissionError, ValueError) as e:
             error_msg = f"Failed to delete {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 
-    async def update_frontmatter(self, path: FilePath, updates: Dict[str, Any]) -> str:
+    async def update_frontmatter(self, path: FilePath, updates: dict[str, Any]) -> str:
         """
         Update frontmatter fields in a file while preserving all content.
 
@@ -331,9 +332,9 @@ class FileService:
                 content = full_path.read_bytes()
             return await file_utils.compute_checksum(content)
 
-        except Exception as e:  # pragma: no cover
+        except (OSError, PermissionError, ValueError) as e:  # pragma: no cover
             logger.error("Failed to compute checksum", path=str(full_path), error=str(e))
-            raise file_utils.FileError(f"Failed to compute checksum for {path}: {e}")
+            raise file_utils.FileError(f"Failed to compute checksum for {path}: {e}") from e
 
     def file_stats(self, path: FilePath) -> stat_result:
         """Return file stats for a given path.

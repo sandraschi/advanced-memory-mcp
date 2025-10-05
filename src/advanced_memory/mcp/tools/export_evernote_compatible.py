@@ -1,20 +1,14 @@
 """Export Evernote compatible tool for Basic Memory MCP server."""
 
-import os
 import re
-from pathlib import Path
-from typing import Optional, List, Dict, Any
 from datetime import datetime
-from xml.etree.ElementTree import Element, SubElement, tostring
+from pathlib import Path
+from typing import Any
 from xml.dom import minidom
+from xml.etree.ElementTree import Element, SubElement, tostring
 
-from loguru import logger
-
-from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.search import search_notes
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_get
-from advanced_memory.mcp.project_session import get_active_project
 
 
 @mcp.tool(
@@ -41,11 +35,11 @@ PARAMETERS:
 - project (str, optional): Specific Basic Memory project to export from
 
 CONTENT CONVERSION:
-- Basic Memory markdown → Rich HTML with Evernote-compatible formatting
-- Entity relationships → Standard HTML links with context
-- Observations → Structured HTML content blocks
-- Mermaid diagrams → Preserved as formatted code blocks
-- Tags and metadata → ENEX XML attributes and elements
+- Basic Memory markdown [UNICODE] Rich HTML with Evernote-compatible formatting
+- Entity relationships [UNICODE] Standard HTML links with context
+- Observations [UNICODE] Structured HTML content blocks
+- Mermaid diagrams [UNICODE] Preserved as formatted code blocks
+- Tags and metadata [UNICODE] ENEX XML attributes and elements
 
 OUTPUT STRUCTURE:
 Creates ENEX files containing:
@@ -57,7 +51,7 @@ Creates ENEX files containing:
 EVERNOTE IMPORT PROCESS:
 1. Export using this tool: export_evernote_compatible("evernote-ready/")
 2. Open Evernote application (desktop or web)
-3. Go to File → Import Notes → Evernote XML (.enex)
+3. Go to File [UNICODE] Import Notes [UNICODE] Evernote XML (.enex)
 4. Select the exported .enex file
 5. Choose target notebook and complete import
 
@@ -76,12 +70,12 @@ Some advanced formatting may be simplified for Evernote compatibility.""",
 )
 async def export_evernote_compatible(
     output_path: str,
-    query: Optional[str] = None,
-    folder_filter: Optional[str] = None,
+    query: str | None = None,
+    folder_filter: str | None = None,
     notebook_name: str = "Basic Memory Export",
     include_observations: bool = True,
     include_relations: bool = True,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Export Basic Memory content in Evernote-compatible ENEX format.
 
@@ -120,6 +114,7 @@ async def export_evernote_compatible(
     """
 
     # Get the active project
+    from advanced_memory.mcp.tools.utils import get_active_project
     active_project = get_active_project(project)
     project_url = active_project.project_url
 
@@ -132,8 +127,8 @@ async def export_evernote_compatible(
         # Make HTTP call to search API to find matching notes
         from advanced_memory.mcp.async_client import client
         from advanced_memory.mcp.project_session import get_active_project
-        from advanced_memory.schemas.search import SearchQuery
         from advanced_memory.mcp.tools.utils import call_post
+        from advanced_memory.schemas.search import SearchQuery
 
         active_project = get_active_project(project)
         project_url = active_project.project_url
@@ -170,7 +165,7 @@ async def export_evernote_compatible(
         entities = entities_data.get('results', [])
 
     if not entities:
-        return f"No entities found to export"
+        return "No entities found to export"
 
     # Generate ENEX file
     enex_content = _generate_enex_xml(entities, notebook_name, include_observations, include_relations)
@@ -184,13 +179,13 @@ async def export_evernote_compatible(
         f.write(enex_content)
 
     # Generate summary
-    summary = f"## Evernote Export Complete\n\n"
+    summary = "## Evernote Export Complete\n\n"
     summary += f"- **Entities exported**: {len(entities)}\n"
     summary += f"- **Notebook name**: {notebook_name}\n"
     summary += f"- **Output file**: {file_path}\n"
     summary += f"- **File size**: {file_path.stat().st_size:,} bytes\n"
 
-    summary += f"\n### Export Options:\n"
+    summary += "\n### Export Options:\n"
     summary += f"- Observations included: {include_observations}\n"
     summary += f"- Relations as tags: {include_relations}\n"
     if query:
@@ -198,18 +193,18 @@ async def export_evernote_compatible(
     if folder_filter:
         summary += f"- Folder filter: {folder_filter}\n"
 
-    summary += f"\n### Import Instructions:\n"
-    summary += f"1. Open Evernote desktop or web application\n"
-    summary += f"2. Go to **File** → **Import** → **Evernote Export Files (.enex)**\n"
+    summary += "\n### Import Instructions:\n"
+    summary += "1. Open Evernote desktop or web application\n"
+    summary += "2. Go to **File** [UNICODE] **Import** [UNICODE] **Evernote Export Files (.enex)**\n"
     summary += f"3. Select the exported `{filename}` file\n"
     summary += f"4. Choose to import into notebook: **{notebook_name}**\n"
-    summary += f"5. Evernote will create notes with preserved formatting and metadata\n"
+    summary += "5. Evernote will create notes with preserved formatting and metadata\n"
 
     return summary
 
 
 def _generate_enex_xml(
-    entities: List[Dict[str, Any]],
+    entities: list[dict[str, Any]],
     notebook_name: str,
     include_observations: bool,
     include_relations: bool
@@ -235,7 +230,7 @@ def _generate_enex_xml(
 
 
 def _create_enex_note_element(
-    entity: Dict[str, Any],
+    entity: dict[str, Any],
     notebook_name: str,
     include_observations: bool,
     include_relations: bool
@@ -277,7 +272,7 @@ def _create_enex_note_element(
 
 
 def _generate_note_html_content(
-    entity: Dict[str, Any],
+    entity: dict[str, Any],
     include_observations: bool,
     include_relations: bool
 ) -> str:

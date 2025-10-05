@@ -5,13 +5,13 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
+from advanced_memory import db
 from loguru import logger
 from sqlalchemy import Executable, Result, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from basic_memory import db
 from advanced_memory.models.search import CREATE_SEARCH_INDEX
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import sanitize_filename
@@ -30,21 +30,21 @@ class SearchIndexRow:
     created_at: datetime
     updated_at: datetime
 
-    permalink: Optional[str] = None
-    metadata: Optional[dict] = None
+    permalink: str | None = None
+    metadata: dict | None = None
 
     # assigned in result
-    score: Optional[float] = None
+    score: float | None = None
 
     # Type-specific fields
-    title: Optional[str] = None  # entity
-    content_stems: Optional[str] = None  # entity, observation
-    content_snippet: Optional[str] = None  # entity, observation
-    entity_id: Optional[int] = None  # observations
-    category: Optional[str] = None  # observations
-    from_id: Optional[int] = None  # relations
-    to_id: Optional[int] = None  # relations
-    relation_type: Optional[str] = None  # relations
+    title: str | None = None  # entity
+    content_stems: str | None = None  # entity, observation
+    content_snippet: str | None = None  # entity, observation
+    entity_id: int | None = None  # observations
+    category: str | None = None  # observations
+    from_id: int | None = None  # relations
+    to_id: int | None = None  # relations
+    relation_type: str | None = None  # relations
 
     @property
     def content(self):
@@ -360,16 +360,16 @@ class SearchRepository:
 
     async def search(
         self,
-        search_text: Optional[str] = None,
-        permalink: Optional[str] = None,
-        permalink_match: Optional[str] = None,
-        title: Optional[str] = None,
-        types: Optional[List[str]] = None,
-        after_date: Optional[datetime] = None,
-        search_item_types: Optional[List[SearchItemType]] = None,
+        search_text: str | None = None,
+        permalink: str | None = None,
+        permalink_match: str | None = None,
+        title: str | None = None,
+        types: list[str] | None = None,
+        after_date: datetime | None = None,
+        search_item_types: list[SearchItemType] | None = None,
         limit: int = 10,
         offset: int = 0,
-    ) -> List[SearchIndexRow]:
+    ) -> list[SearchIndexRow]:
         """Search across all indexed content with fuzzy matching."""
         conditions = []
         params = {}
@@ -394,11 +394,16 @@ class SearchRepository:
             conditions.append("title MATCH :title_text")
 
             # Also search for sanitized version of the title (for markdown files)
-            sanitized_title = sanitize_filename(title.strip())
-            if sanitized_title != title.strip():  # Only add if different
-                sanitized_title_text = self._prepare_search_term(sanitized_title, is_prefix=False)
-                params["sanitized_title_text"] = sanitized_title_text
-                conditions.append("title MATCH :sanitized_title_text")
+            # But skip sanitization for boolean queries as they would become invalid
+            boolean_operators = [" AND ", " OR ", " NOT "]
+            is_boolean_query = any(op in f" {title.strip()} " for op in boolean_operators)
+            
+            if not is_boolean_query:
+                sanitized_title = sanitize_filename(title.strip())
+                if sanitized_title != title.strip():  # Only add if different
+                    sanitized_title_text = self._prepare_search_term(sanitized_title, is_prefix=False)
+                    params["sanitized_title_text"] = sanitized_title_text
+                    conditions.append("title MATCH :sanitized_title_text")
 
         # Handle permalink exact search
         if permalink:
@@ -453,10 +458,10 @@ class SearchRepository:
         where_clause = " AND ".join(conditions) if conditions else "1=1"
 
         sql = f"""
-            SELECT 
+            SELECT
                 project_id,
-                id, 
-                title, 
+                id,
+                title,
                 permalink,
                 file_path,
                 type,
@@ -470,7 +475,7 @@ class SearchRepository:
                 created_at,
                 updated_at,
                 bm25(search_index) as score
-            FROM search_index 
+            FROM search_index
             WHERE {where_clause}
             ORDER BY score ASC {order_by_clause}
             LIMIT :limit
@@ -586,7 +591,7 @@ class SearchRepository:
     async def execute_query(
         self,
         query: Executable,
-        params: Dict[str, Any],
+        params: dict[str, Any],
     ) -> Result[Any]:
         """Execute a query asynchronously."""
         # logger.debug(f"Executing query: {query}, params: {params}")

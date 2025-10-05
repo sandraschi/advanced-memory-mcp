@@ -4,9 +4,9 @@ import pytest
 from pydantic import ValidationError
 
 from advanced_memory.schemas.memory import (
+    memory_url,
     normalize_memory_url,
     validate_memory_url_path,
-    memory_url,
 )
 
 
@@ -199,7 +199,7 @@ class TestMemoryUrlPydanticValidation:
             ("notes<brackets>", "invalid characters"),
         ]
 
-        for url, expected_error in invalid_test_cases:
+        for url, _expected_error in invalid_test_cases:
             with pytest.raises(ValidationError) as exc_info:
                 memory_url.validate_python(url)
 

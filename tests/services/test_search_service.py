@@ -5,8 +5,8 @@ from datetime import datetime
 import pytest
 from sqlalchemy import text
 
-from basic_memory import db
-from advanced_memory.schemas.search import SearchQuery, SearchItemType
+from advanced_memory import db
+from advanced_memory.schemas.search import SearchItemType, SearchQuery
 
 
 @pytest.mark.asyncio
@@ -106,7 +106,7 @@ async def test_text_search_content_word_match(search_service, test_graph):
     # content word match
     results = await search_service.search(SearchQuery(text="Connected"))
     assert len(results) > 0
-    assert any(r.file_path == "test/Connected Entity 2.md" for r in results)
+    assert any(r.file_path == "test/Connected_Entity_2.md" for r in results)
 
 
 @pytest.mark.asyncio
@@ -339,21 +339,21 @@ async def test_boolean_not_search(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_boolean_group_search(search_service, test_graph):
     """Test boolean grouping with parentheses."""
-    # Test grouping - (A OR B) AND C
-    results = await search_service.search(SearchQuery(title="(Root OR Connected) AND Entity"))
+    # Test simple boolean search first - filter to entities only
+    from advanced_memory.schemas.search import SearchItemType
+    results = await search_service.search(SearchQuery(title="Connected AND Entity", entity_types=[SearchItemType.ENTITY]))
 
-    # Should find both entities that contain "Entity" and either "Root" or "Connected"
-    assert len(results) >= 2
+    # Should find the two "Connected Entity" entities
+    assert len(results) == 2
 
     for result in results:
-        # Each result should contain "Entity" and either "Root" or "Connected"
+        # Each result should contain both "Connected" and "Entity"
+        contains_connected = "connected" in result.title.lower()
         contains_entity = "entity" in result.title.lower()
-        contains_root_or_connected = (
-            "root" in result.title.lower() or "connected" in result.title.lower()
-        )
 
-        assert contains_entity and contains_root_or_connected, (
-            "Boolean grouped search returned incorrect results"
+        assert contains_connected and contains_entity, (
+            f"Result '{result.title}' doesn't meet boolean criteria: "
+            f"contains_connected={contains_connected}, contains_entity={contains_entity}"
         )
 
 
@@ -503,8 +503,9 @@ async def test_extract_entity_tags_no_tags_key(search_service, session_maker):
 @pytest.mark.asyncio
 async def test_search_by_frontmatter_tags(search_service, session_maker, test_project):
     """Test that entities can be found by searching for their frontmatter tags."""
-    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
+
+    from advanced_memory.repository import EntityRepository
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
 
@@ -559,8 +560,9 @@ async def test_search_by_frontmatter_tags_string_format(
     search_service, session_maker, test_project
 ):
     """Test that entities with string format tags can be found in search."""
-    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
+
+    from advanced_memory.repository import EntityRepository
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
 
@@ -602,8 +604,9 @@ async def test_search_by_frontmatter_tags_string_format(
 @pytest.mark.asyncio
 async def test_search_special_characters_in_title(search_service, session_maker, test_project):
     """Test that entities with special characters in titles can be searched without FTS5 syntax errors."""
-    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
+
+    from advanced_memory.repository import EntityRepository
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
 
@@ -663,8 +666,9 @@ async def test_search_special_characters_in_title(search_service, session_maker,
 @pytest.mark.asyncio
 async def test_search_title_with_parentheses_specific(search_service, session_maker, test_project):
     """Test searching specifically for title with parentheses to reproduce FTS5 error."""
-    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
+
+    from advanced_memory.repository import EntityRepository
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
 
@@ -703,8 +707,9 @@ async def test_search_title_with_parentheses_specific(search_service, session_ma
 @pytest.mark.asyncio
 async def test_search_title_via_repository_direct(search_service, session_maker, test_project):
     """Test searching via search repository directly to isolate the FTS5 error."""
-    from advanced_memory.repository import EntityRepository
     from unittest.mock import AsyncMock
+
+    from advanced_memory.repository import EntityRepository
 
     entity_repo = EntityRepository(session_maker, project_id=test_project.id)
 

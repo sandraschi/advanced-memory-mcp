@@ -1,6 +1,7 @@
 """Tests for the search template rendering."""
 
 import datetime
+
 import pytest
 
 from advanced_memory.api.template_loader import TemplateLoader

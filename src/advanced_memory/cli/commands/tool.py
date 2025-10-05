@@ -2,7 +2,7 @@
 
 import asyncio
 import sys
-from typing import Annotated, List, Optional
+from typing import Annotated
 
 import typer
 from loguru import logger
@@ -35,13 +35,13 @@ def write_note(
     title: Annotated[str, typer.Option(help="The title of the note")],
     folder: Annotated[str, typer.Option(help="The folder to create the note in")],
     content: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             help="The content of the note. If not provided, content will be read from stdin. This allows piping content from other commands, e.g.: cat file.md | basic-memory tools write-note"
         ),
     ] = None,
     tags: Annotated[
-        Optional[List[str]], typer.Option(help="A list of tags to apply to the note")
+        list[str] | None, typer.Option(help="A list of tags to apply to the note")
     ] = None,
 ):
     """Create or update a markdown note. Content can be provided as an argument or read from stdin.
@@ -95,7 +95,7 @@ def write_note(
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during write_note: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -108,15 +108,15 @@ def read_note(identifier: str, page: int = 1, page_size: int = 10):
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during read_note: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
 @tool_app.command()
 def build_context(
     url: MemoryUrl,
-    depth: Optional[int] = 1,
-    timeframe: Optional[TimeFrame] = "7d",
+    depth: int | None = 1,
+    timeframe: TimeFrame | None = "7d",
     page: int = 1,
     page_size: int = 10,
     max_related: int = 10,
@@ -137,19 +137,19 @@ def build_context(
         import json
 
         context_dict = context.model_dump(exclude_none=True)
-        print(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during build_context: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
 @tool_app.command()
 def recent_activity(
-    type: Annotated[Optional[List[SearchItemType]], typer.Option()] = None,
-    depth: Optional[int] = 1,
-    timeframe: Optional[TimeFrame] = "7d",
+    type: Annotated[list[SearchItemType] | None, typer.Option()] = None,
+    depth: int | None = 1,
+    timeframe: TimeFrame | None = "7d",
     page: int = 1,
     page_size: int = 10,
     max_related: int = 10,
@@ -170,11 +170,11 @@ def recent_activity(
         import json
 
         context_dict = context.model_dump(exclude_none=True)
-        print(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during build_context: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -184,7 +184,7 @@ def search_notes(
     permalink: Annotated[bool, typer.Option("--permalink", help="Search permalink values")] = False,
     title: Annotated[bool, typer.Option("--title", help="Search title values")] = False,
     after_date: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--after_date", help="Search results after date, eg. '2d', '1 week'"),
     ] = None,
     page: int = 1,
@@ -192,7 +192,7 @@ def search_notes(
 ):
     """Search across all content in the knowledge base."""
     if permalink and title:  # pragma: no cover
-        print("Cannot search both permalink and title")
+        logger.warning("Cannot search both permalink and title")
         raise typer.Abort()
 
     try:
@@ -222,20 +222,20 @@ def search_notes(
         import json
 
         results_dict = results.model_dump(exclude_none=True)
-        print(json.dumps(results_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(results_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             logger.exception("Error during search", e)
             typer.echo(f"Error during search: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
 @tool_app.command(name="continue-conversation")
 def continue_conversation(
-    topic: Annotated[Optional[str], typer.Option(help="Topic or keyword to search for")] = None,
+    topic: Annotated[str | None, typer.Option(help="Topic or keyword to search for")] = None,
     timeframe: Annotated[
-        Optional[str], typer.Option(help="How far back to look for activity")
+        str | None, typer.Option(help="How far back to look for activity")
     ] = None,
 ):
     """Prompt to continue a previous conversation or work session."""
@@ -247,7 +247,7 @@ def continue_conversation(
         if not isinstance(e, typer.Exit):
             logger.exception("Error continuing conversation", e)
             typer.echo(f"Error continuing conversation: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 

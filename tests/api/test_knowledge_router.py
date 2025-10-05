@@ -152,7 +152,7 @@ async def test_relation_resolution_exception_handling(client: AsyncClient, proje
     # Mock the sync service to raise an exception during relation resolution
     # We'll patch at the module level where it's imported
     with unittest.mock.patch(
-        "basic_memory.api.routers.knowledge_router.SyncServiceDep",
+        "advanced_memory.api.routers.knowledge_router.SyncServiceDep",
         side_effect=lambda: unittest.mock.AsyncMock(),
     ) as mock_sync_service_dep:
         # Configure the mock sync service to raise an exception
@@ -693,7 +693,7 @@ permalink: test/test-note
 Prepended content
 Original content"""
 
-    assert file_content.strip() == expected_content.strip()
+    assert file_content.strip().replace('\r\n', '\n') == expected_content.strip()
 
 
 @pytest.mark.asyncio

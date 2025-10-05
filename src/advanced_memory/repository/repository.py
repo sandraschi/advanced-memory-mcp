@@ -1,37 +1,38 @@
 """Base repository implementation."""
 
-from typing import Type, Optional, Any, Sequence, TypeVar, List, Dict
+from collections.abc import Sequence
+from typing import Any, TypeVar
 
+from advanced_memory import db
 from loguru import logger
 from sqlalchemy import (
-    select,
-    func,
-    Select,
-    Executable,
-    inspect,
-    Result,
     Column,
+    Executable,
+    Result,
+    Select,
     and_,
     delete,
+    func,
+    inspect,
+    select,
 )
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm.interfaces import LoaderOption
 
-from basic_memory import db
 from advanced_memory.models import Base
 
 T = TypeVar("T", bound=Base)
 
 
-class Repository[T: Base]:
+class Repository:
     """Base repository implementation with generic CRUD operations."""
 
     def __init__(
         self,
         session_maker: async_sessionmaker[AsyncSession],
-        Model: Type[T],
-        project_id: Optional[int] = None,
+        Model: type[T],
+        project_id: int | None = None,
     ):
         self.session_maker = session_maker
         self.project_id = project_id
@@ -50,7 +51,7 @@ class Repository[T: Base]:
             and self.project_id is not None
             and getattr(model, "project_id", None) is None
         ):
-            setattr(model, "project_id", self.project_id)
+            model.project_id = self.project_id
 
     def get_model_data(self, entity_data):
         model_data = {
@@ -68,10 +69,10 @@ class Repository[T: Base]:
             Updated query with project filter if applicable
         """
         if self.has_project_id and self.project_id is not None:
-            query = query.filter(getattr(self.Model, "project_id") == self.project_id)
+            query = query.filter(self.Model.project_id == self.project_id)
         return query
 
-    async def select_by_id(self, session: AsyncSession, entity_id: int) -> Optional[T]:
+    async def select_by_id(self, session: AsyncSession, entity_id: int) -> T | None:
         """Select an entity by ID using an existing session."""
         query = (
             select(self.Model)
@@ -84,7 +85,7 @@ class Repository[T: Base]:
         result = await session.execute(query)
         return result.scalars().one_or_none()
 
-    async def select_by_ids(self, session: AsyncSession, ids: List[int]) -> Sequence[T]:
+    async def select_by_ids(self, session: AsyncSession, ids: list[int]) -> Sequence[T]:
         """Select multiple entities by IDs using an existing session."""
         query = (
             select(self.Model).where(self.primary_key.in_(ids)).options(*self.get_load_options())
@@ -121,7 +122,7 @@ class Repository[T: Base]:
                 )
             return found
 
-    async def add_all(self, models: List[T]) -> Sequence[T]:
+    async def add_all(self, models: list[T]) -> Sequence[T]:
         """
         Add a list of models to the repository. This will also add related objects
         :param models: the models to add
@@ -152,7 +153,7 @@ class Repository[T: Base]:
         # Add project filter if applicable
         return self._add_project_filter(query)
 
-    async def find_all(self, skip: int = 0, limit: Optional[int] = None) -> Sequence[T]:
+    async def find_all(self, skip: int = 0, limit: int | None = None) -> Sequence[T]:
         """Fetch records from the database with pagination."""
         logger.debug(f"Finding all {self.Model.__name__} (skip={skip}, limit={limit})")
 
@@ -170,21 +171,21 @@ class Repository[T: Base]:
             logger.debug(f"Found {len(items)} {self.Model.__name__} records")
             return items
 
-    async def find_by_id(self, entity_id: int) -> Optional[T]:
+    async def find_by_id(self, entity_id: int) -> T | None:
         """Fetch an entity by its unique identifier."""
         logger.debug(f"Finding {self.Model.__name__} by ID: {entity_id}")
 
         async with db.scoped_session(self.session_maker) as session:
             return await self.select_by_id(session, entity_id)
 
-    async def find_by_ids(self, ids: List[int]) -> Sequence[T]:
+    async def find_by_ids(self, ids: list[int]) -> Sequence[T]:
         """Fetch multiple entities by their identifiers in a single query."""
         logger.debug(f"Finding {self.Model.__name__} by IDs: {ids}")
 
         async with db.scoped_session(self.session_maker) as session:
             return await self.select_by_ids(session, ids)
 
-    async def find_one(self, query: Select[tuple[T]]) -> Optional[T]:
+    async def find_one(self, query: Select[tuple[T]]) -> T | None:
         """Execute a query and retrieve a single record."""
         # add in load options
         query = query.options(*self.get_load_options())
@@ -228,7 +229,7 @@ class Repository[T: Base]:
                 )
             return return_instance
 
-    async def create_all(self, data_list: List[dict]) -> Sequence[T]:
+    async def create_all(self, data_list: list[dict]) -> Sequence[T]:
         """Create multiple records in a single transaction."""
         logger.debug(f"Bulk creating {len(data_list)} {self.Model.__name__} instances")
 
@@ -253,7 +254,7 @@ class Repository[T: Base]:
 
             return await self.select_by_ids(session, [model.id for model in model_list])  # pyright: ignore [reportAttributeAccessIssue]
 
-    async def update(self, entity_id: int, entity_data: dict | T) -> Optional[T]:
+    async def update(self, entity_id: int, entity_data: dict | T) -> T | None:
         """Update an entity with the given data."""
         logger.debug(f"Updating {self.Model.__name__} {entity_id} with data: {entity_data}")
         async with db.scoped_session(self.session_maker) as session:
@@ -299,7 +300,7 @@ class Repository[T: Base]:
                 logger.debug(f"No {self.Model.__name__} found to delete: {entity_id}")
                 return False
 
-    async def delete_by_ids(self, ids: List[int]) -> int:
+    async def delete_by_ids(self, ids: list[int]) -> int:
         """Delete records matching given IDs."""
         logger.debug(f"Deleting {self.Model.__name__} by ids: {ids}")
         async with db.scoped_session(self.session_maker) as session:
@@ -307,7 +308,7 @@ class Repository[T: Base]:
 
             # Add project_id filter if applicable
             if self.has_project_id and self.project_id is not None:  # pragma: no cover
-                conditions.append(getattr(self.Model, "project_id") == self.project_id)
+                conditions.append(self.Model.project_id == self.project_id)
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -322,7 +323,7 @@ class Repository[T: Base]:
 
             # Add project_id filter if applicable
             if self.has_project_id and self.project_id is not None:
-                conditions.append(getattr(self.Model, "project_id") == self.project_id)
+                conditions.append(self.Model.project_id == self.project_id)
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -342,7 +343,7 @@ class Repository[T: Base]:
                     and self.project_id is not None
                 ):
                     query = query.where(
-                        getattr(self.Model, "project_id") == self.project_id
+                        self.Model.project_id == self.project_id
                     )  # pragma: no cover
 
             result = await session.execute(query)
@@ -354,7 +355,7 @@ class Repository[T: Base]:
     async def execute_query(
         self,
         query: Executable,
-        params: Optional[Dict[str, Any]] = None,
+        params: dict[str, Any] | None = None,
         use_query_options: bool = True,
     ) -> Result[Any]:
         """Execute a query asynchronously."""
@@ -365,7 +366,7 @@ class Repository[T: Base]:
             result = await session.execute(query, params)
             return result
 
-    def get_load_options(self) -> List[LoaderOption]:
+    def get_load_options(self) -> list[LoaderOption]:
         """Get list of loader options for eager loading relationships.
         Override in subclasses to specify what to load."""
         return []

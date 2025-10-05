@@ -5,12 +5,13 @@ This module provides an interactive setup for configuring Basic Memory
 with various IDEs and tools.
 """
 
-import os
-import sys
 import json
-import shutil
-from pathlib import Path
+import os
 import platform
+import shutil
+import sys
+from pathlib import Path
+
 
 def clear_screen():
     """Clear the terminal screen."""
@@ -19,13 +20,13 @@ def clear_screen():
 def print_banner():
     """Display the ASCII banner."""
     banner = r"""
-     ____        _      _____                          
-    |  _ \      | |    |  __ \                         
-    | |_) | __ _| | __ | |__) |_ _ _ __   __ _ ___ ___ 
+     ____        _      _____
+    |  _ \      | |    |  __ \
+    | |_) | __ _| | __ | |__) |_ _ _ __   __ _ ___ ___
     |  _ < / _` | |/ / |  ___/ _` | '_ \ / _` / __/ __|
     | |_) | (_| |   <  | |  | (_| | | | | (_| \__ \__ \
     |____/ \__,_|_|\_\ |_|   \__,_|_| |_|\__,_|___/___/
-    
+
     Advanced Memory - Installation Wizard
     ====================================
     """
@@ -53,22 +54,22 @@ def configure_windsurf():
     """Configure Windsurf to use Basic Memory as an MCP client."""
     config_path = get_config_path('windsurf')
     backup_path = backup_file(config_path)
-    
+
     # Create or update config
     config = {}
     if config_path.exists():
-        with open(config_path, 'r', encoding='utf-8') as f:
+        with open(config_path, encoding='utf-8') as f:
             try:
                 config = json.load(f)
             except json.JSONDecodeError:
                 config = {}
-    
+
     # Update MCP settings
     if 'mcp' not in config:
         config['mcp'] = {}
     if 'clients' not in config['mcp']:
         config['mcp']['clients'] = {}
-    
+
     config['mcp']['clients']['basic-memory'] = {
         'enabled': True,
         'transport': 'stdio',
@@ -76,34 +77,34 @@ def configure_windsurf():
         'args': ['mcp', '--transport', 'stdio'],
         'cwd': str(Path.home() / 'Documents' / 'Notes')
     }
-    
+
     # Save config
     config_path.parent.mkdir(parents=True, exist_ok=True)
     with open(config_path, 'w', encoding='utf-8') as f:
         json.dump(config, f, indent=2)
-    
+
     return config_path, backup_path
 
 def show_help():
     """Display the help information."""
     help_text = """
     ===== Basic Memory - Quick Start Guide =====
-    
+
     Basic Memory is now installed and running as an MCP server.
-    
+
     Key Features:
     - Store and retrieve notes with rich markdown support
     - Full-text search across all your notes
     - Tag and categorize your knowledge
-    
+
     Quick Commands:
     - Start the MCP server: basic-memory mcp
     - List all notes: basic-memory list
     - Create a note: basic-memory new "Note Title"
-    
+
     For more help, visit:
     https://github.com/sandraschi/basic-memory
-    
+
     Press Enter to exit...
     """
     input(help_text)
@@ -112,20 +113,20 @@ def main():
     """Main entry point for the installation wizard."""
     clear_screen()
     print_banner()
-    
+
     print("1. Set up Claude integration")
     print("2. Set up Windsurf integration")
     print("3. Set up Cursor IDE integration")
     print("4. Exit")
-    
+
     choice = input("\nSelect an option (1-4): ").strip()
-    
+
     if choice == '1':
         print("\nClaude integration is automatic when using Claude Desktop.")
     elif choice == '2':
         try:
             config_path, backup_path = configure_windsurf()
-            print(f"\n✓ Windsurf configuration updated!")
+            print("\nOK Windsurf configuration updated!")
             print(f"  Config file: {config_path}")
             if backup_path != config_path:
                 print(f"  Backup saved to: {backup_path}")
@@ -136,7 +137,7 @@ def main():
     else:
         print("\nInstallation cancelled.")
         return
-    
+
     input("\nPress Enter to show help...")
     show_help()
 

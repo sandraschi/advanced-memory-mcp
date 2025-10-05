@@ -5,8 +5,8 @@ from datetime import datetime
 from advanced_memory.schemas.search import (
     SearchItemType,
     SearchQuery,
-    SearchResult,
     SearchResponse,
+    SearchResult,
 )
 
 

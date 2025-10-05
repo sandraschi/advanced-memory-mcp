@@ -2,7 +2,7 @@
 
 import hashlib
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any
 
 import yaml
 from loguru import logger
@@ -28,7 +28,7 @@ class ParseError(FileError):
     pass
 
 
-async def compute_checksum(content: Union[str, bytes]) -> str:
+async def compute_checksum(content: str | bytes) -> str:
     """
     Compute SHA-256 checksum of content.
 
@@ -47,7 +47,7 @@ async def compute_checksum(content: Union[str, bytes]) -> str:
         return hashlib.sha256(content).hexdigest()
     except Exception as e:  # pragma: no cover
         logger.error(f"Failed to compute checksum: {e}")
-        raise FileError(f"Failed to compute checksum: {e}")
+        raise FileError(f"Failed to compute checksum: {e}") from e
 
 
 async def ensure_directory(path: FilePath) -> None:
@@ -66,7 +66,7 @@ async def ensure_directory(path: FilePath) -> None:
         path_obj.mkdir(parents=True, exist_ok=True)
     except Exception as e:  # pragma: no cover
         logger.error("Failed to create directory", path=str(path), error=str(e))
-        raise FileWriteError(f"Failed to create directory {path}: {e}")
+        raise FileWriteError(f"Failed to create directory {path}: {e}") from e
 
 
 async def write_file_atomic(path: FilePath, content: str) -> None:
@@ -91,7 +91,7 @@ async def write_file_atomic(path: FilePath, content: str) -> None:
     except Exception as e:  # pragma: no cover
         temp_path.unlink(missing_ok=True)
         logger.error("Failed to write file", path=str(path_obj), error=str(e))
-        raise FileWriteError(f"Failed to write file {path}: {e}")
+        raise FileWriteError(f"Failed to write file {path}: {e}") from e
 
 
 def has_frontmatter(content: str) -> bool:
@@ -114,7 +114,7 @@ def has_frontmatter(content: str) -> bool:
     return "---" in content[3:]
 
 
-def parse_frontmatter(content: str) -> Dict[str, Any]:
+def parse_frontmatter(content: str) -> dict[str, Any]:
     """
     Parse YAML frontmatter from content.
 
@@ -154,14 +154,12 @@ def parse_frontmatter(content: str) -> Dict[str, Any]:
             elif "scanning an alias" in str(e):
                 error_msg += " (YAML aliases &/* may be malformed)"
             logger.warning(f"YAML parse error in content: {error_msg}")
-            # Instead of failing completely, return empty frontmatter to allow processing
-            logger.info("Treating malformed frontmatter as empty to allow file processing")
-            return {}
+            raise ParseError(error_msg) from e
 
     except Exception as e:  # pragma: no cover
         if not isinstance(e, ParseError):
             logger.error(f"Failed to parse frontmatter: {e}")
-            raise ParseError(f"Failed to parse frontmatter: {e}")
+            raise ParseError(f"Failed to parse frontmatter: {e}") from e
         raise
 
 
@@ -192,7 +190,7 @@ def remove_frontmatter(content: str) -> str:
     return parts[2].strip()
 
 
-async def update_frontmatter(path: FilePath, updates: Dict[str, Any]) -> str:
+async def update_frontmatter(path: FilePath, updates: dict[str, Any]) -> str:
     """Update frontmatter fields in a file while preserving all content.
 
     Only modifies the frontmatter section, leaving all content untouched.
@@ -238,7 +236,7 @@ async def update_frontmatter(path: FilePath, updates: Dict[str, Any]) -> str:
     except Exception as e:  # pragma: no cover
         logger.error(
             "Failed to update frontmatter",
-            path=str(path) if isinstance(path, (str, Path)) else "<unknown>",
+            path=str(path) if isinstance(path, str | Path) else "<unknown>",
             error=str(e),
         )
-        raise FileError(f"Failed to update frontmatter: {e}")
+        raise FileError(f"Failed to update frontmatter: {e}") from e

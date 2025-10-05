@@ -7,20 +7,16 @@ This module provides safe alternatives to standard file operations that:
 4. Support recovery of deleted files
 """
 
-import logging
+import hashlib
+import os
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Union, List, Set
-import os
-import stat
-from functools import wraps
-import hashlib
 
 from loguru import logger
 
 # Type aliases
-FilePath = Union[str, Path]
+FilePath = str | Path
 
 class FileSafetyError(Exception):
     """Base exception for file safety operations."""
@@ -28,7 +24,7 @@ class FileSafetyError(Exception):
 
 class FileSafety:
     """Safe file operations with trash and logging."""
-    
+
     # Directories that should never be deleted
     PROTECTED_DIRS = {
         '.git',
@@ -36,7 +32,7 @@ class FileSafety:
         '.svn',
         '.trash',  # Don't delete the trash!
     }
-    
+
     # File patterns that should never be deleted
     PROTECTED_PATTERNS = {
         '.gitignore',
@@ -44,30 +40,30 @@ class FileSafety:
         'README.md',
         'LICENSE*',
     }
-    
+
     # Maximum file size to move to trash (in bytes)
     MAX_TRASH_SIZE = 100 * 1024 * 1024  # 100MB
-    
-    def __init__(self, base_path: FilePath, trash_dir: Optional[FilePath] = None):
+
+    def __init__(self, base_path: FilePath, trash_dir: FilePath | None = None):
         """Initialize with base path and optional trash directory.
-        
+
         Args:
             base_path: Base path for all operations (must be absolute)
             trash_dir: Custom trash directory (default: .trash in base_path)
         """
         self.base_path = Path(base_path).resolve()
-        
+
         # Set up trash directory
         self.trash_dir = Path(trash_dir) if trash_dir else self.base_path / '.trash'
         self._ensure_trash_dir()
-        
+
         # Set up logging
         self.setup_logging()
-    
+
     def setup_logging(self) -> None:
         """Set up file operation logging."""
         self.log_file = self.base_path / '.trash' / 'file_operations.log'
-        
+
         # Configure loguru logger for this module
         logger.add(
             self.log_file,
@@ -77,7 +73,7 @@ class FileSafety:
             format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
             enqueue=True,
         )
-    
+
     def _ensure_trash_dir(self) -> None:
         """Ensure trash directory exists."""
         try:
@@ -87,8 +83,8 @@ class FileSafety:
                 import ctypes
                 ctypes.windll.kernel32.SetFileAttributesW(str(self.trash_dir), 0x02)
         except Exception as e:
-            raise FileSafetyError(f"Failed to create trash directory: {e}")
-    
+            raise FileSafetyError(f"Failed to create trash directory: {e}") from e
+
     def _log_operation(self, operation: str, path: FilePath, **kwargs) -> None:
         """Log a file operation."""
         path_str = str(Path(path).relative_to(self.base_path) if Path(path).is_relative_to(self.base_path) else path)
@@ -98,54 +94,54 @@ class FileSafety:
             **kwargs
         }
         logger.info(str(log_msg))
-    
+
     def _is_safe_path(self, path: FilePath) -> bool:
         """Check if a path is safe to operate on."""
         try:
             path = Path(path).resolve()
-            
+
             # Allow all operations in test environment
             if "pytest" in str(path) or "test" in path.parts:
                 return True
-            
+
             # Check if path is within base directory
             if not path.is_relative_to(self.base_path):
                 return False
-                
+
             # Check for protected directories
             for part in path.parts:
                 if part in self.PROTECTED_DIRS:
                     return False
-                
+
             # Check for protected patterns
             for pattern in self.PROTECTED_PATTERNS:
                 if path.match(pattern):
                     return False
-                    
+
             return True
-            
+
         except Exception as e:
             logger.error(f"Path safety check failed for {path}: {e}")
             return False
-    
+
     def _move_to_trash(self, path: FilePath) -> Path:
         """Move a file to the trash directory."""
         path = Path(path)
         if not path.exists():
             return path
-            
+
         # Generate unique name in trash with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         name_hash = hashlib.md5(str(path).encode()).hexdigest()[:8]
         trash_name = f"{timestamp}_{name_hash}_{path.name}"
         trash_path = self.trash_dir / trash_name
-        
+
         # If file is too large, don't move to trash
         if path.is_file() and path.stat().st_size > self.MAX_TRASH_SIZE:
             logger.warning(f"File too large for trash, deleting permanently: {path}")
             path.unlink()
             return path
-            
+
         # Move to trash
         try:
             shutil.move(str(path), str(trash_path))
@@ -158,20 +154,20 @@ class FileSafety:
             return trash_path
         except Exception as e:
             logger.error(f"Failed to move {path} to trash: {e}")
-            raise FileSafetyError(f"Failed to move to trash: {e}")
-    
+            raise FileSafetyError(f"Failed to move to trash: {e}") from e
+
     def safe_delete(self, path: FilePath) -> bool:
         """Safely delete a file or directory by moving it to trash."""
         path = Path(path)
         if not path.exists():
             return True
-            
+
         if not self._is_safe_path(path):
             raise FileSafetyError(f"Operation not allowed on protected path: {path}")
-        
+
         try:
             self._log_operation("delete", path, size=path.stat().st_size if path.is_file() else 0)
-            
+
             if path.is_dir():
                 # For directories, move contents to trash first
                 for item in path.glob('*'):
@@ -179,48 +175,48 @@ class FileSafety:
                 path.rmdir()  # Remove empty directory
             else:
                 self._move_to_trash(path)
-                
+
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to safely delete {path}: {e}")
-            raise FileSafetyError(f"Failed to delete {path}: {e}")
-    
+            raise FileSafetyError(f"Failed to delete {path}: {e}") from e
+
     def safe_rename(self, src: FilePath, dst: FilePath) -> bool:
         """Safely rename/move a file or directory."""
         src, dst = Path(src), Path(dst)
-        
+
         if not src.exists():
             raise FileSafetyError(f"Source does not exist: {src}")
-            
+
         if not self._is_safe_path(src) or not self._is_safe_path(dst):
             raise FileSafetyError("Operation not allowed on protected paths")
-            
+
         try:
             self._log_operation("rename", src, new_path=str(dst))
-            
+
             # Ensure parent directory exists
             dst.parent.mkdir(parents=True, exist_ok=True)
-            
+
             # Perform the move
             shutil.move(str(src), str(dst))
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to rename {src} to {dst}: {e}")
-            raise FileSafetyError(f"Failed to rename: {e}")
-    
-    def list_trash(self) -> List[dict]:
+            raise FileSafetyError(f"Failed to rename: {e}") from e
+
+    def list_trash(self) -> list[dict]:
         """List all files in trash with metadata."""
         trash_items = []
-        
+
         for item in self.trash_dir.glob('*'):
             if item.suffix == '.meta' or item.name == 'file_operations.log':
                 continue
-                
+
             meta_file = item.with_suffix(item.suffix + '.meta')
             meta = {}
-            
+
             if meta_file.exists():
                 try:
                     meta = {
@@ -230,25 +226,25 @@ class FileSafety:
                     }
                 except Exception as e:
                     logger.warning(f"Failed to read metadata for {item}: {e}")
-            
+
             trash_items.append({
                 'path': str(item.relative_to(self.trash_dir)),
                 'size': item.stat().st_size if item.is_file() else 0,
                 'deleted_at': meta.get('deleted_at', 'unknown'),
                 'original_path': meta.get('original_path', 'unknown'),
             })
-            
+
         return trash_items
-    
+
     def empty_trash(self, older_than_days: int = 30) -> int:
         """Empty the trash, optionally only items older than X days."""
         count = 0
         cutoff = datetime.now().timestamp() - (older_than_days * 86400)
-        
+
         for item in self.trash_dir.glob('*'):
             if item.name == 'file_operations.log':
                 continue
-                
+
             try:
                 if item.stat().st_mtime < cutoff:
                     if item.is_dir():
@@ -265,7 +261,7 @@ class FileSafety:
                     count += 1
             except Exception as e:
                 logger.error(f"Failed to delete {item} from trash: {e}")
-                
+
         return count
 
 # Global instance for convenience

@@ -1,0 +1,75 @@
+{
+  "manifest_version": "0.2",
+  "name": "advanced-memory-mcp",
+  "version": "1.0.0",
+  "description": "Advanced Memory MCP - A powerful knowledge management system with portmanteau tools for Cursor IDE compatibility. Consolidates 40+ tools into 8 comprehensive tools with full functionality.",
+  "author": {
+    "name": "Advanced Memory Team",
+    "email": "team@advanced-memory-mcp.com",
+    "url": "https://github.com/advanced-memory-mcp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/advanced-memory-mcp/advanced-memory-mcp.git"
+  },
+  "homepage": "https://github.com/advanced-memory-mcp/advanced-memory-mcp",
+  "documentation": "https://github.com/advanced-memory-mcp/advanced-memory-mcp/blob/main/README.md",
+  "support": "https://github.com/advanced-memory-mcp/advanced-memory-mcp/issues",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "knowledge-management",
+    "memory",
+    "notes",
+    "obsidian",
+    "notion",
+    "evernote",
+    "joplin",
+    "portmanteau-tools",
+    "cursor-ide"
+  ],
+  "server": {
+    "type": "python",
+    "entry_point": "src/advanced_memory/mcp/server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": ["src/advanced_memory/mcp/server.py"],
+      "env": {
+        "PYTHONPATH": "${__dirname}/src",
+        "PYTHONUNBUFFERED": "1",
+        "EXTENSION_ROOT": "${__dirname}",
+        "ADVANCED_MEMORY_HOME": "${__dirname}/data"
+      }
+    }
+  },
+  "user_config": {
+    "project_path": {
+      "type": "string",
+      "title": "Project Path",
+      "description": "Path to your Advanced Memory project directory",
+      "required": false,
+      "sensitive": false,
+      "default": "~/Documents/advanced-memory"
+    },
+    "enable_portmanteau_tools": {
+      "type": "boolean",
+      "title": "Enable Portmanteau Tools",
+      "description": "Use the new portmanteau tools (adn_*) for Cursor IDE compatibility",
+      "required": false,
+      "sensitive": false,
+      "default": true
+    },
+    "max_tools": {
+      "type": "number",
+      "title": "Maximum Tools",
+      "description": "Maximum number of tools to expose (for IDE compatibility)",
+      "required": false,
+      "sensitive": false,
+      "default": 50
+    }
+  },
+  "compatibility": {
+    "platforms": ["win32", "darwin", "linux"],
+    "python_version": ">=3.11"
+  }
+}

@@ -389,7 +389,7 @@ This note contains various Unicode characters:
 - [test] Unicode characters preserved ✓
 - [note] Emoji support working 🎯
 
-## Relations  
+## Relations
 - supports [[Unicode Standards]]
 - tested_with [[Various Languages]]"""
 

@@ -1,17 +1,17 @@
 """Tests for resource tools that exercise the full stack with SQLite."""
 
-import io
 import base64
-from PIL import Image as PILImage
+import io
 
 import pytest
 from mcp.server.fastmcp.exceptions import ToolError
+from PIL import Image as PILImage
 
 from advanced_memory.mcp.tools import read_content, write_note
 from advanced_memory.mcp.tools.read_content import (
     calculate_target_params,
-    resize_image,
     optimize_image,
+    resize_image,
 )
 
 

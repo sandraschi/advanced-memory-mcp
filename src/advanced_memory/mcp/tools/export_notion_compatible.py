@@ -1,19 +1,11 @@
 """Export Notion compatible tool for Basic Memory MCP server."""
 
-import json
-import os
 import re
 from pathlib import Path
-from typing import Optional, List, Dict, Any
-from urllib.parse import urljoin
+from typing import Any
 
-from loguru import logger
-
-from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.search import search_notes
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_get
-from advanced_memory.mcp.project_session import get_active_project
 
 
 @mcp.tool(
@@ -39,11 +31,11 @@ PARAMETERS:
 - project (str, optional): Specific Basic Memory project to export from
 
 CONTENT CONVERSION:
-- Basic Memory markdown → Notion-compatible markdown
-- Entity relationships → Standard markdown links with context
-- Observations → YAML frontmatter for Notion properties
-- Mermaid diagrams → Preserved as code blocks (Notion renders some diagram types)
-- Rich formatting → Standard markdown formatting
+- Basic Memory markdown [UNICODE] Notion-compatible markdown
+- Entity relationships [UNICODE] Standard markdown links with context
+- Observations [UNICODE] YAML frontmatter for Notion properties
+- Mermaid diagrams [UNICODE] Preserved as code blocks (Notion renders some diagram types)
+- Rich formatting [UNICODE] Standard markdown formatting
 
 OUTPUT STRUCTURE:
 Creates import-ready files with:
@@ -55,7 +47,7 @@ Creates import-ready files with:
 NOTION IMPORT PROCESS:
 1. Export using this tool: export_notion_compatible("notion-ready/")
 2. Open Notion workspace
-3. Click "Import" → "Markdown & CSV"
+3. Click "Import" [UNICODE] "Markdown & CSV"
 4. Select the exported directory
 5. Choose import settings and complete
 
@@ -73,11 +65,11 @@ may be simplified. For best results, use Notion's "Markdown & CSV" import option
 )
 async def export_notion_compatible(
     output_path: str,
-    query: Optional[str] = None,
-    folder_filter: Optional[str] = None,
+    query: str | None = None,
+    folder_filter: str | None = None,
     include_observations: bool = True,
     include_relations: bool = True,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Export Basic Memory content in Notion-compatible markdown format.
 
@@ -117,6 +109,7 @@ async def export_notion_compatible(
     """
 
     # Get the active project
+    from advanced_memory.mcp.tools.utils import get_active_project
     active_project = get_active_project(project)
     project_url = active_project.project_url
 
@@ -129,8 +122,8 @@ async def export_notion_compatible(
         # Make HTTP call to search API to find matching notes
         from advanced_memory.mcp.async_client import client
         from advanced_memory.mcp.project_session import get_active_project
-        from advanced_memory.schemas.search import SearchQuery
         from advanced_memory.mcp.tools.utils import call_post
+        from advanced_memory.schemas.search import SearchQuery
 
         active_project = get_active_project(project)
         project_url = active_project.project_url
@@ -167,7 +160,7 @@ async def export_notion_compatible(
         entities = entities_data.get('results', [])
 
     if not entities:
-        return f"No entities found to export"
+        return "No entities found to export"
 
     # Export each entity
     exported_files = []
@@ -187,16 +180,16 @@ async def export_notion_compatible(
             errors.append(f"{entity.get('title', 'Unknown')}: {str(e)}")
 
     # Generate summary
-    summary = f"## Notion Export Complete\n\n"
+    summary = "## Notion Export Complete\n\n"
     summary += f"- **Entities processed**: {len(entities)}\n"
     summary += f"- **Files exported**: {len(exported_files)}\n"
     summary += f"- **Errors**: {len(errors)}\n"
     summary += f"- **Output directory**: {output_path}\n"
 
     if exported_files:
-        summary += f"\n### Exported Files:\n"
+        summary += "\n### Exported Files:\n"
         for export_info in exported_files[:10]:  # Show first 10
-            summary += f"- **{export_info['title']}** → {export_info['file_path']}\n"
+            summary += f"- **{export_info['title']}** [UNICODE] {export_info['file_path']}\n"
         if len(exported_files) > 10:
             summary += f"- ... and {len(exported_files) - 10} more files\n"
 
@@ -207,17 +200,17 @@ async def export_notion_compatible(
         if len(errors) > 5:
             summary += f"- ... and {len(errors) - 5} more errors\n"
 
-    summary += f"\n### Import Instructions:\n"
-    summary += f"1. Open Notion and create a new page\n"
-    summary += f"2. Use **Import** → **Markdown & CSV**\n"
-    summary += f"3. Select the exported markdown files\n"
-    summary += f"4. Notion will create pages from the markdown files\n"
+    summary += "\n### Import Instructions:\n"
+    summary += "1. Open Notion and create a new page\n"
+    summary += "2. Use **Import** [UNICODE] **Markdown & CSV**\n"
+    summary += "3. Select the exported markdown files\n"
+    summary += "4. Notion will create pages from the markdown files\n"
 
     return summary
 
 
 async def _export_entity_to_notion_markdown(
-    entity: Dict[str, Any],
+    entity: dict[str, Any],
     output_dir: Path,
     project_url: str,
     include_observations: bool,

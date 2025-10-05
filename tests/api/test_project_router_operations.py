@@ -18,7 +18,7 @@ async def test_get_project_info_additional(client, test_graph, project_url):
     assert isinstance(data["available_projects"], dict)
 
     # Get a project from the list
-    for project_name, project_info in data["available_projects"].items():
+    for _project_name, project_info in data["available_projects"].items():
         # Verify project structure
         assert "path" in project_info
         assert "active" in project_info

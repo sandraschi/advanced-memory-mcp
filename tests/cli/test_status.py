@@ -1,6 +1,6 @@
 """Tests for CLI status command."""
 
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
 from typer.testing import CliRunner
 
@@ -8,8 +8,8 @@ from advanced_memory.cli.app import app
 from advanced_memory.cli.commands.status import (
     add_files_to_tree,
     build_directory_summary,
-    group_changes_by_directory,
     display_changes,
+    group_changes_by_directory,
 )
 from advanced_memory.sync.sync_service import SyncReport
 
@@ -21,7 +21,7 @@ def test_status_command():
     """Test CLI status command."""
     # Mock the async run_status function to avoid event loop issues
     with patch(
-        "basic_memory.cli.commands.status.run_status", new_callable=AsyncMock
+        "advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock
     ) as mock_run_status:
         # Mock successful execution (no return value needed since it just prints)
         mock_run_status.return_value = None
@@ -38,7 +38,7 @@ def test_status_command_error():
     """Test CLI status command error handling."""
     # Mock the async run_status function to raise an exception
     with patch(
-        "basic_memory.cli.commands.status.run_status", new_callable=AsyncMock
+        "advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock
     ) as mock_run_status:
         # Mock an error
         mock_run_status.side_effect = Exception("Database connection failed")
@@ -80,7 +80,7 @@ def test_build_directory_summary():
     summary = build_directory_summary(counts)
     assert "+2" in summary
     assert "~1" in summary
-    assert "↔1" in summary
+    assert "<->1" in summary
     assert "-1" in summary
 
 

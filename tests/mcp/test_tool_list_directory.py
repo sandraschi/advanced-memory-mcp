@@ -30,7 +30,7 @@ async def test_list_directory_with_test_graph(client, test_graph):
 
     assert isinstance(result, str)
     assert "Contents of '/' (depth 1):" in result
-    assert "📁 test" in result
+    assert "[FOLDER] test" in result
     assert "Total: 1 items (1 directory)" in result
 
 
@@ -42,11 +42,11 @@ async def test_list_directory_specific_path(client, test_graph):
 
     assert isinstance(result, str)
     assert "Contents of '/test' (depth 1):" in result
-    assert "📄 Connected Entity 1.md" in result
-    assert "📄 Connected Entity 2.md" in result
-    assert "📄 Deep Entity.md" in result
-    assert "📄 Deeper Entity.md" in result
-    assert "📄 Root.md" in result
+    assert "[DOC] Connected_Entity_1.md" in result
+    assert "[DOC] Connected_Entity_2.md" in result
+    assert "[DOC] Deep_Entity.md" in result
+    assert "[DOC] Deeper_Entity.md" in result
+    assert "[DOC] Root.md" in result
     assert "Total: 5 items (5 files)" in result
 
 
@@ -58,8 +58,8 @@ async def test_list_directory_with_glob_filter(client, test_graph):
 
     assert isinstance(result, str)
     assert "Files in '/test' matching '*Connected*' (depth 1):" in result
-    assert "📄 Connected Entity 1.md" in result
-    assert "📄 Connected Entity 2.md" in result
+    assert "[DOC] Connected_Entity_1.md" in result
+    assert "[DOC] Connected_Entity_2.md" in result
     # Should not contain other files
     assert "Deep Entity.md" not in result
     assert "Deeper Entity.md" not in result
@@ -75,11 +75,11 @@ async def test_list_directory_with_markdown_filter(client, test_graph):
     assert isinstance(result, str)
     assert "Files in '/test' matching '*.md' (depth 1):" in result
     # All files in test_graph are markdown files
-    assert "📄 Connected Entity 1.md" in result
-    assert "📄 Connected Entity 2.md" in result
-    assert "📄 Deep Entity.md" in result
-    assert "📄 Deeper Entity.md" in result
-    assert "📄 Root.md" in result
+    assert "[DOC] Connected_Entity_1.md" in result
+    assert "[DOC] Connected_Entity_2.md" in result
+    assert "[DOC] Deep_Entity.md" in result
+    assert "[DOC] Deeper_Entity.md" in result
+    assert "[DOC] Root.md" in result
     assert "Total: 5 items (5 files)" in result
 
 
@@ -91,7 +91,7 @@ async def test_list_directory_with_depth_control(client, test_graph):
 
     assert isinstance(result_depth_1, str)
     assert "Contents of '/' (depth 1):" in result_depth_1
-    assert "📁 test" in result_depth_1
+    assert "[FOLDER] test" in result_depth_1
     assert "Total: 1 items (1 directory)" in result_depth_1
 
     # Depth 2: should return directory + its files
@@ -99,12 +99,12 @@ async def test_list_directory_with_depth_control(client, test_graph):
 
     assert isinstance(result_depth_2, str)
     assert "Contents of '/' (depth 2):" in result_depth_2
-    assert "📁 test" in result_depth_2
-    assert "📄 Connected Entity 1.md" in result_depth_2
-    assert "📄 Connected Entity 2.md" in result_depth_2
-    assert "📄 Deep Entity.md" in result_depth_2
-    assert "📄 Deeper Entity.md" in result_depth_2
-    assert "📄 Root.md" in result_depth_2
+    assert "[FOLDER] test" in result_depth_2
+    assert "[DOC] Connected_Entity_1.md" in result_depth_2
+    assert "[DOC] Connected_Entity_2.md" in result_depth_2
+    assert "[DOC] Deep_Entity.md" in result_depth_2
+    assert "[DOC] Deeper_Entity.md" in result_depth_2
+    assert "[DOC] Root.md" in result_depth_2
     assert "Total: 6 items (1 directory, 5 files)" in result_depth_2
 
 
@@ -156,8 +156,8 @@ async def test_list_directory_with_created_notes(client):
 
     assert isinstance(result_root, str)
     assert "Contents of '/' (depth 1):" in result_root
-    assert "📁 projects" in result_root
-    assert "📁 research" in result_root
+    assert "[FOLDER] projects" in result_root
+    assert "[FOLDER] research" in result_root
     assert "Total: 2 items (2 directories)" in result_root
 
     # List projects directory
@@ -165,8 +165,8 @@ async def test_list_directory_with_created_notes(client):
 
     assert isinstance(result_projects, str)
     assert "Contents of '/projects' (depth 1):" in result_projects
-    assert "📄 Project Planning.md" in result_projects
-    assert "📄 Meeting Notes.md" in result_projects
+    assert "[DOC] Project_Planning.md" in result_projects
+    assert "[DOC] Meeting_Notes.md" in result_projects
     assert "Total: 2 items (2 files)" in result_projects
 
     # Test glob filter for "Meeting"
@@ -174,8 +174,8 @@ async def test_list_directory_with_created_notes(client):
 
     assert isinstance(result_meeting, str)
     assert "Files in '/projects' matching '*Meeting*' (depth 1):" in result_meeting
-    assert "📄 Meeting Notes.md" in result_meeting
-    assert "Project Planning.md" not in result_meeting
+    assert "[DOC] Meeting_Notes.md" in result_meeting
+    assert "Project_Planning.md" not in result_meeting
     assert "Total: 1 items (1 file)" in result_meeting
 
 
@@ -189,7 +189,7 @@ async def test_list_directory_path_normalization(client, test_graph):
         result = await list_directory.fn(dir_name=path)
         # All should return the same number of items
         assert "Total: 5 items (5 files)" in result
-        assert "📄 Connected Entity 1.md" in result
+        assert "[DOC] Connected_Entity_1.md" in result
 
 
 @pytest.mark.asyncio
@@ -199,14 +199,14 @@ async def test_list_directory_shows_file_metadata(client, test_graph):
 
     assert isinstance(result, str)
     # Should show file names
-    assert "📄 Connected Entity 1.md" in result
-    assert "📄 Connected Entity 2.md" in result
+    assert "[DOC] Connected_Entity_1.md" in result
+    assert "[DOC] Connected_Entity_2.md" in result
 
     # Should show directory paths
-    assert "test/Connected Entity 1.md" in result
-    assert "test/Connected Entity 2.md" in result
+    assert "test/Connected_Entity_1.md" in result
+    assert "test/Connected_Entity_2.md" in result
 
     # Files should be listed after directories (but no directories in this case)
     lines = result.split("\n")
-    file_lines = [line for line in lines if "📄" in line]
+    file_lines = [line for line in lines if "[DOC]" in line]
     assert len(file_lines) == 5  # All 5 files from test_graph

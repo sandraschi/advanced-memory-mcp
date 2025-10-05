@@ -1,19 +1,25 @@
 """Tests for Pydantic schema validation and conversion."""
 
-import pytest
 from datetime import datetime, time, timedelta
-from pydantic import ValidationError, BaseModel
+
+import pytest
+from pydantic import BaseModel, ValidationError
 
 from advanced_memory.schemas import (
     Entity,
     EntityResponse,
-    Relation,
-    SearchNodesRequest,
     GetEntitiesRequest,
+    Relation,
     RelationResponse,
+    SearchNodesRequest,
+)
+from advanced_memory.schemas.base import (
+    TimeFrame,
+    parse_timeframe,
+    to_snake_case,
+    validate_timeframe,
 )
 from advanced_memory.schemas.request import EditEntityRequest
-from advanced_memory.schemas.base import to_snake_case, TimeFrame, parse_timeframe, validate_timeframe
 
 
 def test_entity_project_name():
@@ -179,7 +185,7 @@ def test_open_nodes_input():
 def test_path_sanitization():
     """Test to_snake_case() handles various inputs correctly."""
     test_cases = [
-        ("BasicMemory", "basic_memory"),  # CamelCase
+        ("AdvancedMemory", "advanced_memory"),  # CamelCase
         ("Memory Service", "memory_service"),  # Spaces
         ("memory-service", "memory_service"),  # Hyphens
         ("Memory_Service", "memory_service"),  # Already has underscore

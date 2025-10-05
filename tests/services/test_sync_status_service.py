@@ -1,7 +1,8 @@
 """Test sync status service functionality."""
 
 import pytest
-from advanced_memory.services.sync_status_service import SyncStatusTracker, SyncStatus
+
+from advanced_memory.services.sync_status_service import SyncStatus, SyncStatusTracker
 
 
 @pytest.fixture
@@ -15,7 +16,7 @@ def test_sync_tracker_initial_state(sync_tracker):
     assert sync_tracker.is_ready
     assert not sync_tracker.is_syncing
     assert sync_tracker.global_status == SyncStatus.IDLE
-    assert sync_tracker.get_summary() == "✅ System ready"
+    assert sync_tracker.get_summary() == "OK System ready"
 
     # Test project-specific ready check for unknown project
     assert sync_tracker.is_project_ready("unknown-project")
@@ -134,7 +135,7 @@ def test_get_summary_with_progress(sync_tracker):
     )
 
     summary = sync_tracker.get_summary()
-    assert "🔄 Syncing 1 projects" in summary
+    assert "SYNCING 1 projects" in summary
     assert "(25/100 files, 25%)" in summary
 
 
@@ -174,16 +175,16 @@ def test_clear_completed(sync_tracker):
 def test_summary_messages(sync_tracker):
     """Test various summary messages."""
     # Initial state
-    assert sync_tracker.get_summary() == "✅ System ready"
+    assert sync_tracker.get_summary() == "OK System ready"
 
     # All completed
     sync_tracker.start_project_sync("project1")
     sync_tracker.complete_project_sync("project1")
-    assert sync_tracker.get_summary() == "✅ All projects synced successfully"
+    assert sync_tracker.get_summary() == "OK All projects synced successfully"
 
     # Failed projects
     sync_tracker.fail_project_sync("project1", "Test error")
-    assert "❌ Sync failed for: project1" in sync_tracker.get_summary()
+    assert "ERROR Sync failed for: project1" in sync_tracker.get_summary()
 
 
 def test_global_status_edge_cases(sync_tracker):
@@ -212,7 +213,7 @@ def test_summary_without_file_counts(sync_tracker):
 
     # Don't set file counts - should use the fallback message
     summary = sync_tracker.get_summary()
-    assert "🔄 Syncing 2 projects" in summary
+    assert "SYNCING 2 projects" in summary
     assert "files" not in summary  # Should not show file progress
 
 

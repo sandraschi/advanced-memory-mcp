@@ -4,24 +4,25 @@ This router is responsible for rendering various prompts using Handlebars templa
 It centralizes all prompt formatting logic that was previously in the MCP prompts.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from fastapi import APIRouter, HTTPException, status
 from loguru import logger
 
 from advanced_memory.api.routers.utils import to_graph_context, to_search_results
 from advanced_memory.api.template_loader import template_loader
-from advanced_memory.schemas.base import parse_timeframe
 from advanced_memory.deps import (
     ContextServiceDep,
     EntityRepositoryDep,
-    SearchServiceDep,
     EntityServiceDep,
+    SearchServiceDep,
 )
+from advanced_memory.schemas.base import parse_timeframe
 from advanced_memory.schemas.prompt import (
     ContinueConversationRequest,
-    SearchPromptRequest,
-    PromptResponse,
     PromptMetadata,
+    PromptResponse,
+    SearchPromptRequest,
 )
 from advanced_memory.schemas.search import SearchItemType, SearchQuery
 
@@ -174,7 +175,7 @@ async def continue_conversation(
             "search_limit": request.search_items_limit,
             "context_depth": request.depth,
             "related_limit": request.related_items_limit,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
         prompt_metadata = PromptMetadata(**metadata)
@@ -187,7 +188,7 @@ async def continue_conversation(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error rendering prompt template: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/search", response_model=PromptResponse)
@@ -244,7 +245,7 @@ async def search_prompt(
             "search_limit": limit,
             "context_depth": 0,  # No context depth for basic search
             "related_limit": 0,  # No related items for basic search
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
         prompt_metadata = PromptMetadata(**metadata)
@@ -257,4 +258,4 @@ async def search_prompt(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error rendering prompt template: {str(e)}",
-        )
+        ) from e

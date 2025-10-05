@@ -1,17 +1,18 @@
 """Tests for async_client configuration."""
 
 from unittest.mock import patch
-from httpx import AsyncClient, ASGITransport
 
-from advanced_memory.mcp.async_client import create_client
+from httpx import ASGITransport, AsyncClient
+
 from advanced_memory.config import AdvancedMemoryConfig
+from advanced_memory.mcp.async_client import create_client
 
 
 def test_create_client_uses_asgi_when_no_api_url():
     """Test that create_client uses ASGI transport when api_url is None."""
     mock_config = AdvancedMemoryConfig(api_url=None)
 
-    with patch("basic_memory.mcp.async_client.ConfigManager") as mock_config_manager:
+    with patch("advanced_memory.mcp.async_client.ConfigManager") as mock_config_manager:
         mock_config_manager.return_value.load_config.return_value = mock_config
 
         client = create_client()
@@ -26,7 +27,7 @@ def test_create_client_uses_http_when_api_url_set():
     remote_url = "https://api.basicmemory.example.com"
     mock_config = AdvancedMemoryConfig(api_url=remote_url)
 
-    with patch("basic_memory.mcp.async_client.ConfigManager") as mock_config_manager:
+    with patch("advanced_memory.mcp.async_client.ConfigManager") as mock_config_manager:
         mock_config_manager.return_value.load_config.return_value = mock_config
 
         client = create_client()

@@ -1,13 +1,13 @@
 """Tests for the RelationRepository."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 import pytest_asyncio
 import sqlalchemy
 
-from basic_memory import db
-from advanced_memory.models import Entity, Relation, Project
+from advanced_memory import db
+from advanced_memory.models import Entity, Project, Relation
 from advanced_memory.repository.relation_repository import RelationRepository
 
 
@@ -21,8 +21,8 @@ async def source_entity(session_maker, test_project: Project):
         permalink="source/test-source",
         file_path="source/test_source.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     async with db.scoped_session(session_maker) as session:
         session.add(entity)
@@ -40,8 +40,8 @@ async def target_entity(session_maker, test_project: Project):
         permalink="target/test-target",
         file_path="target/test_target.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     async with db.scoped_session(session_maker) as session:
         session.add(entity)
@@ -82,8 +82,8 @@ async def related_entity(entity_repository):
         "file_path": "test/related_entity.md",
         "summary": "A related test entity",
         "content_type": "text/markdown",
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
+        "updated_at": datetime.now(UTC),
     }
     return await entity_repository.create(entity_data)
 

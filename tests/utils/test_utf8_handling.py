@@ -2,7 +2,7 @@
 
 import pytest
 
-from basic_memory import file_utils
+from advanced_memory import file_utils
 from advanced_memory.file_utils import compute_checksum, write_file_atomic
 
 
@@ -14,7 +14,7 @@ async def test_write_utf8_characters(tmp_path):
 
     # Include characters from various scripts
     utf8_content = """# UTF-8 Test Document
-    
+
 ## Cyrillic
 Привет мир! (Hello world in Russian)
 
@@ -65,7 +65,7 @@ async def test_frontmatter_with_utf8(tmp_path):
     content = """---
 title: UTF-8 测试文件 (Test File)
 author: José García
-keywords: 
+keywords:
   - тестирование
   - 테스트
   - 测试

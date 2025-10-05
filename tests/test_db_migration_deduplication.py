@@ -1,15 +1,15 @@
 """Tests for database migration deduplication functionality."""
 
-import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
-from basic_memory import db
+import pytest
+from advanced_memory import db
 
 
 @pytest.fixture
 def mock_alembic_config():
     """Mock Alembic config to avoid actual migration runs."""
-    with patch("basic_memory.db.Config") as mock_config_class:
+    with patch("advanced_memory.db.Config") as mock_config_class:
         mock_config = MagicMock()
         mock_config_class.return_value = mock_config
         yield mock_config
@@ -18,14 +18,14 @@ def mock_alembic_config():
 @pytest.fixture
 def mock_alembic_command():
     """Mock Alembic command to avoid actual migration runs."""
-    with patch("basic_memory.db.command") as mock_command:
+    with patch("advanced_memory.db.command") as mock_command:
         yield mock_command
 
 
 @pytest.fixture
 def mock_search_repository():
     """Mock SearchRepository to avoid database dependencies."""
-    with patch("basic_memory.db.SearchRepository") as mock_repo_class:
+    with patch("advanced_memory.db.SearchRepository") as mock_repo_class:
         mock_repo = AsyncMock()
         mock_repo_class.return_value = mock_repo
         yield mock_repo

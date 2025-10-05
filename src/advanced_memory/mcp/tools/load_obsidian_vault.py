@@ -4,18 +4,17 @@ This tool imports entire Obsidian vaults into Basic Memory, preserving
 folder structure, wikilinks, frontmatter, and other Obsidian-specific features.
 """
 
-import os
 import re
-import yaml
-from pathlib import Path
-from typing import Optional, Dict, List, Any, Set
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
+import yaml
 from loguru import logger
 
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.search import search_notes
+from advanced_memory.mcp.tools.write_note import write_note
 
 
 @mcp.tool(
@@ -67,7 +66,7 @@ async def load_obsidian_vault(
     convert_links: bool = True,
     include_attachments: bool = False,
     skip_existing: bool = True,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> str:
     """Import an entire Obsidian vault into Basic Memory.
 
@@ -154,7 +153,7 @@ async def load_obsidian_vault(
         return f"# Vault Import Failed\n\nUnexpected error: {e}"
 
 
-async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tuple[List[Path], List[Path]]:
+async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tuple[list[Path], list[Path]]:
     """Scan vault for markdown and attachment files."""
     markdown_files = []
     attachment_files = []
@@ -167,7 +166,7 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
         try:
             from mcp_filesystem import list_directory
 
-            async def scan_recursive(current_path: str) -> tuple[List[str], List[str]]:
+            async def scan_recursive(current_path: str) -> tuple[list[str], list[str]]:
                 md_files = []
                 att_files = []
 
@@ -176,22 +175,22 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
 
                     lines = dir_contents.split('\n')
                     for line in lines:
-                        if '📄' in line:
+                        if '[DOC]' in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                                file_path = str(Path(current_path) / filename)
 
                                 if filename.endswith('.md'):
                                     md_files.append(file_path)
                                 elif include_attachments and any(filename.lower().endswith(ext) for ext in attachment_exts):
                                     att_files.append(file_path)
 
-                        elif '📁' in line and not line.strip().endswith('.'):
+                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
+                                subdir_path = str(Path(current_path) / dirname)
                                 sub_md, sub_att = await scan_recursive(subdir_path)
                                 md_files.extend(sub_md)
                                 att_files.extend(sub_att)
@@ -224,14 +223,14 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
 
 async def _process_vault_import(
     vault_path: Path,
-    markdown_files: List[Path],
-    attachment_files: List[Path],
+    markdown_files: list[Path],
+    attachment_files: list[Path],
     destination_folder: str,
     preserve_structure: bool,
     convert_links: bool,
     include_attachments: bool,
     skip_existing: bool,
-    project: Optional[str]
+    project: str | None
 ) -> str:
     """Process the vault import with all files."""
 
@@ -293,7 +292,7 @@ async def _process_vault_import(
 
             full_content = body + import_metadata
 
-            result = await write_note.fn(
+            await write_note.fn(
                 title=title,
                 content=full_content,
                 folder=dest_path,
@@ -336,7 +335,7 @@ async def _process_vault_import(
     return _generate_import_report(stats, processed_files, vault_path, destination_folder)
 
 
-def _parse_frontmatter(content: str) -> tuple[Dict[str, Any], str]:
+def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """Parse YAML frontmatter from markdown content."""
     if not content.startswith('---'):
         return {}, content
@@ -381,10 +380,10 @@ def _extract_title_from_content(content: str, file_path: Path) -> str:
 
 async def _build_file_mapping(
     vault_path: Path,
-    markdown_files: List[Path],
+    markdown_files: list[Path],
     destination_folder: str,
     preserve_structure: bool
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Build mapping from original filenames to new paths for link conversion."""
     mapping = {}
 
@@ -424,7 +423,7 @@ def _calculate_destination_path(
         return f"{destination_folder}/{rel_dir}/{file_path.stem}"
 
 
-def _convert_wikilinks(content: str, file_mapping: Dict[str, str], vault_path: Path, current_file: Path) -> tuple[str, int]:
+def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: Path, current_file: Path) -> tuple[str, int]:
     """Convert Obsidian wikilinks to Basic Memory format."""
     conversions = 0
 
@@ -460,14 +459,14 @@ def _convert_wikilinks(content: str, file_mapping: Dict[str, str], vault_path: P
 
 
 def _generate_import_report(
-    stats: Dict[str, Any],
-    processed_files: List[Dict[str, Any]],
+    stats: dict[str, Any],
+    processed_files: list[dict[str, Any]],
     vault_path: str,
     destination_folder: str
 ) -> str:
     """Generate a comprehensive import report."""
     lines = [
-        f"# Obsidian Vault Import Complete",
+        "# Obsidian Vault Import Complete",
         f"**Source vault:** {vault_path}",
         f"**Destination folder:** {destination_folder}",
         f"**Import completed:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
@@ -499,10 +498,10 @@ def _generate_import_report(
         lines.append("## Processed Files")
         for file_info in processed_files[:20]:  # Limit to first 20
             if 'error' in file_info:
-                lines.append(f"- ❌ **{file_info['original_path']}** - Error: {file_info['error']}")
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
             else:
                 links_text = f" ({file_info['links_converted']} links converted)" if file_info.get('links_converted', 0) > 0 else ""
-                lines.append(f"- ✅ **{file_info['original_path']}** → {file_info['destination_path']}{links_text}")
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}")
 
         if len(processed_files) > 20:
             lines.append(f"- ... and {len(processed_files) - 20} more files")

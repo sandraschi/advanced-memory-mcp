@@ -1,15 +1,15 @@
 """Tests for the SearchRepository."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import text
 
-from basic_memory import db
+from advanced_memory import db
 from advanced_memory.models import Entity
 from advanced_memory.models.project import Project
-from advanced_memory.repository.search_repository import SearchRepository, SearchIndexRow
+from advanced_memory.repository.search_repository import SearchIndexRow, SearchRepository
 from advanced_memory.schemas.search import SearchItemType
 
 
@@ -24,8 +24,8 @@ async def search_entity(session_maker, test_project: Project):
             permalink="test/search-test-entity",
             file_path="test/search_test_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -62,8 +62,8 @@ async def second_entity(session_maker, second_project: Project):
             permalink="test/second-project-entity",
             file_path="test/second_project_entity.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         session.add(entity)
         await session.flush()
@@ -254,8 +254,8 @@ async def test_to_insert_includes_project_id(search_repository):
         permalink="test/permalink",
         file_path="test/file.md",
         metadata={"test": "metadata"},
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
         project_id=search_repository.project_id,
     )
 
@@ -274,8 +274,8 @@ def test_directory_property():
         id=1,
         type=SearchItemType.ENTITY.value,
         file_path="projects/notes/ideas.md",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
         project_id=1,
     )
     assert row1.directory == "/projects/notes"
@@ -285,8 +285,8 @@ def test_directory_property():
         id=2,
         type=SearchItemType.ENTITY.value,
         file_path="README.md",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
         project_id=1,
     )
     assert row2.directory == "/"
@@ -296,8 +296,8 @@ def test_directory_property():
         id=3,
         type=SearchItemType.OBSERVATION.value,
         file_path="",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
         project_id=1,
     )
     assert row3.directory == ""
@@ -469,7 +469,7 @@ class TestSearchTermPreparation:
         import unittest.mock
 
         # Mock the scoped_session to raise a non-FTS5 error
-        with unittest.mock.patch("basic_memory.db.scoped_session") as mock_scoped_session:
+        with unittest.mock.patch("advanced_memory.db.scoped_session") as mock_scoped_session:
             mock_session = unittest.mock.AsyncMock()
             mock_scoped_session.return_value.__aenter__.return_value = mock_session
 

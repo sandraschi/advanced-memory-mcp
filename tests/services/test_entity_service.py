@@ -1,12 +1,13 @@
 """Tests for EntityService."""
 
+from datetime import UTC
 from pathlib import Path
 from textwrap import dedent
 
 import pytest
 import yaml
 
-from advanced_memory.config import ProjectConfig, AdvancedMemoryConfig
+from advanced_memory.config import AdvancedMemoryConfig, ProjectConfig
 from advanced_memory.markdown import EntityParser
 from advanced_memory.models import Entity as EntityModel
 from advanced_memory.repository import EntityRepository
@@ -395,14 +396,14 @@ async def test_create_with_content(entity_service: EntityService, file_service: 
         permalink: git-workflow-guide
         ---
         # Git Workflow Guide
-                
+
         A guide to our [[Git]] workflow. This uses some ideas from [[Trunk Based Development]].
-        
+
         ## Best Practices
         Use branches effectively:
         - [design] Keep feature branches short-lived #git #workflow (Reduces merge conflicts)
         - implements [[Branch Strategy]] (Our standard workflow)
-        
+
         ## Common Commands
         See the [[Git Cheat Sheet]] for reference.
         """
@@ -453,16 +454,16 @@ async def test_create_with_content(entity_service: EntityService, file_service: 
         type: test
         permalink: git-workflow-guide
         ---
-        
+
         # Git Workflow Guide
-                
+
         A guide to our [[Git]] workflow. This uses some ideas from [[Trunk Based Development]].
-        
+
         ## Best Practices
         Use branches effectively:
         - [design] Keep feature branches short-lived #git #workflow (Reduces merge conflicts)
         - implements [[Branch Strategy]] (Our standard workflow)
-        
+
         ## Common Commands
         See the [[Git Cheat Sheet]] for reference.
 
@@ -503,7 +504,7 @@ async def test_update_with_content(entity_service: EntityService, file_service: 
             type: test
             permalink: test/git-workflow-guide
             ---
-            
+
             # Git Workflow Guide
             """
         ).strip()
@@ -518,16 +519,16 @@ async def test_update_with_content(entity_service: EntityService, file_service: 
         type: test
         permalink: git-workflow-guide
         ---
-        
+
         # Git Workflow Guide
-        
+
         A guide to our [[Git]] workflow. This uses some ideas from [[Trunk Based Development]].
-        
+
         ## Best Practices
         Use branches effectively:
         - [design] Keep feature branches short-lived #git #workflow (Reduces merge conflicts)
         - implements [[Branch Strategy]] (Our standard workflow)
-        
+
         ## Common Commands
         See the [[Git Cheat Sheet]] for reference.
         """
@@ -592,7 +593,7 @@ async def test_create_with_no_frontmatter(
     created = await entity_service.create_entity_from_markdown(file_path, entity_markdown)
     file_content, _ = await file_service.read_file(created.file_path)
 
-    assert str(file_path) == str(created.file_path)
+    assert str(file_path).replace('\\', '/') == str(created.file_path)
     assert created.title == "Git Workflow Guide"
     assert created.entity_type == "note"
     assert created.permalink is None
@@ -692,10 +693,10 @@ async def test_edit_entity_replace_section(
     # Create test entity with sections
     content = dedent("""
         # Main Title
-        
+
         ## Section 1
         Original section 1 content
-        
+
         ## Section 2
         Original section 2 content
         """).strip()
@@ -829,10 +830,10 @@ async def test_edit_entity_with_observations_and_relations(
     # Create test entity with observations and relations
     content = dedent("""
         # Test Note
-        
+
         - [note] This is an observation
         - links to [[Other Entity]]
-        
+
         Original content
         """).strip()
 
@@ -877,19 +878,22 @@ async def test_create_entity_from_markdown_with_upsert(
     file_path = Path("test/upsert-test.md")
 
     # Create a mock EntityMarkdown object
+    from datetime import datetime
+
     from advanced_memory.markdown.schemas import (
         EntityFrontmatter,
+    )
+    from advanced_memory.markdown.schemas import (
         EntityMarkdown as RealEntityMarkdown,
     )
-    from datetime import datetime, timezone
 
     frontmatter = EntityFrontmatter(metadata={"title": "UPSERT Test", "type": "test"})
     markdown = RealEntityMarkdown(
         frontmatter=frontmatter,
         observations=[],
         relations=[],
-        created=datetime.now(timezone.utc),
-        modified=datetime.now(timezone.utc),
+        created=datetime.now(UTC),
+        modified=datetime.now(UTC),
     )
 
     # Call the method - should succeed without complex exception handling
@@ -898,7 +902,7 @@ async def test_create_entity_from_markdown_with_upsert(
     # Verify it created the entity successfully using the UPSERT approach
     assert result is not None
     assert result.title == "UPSERT Test"
-    assert result.file_path == str(file_path)
+    assert result.file_path == str(file_path).replace('\\', '/')
     # create_entity_from_markdown sets checksum to None (incomplete sync)
     assert result.checksum is None
 
@@ -909,24 +913,28 @@ async def test_create_entity_from_markdown_error_handling(
 ):
     """Test that create_entity_from_markdown handles repository errors gracefully."""
     from unittest.mock import patch
+
     from advanced_memory.services.exceptions import EntityCreationError
 
     file_path = Path("test/error-test.md")
 
     # Create a mock EntityMarkdown object
+    from datetime import datetime
+
     from advanced_memory.markdown.schemas import (
         EntityFrontmatter,
+    )
+    from advanced_memory.markdown.schemas import (
         EntityMarkdown as RealEntityMarkdown,
     )
-    from datetime import datetime, timezone
 
     frontmatter = EntityFrontmatter(metadata={"title": "Error Test", "type": "test"})
     markdown = RealEntityMarkdown(
         frontmatter=frontmatter,
         observations=[],
         relations=[],
-        created=datetime.now(timezone.utc),
-        modified=datetime.now(timezone.utc),
+        created=datetime.now(UTC),
+        modified=datetime.now(UTC),
     )
 
     # Mock the repository.upsert_entity to raise a general error
@@ -1051,11 +1059,11 @@ async def test_edit_entity_find_replace_multiline(
     # Create test entity with multiline content
     content = dedent("""
         # Title
-        
+
         This is a paragraph
         that spans multiple lines
         and needs replacement.
-        
+
         Other content.
         """).strip()
 
@@ -1090,13 +1098,13 @@ async def test_edit_entity_replace_section_multiple_sections_error(entity_servic
     # Create test entity with duplicate section headers
     content = dedent("""
         # Main Title
-        
+
         ## Section 1
         First instance content
-        
+
         ## Section 2
         Some content
-        
+
         ## Section 1
         Second instance content
         """).strip()
@@ -1151,10 +1159,10 @@ async def test_edit_entity_replace_section_header_variations(
     # Create entity with various header formats (avoiding "test" in frontmatter)
     content = dedent("""
         # Main Title
-        
+
         ## Section Name
         Original content
-        
+
         ### Subsection
         Sub content
         """).strip()
@@ -1192,10 +1200,10 @@ async def test_edit_entity_replace_section_at_end_of_document(
     # Create test entity with section at end
     content = dedent("""
         # Main Title
-        
+
         ## First Section
         First content
-        
+
         ## Last Section
         Last section content""").strip()  # No trailing newline
 
@@ -1232,16 +1240,16 @@ async def test_edit_entity_replace_section_with_subsections(
     # Create test entity with nested sections
     content = dedent("""
         # Main Title
-        
+
         ## Parent Section
         Parent content
-        
+
         ### Child Section 1
         Child 1 content
-        
-        ### Child Section 2  
+
+        ### Child Section 2
         Child 2 content
-        
+
         ## Another Section
         Other content
         """).strip()
@@ -1569,10 +1577,10 @@ async def test_move_entity_preserves_observations_and_relations(
     # Create test entity with observations and relations
     content = dedent("""
         # Test Note
-        
+
         - [note] This is an observation #test
         - links to [[Other Entity]]
-        
+
         Original content
         """).strip()
 
@@ -1675,11 +1683,11 @@ async def test_move_entity_with_complex_observations(
     """Test moving entity with complex observations (tags, context)."""
     content = dedent("""
         # Complex Note
-        
+
         - [design] Keep feature branches short-lived #git #workflow (Reduces merge conflicts)
         - [tech] Using SQLite for storage #implementation (Fast and reliable)
         - implements [[Branch Strategy]] (Our standard workflow)
-        
+
         Complex content with [[Multiple]] [[Links]].
         """).strip()
 
@@ -1744,7 +1752,7 @@ async def test_move_entity_with_null_permalink_generates_permalink(
     update_permalinks_on_move setting.
     """
     # Create entity through direct database insertion to simulate migrated entity with null permalink
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     # Create an entity with null permalink directly in database (simulating migrated data)
     entity_data = {
@@ -1753,8 +1761,8 @@ async def test_move_entity_with_null_permalink_generates_permalink(
         "entity_type": "note",
         "content_type": "text/markdown",
         "permalink": None,  # This is the key - null permalink from migration
-        "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
+        "updated_at": datetime.now(UTC),
     }
 
     # Create the entity directly in database

@@ -1,6 +1,7 @@
 """Tests for the continue_conversation template rendering."""
 
 import datetime
+
 import pytest
 
 from advanced_memory.api.template_loader import TemplateLoader
@@ -30,7 +31,7 @@ def entity_summary():
 @pytest.fixture
 def context_with_results(entity_summary):
     """Create a sample context with results for testing."""
-    from advanced_memory.schemas.memory import ObservationSummary, ContextResult
+    from advanced_memory.schemas.memory import ContextResult, ObservationSummary
 
     # Create an observation for the entity
     observation = ObservationSummary(

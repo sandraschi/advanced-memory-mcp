@@ -1,7 +1,8 @@
 """Tests for the entity repository UPSERT functionality."""
 
+from datetime import UTC, datetime
+
 import pytest
-from datetime import datetime, timezone
 
 from advanced_memory.models.knowledge import Entity
 from advanced_memory.repository.entity_repository import EntityRepository
@@ -18,8 +19,8 @@ async def test_upsert_entity_new_entity(entity_repository: EntityRepository):
         permalink="test/test-entity",
         file_path="test/test-entity.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result = await entity_repository.upsert_entity(entity)
@@ -41,8 +42,8 @@ async def test_upsert_entity_same_file_update(entity_repository: EntityRepositor
         permalink="test/test-entity",
         file_path="test/test-entity.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result1 = await entity_repository.upsert_entity(entity1)
@@ -56,8 +57,8 @@ async def test_upsert_entity_same_file_update(entity_repository: EntityRepositor
         permalink="test/test-entity",  # Same permalink
         file_path="test/test-entity.md",  # Same file_path
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result2 = await entity_repository.upsert_entity(entity2)
@@ -80,8 +81,8 @@ async def test_upsert_entity_permalink_conflict_different_file(entity_repository
         permalink="test/shared-permalink",
         file_path="test/first-file.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result1 = await entity_repository.upsert_entity(entity1)
@@ -95,8 +96,8 @@ async def test_upsert_entity_permalink_conflict_different_file(entity_repository
         permalink="test/shared-permalink",  # Same permalink
         file_path="test/second-file.md",  # Different file_path
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result2 = await entity_repository.upsert_entity(entity2)
@@ -129,8 +130,8 @@ async def test_upsert_entity_multiple_permalink_conflicts(entity_repository: Ent
             permalink=base_permalink,  # All try to use same permalink
             file_path=f"test/file-{i + 1}.md",  # Different file paths
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
 
         result = await entity_repository.upsert_entity(entity)
@@ -151,6 +152,7 @@ async def test_upsert_entity_multiple_permalink_conflicts(entity_repository: Ent
 async def test_upsert_entity_race_condition_file_path(entity_repository: EntityRepository):
     """Test that upsert handles race condition where file_path conflict occurs after initial check."""
     from unittest.mock import patch
+
     from sqlalchemy.exc import IntegrityError
 
     # Create an entity first
@@ -161,8 +163,8 @@ async def test_upsert_entity_race_condition_file_path(entity_repository: EntityR
         permalink="test/original",
         file_path="test/race-file.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result1 = await entity_repository.upsert_entity(entity1)
@@ -176,8 +178,8 @@ async def test_upsert_entity_race_condition_file_path(entity_repository: EntityR
         permalink="test/race-entity",
         file_path="test/different-file.md",  # Different initially
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     # Now simulate race condition: change file_path to conflict after the initial check
@@ -224,8 +226,8 @@ async def test_upsert_entity_gap_in_suffixes(entity_repository: EntityRepository
             permalink=permalink,
             file_path=f"test/gap-file-{i + 1}.md",
             content_type="text/markdown",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
         )
         await entity_repository.add(entity)  # Use direct add to set specific permalinks
 
@@ -237,8 +239,8 @@ async def test_upsert_entity_gap_in_suffixes(entity_repository: EntityRepository
         permalink=base_permalink,  # Will conflict
         file_path="test/gap-new-file.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result = await entity_repository.upsert_entity(new_entity)
@@ -291,8 +293,8 @@ async def test_upsert_entity_project_scoping_isolation(session_maker):
         permalink="docs/shared-name",
         file_path="docs/shared-name.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     entity2 = Entity(
@@ -302,8 +304,8 @@ async def test_upsert_entity_project_scoping_isolation(session_maker):
         permalink="docs/shared-name",  # Same permalink
         file_path="docs/shared-name.md",  # Same file_path
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     # These should succeed without "multiple rows" errors
@@ -327,8 +329,8 @@ async def test_upsert_entity_project_scoping_isolation(session_maker):
         permalink="docs/shared-name",
         file_path="docs/shared-name.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     entity2_update = Entity(
@@ -338,8 +340,8 @@ async def test_upsert_entity_project_scoping_isolation(session_maker):
         permalink="docs/shared-name",
         file_path="docs/shared-name.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     # Updates should work without conflicts
@@ -405,8 +407,8 @@ async def test_upsert_entity_permalink_conflict_within_project_only(session_make
         permalink="test/conflict-permalink",
         file_path="test/original.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result1 = await repo1.upsert_entity(entity1)
@@ -420,8 +422,8 @@ async def test_upsert_entity_permalink_conflict_within_project_only(session_make
         permalink="test/conflict-permalink",  # Same permalink, different project
         file_path="test/cross-project.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result2 = await repo2.upsert_entity(entity2)
@@ -436,8 +438,8 @@ async def test_upsert_entity_permalink_conflict_within_project_only(session_make
         permalink="test/conflict-permalink",  # Same permalink, same project
         file_path="test/conflict.md",
         content_type="text/markdown",
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     result3 = await repo1.upsert_entity(entity3)

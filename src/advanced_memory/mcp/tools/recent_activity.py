@@ -1,13 +1,12 @@
 """Recent activity tool for Basic Memory MCP server."""
 
-from typing import List, Union, Optional
 
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
@@ -17,22 +16,22 @@ from advanced_memory.schemas.search import SearchItemType
     description="""Get recent activity from across the knowledge base.
 
     Timeframe supports natural language formats like:
-    - "2 days ago"  
+    - "2 days ago"
     - "last week"
-    - "yesterday" 
+    - "yesterday"
     - "today"
     - "3 weeks ago"
     Or standard formats like "7d"
     """,
 )
 async def recent_activity(
-    type: Union[str, List[str]] = "",
+    type: str | list[str] = "",
     depth: int = 1,
     timeframe: TimeFrame = "7d",
     page: int = 1,
     page_size: int = 10,
     max_related: int = 10,
-    project: Optional[str] = None,
+    project: str | None = None,
 ) -> GraphContext:
     """Get recent activity across the knowledge base.
 
@@ -113,9 +112,9 @@ async def recent_activity(
                 # Try to convert string to enum
                 if isinstance(t, str):
                     validated_types.append(SearchItemType(t.lower()))
-            except ValueError:
+            except ValueError as e:
                 valid_types = [t.value for t in SearchItemType]
-                raise ValueError(f"Invalid type: {t}. Valid types are: {valid_types}")
+                raise ValueError(f"Invalid type: {t}. Valid types are: {valid_types}") from e
 
         # Add validated types to params
         params["type"] = [t.value for t in validated_types]  # pyright: ignore

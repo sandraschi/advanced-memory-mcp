@@ -1,14 +1,14 @@
 """Router for project management."""
 
-from fastapi import APIRouter, HTTPException, Path, Body
-from typing import Optional
 
-from advanced_memory.deps import ProjectServiceDep, ProjectPathDep
+from fastapi import APIRouter, Body, HTTPException, Path
+
+from advanced_memory.deps import ProjectPathDep, ProjectServiceDep
 from advanced_memory.schemas import ProjectInfoResponse
 from advanced_memory.schemas.project_info import (
-    ProjectList,
-    ProjectItem,
     ProjectInfoRequest,
+    ProjectItem,
+    ProjectList,
     ProjectStatusResponse,
 )
 
@@ -33,8 +33,8 @@ async def get_project_info(
 async def update_project(
     project_service: ProjectServiceDep,
     project_name: str = Path(..., description="Name of the project to update"),
-    path: Optional[str] = Body(None, description="New path for the project"),
-    is_active: Optional[bool] = Body(None, description="Status of the project (active/inactive)"),
+    path: str | None = Body(None, description="New path for the project"),
+    is_active: bool | None = Body(None, description="Status of the project (active/inactive)"),
 ) -> ProjectStatusResponse:
     """Update a project's information in configuration and database.
 
@@ -66,7 +66,7 @@ async def update_project(
             new_project=ProjectItem(name=project_name, path=updated_path),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # List all available projects
@@ -125,7 +125,7 @@ async def add_project(
             ),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Remove a project
@@ -159,7 +159,7 @@ async def remove_project(
             new_project=None,
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Set a project as default
@@ -206,7 +206,7 @@ async def set_default_project(
             ),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Synchronize projects between config and database
@@ -231,4 +231,4 @@ async def synchronize_projects(
             default=False,
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

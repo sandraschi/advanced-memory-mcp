@@ -368,7 +368,7 @@ async def test_move_note_preserves_search_functionality(mcp_server, app):
 
 This note contains unique search terms:
 - quantum mechanics
-- artificial intelligence 
+- artificial intelligence
 - machine learning algorithms
 
 ## Features

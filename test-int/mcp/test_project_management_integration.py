@@ -82,7 +82,7 @@ This is the first entity.
 - [type] First entity type
 - [status] Active entity
 
-## Relations  
+## Relations
 - relates_to [[Entity Two]]
 - implements [[Some System]]""",
                 "tags": "entity,test",

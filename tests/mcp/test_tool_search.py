@@ -1,11 +1,12 @@
 """Tests for search MCP tools."""
 
-import pytest
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+import pytest
+
 from advanced_memory.mcp.tools import write_note
-from advanced_memory.mcp.tools.search import search_notes, _format_search_error_response
+from advanced_memory.mcp.tools.search import _format_search_error_response, search_notes
 from advanced_memory.schemas.search import SearchResponse
 
 
@@ -262,11 +263,11 @@ class TestSearchToolErrorHandling:
     @pytest.mark.asyncio
     async def test_search_notes_exception_handling(self):
         """Test exception handling in search_notes."""
-        with patch("basic_memory.mcp.tools.search.get_active_project") as mock_get_project:
+        with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
             mock_get_project.return_value.project_url = "http://test"
 
             with patch(
-                "basic_memory.mcp.tools.search.call_post", side_effect=Exception("syntax error")
+                "advanced_memory.mcp.tools.search.call_post", side_effect=Exception("syntax error")
             ):
                 result = await search_notes.fn("test query")
 
@@ -276,11 +277,11 @@ class TestSearchToolErrorHandling:
     @pytest.mark.asyncio
     async def test_search_notes_permission_error(self):
         """Test search_notes with permission error."""
-        with patch("basic_memory.mcp.tools.search.get_active_project") as mock_get_project:
+        with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
             mock_get_project.return_value.project_url = "http://test"
 
             with patch(
-                "basic_memory.mcp.tools.search.call_post",
+                "advanced_memory.mcp.tools.search.call_post",
                 side_effect=Exception("permission denied"),
             ):
                 result = await search_notes.fn("test query")

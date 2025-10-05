@@ -1,18 +1,17 @@
-from typing import Optional
 
 import typer
 
-from advanced_memory.config import get_project_config, ConfigManager
+from advanced_memory import __version__
+from advanced_memory.config import ConfigManager, get_project_config
 from advanced_memory.mcp.project_session import session
 
 
 def version_callback(value: bool) -> None:
     """Show version and exit."""
     if value:  # pragma: no cover
-        import advanced_memory
 
         config = get_project_config()
-        typer.echo(f"Basic Memory version: {basic_memory.__version__}")
+        typer.echo(f"Advanced Memory version: {__version__}")
         typer.echo(f"Current project: {config.project}")
         typer.echo(f"Project path: {config.home}")
         raise typer.Exit()
@@ -24,14 +23,14 @@ app = typer.Typer(name="basic-memory")
 @app.callback()
 def app_callback(
     ctx: typer.Context,
-    project: Optional[str] = typer.Option(
+    project: str | None = typer.Option(
         None,
         "--project",
         "-p",
         help="Specify which project to use 1",
         envvar="BASIC_MEMORY_PROJECT",
     ),
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         "-v",

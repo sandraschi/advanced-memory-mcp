@@ -1,14 +1,13 @@
 """Tests for link resolution service."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
-
 import pytest_asyncio
 
+from advanced_memory.models.knowledge import Entity as EntityModel
 from advanced_memory.schemas.base import Entity as EntitySchema
 from advanced_memory.services.link_resolver import LinkResolver
-from advanced_memory.models.knowledge import Entity as EntityModel
 
 
 @pytest_asyncio.fixture
@@ -81,8 +80,8 @@ async def test_entities(entity_service, file_service):
             entity_type="file",
             content_type="image/png",
             file_path="Image.png",
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
             project_id=entity_service.repository.project_id,
         )
     )
@@ -193,24 +192,25 @@ async def test_folder_title_pattern_with_md_extension(link_resolver, test_entiti
     entity = await link_resolver.resolve_link("components/Core Service")
     assert entity is not None
     assert entity.permalink == "components/core-service"
-    assert entity.file_path == "components/Core Service.md"
+    assert entity.file_path == "components/Core_Service.md"
 
     # Test with different entity
     entity = await link_resolver.resolve_link("config/Service Config")
     assert entity is not None
     assert entity.permalink == "config/service-config"
-    assert entity.file_path == "config/Service Config.md"
+    assert entity.file_path == "config/Service_Config.md"
 
     # Test with nested folder structure
     entity = await link_resolver.resolve_link("specs/subspec/Sub Features 1")
     assert entity is not None
     assert entity.permalink == "specs/subspec/sub-features-1"
-    assert entity.file_path == "specs/subspec/Sub Features 1.md"
+    assert entity.file_path == "specs/subspec/Sub_Features_1.md"
 
     # Test that it doesn't try to add .md to things that already have it
     entity = await link_resolver.resolve_link("components/Core Service.md")
     assert entity is not None
     assert entity.permalink == "components/core-service"
+    assert entity.file_path == "components/Core_Service.md"
 
     # Test that it doesn't try to add .md to single words (no slash)
     entity = await link_resolver.resolve_link("NonExistent")
@@ -299,9 +299,9 @@ async def test_exact_match_types_in_strict_mode(link_resolver, test_entities):
     assert result is not None
     assert result.permalink == "components/core-service"
 
-    # 4. Folder/title pattern with .md extension added (use correct filename with underscores)
+    # 4. Folder/title pattern with .md extension added (use correct filename with spaces)
     import os
-    folder_path = os.path.join("components", "Core_Service")
+    folder_path = os.path.join("components", "Core Service")
     result = await link_resolver.resolve_link(folder_path, strict=True)
     assert result is not None
     assert result.permalink == "components/core-service"

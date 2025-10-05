@@ -127,7 +127,7 @@ async def import_memory_json(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Import failed: {str(e)}",
-        )
+        ) from e
     return result
 
 
@@ -149,4 +149,4 @@ async def import_file(importer: Importer, file: UploadFile, destination_folder: 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Import failed: {str(e)}",
-        )
+        ) from e
