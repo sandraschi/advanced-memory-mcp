@@ -56,7 +56,17 @@ jobs:
         run: npm install -g @anthropic-ai/mcpb
 
       - name: Build MCPB package
-        run: mcpb pack . advanced-memory-mcp.mcpb
+        run: |
+          if command -v mcpb >/dev/null 2>&1; then
+            cd dxt
+            mcpb pack . ../dist/advanced-memory-mcp.mcpb
+            cd ..
+          else
+            echo "MCPB CLI not available, creating basic package"
+            cd dxt
+            zip -r ../dist/advanced-memory-mcp.mcpb . -x "*.git*" "*.pyc" "__pycache__/*"
+            cd ..
+          fi
 
       - name: Generate changelog
         id: changelog
@@ -141,7 +151,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./advanced-memory-mcp.mcpb
+          asset_path: ./dist/advanced-memory-mcp.mcpb
           asset_name: advanced-memory-mcp.mcpb
           asset_content_type: application/octet-stream
 

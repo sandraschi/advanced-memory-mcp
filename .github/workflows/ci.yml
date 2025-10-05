@@ -161,7 +161,9 @@ jobs:
       - name: Validate manifest
         run: |
           if command -v mcpb >/dev/null 2>&1; then
+            cd dxt
             mcpb validate manifest.json
+            cd ..
           else
             echo "MCPB CLI not available, skipping validation"
           fi
@@ -169,20 +171,21 @@ jobs:
       - name: Build MCPB package
         run: |
           if command -v mcpb >/dev/null 2>&1; then
-            mcpb pack . advanced-memory-mcp.mcpb
+            cd dxt
+            mcpb pack . ../dist/advanced-memory-mcp.mcpb
+            cd ..
           else
             echo "MCPB CLI not available, creating basic package"
-            mkdir -p temp-mcpb
-            cp -r server temp-mcpb/
-            cp manifest.json temp-mcpb/
-            cd temp-mcpb && zip -r ../advanced-memory-mcp.mcpb . && cd ..
+            cd dxt
+            zip -r ../dist/advanced-memory-mcp.mcpb . -x "*.git*" "*.pyc" "__pycache__/*"
+            cd ..
           fi
 
       - name: Upload MCPB package
         uses: actions/upload-artifact@v3
         with:
           name: mcpb-package
-          path: advanced-memory-mcp.mcpb
+          path: dist/advanced-memory-mcp.mcpb
 
   integration-test:
     name: Integration Tests
