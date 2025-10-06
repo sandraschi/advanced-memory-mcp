@@ -34,6 +34,9 @@ dependencies = [
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
+    "markdown>=3.9",
+    "types-pyyaml>=6.0.12.20250915",
+    "types-markdown>=3.9.0.20250906",
 ]
 
 
