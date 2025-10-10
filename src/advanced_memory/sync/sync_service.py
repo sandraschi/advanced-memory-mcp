@@ -340,7 +340,16 @@ class SyncService:
             if not absolute_path.exists():
                 return False, f"File does not exist: {path}"
 
-            content = absolute_path.read_text(encoding="utf-8")
+            # Check file size before reading
+            file_size = absolute_path.stat().st_size
+            if file_size > 10 * 1024 * 1024:  # 10MB limit
+                return False, f"File too large ({file_size / 1024 / 1024:.2f} MB)"
+
+            # Try to read file with encoding error handling
+            try:
+                content = absolute_path.read_text(encoding="utf-8")
+            except UnicodeDecodeError as e:
+                return False, f"Invalid UTF-8 encoding: {e}"
 
             if not has_frontmatter(content):
                 return True, None  # No frontmatter to validate
@@ -405,11 +414,37 @@ class SyncService:
         logger.debug(f"Parsing markdown file, path: {path}, new: {new}")
 
         file_path = self.entity_parser.base_path / path
-        file_content = file_path.read_text(encoding="utf-8")
+        
+        # Check file size before reading to prevent hanging on huge files
+        try:
+            file_size = file_path.stat().st_size
+            if file_size > 10 * 1024 * 1024:  # 10MB limit
+                logger.warning(f"File too large to sync: {path} ({file_size / 1024 / 1024:.2f} MB)")
+                raise ValueError(f"File exceeds 10MB limit: {path}")
+        except OSError as e:
+            logger.error(f"Cannot access file: {path}, error: {e}")
+            raise
+        
+        # Read file with encoding error handling
+        try:
+            file_content = file_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            logger.warning(f"UTF-8 decode failed for {path}, trying with error handling")
+            try:
+                file_content = file_path.read_text(encoding="utf-8", errors="replace")
+            except Exception as e:
+                logger.error(f"Cannot read file {path}: {e}")
+                raise ValueError(f"File is unreadable: {path}")
+        
         file_contains_frontmatter = has_frontmatter(file_content)
 
         # entity markdown will always contain front matter, so it can be used up create/update the entity
-        entity_markdown = await self.entity_parser.parse_file(path)
+        # Wrap parser in try/except to handle corrupt markdown
+        try:
+            entity_markdown = await self.entity_parser.parse_file(path)
+        except Exception as e:
+            logger.error(f"Failed to parse markdown file {path}: {type(e).__name__}: {e}")
+            raise ValueError(f"Markdown parsing failed for {path}: {e}")
 
         # if the file contains frontmatter, resolve a permalink
         if file_contains_frontmatter:

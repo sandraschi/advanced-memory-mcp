@@ -151,11 +151,13 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
         from loguru import logger
         logger.warning("mcp_commons_not_available_using_fallback")
         
-        # ORIGINAL IMPLEMENTATION (FALLBACK)
+        # ORIGINAL IMPLEMENTATION (FALLBACK) with safety limits
         relations = []
         start = 0
+        MAX_LINKS = 5000
+        MAX_LINK_LENGTH = 500
         
-        while True:
+        while len(relations) < MAX_LINKS:
             start = content.find("[[", start)
             if start == -1:
                 break
@@ -164,7 +166,10 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
             pos = start + 2
             end = -1
             
-            while pos < len(content):
+            # Limit search range to prevent hanging
+            max_search = min(pos + MAX_LINK_LENGTH, len(content))
+            
+            while pos < max_search:
                 if content[pos : pos + 2] == "[[":
                     depth += 1
                     pos += 2
@@ -178,13 +183,18 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
                     pos += 1
             
             if end == -1:
-                break
+                # Malformed link - skip to next
+                start = start + 2
+                continue
             
             target = content[start + 2 : end].strip()
-            if target:
+            if target and len(target) < MAX_LINK_LENGTH:
                 relations.append({"type": "links to", "target": target, "context": None})
             
             start = end + 2
+        
+        if len(relations) >= MAX_LINKS:
+            logger.warning(f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links")
         
         return relations
 

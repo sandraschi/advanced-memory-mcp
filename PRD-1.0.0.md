@@ -49,17 +49,23 @@ Advanced Memory 1.0.0 represents a major milestone as the first stable release o
 - **Migration Tools:** Seamless project data movement
 
 #### 📥📤 **Advanced Import/Export**
-- **Obsidian Integration:** Full vault import/export
+- **Obsidian Integration:** Full vault import/export (Required for canvas visualization)
 - **Joplin Support:** Complete notebook synchronization
 - **Notion Compatibility:** HTML/Markdown export support
 - **Evernote Integration:** ENEX file processing
-- **Canvas Support:** Visual mind map import/export
+- **Canvas Support:** Visual mind map import/export (requires Obsidian for viewing)
 
 #### 🛡️ **Enterprise-Grade Reliability**
 - **File Safety:** Atomic operations with rollback capabilities
 - **Error Recovery:** Comprehensive error handling and recovery
 - **Data Validation:** Strict schema validation and integrity checks
 - **Backup Support:** Complete system backup and restore
+- **Bulletproof Sync:** Robust error handling prevents hangs on corrupted/unusual files
+  - File size limits (10MB) prevent memory issues
+  - UTF-8 encoding fallback with replacement characters
+  - Markdown parsing error catching and graceful degradation
+  - Wikilink parser safety limits (5000 links max, 500 char max)
+  - Early file validation before processing
 
 #### 🎨 **Rich Content Support**
 - **Mermaid Diagrams:** Live diagram rendering in HTML exports
@@ -145,6 +151,9 @@ Advanced Memory 1.0.0 represents a major milestone as the first stable release o
 - **NFR-2.2:** Automatic data recovery from corruption
 - **NFR-2.3:** Comprehensive error logging and reporting
 - **NFR-2.4:** Graceful degradation under load
+- **NFR-2.5:** No sync hangs on large files (10MB+ limit enforced)
+- **NFR-2.6:** Graceful handling of encoding errors and malformed markdown
+- **NFR-2.7:** Early validation prevents cascading failures
 
 #### NFR-3.0: Security
 - **NFR-3.1:** No data transmission to external services

@@ -33,10 +33,11 @@ enable any compatible LLM to read and write to your local knowledge base.
 📋 **[Product Requirements Document](PRD-1.0.0.md)** | 📝 **[Changelog](CHANGELOG.md)** | 🏗️ **[Development Status](https://github.com/advanced-memory/advanced-memory/projects)**
 
 **Advanced Memory enhances the original concept with:**
+- 🛡️ **Bulletproof Sync** - Robust error handling prevents hangs on large files, encoding errors, or malformed markdown
 - 🛡️ **Safer File Operations** - Prevents choking on node_modules, build artifacts, and large directories through intelligent filtering
-- 🎨 **Mermaid diagram support** - Visual diagrams that render in HTML exports
+- 🎨 **Mermaid diagram support** - Visual diagrams that render in HTML exports  
 - 🐧 **Pandoc export engine** - FREE CLI-based export to PDF, Word, HTML, and 40+ formats
-- 📚 **Extended import/export** - Joplin, Docsify, Notion, Evernote, and enhanced HTML tools
+- 📚 **Extended import/export** - Joplin, Docsify, Notion, Evernote, and enhanced HTML tools (requires Obsidian for canvas visualization)
 - 🔍 **Enhanced search** - Better handling of special characters
 - 📊 **Professional document generation** - Templates, TOC, syntax highlighting
 - 📖 **PDF book creation** - Complete books with title pages and chapters
