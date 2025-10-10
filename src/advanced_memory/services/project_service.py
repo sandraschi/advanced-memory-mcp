@@ -280,11 +280,13 @@ class ProjectService:
                 }
                 await self.repository.create(project_data)
 
-        # Add projects that exist in DB but not in config to config
+        # Don't automatically add database projects back to config
+        # This allows users to remove projects from config without them being re-added
+        # Projects in DB but not in config will be marked as inactive instead
         for name, project in db_projects_by_permalink.items():
             if name not in config_projects:
-                logger.info(f"Adding project '{name}' to configuration")
-                self.config_manager.add_project(name, project.path)
+                logger.info(f"Project '{name}' exists in database but not in config - marking inactive")
+                await self.repository.update(project.id, {"is_active": False})
 
         # Ensure database default project state is consistent
         await self._ensure_single_default_project()

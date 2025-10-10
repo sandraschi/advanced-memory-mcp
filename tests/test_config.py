@@ -29,7 +29,7 @@ class TestAdvancedMemoryConfig:
         assert config.projects["main"] == custom_path
 
     def test_model_post_init_respects_advanced_memory_home(self, config_home, monkeypatch):
-        """Test that model_post_init creates main project with ADVANCED_MEMORY_HOME when missing."""
+        """Test that model_post_init no longer auto-creates main project."""
         custom_path = str(config_home / "custom" / "memory" / "path")
         monkeypatch.setenv("ADVANCED_MEMORY_HOME", custom_path)
 
@@ -37,12 +37,14 @@ class TestAdvancedMemoryConfig:
         other_path = str(config_home / "some" / "path")
         config = AdvancedMemoryConfig(projects={"other": other_path})
 
-        # model_post_init should have added main project with ADVANCED_MEMORY_HOME
-        assert "main" in config.projects
-        assert config.projects["main"] == custom_path
+        # model_post_init should NOT auto-create main project anymore
+        assert "main" not in config.projects
+        assert "other" in config.projects
+        # Default should be set to first available project
+        assert config.default_project == "other"
 
     def test_model_post_init_fallback_without_advanced_memory_home(self, config_home, monkeypatch):
-        """Test that model_post_init falls back to default when ADVANCED_MEMORY_HOME is not set."""
+        """Test that model_post_init no longer auto-creates main project."""
         # Ensure ADVANCED_MEMORY_HOME is not set
         monkeypatch.delenv("ADVANCED_MEMORY_HOME", raising=False)
 
@@ -50,11 +52,11 @@ class TestAdvancedMemoryConfig:
         other_path = str(config_home / "some" / "path")
         config = AdvancedMemoryConfig(projects={"other": other_path})
 
-        # model_post_init should have added main project with default path
-        # Note: config_home fixture sets HOME to tmp_path, so Path.home() returns tmp_path
-        expected_path = str(config_home / "advanced-memory")
-        assert "main" in config.projects
-        assert config.projects["main"] == expected_path
+        # model_post_init should NOT auto-create main project anymore
+        assert "main" not in config.projects
+        assert "other" in config.projects
+        # Default should be set to first available project
+        assert config.default_project == "other"
 
     def test_advanced_memory_home_with_relative_path(self, config_home, monkeypatch):
         """Test that ADVANCED_MEMORY_HOME works with relative paths."""

@@ -6510,3 +6510,50 @@ did not find expected alphabetic or numeric character
 2025-10-10 11:19:51 | INFO     | Initializing search index
 2025-10-10 11:19:51 | INFO     | Initialized project session with default project: test-project
 2025-10-10 11:19:51 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:37:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:37:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:42:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:42:58 | INFO     | Using in-memory SQLite database
+2025-10-10 11:42:58 | INFO     | Initializing search index
+2025-10-10 11:42:58 | INFO     | Initializing search index
+2025-10-10 11:42:58 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:42:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:43:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:43:37 | INFO     | Using in-memory SQLite database
+2025-10-10 11:43:37 | INFO     | Initializing search index
+2025-10-10 11:43:37 | INFO     | Initializing search index
+2025-10-10 11:43:37 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:43:37 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:43:37 | INFO     | Using in-memory SQLite database
+2025-10-10 11:43:37 | INFO     | Initializing search index
+2025-10-10 11:43:37 | INFO     | Initializing search index
+2025-10-10 11:43:37 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:43:37 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:43:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:48:55 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:48:56 | INFO     | Using in-memory SQLite database
+2025-10-10 11:48:56 | INFO     | Initializing search index
+2025-10-10 11:48:56 | INFO     | Initializing search index
+2025-10-10 11:48:56 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:48:56 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:49:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:49:23 | INFO     | Using in-memory SQLite database
+2025-10-10 11:49:23 | INFO     | Initializing search index
+2025-10-10 11:49:23 | INFO     | Initializing search index
+2025-10-10 11:49:23 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:49:23 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:49:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 11:49:39 | INFO     | Using in-memory SQLite database
+2025-10-10 11:49:39 | INFO     | Initializing search index
+2025-10-10 11:49:39 | INFO     | Initializing search index
+2025-10-10 11:49:39 | INFO     | Initialized project session with default project: test-project
+2025-10-10 11:49:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 11:49:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 15:11:01 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 15:11:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 15:11:16 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:12:23 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:12:28 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:13:53 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:14:01 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:14:39 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
