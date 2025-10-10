@@ -1,7 +1,7 @@
 """
-Basic Memory Installation Wizard
+Advanced Memory Installation Wizard
 
-This module provides an interactive setup for configuring Basic Memory
+This module provides an interactive setup for configuring Advanced Memory
 with various IDEs and tools.
 """
 
@@ -51,7 +51,7 @@ def backup_file(file_path):
     return backup_path
 
 def configure_windsurf():
-    """Configure Windsurf to use Basic Memory as an MCP client."""
+    """Configure Windsurf to use Advanced Memory as an MCP client."""
     config_path = get_config_path('windsurf')
     backup_path = backup_file(config_path)
 
@@ -70,7 +70,7 @@ def configure_windsurf():
     if 'clients' not in config['mcp']:
         config['mcp']['clients'] = {}
 
-    config['mcp']['clients']['basic-memory'] = {
+    config['mcp']['clients']['advanced-memory'] = {
         'enabled': True,
         'transport': 'stdio',
         'command': os.path.abspath(sys.executable),
@@ -88,9 +88,9 @@ def configure_windsurf():
 def show_help():
     """Display the help information."""
     help_text = """
-    ===== Basic Memory - Quick Start Guide =====
+    ===== Advanced Memory - Quick Start Guide =====
 
-    Basic Memory is now installed and running as an MCP server.
+    Advanced Memory is now installed and running as an MCP server.
 
     Key Features:
     - Store and retrieve notes with rich markdown support
@@ -98,12 +98,12 @@ def show_help():
     - Tag and categorize your knowledge
 
     Quick Commands:
-    - Start the MCP server: basic-memory mcp
-    - List all notes: basic-memory list
-    - Create a note: basic-memory new "Note Title"
+    - Start the MCP server: advanced-memory mcp
+    - List all notes: advanced-memory list
+    - Create a note: advanced-memory new "Note Title"
 
     For more help, visit:
-    https://github.com/sandraschi/basic-memory
+    https://github.com/sandraschi/advanced-memory
 
     Press Enter to exit...
     """

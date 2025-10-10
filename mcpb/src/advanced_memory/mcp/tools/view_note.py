@@ -1,4 +1,4 @@
-"""View note tool for Basic Memory MCP server."""
+"""View note tool for Advanced Memory MCP server."""
 
 from textwrap import dedent
 

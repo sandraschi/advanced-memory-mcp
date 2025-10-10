@@ -1,4 +1,4 @@
-"""Import services for Basic Memory."""
+"""Import services for Advanced Memory."""
 
 from advanced_memory.importers.base import Importer
 from advanced_memory.importers.chatgpt_importer import ChatGPTImporter

@@ -1,4 +1,4 @@
-"""Import router for Basic Memory API."""
+"""Import router for Advanced Memory API."""
 
 import json
 import logging

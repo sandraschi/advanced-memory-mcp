@@ -9,7 +9,7 @@ from sqlalchemy import engine_from_config, pool
 from advanced_memory.config import ConfigManager
 
 # set config.env to "test" for pytest to prevent logging to file in utils.setup_logging()
-os.environ["BASIC_MEMORY_ENV"] = "test"
+os.environ["ADVANCED_MEMORY_ENV"] = "test"
 
 # Import after setting environment variable  # noqa: E402
 from advanced_memory.models import Base  # noqa: E402

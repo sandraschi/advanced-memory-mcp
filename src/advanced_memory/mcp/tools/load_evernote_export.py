@@ -1,4 +1,4 @@
-"""Load Evernote export tool for Basic Memory MCP server."""
+"""Load Evernote export tool for Advanced Memory MCP server."""
 
 import base64
 import re
@@ -15,10 +15,10 @@ from advanced_memory.mcp.tools.utils import call_get
 
 
 @mcp.tool(
-    description="""Import Evernote ENEX files into Basic Memory with complete content and metadata preservation.
+    description="""Import Evernote ENEX files into Advanced Memory with complete content and metadata preservation.
 
 This tool processes Evernote's ENEX (Evernote XML) export format, converting rich notes
-with attachments into clean Basic Memory markdown while preserving all organizational structure.
+with attachments into clean Advanced Memory markdown while preserving all organizational structure.
 
 EVERNOTE FEATURES SUPPORTED:
 - ENEX XML format parsing with full metadata extraction
@@ -31,10 +31,10 @@ EVERNOTE FEATURES SUPPORTED:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Path to .enex file or directory containing ENEX files
-- folder (str, default="evernote-import"): Basic Memory folder for imported content
+- folder (str, default="evernote-import"): Advanced Memory folder for imported content
 - preserve_notebooks (bool, default=True): Maintain Evernote notebook hierarchy
 - include_attachments (bool, default=True): Extract and save embedded media files
-- project (str, optional): Target Basic Memory project
+- project (str, optional): Target Advanced Memory project
 
 ENEX FILE STRUCTURE:
 Evernote exports are XML files containing:
@@ -47,7 +47,7 @@ CONTENT CONVERSION:
 - HTML rich text [UNICODE] Clean markdown formatting
 - Evernote tables [UNICODE] Markdown table syntax
 - Embedded images [UNICODE] Extracted files with proper references
-- Internal links [UNICODE] Basic Memory entity relationships
+- Internal links [UNICODE] Advanced Memory entity relationships
 - Tags [UNICODE] Preserved as metadata tags
 
 USAGE EXAMPLES:
@@ -70,7 +70,7 @@ async def load_evernote_export(
     include_attachments: bool = True,
     project: str | None = None,
 ) -> str:
-    """Import Evernote ENEX exports into Basic Memory.
+    """Import Evernote ENEX exports into Advanced Memory.
 
     This tool imports content from Evernote ENEX (.enex) export files.
     Evernote exports contain notes in XML format with metadata, tags,
@@ -210,7 +210,7 @@ async def _process_enex_file(
                 )
 
                 if entity_data:
-                    # Create the note in Basic Memory
+                    # Create the note in Advanced Memory
                     response = await call_get(project_url + "/api/memory", method='POST', json=entity_data)
 
                     if response.status_code == 200:

@@ -3,7 +3,6 @@
 from collections.abc import Sequence
 from typing import Any, TypeVar
 
-from advanced_memory import db
 from loguru import logger
 from sqlalchemy import (
     Column,
@@ -20,6 +19,7 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm.interfaces import LoaderOption
 
+from advanced_memory import db
 from advanced_memory.models import Base
 
 T = TypeVar("T", bound=Base)

@@ -1,4 +1,4 @@
-"""Archive export tool for Basic Memory - creates complete backup for migration."""
+"""Archive export tool for Advanced Memory - creates complete backup for migration."""
 
 import json
 import shutil
@@ -156,9 +156,9 @@ def _filter_database(
 
 
 @mcp.tool(
-    description="""[UNICODE][UNICODE] Export Complete Basic Memory Archive for Migration
+    description="""[UNICODE][UNICODE] Export Complete Advanced Memory Archive for Migration
 
-Creates a compressed archive containing the complete Basic Memory system for installation
+Creates a compressed archive containing the complete Advanced Memory system for installation
 on a new PC or backup purposes. Includes database, all projects, and configuration.
 
 ARCHIVE CONTENTS:
@@ -168,13 +168,13 @@ ARCHIVE CONTENTS:
 - Project-specific settings
 
 USE CASES:
-- Migrate Basic Memory to a new computer
+- Migrate Advanced Memory to a new computer
 - Create backup of entire knowledge base
 - Transfer installation between machines
 - Archive complete system state
 
 PARAMETERS:
-- archive_path (str, REQUIRED): Path where archive will be created (e.g., "basic-memory-backup.zip")
+- archive_path (str, REQUIRED): Path where archive will be created (e.g., "advanced-memory-backup.zip")
 - include_projects (List[str], optional): Specific projects to include (default: all)
 - exclude_projects (List[str], optional): Projects to exclude (overrides include_projects)
 - exclude_tags (List[str], optional): Tags to exclude (e.g., ["obsolete", "test", "draft"])
@@ -199,7 +199,7 @@ async def export_to_archive(
     project: str | None = None
 ) -> str:
     """
-    Export complete Basic Memory system to archive for migration/backup.
+    Export complete Advanced Memory system to archive for migration/backup.
 
     Args:
         archive_path: Path for the archive file (with or without extension)
@@ -254,7 +254,7 @@ async def export_to_archive(
         # Create temporary directory for staging files
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
-            archive_root = temp_path / "basic-memory-backup"
+            archive_root = temp_path / "advanced-memory-backup"
             archive_root.mkdir()
 
             total_files = 0
@@ -377,7 +377,7 @@ async def export_to_archive(
                     str(archive_path.with_suffix('')),  # remove extension for make_archive
                     'zip',
                     temp_path,
-                    "basic-memory-backup"
+                    "advanced-memory-backup"
                 )
             else:
                 # Create uncompressed tar archive
@@ -385,7 +385,7 @@ async def export_to_archive(
                     str(archive_path.with_suffix('')),  # remove extension for make_archive
                     'tar',
                     temp_path,
-                    "basic-memory-backup"
+                    "advanced-memory-backup"
                 )
 
             # Get final archive size
@@ -412,7 +412,7 @@ async def export_to_archive(
                 filter_info += """
 *Note: Filtered archives may have broken semantic links. Run rescan after import to rebuild.*"""
 
-            return f"""[UNICODE][UNICODE] **Basic Memory Archive Created Successfully!**
+            return f"""[UNICODE][UNICODE] **Advanced Memory Archive Created Successfully!**
 
 **Archive Details:**
 - [FOLDER] Location: {archive_path}

@@ -103,28 +103,28 @@ async def _build_context_operation(url: str | None, depth: int, timeframe: str, 
         return "# Error\n\nBuild context requires: url parameter"
 
     from advanced_memory.mcp.tools.build_context import build_context
-    return await build_context(url, depth, timeframe, page, page_size, max_related, project)
+    return await build_context.fn(url, depth, timeframe, page, page_size, max_related, project)
 
 
 async def _recent_activity_operation(type_filter: str | None, depth: int, timeframe: str, page: int, page_size: int, max_related: int, project: str | None) -> str:
     """Handle recent activity operation."""
     from advanced_memory.mcp.tools.recent_activity import recent_activity
-    return await recent_activity(type_filter, depth, timeframe, page, page_size, max_related, project)
+    return await recent_activity.fn(type_filter, depth, timeframe, page, page_size, max_related, project)
 
 
 async def _list_directory_operation(dir_name: str, depth: int, file_name_glob: str | None, project: str | None) -> str:
     """Handle list directory operation."""
     from advanced_memory.mcp.tools.list_directory import list_directory
-    return await list_directory(dir_name, depth, file_name_glob, project)
+    return await list_directory.fn(dir_name, depth, file_name_glob, project)
 
 
 async def _status_operation(level: str, focus: str | None) -> str:
     """Handle status operation."""
     from advanced_memory.mcp.tools.status import status
-    return await status(level, focus)
+    return await status.fn(level, focus)
 
 
 async def _sync_status_operation(project: str | None) -> str:
     """Handle sync status operation."""
     from advanced_memory.mcp.tools.sync_status import sync_status
-    return await sync_status(project)
+    return await sync_status.fn(project)

@@ -1,4 +1,4 @@
-"""Basic Memory API module."""
+"""Advanced Memory API module."""
 
 from .app import app
 

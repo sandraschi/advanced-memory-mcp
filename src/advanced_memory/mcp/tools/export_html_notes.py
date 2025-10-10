@@ -1,6 +1,6 @@
-"""Export HTML notes tool for Basic Memory MCP server.
+"""Export HTML notes tool for Advanced Memory MCP server.
 
-This tool exports Basic Memory notes to HTML format with a simple,
+This tool exports Advanced Memory notes to HTML format with a simple,
 clean design suitable for web viewing or sharing.
 """
 
@@ -16,9 +16,9 @@ from advanced_memory.mcp.tools.read_note import read_note
 
 
 @mcp.tool(
-    description="""Export Basic Memory notes to standalone HTML website with live Mermaid diagram rendering.
+    description="""Export Advanced Memory notes to standalone HTML website with live Mermaid diagram rendering.
 
-This tool transforms Basic Memory knowledge base into a beautiful, self-contained HTML website
+This tool transforms Advanced Memory knowledge base into a beautiful, self-contained HTML website
 with automatic Mermaid diagram rendering, perfect for sharing and offline viewing.
 
 EXPORT FEATURES:
@@ -31,10 +31,10 @@ EXPORT FEATURES:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Filesystem path where HTML website will be created
-- source_folder (str, default="/"): Basic Memory folder to export (use "/" for all notes)
+- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
 - include_subfolders (bool, default=True): Include subfolders recursively
 - include_index (bool, default=True): Generate main index page with navigation
-- project (str, optional): Specific Basic Memory project to export from
+- project (str, optional): Specific Advanced Memory project to export from
 
 OUTPUT STRUCTURE:
 Creates a complete website with:
@@ -83,14 +83,14 @@ async def export_html_notes(
     include_index: bool = True,
     project: str | None = None,
 ) -> str:
-    """Export Basic Memory notes to clean HTML format.
+    """Export Advanced Memory notes to clean HTML format.
 
     This tool converts markdown notes to HTML files with a simple, clean design.
     It preserves folder structure and creates an index page for easy navigation.
 
     Args:
         export_path: Path where to create the HTML export
-        source_folder: Folder in Basic Memory to export from (default: root "/")
+        source_folder: Folder in Advanced Memory to export from (default: root "/")
         include_subfolders: Whether to include subfolders recursively (default: True)
         include_index: Whether to create an index page (default: True)
         project: Optional project name to export from. If not provided, uses current active project.
@@ -365,7 +365,7 @@ def _create_html_content(note_info: dict[str, Any]) -> str:
 
         <footer class="note-footer">
             <p class="export-info">
-                Exported from Basic Memory on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+                Exported from Advanced Memory on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             </p>
         </footer>
     </article>
@@ -458,7 +458,7 @@ async def _create_index_page(
 
 def _create_css_file(export_path: Path) -> None:
     """Create a simple CSS file for styling."""
-    css_content = """/* Basic Memory HTML Export Styles */
+    css_content = """/* Advanced Memory HTML Export Styles */
 
 :root {
     --primary-color: #2c3e50;

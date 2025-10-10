@@ -1,4 +1,4 @@
-"""Memory JSON import service for Basic Memory."""
+"""Memory JSON import service for Advanced Memory."""
 
 import logging
 from typing import Any

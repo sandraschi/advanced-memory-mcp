@@ -1,7 +1,7 @@
-"""Load Obsidian canvas tool for Basic Memory MCP server.
+"""Load Obsidian canvas tool for Advanced Memory MCP server.
 
 This tool imports Obsidian canvas files (.canvas) and converts them into
-Basic Memory entities and relations.
+Advanced Memory entities and relations.
 """
 
 import json
@@ -16,9 +16,9 @@ from advanced_memory.mcp.tools.write_note import write_note
 
 
 @mcp.tool(
-    description="""Import Obsidian Canvas visual mind maps into Basic Memory as structured knowledge.
+    description="""Import Obsidian Canvas visual mind maps into Advanced Memory as structured knowledge.
 
-This tool converts Obsidian's visual canvas files (.canvas) into Basic Memory entities and relationships,
+This tool converts Obsidian's visual canvas files (.canvas) into Advanced Memory entities and relationships,
 transforming visual thinking into structured, searchable knowledge.
 
 CANVAS FEATURES SUPPORTED:
@@ -30,9 +30,9 @@ CANVAS FEATURES SUPPORTED:
 
 PARAMETERS:
 - canvas_path (str, REQUIRED): Filesystem path to .canvas JSON file
-- destination_folder (str, default="imported/canvases"): Basic Memory folder for imported content
+- destination_folder (str, default="imported/canvases"): Advanced Memory folder for imported content
 - create_missing_files (bool, default=False): Create placeholder notes for missing file references
-- project (str, optional): Target Basic Memory project
+- project (str, optional): Target Advanced Memory project
 
 NODE TYPE CONVERSION:
 - Text nodes [UNICODE] Markdown notes with canvas content
@@ -49,7 +49,7 @@ RETURNS:
 Import summary showing nodes processed, relationships created, and any issues encountered.
 
 NOTE: Canvas files are JSON-based visual layouts. This tool extracts the structured content
-and relationships, converting visual thinking into Basic Memory's entity-relationship model.""",
+and relationships, converting visual thinking into Advanced Memory's entity-relationship model.""",
 )
 async def load_obsidian_canvas(
     canvas_path: str,
@@ -57,10 +57,10 @@ async def load_obsidian_canvas(
     create_missing_files: bool = False,
     project: str | None = None,
 ) -> str:
-    """Load an Obsidian canvas file and import its content into Basic Memory.
+    """Load an Obsidian canvas file and import its content into Advanced Memory.
 
     This tool reads a JSON Canvas file (.canvas) and converts its nodes and edges
-    into Basic Memory entities and relations. Text nodes become notes, file nodes
+    into Advanced Memory entities and relations. Text nodes become notes, file nodes
     reference existing content, and edges become relations between entities.
 
     Args:
@@ -186,7 +186,7 @@ async def _process_canvas(
     skipped_items = []
 
     # Process nodes first
-    node_map = {}  # Map canvas node IDs to Basic Memory entity paths
+    node_map = {}  # Map canvas node IDs to Advanced Memory entity paths
 
     for node in nodes:
         try:
@@ -252,7 +252,7 @@ async def _process_canvas_node(
     create_missing_files: bool,
     project: str | None
 ) -> str | None:
-    """Process a single canvas node and create a Basic Memory entity."""
+    """Process a single canvas node and create a Advanced Memory entity."""
     node_type = node.get("type")
     node_id = node.get("id")
 
@@ -349,7 +349,7 @@ async def _process_canvas_edge(
     node_map: dict,
     project: str | None
 ) -> str | None:
-    """Process a canvas edge and create a Basic Memory relation."""
+    """Process a canvas edge and create a Advanced Memory relation."""
     from_node = edge.get("fromNode")
     to_node = edge.get("toNode")
     label = edge.get("label", "connects to")

@@ -1,4 +1,4 @@
-"""Template loading and rendering utilities for the Basic Memory API.
+"""Template loading and rendering utilities for the Advanced Memory API.
 
 This module handles the loading and rendering of Handlebars templates from the
 templates directory, providing a consistent interface for all prompt-related

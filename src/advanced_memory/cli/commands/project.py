@@ -1,4 +1,4 @@
-"""Command module for basic-memory project management."""
+"""Command module for advanced-memory project management."""
 
 import asyncio
 import json
@@ -23,7 +23,7 @@ from advanced_memory.utils import generate_permalink
 console = Console()
 
 # Create a project subcommand
-project_app = typer.Typer(help="Manage multiple Basic Memory projects")
+project_app = typer.Typer(help="Manage multiple Advanced Memory projects")
 app.add_typer(project_app, name="project")
 
 
@@ -43,7 +43,7 @@ def list_projects() -> None:
         response = asyncio.run(call_get(client, "/projects/projects"))
         result = ProjectList.model_validate(response.json())
 
-        table = Table(title="Basic Memory Projects")
+        table = Table(title="Advanced Memory Projects")
         table.add_column("Name", style="cyan")
         table.add_column("Path", style="green")
         table.add_column("Default", style="yellow")
@@ -83,9 +83,9 @@ def add_project(
 
     # Display usage hint
     console.print("\nTo use this project:")
-    console.print(f"  basic-memory --project={name} <command>")
+    console.print(f"  advanced-memory --project={name} <command>")
     console.print("  # or")
-    console.print(f"  basic-memory project default {name}")
+    console.print(f"  advanced-memory project default {name}")
 
 
 @project_app.command("remove")
@@ -154,7 +154,7 @@ def display_project_info(
 
         if json_output:
             # Convert to JSON and print
-            print(json.dumps(info.model_dump(), indent=2, default=str))
+            console.print(json.dumps(info.model_dump(), indent=2, default=str))
         else:
             # Create rich display
             console = Console()
@@ -165,7 +165,7 @@ def display_project_info(
                     f"[bold]Project:[/bold] {info.project_name}\n"
                     f"[bold]Path:[/bold] {info.project_path}\n"
                     f"[bold]Default Project:[/bold] {info.default_project}\n",
-                    title="Basic Memory Project Info",
+                    title="Advanced Memory Project Info",
                     expand=False,
                 )
             )
@@ -233,7 +233,7 @@ def display_project_info(
 
             # System status
             system_tree = Tree("System Status")
-            system_tree.add(f"Basic Memory version: [bold green]{info.system.version}[/bold green]")
+            system_tree.add(f"Advanced Memory version: [bold green]{info.system.version}[/bold green]")
             system_tree.add(
                 f"Database: [cyan]{info.system.database_path}[/cyan] ([green]{info.system.database_size}[/green])"
             )

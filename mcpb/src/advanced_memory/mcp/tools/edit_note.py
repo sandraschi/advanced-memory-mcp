@@ -1,4 +1,4 @@
-"""Edit note tool for Basic Memory MCP server."""
+"""Edit note tool for Advanced Memory MCP server."""
 
 
 from loguru import logger

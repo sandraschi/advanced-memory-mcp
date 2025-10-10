@@ -1,6 +1,6 @@
-"""Load Obsidian vault tool for Basic Memory MCP server.
+"""Load Obsidian vault tool for Advanced Memory MCP server.
 
-This tool imports entire Obsidian vaults into Basic Memory, preserving
+This tool imports entire Obsidian vaults into Advanced Memory, preserving
 folder structure, wikilinks, frontmatter, and other Obsidian-specific features.
 """
 
@@ -18,14 +18,14 @@ from advanced_memory.mcp.tools.write_note import write_note
 
 
 @mcp.tool(
-    description="""Import complete Obsidian vaults into Basic Memory with full feature preservation.
+    description="""Import complete Obsidian vaults into Advanced Memory with full feature preservation.
 
-This tool migrates entire Obsidian knowledge bases into Basic Memory, converting
-Obsidian-specific features into Basic Memory equivalents while preserving content integrity.
+This tool migrates entire Obsidian knowledge bases into Advanced Memory, converting
+Obsidian-specific features into Advanced Memory equivalents while preserving content integrity.
 
 FEATURES:
 - Imports all markdown files from vault structure
-- Converts [[WikiLinks]] to Basic Memory entity references
+- Converts [[WikiLinks]] to Advanced Memory entity references
 - Preserves frontmatter metadata and YAML properties
 - Handles folder hierarchies and nested structures
 - Supports selective import with filtering options
@@ -33,12 +33,12 @@ FEATURES:
 
 PARAMETERS:
 - vault_path (str, REQUIRED): Filesystem path to Obsidian vault root directory
-- destination_folder (str, default="imported/obsidian"): Basic Memory folder for imported content
+- destination_folder (str, default="imported/obsidian"): Advanced Memory folder for imported content
 - preserve_structure (bool, default=True): Maintain original folder hierarchy
 - convert_links (bool, default=True): Convert [[WikiLinks]] to entity references
 - include_attachments (bool, default=False): Import images and media files
 - skip_existing (bool, default=True): Skip notes that already exist
-- project (str, optional): Target Basic Memory project
+- project (str, optional): Target Advanced Memory project
 
 SUPPORTED OBSIDIAN FEATURES:
 - Standard markdown with extensions
@@ -68,17 +68,17 @@ async def load_obsidian_vault(
     skip_existing: bool = True,
     project: str | None = None,
 ) -> str:
-    """Import an entire Obsidian vault into Basic Memory.
+    """Import an entire Obsidian vault into Advanced Memory.
 
     This tool reads all markdown files from an Obsidian vault and imports them
-    into Basic Memory, preserving folder structure, converting wikilinks to
-    Basic Memory format, and handling frontmatter appropriately.
+    into Advanced Memory, preserving folder structure, converting wikilinks to
+    Advanced Memory format, and handling frontmatter appropriately.
 
     Args:
         vault_path: Path to the Obsidian vault root directory
-        destination_folder: Base folder in Basic Memory where vault will be imported
+        destination_folder: Base folder in Advanced Memory where vault will be imported
         preserve_structure: Whether to preserve the vault's folder structure (default: True)
-        convert_links: Whether to convert Obsidian wikilinks to Basic Memory format (default: True)
+        convert_links: Whether to convert Obsidian wikilinks to Advanced Memory format (default: True)
         include_attachments: Whether to copy attachment files (images, PDFs, etc.) (default: False)
         skip_existing: Whether to skip files that already exist (default: True)
         project: Optional project name to import into. If not provided, uses current active project.
@@ -164,7 +164,7 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
     try:
         # Use MCP filesystem if available, otherwise direct access
         try:
-            from mcp_filesystem import list_directory
+            from mcp_filesystem import list_directory  # type: ignore
 
             async def scan_recursive(current_path: str) -> tuple[list[str], list[str]]:
                 md_files = []
@@ -280,6 +280,7 @@ async def _process_vault_import(
             frontmatter, body = _parse_frontmatter(content)
 
             # Convert wikilinks if requested
+            link_conversions = 0
             if convert_links:
                 body, link_conversions = _convert_wikilinks(body, file_mapping, vault_path, file_path)
                 stats['converted_links'] += link_conversions
@@ -332,7 +333,7 @@ async def _process_vault_import(
                 logger.error(f"Failed to copy attachment {att_path}: {e}")
 
     # Generate summary report
-    return _generate_import_report(stats, processed_files, vault_path, destination_folder)
+    return _generate_import_report(stats, processed_files, str(vault_path), destination_folder)
 
 
 def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
@@ -424,7 +425,7 @@ def _calculate_destination_path(
 
 
 def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: Path, current_file: Path) -> tuple[str, int]:
-    """Convert Obsidian wikilinks to Basic Memory format."""
+    """Convert Obsidian wikilinks to Advanced Memory format."""
     conversions = 0
 
     def replace_link(match):
@@ -443,7 +444,7 @@ def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: P
         # Look up the target in our mapping
         if link_target in file_mapping:
             new_path = file_mapping[link_target]
-            # Convert to Basic Memory link format
+            # Convert to Advanced Memory link format
             converted = f"[[{new_path}|{display_text}]]"
             conversions += 1
             return converted
@@ -511,7 +512,7 @@ def _generate_import_report(
     lines.extend([
         "## Next Steps",
         "1. **Review imported content** - Check that links and formatting converted correctly",
-        "2. **Run sync** - Execute 'basic-memory sync' to index the new content",
+        "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
         "3. **Update links** - Any remaining wikilinks may need manual conversion",
         "4. **Verify attachments** - If attachments were included, check they're accessible",
         ""

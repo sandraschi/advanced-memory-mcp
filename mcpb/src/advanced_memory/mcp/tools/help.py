@@ -1,13 +1,13 @@
-"""Help and system information tool for Basic Memory MCP server."""
+"""Help and system information tool for Advanced Memory MCP server."""
 
 
 from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
-    description="""Comprehensive help system for Basic Memory with multiple knowledge levels.
+    description="""Comprehensive help system for Advanced Memory with multiple knowledge levels.
 
-This tool provides contextual assistance and documentation for Basic Memory features,
+This tool provides contextual assistance and documentation for Advanced Memory features,
 organized by knowledge levels from basic usage to advanced technical details.
 
 LEVELS:
@@ -44,7 +44,7 @@ RETURNS:
 Contextual help content formatted for easy reading with examples and guidance.""",
 )
 async def help(level: str = "basic", topic: str | None = None) -> str:
-    """Get help and information about Basic Memory and its capabilities.
+    """Get help and information about Advanced Memory and its capabilities.
 
     This is a multilevel help system providing different depths of information:
 
@@ -141,11 +141,11 @@ Try: `help("tools")`"""
 def _get_basic_help() -> str:
     """Basic help - quick overview and getting started."""
 
-    return """# Basic Memory - Getting Started
+    return """# Advanced Memory - Getting Started
 
-## What is Basic Memory?
+## What is Advanced Memory?
 
-Basic Memory is an **enhanced knowledge management system** that combines:
+Advanced Memory is an **enhanced knowledge management system** that combines:
 - **Local-first architecture** - Your data stays on your machine
 - **Semantic networking** - Entities and relationships form knowledge graphs
 - **Multi-format support** - Import from popular note-taking apps
@@ -164,15 +164,15 @@ Shows if your knowledge base is ready and processing status.
 ### 2. Create Your First Note
 ```
 write_note(
-    title="Welcome to Basic Memory",
-    content="# Hello World\\n\\nThis is my first note in Basic Memory!",
+    title="Welcome to Advanced Memory",
+    content="# Hello World\\n\\nThis is my first note in Advanced Memory!",
     folder="getting-started"
 )
 ```
 
 ### 3. Read and Search
 ```
-read_note("Welcome to Basic Memory")
+read_note("Welcome to Advanced Memory")
 search_notes("hello world")
 ```
 
@@ -231,20 +231,20 @@ recent_activity()    # Check recent changes
 
 ## Getting Started Checklist
 
-- [UNICODE] Install and configure Basic Memory
+- [UNICODE] Install and configure Advanced Memory
 - [UNICODE] Check sync status with `sync_status()`
 - [UNICODE] Import existing notes from other apps
 - [UNICODE] Create your first knowledge network
 - [UNICODE] Explore Mermaid diagrams
 - [UNICODE] Set up Typora for rich editing
 
-Your enhanced Basic Memory is ready to revolutionize how you manage knowledge! [LAUNCH]"""
+Your enhanced Advanced Memory is ready to revolutionize how you manage knowledge! [LAUNCH]"""
 
 
 def _get_intermediate_help() -> str:
     """Intermediate help - detailed tool descriptions."""
 
-    return """# Basic Memory - Tool Reference
+    return """# Advanced Memory - Tool Reference
 
 ## Core Note Operations
 
@@ -401,7 +401,7 @@ get_current_project()           # Current project info
 ### Knowledge Networking
 1. Create entity notes with consistent naming
 2. Use `[[Entity Name]]` syntax for relationships
-3. Basic Memory automatically builds knowledge graphs
+3. Advanced Memory automatically builds knowledge graphs
 4. Search across connected concepts
 
 ### Migration Strategies
@@ -442,13 +442,13 @@ For technical details: `help("expert")`"""
 def _get_advanced_help() -> str:
     """Advanced help - technical details and architecture."""
 
-    return """# Basic Memory - Advanced Architecture
+    return """# Advanced Memory - Advanced Architecture
 
 ## Semantic Network Architecture
 
 ### Entity-Relationship Model
 
-Basic Memory implements a **graph-based knowledge representation** where:
+Advanced Memory implements a **graph-based knowledge representation** where:
 
 #### Entities
 - **Core nodes** in the knowledge graph
@@ -595,7 +595,7 @@ For expert-level details: `help("expert")`"""
 def _get_expert_help() -> str:
     """Expert help - development and troubleshooting."""
 
-    return """# Basic Memory - Expert Reference
+    return """# Advanced Memory - Expert Reference
 
 ## System Architecture
 
@@ -884,14 +884,14 @@ mypy src/
 
 ---
 
-*This expert reference is for developers extending or troubleshooting Basic Memory. For user help, see `help("intermediate")` or `help("basic")`.*"""
+*This expert reference is for developers extending or troubleshooting Advanced Memory. For user help, see `help("intermediate")` or `help("basic")`.*"""
 
 
 def _get_semantic_net_help(level: str) -> str:
     """Get detailed help about semantic networking."""
 
     if level in ["basic", "intermediate"]:
-        return """# Semantic Networking in Basic Memory
+        return """# Semantic Networking in Advanced Memory
 
 ## What is Semantic Networking?
 
@@ -900,14 +900,14 @@ Semantic networking creates **meaningful connections** between your notes, build
 ## How It Works
 
 ### Entity Recognition
-Basic Memory automatically identifies **entities** in your content:
+Advanced Memory automatically identifies **entities** in your content:
 - People: `[[John Smith]]`, `[[Dr. Sarah Johnson]]`
 - Projects: `[[Project Alpha]]`, `[[Q4 Marketing Campaign]]`
 - Concepts: `[[Machine Learning]]`, `[[Agile Development]]`
 - Locations: `[[San Francisco]]`, `[[Headquarters Building]]`
 
 ### Relationship Building
-When you mention entities in your notes, Basic Memory creates **bidirectional links**:
+When you mention entities in your notes, Advanced Memory creates **bidirectional links**:
 ```
 Note A mentions [[Entity X]] [UNICODE] Link created: A [UNICODE] X
 Note B mentions [[Entity X]] [UNICODE] Link created: B [UNICODE] X
@@ -1030,7 +1030,7 @@ The semantic network grows organically as you write, creating a rich web of know
 ## Graph Theory Fundamentals
 
 ### Entity-Relation Model
-Basic Memory implements a **labeled property graph** where:
+Advanced Memory implements a **labeled property graph** where:
 
 **Nodes (Entities):**
 - Properties: title, content, type, metadata
@@ -1224,9 +1224,9 @@ def _get_claude_interaction_help(level: str) -> str:
     if level in ["basic", "intermediate"]:
         return """# Claude Desktop Integration
 
-## How Basic Memory Works with Claude
+## How Advanced Memory Works with Claude
 
-Basic Memory provides **seamless AI integration** through the **Model Context Protocol (MCP)**, allowing Claude to interact with your knowledge base as naturally as having a conversation.
+Advanced Memory provides **seamless AI integration** through the **Model Context Protocol (MCP)**, allowing Claude to interact with your knowledge base as naturally as having a conversation.
 
 ## Core Interaction Patterns
 
@@ -1240,7 +1240,7 @@ Basic Memory provides **seamless AI integration** through the **Model Context Pr
 Claude translates natural language into specific tool calls:
 - **Intent recognition**: Understands what you want to do
 - **Parameter extraction**: Pulls details from your request
-- **Tool selection**: Chooses the right Basic Memory function
+- **Tool selection**: Chooses the right Advanced Memory function
 - **Result interpretation**: Presents results in natural language
 
 ### Contextual Responses
@@ -1409,7 +1409,7 @@ sync_status()  # Check if system is ready
 - **AI-enhanced insights** from your knowledge graph
 - **Future-proof storage** in open formats
 
-The combination of Basic Memory's structured knowledge base with Claude's natural language understanding creates a powerful system for **thinking, writing, and discovering** that enhances both human and AI capabilities."""
+The combination of Advanced Memory's structured knowledge base with Claude's natural language understanding creates a powerful system for **thinking, writing, and discovering** that enhances both human and AI capabilities."""
 
     else:  # advanced/expert
         return """# Advanced Claude Integration Architecture
@@ -1626,7 +1626,7 @@ This advanced integration creates a **symbiotic relationship** between human kno
 def _get_tools_help(level: str) -> str:
     """Get comprehensive tools reference."""
 
-    return """# Basic Memory Tools Reference
+    return """# Advanced Memory Tools Reference
 
 ## Complete Command Reference
 
@@ -1811,7 +1811,7 @@ edit_in_typora("note-title", workspace="edits")
 # Export note for professional editing in Typora
 
 import_from_typora("note-title", workspace="edits")
-# Import edited content back into Basic Memory
+# Import edited content back into Advanced Memory
 ```
 
 ## Project Management
@@ -1884,7 +1884,7 @@ help(level, topic)
 def _get_import_export_help(level: str) -> str:
     """Get detailed import/export help."""
 
-    return """# Import/Export Ecosystem in Basic Memory
+    return """# Import/Export Ecosystem in Advanced Memory
 
 ## Supported Platforms & Formats
 
@@ -1895,7 +1895,7 @@ def _get_import_export_help(level: str) -> str:
 #### Import Capabilities
 ```
 load_obsidian_vault("path/to/vault", folder="obsidian-archive")
-# - Converts [[WikiLinks]] to Basic Memory entity links
+# - Converts [[WikiLinks]] to Advanced Memory entity links
 # - Preserves folder structure
 # - Handles frontmatter metadata
 # - Supports image and attachment references
@@ -1928,7 +1928,7 @@ search_obsidian_vault("vault/path", "query", file_type="markdown")
 ```
 load_joplin_vault("path/to/joplin-export", folder="joplin-archive")
 # - Preserves notebook hierarchy as folders
-# - Converts Joplin metadata to Basic Memory format
+# - Converts Joplin metadata to Advanced Memory format
 # - Handles tags and note properties
 # - Supports rich text and attachments
 ```
@@ -2036,7 +2036,7 @@ export_docsify("docs-site/")
 
 ### Cross-Platform Migration
 ```
-# Export from Basic Memory to other tools
+# Export from Advanced Memory to other tools
 export_joplin_notes("migration/joplin/")
 export_notion_compatible("migration/notion/")
 export_evernote_compatible("migration/evernote/")
@@ -2054,10 +2054,10 @@ export_evernote_compatible("migration/evernote/")
 - **Media**: Attachments and images handled
 
 ### Format Conversion
-- **Obsidian wikilinks** [UNICODE] Basic Memory entity links
-- **Joplin notebooks** [UNICODE] Basic Memory folders
-- **Notion pages** [UNICODE] Basic Memory entities
-- **Evernote notes** [UNICODE] Basic Memory markdown
+- **Obsidian wikilinks** [UNICODE] Advanced Memory entity links
+- **Joplin notebooks** [UNICODE] Advanced Memory folders
+- **Notion pages** [UNICODE] Advanced Memory entities
+- **Evernote notes** [UNICODE] Advanced Memory markdown
 
 ### Relationship Mapping
 - **Explicit links** preserved across platforms
@@ -2080,7 +2080,7 @@ export_evernote_compatible("migration/evernote/")
 4. **Maintain sync** if using multiple tools
 
 ### Hybrid Usage
-- **Basic Memory as primary**: Enhanced features and AI integration
+- **Advanced Memory as primary**: Enhanced features and AI integration
 - **Other tools as secondary**: Specific use cases (mobile, sharing)
 - **Regular sync**: Export/import to maintain consistency
 - **Selective sharing**: Export only relevant content
@@ -2105,21 +2105,21 @@ export_evernote_compatible("migration/evernote/")
 - **Disk space**: Account for attachment extraction
 - **Sync delays**: Allow time for indexing completion
 
-The import/export ecosystem makes Basic Memory a **universal knowledge hub**, allowing seamless movement of content between different tools while maintaining the richest feature set available."""
+The import/export ecosystem makes Advanced Memory a **universal knowledge hub**, allowing seamless movement of content between different tools while maintaining the richest feature set available."""
 
 
 def _get_typora_help(level: str) -> str:
     """Get detailed Typora integration help."""
 
-    return """# Typora Integration in Basic Memory
+    return """# Typora Integration in Advanced Memory
 
 ## What is Typora Integration?
 
-Typora provides **professional rich-text editing** for markdown files. The Basic Memory integration creates a **round-trip workflow** allowing you to:
+Typora provides **professional rich-text editing** for markdown files. The Advanced Memory integration creates a **round-trip workflow** allowing you to:
 
-- Export notes from Basic Memory for editing in Typora
+- Export notes from Advanced Memory for editing in Typora
 - Edit with full WYSIWYG (What You See Is What You Get) features
-- Import the edited content back into Basic Memory
+- Import the edited content back into Advanced Memory
 - Preserve all formatting, links, and metadata
 
 ## Core Workflow
@@ -2141,7 +2141,7 @@ This creates a temporary markdown file in your workspace and opens it in Typora.
 ```
 import_from_typora("My Note Title", workspace="current-edits")
 ```
-This reads the edited file and updates the note in Basic Memory.
+This reads the edited file and updates the note in Advanced Memory.
 
 ## Detailed Commands
 
@@ -2154,7 +2154,7 @@ edit_in_typora(identifier, workspace="edits")
 - `workspace`: Folder for temporary files (default: "typora-workspace")
 
 **What it does:**
-1. Finds the note in Basic Memory
+1. Finds the note in Advanced Memory
 2. Creates a temporary markdown file
 3. Opens the file in Typora (if installed)
 4. Creates backup of original content
@@ -2176,7 +2176,7 @@ import_from_typora(identifier, workspace="edits")
 
 **What it does:**
 1. Reads the edited markdown file
-2. Updates the note in Basic Memory
+2. Updates the note in Advanced Memory
 3. Preserves all metadata and relationships
 4. Cleans up temporary files (optional)
 
@@ -2250,7 +2250,7 @@ import_from_typora("Budget Review", workspace="q4-planning")
 ## Use Cases
 
 ### Documentation Writing
-1. Create initial outline in Basic Memory
+1. Create initial outline in Advanced Memory
 2. Export to Typora for detailed writing
 3. Use advanced formatting features
 4. Import back with professional styling
@@ -2262,10 +2262,10 @@ import_from_typora("Budget Review", workspace="q4-planning")
 4. Import polished version
 
 ### Technical Writing
-1. Write technical content in Basic Memory
+1. Write technical content in Advanced Memory
 2. Use Typora for equation editing and code formatting
 3. Add diagrams and complex formatting
-4. Maintain in Basic Memory with enhanced presentation
+4. Maintain in Advanced Memory with enhanced presentation
 
 ### Content Review
 1. Export content for stakeholder review
@@ -2289,10 +2289,10 @@ workspace/
 ```
 
 ### Content Workflow
-1. **Draft in Basic Memory**: Capture ideas quickly
+1. **Draft in Advanced Memory**: Capture ideas quickly
 2. **Edit in Typora**: Polish formatting and structure
 3. **Review and refine**: Make final adjustments
-4. **Import back**: Preserve in Basic Memory
+4. **Import back**: Preserve in Advanced Memory
 
 ### Version Control
 - **Commit before export**: Track original state
@@ -2314,7 +2314,7 @@ edit_in_typora("note", workspace="test")
 ```
 # Check workspace path exists
 # Verify file was edited and saved
-# Ensure note still exists in Basic Memory
+# Ensure note still exists in Advanced Memory
 import_from_typora("note", workspace="test")
 ```
 
@@ -2351,9 +2351,9 @@ for note in notes_to_edit:
 - **Collaboration**: Share edited files for review
 - **Publishing**: Export to other formats
 
-## Comparison: Typora vs Basic Memory Editor
+## Comparison: Typora vs Advanced Memory Editor
 
-| Feature | Basic Memory | Typora |
+| Feature | Advanced Memory | Typora |
 |---------|--------------|---------|
 | **Speed** | Fast capture | Rich editing |
 | **Formatting** | Markdown syntax | Visual editing |
@@ -2363,21 +2363,21 @@ for note in notes_to_edit:
 | **Math** | LaTeX support | Live rendering |
 | **Collaboration** | AI-assisted | Visual review |
 
-**Best Practice**: Use both - Basic Memory for knowledge networking, Typora for presentation polish."""
+**Best Practice**: Use both - Advanced Memory for knowledge networking, Typora for presentation polish."""
 
 
 def _get_obsidian_help(level: str) -> str:
     """Get detailed Obsidian integration help."""
 
-    return """# Obsidian Integration in Basic Memory
+    return """# Obsidian Integration in Advanced Memory
 
 ## Obsidian Overview
 
 Obsidian is a powerful **note-taking app** that pioneered **bidirectional linking** and **graph visualization**. It uses markdown files with wikilinks (`[[Note Title]]`) and provides extensive plugin ecosystem.
 
-## Basic Memory's Obsidian Integration
+## Advanced Memory's Obsidian Integration
 
-Basic Memory provides **comprehensive Obsidian compatibility** with enhanced features:
+Advanced Memory provides **comprehensive Obsidian compatibility** with enhanced features:
 
 ### Import Capabilities
 - **Vault Import**: Full vault structure preservation
@@ -2400,7 +2400,7 @@ load_obsidian_vault("path/to/obsidian-vault", folder="obsidian-archive")
 **What it does:**
 1. **Scans vault structure**: Finds all markdown files
 2. **Preserves folders**: Maintains directory hierarchy
-3. **Converts wikilinks**: `[[Note Title]]` [UNICODE] Basic Memory entity links
+3. **Converts wikilinks**: `[[Note Title]]` [UNICODE] Advanced Memory entity links
 4. **Handles frontmatter**: YAML metadata preserved
 5. **Processes attachments**: Images and files referenced correctly
 
@@ -2429,13 +2429,13 @@ load_obsidian_canvas("canvas-file.canvas", folder="canvas-imports")
 ### Wikilink Conversion
 ```
 Obsidian: [[Project Alpha]] and [[Meeting Notes]]
-Basic Memory: Automatic entity linking with relationships
+Advanced Memory: Automatic entity linking with relationships
 ```
 
 ### File References
 ```
 Obsidian: ![Image](attachments/image.png)
-Basic Memory: Preserved with correct relative paths
+Advanced Memory: Preserved with correct relative paths
 ```
 
 ### Frontmatter Handling
@@ -2482,30 +2482,30 @@ search_obsidian_vault(
 1. Export entire Obsidian vault
 2. load_obsidian_vault("vault-backup")
 3. Verify import with search_notes("vault-backup")
-4. Continue using Basic Memory features
+4. Continue using Advanced Memory features
 ```
 
 ### Selective Import
 ```
 1. Export specific folders from Obsidian
 2. Import only needed content
-3. Rebuild semantic links in Basic Memory
+3. Rebuild semantic links in Advanced Memory
 4. Use search to verify relationships
 ```
 
 ### Hybrid Workflow
 ```
 1. Keep Obsidian for daily notes and linking
-2. Use Basic Memory for AI-enhanced features
+2. Use Advanced Memory for AI-enhanced features
 3. Sync important content between systems
-4. Leverage Basic Memory's export capabilities
+4. Leverage Advanced Memory's export capabilities
 ```
 
 ## Feature Comparison
 
 ### Linking Systems
 
-| Feature | Obsidian | Basic Memory |
+| Feature | Obsidian | Advanced Memory |
 |---------|----------|--------------|
 | **Link Syntax** | `[[Note Title]]` | `[[Entity Name]]` |
 | **Bidirectional** | [UNICODE] Manual graph | [UNICODE] Automatic |
@@ -2515,7 +2515,7 @@ search_obsidian_vault(
 
 ### Content Features
 
-| Feature | Obsidian | Basic Memory |
+| Feature | Obsidian | Advanced Memory |
 |---------|----------|--------------|
 | **Plugins** | 500+ community | Built-in AI integration |
 | **Themes** | Extensive | Clean, focused |
@@ -2539,7 +2539,7 @@ search_obsidian_vault(
 
 ### Workflow Integration
 - **Obsidian for capture**: Fast note-taking and linking
-- **Basic Memory for enhancement**: AI features and advanced search
+- **Advanced Memory for enhancement**: AI features and advanced search
 - **Export for sharing**: HTML versions with diagrams
 - **Regular sync**: Move content between systems
 
@@ -2590,7 +2590,7 @@ search_obsidian_vault("path", "test query")
 
 ### Canvas Workflow
 1. **Create visual maps** in Obsidian Canvas
-2. **Import to Basic Memory** as structured notes
+2. **Import to Advanced Memory** as structured notes
 3. **Enhance with AI** to add content and relationships
 4. **Export as documentation** with Mermaid diagrams
 
@@ -2613,19 +2613,19 @@ search_obsidian_vault("path", "test query")
 - **Plugin ecosystem**: Rapidly expanding
 - **Mobile improvements**: Better cross-device sync
 
-### Basic Memory Advantages
+### Advanced Memory Advantages
 - **AI integration**: Claude Desktop connectivity
 - **Rich export options**: Multiple output formats
 - **Semantic networking**: Automatic relationship discovery
 - **Professional editing**: Typora integration
 
-The integration allows you to **leverage both tools' strengths**: Obsidian's flexible linking and Basic Memory's AI-enhanced knowledge management."""
+The integration allows you to **leverage both tools' strengths**: Obsidian's flexible linking and Advanced Memory's AI-enhanced knowledge management."""
 
 
 def _get_joplin_help(level: str) -> str:
     """Get detailed Joplin integration help."""
 
-    return """# Joplin Integration in Basic Memory
+    return """# Joplin Integration in Advanced Memory
 
 ## Joplin Overview
 
@@ -2638,7 +2638,7 @@ Joplin is a **free, open-source note-taking app** that works across all platform
 - **Plugin ecosystem**: Extensible functionality
 - **Web clipper**: Save web content easily
 
-## Basic Memory Integration
+## Advanced Memory Integration
 
 ### Import from Joplin
 ```
@@ -2649,7 +2649,7 @@ load_joplin_vault("path/to/joplin-export", folder="joplin-archive")
 - **JSON metadata files**: Note properties and structure
 - **Markdown content**: Full formatting preservation
 - **Notebook hierarchy**: Converted to folder structure
-- **Tags and metadata**: Preserved in Basic Memory
+- **Tags and metadata**: Preserved in Advanced Memory
 - **Attachments**: Images and files extracted
 
 ### Export to Joplin
@@ -2684,7 +2684,7 @@ search_joplin_vault("export/path", "meeting notes", file_type="json")
 3. Choose notebooks to export
 4. Save to a folder
 
-#### Step 2: Import to Basic Memory
+#### Step 2: Import to Advanced Memory
 ```
 load_joplin_vault("joplin-export-folder", folder="joplin-archive")
 ```
@@ -2704,7 +2704,7 @@ list_directory("joplin-archive")  # Browse structure
 
 #### Use Case: Mobile Access
 ```
-# Keep primary notes in Basic Memory
+# Keep primary notes in Advanced Memory
 export_joplin_notes("mobile-sync", folder="current-projects")
 # Import to Joplin mobile app for offline access
 ```
@@ -2718,9 +2718,9 @@ export_joplin_notes("team-docs", folder="project-docs")
 
 ## Data Structure Mapping
 
-### Joplin [UNICODE] Basic Memory
+### Joplin [UNICODE] Advanced Memory
 
-| Joplin Concept | Basic Memory Equivalent |
+| Joplin Concept | Advanced Memory Equivalent |
 |----------------|------------------------|
 | **Note** | Entity with markdown content |
 | **Notebook** | Folder |
@@ -2729,9 +2729,9 @@ export_joplin_notes("team-docs", folder="project-docs")
 | **Attachment** | File reference |
 | **Todo items** | Task lists in markdown |
 
-### Basic Memory [UNICODE] Joplin
+### Advanced Memory [UNICODE] Joplin
 
-| Basic Memory | Joplin Export |
+| Advanced Memory | Joplin Export |
 |--------------|---------------|
 | **Entity** | JSON metadata + Markdown file |
 | **Folder** | Notebook structure |
@@ -2813,7 +2813,7 @@ export_joplin_notes("team-docs", folder="project-docs")
 
 **Missing metadata:**
 ```
-# Check Basic Memory entity structure
+# Check Advanced Memory entity structure
 # Ensure required fields are present
 # Some metadata may not translate perfectly
 ```
@@ -2821,18 +2821,18 @@ export_joplin_notes("team-docs", folder="project-docs")
 ## Use Cases
 
 ### Personal Knowledge Base
-- **Primary storage**: Basic Memory with AI features
+- **Primary storage**: Advanced Memory with AI features
 - **Mobile access**: Sync to Joplin for offline reading
 - **Cross-device**: Access on all platforms
 
 ### Team Documentation
-- **Central authoring**: Create content in Basic Memory
+- **Central authoring**: Create content in Advanced Memory
 - **Team distribution**: Export to Joplin for sharing
 - **Version control**: Track changes in both systems
 
 ### Research Management
 - **Data collection**: Gather notes in Joplin (web clipper, mobile)
-- **Processing**: Analyze and enhance in Basic Memory
+- **Processing**: Analyze and enhance in Advanced Memory
 - **Publication**: Export polished versions
 
 ## Integration Benefits
@@ -2849,7 +2849,7 @@ export_joplin_notes("team-docs", folder="project-docs")
 
 ### Feature Combination
 - **Joplin's reliability**: Stable, cross-platform app
-- **Basic Memory's intelligence**: AI-enhanced features
+- **Advanced Memory's intelligence**: AI-enhanced features
 - **Best of both worlds**: Comprehensive note-taking solution
 
 The Joplin integration provides **seamless migration** and **hybrid workflow** capabilities, allowing you to leverage both tools' strengths for comprehensive knowledge management."""
@@ -2858,7 +2858,7 @@ The Joplin integration provides **seamless migration** and **hybrid workflow** c
 def _get_notion_help(level: str) -> str:
     """Get detailed Notion integration help."""
 
-    return """# Notion Integration in Basic Memory
+    return """# Notion Integration in Advanced Memory
 
 ## Notion Overview
 
@@ -2871,7 +2871,7 @@ Notion provides several export options:
 - **Markdown Export**: Simpler format, good for content migration
 - **PDF Export**: Read-only format for sharing
 
-## Basic Memory Integration
+## Advanced Memory Integration
 
 ### Import from Notion
 ```
@@ -2939,7 +2939,7 @@ Workspace
     [UNICODE][UNICODE][UNICODE] Research
     [UNICODE][UNICODE][UNICODE] Documentation
 
-Basic Memory Structure:
+Advanced Memory Structure:
 notion-import/
 [UNICODE][UNICODE][UNICODE] Project Alpha/
 [UNICODE]   [UNICODE][UNICODE][UNICODE] Planning.md
@@ -2983,13 +2983,13 @@ Markdown:
 ## Export to Notion Workflow
 
 ### Creating Notion-Compatible Content
-1. **Write in Basic Memory** with semantic linking
+1. **Write in Advanced Memory** with semantic linking
 2. **Add observations** for structured data
 3. **Create relationships** between entities
 4. **Export to markdown** compatible with Notion
 
 ### Import Process
-1. **Export from Basic Memory**:
+1. **Export from Advanced Memory**:
    ```python
    export_notion_compatible("notion-ready/", notebook_name="My Knowledge Base")
    ```
@@ -3005,14 +3005,14 @@ Markdown:
 ## Advanced Features
 
 ### Semantic Link Handling
-When exporting to Notion, Basic Memory's semantic links are converted to:
+When exporting to Notion, Advanced Memory's semantic links are converted to:
 - **Explicit links**: `[[Entity Name]]` [UNICODE] `[Entity Name](entity-link)`
 - **Relationship preservation**: Maintains connection context
 - **Cross-reference maintenance**: Links remain navigable
 
 ### Metadata Integration
 - **Frontmatter conversion**: YAML metadata becomes Notion properties
-- **Tag preservation**: Basic Memory tags [UNICODE] Notion tags
+- **Tag preservation**: Advanced Memory tags [UNICODE] Notion tags
 - **Date handling**: Creation/modification dates maintained
 - **Author information**: Preserved where available
 
@@ -3032,7 +3032,7 @@ When exporting to Notion, Basic Memory's semantic links are converted to:
 
 ### Migration Workflow
 1. **Export from Notion**: HTML format for best fidelity
-2. **Import to Basic Memory**: Process with load_notion_export
+2. **Import to Advanced Memory**: Process with load_notion_export
 3. **Enhance content**: Add semantic links and AI assistance
 4. **Re-export if needed**: Send back to Notion or share
 
@@ -3080,28 +3080,28 @@ When exporting to Notion, Basic Memory's semantic links are converted to:
 ## Use Cases
 
 ### Team Knowledge Base
-1. **Create content** in Basic Memory with AI assistance
+1. **Create content** in Advanced Memory with AI assistance
 2. **Export to Notion** for team collaboration
 3. **Maintain structure** with databases and pages
 4. **Sync updates** between systems
 
 ### Documentation Publishing
-1. **Write technical docs** in Basic Memory
+1. **Write technical docs** in Advanced Memory
 2. **Add diagrams** with Mermaid support
 3. **Export to Notion** for sharing
 4. **Collaborate** on documentation
 
 ### Project Management
-1. **Plan projects** in Basic Memory with semantic links
+1. **Plan projects** in Advanced Memory with semantic links
 2. **Export to Notion** for task tracking
 3. **Use Notion databases** for detailed tracking
-4. **Maintain overview** in Basic Memory
+4. **Maintain overview** in Advanced Memory
 
 ## Integration Benefits
 
 ### Workflow Flexibility
 - **Notion's versatility**: Databases, calendars, kanban boards
-- **Basic Memory's intelligence**: AI assistance and linking
+- **Advanced Memory's intelligence**: AI assistance and linking
 - **Best of both**: Comprehensive workspace solution
 
 ### Content Enhancement
@@ -3111,18 +3111,18 @@ When exporting to Notion, Basic Memory's semantic links are converted to:
 - **Professional editing**: Typora integration
 
 ### Migration Freedom
-- **Import existing content**: Bring Notion workspaces to Basic Memory
+- **Import existing content**: Bring Notion workspaces to Advanced Memory
 - **Export enhanced content**: Share improvements back to Notion
 - **Hybrid usage**: Use both tools for different purposes
 - **Future-proofing**: Content remains accessible
 
-The Notion integration enables **seamless content flow** between Notion's flexible workspace and Basic Memory's intelligent knowledge management, giving you the best of both worlds."""
+The Notion integration enables **seamless content flow** between Notion's flexible workspace and Advanced Memory's intelligent knowledge management, giving you the best of both worlds."""
 
 
 def _get_evernote_help(level: str) -> str:
     """Get detailed Evernote integration help."""
 
-    return """# Evernote Integration in Basic Memory
+    return """# Evernote Integration in Advanced Memory
 
 ## Evernote Overview
 
@@ -3137,7 +3137,7 @@ Evernote's **ENEX (Evernote XML)** format is their standard export:
 - **Attachments**: Base64-encoded images and files
 - **Comprehensive**: Preserves all note properties
 
-## Basic Memory Integration
+## Advanced Memory Integration
 
 ### Import from Evernote
 ```
@@ -3210,7 +3210,7 @@ Evernote's HTML content gets converted to clean markdown:
 3. **Choose ENEX format** from export options
 4. **Save file** with .enex extension
 
-### Import to Basic Memory
+### Import to Advanced Memory
 ```
 load_evernote_export("my-notes.enex", preserve_notebooks=True)
 ```
@@ -3220,7 +3220,7 @@ load_evernote_export("my-notes.enex", preserve_notebooks=True)
 2. **Note extraction** with all metadata
 3. **HTML processing** to clean markdown
 4. **Attachment decoding** and saving
-5. **Entity creation** in Basic Memory
+5. **Entity creation** in Advanced Memory
 6. **Relationship preservation** where possible
 
 ### Advanced Options
@@ -3270,13 +3270,13 @@ Markdown: ![Image](attachments/image.jpg)
 ## Export to Evernote Workflow
 
 ### Creating ENEX-Compatible Content
-1. **Write in Basic Memory** with semantic enhancements
+1. **Write in Advanced Memory** with semantic enhancements
 2. **Add structure** and metadata
 3. **Create relationships** between entities
 4. **Export to ENEX** for Evernote compatibility
 
 ### Import Process
-1. **Export from Basic Memory**:
+1. **Export from Advanced Memory**:
    ```python
    export_evernote_compatible("evernote-ready/", notebook_name="My Notes")
    ```
@@ -3295,12 +3295,12 @@ Markdown: ![Image](attachments/image.jpg)
 ### Evernote Properties
 - **Title**: Note title (preserved)
 - **Created/Updated**: Timestamps (converted from ENEX format)
-- **Notebook**: Organizational folder (becomes Basic Memory folder)
+- **Notebook**: Organizational folder (becomes Advanced Memory folder)
 - **Tags**: Categorization labels (preserved)
 - **Author**: Note creator (if available)
 
-### Basic Memory Enhancements
-When importing to Basic Memory:
+### Advanced Memory Enhancements
+When importing to Advanced Memory:
 - **Semantic links**: Convert Evernote links to entity references
 - **Observation system**: Add metadata as structured observations
 - **Relationship mapping**: Preserve note connections
@@ -3371,18 +3371,18 @@ When importing to Basic Memory:
 
 ### Personal Archive Migration
 1. **Export legacy notes** from Evernote
-2. **Import to Basic Memory** for modern features
+2. **Import to Advanced Memory** for modern features
 3. **Enhance with AI** for better organization
 4. **Keep Evernote** for mobile access if needed
 
 ### Research Management
 1. **Collect research** in Evernote (web clipper, mobile)
-2. **Process and organize** in Basic Memory
+2. **Process and organize** in Advanced Memory
 3. **Add semantic links** and relationships
 4. **Export polished versions** back to Evernote
 
 ### Cross-Platform Sync
-1. **Primary editing** in Basic Memory with AI assistance
+1. **Primary editing** in Advanced Memory with AI assistance
 2. **Mobile access** via Evernote for reading
 3. **Sync important changes** between systems
 4. **Maintain single source of truth**
@@ -3396,7 +3396,7 @@ When importing to Basic Memory:
 
 ### Workflow Continuity
 - **Familiar interface**: Evernote for capture and mobile
-- **Advanced features**: Basic Memory for processing and AI
+- **Advanced features**: Advanced Memory for processing and AI
 - **Best of both**: Established workflow with modern capabilities
 
 ### Future-Proofing
@@ -3410,7 +3410,7 @@ The Evernote integration provides a **bridge from legacy note-taking** to modern
 def _get_mermaid_help(level: str) -> str:
     """Get detailed Mermaid diagram help."""
 
-    return """# Mermaid Diagrams in Basic Memory
+    return """# Mermaid Diagrams in Advanced Memory
 
 ## What are Mermaid Diagrams?
 
@@ -3433,13 +3433,13 @@ graph TD
 ```mermaid
 sequenceDiagram
     participant User
-    participant Basic Memory
+    participant Advanced Memory
     participant Claude
 
-    User->>Basic Memory: Write note
-    Basic Memory->>Claude: Process with AI
-    Claude-->>Basic Memory: Enhanced content
-    Basic Memory-->>User: Improved note
+    User->>Advanced Memory: Write note
+    Advanced Memory->>Claude: Process with AI
+    Claude-->>Advanced Memory: Enhanced content
+    Advanced Memory-->>User: Improved note
 ```
 
 ### Gantt Charts
@@ -3464,7 +3464,7 @@ mindmap
       Research
       Documentation
     Tools
-      Basic Memory
+      Advanced Memory
       Claude AI
       Typora
     Features
@@ -3504,7 +3504,7 @@ erDiagram
     }
 ```
 
-## Basic Memory Integration
+## Advanced Memory Integration
 
 ### Automatic Rendering
 When you export notes to HTML, Mermaid diagrams are **automatically rendered**:
@@ -3556,7 +3556,7 @@ graph LR
         JO[Joplin]
     end
 
-    subgraph "Basic Memory"
+    subgraph "Advanced Memory"
         IM[Import]
         ENH[Enhance]
         LINK[Link]
@@ -3609,7 +3609,7 @@ graph TD
 ### Project Planning
 ```mermaid
 gantt
-    title Basic Memory Enhancement Project
+    title Advanced Memory Enhancement Project
     dateFormat YYYY-MM-DD
 
     section Research
@@ -3640,7 +3640,7 @@ graph TB
         WEB[Web Interface]
     end
 
-    subgraph "Basic Memory Core"
+    subgraph "Advanced Memory Core"
         MCP[MCP Server]
         API[REST API]
         DB[(SQLite Database)]
@@ -3724,7 +3724,7 @@ graph TD
 ```markdown
 ## System Architecture
 
-Here's how Basic Memory components interact:
+Here's how Advanced Memory components interact:
 
 graph TB
     UI[User Interface] --> API[API Layer]

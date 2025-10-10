@@ -1,6 +1,6 @@
-"""Export Docsify tool for Basic Memory MCP server.
+"""Export Docsify tool for Advanced Memory MCP server.
 
-This tool exports Basic Memory notes to Docsify format, creating a
+This tool exports Advanced Memory notes to Docsify format, creating a
 complete documentation website from your knowledge base.
 """
 
@@ -59,10 +59,10 @@ Transforms your knowledge base into a MODERN, feature-rich documentation platfor
 
 PARAMETERS:
 - export_path (str, REQUIRED): Filesystem path where enhanced Docsify site will be created
-- source_folder (str, default="/"): Basic Memory folder to export (use "/" for all notes)
+- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
 - include_subfolders (bool, default=True): Include subfolders recursively
 - site_title (str, default="Enhanced Knowledge Base"): Title for the documentation site
-- site_description (str, default="Professional documentation generated from Basic Memory"): Site description
+- site_description (str, default="Professional documentation generated from Advanced Memory"): Site description
 - enable_pagination (bool, default=True): Enable document pagination
 - enable_toc (bool, default=True): Enable auto-generated table of contents
 - enable_theme_toggle (bool, default=True): Enable light/dark theme switcher
@@ -106,7 +106,7 @@ async def export_docsify_enhanced(
     source_folder: str = "/",
     include_subfolders: bool = True,
     site_title: str = "Enhanced Knowledge Base",
-    site_description: str = "Professional documentation generated from Basic Memory",
+    site_description: str = "Professional documentation generated from Advanced Memory",
     enable_pagination: bool = True,
     enable_toc: bool = True,
     enable_theme_toggle: bool = True,
@@ -220,7 +220,7 @@ async def export_docsify_enhanced(
 
 # Legacy wrapper for backward compatibility
 @mcp.tool(
-    description="""Export Basic Memory notes to a complete, searchable Docsify documentation website.
+    description="""Export Advanced Memory notes to a complete, searchable Docsify documentation website.
 
 [UNICODE][UNICODE]  DEPRECATED: Use export_docsify_enhanced for modern features!
 
@@ -236,10 +236,10 @@ FEATURES:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Filesystem path where Docsify site will be created
-- source_folder (str, default="/"): Basic Memory folder to export (use "/" for all notes)
+- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
 - include_subfolders (bool, default=True): Include subfolders recursively
 - site_title (str, default="Knowledge Base"): Title for the documentation site
-- site_description (str, default="Documentation generated from Basic Memory"): Site description
+- site_description (str, default="Documentation generated from Advanced Memory"): Site description
 - project (str, optional): Specific project to export from (defaults to current active project)
 
 [UNICODE][UNICODE]  DEPRECATED: This basic version lacks modern features like pagination, themes, and enhanced UI.
@@ -251,7 +251,7 @@ async def export_docsify(
     source_folder: str = "/",
     include_subfolders: bool = True,
     site_title: str = "Knowledge Base",
-    site_description: str = "Documentation generated from Basic Memory",
+    site_description: str = "Documentation generated from Advanced Memory",
     project: str | None = None,
 ) -> str:
     """DEPRECATED: Use export_docsify_enhanced instead.
@@ -974,7 +974,7 @@ If you encounter any issues or have suggestions for improvement, please check:
 
 ---
 
-*Generated with [UNICODE][UNICODE] by Basic Memory's Enhanced Docsify Export*
+*Generated with [UNICODE][UNICODE] by Advanced Memory's Enhanced Docsify Export*
 """
 
     return readme
@@ -1711,7 +1711,7 @@ async def _create_docsify_files(
 
 ## Overview
 
-This documentation site was generated from a Basic Memory knowledge base using the Docsify export tool.
+This documentation site was generated from a Advanced Memory knowledge base using the Docsify export tool.
 
 ## Features
 
@@ -1733,7 +1733,7 @@ Use the sidebar to navigate through the documentation, or use the search box to 
 
 ---
 
-*Powered by [Docsify](https://docsify.js.org/) and [Basic Memory](https://github.com/user/basic-memory)*
+*Powered by [Docsify](https://docsify.js.org/) and [Advanced Memory](https://github.com/basicmachines-co/advanced-memory-mcp)*
 """
 
     # Write README.md
@@ -1750,7 +1750,7 @@ Use the sidebar to navigate through the documentation, or use the search box to 
         "name": site_title,
         "description": site_description,
         "version": "1.0.0",
-        "exported_by": "Basic Memory",
+        "exported_by": "Advanced Memory",
         "exported_at": datetime.now().isoformat(),
         "note_count": sum(len(notes) for notes in notes_by_folder.values()),
         "folder_count": len(notes_by_folder)

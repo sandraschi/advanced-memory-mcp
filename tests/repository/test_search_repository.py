@@ -400,11 +400,11 @@ class TestSearchTermPreparation:
 
     def test_version_strings_with_dots_handled_correctly(self, search_repository):
         """Version strings with dots should be quoted to prevent FTS5 syntax errors."""
-        # This reproduces the bug where "Basic Memory v0.13.0b2" becomes "Basic* AND Memory* AND v0.13.0b2*"
+        # This reproduces the bug where "Advanced Memory v0.13.0b2" becomes "Basic* AND Memory* AND v0.13.0b2*"
         # which causes FTS5 syntax errors because v0.13.0b2* is not valid FTS5 syntax
-        result = search_repository._prepare_search_term("Basic Memory v0.13.0b2")
+        result = search_repository._prepare_search_term("Advanced Memory v0.13.0b2")
         # Should be quoted because of dots in v0.13.0b2
-        assert result == '"Basic Memory v0.13.0b2"*'
+        assert result == '"Advanced Memory v0.13.0b2"*'
 
     def test_mixed_special_characters_in_multi_word_queries(self, search_repository):
         """Multi-word queries with special characters in any word should be fully quoted."""
@@ -487,9 +487,9 @@ class TestSearchTermPreparation:
         search_row = SearchIndexRow(
             id=search_entity.id,
             type=SearchItemType.ENTITY.value,
-            title="Basic Memory v0.13.0b2 Release",
+            title="Advanced Memory v0.13.0b2 Release",
             content_stems="basic memory version 0.13.0b2 beta release notes features",
-            content_snippet="Basic Memory v0.13.0b2 is a beta release with new features",
+            content_snippet="Advanced Memory v0.13.0b2 is a beta release with new features",
             permalink=search_entity.permalink,
             file_path=search_entity.file_path,
             entity_id=search_entity.id,
@@ -502,9 +502,9 @@ class TestSearchTermPreparation:
         await search_repository.index_item(search_row)
 
         # This should not cause FTS5 syntax errors and should find the entity
-        results = await search_repository.search(search_text="Basic Memory v0.13.0b2")
+        results = await search_repository.search(search_text="Advanced Memory v0.13.0b2")
         assert len(results) == 1
-        assert results[0].title == "Basic Memory v0.13.0b2 Release"
+        assert results[0].title == "Advanced Memory v0.13.0b2 Release"
 
         # Test other version-like patterns
         results2 = await search_repository.search(search_text="v0.13.0b2")

@@ -95,5 +95,5 @@ def downgrade() -> None:
     # Print instruction to manually reindex after migration
     print("\n------------------------------------------------------------------")
     print("IMPORTANT: After downgrade completes, manually run the reindex command:")
-    print("basic-memory sync")
+    print("advanced-memory sync")
     print("------------------------------------------------------------------\n")

@@ -24,7 +24,7 @@ async def test_sync_status_completed():
     with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
         result = await sync_status.fn()
 
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
     assert "System Ready**: [OK] Yes" in result
     assert "All sync operations completed" in result
     assert "File indexing is complete" in result
@@ -60,7 +60,7 @@ async def test_sync_status_in_progress():
     with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
         result = await sync_status.fn()
 
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
     assert "System Ready**: [WORKING] Processing" in result
     assert "File synchronization in progress" in result
     assert "project1**: Processing new files (3/5, 60%)" in result
@@ -90,7 +90,7 @@ async def test_sync_status_failed():
     with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
         result = await sync_status.fn()
 
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
     assert "System Ready**: [WORKING] Processing" in result
     assert "Some projects failed to sync" in result
     assert "project1**: Permission denied" in result
@@ -110,7 +110,7 @@ async def test_sync_status_idle():
     with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
         result = await sync_status.fn()
 
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
     assert "System Ready**: [OK] Yes" in result
     assert "All sync operations completed" in result
 
@@ -138,7 +138,7 @@ async def test_sync_status_with_project():
 
     # The function should use the original logic for project-specific queries
     # But since we changed the implementation, let's just verify it doesn't crash
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
 
 
 @pytest.mark.asyncio
@@ -153,7 +153,7 @@ async def test_sync_status_pending():
     with patch("advanced_memory.services.sync_status_service.sync_status_tracker", mock_tracker):
         result = await sync_status.fn()
 
-    assert "Basic Memory Sync Status" in result
+    assert "Advanced Memory Sync Status" in result
     assert "Sync operations pending" in result
     assert "usually resolves automatically" in result
 

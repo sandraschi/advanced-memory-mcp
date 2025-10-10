@@ -1,4 +1,4 @@
-"""Watch service for Basic Memory."""
+"""Watch service for Advanced Memory."""
 
 import asyncio
 import os
@@ -95,7 +95,7 @@ class WatchService:
         self.app_config = app_config
         self.project_repository = project_repository
         self.state = WatchServiceState()
-        self.status_path = Path.home() / ".basic-memory" / WATCH_STATUS_JSON
+        self.status_path = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON
         self.status_path.parent.mkdir(parents=True, exist_ok=True)
 
         # quiet mode for mcp so it doesn't mess up stdout

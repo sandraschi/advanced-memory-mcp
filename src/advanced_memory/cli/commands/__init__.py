@@ -1,4 +1,4 @@
-"""CLI commands for basic-memory."""
+"""CLI commands for advanced-memory."""
 
 from . import (
     db,

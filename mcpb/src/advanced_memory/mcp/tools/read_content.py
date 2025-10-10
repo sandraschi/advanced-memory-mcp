@@ -1,4 +1,4 @@
-"""File reading tool for Basic Memory MCP server.
+"""File reading tool for Advanced Memory MCP server.
 
 This module provides tools for reading raw file content directly,
 supporting various file types including text, images, and other binary files.

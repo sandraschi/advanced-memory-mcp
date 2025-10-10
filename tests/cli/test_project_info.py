@@ -59,7 +59,7 @@ def test_info_stats():
         assert result.exit_code == 0
 
         # Check that key data is included in the output
-        assert "Basic Memory Project Info" in result.stdout
+        assert "Advanced Memory Project Info" in result.stdout
         assert "test-project" in result.stdout
         assert "Statistics" in result.stdout
 

@@ -1,4 +1,4 @@
-"""Search Notion vault tool for Basic Memory MCP server."""
+"""Search Notion vault tool for Advanced Memory MCP server."""
 
 import re
 from pathlib import Path
@@ -61,7 +61,7 @@ RETURNS:
 Formatted search results with file details, content previews, and match statistics.
 
 NOTE: This searches external Notion exports without importing them. For enhanced search
-and AI-powered analysis, use load_notion_export() to import into Basic Memory.""",
+and AI-powered analysis, use load_notion_export() to import into Advanced Memory.""",
 )
 async def search_notion_vault(
     vault_path: str,

@@ -1,6 +1,6 @@
-"""PDF Book Creation Tool for Basic Memory MCP server.
+"""PDF Book Creation Tool for Advanced Memory MCP server.
 
-Creates professional PDF books from Basic Memory notes with title pages,
+Creates professional PDF books from Advanced Memory notes with title pages,
 table of contents, and chapter organization using Pandoc.
 """
 
@@ -15,10 +15,10 @@ from advanced_memory.schemas.search import SearchQuery, SearchResponse
 
 
 @mcp.tool(
-    description="""[BOOK] Create Professional PDF Books from Basic Memory Notes
+    description="""[BOOK] Create Professional PDF Books from Advanced Memory Notes
 
 Generates a complete PDF book with title page, table of contents, and chapters
-from your Basic Memory notes. Perfect for creating documentation, research papers,
+from your Advanced Memory notes. Perfect for creating documentation, research papers,
 or knowledge base books.
 
 BOOK FEATURES:
@@ -39,7 +39,7 @@ PARAMETERS:
 - source_folder (str, optional): Folder to get notes from (default: "/")
 - tag_filter (str, optional): Filter notes by tag (e.g., "standards", "research")
 - output_path (str, optional): Where to save the PDF (default: "pdf-books/")
-- author (str, optional): Book author (default: "Basic Memory")
+- author (str, optional): Book author (default: "Advanced Memory")
 - include_subfolders (bool, optional): Include notes from subfolders (default: True)
 - toc_depth (int, optional): TOC depth (1-3, default: 2)
 - paper_size (str, optional): Paper size (a4, letter, default: a4)
@@ -61,14 +61,14 @@ async def make_pdf_book(
     source_folder: str = "/",
     tag_filter: str | None = None,
     output_path: str | None = None,
-    author: str = "Basic Memory",
+    author: str = "Advanced Memory",
     include_subfolders: bool = True,
     toc_depth: int = 2,
     paper_size: str = "a4",
     project: str | None = None
 ) -> str:
     """
-    Create a professional PDF book from Basic Memory notes.
+    Create a professional PDF book from Advanced Memory notes.
 
     Args:
         book_title: Title for the PDF book
@@ -286,7 +286,7 @@ async def _create_book_markdown(
         f.write(f"## {book_title}\n\n")
         f.write(f"**Author:** {author}\n\n")
         f.write(f"**Generated:** {datetime.now().strftime('%B %d, %Y')}\n\n")
-        f.write("**Created with Basic Memory & Pandoc**\n\n")
+        f.write("**Created with Advanced Memory & Pandoc**\n\n")
         f.write("\\newpage\n\n")
 
         # Table of contents
@@ -310,8 +310,8 @@ async def _create_book_markdown(
         # Back matter
         f.write("\\backmatter\n\n")
         f.write("# About\n\n")
-        f.write("This book was generated from Basic Memory notes using Pandoc.\n\n")
-        f.write("**Basic Memory** - Knowledge management for AI conversations.\n\n")
+        f.write("This book was generated from Advanced Memory notes using Pandoc.\n\n")
+        f.write("**Advanced Memory** - Knowledge management for AI conversations.\n\n")
         f.write("**Pandoc** - Universal document converter.\n\n")
 
     return book_md_path

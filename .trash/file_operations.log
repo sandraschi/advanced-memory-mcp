@@ -4429,3 +4429,859 @@ did not find expected alphabetic or numeric character
 2025-10-05 18:28:28 | INFO     | Initializing search index
 2025-10-05 18:28:28 | INFO     | Initialized project session with default project: test-project
 2025-10-05 18:28:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-06 02:43:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:44:10 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:46:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:47:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:47:44 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:49:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 02:49:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 03:09:25 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 05:13:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 05:13:11 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-06 05:13:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:54:02 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:55:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:55:44 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:55:47 | INFO     | Using in-memory SQLite database
+2025-10-09 23:55:47 | INFO     | Initializing search index
+2025-10-09 23:55:47 | INFO     | Initializing search index
+2025-10-09 23:55:47 | INFO     | Initialized project session with default project: test-project
+2025-10-09 23:55:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-09 23:55:47 | INFO     | Searching for permalink=None permalink_match=None text='*' title=None types=None entity_types=None after_date=None
+2025-10-09 23:55:47 | INFO     | Search returned no results for query: *
+2025-10-09 23:55:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:56:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:56:34 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-09 23:59:32 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:04:03 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:08:26 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:09:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:14:24 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:14:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:17:32 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:22:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:22:53 | INFO     | Initializing search index
+2025-10-10 00:22:53 | INFO     | Initializing search index
+2025-10-10 00:22:53 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:23:08 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:24:48 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:24:58 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:25:21 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:25:25 | INFO     | Initializing search index
+2025-10-10 00:25:25 | INFO     | Initializing search index
+2025-10-10 00:25:25 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:27:39 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:27:43 | INFO     | Initializing search index
+2025-10-10 00:27:43 | INFO     | Initializing search index
+2025-10-10 00:27:43 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:27:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:27:55 | INFO     | Initializing search index
+2025-10-10 00:27:55 | INFO     | Initializing search index
+2025-10-10 00:27:55 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:28:13 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:28:17 | INFO     | Initializing search index
+2025-10-10 00:28:17 | INFO     | Initializing search index
+2025-10-10 00:28:17 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:29:35 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:29:38 | INFO     | Initializing search index
+2025-10-10 00:29:38 | INFO     | Initializing search index
+2025-10-10 00:29:38 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:29:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 00:29:59 | INFO     | Initializing search index
+2025-10-10 00:29:59 | INFO     | Initializing search index
+2025-10-10 00:29:59 | INFO     | Initialized project session with default project: test-project
+2025-10-10 00:31:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:06:37 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:19:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:19:33 | INFO     | Initializing app...
+2025-10-10 02:19:33 | INFO     | Running database migrations...
+2025-10-10 02:19:34 | INFO     | Migrations completed successfully
+2025-10-10 02:19:34 | INFO     | Initializing search index
+2025-10-10 02:19:34 | INFO     | Database initialization completed
+2025-10-10 02:19:34 | INFO     | Reconciling projects from config with database...
+2025-10-10 02:19:34 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 02:19:34 | INFO     | Adding project 'main' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'japan-trip-2025' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'claude-depot-consolidated' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'veogen' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'general-ai' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'mcp-investigation' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'obsidian-integrated' to database
+2025-10-10 02:19:34 | INFO     | Adding project 'chitchat' to database
+2025-10-10 02:19:34 | INFO     | Set 'main' as default project (was missing)
+2025-10-10 02:19:34 | INFO     | Project synchronization complete
+2025-10-10 02:19:34 | INFO     | Initialized project session with default project: main
+2025-10-10 02:19:34 | INFO     | Refreshed project session from config, new default: main
+2025-10-10 02:19:34 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 02:19:34 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 02:19:34 | INFO     | Initialization completed successfully: result=None
+2025-10-10 02:19:34 | INFO     | Switched project context: main -> main
+2025-10-10 02:19:36 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:19:39 | INFO     | Initializing app...
+2025-10-10 02:19:39 | INFO     | Running database migrations...
+2025-10-10 02:19:39 | INFO     | Migrations completed successfully
+2025-10-10 02:19:39 | INFO     | Initializing search index
+2025-10-10 02:19:39 | INFO     | Database initialization completed
+2025-10-10 02:19:39 | INFO     | Reconciling projects from config with database...
+2025-10-10 02:19:39 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 02:19:39 | INFO     | Project synchronization complete
+2025-10-10 02:19:39 | INFO     | Initialized project session with default project: main
+2025-10-10 02:19:39 | INFO     | Refreshed project session from config, new default: main
+2025-10-10 02:19:39 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 02:19:39 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 02:19:39 | INFO     | Initialization completed successfully: result=None
+2025-10-10 02:19:39 | INFO     | Switched project context: main -> main
+2025-10-10 02:19:39 | INFO     | Getting project info
+2025-10-10 02:20:31 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:20:35 | INFO     | Initializing app...
+2025-10-10 02:20:35 | INFO     | Running database migrations...
+2025-10-10 02:20:35 | INFO     | Migrations completed successfully
+2025-10-10 02:20:35 | INFO     | Initializing search index
+2025-10-10 02:20:35 | INFO     | Database initialization completed
+2025-10-10 02:20:35 | INFO     | Reconciling projects from config with database...
+2025-10-10 02:20:35 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 02:20:35 | INFO     | Project synchronization complete
+2025-10-10 02:20:35 | INFO     | Initialized project session with default project: main
+2025-10-10 02:20:35 | INFO     | Refreshed project session from config, new default: main
+2025-10-10 02:20:35 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 02:20:35 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 02:20:35 | INFO     | Initialization completed successfully: result=None
+2025-10-10 02:20:35 | INFO     | Switched project context: main -> main
+2025-10-10 02:20:35 | INFO     | Sync command started
+2025-10-10 02:20:35 | INFO     | Running one-time sync
+2025-10-10 02:20:35 | INFO     | Sync operation started for directory: C:\Users\sandr\basic-memory
+2025-10-10 02:20:35 | INFO     | Found 0 db records
+2025-10-10 02:20:35 | INFO     | Scanning directory C:\Users\sandr\basic-memory. Found 0 db paths
+2025-10-10 02:20:35 | INFO     | Completed scan for directory C:\Users\sandr\basic-memory, found 53 changes.
+2025-10-10 02:20:35 | INFO     | Sync changes detected: new_files=53, modified_files=0, deleted_files=0, moved_files=0
+2025-10-10 02:20:40 | INFO     | Resolving forward references
+2025-10-10 02:20:40 | INFO     | Sync operation completed: directory=C:\Users\sandr\basic-memory, total_changes=53, duration_ms=5105
+2025-10-10 02:20:40 | INFO     | Sync command completed
+2025-10-10 02:20:55 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:21:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 02:21:49 | INFO     | Initializing app...
+2025-10-10 02:21:49 | INFO     | Running database migrations...
+2025-10-10 02:21:49 | INFO     | Migrations completed successfully
+2025-10-10 02:21:49 | INFO     | Initializing search index
+2025-10-10 02:21:49 | INFO     | Database initialization completed
+2025-10-10 02:21:49 | INFO     | Reconciling projects from config with database...
+2025-10-10 02:21:49 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 02:21:49 | INFO     | Project synchronization complete
+2025-10-10 02:21:49 | INFO     | Initialized project session with default project: main
+2025-10-10 02:21:49 | INFO     | Refreshed project session from config, new default: main
+2025-10-10 02:21:49 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 02:21:49 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 02:21:49 | INFO     | Initialization completed successfully: result=None
+2025-10-10 02:21:49 | INFO     | Switched project context: main -> main
+2025-10-10 02:21:49 | INFO     | Project 'claude-depot-consolidated' set as default in configuration and database
+2025-10-10 02:21:49 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 02:21:49 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 02:22:06 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 02:22:09 | INFO     | Initializing app...
+2025-10-10 02:22:09 | INFO     | Running database migrations...
+2025-10-10 02:22:09 | INFO     | Migrations completed successfully
+2025-10-10 02:22:09 | INFO     | Initializing search index
+2025-10-10 02:22:09 | INFO     | Database initialization completed
+2025-10-10 02:22:09 | INFO     | Reconciling projects from config with database...
+2025-10-10 02:22:09 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 02:22:09 | INFO     | Project synchronization complete
+2025-10-10 02:22:09 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 02:22:09 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 02:22:09 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 02:22:09 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 02:22:09 | INFO     | Initialization completed successfully: result=None
+2025-10-10 02:22:09 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 02:22:10 | INFO     | Sync command started
+2025-10-10 02:22:10 | INFO     | Running one-time sync
+2025-10-10 02:22:10 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-10 02:22:10 | INFO     | Found 0 db records
+2025-10-10 02:22:10 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 0 db paths
+2025-10-10 02:22:37 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2275 changes.
+2025-10-10 02:22:37 | INFO     | Sync changes detected: new_files=2275, modified_files=0, deleted_files=0, moved_files=0
+2025-10-10 02:28:37 | INFO     | Resolving forward references
+2025-10-10 02:28:52 | INFO     | Sync operation completed: directory=C:\Users\sandr\Documents\claude-depot, total_changes=2275, duration_ms=402840
+2025-10-10 02:28:52 | INFO     | Sync command completed
+2025-10-10 06:35:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-10 06:35:27 | INFO     | Initializing app...
+2025-10-10 06:35:27 | INFO     | Running database migrations...
+2025-10-10 06:35:27 | INFO     | Migrations completed successfully
+2025-10-10 06:35:27 | INFO     | Initializing search index
+2025-10-10 06:35:27 | INFO     | Database initialization completed
+2025-10-10 06:35:27 | INFO     | Reconciling projects from config with database...
+2025-10-10 06:35:27 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 06:35:27 | INFO     | Updating default project in config to 'claude-depot-consolidated'
+2025-10-10 06:35:27 | INFO     | Project synchronization complete
+2025-10-10 06:35:27 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 06:35:27 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 06:35:27 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 06:35:27 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 06:35:27 | INFO     | Initialization completed successfully: result=None
+2025-10-10 06:35:27 | INFO     | Switched project context: claude-depot-consolidated -> main
+2025-10-10 06:35:27 | INFO     | Sync command started
+2025-10-10 06:35:27 | INFO     | Running one-time sync
+2025-10-10 06:35:27 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-10 06:35:27 | INFO     | Found 2275 db records
+2025-10-10 06:35:27 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2275 db paths
+2025-10-10 06:35:28 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2451 changes.
+2025-10-10 06:35:28 | INFO     | Sync changes detected: new_files=177, modified_files=0, deleted_files=348, moved_files=1926
+2025-10-10 06:35:35 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move analysis/Claude MCP Scripts Extended Analysis - 2025-09-09 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 104
+2025-10-10 06:35:37 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move technical-analysis/LoonaMCP - NEW PROJECT to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 119
+2025-10-10 06:35:38 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/PlexMCP Search Functions Bug - 2025-09-07 16 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 128
+2025-10-10 06:35:39 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move comparisons/Basic Memory vs Notion MCP to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 136
+2025-10-10 06:35:53 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move research/Zed Editor Limitations & Workarounds vs Competition - 2025-08-16 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 232
+2025-10-10 06:35:53 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Docker MCP Fix Status - 2025-08-28 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 240
+2025-10-10 06:35:55 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/blender-mcp/Blender MCP Fix Analysis - 2025-09-17 00 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 249
+2025-10-10 06:36:00 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move bugs/Local LLM MCP Bug - list_tools broken 2025-09-17 06 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 295
+2025-10-10 06:36:00 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-log/AutoHotkey Dev Context Music Script Fix - 2025-09-11 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 296
+2025-10-10 06:36:02 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move debug/windows-operations-mcp PowerShell Tools Analysis - 2025-09-08 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 315
+2025-10-10 06:36:03 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/PlexMCP → CalibreMCP Standard to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 327
+2025-10-10 06:36:06 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/blender-mcp/Blender MCP Fix Analysis 2025-09-17 00 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 340
+2025-10-10 06:36:08 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/avatarmcp/AvatarMCP Server Startup Fixing Plan - Sept 1 2025 18 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 352
+2025-10-10 06:36:08 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/llm-txt-mcp/LLM-TXT-MCP Status - 2025-08-18 10 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 357
+2025-10-10 06:36:10 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move session_management/🎯 SESSION RESUME to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 374
+2025-10-10 06:36:23 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move rtorrent-mcp/RTorrent MCP Dependencies Fixed - 2025-09-26 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 431
+2025-10-10 06:36:32 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Plex MCP Server Fix Status - 2025-09-07 11 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 467
+2025-10-10 06:36:33 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Unitree-Robotics Repo Starter Setup COMPLETED - Sept 13, 2025 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 469
+2025-10-10 06:36:38 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/avatarmcp/AvatarMCP Repository Fresh Analysis - 2025-08-19 19 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 492
+2025-10-10 06:36:40 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/mcp-servers/CalibreMCP Server Setup Progress - 2025-08-10 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 506
+2025-10-10 06:36:50 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/tapo-mcp/2025-09-16 14 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 586
+2025-10-10 06:36:52 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/fastsearch-mcp/FastSearch MCP Status - 2025-09-19 00 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 595
+2025-10-10 06:36:52 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/avatarmcp/AvatarMCP Repository Analysis - 2025-08-09T15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 599
+2025-10-10 06:36:58 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move autohotkey-implementation/Phase 2 Welcome Screen Enhanced - 2025-09-09 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 649
+2025-10-10 06:37:03 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move notes/Windows-Operations-MCP Tools Discovery 2025-08-11 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 688
+2025-10-10 06:37:05 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/AvatarMCP Desktop Avatar Implementation Plan - 19 Aug 2025 11 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 707
+2025-10-10 06:37:07 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-status/Windows Operations MCP FIXED - Console Script Solution Aug 14 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 717
+2025-10-10 06:37:07 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move productivity/AutoHotkey Script Fix - 2025-09-02 16 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 722
+2025-10-10 06:37:12 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move analysis/Firefox Books Tools Analysis - 2025-09-05 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 753
+2025-10-10 06:37:12 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/local-llm-mcp/Local-LLM-MCP Critical Assessment - 2025-09-01 18 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 757
+2025-10-10 06:37:18 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Filesystem-MCP List Directory Tool Analysis - 2025-09-27 03 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 793
+2025-10-10 06:37:21 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/tapo-camera-mcp/Tapo MCP Critical AsyncIO Fix - 2025-09-16 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 811
+2025-10-10 06:37:32 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/dockermcp/dockermcp Import Fix Applied - 2025-09-15 13 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 891
+2025-10-10 06:37:37 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move filesystem-mcp/Filesystem MCP List Directory Tool Fix - 2025-09-27 03 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 934
+2025-10-10 06:37:37 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/mcp-studio/MCP Studio TSX Linting Fix - 2025-09-04 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 937
+2025-10-10 06:37:39 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move fixes/PowerShell Tools QUICK FIX SUCCESS - 2025-09-08 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 949
+2025-10-10 06:37:39 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/filesystem-mcp/List Directory Tool Improvements Summary - 2025-09-27 05 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 957
+2025-10-10 06:37:43 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move mcp-template/MCP Production Checklist Updated - Anti-Monster Structure - 2025-09-24 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 987
+2025-10-10 06:37:44 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move rules/PowerShell MCP Rules - 2025-08-30-20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 993
+2025-10-10 06:37:54 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move tests/AutoHotkey Test 2025-09-02 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1073
+2025-10-10 06:38:01 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move autohotkey-analysis/AutoHotkey MCP Analysis Complete - 2025-09-09 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1117
+2025-10-10 06:38:06 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move rules/POWERSHELL MCP TOOL RULE - COMPREHENSIVE RELIABILITY + CLAUDE DESKTOP MITIGATION - 2025-08-30-20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1155
+2025-10-10 06:38:09 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move standards/The LLMs.txt Standard to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1178
+2025-10-10 06:38:10 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move development/CRISIS RECOVERED - Zed Fork Found and Assessed - Aug 16 23 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1183
+2025-10-10 06:38:11 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move daily-logs/Session Start July 24 13 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1194
+2025-10-10 06:38:12 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move tech/claude-mcp/Windows Operations MCP Extension Fix - 2025-08-14 01 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1203
+2025-10-10 06:38:13 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/NARRATIVEDNA REPO RECOVERY SUCCESS - 2025-07-27 18 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1209
+2025-10-10 06:38:16 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move tech/claude-mcp/DaVinci Resolve MCP Fix Progress - 2025-08-14 08 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1235
+2025-10-10 06:38:27 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-notes/AutoHotkey v2 Quick Notes Issues - 2025-09-10 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1308
+2025-10-10 06:38:28 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Reaper MCP Analysis Start - 2025-08-13 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1322
+2025-10-10 06:38:30 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move session-notes/VBox MCP Server Investigation - 2025-08-02 09 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1333
+2025-10-10 06:38:33 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move infrastructure/🚨 CRITICAL to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1359
+2025-10-10 06:38:38 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move debug/Windows Operations MCP Fix - Status 2025-08-11 01 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1390
+2025-10-10 06:38:38 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move bugfix/PowerShell Profile Fix - 2025-08-20 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1392
+2025-10-10 06:38:40 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/tapo-camera-mcp/tapo-camera-mcp bug fixes - 2025-09-02 11 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1404
+2025-10-10 06:38:42 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/dockermcp/dockermcp ImportError Fix - 2025-09-15 13 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1419
+2025-10-10 06:38:43 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-notes/AutoHotkey v2 Sudoku Script Issues - 2025-09-10 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1427
+2025-10-10 06:38:45 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move status/Firefox Database Tools Status Check - 2025-09-05 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1448
+2025-10-10 06:38:50 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Bright Data MCP Installation Progress - 2025-09-21-18 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1451
+2025-10-10 06:38:52 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move tests/Test Title With Timestamp - 2025-09-27 05 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1472
+2025-10-10 06:38:52 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/tapo-camera-mcp/Tapo MCP Server Status - Critical AsyncIO Thread Error - 2025-09-16 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1474
+2025-10-10 06:38:58 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/local-llm-mcp/Windsurf Local-LLM-MCP to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1514
+2025-10-10 06:39:01 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-notes/CRITICAL to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1540
+2025-10-10 06:39:03 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/rtorrent-mcp/RTorrent MCP Status - Sept 26 2025 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1557
+2025-10-10 06:39:04 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move fixes/Docker-MCP Fix Status 2025-09-08 12 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1567
+2025-10-10 06:39:06 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/hasleo-backup-mcp/Project to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1587
+2025-10-10 06:39:19 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move imported/docs/Miscellaneous/sample files/sample-document.pdf to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1680
+2025-10-10 06:39:32 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-status/Windows-Operations-MCP Fixed - Syntax Error Aug 14 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1768
+2025-10-10 06:39:36 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move pywinauto-mcp/PyWinAuto MCP - MASSIVE TOOLS REGISTRATION ISSUE - 2025-09-02 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1791
+2025-10-10 06:39:36 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move daily-logs/DXT Packaging Total Victory - 2025-08-14 16 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1792
+2025-10-10 06:39:37 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move mcp-template/MCP Production Checklist Updated - Anti-Monster Server.py - 2025-09-24 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1802
+2025-10-10 06:39:37 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move database-queries/Firefox Database Query Setup - 2025-09-05 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1805
+2025-10-10 06:39:41 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move fixes/2025-09-07 03 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1824
+2025-10-10 06:39:44 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/The Great Sycophancy Crisis to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1845
+2025-10-10 06:39:46 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move debugging/RTorrent MCP Search Issue Diagnosis - 2025-09-26 21 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1858
+2025-10-10 06:39:47 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-status/Shell MCP Server Fix - Working Package - Aug 14 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1868
+2025-10-10 06:39:48 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/plexmcp/PlexMCP Mock Data Analysis - 2025-09-06 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1877
+2025-10-10 06:39:49 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/database-operations-mcp/Firefox Bookmarks Extensions Plan - 2025-09-05 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1881
+2025-10-10 06:39:51 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/blender-mcp/Blender MCP Fix Status - 2025-09-16 22 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1899
+2025-10-10 06:39:52 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move daily-logs/MCP Dashboard Integration - Building Core Client - 2025-08-29 16 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1907
+2025-10-10 06:39:59 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move sessions/2025-08-07 14 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 1966
+2025-10-10 06:40:06 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move fixes/local-llm-mcp/[2025-09-19 18 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2019
+2025-10-10 06:40:07 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move meta/CRITICAL WORKFLOW ISSUE to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2030
+2025-10-10 06:40:09 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Plex MCP Server Issues - 2025-09-07T03 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2043
+2025-10-10 06:40:11 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/mixxx-vj/Mixxx-VJ to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2060
+2025-10-10 06:40:14 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move bugs/PowerShell MCP Parameter Validation Bug Analysis - 2025-09-27 05 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2087
+2025-10-10 06:40:15 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/AvatarMCP Status Analysis - Sep 04 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2095
+2025-10-10 06:40:17 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/beyondcompare-mcp/Beyond Compare MCP USB Detection Debug - 2025-09-16 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2106
+2025-10-10 06:40:21 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move daily/Calibre MCP Fix Applied - 2025-08-14 16 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2133
+2025-10-10 06:40:24 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Unitree-Robotics Documentation COMPLETED - Sept 13, 2025 19 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2161
+2025-10-10 06:40:25 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/Firefox Bookmarks Database Analysis - 2025-09-05 19 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2168
+2025-10-10 06:40:30 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/avatarmcp/AvatarMCP Analysis Aug09 15 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2212
+2025-10-10 06:40:33 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move projects/🎬 PlexMCP Bond Discovery & Fix List - 2025-07-26 20 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2236
+2025-10-10 06:40:33 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev/tapo-camera-mcp/tapo-camera-mcp error fixes - 2025-09-02 11 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2239
+2025-10-10 06:40:33 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move dev-status/Shell MCP Disconnect - Recovery Aug 14 17 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2242
+2025-10-10 06:40:41 | WARNING  | File path conflict during move: 06-archive\tests\Test Title With Timestamp - 2025-09-27 05 already exists. Cannot move research-notes/Firebase vs BaaS Competitors Research - 2025-08-04 10 to 06-archive\tests\Test Title With Timestamp - 2025-09-27 05. Entity ID: 2287
+2025-10-10 06:40:45 | INFO     | Deleting entity with file_path=meta/Knowledge Architecture & Organization Strategy.md, entity_id=815, permalink=metaknowledge-architecture-organization-strategy
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=assessments/Claude Code Worktrees Pattern Assessment - Austrian Efficiency Analysis.md, entity_id=1137, permalink=assessmentsclaude-code-worktrees-pattern-assessment-austrian-efficiency-analysis
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=issues/2025-09-19 Fastsearch MCP Server Bug.md, entity_id=424, permalink=issues2025-09-19-fastsearch-mcp-server-bug
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=random-thoughts/Agentic Reality Check - Brother vs Claude Timeline.md, entity_id=1573, permalink=random-thoughtsagentic-reality-check-brother-vs-claude-timeline
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=research/PowerShell Subprocess STDOUT Swallowing Research SOLVED.md, entity_id=924, permalink=researchpowershell-subprocess-stdout-swallowing-research-solved
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=implementation/DaVinci Resolve MCP - MAJOR STATUS DISCOVERY & COMPLETION PLAN.md, entity_id=917, permalink=implementationdavinci-resolve-mcp-major-status-discovery-completion-plan
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=visualizations/Claude Depot Project Ecosystem Overview.canvas, entity_id=415, permalink=None
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=implementation/GIMP-MCP Implementation Day 1 Progress.md, entity_id=893, permalink=implementationgimp-mcp-implementation-day-1-progress
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=infrastructure/CRITICAL Python PATH Testing Fix Plan.md, entity_id=2207, permalink=infrastructurecritical-python-path-testing-fix-plan
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=tools/OneNote Integration Solutions - HTML Handling & Reliable Operations.md, entity_id=812, permalink=tools-one-note-integration-solutions-html-handling-reliable-operations
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=meta/Claude Development & Communication Rules - MANDATORY COMPLIANCE.md, entity_id=1268, permalink=meta-claude-development-communication-rules-mandatory-compliance
+2025-10-10 06:40:47 | INFO     | Deleting entity with file_path=system-analysis/MCP Server Status Analysis - July 16, 2025.md, entity_id=142, permalink=system-analysis-mcp-server-status-analysis-july-16-2025
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=detailed-analyses/WiX Toolkit FOSS Analysis 2025-08-03.md, entity_id=877, permalink=detailed-analyseswix-toolkit-foss-analysis-2025-08-03
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=project_status/Notepad++ MCP Server - Project Status Report.md, entity_id=1248, permalink=project-statusnotepad-mcp-server-project-status-report
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=research/zed-analysis/Zed Local AI Integration - Ollama and Open Models Deep Dive.md, entity_id=2180, permalink=researchzed-analysiszed-local-ai-integration-ollama-and-open-models-deep-dive
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=architecture/Professional Dual Transport MCP Pattern - Full HTTP Suite.md, entity_id=2064, permalink=architectureprofessional-dual-transport-mcp-pattern-full-http-suite
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=strategic-planning/VBox-MCP Hyper-V Extension Strategic Plan 2025-08-03.md, entity_id=181, permalink=strategic-planningvbox-mcp-hyper-v-extension-strategic-plan-2025-08-03
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=discussions/Neurophilosophy-Inner-Monologue-2025-09-27-1448.md, entity_id=1657, permalink=discussionsneurophilosophy-inner-monologue-2025-09-27-1448
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=notes/PlexMCP Debug Session 2025-08-11-1545.md, entity_id=996, permalink=notesplexmcp-debug-session-2025-08-11-1545
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=planning/Next Session Plan - MyAI + Claude Desktop MCP Monitoring Expansion - Aug 20, 2025.md, entity_id=906, permalink=planningnext-session-plan-myai-claude-desktop-mcp-monitoring-expansion-aug-20-2025
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=deployment/Squirrel Production Deployment Strategy.md, entity_id=216, permalink=planning-squirrel-production-deployment-strategy-1
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=deployment/Netlify Complete Deployment Guide.md, entity_id=1166, permalink=deployment-netlify-complete-deployment-guide
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=scripts/development/debug/setup-debug-env.ps1, entity_id=869, permalink=None
+2025-10-10 06:40:48 | INFO     | Deleting entity with file_path=meta/EMERGENCY Database & File System Consolidation Plan.md, entity_id=360, permalink=meta-emergency-database-file-system-consolidation-plan
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=implementation/Wispr Flow Installation Guide + RustDesk iPhone Audio Hack Analysis.md, entity_id=1293, permalink=implementationwispr-flow-installation-guide-rustdesk-iphone-audio-hack-analysis
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=continuation/Advanced Memory Project - Continuation Guide.md, entity_id=1288, permalink=continuation-advanced-memory-project-continuation-guide
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=implementation/VirtualDJ-MCP Complete Scaffold & Documentation Package.md, entity_id=1323, permalink=implementationvirtualdj-mcp-complete-scaffold-documentation-package
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=critical-analysis/FOSS Existential Crisis - AI Motivation Apocalypse.md, entity_id=901, permalink=critical-analysisfoss-existential-crisis-ai-motivation-apocalypse
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=implementation/GIMP-MCP Phase 1 Day 1 Status Report.md, entity_id=2025, permalink=implementationgimp-mcp-phase-1-day-1-status-report
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=culture/Impossible Crime Fiction Knowledge - Pocket Dimension Discovery.md, entity_id=634, permalink=cultureimpossible-crime-fiction-knowledge-pocket-dimension-discovery
+2025-10-10 06:40:49 | INFO     | Deleting entity with file_path=analysis/Firefox Books Tools Analysis 2025-09-05.md, entity_id=1570, permalink=analysisfirefox-books-tools-analysis-2025-09-05
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=status/Logging Setup Status Check - Loki Docker Integration.md, entity_id=1866, permalink=statuslogging-setup-status-check-loki-docker-integration
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=detailed-analyses/CalibreMCP Comprehensive Analysis 2025-08-03.md, entity_id=596, permalink=detailed-analysescalibremcp-comprehensive-analysis-2025-08-03
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=tools/SQLite MCP Server Reference.md, entity_id=2075, permalink=tools-sqlite-mcp-server-reference
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=onenote-integration/OneNote Basic Memory Integration Strategy.md, entity_id=763, permalink=onenote-integration-one-note-basic-memory-integration-strategy
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=visualizations/DXT Extension Packaging Knowledge Map.canvas, entity_id=1490, permalink=None
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=tools/OneNote & Teams MCP Integration - Practical Functions.md, entity_id=835, permalink=tools-one-note-teams-mcp-integration-practical-functions
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=onenote-integration/OneNote Implementation Checklist.md, entity_id=1367, permalink=onenote-integration-one-note-implementation-checklist
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=tools/MCP Repository Update Script.md, entity_id=2140, permalink=tools-mcp-repository-update-script
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=market-analysis/Zettelkasten MCP Reality Check - Crowded Market Analysis.md, entity_id=736, permalink=market-analysiszettelkasten-mcp-reality-check-crowded-market-analysis
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=discoveries/PyWinAuto-MCP Discovery - Custom Professional Windows MCP Server 2025-08-04 0845.md, entity_id=1189, permalink=discoveriespywinauto-mcp-discovery-custom-professional-windows-mcp-server-2025-08-04-0845
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=general-ai/Basic Memory Database Schema Analysis.md, entity_id=1045, permalink=general-ai-basic-memory-database-schema-analysis
+2025-10-10 06:40:50 | INFO     | Deleting entity with file_path=infrastructure/DATA APOCALYPSE WARNING - Authentication Wall Timeline.md, entity_id=1902, permalink=infrastructuredata-apocalypse-warning-authentication-wall-timeline
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=universal-docs/Universal Documentation - Command Abbreviations and IDE Conversation Persistence.md, entity_id=2038, permalink=universal-docs/universal-documentation-command-abbreviations-and-ide-conversation-persistence
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=tools/VeoGen Control Panel Startup Scripts.md, entity_id=1048, permalink=tools-veo-gen-control-panel-startup-scripts
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=project-milestones/Documentation_Reorganization_-_206_Pages_into_6_Subdirectories.md, entity_id=493, permalink=project-milestones/documentation-reorganization-206-pages-into-6-subdirectories
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=weather/Recent Rainy Weather in Austria.md, entity_id=502, permalink=weatherrecent-rainy-weather-in-austria
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=troubleshooting/MyAI Dashboard Docker Fix CLI Implementation 2025-08-04 2008.md, entity_id=1878, permalink=troubleshootingmyai-dashboard-docker-fix-cli-implementation-2025-08-04-2008
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=tech-rants/Microsoft Python App Execution Aliases - Peak Corporate Stupidity.md, entity_id=989, permalink=tech-rantsmicrosoft-python-app-execution-aliases-peak-corporate-stupidity
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=implementation/Windows Operations MCP Archive Extension Strategy.md, entity_id=2094, permalink=implementationwindows-operations-mcp-archive-extension-strategy
+2025-10-10 06:40:51 | INFO     | Deleting entity with file_path=onenote-integration/OneNote CRUD Working Examples.md, entity_id=446, permalink=onenote-integration-one-note-crud-working-examples
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=troubleshooting/Windows-MCP Repository Analysis and Version Status 2025-08-04 0830.md, entity_id=2233, permalink=troubleshootingwindows-mcp-repository-analysis-and-version-status-2025-08-04-0830
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=troubleshooting/FastMCP_1_14_Incompatibility_with_Python_3_13_-_2025-10-08-1240.md, entity_id=1047, permalink=troubleshooting/fast-mcp-1-14-incompatibility-with-python-3-13-2025-10-08-1240
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=work/mcp-servers/Glama_ai_MCP_Server_Indexing_Guide_2025-09-30.md, entity_id=1935, permalink=workmcp-serversglama-ai-mcp-server-indexing-guide-2025-09-30
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=database/Basic Memory Database Schema and Cleanup.md, entity_id=1890, permalink=database-basic-memory-database-schema-and-cleanup
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=project-analysis/HasleoBackup-MCP Corporate Ready Analysis 2025-08-04 1130.md, entity_id=353, permalink=project-analysishasleobackup-mcp-corporate-ready-analysis-2025-08-04-1130
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=meta/The Claude Triple Guillotine - Complete Taxonomy & Mitigation Strategies.md, entity_id=525, permalink=metathe-claude-triple-guillotine-complete-taxonomy-mitigation-strategies
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=infrastructure/MCP Orchestration & Structured Data Revolution - Research Deep Dive.md, entity_id=117, permalink=infrastructuremcp-orchestration-structured-data-revolution-research-deep-dive
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=research/zed-analysis/Zed Research - Company Background & Team Credentials.md, entity_id=672, permalink=researchzed-analysiszed-research-company-background-team-credentials
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=status/VeoGen Control Panel Final Summary.md, entity_id=1708, permalink=status-veo-gen-control-panel-final-summary
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=onenote-integration/OneNote Basic Memory - Complete Implementation Guide.md, entity_id=1054, permalink=onenote-integration-one-note-basic-memory-complete-implementation-guide
+2025-10-10 06:40:52 | INFO     | Deleting entity with file_path=research/Basic Memory MCP Alternative Analysis - 2025-09-11.md, entity_id=1441, permalink=researchbasic-memory-mcp-alternative-analysis-2025-09-11
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=troubleshooting/Microsoft 365 MCP Authentication Issues Analysis - August 13 2025.md, entity_id=2289, permalink=troubleshootingmicrosoft-365-mcp-authentication-issues-analysis-august-13-2025
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=dxt/DXT MCP Server Packaging - PROVEN METHOD for Next 20 Servers.md, entity_id=979, permalink=dxt/dxt-mcp-server-packaging-proven-method-for-next-20-servers
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=infrastructure/Official Docker MCP Toolkit Due Diligence FAILED.md, entity_id=1616, permalink=infrastructureofficial-docker-mcp-toolkit-due-diligence-failed
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=fastmcp/FastMCP 2.12 Release Notes - 2025-09-01.md, entity_id=189, permalink=fastmcpfastmcp-212-release-notes-2025-09-01
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=philosophy/Inverse Turing Test - AI Must Play Dumb.md, entity_id=1569, permalink=philosophyinverse-turing-test-ai-must-play-dumb
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=n8n-series/n8n Overview & FOSS Philosophy.md, entity_id=2032, permalink=n8n-seriesn8n-overview-foss-philosophy
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=integration/FIXED OneNote MCP Integration - HTML Parsing Corrected.md, entity_id=2186, permalink=integration-fixed-one-note-mcp-integration-html-parsing-corrected
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=infrastructure/MCP Server Upgrade Status Update - July 17, 2025.md, entity_id=1138, permalink=infrastructure-mcp-server-upgrade-status-update-july-17-2025
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=research/Anthropic MCP Documentation & Guidelines Summary.md, entity_id=1715, permalink=research-anthropic-mcp-documentation-guidelines-summary
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=security/WinRAR vs 7-Zip MCP Security Analysis.md, entity_id=1447, permalink=securitywinrar-vs-7-zip-mcp-security-analysis
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=assessments/DaVinci Resolve MCP Critical Assessment - 75% Complete Revolutionary Project.md, entity_id=1952, permalink=assessmentsdavinci-resolve-mcp-critical-assessment-75-complete-revolutionary-project
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=zed-analysis/Zed IDE Technical Analysis - Revolutionary GPU Architecture.md, entity_id=1718, permalink=zed-analysiszed-ide-technical-analysis-revolutionary-gpu-architecture
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=assessments/GTFS-MCP Critical Assessment - Massive Scope Creep, Weak Value Proposition.md, entity_id=2268, permalink=assessmentsgtfs-mcp-critical-assessment-massive-scope-creep-weak-value-proposition
+2025-10-10 06:40:53 | INFO     | Deleting entity with file_path=meta/Basic Memory - Note Management Rules & Conventions.md, entity_id=2172, permalink=meta-basic-memory-note-management-rules-conventions
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=analysis/PyWinAuto MCP Enhancement Analysis.md, entity_id=1083, permalink=analysispywinauto-mcp-enhancement-analysis
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=infrastructure/Docker MCP Infrastructure Crisis - Critical Blocking Issue.md, entity_id=902, permalink=infrastructuredocker-mcp-infrastructure-crisis-critical-blocking-issue
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=research-notes/Firebase vs BaaS Competitors Research 2025-08-04 1030.md, entity_id=297, permalink=research-notesfirebase-vs-baas-competitors-research-2025-08-04-1030
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=formats/TAR and TAR.GZ Formats Explained.md, entity_id=2200, permalink=formatstar-and-targz-formats-explained
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=troubleshooting/VBoxMCP Conflict Resolution SUCCESS - Extension Test 2025-08-04 2142.md, entity_id=298, permalink=troubleshootingvboxmcp-conflict-resolution-success-extension-test-2025-08-04-2142
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=rules/IMPROVED_DEVELOPMENT_RULES.md, entity_id=2117, permalink=rulesimproved-development-rules
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=integration/OneNote HTML Parser - WORKING.md, entity_id=514, permalink=integration-one-note-html-parser-working
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=general-ai/FastSearch-MCP-Plan.md, entity_id=1685, permalink=None
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=research/Bookmark Management Crisis & AI-Powered Solution Strategy.md, entity_id=2270, permalink=researchbookmark-management-crisis-ai-powered-solution-strategy
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=continuation/Advanced Memory Project - Updated Continuation Guide.md, entity_id=1356, permalink=continuation-advanced-memory-project-updated-continuation-guide
+2025-10-10 06:40:54 | INFO     | Deleting entity with file_path=implementation/GIMP-MCP Development Project Start.md, entity_id=347, permalink=implementationgimp-mcp-development-project-start
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=tools/VibeTunnel & Wispr Flow - AI Development Tools Overview.md, entity_id=2292, permalink=toolsvibetunnel-wispr-flow-ai-development-tools-overview
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=corrections/CORRECTION - Name is Sandra SCHIPAL not Schieder.md, entity_id=1260, permalink=correctionscorrection-name-is-sandra-schipal-not-schieder
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=ai-development/SandraLLM 175B - Enterprise AI Development with H100 Cluster.md, entity_id=2120, permalink=ai-developmentsandrallm-175b-enterprise-ai-development-with-h100-cluster
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=implementation/VRoid Studio MCP - AUTOMATION IMPOSSIBILITY CONFIRMED.md, entity_id=549, permalink=implementationvroid-studio-mcp-automation-impossibility-confirmed
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=implementation/GIMP-MCP Status Assessment - MAJOR DISCOVERY.md, entity_id=790, permalink=implementationgimp-mcp-status-assessment-major-discovery
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=incident-reports/The Great VeoGen Deletion Disaster - A Cautionary Tale.md, entity_id=464, permalink=incident-reports-the-great-veo-gen-deletion-disaster-a-cautionary-tale
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=assessments/Claude 4 Reality Check - User Feedback Analysis.md, entity_id=125, permalink=assessmentsclaude-4-reality-check-user-feedback-analysis
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=hobbies/Japanese Linguistics and Anime Plot Analysis - Unmarketable Excellence.md, entity_id=608, permalink=hobbiesjapanese-linguistics-and-anime-plot-analysis-unmarketable-excellence
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=troubleshooting/Fetch MCP Docker Issue - Troubleshooting.md, entity_id=2279, permalink=troubleshootingfetch-mcp-docker-issue-troubleshooting
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=research/🔍 SANDRASCHI GITHUB API SEARCH RESULTS - JULY 31, 2025.md, entity_id=1132, permalink=research-sandraschi-github-api-search-results-july-31-2025
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=deployment/Deployment Methods Index.md, entity_id=1529, permalink=deployment-deployment-methods-index
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=research/Docker MCP Server Ecosystem - Gateway vs Servers.md, entity_id=2321, permalink=researchdocker-mcp-server-ecosystem-gateway-vs-servers
+2025-10-10 06:40:55 | INFO     | Deleting entity with file_path=obsidian/RAG (Retrieval-Augmented Generation) for Obsidian - Implementation Options.md, entity_id=1462, permalink=obsidianrag-retrieval-augmented-generation-for-obsidian-implementation-options
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=github-posts/DXT GitHub Discussion - Ready to Post.md, entity_id=1362, permalink=github-postsdxt-github-discussion-ready-to-post
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=research/ai-futures/AI 2027 - Complete Source Document.md, entity_id=1066, permalink=research-ai-futures-ai-2027-complete-source-document
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=meta/ANALYSIS - What Are Those 611 Files.md, entity_id=96, permalink=meta-analysis-what-are-those-611-files
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=troubleshooting/Blender MCP Extension Troubleshooting - CRITICAL ERROR FOUND & SOLUTION.md, entity_id=472, permalink=troubleshootingblender-mcp-extension-troubleshooting-critical-error-found-solution
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=research/RapidAPI Analysis & Cost Breakdown - 2025-09-21.md, entity_id=2050, permalink=researchrapidapi-analysis-cost-breakdown-2025-09-21
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=strategy/Detailed Implementation Plan - Obsidian MCP + Enhanced Basic Memory Integration.md, entity_id=797, permalink=strategydetailed-implementation-plan-obsidian-mcp-enhanced-basic-memory-integration
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=integration/CRITICAL OneNote API Fix - Root Cause & Solution.md, entity_id=1009, permalink=integration-critical-one-note-api-fix-root-cause-solution
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=politics/Sinophobic Media Bias - Engineering Reality vs Manufactured Panic.md, entity_id=1767, permalink=politicssinophobic-media-bias-engineering-reality-vs-manufactured-panic
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=infrastructure/🚨 Docker Tooling COMPLETE FAILURE - Critical Update.md, entity_id=579, permalink=infrastructure-docker-tooling-complete-failure-critical-update
+2025-10-10 06:40:56 | INFO     | Deleting entity with file_path=system/Tool_Duplication_and_Name_Ambiguity_Audit_-_2025-10-09-1430.md, entity_id=1001, permalink=system/tool-duplication-and-name-ambiguity-audit-2025-10-09-1430
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=troubleshooting/VBoxMCP Import Error Fix - Direct File Execution.md, entity_id=259, permalink=troubleshootingvboxmcp-import-error-fix-direct-file-execution
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=troubleshooting/Windows-MCP PowerShell Tool Critical Reliability Issues 2025-08-04 0815.md, entity_id=1656, permalink=troubleshootingwindows-mcp-powershell-tool-critical-reliability-issues-2025-08-04-0815
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=meta/Claude Depot Cleanup - Practical Action Plan.md, entity_id=1225, permalink=meta-claude-depot-cleanup-practical-action-plan
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=system/Claude Preprompt v2_1 Final - Filename Bug Fixed - 2025-09-27-1740.md, entity_id=1147, permalink=systemclaude-preprompt-v2-1-final-filename-bug-fixed-2025-09-27-1740
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=reddit-posts/DXT Reddit Posts - Ready to Post.md, entity_id=1978, permalink=reddit-postsdxt-reddit-posts-ready-to-post
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=tech-issues/Python Command Not Found Issue SOLVED - Windows App Execution Aliases Problem.md, entity_id=953, permalink=tech-issuespython-command-not-found-issue-solved-windows-app-execution-aliases-problem
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=productivity/enhanced-autohotkey-ideas-2025-09-02.md, entity_id=2201, permalink=productivityenhanced-autohotkey-ideas-2025-09-02
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=assessments/Hasleo Backup MCP Critical Assessment - Surprising Quality Despite Market Questions.md, entity_id=409, permalink=assessmentshasleo-backup-mcp-critical-assessment-surprising-quality-despite-market-questions
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=troubleshooting/VBoxMCP Windsurf Fix - Found Root Cause.md, entity_id=611, permalink=troubleshootingvboxmcp-windsurf-fix-found-root-cause
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=research/FastMCP 2.12+ Parameter Standards Research - 2025-09-12.md, entity_id=1749, permalink=researchfastmcp-212-parameter-standards-research-2025-09-12
+2025-10-10 06:40:57 | INFO     | Deleting entity with file_path=infrastructure/🔍 Docker MCP Community Servers - Due Diligence Assessment.md, entity_id=1131, permalink=infrastructure-docker-mcp-community-servers-due-diligence-assessment
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=meta/Chat Start Note - Quick Context & Status.md, entity_id=1832, permalink=metachat-start-note-quick-context-status
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=datasets/LinkedMDB Dataset Discovery - 2025-08-30.md, entity_id=857, permalink=datasetslinkedmdb-dataset-discovery-2025-08-30
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=assessments/DockerMCP Windsurf Critical Assessment - Infrastructure Issues Found.md, entity_id=977, permalink=assessmentsdockermcp-windsurf-critical-assessment-infrastructure-issues-found
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=CONSOLIDATION_PLAN.md, entity_id=83, permalink=None
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=solutions/Firefox Bookmark Search Solution.md, entity_id=661, permalink=solutionsfirefox-bookmark-search-solution
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=platform-analyses/VMware Workstation Post-Broadcom Analysis 2025-08-03.md, entity_id=289, permalink=platform-analysesvmware-workstation-post-broadcom-analysis-2025-08-03
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=deployment/Docker Self-Hosted Deployment Guide.md, entity_id=604, permalink=deployment-docker-self-hosted-deployment-guide
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=troubleshooting/PlexMCP Server Disconnected Fix - FastMCP Constructor Issue.md, entity_id=1480, permalink=troubleshootingplexmcp-server-disconnected-fix-fastmcp-constructor-issue
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=beyond-compare-analysis/Beyond Compare MCP - Project Status Summary.md, entity_id=1507, permalink=beyond-compare-analysisbeyond-compare-mcp-project-status-summary
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=market-analyses/Windows Virtualization Landscape Overview 2025-08-03.md, entity_id=1623, permalink=market-analyseswindows-virtualization-landscape-overview-2025-08-03
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=dxt/DXT MCP Server Packaging - PROVEN METHOD for All MCP Servers.md, entity_id=1347, permalink=dxtdxt-mcp-server-packaging-proven-method-for-all-mcp-servers
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=research/🔍 FILIPE CALEGARIO GITHUB REPOS RESEARCH - JULY 31, 2025.md, entity_id=1383, permalink=research-filipe-calegario-github-repos-research-july-31-2025
+2025-10-10 06:40:58 | INFO     | Deleting entity with file_path=solutions/Portainer Port Display Location - SOLVED.md, entity_id=1188, permalink=solutionsportainer-port-display-location-solved
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=troubleshooting/Fetch MCP Docker Issue - RESOLVED.md, entity_id=1532, permalink=troubleshootingfetch-mcp-docker-issue-resolved
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=analysis/Anthropic Rate Limit Scandal August 2025.md, entity_id=724, permalink=analysisanthropic-rate-limit-scandal-august-2025
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=deployment/Deployment Methods Complete Guide.md, entity_id=622, permalink=deployment-deployment-methods-complete-guide
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=assessments/Claude Code Rate Limits Reality Check - The Troll Problem & Austrian Budget Impact.md, entity_id=1981, permalink=assessmentsclaude-code-rate-limits-reality-check-the-troll-problem-austrian-budget-impact
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=integration/Complete Integration Solutions - OneNote, Teams, & Documentation Website.md, entity_id=247, permalink=integration-complete-integration-solutions-one-note-teams-documentation-website
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=troubleshooting/MCP Server Reality Check and Testing Guide.md, entity_id=1114, permalink=troubleshooting-mcp-server-reality-check-and-testing-guide
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=philosophy/EXISTENCE IS QUERYABLE - The Universal Query Principle.md, entity_id=650, permalink=philosophyexistence-is-queryable-the-universal-query-principle
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=implementation/VirtualDJ-MCP Project Scaffold Complete - Phase 1.md, entity_id=849, permalink=implementationvirtualdj-mcp-project-scaffold-complete-phase-1
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=system-issues/PowerShell MCP Tool CRITICAL FAILURE - Must Fix Tomorrow.md, entity_id=1328, permalink=system-issuespowershell-mcp-tool-critical-failure-must-fix-tomorrow
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=tools-reference/Basic-Memory MCP Server - Complete Reference and Advanced Usage Guide.md, entity_id=417, permalink=tools-referencebasic-memory-mcp-server-complete-reference-and-advanced-usage-guide
+2025-10-10 06:40:59 | INFO     | Deleting entity with file_path=notes/PyWinAuto MCP Server Fix - COMPLETED 2025-08-11-1625.md, entity_id=908, permalink=notespywinauto-mcp-server-fix-completed-2025-08-11-1625
+2025-10-10 06:41:00 | INFO     | Deleting entity with file_path=architecture/Future_Infrastructure_Enhancements_2025-10-06-1920.md, entity_id=1518, permalink=architecture/future-infrastructure-enhancements-2025-10-06-1920
+2025-10-10 06:41:00 | INFO     | Deleting entity with file_path=meta/Complete Knowledge Enhancement Implementation Roadmap.md, entity_id=605, permalink=metacomplete-knowledge-enhancement-implementation-roadmap
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=detailed-analyses/Complete MCP Portfolio Analysis 2025-08-03.md, entity_id=976, permalink=detailed-analysescomplete-mcp-portfolio-analysis-2025-08-03
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=prompts/prompt-blocks.md, entity_id=2222, permalink=promptsprompt-blocks
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=data/OneNote Complete Structure Map - Verified Data.md, entity_id=571, permalink=data-one-note-complete-structure-map-verified-data
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=analysis/FastSearch MCP Service Analysis - 2025-09-05 2258.md, entity_id=1433, permalink=analysisfastsearch-mcp-service-analysis-2025-09-05-2258
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=automation-solutions/Command Line Abbreviations for Claude Multi-Platform Documentation.md, entity_id=1906, permalink=automation-solutions/command-line-abbreviations-for-claude-multi-platform-documentation
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=notes/Newest Features in LMStudio.md, entity_id=1550, permalink=notesnewest-features-in-lmstudio
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=research/Apify vs Bright Data MCP Detailed Analysis - 2025-09-21.md, entity_id=630, permalink=researchapify-vs-bright-data-mcp-detailed-analysis-2025-09-21
+2025-10-10 06:41:01 | INFO     | Deleting entity with file_path=analysis/AI 2027 Analysis - Strategic Assessment and Implications.md, entity_id=1671, permalink=analysis-ai-2027-analysis-strategic-assessment-and-implications
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=research/🔍 GITHUB SEARCH VISIBILITY MYSTERY - ANALYSIS JULY 31, 2025.md, entity_id=2062, permalink=research-github-search-visibility-mystery-analysis-july-31-2025
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=creative/UNCONVENTIONAL GRAFANA USES - Nobody Can Stop Us! - Aug 20, 2025.md, entity_id=1799, permalink=creativeunconventional-grafana-uses-nobody-can-stop-us-aug-20-2025
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=work/mcp-servers/Windows-Operations-MCP_License_Fixed_2025-09-30-2040.md, entity_id=1736, permalink=workmcp-serverswindows-operations-mcp-license-fixed-2025-09-30-2040
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=assessments/Petbot Loona MCP Critical Assessment - MAJOR FABRICATION ISSUES IDENTIFIED.md, entity_id=1241, permalink=assessmentspetbot-loona-mcp-critical-assessment-major-fabrication-issues-identified
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=scripts/automation/gitignore-cleanup/emergency-stop-sync.ps1, entity_id=1338, permalink=None
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=scripts/docker/management/rebuild-frontend.ps1, entity_id=2078, permalink=None
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=tools-documentation/Grafana for Home Kitchen & Security Monitoring Guide.md, entity_id=2210, permalink=tools-documentationgrafana-for-home-kitchen-security-monitoring-guide
+2025-10-10 06:41:02 | INFO     | Deleting entity with file_path=work/mcp-servers/Tapo-Camera-MCP_Improvement_Plan_-_2025-09-30-2201.md, entity_id=74, permalink=workmcp-serverstapo-camera-mcp-improvement-plan-2025-09-30-2201
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=system/Claude Preprompt v2.1 Final - Git and MCP Rules - 2025-09-27-1735.md, entity_id=221, permalink=systemclaude-preprompt-v21-final-git-and-mcp-rules-2025-09-27-1735
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=research/Booking.com API Scam Analysis - Official vs Middleman - 2025-09-21.md, entity_id=671, permalink=researchbookingcom-api-scam-analysis-official-vs-middleman-2025-09-21
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=philosophy/Sandra's Philosophical Framework - Anti-Essentialist Materialism & AI Reality.md, entity_id=2285, permalink=philosophysandras-philosophical-framework-anti-essentialist-materialism-ai-reality
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=analysis/MCP Configuration Analysis - 2025-09-06 2013.md, entity_id=1234, permalink=analysismcp-configuration-analysis-2025-09-06-2013
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=tools-documentation/Portainer - Docker Management UI Complete Guide.md, entity_id=1431, permalink=tools-documentationportainer-docker-management-ui-complete-guide
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=server-status/Plex Server Status Check - July 25 2025 1656.md, entity_id=829, permalink=server-statusplex-server-status-check-july-25-2025-1656
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=CONSOLIDATION_PLAN_REVISED.md, entity_id=230, permalink=None
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=zed-analysis/Zed IDE - Strategic Analysis & Market Impact Assessment.md, entity_id=1580, permalink=zed-analysiszed-ide-strategic-analysis-market-impact-assessment
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=infrastructure/Fetch MCP Server Investigation - July 17, 2025.md, entity_id=1990, permalink=infrastructure-fetch-mcp-server-investigation-july-17-2025
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=strategy/Quick Fix Strategy - Node Modules Exclusion.md, entity_id=665, permalink=strategy-quick-fix-strategy-node-modules-exclusion
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=implementation/WinRAR MCP Hybrid Strategy + Windows 11 Native Archive Support.md, entity_id=973, permalink=implementationwinrar-mcp-hybrid-strategy-windows-11-native-archive-support
+2025-10-10 06:41:03 | INFO     | Deleting entity with file_path=market-analysis/Single-Purpose OneNote Reading MCP - Leveraging Existing Solutions.md, entity_id=564, permalink=market-analysissingle-purpose-onenote-reading-mcp-leveraging-existing-solutions
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=integration/OneNote MCP Status - SUCCESS.md, entity_id=389, permalink=integration-one-note-mcp-status-success
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=troubleshooting/VBoxMCP Fixed - Windsurf Damage Repaired.md, entity_id=566, permalink=troubleshootingvboxmcp-fixed-windsurf-damage-repaired
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=detailed-analyses/FastSearchMCP Comprehensive Analysis 2025-08-03.md, entity_id=2216, permalink=detailed-analysesfastsearchmcp-comprehensive-analysis-2025-08-03
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=deployment/Vercel Complete Deployment Guide.md, entity_id=1574, permalink=deployment-vercel-complete-deployment-guide
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=analysis/Anthropic Integrations Analysis - May 2025 Recent.md, entity_id=1370, permalink=analysisanthropic-integrations-analysis-may-2025-recent
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=project-plans/Sandra Personal MCP Zoo Strategy 2025-08-04 1115.md, entity_id=1214, permalink=project-planssandra-personal-mcp-zoo-strategy-2025-08-04-1115
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=analysis/MCP Wrapper Analysis for Creative Applications.md, entity_id=1607, permalink=analysismcp-wrapper-analysis-for-creative-applications
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=research/Anthropic_Claude_4_Family_and_Sonnet_4_5_Research_-_2025-09-30.md, entity_id=922, permalink=researchanthropic-claude-4-family-and-sonnet-4-5-research-2025-09-30
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=assessments/The $300-500B AI Gold Rush - Jensen's Money Machine.md, entity_id=1498, permalink=assessmentsthe-300-500b-ai-gold-rush-jensens-money-machine
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=analysis/dockermcp-assessment-complete.md, entity_id=235, permalink=analysisdockermcp-assessment-complete
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=meta/Reorganization Step 1 - Folder Structure.md, entity_id=547, permalink=meta-reorganization-step-1-folder-structure
+2025-10-10 06:41:04 | INFO     | Deleting entity with file_path=architecture/Dashboard_Architecture_-_Clean_React_Pattern_2025-10-06-1830.md, entity_id=2152, permalink=architecture/dashboard-architecture-clean-react-pattern-2025-10-06-1830
+2025-10-10 06:41:05 | INFO     | Deleting entity with file_path=troubleshooting/Claude Desktop MCP Startup Reliability Issues 2025-08-03.md, entity_id=968, permalink=troubleshootingclaude-desktop-mcp-startup-reliability-issues-2025-08-03
+2025-10-10 06:41:05 | INFO     | Deleting entity with file_path=infrastructure/🐳 Docker MCP vs CLI Flakiness Analysis - CRITICAL WORKFLOW ISSUE.md, entity_id=715, permalink=infrastructure-docker-mcp-vs-cli-flakiness-analysis-critical-workflow-issue
+2025-10-10 06:41:05 | INFO     | Deleting entity with file_path=infrastructure/Docker MCP Testing & Update Report - July 17, 2025.md, entity_id=940, permalink=infrastructure-docker-mcp-testing-update-report-july-17-2025
+2025-10-10 06:41:05 | INFO     | Deleting entity with file_path=research/OneNote & Teams - Repository Examples & Best Practices.md, entity_id=114, permalink=research-one-note-teams-repository-examples-best-practices
+2025-10-10 06:41:05 | INFO     | Deleting entity with file_path=analysis/Windows 11 Archive Support Progress + WinRAR Guilt Complex.md, entity_id=2191, permalink=analysiswindows-11-archive-support-progress-winrar-guilt-complex
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=research/Zed Editor Limitations and Workarounds vs Competition.md, entity_id=510, permalink=researchzed-editor-limitations-and-workarounds-vs-competition
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=market-analysis/Joplin MCP Wrapper - Smart Integration Strategy.md, entity_id=1334, permalink=market-analysisjoplin-mcp-wrapper-smart-integration-strategy
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=deployment/Squirrel Framework Reference.md, entity_id=509, permalink=tools-squirrel-framework-reference-1
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=productivity/autohotkey-mcp-helper-setup-2025-09-02.md, entity_id=486, permalink=productivityautohotkey-mcp-helper-setup-2025-09-02
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=troubleshooting/SQLite MCP Installation Troubleshooting.md, entity_id=2185, permalink=troubleshooting-sqlite-mcp-installation-troubleshooting
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=notes/PyWinAuto MCP Fix Progress 2025-08-11-1615.md, entity_id=533, permalink=notespywinauto-mcp-fix-progress-2025-08-11-1615
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=predictions/GitHub Honor System Collapse Prediction.md, entity_id=1784, permalink=predictionsgithub-honor-system-collapse-prediction
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=assessments/DaVinci Resolve MCP Extension Test Results - Python Path Issue Found.md, entity_id=370, permalink=assessmentsdavinci-resolve-mcp-extension-test-results-python-path-issue-found
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=solutions/GitHub MCP Tools Issue - Solution Found.md, entity_id=930, permalink=solutionsgithub-mcp-tools-issue-solution-found
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=analysis/Anthropic Integrations Analysis - May 2024 Stone Age.md, entity_id=1267, permalink=analysisanthropic-integrations-analysis-may-2024-stone-age
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=planning/Tomorrow's Epic MCP Development Sprint Plan.md, entity_id=948, permalink=planningtomorrows-epic-mcp-development-sprint-plan
+2025-10-10 06:41:06 | INFO     | Deleting entity with file_path=platform-analyses/Microsoft Hyper-V Platform Analysis 2025-08-03.md, entity_id=899, permalink=platform-analysesmicrosoft-hyper-v-platform-analysis-2025-08-03
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=scripts/automation/gitignore-cleanup/cleanup-gitignore.ps1, entity_id=57, permalink=None
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=integration/Working OneNote API Code - Microsoft Official Examples.md, entity_id=1469, permalink=integration-working-one-note-api-code-microsoft-official-examples
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=assessments/Beyond Compare MCP - Scathing Assessment 2025-08-13.md, entity_id=1601, permalink=assessmentsbeyond-compare-mcp-scathing-assessment-2025-08-13
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=philosophy/AI Art, Ethics and Theology Meander - 2025-09-27-0625.md, entity_id=183, permalink=philosophyai-art-ethics-and-theology-meander-2025-09-27-0625
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=research/zed-analysis/Zed GPU Technology - Revolutionary Shader Architecture.md, entity_id=1905, permalink=researchzed-analysiszed-gpu-technology-revolutionary-shader-architecture
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=assessments/MCP Server Template Architecture Assessment.md, entity_id=443, permalink=assessmentsmcp-server-template-architecture-assessment
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=practical-guides/MCP Knowledge Management Use Cases and Workflows.md, entity_id=448, permalink=practical-guides-mcp-knowledge-management-use-cases-and-workflows
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=tools/OneNote API Integration - Complete Solution & Troubleshooting.md, entity_id=670, permalink=tools-one-note-api-integration-complete-solution-troubleshooting
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=research/ROS2 and Unitree R1 Research - 2025-09-13.md, entity_id=2164, permalink=researchros2-and-unitree-r1-research-2025-09-13
+2025-10-10 06:41:07 | INFO     | Deleting entity with file_path=opportunities/Teams MCP Fork Opportunity Analysis - Sandra's Next Big Win 2025-08-11-2116.md, entity_id=880, permalink=opportunitiesteams-mcp-fork-opportunity-analysis-sandras-next-big-win-2025-08-11-2116
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=troubleshooting/DaVinci Resolve MCP - DXT Extension Python Path FIXED.md, entity_id=1026, permalink=troubleshootingdavinci-resolve-mcp-dxt-extension-python-path-fixed
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=tech/Basic Memory Tag CRUD Tool Gap Analysis.md, entity_id=856, permalink=techbasic-memory-tag-crud-tool-gap-analysis
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=backup-strategy/D-Dev-Repos Backup Strategy Plan - 2025-09-28-1530.md, entity_id=1230, permalink=backup-strategyd-dev-repos-backup-strategy-plan-2025-09-28-1530
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=mediadashboards/MediaDashboards Cleanup Project.md, entity_id=2054, permalink=mediadashboardsmediadashboards-cleanup-project
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=troubleshooting/MyAI Dashboard StableDiff Monitoring Issue Debug 2025-08-04 2005.md, entity_id=59, permalink=troubleshootingmyai-dashboard-stablediff-monitoring-issue-debug-2025-08-04-2005
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=analysis/Anthropic Desktop Extensions Analysis - DXT Format.md, entity_id=633, permalink=analysisanthropic-desktop-extensions-analysis-dxt-format
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=meta/The Great DXT Gallop - From 1980s Hell to AI-Powered Heaven.md, entity_id=204, permalink=metathe-great-dxt-gallop-from-1980s-hell-to-ai-powered-heaven
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=beyond-compare-analysis/Beyond Compare MCP - Deep Analysis & Completion Plan.md, entity_id=320, permalink=beyond-compare-analysisbeyond-compare-mcp-deep-analysis-completion-plan
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=strategy/Obsidian Strategy & Basic Memory MCP Enhancement Plan.md, entity_id=991, permalink=strategyobsidian-strategy-basic-memory-mcp-enhancement-plan
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=research/Unitree R1 Humanoid Robot - Complete Technical Overview.md, entity_id=2313, permalink=researchunitree-r1-humanoid-robot-complete-technical-overview
+2025-10-10 06:41:08 | INFO     | Deleting entity with file_path=architecture/Backend_Architecture_for_Fullstack-Demo_2025-10-06-1900.md, entity_id=1492, permalink=architecture/backend-architecture-for-fullstack-demo-2025-10-06-1900
+2025-10-10 06:41:09 | INFO     | Deleting entity with file_path=meta/Obsidian Integration & Knowledge Enhancement - Complete Setup Summary.md, entity_id=1695, permalink=metaobsidian-integration-knowledge-enhancement-complete-setup-summary
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=research/GIMP MCP Tools Research - 2025-08-28.md, entity_id=792, permalink=researchgimp-mcp-tools-research-2025-08-28
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=meta/CRITICAL WORKFLOW ISSUE - Claude Guillotine & Outdated Progress Notes.md, entity_id=255, permalink=metacritical-workflow-issue-claude-guillotine-outdated-progress-notes
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=infrastructure/AI Knowledge Cutoff Strategy - Static vs Dynamic Content.md, entity_id=167, permalink=infrastructureai-knowledge-cutoff-strategy-static-vs-dynamic-content
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=troubleshooting/Database Integrity Fix Script.md, entity_id=504, permalink=troubleshootingdatabase-integrity-fix-script
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=ai-development/Building SandraLLM 30B - Post-Training Wisdom Expansion Guide.md, entity_id=1420, permalink=ai-developmentbuilding-sandrallm-30b-post-training-wisdom-expansion-guide
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=deployment/Railway Complete Deployment Guide.md, entity_id=1042, permalink=deployment-railway-complete-deployment-guide
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=tools/SQLite MCP Server Complete Guide.md, entity_id=741, permalink=tools-sqlite-mcp-server-complete-guide
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=diagnostics/Claude Desktop Issues & AvatarMCP Fix Sep04 1402.md, entity_id=747, permalink=diagnosticsclaude-desktop-issues-avatarmcp-fix-sep04-1402
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=system/MCP_Tool_Naming_Convention_Proposal_-_2025-10-09-1440.md, entity_id=515, permalink=system/mcp-tool-naming-convention-proposal-2025-10-09-1440
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=scripts/automation/log-migration/migrate_logs.ps1, entity_id=2199, permalink=None
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=discoveries/MCP Inspector Discovery - Game Changer.md, entity_id=1253, permalink=discoveriesmcp-inspector-discovery-game-changer
+2025-10-10 06:41:10 | INFO     | Deleting entity with file_path=The_Great_VeoGen_Deletion_Disaster.md, entity_id=429, permalink=None
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=research/Booking.com MCP Server Research - 2025-09-21.md, entity_id=1639, permalink=researchbookingcom-mcp-server-research-2025-09-21
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=troubleshooting/PlexMCP Startup Fix - Environment Variable Issue.md, entity_id=1077, permalink=troubleshootingplexmcp-startup-fix-environment-variable-issue
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=system/Claude Preprompt v2.1 - Concise Prioritized Version - 2025-09-27-1715.md, entity_id=1023, permalink=systemclaude-preprompt-v21-concise-prioritized-version-2025-09-27-1715
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=scripts/automation/audit-script-compliance.ps1, entity_id=1262, permalink=None
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=status/Firefox Database Tools Status Check 2025-09-05 2252.md, entity_id=1317, permalink=statusfirefox-database-tools-status-check-2025-09-05-2252
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=security-research/MCP Security Exploit Chain - WSJ Disclosure Draft.md, entity_id=1590, permalink=security-researchmcp-security-exploit-chain-wsj-disclosure-draft
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=architecture/MCP Server-to-Server Communication Patterns.md, entity_id=1672, permalink=architecturemcp-server-to-server-communication-patterns
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=CONSOLIDATION_COMPLETE.md, entity_id=1761, permalink=None
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=scripts/docker/management/docker-logs.ps1, entity_id=2135, permalink=None
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=beyond-compare-analysis/Beyond Compare MCP - Technical Action Plan.md, entity_id=789, permalink=beyond-compare-analysisbeyond-compare-mcp-technical-action-plan
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=analysis/Dual RTX 4090 Analysis - AI/ML Use Cases.md, entity_id=280, permalink=analysisdual-rtx-4090-analysis-aiml-use-cases
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=preprompts/Sandra Profile & Preferences - PowerShell Syntax Standards.md, entity_id=626, permalink=prepromptssandra-profile-preferences-powershell-syntax-standards
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=troubleshooting/MyAI Dashboard Docker Package Fix ACTUAL ROOT CAUSE 2025-08-04 2012.md, entity_id=734, permalink=troubleshootingmyai-dashboard-docker-package-fix-actual-root-cause-2025-08-04-2012
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=research-notes/Vibecoding Discovery Crisis and Real Feature Research 2025-08-04 1105.md, entity_id=652, permalink=research-notesvibecoding-discovery-crisis-and-real-feature-research-2025-08-04-1105
+2025-10-10 06:41:11 | INFO     | Deleting entity with file_path=analysis/dockermcp-repository-assessment.md, entity_id=822, permalink=analysisdockermcp-repository-assessment
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=status/Claude Depot Successfully Created.md, entity_id=879, permalink=status-claude-depot-successfully-created
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=status/windows-operations-mcp Temporary Config JSON Setup.md, entity_id=2238, permalink=statuswindows-operations-mcp-temporary-config-json-setup
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=assessments/Blender MCP Extension Analysis - Available Tools & Functions.md, entity_id=451, permalink=assessmentsblender-mcp-extension-analysis-available-tools-functions
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=research/zed-analysis/Zed vs Cursor Strategic Market Analysis - Valuation Paradox.md, entity_id=1561, permalink=researchzed-analysiszed-vs-cursor-strategic-market-analysis-valuation-paradox
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=n8n-series/n8n Complete Documentation Series - Master Index.md, entity_id=1127, permalink=n8n-seriesn8n-complete-documentation-series-master-index
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=troubleshooting/DaVinci Resolve MCP Python Path Fix - SOLUTION IMPLEMENTED.md, entity_id=1366, permalink=troubleshootingdavinci-resolve-mcp-python-path-fix-solution-implemented
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=productivity/autohotkey-script-fix-sep02.md, entity_id=317, permalink=productivityautohotkey-script-fix-sep02
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=system/Session_Summary_2025-10-09-1835.md, entity_id=2300, permalink=system/session-summary-2025-10-09-1835
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=infrastructure/MCP Server Upgrade Plan - July 2025.md, entity_id=426, permalink=infrastructure-mcp-server-upgrade-plan-july-2025
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=rules/MASTER_DEVELOPMENT_RULES.md, entity_id=1112, permalink=rules-master-development-rules
+2025-10-10 06:41:12 | INFO     | Deleting entity with file_path=research/Best FOSS Coding LLMs for RTX 4090 - August 2025.md, entity_id=80, permalink=researchbest-foss-coding-llms-for-rtx-4090-august-2025
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=notes/PlexMCP Fix Progress 2025-08-11-1555.md, entity_id=1889, permalink=notesplexmcp-fix-progress-2025-08-11-1555
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=notes/Windows-Operations-MCP Tools Discovery 2025-08-11-1530.md, entity_id=1949, permalink=noteswindows-operations-mcp-tools-discovery-2025-08-11-1530
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=assessments/FOSS Virtual Organ Alternatives & GrandOrgue Fork Feasibility Analysis.md, entity_id=1753, permalink=assessmentsfoss-virtual-organ-alternatives-grandorgue-fork-feasibility-analysis
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=project-dashboard/Sandra Complete Dev Projects Dashboard 2025-08-04 1140.md, entity_id=2125, permalink=project-dashboardsandra-complete-dev-projects-dashboard-2025-08-04-1140
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=integration/OneNote Integration - Real Solution.md, entity_id=2284, permalink=integration-one-note-integration-real-solution
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=meta/MCPMCP Next Session Start - 2025-07-26.md, entity_id=897, permalink=metamcpmcp-next-session-start-2025-07-26
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=tools/utilities/wizfile-search.bat, entity_id=1256, permalink=None
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=planning/COMPREHENSIVE AI ECOSYSTEM MONITORING PLAN - Show Steve Who's Boss!.md, entity_id=1630, permalink=planningcomprehensive-ai-ecosystem-monitoring-plan-show-steve-whos-boss
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=implementation/VRoid Studio MCP Status Assessment - CONFIRMED RUNT.md, entity_id=870, permalink=implementationvroid-studio-mcp-status-assessment-confirmed-runt
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=platform-analyses/Oracle VirtualBox Platform Analysis 2025-08-03.md, entity_id=2304, permalink=platform-analysesoracle-virtualbox-platform-analysis-2025-08-03
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=work/calibremcp/Calibre MCP Server Fix - Invalid JSON Response.md, entity_id=985, permalink=workcalibremcpcalibre-mcp-server-fix-invalid-json-response
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=tools/utilities/README.md, entity_id=1960, permalink=None
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=critical-analysis/AI Unconscious Knowledge Crisis - Claude iPad Discovery.md, entity_id=1003, permalink=critical-analysisai-unconscious-knowledge-crisis-claude-ipad-discovery
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=productivity/text-macro-solutions-analysis-2025-09-02.md, entity_id=1698, permalink=productivitytext-macro-solutions-analysis-2025-09-02
+2025-10-10 06:41:13 | INFO     | Deleting entity with file_path=troubleshooting/PlexMCP FastMCP 2.10+ Transport Import Fix - CRITICAL.md, entity_id=1757, permalink=troubleshootingplexmcp-fastmcp-210-transport-import-fix-critical
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=productivity/AutoHotkey InputBox Fix - 2025-09-02 1649.md, entity_id=552, permalink=productivityautohotkey-inputbox-fix-2025-09-02-1649
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=rants/Microsoft OneNote API HTML Stupidity - Official Design Failure.md, entity_id=134, permalink=rantsmicrosoft-onenote-api-html-stupidity-official-design-failure
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=research/Bright Data Complete Product Portfolio 2025-09-21.md, entity_id=491, permalink=researchbright-data-complete-product-portfolio-2025-09-21
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=integration/OneNote & Teams Complete Structure and Integration Guide.md, entity_id=2260, permalink=integration-one-note-teams-complete-structure-and-integration-guide
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=detailed-analyses/VBoxMCP Comprehensive Analysis 2025-08-03.md, entity_id=1198, permalink=detailed-analysesvboxmcp-comprehensive-analysis-2025-08-03
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=troubleshooting/VBoxMCP Conflict Resolution Dual MCP Server Problem 2025-08-04 2130.md, entity_id=1537, permalink=troubleshootingvboxmcp-conflict-resolution-dual-mcp-server-problem-2025-08-04-2130
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=communications/Email Draft for Stephan - Claude Platform Comparison.md, entity_id=1782, permalink=communicationsemail-draft-for-stephan-claude-platform-comparison
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=tech/Rayon Work-Stealing Parallelism in FastSearch-MCP.md, entity_id=2011, permalink=techrayon-work-stealing-parallelism-in-fastsearch-mcp
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=assessments/Tapo MCP Server Assessment - 2025-09-18.md, entity_id=2126, permalink=assessmentstapo-mcp-server-assessment-2025-09-18
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=deployment/Squirrel Framework for VeoGen.md, entity_id=56, permalink=deployment-squirrel-framework-for-veo-gen
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=research/Comprehensive Knowledge Management Tool Comparison - Mobile & Migration Focus.md, entity_id=1846, permalink=researchcomprehensive-knowledge-management-tool-comparison-mobile-migration-focus
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=zed-analysis/Zed Enhancement Plan - Improving the Mona Lisa of IDEs.md, entity_id=764, permalink=zed-analysiszed-enhancement-plan-improving-the-mona-lisa-of-ides
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=tools-reference/Notepad++ Comprehensive Usage Guide - Developer's Swiss Army Knife.md, entity_id=1115, permalink=tools-referencenotepad-comprehensive-usage-guide-developers-swiss-army-knife
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=status/VeoGen Control Panel Development Status.md, entity_id=1764, permalink=status-veo-gen-control-panel-development-status
+2025-10-10 06:41:14 | INFO     | Deleting entity with file_path=system/BM-Status-Check-2025-09-27-1445.md, entity_id=1365, permalink=systembm-status-check-2025-09-27-1445
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=implementation/FastMCP Standard - Universal show_help Tool.md, entity_id=952, permalink=implementationfastmcp-standard-universal-show-help-tool
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=breakthroughs/Claude Code Worktrees Documentation Complete - Revolutionary Multi-Terminal Development.md, entity_id=2328, permalink=breakthroughsclaude-code-worktrees-documentation-complete-revolutionary-multi-terminal-development
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=zed-analysis/Zed-MCP Server - Revolutionary Development Plan.md, entity_id=1525, permalink=zed-analysiszed-mcp-server-revolutionary-development-plan
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=scripts/automation/gitignore-cleanup/emergency-fix.ps1, entity_id=2197, permalink=None
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=meta/Obsidian Folder Structure Plan.md, entity_id=927, permalink=metaobsidian-folder-structure-plan
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=project-plans/Sandra Basic Memory Fork Roadmap 2025-08-04 1050.md, entity_id=988, permalink=project-planssandra-basic-memory-fork-roadmap-2025-08-04-1050
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=analysis/Advanced Memory Project Complexity Analysis.md, entity_id=1690, permalink=analysis-advanced-memory-project-complexity-analysis
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=meta/CRITICAL_BACKUP_PROTOCOL_-_Repository_Migration_Safety_2025-10-01-1140.md, entity_id=1089, permalink=meta/critical-backup-protocol-repository-migration-safety-2025-10-01-1140
+2025-10-10 06:41:15 | INFO     | Deleting entity with file_path=procedures/DXT Extension Fast Debug Procedure.md, entity_id=1057, permalink=proceduresdxt-extension-fast-debug-procedure
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=case-studies/Sandra Basic Memory Fork - GitHub Honor System Case Study.md, entity_id=1168, permalink=case-studiessandra-basic-memory-fork-github-honor-system-case-study
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=tragedies/The Duesberg Tragedy - From Pioneer to Mass Killer.md, entity_id=1559, permalink=tragediesthe-duesberg-tragedy-from-pioneer-to-mass-killer
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=research/Basic Memory SQLite Database Schema Analysis.md, entity_id=2121, permalink=research-basic-memory-sqlite-database-schema-analysis
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=opportunities/PRIMO Claude Extensions Market Analysis - Teams Video MCP 2025-08-11-2120.md, entity_id=519, permalink=opportunitiesprimo-claude-extensions-market-analysis-teams-video-mcp-2025-08-11-2120
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=outreach/🎵🎭 The Future of Virtual DJing & Partying is HERE! - VRChat AI Rave Revolution.md, entity_id=1998, permalink=outreach-the-future-of-virtual-djing-partying-is-here-vrchat-ai-rave-revolution
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=comparisons/Basic Memory vs Notion MCP Comparison.md, entity_id=286, permalink=comparisons-basic-memory-vs-notion-mcp-comparison
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=infrastructure/MCP-Agent Framework - New Orchestration Paradigm.md, entity_id=1257, permalink=infrastructuremcp-agent-framework-new-orchestration-paradigm
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=detailed-analyses/PlexMCP Comprehensive Analysis 2025-08-03.md, entity_id=2154, permalink=detailed-analysesplexmcp-comprehensive-analysis-2025-08-03
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=automation-solutions/IDE Chat Window Persistence - MCP Solutions for Conversation Loss.md, entity_id=154, permalink=automation-solutions-ide-chat-window-persistence-mcp-solutions-for-conversation-loss
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=market-analysis/OneNote MCP Analysis - The Office 365 Integration Challenge.md, entity_id=1309, permalink=market-analysisonenote-mcp-analysis-the-office-365-integration-challenge
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=research-notes/Basic Memory MCP Deep Research and Origin Story Theory 2025-08-04 1045.md, entity_id=2244, permalink=research-notesbasic-memory-mcp-deep-research-and-origin-story-theory-2025-08-04-1045
+2025-10-10 06:41:16 | INFO     | Deleting entity with file_path=research/Node Modules Filter Implementation.md, entity_id=1986, permalink=researchnode-modules-filter-implementation
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=breakthroughs/Claude Code Worktrees - Revolutionary MCP Development Pattern.md, entity_id=830, permalink=breakthroughsclaude-code-worktrees-revolutionary-mcp-development-pattern
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=beyond-compare-analysis/Beyond Compare MCP - Project Completion Summary.md, entity_id=1320, permalink=beyond-compare-analysisbeyond-compare-mcp-project-completion-summary
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=integration/WORKING OneNote Implementation - SOLUTION FOUND.md, entity_id=1411, permalink=integration-working-one-note-implementation-solution-found
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=integration/MCP JSON Parse Error - Evidence.md, entity_id=71, permalink=integration-mcp-json-parse-error-evidence
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=research/Docker Ecosystem Research Task Queue.md, entity_id=152, permalink=researchdocker-ecosystem-research-task-queue
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=assessments/GrandOrgueMCP Windsurf Critical Assessment - MAJOR GAPS IDENTIFIED.md, entity_id=561, permalink=assessmentsgrandorguemcp-windsurf-critical-assessment-major-gaps-identified
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=implementation/DaVinci Resolve MCP Phase 1 Foundation Progress.md, entity_id=986, permalink=implementationdavinci-resolve-mcp-phase-1-foundation-progress
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=ai-tools/Windsurf Rules Enforcement Hack - Training Data Bias Workaround.md, entity_id=703, permalink=ai-toolswindsurf-rules-enforcement-hack-training-data-bias-workaround
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=analysis/Anthropic Rate Limit Scandal Social Media Acceleration.md, entity_id=2148, permalink=analysisanthropic-rate-limit-scandal-social-media-acceleration
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=integration/OneNote HTML Parsing Fix - VALIDATED.md, entity_id=1606, permalink=integration-one-note-html-parsing-fix-validated
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=onenote-integration/Office365-REST-Python-Client - OneNote CRUD Library.md, entity_id=292, permalink=onenote-integration-office365-rest-python-client-one-note-crud-library
+2025-10-10 06:41:17 | INFO     | Deleting entity with file_path=research/🔍 SANDRASCHI GITHUB REPOS ANALYSIS - JULY 31, 2025.md, entity_id=745, permalink=research-sandraschi-github-repos-analysis-july-31-2025
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=analysis/VibeTunnel vs RustDesk Analysis & Wispr Flow Claude Desktop Integration.md, entity_id=577, permalink=analysisvibetunnel-vs-rustdesk-analysis-wispr-flow-claude-desktop-integration
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=research/Nano Banana AI Model Research - Aug 19 2025.md, entity_id=1619, permalink=researchnano-banana-ai-model-research-aug-19-2025
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=philosophy/Ontological Perspective - Mortality, Digital Immortality & Cosmic Scale.md, entity_id=1980, permalink=philosophyontological-perspective-mortality-digital-immortality-cosmic-scale
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=architecture/Dual Transport MCP Strategy - HTTP Restoration Plan.md, entity_id=846, permalink=architecturedual-transport-mcp-strategy-http-restoration-plan
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=windows-automation/Windows-Use Integration Analysis.md, entity_id=1221, permalink=windows-automationwindows-use-integration-analysis
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=integration/OneNote MCP Issue Analysis - 400 Bad Request.md, entity_id=2031, permalink=integration-one-note-mcp-issue-analysis-400-bad-request
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=zed-analysis/Zed IDE - Comprehensive Analysis of Revolutionary Agentic AI Editor.md, entity_id=845, permalink=zed-analysiszed-ide-comprehensive-analysis-of-revolutionary-agentic-ai-editor
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=research/🎉 SANDRASCHI GITHUB PROFILE FOUND - JULY 31, 2025.md, entity_id=603, permalink=research-sandraschi-github-profile-found-july-31-2025
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=tools/utilities/wizfile-search.ps1, entity_id=609, permalink=None
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=humor/Sonnet Sycophancy Level Dashboard - The Ultimate Meta Monitoring - Aug 20, 2025.md, entity_id=1387, permalink=humorsonnet-sycophancy-level-dashboard-the-ultimate-meta-monitoring-aug-20-2025
+2025-10-10 06:41:18 | INFO     | Deleting entity with file_path=database/Basic Memory Database Cleanup Results.md, entity_id=898, permalink=database-basic-memory-database-cleanup-results
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=strategies/LLM Preprompt Strategy - Make AI Actually Useful Instead of Generic Corporate Speak.md, entity_id=2323, permalink=strategiesllm-preprompt-strategy-make-ai-actually-useful-instead-of-generic-corporate-speak
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=planning/Claude Depot Reorganization Plan.md, entity_id=1364, permalink=planning-claude-depot-reorganization-plan
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=implementation/VirtualDJ-MCP Detailed Implementation Plan.md, entity_id=2017, permalink=implementationvirtualdj-mcp-detailed-implementation-plan
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=deployment/GitHub Pages Complete Deployment Guide.md, entity_id=299, permalink=deployment-git-hub-pages-complete-deployment-guide
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=research-projects/Sandra's 45 MCP Orchestra - ULTIMATE RESEARCH PROJECT.md, entity_id=505, permalink=research-projectssandras-45-mcp-orchestra-ultimate-research-project
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=system/Tool_Selection_Decision_Tree_-_2025-10-09-1435.md, entity_id=2187, permalink=system/tool-selection-decision-tree-2025-10-09-1435
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=research/zed-analysis/Zed Editor Deep Research Collection - The Beautiful Monster - Aug 17 2025.md, entity_id=1164, permalink=researchzed-analysiszed-editor-deep-research-collection-the-beautiful-monster-aug-17-2025
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=implementation/PyWinAuto MCP Implementation Note.md, entity_id=356, permalink=implementationpywinauto-mcp-implementation-note
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=analysis/AHK MCP Analysis Complete 2025-09-09.md, entity_id=695, permalink=analysisahk-mcp-analysis-complete-2025-09-09
+2025-10-10 06:41:19 | INFO     | Deleting entity with file_path=assessments/Trump vs Jensen - The H20 Chess Game Analysis.md, entity_id=837, permalink=assessmentstrump-vs-jensen-the-h20-chess-game-analysis
+2025-10-10 06:41:49 | INFO     | Resolving forward references
+2025-10-10 06:41:56 | INFO     | Sync operation completed: directory=C:\Users\sandr\Documents\claude-depot, total_changes=2451, duration_ms=389320
+2025-10-10 06:41:56 | INFO     | Sync command completed
+2025-10-10 06:53:54 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:00:49 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:13 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:16 | INFO     | Initializing app...
+2025-10-10 07:03:16 | INFO     | Running database migrations...
+2025-10-10 07:03:16 | INFO     | Migrations completed successfully
+2025-10-10 07:03:16 | INFO     | Initializing search index
+2025-10-10 07:03:16 | INFO     | Database initialization completed
+2025-10-10 07:03:16 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:16 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:16 | INFO     | Project synchronization complete
+2025-10-10 07:03:16 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:16 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:16 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:16 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:16 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:16 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:16 | INFO     | Project 'main' removed from configuration and database
+2025-10-10 07:03:18 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:22 | INFO     | Initializing app...
+2025-10-10 07:03:22 | INFO     | Running database migrations...
+2025-10-10 07:03:22 | INFO     | Migrations completed successfully
+2025-10-10 07:03:22 | INFO     | Initializing search index
+2025-10-10 07:03:22 | INFO     | Database initialization completed
+2025-10-10 07:03:22 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:22 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:22 | INFO     | Adding project 'main' to database
+2025-10-10 07:03:22 | INFO     | Project synchronization complete
+2025-10-10 07:03:22 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:22 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:22 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:22 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:22 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:22 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:22 | INFO     | Project 'japan-trip-2025' removed from configuration and database
+2025-10-10 07:03:24 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:28 | INFO     | Initializing app...
+2025-10-10 07:03:28 | INFO     | Running database migrations...
+2025-10-10 07:03:28 | INFO     | Migrations completed successfully
+2025-10-10 07:03:28 | INFO     | Initializing search index
+2025-10-10 07:03:28 | INFO     | Database initialization completed
+2025-10-10 07:03:28 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:28 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:28 | INFO     | Project synchronization complete
+2025-10-10 07:03:28 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:28 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:28 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:28 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:28 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:28 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:28 | INFO     | Project 'veogen' removed from configuration and database
+2025-10-10 07:03:30 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:34 | INFO     | Initializing app...
+2025-10-10 07:03:34 | INFO     | Running database migrations...
+2025-10-10 07:03:34 | INFO     | Migrations completed successfully
+2025-10-10 07:03:34 | INFO     | Initializing search index
+2025-10-10 07:03:34 | INFO     | Database initialization completed
+2025-10-10 07:03:34 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:34 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:34 | INFO     | Project synchronization complete
+2025-10-10 07:03:34 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:34 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:34 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:34 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:34 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:34 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:34 | INFO     | Project 'general-ai' removed from configuration and database
+2025-10-10 07:03:36 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:39 | INFO     | Initializing app...
+2025-10-10 07:03:39 | INFO     | Running database migrations...
+2025-10-10 07:03:39 | INFO     | Migrations completed successfully
+2025-10-10 07:03:39 | INFO     | Initializing search index
+2025-10-10 07:03:39 | INFO     | Database initialization completed
+2025-10-10 07:03:39 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:39 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:39 | INFO     | Project synchronization complete
+2025-10-10 07:03:39 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:39 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:39 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:39 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:39 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:39 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:39 | INFO     | Project 'mcp-investigation' removed from configuration and database
+2025-10-10 07:03:42 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:45 | INFO     | Initializing app...
+2025-10-10 07:03:45 | INFO     | Running database migrations...
+2025-10-10 07:03:45 | INFO     | Migrations completed successfully
+2025-10-10 07:03:45 | INFO     | Initializing search index
+2025-10-10 07:03:45 | INFO     | Database initialization completed
+2025-10-10 07:03:45 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:45 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:45 | INFO     | Project synchronization complete
+2025-10-10 07:03:45 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:45 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:45 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:45 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:45 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:45 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:45 | INFO     | Project 'obsidian-integrated' removed from configuration and database
+2025-10-10 07:03:47 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:03:50 | INFO     | Initializing app...
+2025-10-10 07:03:50 | INFO     | Running database migrations...
+2025-10-10 07:03:50 | INFO     | Migrations completed successfully
+2025-10-10 07:03:50 | INFO     | Initializing search index
+2025-10-10 07:03:50 | INFO     | Database initialization completed
+2025-10-10 07:03:50 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:03:50 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:03:50 | INFO     | Project synchronization complete
+2025-10-10 07:03:50 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:03:50 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:03:50 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:03:50 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:03:50 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:03:50 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:03:51 | INFO     | Project 'chitchat' removed from configuration and database
+2025-10-10 07:04:02 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:04:05 | INFO     | Initializing app...
+2025-10-10 07:04:05 | INFO     | Running database migrations...
+2025-10-10 07:04:05 | INFO     | Migrations completed successfully
+2025-10-10 07:04:05 | INFO     | Initializing search index
+2025-10-10 07:04:05 | INFO     | Database initialization completed
+2025-10-10 07:04:05 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:04:05 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:04:05 | INFO     | Project synchronization complete
+2025-10-10 07:04:05 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:04:05 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:04:05 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:04:05 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:04:05 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:04:05 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:04:08 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:09:11 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:09:14 | INFO     | Initializing app...
+2025-10-10 07:09:14 | INFO     | Running database migrations...
+2025-10-10 07:09:14 | INFO     | Migrations completed successfully
+2025-10-10 07:09:14 | INFO     | Initializing search index
+2025-10-10 07:09:14 | INFO     | Database initialization completed
+2025-10-10 07:09:14 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:09:14 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:09:15 | INFO     | Project synchronization complete
+2025-10-10 07:09:15 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:09:15 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:09:15 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:09:15 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:09:15 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:09:15 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:09:15 | INFO     | Project 'main' removed from configuration and database
+2025-10-10 07:09:16 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:09:20 | INFO     | Initializing app...
+2025-10-10 07:09:20 | INFO     | Running database migrations...
+2025-10-10 07:09:20 | INFO     | Migrations completed successfully
+2025-10-10 07:09:20 | INFO     | Initializing search index
+2025-10-10 07:09:20 | INFO     | Database initialization completed
+2025-10-10 07:09:20 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:09:20 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:09:20 | INFO     | Adding project 'main' to database
+2025-10-10 07:09:20 | INFO     | Project synchronization complete
+2025-10-10 07:09:20 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:09:20 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:09:20 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:09:20 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:09:20 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:09:20 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:42:24 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:42:29 | INFO     | Initializing app...
+2025-10-10 07:42:29 | INFO     | Running database migrations...
+2025-10-10 07:42:29 | INFO     | Migrations completed successfully
+2025-10-10 07:42:29 | INFO     | Initializing search index
+2025-10-10 07:42:29 | INFO     | Database initialization completed
+2025-10-10 07:42:29 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:42:29 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:42:29 | INFO     | Project synchronization complete
+2025-10-10 07:42:29 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:42:29 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:42:29 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:42:29 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:42:29 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:42:29 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:42:29 | INFO     | Project 'main' removed from configuration and database
+2025-10-10 07:42:31 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:42:35 | INFO     | Initializing app...
+2025-10-10 07:42:35 | INFO     | Running database migrations...
+2025-10-10 07:42:35 | INFO     | Migrations completed successfully
+2025-10-10 07:42:35 | INFO     | Initializing search index
+2025-10-10 07:42:35 | INFO     | Database initialization completed
+2025-10-10 07:42:35 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:42:35 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:42:35 | INFO     | Adding project 'main' to database
+2025-10-10 07:42:35 | INFO     | Project synchronization complete
+2025-10-10 07:42:35 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:42:35 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:42:35 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:42:35 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:42:35 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:42:35 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:43:15 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:43:18 | INFO     | Initializing app...
+2025-10-10 07:43:18 | INFO     | Running database migrations...
+2025-10-10 07:43:18 | INFO     | Migrations completed successfully
+2025-10-10 07:43:18 | INFO     | Initializing search index
+2025-10-10 07:43:18 | INFO     | Database initialization completed
+2025-10-10 07:43:18 | INFO     | Reconciling projects from config with database...
+2025-10-10 07:43:18 | INFO     | Synchronizing projects between database and configuration
+2025-10-10 07:43:18 | INFO     | Adding project 'main' to configuration
+2025-10-10 07:43:18 | INFO     | Project synchronization complete
+2025-10-10 07:43:18 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-10 07:43:18 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-10 07:43:18 | INFO     | Projects successfully reconciled between config and database
+2025-10-10 07:43:18 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-10 07:43:18 | INFO     | Initialization completed successfully: result=None
+2025-10-10 07:43:18 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-10 07:43:56 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 07:44:16 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)

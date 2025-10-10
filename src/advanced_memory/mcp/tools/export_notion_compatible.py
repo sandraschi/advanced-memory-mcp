@@ -1,4 +1,4 @@
-"""Export Notion compatible tool for Basic Memory MCP server."""
+"""Export Notion compatible tool for Advanced Memory MCP server."""
 
 import re
 from pathlib import Path
@@ -9,9 +9,9 @@ from advanced_memory.mcp.tools.utils import call_get
 
 
 @mcp.tool(
-    description="""Export Basic Memory content to Notion-compatible markdown for team collaboration.
+    description="""Export Advanced Memory content to Notion-compatible markdown for team collaboration.
 
-This tool converts Basic Memory knowledge base content into clean markdown format
+This tool converts Advanced Memory knowledge base content into clean markdown format
 optimized for Notion import, enabling enhanced team collaboration and database features.
 
 EXPORT FEATURES:
@@ -28,10 +28,10 @@ PARAMETERS:
 - folder_filter (str, optional): Folder path to limit export scope
 - include_observations (bool, default=True): Include observation metadata in frontmatter
 - include_relations (bool, default=True): Include relationship links in content
-- project (str, optional): Specific Basic Memory project to export from
+- project (str, optional): Specific Advanced Memory project to export from
 
 CONTENT CONVERSION:
-- Basic Memory markdown [UNICODE] Notion-compatible markdown
+- Advanced Memory markdown [UNICODE] Notion-compatible markdown
 - Entity relationships [UNICODE] Standard markdown links with context
 - Observations [UNICODE] YAML frontmatter for Notion properties
 - Mermaid diagrams [UNICODE] Preserved as code blocks (Notion renders some diagram types)
@@ -71,9 +71,9 @@ async def export_notion_compatible(
     include_relations: bool = True,
     project: str | None = None,
 ) -> str:
-    """Export Basic Memory content in Notion-compatible markdown format.
+    """Export Advanced Memory content in Notion-compatible markdown format.
 
-    This tool exports Basic Memory entities as clean markdown files that can be
+    This tool exports Advanced Memory entities as clean markdown files that can be
     imported into Notion. The exported format preserves content structure while
     being optimized for Notion's import capabilities.
 

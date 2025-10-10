@@ -1,4 +1,4 @@
-"""Utility functions for basic-memory."""
+"""Utility functions for advanced-memory."""
 
 import logging
 import os

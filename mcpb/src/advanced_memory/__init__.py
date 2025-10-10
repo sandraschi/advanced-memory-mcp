@@ -1,4 +1,4 @@
-"""advanced-memory - Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Basic Memory with significant enhancements"""
+"""advanced-memory - Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"""
 
 # Package version - updated by release automation
 __version__ = "1.0.0b1"

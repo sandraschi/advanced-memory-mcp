@@ -1,4 +1,4 @@
-"""Type definitions for Basic Memory.
+"""Type definitions for Advanced Memory.
 
 This module contains type definitions used throughout the application to avoid circular imports.
 """

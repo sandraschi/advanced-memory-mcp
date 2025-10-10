@@ -133,7 +133,7 @@ class TestTyporaControlOperations:
         # Create a test file that exists
         test_file = tmp_path / "test.md"
         test_file.write_text("# Test file")
-        
+
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
         result = await typora_control.fn("open_file", file_path=str(test_file))

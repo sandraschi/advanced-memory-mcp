@@ -1,4 +1,4 @@
-"""Recent activity prompts for Basic Memory MCP server.
+"""Recent activity prompts for Advanced Memory MCP server.
 
 These prompts help users see what has changed in their knowledge base recently.
 """

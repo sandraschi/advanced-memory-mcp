@@ -1,4 +1,4 @@
-"""Archive import tool for Basic Memory - restores complete system from backup."""
+"""Archive import tool for Advanced Memory - restores complete system from backup."""
 
 import json
 import shutil
@@ -12,9 +12,9 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
-    description="""[UNICODE][UNICODE] Import Complete Basic Memory Archive from Migration/Backup
+    description="""[UNICODE][UNICODE] Import Complete Advanced Memory Archive from Migration/Backup
 
-Restores a complete Basic Memory system from an archive created with export_to_archive.
+Restores a complete Advanced Memory system from an archive created with export_to_archive.
 Includes database, all projects, and configuration for full system restoration.
 
 ARCHIVE CONTENTS EXPECTED:
@@ -57,7 +57,7 @@ async def import_from_archive(
     project: str | None = None
 ) -> str:
     """
-    Import complete Basic Memory system from archive.
+    Import complete Advanced Memory system from archive.
 
     Args:
         archive_path: Path to archive file
@@ -122,7 +122,7 @@ async def import_from_archive(
             success_count = sum(1 for r in results if r.startswith("[UNICODE]"))
             total_count = len(results)
 
-            return f"""[UNICODE][UNICODE] **Basic Memory Archive Import Complete!**
+            return f"""[UNICODE][UNICODE] **Advanced Memory Archive Import Complete!**
 
 **Archive Details:**
 - [FOLDER] Source: {archive_path}
@@ -139,7 +139,7 @@ async def import_from_archive(
 {backup_info}
 
 **Next Steps:**
-1. Restart Basic Memory to load restored projects
+1. Restart Advanced Memory to load restored projects
 2. Verify project contents are accessible
 3. Check that all knowledge is properly restored
 

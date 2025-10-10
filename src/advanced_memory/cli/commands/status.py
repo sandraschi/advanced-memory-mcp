@@ -1,14 +1,14 @@
-"""Status command for basic-memory CLI."""
+"""Status command for advanced-memory CLI."""
 
 import asyncio
 
 import typer
-from advanced_memory import db
 from loguru import logger
 from rich.console import Console
 from rich.panel import Panel
 from rich.tree import Tree
 
+from advanced_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.cli.commands.sync import get_sync_service
 from advanced_memory.config import ConfigManager, get_project_config

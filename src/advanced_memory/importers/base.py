@@ -1,4 +1,4 @@
-"""Base import service for Basic Memory."""
+"""Base import service for Advanced Memory."""
 
 import logging
 from abc import abstractmethod

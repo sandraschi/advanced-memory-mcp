@@ -1,6 +1,6 @@
-"""Load Joplin vault tool for Basic Memory MCP server.
+"""Load Joplin vault tool for Advanced Memory MCP server.
 
-This tool imports Joplin exports into Basic Memory, preserving
+This tool imports Joplin exports into Advanced Memory, preserving
 folder structure, metadata, and relationships.
 """
 
@@ -19,14 +19,14 @@ from advanced_memory.mcp.tools.write_note import write_note
 
 
 @mcp.tool(
-    description="""Import Joplin knowledge bases into Basic Memory with full metadata preservation.
+    description="""Import Joplin knowledge bases into Advanced Memory with full metadata preservation.
 
-This tool migrates Joplin exports into Basic Memory, converting Joplin's note organization
-into Basic Memory's entity-relationship model while preserving all metadata and structure.
+This tool migrates Joplin exports into Advanced Memory, converting Joplin's note organization
+into Advanced Memory's entity-relationship model while preserving all metadata and structure.
 
 JOPLIN FEATURES SUPPORTED:
 - Markdown notes with full formatting support
-- Notebook hierarchy (folders become Basic Memory folders)
+- Notebook hierarchy (folders become Advanced Memory folders)
 - Tags and categorization systems
 - Note metadata (creation dates, modification dates, author info)
 - Rich content (tables, code blocks, lists, links)
@@ -34,11 +34,11 @@ JOPLIN FEATURES SUPPORTED:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Path to Joplin export directory (containing .md and .json files)
-- destination_folder (str, default="imported/joplin"): Basic Memory folder for imported content
+- destination_folder (str, default="imported/joplin"): Advanced Memory folder for imported content
 - preserve_structure (bool, default=True): Maintain Joplin notebook hierarchy
-- convert_links (bool, default=True): Convert Joplin links to Basic Memory entity references
-- skip_existing (bool, default=True): Skip notes that already exist in Basic Memory
-- project (str, optional): Target Basic Memory project
+- convert_links (bool, default=True): Convert Joplin links to Advanced Memory entity references
+- skip_existing (bool, default=True): Skip notes that already exist in Advanced Memory
+- project (str, optional): Target Advanced Memory project
 
 JOPLIN EXPORT STRUCTURE:
 Joplin exports create pairs of files:
@@ -66,17 +66,17 @@ async def load_joplin_vault(
     skip_existing: bool = True,
     project: str | None = None,
 ) -> str:
-    """Import a Joplin export into Basic Memory.
+    """Import a Joplin export into Advanced Memory.
 
     This tool reads all markdown files and JSON metadata from a Joplin export
-    and imports them into Basic Memory, preserving folder structure, tags,
-    timestamps, and converting Joplin links to Basic Memory format.
+    and imports them into Advanced Memory, preserving folder structure, tags,
+    timestamps, and converting Joplin links to Advanced Memory format.
 
     Args:
         export_path: Path to the Joplin export root directory
-        destination_folder: Base folder in Basic Memory where export will be imported
+        destination_folder: Base folder in Advanced Memory where export will be imported
         preserve_structure: Whether to preserve the notebook/folder structure (default: True)
-        convert_links: Whether to convert Joplin links to Basic Memory format (default: True)
+        convert_links: Whether to convert Joplin links to Advanced Memory format (default: True)
         skip_existing: Whether to skip notes that already exist (default: True)
         project: Optional project name to import into. If not provided, uses current active project.
 
@@ -410,7 +410,7 @@ async def _build_file_mapping(
     destination_folder: str,
     preserve_structure: bool
 ) -> dict[str, str]:
-    """Build mapping from Joplin IDs to new Basic Memory paths for link conversion."""
+    """Build mapping from Joplin IDs to new Advanced Memory paths for link conversion."""
     mapping = {}
 
     for file_info in joplin_files:
@@ -491,7 +491,7 @@ def _process_content(
 
 
 def _convert_joplin_links(content: str, file_mapping: dict[str, str]) -> tuple[str, int]:
-    """Convert Joplin links to Basic Memory format."""
+    """Convert Joplin links to Advanced Memory format."""
     conversions = 0
 
     def replace_link(match):
@@ -501,7 +501,7 @@ def _convert_joplin_links(content: str, file_mapping: dict[str, str]) -> tuple[s
         # Check if we have a mapping for this link
         if link_target in file_mapping:
             new_path = file_mapping[link_target]
-            # Convert to Basic Memory link format
+            # Convert to Advanced Memory link format
             converted = f"[[{new_path}]]"
             conversions += 1
             return converted
@@ -581,7 +581,7 @@ def _generate_import_report(
     lines.extend([
         "## Next Steps",
         "1. **Review imported content** - Check that links and formatting converted correctly",
-        "2. **Run sync** - Execute 'basic-memory sync' to index the new content",
+        "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
         "3. **Update remaining links** - Any unconverted Joplin links may need manual fixing",
         "4. **Verify metadata** - Check that tags, dates, and other metadata imported correctly",
         ""

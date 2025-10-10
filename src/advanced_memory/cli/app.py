@@ -17,7 +17,7 @@ def version_callback(value: bool) -> None:
         raise typer.Exit()
 
 
-app = typer.Typer(name="basic-memory")
+app = typer.Typer(name="advanced-memory")
 
 
 @app.callback()
@@ -28,7 +28,7 @@ def app_callback(
         "--project",
         "-p",
         help="Specify which project to use 1",
-        envvar="BASIC_MEMORY_PROJECT",
+        envvar="ADVANCED_MEMORY_PROJECT",
     ),
     version: bool | None = typer.Option(
         None,
@@ -39,7 +39,7 @@ def app_callback(
         is_eager=True,
     ),
 ) -> None:
-    """Basic Memory - Local-first personal knowledge management."""
+    """Advanced Memory - Local-first personal knowledge management."""
 
     # Run initialization for every command unless --version was specified
     if not version and ctx.invoked_subcommand is not None:

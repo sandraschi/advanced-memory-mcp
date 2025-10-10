@@ -1,4 +1,4 @@
-"""Project info tool for Basic Memory MCP server."""
+"""Project info tool for Advanced Memory MCP server."""
 
 from loguru import logger
 
@@ -11,13 +11,13 @@ from advanced_memory.schemas import ProjectInfoResponse
 
 @mcp.resource(
     uri="memory://project_info",
-    description="Get information and statistics about the current Basic Memory project.",
+    description="Get information and statistics about the current Advanced Memory project.",
 )
 async def project_info() -> ProjectInfoResponse:
-    """Get comprehensive information about the current Basic Memory project.
+    """Get comprehensive information about the current Advanced Memory project.
 
     This tool provides detailed statistics and status information about your
-    Basic Memory project, including:
+    Advanced Memory project, including:
 
     - Project configuration
     - Entity, observation, and relation counts
@@ -26,7 +26,7 @@ async def project_info() -> ProjectInfoResponse:
     - System status (database, watch service, version)
 
     Use this tool to:
-    - Verify your Basic Memory installation is working correctly
+    - Verify your Advanced Memory installation is working correctly
     - Get insights into your knowledge base structure
     - Monitor growth and activity over time
     - Identify potential issues like unresolved relations
@@ -42,7 +42,7 @@ async def project_info() -> ProjectInfoResponse:
         print(f"Total entities: {info.statistics.total_entities}")
 
         # Check system status
-        print(f"Basic Memory version: {info.system.version}")
+        print(f"Advanced Memory version: {info.system.version}")
     """
     logger.info("Getting project info")
     project_config = get_active_project()

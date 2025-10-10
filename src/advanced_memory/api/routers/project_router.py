@@ -24,7 +24,7 @@ async def get_project_info(
     project_service: ProjectServiceDep,
     project: ProjectPathDep,
 ) -> ProjectInfoResponse:
-    """Get comprehensive information about the specified Basic Memory project."""
+    """Get comprehensive information about the specified Advanced Memory project."""
     return await project_service.get_project_info(project)
 
 

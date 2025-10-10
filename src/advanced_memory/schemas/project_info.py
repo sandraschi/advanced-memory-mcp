@@ -63,7 +63,7 @@ class SystemStatus(BaseModel):
     """System status information."""
 
     # Version information
-    version: str = Field(description="Basic Memory version")
+    version: str = Field(description="Advanced Memory version")
 
     # Database status
     database_path: str = Field(description="Path to the SQLite database")

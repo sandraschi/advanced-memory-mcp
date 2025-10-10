@@ -67,7 +67,7 @@ class LinkResolver:
                 f"{clean_text}.md",  # Original with .md
                 f"{clean_text.replace(' ', '_')}.md",  # Spaces to underscores with .md
             ]
-            
+
             # Also try converting the last part (filename) to underscore format
             if "/" in clean_text:
                 parts = clean_text.split("/")
@@ -76,10 +76,10 @@ class LinkResolver:
                     last_part = parts[-1].replace(" ", "_")
                     folder_path = "/".join(parts[:-1])
                     variations.append(f"{folder_path}/{last_part}.md")
-            
+
             # Normalize path separators for cross-platform compatibility
             from advanced_memory.sync.sync_service import normalize_file_path
-            
+
             for file_path_variant in variations:
                 file_path_normalized = normalize_file_path(file_path_variant)
                 logger.debug(f"Trying to find entity with normalized path: {file_path_normalized}")

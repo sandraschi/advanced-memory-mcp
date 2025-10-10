@@ -1,7 +1,7 @@
-"""Utility modules for Basic Memory.
+"""Utility modules for Advanced Memory.
 
 This package contains various utility modules that provide common functionality
-across the Basic Memory application, including file operations, logging, and more.
+across the Advanced Memory application, including file operations, logging, and more.
 """
 
 # Import types from the main types module

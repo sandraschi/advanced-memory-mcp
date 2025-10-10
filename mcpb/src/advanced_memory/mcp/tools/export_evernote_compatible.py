@@ -1,4 +1,4 @@
-"""Export Evernote compatible tool for Basic Memory MCP server."""
+"""Export Evernote compatible tool for Advanced Memory MCP server."""
 
 import re
 from datetime import datetime
@@ -13,9 +13,9 @@ from advanced_memory.mcp.tools.utils import call_get
 
 
 @mcp.tool(
-    description="""Export Basic Memory content to Evernote-compatible ENEX XML format for mobile access.
+    description="""Export Advanced Memory content to Evernote-compatible ENEX XML format for mobile access.
 
-This tool converts Basic Memory knowledge base content into Evernote's ENEX (Evernote XML) format,
+This tool converts Advanced Memory knowledge base content into Evernote's ENEX (Evernote XML) format,
 enabling access through Evernote's mobile apps and cross-platform synchronization.
 
 EXPORT FEATURES:
@@ -30,13 +30,13 @@ PARAMETERS:
 - output_path (str, REQUIRED): Filesystem path where ENEX files will be created
 - query (str, optional): Search query to filter notes (exports matching notes)
 - folder_filter (str, optional): Folder path to limit export scope
-- notebook_name (str, default="Basic Memory Export"): Evernote notebook name for imported notes
+- notebook_name (str, default="Advanced Memory Export"): Evernote notebook name for imported notes
 - include_observations (bool, default=True): Include observation metadata as note content
 - include_relations (bool, default=True): Include relationship links in content
-- project (str, optional): Specific Basic Memory project to export from
+- project (str, optional): Specific Advanced Memory project to export from
 
 CONTENT CONVERSION:
-- Basic Memory markdown [UNICODE] Rich HTML with Evernote-compatible formatting
+- Advanced Memory markdown [UNICODE] Rich HTML with Evernote-compatible formatting
 - Entity relationships [UNICODE] Standard HTML links with context
 - Observations [UNICODE] Structured HTML content blocks
 - Mermaid diagrams [UNICODE] Preserved as formatted code blocks
@@ -73,21 +73,21 @@ async def export_evernote_compatible(
     output_path: str,
     query: str | None = None,
     folder_filter: str | None = None,
-    notebook_name: str = "Basic Memory Export",
+    notebook_name: str = "Advanced Memory Export",
     include_observations: bool = True,
     include_relations: bool = True,
     project: str | None = None,
 ) -> str:
-    """Export Basic Memory content in Evernote-compatible ENEX format.
+    """Export Advanced Memory content in Evernote-compatible ENEX format.
 
-    This tool exports Basic Memory entities as ENEX (Evernote XML) files that can be
+    This tool exports Advanced Memory entities as ENEX (Evernote XML) files that can be
     imported directly into Evernote. The exported format preserves content structure
     and metadata for seamless migration.
 
     Features:
     - Generate valid ENEX XML format compatible with Evernote import
     - Preserve entity metadata as Evernote note attributes
-    - Convert Basic Memory relations to Evernote tags
+    - Convert Advanced Memory relations to Evernote tags
     - Include observations as structured content sections
     - Support custom notebook naming
 
@@ -95,7 +95,7 @@ async def export_evernote_compatible(
         output_path: Directory path where to save the .enex file
         query: Optional search query to filter entities (default: all entities)
         folder_filter: Optional folder path to filter entities
-        notebook_name: Name for the Evernote notebook (default: "Basic Memory Export")
+        notebook_name: Name for the Evernote notebook (default: "Advanced Memory Export")
         include_observations: Include observation metadata (default: True)
         include_relations: Include relation links as tags (default: True)
         project: Optional project name to export from
@@ -172,7 +172,7 @@ async def export_evernote_compatible(
 
     # Save file
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"basic_memory_export_{timestamp}.enex"
+    filename = f"advanced_memory_export_{timestamp}.enex"
     file_path = output_dir / filename
 
     with open(file_path, 'w', encoding='utf-8') as f:
@@ -209,12 +209,12 @@ def _generate_enex_xml(
     include_observations: bool,
     include_relations: bool
 ) -> str:
-    """Generate ENEX XML content from Basic Memory entities."""
+    """Generate ENEX XML content from Advanced Memory entities."""
 
     # Create root element
     en_export = Element("en-export")
     en_export.set("export-date", datetime.now().strftime("%Y%m%dT%H%M%SZ"))
-    en_export.set("application", "basic-memory")
+    en_export.set("application", "advanced-memory")
     en_export.set("version", "0.1")
 
     for entity in entities:

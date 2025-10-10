@@ -1,4 +1,4 @@
-"""Project session management for Basic Memory MCP server.
+"""Project session management for Advanced Memory MCP server.
 
 Provides simple in-memory project context for MCP tools, allowing users to switch
 between projects during a conversation without restarting the server.

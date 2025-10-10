@@ -1,4 +1,4 @@
-"""Project management service for Basic Memory."""
+"""Project management service for Advanced Memory."""
 
 import json
 import os
@@ -28,7 +28,7 @@ from advanced_memory.utils import generate_permalink
 
 
 class ProjectService:
-    """Service for managing Basic Memory projects."""
+    """Service for managing Advanced Memory projects."""
 
     repository: ProjectRepository
 
@@ -80,7 +80,7 @@ class ProjectService:
         Returns:
             The name of the current project
         """
-        return os.environ.get("BASIC_MEMORY_PROJECT", self.config_manager.default_project)
+        return os.environ.get("ADVANCED_MEMORY_PROJECT", self.config_manager.default_project)
 
     async def list_projects(self) -> Sequence[Project]:
         return await self.repository.find_all()
@@ -375,7 +375,7 @@ class ProjectService:
                 )
 
     async def get_project_info(self, project_name: str | None = None) -> ProjectInfoResponse:
-        """Get comprehensive information about the specified Basic Memory project.
+        """Get comprehensive information about the specified Advanced Memory project.
 
         Args:
             project_name: Name of the project to get info for. If None, uses the current config project.
@@ -700,7 +700,7 @@ class ProjectService:
 
         # Get watch service status if available
         watch_status = None
-        watch_status_path = Path.home() / ".basic-memory" / WATCH_STATUS_JSON
+        watch_status_path = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON
         if watch_status_path.exists():
             try:
                 watch_status = json.loads(watch_status_path.read_text(encoding="utf-8"))

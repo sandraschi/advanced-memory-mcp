@@ -1,6 +1,6 @@
-"""Export Joplin notes tool for Basic Memory MCP server.
+"""Export Joplin notes tool for Advanced Memory MCP server.
 
-This tool exports Basic Memory notes to Joplin format, creating
+This tool exports Advanced Memory notes to Joplin format, creating
 markdown files with corresponding JSON metadata.
 """
 
@@ -17,9 +17,9 @@ from advanced_memory.mcp.tools.read_note import read_note
 
 
 @mcp.tool(
-    description="""Export Basic Memory notes to Joplin-compatible format for cross-platform access.
+    description="""Export Advanced Memory notes to Joplin-compatible format for cross-platform access.
 
-This tool converts Basic Memory knowledge base content into Joplin's native format,
+This tool converts Advanced Memory knowledge base content into Joplin's native format,
 creating markdown files paired with JSON metadata that can be directly imported into Joplin.
 
 EXPORT FEATURES:
@@ -32,10 +32,10 @@ EXPORT FEATURES:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Filesystem path where Joplin export will be created
-- source_folder (str, default="/"): Basic Memory folder to export (use "/" for all notes)
+- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
 - include_subfolders (bool, default=True): Include subfolders recursively
 - create_notebooks (bool, default=True): Create notebook structure from folders
-- project (str, optional): Specific Basic Memory project to export from
+- project (str, optional): Specific Advanced Memory project to export from
 
 OUTPUT STRUCTURE:
 Creates a Joplin-compatible export with:
@@ -44,7 +44,7 @@ Creates a Joplin-compatible export with:
 - Organized folder structure representing Joplin notebooks
 
 CONTENT CONVERSION:
-- Basic Memory markdown [UNICODE] Joplin-compatible markdown
+- Advanced Memory markdown [UNICODE] Joplin-compatible markdown
 - Entity links [UNICODE] Standard markdown links (relationships may be lost)
 - Tags [UNICODE] Preserved in JSON metadata
 - Folder hierarchy [UNICODE] Joplin notebook structure
@@ -66,7 +66,7 @@ RETURNS:
 Detailed export summary with file counts, notebook mappings, tag conversions, and import instructions.
 
 NOTE: Joplin's end-to-end encryption should be disabled before import. Some advanced
-Basic Memory features like entity relationships may not translate perfectly to Joplin.""",
+Advanced Memory features like entity relationships may not translate perfectly to Joplin.""",
 )
 async def export_joplin_notes(
     export_path: str,
@@ -75,14 +75,14 @@ async def export_joplin_notes(
     create_notebooks: bool = True,
     project: str | None = None,
 ) -> str:
-    """Export Basic Memory notes to Joplin format.
+    """Export Advanced Memory notes to Joplin format.
 
-    This tool reads notes from Basic Memory and exports them to Joplin format,
+    This tool reads notes from Advanced Memory and exports them to Joplin format,
     creating markdown files with corresponding JSON metadata files that can be
     imported back into Joplin.
 
     Args:
-        source_folder: Folder in Basic Memory to export from (default: root "/")
+        source_folder: Folder in Advanced Memory to export from (default: root "/")
         export_path: Path where to create the Joplin export
         include_subfolders: Whether to include subfolders recursively (default: True)
         create_notebooks: Whether to create notebook structure (default: True)
@@ -370,11 +370,11 @@ def _create_joplin_metadata(note_info: dict[str, Any], notebook_name: str) -> di
         "markup_language": 1,  # 1 = Markdown
         "is_shared": 0,
         "type_": 1,  # 1 = Note
-        "source": "basic-memory-export",
-        "source_application": "basic-memory",
+        "source": "advanced-memory-export",
+        "source_application": "advanced-memory",
         "application_data": json.dumps({
             "original_path": note_info['path'],
-            "exported_from": "basic-memory",
+            "exported_from": "advanced-memory",
             "export_timestamp": now
         }),
         "author": "",
@@ -386,7 +386,7 @@ def _create_joplin_metadata(note_info: dict[str, Any], notebook_name: str) -> di
         "longitude": 0.0,
         "altitude": 0.0,
         "order": 0,
-        "tags": []  # Could be populated from Basic Memory tags
+        "tags": []  # Could be populated from Advanced Memory tags
     }
 
     return metadata
@@ -453,7 +453,7 @@ def _generate_export_report(
         "## Notes",
         "- Each note has been exported as a `.md` file with a corresponding `.json` metadata file",
         "- Notebook structure has been preserved based on folder organization",
-        "- Original Basic Memory paths are stored in the metadata for reference",
+        "- Original Advanced Memory paths are stored in the metadata for reference",
         ""
     ])
 

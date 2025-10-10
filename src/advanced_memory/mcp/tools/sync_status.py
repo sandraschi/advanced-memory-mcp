@@ -1,4 +1,4 @@
-"""Sync status tool for Basic Memory MCP server."""
+"""Sync status tool for Advanced Memory MCP server."""
 
 
 from loguru import logger
@@ -64,7 +64,7 @@ def _get_all_projects_status() -> list[str]:
 @mcp.tool(
     description="""Monitor file synchronization status and background processing operations across all projects.
 
-This diagnostic tool provides comprehensive visibility into Basic Memory's file synchronization,
+This diagnostic tool provides comprehensive visibility into Advanced Memory's file synchronization,
 background processing, and indexing operations to ensure knowledge base integrity and performance.
 
 MONITORING CAPABILITIES:
@@ -141,7 +141,7 @@ async def sync_status(project: str | None = None) -> str:
         # Header
         status_lines.extend(
             [
-                "# Basic Memory Sync Status",
+                "# Advanced Memory Sync Status",
                 "",
                 f"**Current Status**: {summary}",
                 f"**System Ready**: {'[OK] Yes' if is_ready else '[WORKING] Processing'}",
@@ -156,7 +156,7 @@ async def sync_status(project: str | None = None) -> str:
                     "",
                     "- File indexing is complete",
                     "- Knowledge graphs are up to date",
-                    "- All Basic Memory tools are fully operational",
+                    "- All Advanced Memory tools are fully operational",
                     "",
                     "Your knowledge base is ready for use!",
                 ]
@@ -178,7 +178,7 @@ async def sync_status(project: str | None = None) -> str:
                     [
                         "[WORKING] **File synchronization in progress**",
                         "",
-                        "Basic Memory is automatically processing all configured projects and building knowledge graphs.",
+                        "Advanced Memory is automatically processing all configured projects and building knowledge graphs.",
                         "This typically takes 1-3 minutes depending on the amount of content.",
                         "",
                         "**Currently Processing:**",
@@ -256,7 +256,7 @@ async def sync_status(project: str | None = None) -> str:
                     [
                         "",
                         "**Note**: All configured projects will be automatically synced during startup.",
-                        "You don't need to manually switch projects - Basic Memory handles this for you.",
+                        "You don't need to manually switch projects - Advanced Memory handles this for you.",
                     ]
                 )
 

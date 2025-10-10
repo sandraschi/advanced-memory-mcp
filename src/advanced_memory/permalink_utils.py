@@ -1,4 +1,4 @@
-"""Permalink generation utilities for basic-memory."""
+"""Permalink generation utilities for advanced-memory."""
 
 import os
 import re

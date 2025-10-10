@@ -1,20 +1,20 @@
-# Basic Memory Installation Guide for LLMs
+# Advanced Memory Installation Guide for LLMs
 
-This guide is specifically designed to help AI assistants like Cline install and configure Basic Memory. Follow these
+This guide is specifically designed to help AI assistants like Cline install and configure Advanced Memory. Follow these
 steps in order.
 
 ## Installation Steps
 
-### 1. Install Basic Memory Package
+### 1. Install Advanced Memory Package
 
 Use one of the following package managers to install:
 
 ```bash
 # Install with uv (recommended)
-uv tool install basic-memory
+uv tool install advanced-memory
 
 # Or with pip
-pip install basic-memory
+pip install advanced-memory
 ```
 
 ### 2. Configure MCP Server
@@ -24,10 +24,10 @@ Add the following to your config:
 ```json
 {
   "mcpServers": {
-    "basic-memory": {
+    "advanced-memory": {
       "command": "uvx",
       "args": [
-        "basic-memory",
+        "advanced-memory",
         "mcp"
       ]
     }
@@ -45,24 +45,24 @@ Windows: %APPDATA%\Claude\claude_desktop_config.json
 To synchronize files in real-time, run:
 
 ```bash
-basic-memory sync --watch
+advanced-memory sync --watch
 ```
 
 Or for a one-time sync:
 
 ```bash
-basic-memory sync
+advanced-memory sync
 ```
 
 ## Configuration Options
 
 ### Custom Directory
 
-To use a directory other than the default `~/basic-memory`:
+To use a directory other than the default `~/advanced-memory`:
 
 ```bash
-basic-memory project add custom-project /path/to/your/directory
-basic-memory project default custom-project
+advanced-memory project add custom-project /path/to/your/directory
+advanced-memory project default custom-project
 ```
 
 ### Multiple Projects
@@ -71,13 +71,13 @@ To manage multiple knowledge bases:
 
 ```bash
 # List all projects
-basic-memory project list
+advanced-memory project list
 
 # Add a new project
-basic-memory project add work ~/work-basic-memory
+advanced-memory project add work ~/work-advanced-memory
 
 # Set default project
-basic-memory project default work
+advanced-memory project default work
 ```
 
 ## Importing Existing Data
@@ -85,44 +85,44 @@ basic-memory project default work
 ### From Claude.ai
 
 ```bash
-basic-memory import claude conversations path/to/conversations.json
-basic-memory import claude projects path/to/projects.json
+advanced-memory import claude conversations path/to/conversations.json
+advanced-memory import claude projects path/to/projects.json
 ```
 
 ### From ChatGPT
 
 ```bash
-basic-memory import chatgpt path/to/conversations.json
+advanced-memory import chatgpt path/to/conversations.json
 ```
 
 ### From MCP Memory Server
 
 ```bash
-basic-memory import memory-json path/to/memory.json
+advanced-memory import memory-json path/to/memory.json
 ```
 
 ## Troubleshooting
 
 If you encounter issues:
 
-1. Check that Basic Memory is properly installed:
+1. Check that Advanced Memory is properly installed:
    ```bash
-   basic-memory --version
+   advanced-memory --version
    ```
 
 2. Verify the sync process is running:
    ```bash
-   ps aux | grep basic-memory
+   ps aux | grep advanced-memory
    ```
 
 3. Check sync output for errors:
    ```bash
-   basic-memory sync --verbose
+   advanced-memory sync --verbose
    ```
 
 4. Check log output:
    ```bash
-   cat ~/.basic-memory/basic-memory.log
+   cat ~/.advanced-memory/advanced-memory.log
    ```
 
 For more detailed information, refer to the [full documentation](https://memory.basicmachines.co/).

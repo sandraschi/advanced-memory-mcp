@@ -1,5 +1,5 @@
 """
-Basic Memory FastMCP server with console output suppression.
+Advanced Memory FastMCP server with console output suppression.
 """
 
 import asyncio
@@ -58,6 +58,10 @@ def configure_mcp_logging():
 
 # Apply logging configuration
 configure_mcp_logging()
+
+# CRITICAL: Import tools to register them with the MCP instance
+# This must happen after mcp instance is created but before running server
+from advanced_memory.mcp import tools  # noqa: E402, F401
 
 # Use the shared MCP instance as the server
 server = mcp

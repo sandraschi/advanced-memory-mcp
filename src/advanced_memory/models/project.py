@@ -1,4 +1,4 @@
-"""Project model for Basic Memory."""
+"""Project model for Advanced Memory."""
 
 from datetime import datetime
 
@@ -18,7 +18,7 @@ from advanced_memory.utils import generate_permalink
 
 
 class Project(Base):
-    """Project model for Basic Memory.
+    """Project model for Advanced Memory.
 
     A project represents a collection of knowledge entities that are grouped together.
     Projects are stored in the app-level database and provide context for all knowledge

@@ -1,7 +1,7 @@
-"""Edit in Notepad++ tool for Basic Memory MCP server.
+"""Edit in Notepad++ tool for Advanced Memory MCP server.
 
 [UNICODE] FREE & Open Source Alternative to Typora!
-This tool enables editing Basic Memory notes in Notepad++, a powerful free code editor
+This tool enables editing Advanced Memory notes in Notepad++, a powerful free code editor
 with excellent markdown support through plugins.
 
 Notepad++ Features:
@@ -29,7 +29,7 @@ from advanced_memory.mcp.tools.write_note import write_note
 
 @mcp.tool(
     description="""[UNICODE] FREE & Open Source Markdown Editing with Notepad++
-Export Basic Memory notes to Notepad++ for professional code-style editing.
+Export Advanced Memory notes to Notepad++ for professional code-style editing.
 
 This tool provides a FREE alternative to paid editors like Typora, using Notepad++
 (a powerful, lightweight code editor) with excellent markdown support.
@@ -42,9 +42,9 @@ NOTEPAD++ FEATURES (All FREE):
 - Completely open source (GPL)
 
 WORKFLOW:
-1. Export note from Basic Memory to Notepad++ workspace
+1. Export note from Advanced Memory to Notepad++ workspace
 2. Edit with full markdown syntax highlighting and features
-3. Import edited content back to Basic Memory
+3. Import edited content back to Advanced Memory
 4. Preserve all metadata and relationships
 
 PARAMETERS:
@@ -64,7 +64,7 @@ async def edit_in_notepadpp(
     create_backup: bool = True
 ) -> str:
     """
-    Export a Basic Memory note to Notepad++ for editing.
+    Export an Advanced Memory note to Notepad++ for editing.
 
     This creates a temporary workspace where the note can be edited with
     Notepad++'s professional markdown editing features, then imported back.
@@ -138,7 +138,7 @@ async def edit_in_notepadpp(
 
 @mcp.tool(
     description="""[UNICODE] Import edited note back from Notepad++ workspace
-Complete the round-trip editing workflow by importing your edited markdown back into Basic Memory.
+Complete the round-trip editing workflow by importing your edited markdown back into Advanced Memory.
 
 This tool reads the edited content from the Notepad++ workspace and updates the original note,
 preserving all metadata and relationships.
@@ -161,7 +161,7 @@ async def import_from_notepadpp(
     Import an edited note back from Notepad++ workspace.
 
     This completes the round-trip workflow by reading the edited content
-    and updating the original note in Basic Memory.
+    and updating the original note in Advanced Memory.
 
     Args:
         note_identifier: Original note title or permalink
@@ -223,7 +223,7 @@ The content in Notepad++ workspace is identical to the original note.
 **Lines:** {original_lines} [UNICODE] {edited_lines} ({'+' if line_diff > 0 else ''}{line_diff})
 {f"**Workspace preserved:** `{workspace_dir}`" if keep_workspace else "**Workspace cleaned up**"}
 
-**Your edits have been saved to Basic Memory!** [NOTE][UNICODE]"""
+**Your edits have been saved to Advanced Memory!** [NOTE][UNICODE]"""
 
     except Exception as e:
         logger.error(f"Error in import_from_notepadpp: {e}")

@@ -1,14 +1,14 @@
-"""FastAPI application for basic-memory knowledge graph API."""
+"""FastAPI application for advanced-memory knowledge graph API."""
 
 import asyncio
 from contextlib import asynccontextmanager
 
-from advanced_memory import __version__ as version
-from advanced_memory import db
 from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 from loguru import logger
 
+from advanced_memory import __version__ as version
+from advanced_memory import db
 from advanced_memory.api.routers import (
     directory_router,
     importer_router,
@@ -30,8 +30,8 @@ async def lifespan(app: FastAPI):  # pragma: no cover
 
     app_config = ConfigManager().config
     # Initialize app and database
-    logger.info("Starting Basic Memory API")
-    print(f"fastapi {app_config.projects}")
+    logger.info("Starting Advanced Memory API")
+    logger.debug(f"Configured projects: {app_config.projects}")
     await initialize_app(app_config)
 
     logger.info(f"Sync changes enabled: {app_config.sync_changes}")
@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     # proceed with startup
     yield
 
-    logger.info("Shutting down Basic Memory API")
+    logger.info("Shutting down Advanced Memory API")
     if app.state.sync_task:
         logger.info("Stopping sync...")
         app.state.sync_task.cancel()  # pyright: ignore
@@ -54,8 +54,8 @@ async def lifespan(app: FastAPI):  # pragma: no cover
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Basic Memory API",
-    description="Knowledge graph API for basic-memory",
+    title="Advanced Memory API",
+    description="Knowledge graph API for advanced-memory",
     version=version,
     lifespan=lifespan,
 )

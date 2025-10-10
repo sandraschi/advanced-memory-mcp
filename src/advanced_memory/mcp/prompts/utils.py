@@ -70,7 +70,7 @@ def format_prompt_context(context: PromptContext) -> str:
 
             ## Other Options
 
-            Please use the available basic-memory tools to gather relevant context before responding.
+            Please use the available advanced-memory tools to gather relevant context before responding.
             You can also:
             - Try a different search term
             - Check recent activity with `recent_activity(timeframe="1w")`
@@ -82,7 +82,7 @@ def format_prompt_context(context: PromptContext) -> str:
 
         This is a memory retrieval session.
 
-        Please use the available basic-memory tools to gather relevant context before responding.
+        Please use the available advanced-memory tools to gather relevant context before responding.
         Start by executing one of the suggested commands below to retrieve content.
 
         Here's what I found from previous conversations:

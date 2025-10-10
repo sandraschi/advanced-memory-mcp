@@ -1,4 +1,4 @@
-"""Enhanced status tool for Basic Memory MCP server."""
+"""Enhanced status tool for Advanced Memory MCP server."""
 
 import os
 import platform
@@ -9,7 +9,7 @@ from advanced_memory.services.sync_status_service import sync_status_tracker
 
 
 @mcp.tool(
-    description="""Comprehensive system status and diagnostic monitoring for Basic Memory.
+    description="""Comprehensive system status and diagnostic monitoring for Advanced Memory.
 
 This tool provides detailed insights into system health, performance, and operational status
 across multiple diagnostic levels, helping users understand and troubleshoot their knowledge base.
@@ -49,7 +49,7 @@ MONITORS:
 - Background process status and health""",
 )
 async def status(level: str = "basic", focus: str | None = None) -> str:
-    """Get comprehensive status information about Basic Memory system.
+    """Get comprehensive status information about Advanced Memory system.
 
     This enhanced status tool provides different levels of diagnostic information:
 
@@ -99,7 +99,7 @@ Try: `status("basic")`"""
 
 async def _get_basic_status() -> str:
     """Basic status - core system information."""
-    status_lines = ["# Basic Memory Status - Basic Overview", ""]
+    status_lines = ["# Advanced Memory Status - Basic Overview", ""]
 
     # Get sync status
     sync_info = sync_status_tracker.get_summary()
@@ -128,7 +128,7 @@ async def _get_basic_status() -> str:
 
 async def _get_intermediate_status() -> str:
     """Intermediate status - tool availability and configuration."""
-    status_lines = ["# Basic Memory Status - Intermediate", ""]
+    status_lines = ["# Advanced Memory Status - Intermediate", ""]
 
     # Basic sync status
     sync_info = sync_status_tracker.get_summary()
@@ -185,7 +185,7 @@ async def _get_intermediate_status() -> str:
 
 async def _get_advanced_status() -> str:
     """Advanced status - performance metrics and system resources."""
-    status_lines = ["# Basic Memory Status - Advanced", ""]
+    status_lines = ["# Advanced Memory Status - Advanced", ""]
 
     # Basic sync status
     sync_info = sync_status_tracker.get_summary()
@@ -257,7 +257,7 @@ async def _get_advanced_status() -> str:
 
 async def _get_diagnostic_status() -> str:
     """Diagnostic status - detailed troubleshooting information."""
-    status_lines = ["# Basic Memory Status - Diagnostic", ""]
+    status_lines = ["# Advanced Memory Status - Diagnostic", ""]
 
     # Basic sync status
     sync_info = sync_status_tracker.get_summary()

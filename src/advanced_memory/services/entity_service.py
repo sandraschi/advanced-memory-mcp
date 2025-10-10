@@ -19,10 +19,10 @@ from advanced_memory.repository import ObservationRepository, RelationRepository
 from advanced_memory.repository.entity_repository import EntityRepository
 from advanced_memory.schemas import Entity as EntitySchema
 from advanced_memory.schemas.base import Permalink
-from advanced_memory.services.service import BaseService
-from advanced_memory.services.file_service import FileService
 from advanced_memory.services.exceptions import EntityCreationError, EntityNotFoundError
+from advanced_memory.services.file_service import FileService
 from advanced_memory.services.link_resolver import LinkResolver
+from advanced_memory.services.service import BaseService
 from advanced_memory.utils import generate_permalink
 
 

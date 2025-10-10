@@ -1,4 +1,4 @@
-"""Models package for basic-memory."""
+"""Models package for advanced-memory."""
 
 import advanced_memory
 from advanced_memory.models.base import Base

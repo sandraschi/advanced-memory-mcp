@@ -42,7 +42,7 @@ class TyporaRPCClient:
         try:
             async with websockets.connect(
                 self.uri,
-                extra_headers={"Origin": "basic-memory-mcp"},
+                extra_headers={"Origin": "advanced-memory-mcp"},
                 open_timeout=self.connection_timeout
             ) as websocket:
                 await websocket.send(json.dumps(request))
@@ -190,8 +190,8 @@ async def typora_control(
             return await _handle_link_validation()
         elif operation == "template_apply":
             return await _handle_template_apply(template_name, options)
-        elif operation == "sync_to_basic_memory":
-            return await _handle_sync_to_basic_memory(options)
+        elif operation == "sync_to_advanced_memory":
+            return await _handle_sync_to_advanced_memory(options)
         else:
             return await _handle_unknown_operation(operation)
 
@@ -929,8 +929,8 @@ Template '{template_name}' not found.
 [UNICODE] Save with `save_file`"""
 
 
-async def _handle_sync_to_basic_memory(options: dict[str, Any]) -> str:
-    """Sync current Typora document to Basic Memory."""
+async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> str:
+    """Sync current Typora document to Advanced Memory."""
     # Get current content
     content_result = await typora_client.call("getContent")
     if not content_result["success"]:
@@ -948,15 +948,15 @@ async def _handle_sync_to_basic_memory(options: dict[str, Any]) -> str:
         if metadata.get("title"):
             title = metadata["title"]
 
-    # For now, provide guidance. In future, could directly call Basic Memory APIs
-    return f"""[UNICODE][UNICODE] **Ready to Sync to Basic Memory**
+    # For now, provide guidance. In future, could directly call Advanced Memory APIs
+    return f"""[UNICODE][UNICODE] **Ready to Sync to Advanced Memory**
 
 **Document Title**: {title}
 **Content Length**: {len(content)} characters
 
 **To complete sync**:
 1. Copy the content from Typora
-2. Use Basic Memory's `write_note` tool:
+2. Use Advanced Memory's `write_note` tool:
    ```
    write_note(
        title="{title}",
@@ -978,7 +978,7 @@ async def _handle_unknown_operation(operation: str) -> str:
         "open_file", "save_file", "new_file", "get_metadata", "set_metadata",
         "search_replace", "get_themes", "set_theme", "toggle_sidebar", "toggle_toolbar",
         "batch_export", "content_analysis", "link_validation", "template_apply",
-        "sync_to_basic_memory"
+        "sync_to_advanced_memory"
     ]
 
     return f"""[UNICODE] **Unknown Operation**: {operation}

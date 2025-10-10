@@ -1,4 +1,4 @@
-"""Tests for the Basic Memory CLI tools.
+"""Tests for the Advanced Memory CLI tools.
 
 These tests use real MCP tools with the test environment instead of mocks.
 """

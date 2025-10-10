@@ -1,11 +1,11 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![PyPI version](https://badge.fury.io/py/basic-memory.svg)](https://badge.fury.io/py/basic-memory)
+[![PyPI version](https://badge.fury.io/py/advanced-memory.svg)](https://badge.fury.io/py/advanced-memory)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://github.com/basicmachines-co/basic-memory/workflows/Tests/badge.svg)](https://github.com/basicmachines-co/basic-memory/actions)
+[![Tests](https://github.com/basicmachines-co/advanced-memory/workflows/Tests/badge.svg)](https://github.com/basicmachines-co/advanced-memory/actions)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![](https://badge.mcpx.dev?type=server 'MCP Server')
 ![](https://badge.mcpx.dev?type=dev 'MCP Dev')
-[![smithery badge](https://smithery.ai/badge/@basicmachines-co/basic-memory)](https://smithery.ai/server/@basicmachines-co/basic-memory)
+[![smithery badge](https://smithery.ai/badge/@basicmachines-co/advanced-memory)](https://smithery.ai/server/@basicmachines-co/advanced-memory)
 
 # Advanced Memory
 
@@ -15,7 +15,7 @@ Advanced Memory lets you build persistent knowledge through natural conversation
 Claude, while keeping everything in simple Markdown files on your computer. It uses the Model Context Protocol (MCP) to
 enable any compatible LLM to read and write to your local knowledge base.
 
-**Advanced Memory is an independent project derived from [Basic Memory](https://github.com/basicmachines-co/basic-memory) with significant enhancements and improvements. While inspired by the original work, it has evolved into a standalone solution with its own development roadmap and community.**
+**Advanced Memory is an independent project derived from [Advanced Memory](https://github.com/basicmachines-co/advanced-memory) with significant enhancements and improvements. While inspired by the original work, it has evolved into a standalone solution with its own development roadmap and community.**
 
 ## 📊 Project Status
 
@@ -145,7 +145,7 @@ pip install -e .
       "command": "python",
       "args": [
         "-m",
-        "basic_memory.mcp.server"
+        "advanced_memory.mcp.server"
       ]
     }
   }
@@ -392,7 +392,7 @@ tags:
 
 The note embeds semantic content and links to other topics via simple Markdown formatting.
 
-3. You see this file on your computer in real time in the current project directory (default `~/$HOME/basic-memory`).
+3. You see this file on your computer in real time in the current project directory (default `~/$HOME/advanced-memory`).
 
 - Realtime sync is enabled by default starting with v0.12.0
 - Project switching during conversations is supported starting with v0.13.0
@@ -734,8 +734,8 @@ export_pandoc(path, format, folder) - Export notes to multiple formats (PDF, HTM
 make_pdf_book(title, folder, tag_filter) - Create professional PDF books with title page and TOC from notes 📖
 
 # Archive Tools
-export_to_archive(path, include_projects, exclude_projects, exclude_tags, since_date) - Create complete backup archive of entire Basic Memory system 📦
-import_from_archive(path, restore_mode, backup_existing, dry_run) - Restore complete Basic Memory system from backup archive 📦
+export_to_archive(path, include_projects, exclude_projects, exclude_tags, since_date) - Create complete backup archive of entire Advanced Memory system 📦
+import_from_archive(path, restore_mode, backup_existing, dry_run) - Restore complete Advanced Memory system from backup archive 📦
 
 # Knowledge Operations
 knowledge_operations(operation, filters, action, dry_run) - Swiss Army Knife for bulk operations, tag management, and content validation 🛠️
@@ -822,7 +822,7 @@ Or use Docker directly:
 docker run -d \
   --name advanced-memory-server \
   -v /path/to/your/obsidian-vault:/data/knowledge:rw \
-  -v advanced-memory-config:/root/.basic-memory:rw \
+  -v advanced-memory-config:/root/.advanced-memory:rw \
   ghcr.io/advanced-memory/advanced-memory:latest
 ```
 
@@ -830,7 +830,7 @@ See [Docker Setup Guide](docs/Docker.md) for detailed configuration options, mul
 
 ## Acknowledgments
 
-Advanced Memory is an independent project derived from the foundational work of [Basic Memory](https://github.com/basicmachines-co/basic-memory) created by Basic Machines. We extend our gratitude to the original authors for their pioneering work in building persistent knowledge systems through natural conversations with Large Language Models. While Advanced Memory has evolved into a standalone solution with its own development roadmap, we acknowledge the important role that Basic Memory played in inspiring this enhanced implementation.
+Advanced Memory is an independent project derived from the foundational work of [Advanced Memory](https://github.com/basicmachines-co/advanced-memory) created by Basic Machines. We extend our gratitude to the original authors for their pioneering work in building persistent knowledge systems through natural conversations with Large Language Models. While Advanced Memory has evolved into a standalone solution with its own development roadmap, we acknowledge the important role that Advanced Memory played in inspiring this enhanced implementation.
 
 ## License
 

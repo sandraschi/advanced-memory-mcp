@@ -1,4 +1,4 @@
-"""Configuration management for Advanced Memory - an independent knowledge management system derived from Basic Memory."""
+"""Configuration management for Advanced Memory - an independent knowledge management system derived from Advanced Memory."""
 
 import json
 import os
@@ -59,9 +59,9 @@ class AdvancedMemoryConfig(BaseSettings):
         description="Name of the default project to use",
     )
 
-    # Legacy support for basic-memory environment variables
-    legacy_basic_memory_home: str | None = Field(
-        default_factory=lambda: os.getenv("BASIC_MEMORY_HOME"),
+    # Legacy support for advanced-memory environment variables
+    legacy_advanced_memory_home: str | None = Field(
+        default_factory=lambda: os.getenv("ADVANCED_MEMORY_HOME"),
         description="Legacy environment variable support",
         exclude=True,
     )
@@ -110,15 +110,12 @@ class AdvancedMemoryConfig(BaseSettings):
 
     def model_post_init(self, __context: Any) -> None:
         """Ensure configuration is valid after initialization."""
-        # Ensure main project exists
-        if "main" not in self.projects:  # pragma: no cover
-            self.projects["main"] = str(
-                Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory"))
-            )
-
+        # Note: Removed auto-creation of "main" project - users should explicitly create projects
+        
         # Ensure default project is valid
-        if self.default_project not in self.projects:  # pragma: no cover
-            self.default_project = "main"
+        if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
+            # Set default to first available project instead of auto-creating "main"
+            self.default_project = list(self.projects.keys())[0]
 
     @property
     def app_database_path(self) -> Path:
@@ -284,10 +281,10 @@ def get_project_config(project_name: str | None = None) -> ProjectConfig:
     app_config = config_manager.load_config()
 
     # Get project name from environment variable
-    os_project_name = os.environ.get("BASIC_MEMORY_PROJECT", None)
+    os_project_name = os.environ.get("ADVANCED_MEMORY_PROJECT", None)
     if os_project_name:  # pragma: no cover
         logger.warning(
-            f"BASIC_MEMORY_PROJECT is not supported anymore. Use the --project flag or set the default project in the config instead. Setting default project to {os_project_name}"
+            f"ADVANCED_MEMORY_PROJECT is not supported anymore. Use the --project flag or set the default project in the config instead. Setting default project to {os_project_name}"
         )
         actual_project_name = project_name
     # if the project_name is passed in, use it
@@ -368,7 +365,7 @@ def setup_advanced_memory_logging():  # pragma: no cover
         return
 
     # Check for console logging environment variable
-    console_logging = os.getenv("BASIC_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
+    console_logging = os.getenv("ADVANCED_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
 
     config_manager = ConfigManager()
     config = get_project_config()

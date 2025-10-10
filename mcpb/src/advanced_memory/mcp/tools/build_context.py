@@ -1,4 +1,4 @@
-"""Build context tool for Basic Memory MCP server."""
+"""Build context tool for Advanced Memory MCP server."""
 
 
 from loguru import logger

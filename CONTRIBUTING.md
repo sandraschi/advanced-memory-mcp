@@ -236,6 +236,8 @@ tests/
 ```bash
 # Run all tests
 uv run pytest
+# OR using justfile
+just test
 
 # Run specific test categories
 uv run pytest tests/unit/
@@ -247,6 +249,14 @@ uv run pytest --cov=src/advanced_memory --cov-report=html
 
 # Run specific test
 uv run pytest tests/mcp/test_portmanteau_tools.py::test_adn_content
+
+# Using just (convenience commands)
+just test          # Run all tests
+just test-cov      # Run tests with coverage
+just lint          # Run linting
+just format        # Format code
+just type-check    # Run type checking
+just check         # Run all checks (lint, format, type-check, test)
 ```
 
 ### Test Guidelines

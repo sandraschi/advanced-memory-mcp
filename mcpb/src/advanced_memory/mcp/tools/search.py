@@ -1,4 +1,4 @@
-"""Search tools for Basic Memory MCP server."""
+"""Search tools for Advanced Memory MCP server."""
 
 from textwrap import dedent
 
@@ -199,7 +199,7 @@ Error searching for '{query}': {error_message}
 
 
 @mcp.tool(
-    description="""Perform comprehensive full-text search across the Basic Memory knowledge base with advanced filtering.
+    description="""Perform comprehensive full-text search across the Advanced Memory knowledge base with advanced filtering.
 
 This powerful search tool provides multiple search modes and extensive filtering capabilities
 to help users discover relevant content across their entire knowledge base with precision and speed.

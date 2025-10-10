@@ -1,4 +1,4 @@
-"""Project management tools for Basic Memory MCP server.
+"""Project management tools for Advanced Memory MCP server.
 
 These tools allow users to switch between projects, list available projects,
 and manage project context during conversations.
@@ -28,7 +28,7 @@ async def list_memory_projects(
 ) -> str:
     """List all available projects with their status.
 
-    Shows all Basic Memory projects that are available, indicating which one
+    Shows all Advanced Memory projects that are available, indicating which one
     is currently active and which is the default.
 
     Returns:
@@ -64,7 +64,7 @@ async def list_memory_projects(
 
 
 @mcp.tool(
-    description="""Change the active project context for all subsequent Basic Memory operations.
+    description="""Change the active project context for all subsequent Advanced Memory operations.
 
 This essential project management tool switches the current working context to a different project,
 affecting all subsequent tool calls and operations until changed again.
@@ -80,7 +80,7 @@ PARAMETERS:
 - project_name (str, REQUIRED): Name of the project to switch to (must exist in configuration)
 
 VALIDATION:
-- Project must exist in Basic Memory configuration
+- Project must exist in Advanced Memory configuration
 - Project path must be accessible
 - Automatic project initialization if needed
 
@@ -287,10 +287,10 @@ async def get_current_project(
 
 
 @mcp.tool(
-    description="""Configure which project loads by default when Basic Memory starts.
+    description="""Configure which project loads by default when Advanced Memory starts.
 
 This configuration tool sets the default project that will be automatically activated
-when the Basic Memory server starts, eliminating the need to manually switch projects.
+when the Advanced Memory server starts, eliminating the need to manually switch projects.
 
 CONFIGURATION IMPACT:
 - Default project loads automatically on startup
@@ -315,12 +315,12 @@ RETURNS:
 Confirmation message with configuration update status and restart requirement.
 
 CONFIGURATION PERSISTENCE:
-- Saved to Basic Memory configuration file
+- Saved to Advanced Memory configuration file
 - Takes effect on next server restart
 - Current session continues with active project unchanged
 
 RESTART REQUIREMENT:
-This change requires a Basic Memory server restart to take effect.
+This change requires an Advanced Memory server restart to take effect.
 The configuration is updated immediately, but the default behavior changes on restart.
 
 NOTE: This only affects the default project on startup. Use switch_project() to change
@@ -330,7 +330,7 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
     """Set default project in config. Requires restart to take effect.
 
     Updates the configuration to use a different default project. This change
-    only takes effect after restarting the Basic Memory server.
+    only takes effect after restarting the Advanced Memory server.
 
     Args:
         project_name: Name of the project to set as default
@@ -349,8 +349,8 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     result = f"[UNICODE] {status_response.message}\n\n"
-    result += "Restart Basic Memory for this change to take effect:\n"
-    result += "basic-memory mcp\n"
+    result += "Restart Advanced Memory for this change to take effect:\n"
+    result += "advanced-memory mcp\n"
 
     if status_response.old_project:
         result += f"\nPrevious default: {status_response.old_project.name}\n"
@@ -362,7 +362,7 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
 async def create_memory_project(
     project_name: str, project_path: str, set_default: bool = False, ctx: Context | None = None
 ) -> str:
-    """Create a new Basic Memory project.
+    """Create a new Advanced Memory project.
 
     Creates a new project with the specified name and path. The project directory
     will be created if it doesn't exist. Optionally sets the new project as default.
@@ -411,10 +411,10 @@ async def create_memory_project(
 
 
 @mcp.tool(
-    description="""Remove a project from Basic Memory configuration and database.
+    description="""Remove a project from Advanced Memory configuration and database.
 
-This destructive operation removes a project from Basic Memory's management while preserving
-the actual files on disk. Use this when you want to stop managing a project with Basic Memory.
+This destructive operation removes a project from Advanced Memory's management while preserving
+the actual files on disk. Use this when you want to stop managing a project with Advanced Memory.
 
 DELETION SCOPE:
 - Removes project from configuration
@@ -457,14 +457,14 @@ SAFETY MEASURES:
 - Detailed warnings about permanent metadata loss
 - File preservation guarantee
 
-NOTE: This removes Basic Memory's management of the project but keeps all your files safe.
+NOTE: This removes Advanced Memory's management of the project but keeps all your files safe.
 Use this for project cleanup, not for deleting content.""",
 )
 async def delete_project(project_name: str, ctx: Context | None = None) -> str:
-    """Delete a Basic Memory project.
+    """Delete an Advanced Memory project.
 
     Removes a project from the configuration and database. This does NOT delete
-    the actual files on disk - only removes the project from Basic Memory's
+    the actual files on disk - only removes the project from Advanced Memory's
     configuration and database records.
 
     Args:
@@ -478,7 +478,7 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
 
     Warning:
         This action cannot be undone. The project will need to be re-added
-        to access its content through Basic Memory again.
+        to access its content through Advanced Memory again.
     """
     if ctx:  # pragma: no cover
         await ctx.info(f"Deleting project: {project_name}")
@@ -515,7 +515,7 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
         if hasattr(status_response.old_project, "path"):
             result += f"[UNICODE] Path: {status_response.old_project.path}\n"
 
-    result += "Files remain on disk but project is no longer tracked by Basic Memory.\n"
+    result += "Files remain on disk but project is no longer tracked by Advanced Memory.\n"
     result += "Re-add the project to access its content again.\n"
 
     return add_project_metadata(result, session.get_current_project())

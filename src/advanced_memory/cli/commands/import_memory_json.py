@@ -1,4 +1,4 @@
-"""Import command for basic-memory CLI to import from JSON memory format."""
+"""Import command for advanced-memory CLI to import from JSON memory format."""
 
 import asyncio
 import json
@@ -41,7 +41,7 @@ def memory_json(
     2. Create markdown files for each entity
     3. Include outgoing relations in each entity's markdown
 
-    After importing, run 'basic-memory sync' to index the new files.
+    After importing, run 'advanced-memory sync' to index the new files.
     """
 
     if not json_path.exists():
@@ -82,7 +82,7 @@ def memory_json(
             )
         )
 
-        console.print("\nRun 'basic-memory sync' to index the new files.")
+        console.print("\nRun 'advanced-memory sync' to index the new files.")
 
     except Exception as e:
         logger.error("Import failed")

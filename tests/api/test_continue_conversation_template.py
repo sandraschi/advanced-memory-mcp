@@ -125,7 +125,7 @@ async def test_knowledge_capture_recommendation(template_loader, context_with_re
     assert "Record key information, decisions, or insights" in result
     assert "Link new knowledge to existing topics" in result
     assert "Suggest capturing important context" in result
-    assert "one of the most valuable aspects of Basic Memory" in result
+    assert "one of the most valuable aspects of Advanced Memory" in result
 
 
 @pytest.mark.asyncio

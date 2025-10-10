@@ -1,5 +1,5 @@
 """
-Pandoc-based export tool for Basic Memory.
+Pandoc-based export tool for Advanced Memory.
 
 This tool replaces Typora export functionality with reliable, automated
 Pandoc-based document conversion supporting multiple output formats.
@@ -32,7 +32,7 @@ async def export_pandoc(
     project: str | None = None
 ) -> str:
     """
-    Export Basic Memory notes to various formats using Pandoc.
+    Export Advanced Memory notes to various formats using Pandoc.
 
     This tool provides automated, batch document export capabilities
     that surpass Typora's GUI-only limitations with full CLI automation.
@@ -40,7 +40,7 @@ async def export_pandoc(
     Parameters:
     - export_path: Directory path where exported files will be saved
     - format_type: Output format (pdf, html, docx, odt, rtf, tex, epub, etc.)
-    - source_folder: Basic Memory folder to export from (default: "/")
+    - source_folder: Advanced Memory folder to export from (default: "/")
     - include_subfolders: Include notes from subfolders (default: True)
     - pdf_engine: PDF generation engine (pdflatex, xelatex, lualatex, wkhtmltopdf, etc.)
     - template_path: Path to custom Pandoc template file
@@ -49,7 +49,7 @@ async def export_pandoc(
     - highlight_style: Syntax highlighting style (tango, pygments, kate, etc.)
     - standalone: Generate standalone document with headers (default: True)
     - self_contained: Embed images and styles in output (HTML only, default: False)
-    - project: Specific Basic Memory project to export from
+    - project: Specific Advanced Memory project to export from
 
     Supported Formats:
     - pdf: PDF document (requires LaTeX)

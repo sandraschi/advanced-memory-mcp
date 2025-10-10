@@ -1,4 +1,4 @@
-"""Search Obsidian vault tool for Basic Memory MCP server.
+"""Search Obsidian vault tool for Advanced Memory MCP server.
 
 This tool searches through external Obsidian vaults using Obsidian-specific
 search patterns and syntax.
@@ -15,7 +15,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
-    description="""Search through external Obsidian vaults without importing them into Basic Memory.
+    description="""Search through external Obsidian vaults without importing them into Advanced Memory.
 
 This tool allows you to query Obsidian vaults directly from the filesystem, providing
 search capabilities across markdown files, canvas files, and other Obsidian content types.
@@ -59,7 +59,7 @@ RETURNS:
 Formatted search results with file paths, match counts, and optional content previews.
 
 NOTE: This searches external vaults without importing them. For permanent access,
-use load_obsidian_vault() to import the content into Basic Memory.""",
+use load_obsidian_vault() to import the content into Advanced Memory.""",
 )
 async def search_obsidian_vault(
     vault_path: str,

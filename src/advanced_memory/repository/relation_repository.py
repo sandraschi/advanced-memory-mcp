@@ -2,12 +2,12 @@
 
 from collections.abc import Sequence
 
-from advanced_memory import db
 from sqlalchemy import and_, delete, select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.orm import aliased, selectinload
 from sqlalchemy.orm.interfaces import LoaderOption
 
+from advanced_memory import db
 from advanced_memory.models import Entity, Relation
 from advanced_memory.repository.repository import Repository
 

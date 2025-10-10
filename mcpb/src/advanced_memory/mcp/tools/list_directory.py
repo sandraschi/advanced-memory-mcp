@@ -1,4 +1,4 @@
-"""List directory tool for Basic Memory MCP server."""
+"""List directory tool for Advanced Memory MCP server."""
 
 
 from loguru import logger
@@ -10,7 +10,7 @@ from advanced_memory.mcp.tools.utils import call_get
 
 
 @mcp.tool(
-    description="""Browse and explore Basic Memory directory structure with powerful filtering and navigation capabilities.
+    description="""Browse and explore Advanced Memory directory structure with powerful filtering and navigation capabilities.
 
 This essential navigation tool provides filesystem-like directory listing functionality for the knowledge base,
 enabling exploration of folder hierarchies, file discovery, and content organization overview.

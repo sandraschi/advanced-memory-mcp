@@ -3,13 +3,13 @@
 from collections.abc import Sequence
 from pathlib import Path
 
-from advanced_memory import db
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.interfaces import LoaderOption
 
+from advanced_memory import db
 from advanced_memory.models.knowledge import Entity, Observation, Relation
 from advanced_memory.repository.repository import Repository
 

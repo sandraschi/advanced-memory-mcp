@@ -1,7 +1,7 @@
 [project]
 name = "advanced-memory"
 version = "1.0.0b1"
-description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Basic Memory with significant enhancements"
+description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "AGPL-3.0-or-later" }
@@ -35,6 +35,7 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
     "markdown>=3.9",
+    "pyyaml>=6.0",
     "types-pyyaml>=6.0.12.20250915",
     "types-markdown>=3.9.0.20250906",
 ]

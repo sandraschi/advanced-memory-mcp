@@ -1,4 +1,4 @@
-"""Search schemas for Basic Memory.
+"""Search schemas for Advanced Memory.
 
 The search system supports three primary modes:
 1. Exact permalink lookup

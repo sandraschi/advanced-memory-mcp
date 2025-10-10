@@ -120,7 +120,7 @@ def test_chinese_character_preservation(input_path, expected):
 )
 def test_mixed_character_sets(input_path, expected):
     """Test handling of mixed character sets and edge cases.
-    
+
     Note: Dash insertion between Chinese and Latin characters is currently
     not working due to Unicode regex matching issues. This is a known limitation
     that should be addressed in a future PR.

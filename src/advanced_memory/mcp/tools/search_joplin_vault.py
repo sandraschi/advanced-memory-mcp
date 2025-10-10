@@ -1,4 +1,4 @@
-"""Search Joplin vault tool for Basic Memory MCP server.
+"""Search Joplin vault tool for Advanced Memory MCP server.
 
 This tool searches through external Joplin exports using Joplin-specific
 search patterns and metadata.
@@ -16,7 +16,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.tool(
-    description="""Search through external Joplin exports without importing them into Basic Memory.
+    description="""Search through external Joplin exports without importing them into Advanced Memory.
 
 This tool enables querying Joplin export directories directly from the filesystem,
 providing search capabilities across markdown notes, JSON metadata, and notebook structures.
@@ -63,7 +63,7 @@ RETURNS:
 Formatted search results with note details, notebook organization, and optional content previews.
 
 NOTE: This searches external Joplin exports without importing them. For permanent access
-and enhanced search capabilities, use load_joplin_vault() to import into Basic Memory.""",
+and enhanced search capabilities, use load_joplin_vault() to import into Advanced Memory.""",
 )
 async def search_joplin_vault(
     vault_path: str,
@@ -161,7 +161,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
     try:
         # Use MCP filesystem if available, otherwise direct access
         try:
-            from mcp_filesystem import list_directory
+            from mcp_filesystem import list_directory  # type: ignore
 
             async def scan_recursive(current_path: str) -> list[dict[str, str]]:
                 files = []

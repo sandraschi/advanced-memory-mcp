@@ -1,4 +1,4 @@
-"""Session continuation prompts for Basic Memory MCP server.
+"""Session continuation prompts for Advanced Memory MCP server.
 
 These prompts help users continue conversations and work across sessions,
 providing context from previous interactions to maintain continuity.

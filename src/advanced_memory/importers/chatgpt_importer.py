@@ -1,4 +1,4 @@
-"""ChatGPT import service for Basic Memory."""
+"""ChatGPT import service for Advanced Memory."""
 
 import logging
 from datetime import datetime
@@ -72,7 +72,7 @@ class ChatGPTImporter(Importer):
     def _format_chat_content(
         self, folder: str, conversation: dict[str, Any]
     ) -> EntityMarkdown:  # pragma: no cover
-        """Convert chat conversation to Basic Memory entity.
+        """Convert chat conversation to Advanced Memory entity.
 
         Args:
             folder: Destination folder name.

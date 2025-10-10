@@ -1,4 +1,4 @@
-"""Read note tool for Basic Memory MCP server."""
+"""Read note tool for Advanced Memory MCP server."""
 
 from textwrap import dedent
 
@@ -14,7 +14,7 @@ from advanced_memory.utils import sanitize_filename, validate_project_path
 
 
 @mcp.tool(
-    description="""Retrieve complete note content from Basic Memory with intelligent lookup and fallback strategies.
+    description="""Retrieve complete note content from Advanced Memory with intelligent lookup and fallback strategies.
 
 This essential tool provides flexible access to notes using multiple identification methods,
 with automatic fallback to search when direct lookup fails, ensuring content accessibility.

@@ -1,4 +1,4 @@
-"""Claude projects import service for Basic Memory."""
+"""Claude projects import service for Advanced Memory."""
 
 import logging
 from typing import Any
@@ -73,7 +73,7 @@ class ClaudeProjectsImporter(Importer):
     def _format_project_markdown(
         self, project: dict[str, Any], doc: dict[str, Any]
     ) -> EntityMarkdown:
-        """Format a project document as a Basic Memory entity.
+        """Format a project document as an Advanced Memory entity.
 
         Args:
             project: Project data.
@@ -110,7 +110,7 @@ class ClaudeProjectsImporter(Importer):
         return entity
 
     def _format_prompt_markdown(self, project: dict[str, Any]) -> EntityMarkdown | None:
-        """Format project prompt template as a Basic Memory entity.
+        """Format project prompt template as an Advanced Memory entity.
 
         Args:
             project: Project data.

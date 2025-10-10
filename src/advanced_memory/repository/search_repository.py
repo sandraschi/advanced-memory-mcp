@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from advanced_memory import db
 from loguru import logger
 from sqlalchemy import Executable, Result, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from advanced_memory import db
 from advanced_memory.models.search import CREATE_SEARCH_INDEX
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import sanitize_filename
@@ -397,7 +397,7 @@ class SearchRepository:
             # But skip sanitization for boolean queries as they would become invalid
             boolean_operators = [" AND ", " OR ", " NOT "]
             is_boolean_query = any(op in f" {title.strip()} " for op in boolean_operators)
-            
+
             if not is_boolean_query:
                 sanitized_title = sanitize_filename(title.strip())
                 if sanitized_title != title.strip():  # Only add if different

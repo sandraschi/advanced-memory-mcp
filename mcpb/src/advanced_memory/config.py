@@ -1,4 +1,4 @@
-"""Configuration management for Advanced Memory - an independent knowledge management system derived from Basic Memory."""
+"""Configuration management for Advanced Memory - an independent knowledge management system derived from Advanced Memory."""
 
 import json
 import os
@@ -54,9 +54,9 @@ class AdvancedMemoryConfig(BaseSettings):
         description="Name of the default project to use",
     )
 
-    # Legacy support for basic-memory environment variables
-    legacy_basic_memory_home: str | None = Field(
-        default_factory=lambda: os.getenv("BASIC_MEMORY_HOME"),
+    # Legacy support for advanced-memory environment variables
+    legacy_advanced_memory_home: str | None = Field(
+        default_factory=lambda: os.getenv("ADVANCED_MEMORY_HOME"),
         description="Legacy environment variable support",
         exclude=True,
     )
@@ -279,10 +279,10 @@ def get_project_config(project_name: str | None = None) -> ProjectConfig:
     app_config = config_manager.load_config()
 
     # Get project name from environment variable
-    os_project_name = os.environ.get("BASIC_MEMORY_PROJECT", None)
+    os_project_name = os.environ.get("ADVANCED_MEMORY_PROJECT", None)
     if os_project_name:  # pragma: no cover
         logger.warning(
-            f"BASIC_MEMORY_PROJECT is not supported anymore. Use the --project flag or set the default project in the config instead. Setting default project to {os_project_name}"
+            f"ADVANCED_MEMORY_PROJECT is not supported anymore. Use the --project flag or set the default project in the config instead. Setting default project to {os_project_name}"
         )
         actual_project_name = project_name
     # if the project_name is passed in, use it
@@ -363,7 +363,7 @@ def setup_advanced_memory_logging():  # pragma: no cover
         return
 
     # Check for console logging environment variable
-    console_logging = os.getenv("BASIC_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
+    console_logging = os.getenv("ADVANCED_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
 
     config_manager = ConfigManager()
     config = get_project_config()

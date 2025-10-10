@@ -1,4 +1,4 @@
-"""Load Notion export tool for Basic Memory MCP server."""
+"""Load Notion export tool for Advanced Memory MCP server."""
 
 import re
 import zipfile
@@ -12,10 +12,10 @@ from advanced_memory.mcp.tools.utils import call_get
 
 
 @mcp.tool(
-    description="""Import Notion workspaces and pages into Basic Memory with intelligent content conversion.
+    description="""Import Notion workspaces and pages into Advanced Memory with intelligent content conversion.
 
 This tool processes Notion HTML/Markdown exports, converting Notion's complex block-based
-structure into clean, searchable Basic Memory notes while preserving relationships and hierarchy.
+structure into clean, searchable Advanced Memory notes while preserving relationships and hierarchy.
 
 NOTION FEATURES SUPPORTED:
 - HTML export format (most comprehensive - preserves all formatting)
@@ -28,9 +28,9 @@ NOTION FEATURES SUPPORTED:
 
 PARAMETERS:
 - export_path (str, REQUIRED): Path to Notion export (ZIP file or directory)
-- folder (str, default="notion-import"): Basic Memory folder for imported content
+- folder (str, default="notion-import"): Advanced Memory folder for imported content
 - preserve_hierarchy (bool, default=True): Maintain page/subpage structure
-- project (str, optional): Target Basic Memory project
+- project (str, optional): Target Advanced Memory project
 
 NOTION EXPORT FORMATS:
 - ZIP files: Complete exports with assets (recommended)
@@ -42,7 +42,7 @@ CONTENT CONVERSION:
 - Rich text blocks [UNICODE] Clean markdown formatting
 - Tables [UNICODE] Markdown table syntax
 - Code blocks [UNICODE] Syntax-highlighted markdown code
-- Links [UNICODE] Basic Memory entity references
+- Links [UNICODE] Advanced Memory entity references
 - Images [UNICODE] Extracted and referenced properly
 
 USAGE EXAMPLES:
@@ -63,7 +63,7 @@ async def load_notion_export(
     preserve_hierarchy: bool = True,
     project: str | None = None,
 ) -> str:
-    """Import Notion HTML or Markdown exports into Basic Memory.
+    """Import Notion HTML or Markdown exports into Advanced Memory.
 
     This tool imports content from Notion exports (HTML or Markdown format).
     Notion exports typically come as ZIP files containing HTML pages with assets,
@@ -71,7 +71,7 @@ async def load_notion_export(
 
     The tool will:
     - Extract and parse Notion HTML structure
-    - Convert pages to Basic Memory entities
+    - Convert pages to Advanced Memory entities
     - Preserve page hierarchy and internal links
     - Handle databases and page properties
 
@@ -234,7 +234,7 @@ async def _process_notion_html_file(
     else:
         folder_path = base_folder
 
-    # Create entity in Basic Memory
+    # Create entity in Advanced Memory
     try:
         entity_data = {
             'title': title,
@@ -306,7 +306,7 @@ async def _process_notion_markdown_file(
     else:
         folder_path = base_folder
 
-    # Create entity in Basic Memory
+    # Create entity in Advanced Memory
     try:
         entity_data = {
             'title': title,

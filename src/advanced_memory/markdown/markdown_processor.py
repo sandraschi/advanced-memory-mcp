@@ -2,10 +2,10 @@ from collections import OrderedDict
 from pathlib import Path
 
 import frontmatter
-from advanced_memory import file_utils
 from frontmatter import Post
 from loguru import logger
 
+from advanced_memory import file_utils
 from advanced_memory.markdown.entity_parser import EntityParser
 from advanced_memory.markdown.schemas import EntityMarkdown, Observation, Relation
 

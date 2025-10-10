@@ -1,4 +1,4 @@
-"""Management router for basic-memory API."""
+"""Management router for advanced-memory API."""
 
 import asyncio
 

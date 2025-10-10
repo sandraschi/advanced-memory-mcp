@@ -41,7 +41,7 @@ def import_chatgpt(
     2. Convert them to linear markdown conversations
     3. Save as clean, readable markdown files
 
-    After importing, run 'basic-memory sync' to index the new files.
+    After importing, run 'advanced-memory sync' to index the new files.
     """
 
     try:
@@ -76,7 +76,7 @@ def import_chatgpt(
             )
         )
 
-        console.print("\nRun 'basic-memory sync' to index the new files.")
+        console.print("\nRun 'advanced-memory sync' to index the new files.")
 
     except Exception as e:
         logger.error("Import failed")

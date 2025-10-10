@@ -1,4 +1,4 @@
-"""Command module for basic-memory sync operations."""
+"""Command module for advanced-memory sync operations."""
 
 import asyncio
 from collections import defaultdict
@@ -6,11 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import typer
-from advanced_memory import db
 from loguru import logger
 from rich.console import Console
 from rich.tree import Tree
 
+from advanced_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager, get_project_config
 from advanced_memory.markdown import EntityParser

@@ -1,5 +1,5 @@
 """
-Basic Memory FastMCP server with console output suppression.
+Advanced Memory FastMCP server with console output suppression.
 """
 
 import asyncio

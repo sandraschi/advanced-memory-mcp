@@ -1,4 +1,4 @@
-"""Recent activity tool for Basic Memory MCP server."""
+"""Recent activity tool for Advanced Memory MCP server."""
 
 
 from loguru import logger

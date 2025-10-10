@@ -1,4 +1,4 @@
-"""Write note tool for Basic Memory MCP server."""
+"""Write note tool for Advanced Memory MCP server."""
 
 from typing import Union
 
@@ -20,7 +20,7 @@ TagType = Union[list[str], str, None]
 
 
 @mcp.tool(
-    description="""Create new notes or update existing ones in the Basic Memory knowledge base with automatic semantic processing.
+    description="""Create new notes or update existing ones in the Advanced Memory knowledge base with automatic semantic processing.
 
 This core tool handles all note creation and updates, automatically processing content for entities,
 relationships, and semantic connections while maintaining full markdown support.
@@ -35,10 +35,10 @@ CONTENT PROCESSING:
 PARAMETERS:
 - title (str, REQUIRED): Note title (auto-sanitized for filesystem safety)
 - content (str, REQUIRED): Full markdown content with formatting, links, and structure
-- folder (str, REQUIRED): Target folder path within Basic Memory
+- folder (str, REQUIRED): Target folder path within Advanced Memory
 - tags (optional): Tags as string, list of strings, or None for categorization
 - entity_type (str, default="note"): Content type (note, entity, observation, etc.)
-- project (str, optional): Specific Basic Memory project to write to
+- project (str, optional): Specific Advanced Memory project to write to
 
 SEMANTIC FEATURES:
 - Entity extraction from [[Entity Name]] syntax

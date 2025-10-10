@@ -150,7 +150,7 @@ If the note should be deleted but the operation keeps failing, send a message to
 
 
 @mcp.tool(
-    description="""Remove notes from the Basic Memory knowledge base with relationship cleanup and safety checks.
+    description="""Remove notes from the Advanced Memory knowledge base with relationship cleanup and safety checks.
 
 This tool permanently deletes notes while handling semantic relationship cleanup and providing
 comprehensive error reporting to guide successful operations.

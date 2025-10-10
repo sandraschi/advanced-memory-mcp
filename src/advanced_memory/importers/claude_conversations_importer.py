@@ -1,4 +1,4 @@
-"""Claude conversations import service for Basic Memory."""
+"""Claude conversations import service for Advanced Memory."""
 
 import logging
 from datetime import datetime
@@ -75,7 +75,7 @@ class ClaudeConversationsImporter(Importer):
         created_at: str,
         modified_at: str,
     ) -> EntityMarkdown:
-        """Convert chat messages to Basic Memory entity format.
+        """Convert chat messages to Advanced Memory entity format.
 
         Args:
             base_path: Base path for the entity.

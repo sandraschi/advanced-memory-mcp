@@ -1,4 +1,4 @@
-"""Move note tool for Basic Memory MCP server."""
+"""Move note tool for Advanced Memory MCP server."""
 
 from textwrap import dedent
 
@@ -268,7 +268,7 @@ This usually means the database and filesystem are out of sync.
 
 ## Troubleshooting steps:
 ```
-# Check if note exists in Basic Memory
+# Check if note exists in Advanced Memory
 read_note("{identifier}")
 
 # If it exists, the file is missing on disk - send a message to support@basicmachines.co

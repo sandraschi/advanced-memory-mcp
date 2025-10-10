@@ -1,4 +1,4 @@
-"""Tag parsing and manipulation utilities for basic-memory."""
+"""Tag parsing and manipulation utilities for advanced-memory."""
 
 
 

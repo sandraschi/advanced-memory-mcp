@@ -1,4 +1,4 @@
-"""Main CLI entry point for basic-memory."""  # pragma: no cover
+"""Main CLI entry point for advanced-memory."""  # pragma: no cover
 
 from advanced_memory.cli.app import app  # pragma: no cover
 

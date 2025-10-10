@@ -16,11 +16,11 @@ def create_client() -> AsyncClient:
 
     if config.api_url:
         # Use HTTP transport for remote API
-        logger.info(f"Creating HTTP client for remote Basic Memory API: {config.api_url}")
+        logger.info(f"Creating HTTP client for remote Advanced Memory API: {config.api_url}")
         return AsyncClient(base_url=config.api_url)
     else:
         # Use ASGI transport for local API
-        logger.debug("Creating ASGI client for local Basic Memory API")
+        logger.debug("Creating ASGI client for local Advanced Memory API")
         return AsyncClient(transport=ASGITransport(app=fastapi_app), base_url="http://test")
 
 

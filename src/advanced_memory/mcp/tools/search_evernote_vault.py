@@ -1,4 +1,4 @@
-"""Search Evernote vault tool for Basic Memory MCP server."""
+"""Search Evernote vault tool for Advanced Memory MCP server."""
 
 import re
 import xml.etree.ElementTree as ET
@@ -65,7 +65,7 @@ RETURNS:
 Formatted search results with note details, organizational context, and match statistics.
 
 NOTE: This searches external Evernote exports without importing them. For enhanced search,
-relationship discovery, and AI-powered analysis, use load_evernote_export() to import into Basic Memory.""",
+relationship discovery, and AI-powered analysis, use load_evernote_export() to import into Advanced Memory.""",
 )
 async def search_evernote_vault(
     vault_path: str,
