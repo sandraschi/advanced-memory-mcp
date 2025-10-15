@@ -116,9 +116,20 @@ async def adn_editor(
         return await _notepadpp_import_operation(note_identifier, workspace_path, keep_workspace)
     elif operation == "typora_control":
         return await _typora_control_operation(
-            typora_operation, typora_format, typora_output_path, typora_text, typora_file_path,
-            typora_content, typora_position, typora_find_text, typora_replace_text, typora_files,
-            typora_theme, typora_visible, typora_template_name, typora_options
+            typora_operation,
+            typora_format,
+            typora_output_path,
+            typora_text,
+            typora_file_path,
+            typora_content,
+            typora_position,
+            typora_find_text,
+            typora_replace_text,
+            typora_files,
+            typora_theme,
+            typora_visible,
+            typora_template_name,
+            typora_options,
         )
     elif operation == "canvas_create":
         return await _canvas_create_operation(nodes, edges, canvas_title, canvas_folder, project)
@@ -128,7 +139,9 @@ async def adn_editor(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: notepadpp_edit, notepadpp_import, typora_control, canvas_create, read_content"
 
 
-async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path: str | None, create_backup: bool) -> str:
+async def _notepadpp_edit_operation(
+    note_identifier: str | None, workspace_path: str | None, create_backup: bool
+) -> str:
     """Handle Notepad++ edit operation."""
     if not note_identifier:
         return "# Error\n\nNotepad++ edit requires: note_identifier parameter"
@@ -139,10 +152,9 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
     from datetime import datetime
     from pathlib import Path
 
-
     def _sanitize_filename(title: str) -> str:
         """Sanitize filename for filesystem safety."""
-        return "".join(c for c in title if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        return "".join(c for c in title if c.isalnum() or c in (" ", "-", "_")).rstrip()
 
     def _find_notepadpp_executable() -> Path | None:
         """Find Notepad++ executable on Windows."""
@@ -151,7 +163,10 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
             Path("C:/Program Files/Notepad++/notepad++.exe"),
             Path("C:/Program Files (x86)/Notepad++/notepad++.exe"),
             Path(os.environ.get("ProgramFiles", "C:/Program Files") + "/Notepad++/notepad++.exe"),
-            Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)") + "/Notepad++/notepad++.exe"),
+            Path(
+                os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)")
+                + "/Notepad++/notepad++.exe"
+            ),
         ]
 
         for path in common_paths:
@@ -160,9 +175,11 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
 
         # Try PATH
         try:
-            result = subprocess.run(["where", "notepad++"], capture_output=True, text=True, shell=True)
+            result = subprocess.run(
+                ["where", "notepad++"], capture_output=True, text=True, shell=True
+            )
             if result.returncode == 0 and result.stdout.strip():
-                return Path(result.stdout.strip().split('\n')[0])
+                return Path(result.stdout.strip().split("\n")[0])
         except Exception:
             pass
 
@@ -181,14 +198,16 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
         # Create safe filename
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
-        backup_file = workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        backup_file = (
+            workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        )
 
         # Create backup if requested
         if create_backup:
-            backup_file.write_text(original_content, encoding='utf-8')
+            backup_file.write_text(original_content, encoding="utf-8")
 
         # Write current content to workspace
-        md_file.write_text(original_content, encoding='utf-8')
+        md_file.write_text(original_content, encoding="utf-8")
 
         # Open in Notepad++
         notepadpp_path = _find_notepadpp_executable()
@@ -223,7 +242,9 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
         return f"[UNICODE] Error exporting note to Notepad++: {str(e)}"
 
 
-async def _notepadpp_import_operation(note_identifier: str | None, workspace_path: str | None, keep_workspace: bool) -> str:
+async def _notepadpp_import_operation(
+    note_identifier: str | None, workspace_path: str | None, keep_workspace: bool
+) -> str:
     """Handle Notepad++ import operation."""
     if not note_identifier:
         return "# Error\n\nNotepad++ import requires: note_identifier parameter"
@@ -231,10 +252,9 @@ async def _notepadpp_import_operation(note_identifier: str | None, workspace_pat
     # Import required functions
     from pathlib import Path
 
-
     def _sanitize_filename(title: str) -> str:
         """Sanitize filename for filesystem safety."""
-        return "".join(c for c in title if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        return "".join(c for c in title if c.isalnum() or c in (" ", "-", "_")).rstrip()
 
     try:
         # Setup workspace
@@ -250,7 +270,7 @@ async def _notepadpp_import_operation(note_identifier: str | None, workspace_pat
             return f"[UNICODE] Edited file not found: {md_file}"
 
         # Read the edited content
-        edited_content = md_file.read_text(encoding='utf-8')
+        edited_content = md_file.read_text(encoding="utf-8")
 
         # Update the note in Advanced Memory
         await mcp_write_note.fn(
@@ -258,16 +278,19 @@ async def _notepadpp_import_operation(note_identifier: str | None, workspace_pat
             content=edited_content,
             folder="",  # Use existing folder
             tags=None,
-            entity_type="note"
+            entity_type="note",
         )
 
         # Clean up workspace if requested
         if not keep_workspace:
             import shutil
+
             try:
                 shutil.rmtree(workspace_dir)
             except Exception as e:
-                return f"[UNICODE] Note updated successfully, but failed to clean workspace: {str(e)}"
+                return (
+                    f"[UNICODE] Note updated successfully, but failed to clean workspace: {str(e)}"
+                )
 
         return f"""[UNICODE] **Note imported back to Advanced Memory!**
 
@@ -282,11 +305,20 @@ async def _notepadpp_import_operation(note_identifier: str | None, workspace_pat
 
 
 async def _typora_control_operation(
-    typora_operation: str | None, typora_format: str | None, typora_output_path: str | None,
-    typora_text: str | None, typora_file_path: str | None, typora_content: str | None,
-    typora_position: str | None, typora_find_text: str | None, typora_replace_text: str | None,
-    typora_files: list[str] | None, typora_theme: str | None, typora_visible: bool | None,
-    typora_template_name: str | None, typora_options: dict[str, Any] | None
+    typora_operation: str | None,
+    typora_format: str | None,
+    typora_output_path: str | None,
+    typora_text: str | None,
+    typora_file_path: str | None,
+    typora_content: str | None,
+    typora_position: str | None,
+    typora_find_text: str | None,
+    typora_replace_text: str | None,
+    typora_files: list[str] | None,
+    typora_theme: str | None,
+    typora_visible: bool | None,
+    typora_template_name: str | None,
+    typora_options: dict[str, Any] | None,
 ) -> str:
     """Handle Typora control operation."""
     if not typora_operation:
@@ -306,7 +338,9 @@ async def _typora_control_operation(
         return f"[UNICODE] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {str(e)}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
 
 
-async def _handle_typora_export(format: str | None, output_path: str | None, options: dict[str, Any] | None) -> str:
+async def _handle_typora_export(
+    format: str | None, output_path: str | None, options: dict[str, Any] | None
+) -> str:
     """Handle basic Typora export."""
     if not format:
         return "[UNICODE] Export requires 'format' parameter (pdf, html, docx, etc.)"
@@ -329,7 +363,13 @@ async def _handle_typora_set_content(content: str | None) -> str:
     return "[UNICODE] **Typora Content Update**\n\nSet content functionality requires Typora with json_rpc plugin.\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin\n4. Restart Typora\n\nUse the full typora_control tool for complete functionality."
 
 
-async def _canvas_create_operation(nodes: list[dict[str, Any]] | None, edges: list[dict[str, Any]] | None, canvas_title: str | None, canvas_folder: str | None, project: str | None) -> str:
+async def _canvas_create_operation(
+    nodes: list[dict[str, Any]] | None,
+    edges: list[dict[str, Any]] | None,
+    canvas_title: str | None,
+    canvas_folder: str | None,
+    project: str | None,
+) -> str:
     """Handle canvas create operation."""
     if not nodes or not edges or not canvas_title or not canvas_folder:
         return "# Error\n\nCanvas create requires: nodes, edges, canvas_title, canvas_folder parameters"
@@ -340,6 +380,7 @@ async def _canvas_create_operation(nodes: list[dict[str, Any]] | None, edges: li
     try:
         # Get active project
         from advanced_memory.mcp.project_session import get_active_project
+
         active_project = get_active_project(project)
 
         # Create folder if it doesn't exist
@@ -347,17 +388,16 @@ async def _canvas_create_operation(nodes: list[dict[str, Any]] | None, edges: li
         folder_path.mkdir(parents=True, exist_ok=True)
 
         # Create canvas filename
-        safe_title = "".join(c for c in canvas_title if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        safe_title = "".join(
+            c for c in canvas_title if c.isalnum() or c in (" ", "-", "_")
+        ).rstrip()
         canvas_file = folder_path / f"{safe_title}.canvas"
 
         # Create canvas data structure
-        canvas_data = {
-            "nodes": nodes,
-            "edges": edges
-        }
+        canvas_data = {"nodes": nodes, "edges": edges}
 
         # Write canvas file
-        canvas_file.write_text(json.dumps(canvas_data, indent=2), encoding='utf-8')
+        canvas_file.write_text(json.dumps(canvas_data, indent=2), encoding="utf-8")
 
         return f"""# Canvas Created Successfully
 
@@ -407,10 +447,10 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
         content_type, _ = mimetypes.guess_type(str(file_path))
 
         # Handle different file types
-        if file_path.suffix.lower() in ['.md', '.txt', '.py', '.js', '.html', '.css', '.json']:
+        if file_path.suffix.lower() in [".md", ".txt", ".py", ".js", ".html", ".css", ".json"]:
             # Text files
             try:
-                content = file_path.read_text(encoding='utf-8')
+                content = file_path.read_text(encoding="utf-8")
                 return f"""# File Content: {path}
 
 **Type:** Text
@@ -425,7 +465,7 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
             except UnicodeDecodeError:
                 return f"# Error\n\nCannot read file as text: {path}"
 
-        elif file_path.suffix.lower() in ['.png', '.jpg', '.jpeg', '.gif', '.webp']:
+        elif file_path.suffix.lower() in [".png", ".jpg", ".jpeg", ".gif", ".webp"]:
             # Images - return basic64 for small files
             max_size = 1024 * 1024  # 1MB
             if file_size > max_size:
@@ -438,8 +478,8 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
 **To view:** Open directly in your file browser or image viewer."""
 
             try:
-                with open(file_path, 'rb') as f:
-                    image_data = base64.b64encode(f.read()).decode('utf-8')
+                with open(file_path, "rb") as f:
+                    image_data = base64.b64encode(f.read()).decode("utf-8")
 
                 return f"""# Image File: {path}
 
@@ -455,19 +495,19 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
             if file_size > 1024 * 100:  # 100KB
                 return f"""# Binary File: {path}
 
-**Type:** {content_type or 'Unknown'}
+**Type:** {content_type or "Unknown"}
 **Size:** {file_size} bytes
 **Status:** Binary file too large for display
 
 **To access:** Open directly in appropriate application."""
 
             try:
-                with open(file_path, 'rb') as f:
-                    binary_data = base64.b64encode(f.read()).decode('utf-8')
+                with open(file_path, "rb") as f:
+                    binary_data = base64.b64encode(f.read()).decode("utf-8")
 
                 return f"""# Binary File: {path}
 
-**Type:** {content_type or 'Unknown'}
+**Type:** {content_type or "Unknown"}
 **Size:** {file_size} bytes
 
 **Base64 Data:**

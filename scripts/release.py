@@ -57,11 +57,7 @@ def update_version_in_pyproject(new_version: str) -> None:
     content = pyproject_path.read_text()
 
     # Update version line
-    updated_content = re.sub(
-        r'version = "[^"]+"',
-        f'version = "{new_version}"',
-        content
-    )
+    updated_content = re.sub(r'version = "[^"]+"', f'version = "{new_version}"', content)
 
     pyproject_path.write_text(updated_content)
     print(f"Updated version to {new_version} in pyproject.toml")
@@ -75,7 +71,7 @@ def generate_changelog(new_version: str) -> str:
             ["git", "log", "--oneline", "--since=1 month ago", "--pretty=format:- %s"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         commits = result.stdout.strip()
 
@@ -103,10 +99,7 @@ def get_repo_info() -> str:
     """Get repository info from git remote"""
     try:
         result = subprocess.run(
-            ["git", "remote", "get-url", "origin"],
-            capture_output=True,
-            text=True,
-            check=True
+            ["git", "remote", "get-url", "origin"], capture_output=True, text=True, check=True
         )
         url = result.stdout.strip()
 
@@ -127,7 +120,7 @@ def get_previous_version() -> str:
             ["git", "describe", "--tags", "--abbrev=0", "HEAD^"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return result.stdout.strip().lstrip("v")
     except subprocess.CalledProcessError:
@@ -139,10 +132,7 @@ def create_git_tag(new_version: str) -> None:
     tag_name = f"v{new_version}"
 
     # Create annotated tag
-    subprocess.run([
-        "git", "tag", "-a", tag_name,
-        "-m", f"Release {new_version}"
-    ], check=True)
+    subprocess.run(["git", "tag", "-a", tag_name, "-m", f"Release {new_version}"], check=True)
 
     # Push tag to remote
     subprocess.run(["git", "push", "origin", tag_name], check=True)
@@ -153,14 +143,10 @@ def create_git_tag(new_version: str) -> None:
 def main():
     parser = argparse.ArgumentParser(description="Release automation script")
     parser.add_argument(
-        "bump_type",
-        choices=["patch", "minor", "major"],
-        help="Type of version bump"
+        "bump_type", choices=["patch", "minor", "major"], help="Type of version bump"
     )
     parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Show what would be done without making changes"
+        "--dry-run", action="store_true", help="Show what would be done without making changes"
     )
 
     args = parser.parse_args()
@@ -189,9 +175,7 @@ def main():
 
         # Commit changes
         subprocess.run(["git", "add", "."], check=True)
-        subprocess.run([
-            "git", "commit", "-m", f"chore: release {new_version}"
-        ], check=True)
+        subprocess.run(["git", "commit", "-m", f"chore: release {new_version}"], check=True)
 
         print(f"Committed changes for version {new_version}")
 

@@ -15,6 +15,7 @@ class TestCIBasic:
         """Test that we can import the main module."""
         try:
             import advanced_memory
+
             assert advanced_memory is not None
         except ImportError:
             # If the module isn't available, that's okay for basic CI

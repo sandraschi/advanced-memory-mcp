@@ -68,7 +68,7 @@ async def make_pdf_book(
     include_subfolders: bool = True,
     toc_depth: int = 2,
     paper_size: str = "a4",
-    project: str | None = None
+    project: str | None = None,
 ) -> str:
     """
     Create a professional PDF book from Advanced Memory notes.
@@ -103,14 +103,10 @@ async def make_pdf_book(
             return f"[UNICODE] No notes found in folder '{source_folder}' for book creation."
 
         # Create temporary book markdown file
-        book_md_path = await _create_book_markdown(
-            notes_data, book_title, author, output_dir
-        )
+        book_md_path = await _create_book_markdown(notes_data, book_title, author, output_dir)
 
         # Generate PDF book with Pandoc
-        success = await _generate_pdf_book(
-            book_md_path, pdf_path, toc_depth, paper_size
-        )
+        success = await _generate_pdf_book(book_md_path, pdf_path, toc_depth, paper_size)
 
         # Clean up temporary file
         book_md_path.unlink(missing_ok=True)
@@ -118,7 +114,7 @@ async def make_pdf_book(
         if success:
             # Calculate book statistics
             total_pages = _estimate_page_count(notes_data)
-            total_words = sum(len(note['content'].split()) for note in notes_data)
+            total_words = sum(len(note["content"].split()) for note in notes_data)
 
             return f"""[UNICODE] **PDF Book Created Successfully!**
 
@@ -150,23 +146,22 @@ async def make_pdf_book(
 
 
 async def _get_book_notes(
-    source_folder: str,
-    tag_filter: str | None,
-    include_subfolders: bool,
-    project: str | None = None
+    source_folder: str, tag_filter: str | None, include_subfolders: bool, project: str | None = None
 ) -> list[dict[str, Any]]:
     """
     Get notes for the book, sorted by title for chapter order.
     """
     try:
         # Get all notes from the folder (with optional tag filtering)
-        notes_data = await _get_notes_from_folder(source_folder, tag_filter, include_subfolders, project)
+        notes_data = await _get_notes_from_folder(
+            source_folder, tag_filter, include_subfolders, project
+        )
 
         if not notes_data:
             return []
 
         # Sort notes by title for consistent chapter order
-        notes_data.sort(key=lambda x: x['title'].lower())
+        notes_data.sort(key=lambda x: x["title"].lower())
 
         return notes_data
 
@@ -176,10 +171,7 @@ async def _get_book_notes(
 
 
 async def _get_notes_from_folder(
-    source_folder: str,
-    tag_filter: str | None,
-    include_subfolders: bool,
-    project: str | None = None
+    source_folder: str, tag_filter: str | None, include_subfolders: bool, project: str | None = None
 ) -> list[dict[str, Any]]:
     """
     Retrieve all notes from the specified folder using the search API.
@@ -190,38 +182,42 @@ async def _get_notes_from_folder(
             # Search for notes with specific tag
             query = SearchQuery(
                 text=f"tag:{tag_filter}",  # Search for notes tagged with the specified tag
-                types=["note"]  # Only notes, not entities
+                types=["note"],  # Only notes, not entities
             )
         else:
             # Search all notes (will be filtered by folder below)
             query = SearchQuery(
                 text="",  # Empty query to get all notes
-                types=["note"]  # Only notes, not entities
+                types=["note"],  # Only notes, not entities
             )
 
-        response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump())
+        response = await call_post(
+            client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump()
+        )
 
         if not response:
             return []
 
         response_data = response.json()
-        if not hasattr(response_data, 'results') or not response_data.results:
+        if not hasattr(response_data, "results") or not response_data.results:
             return []
 
         notes_data = []
         for note in response_data.results:
             # Filter by folder path
-            note_path = getattr(note, 'file_path', '')
+            note_path = getattr(note, "file_path", "")
             if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
                 # Get full note content
                 content = await _get_note_content(note)
                 if content:
-                    notes_data.append({
-                        'id': getattr(note, 'id', ''),
-                        'title': getattr(note, 'title', ''),
-                        'file_path': note_path,
-                        'content': content
-                    })
+                    notes_data.append(
+                        {
+                            "id": getattr(note, "id", ""),
+                            "title": getattr(note, "title", ""),
+                            "file_path": note_path,
+                            "content": content,
+                        }
+                    )
 
         return notes_data
 
@@ -239,7 +235,7 @@ async def _get_note_content(note) -> str | None:
         from advanced_memory.mcp.tools import read_note as mcp_read_note
 
         # Get the identifier (prefer permalink, fallback to title)
-        identifier = getattr(note, 'permalink', None) or getattr(note, 'title', '')
+        identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
 
         if not identifier:
             return None
@@ -253,17 +249,14 @@ async def _get_note_content(note) -> str | None:
 
 
 async def _create_book_markdown(
-    notes_data: list[dict[str, Any]],
-    book_title: str,
-    author: str,
-    output_dir: Path
+    notes_data: list[dict[str, Any]], book_title: str, author: str, output_dir: Path
 ) -> Path:
     """
     Create a temporary markdown file with book structure.
     """
     book_md_path = output_dir / "temp_book.md"
 
-    with open(book_md_path, 'w', encoding='utf-8') as f:
+    with open(book_md_path, "w", encoding="utf-8") as f:
         # Write YAML metadata for title page
         f.write("---\n")
         f.write(f"title: {book_title}\n")
@@ -301,7 +294,7 @@ async def _create_book_markdown(
             f.write(f"# Chapter {i}: {note['title']}\n\n")
 
             # Clean up the content for book format
-            content = _prepare_chapter_content(note['content'])
+            content = _prepare_chapter_content(note["content"])
 
             f.write(content)
             f.write("\n\n\\newpage\n\n")
@@ -321,16 +314,16 @@ def _prepare_chapter_content(content: str) -> str:
     Prepare note content for book chapter format.
     """
     # Remove any existing title headers (we add our own chapter titles)
-    lines = content.split('\n')
+    lines = content.split("\n")
     cleaned_lines = []
 
     for line in lines:
         # Skip level 1 headers (we use them as chapter titles)
-        if line.startswith('# '):
+        if line.startswith("# "):
             continue
         cleaned_lines.append(line)
 
-    content = '\n'.join(cleaned_lines)
+    content = "\n".join(cleaned_lines)
 
     # Ensure content doesn't start with excessive whitespace
     content = content.strip()
@@ -343,10 +336,7 @@ def _prepare_chapter_content(content: str) -> str:
 
 
 async def _generate_pdf_book(
-    book_md_path: Path,
-    pdf_path: Path,
-    toc_depth: int,
-    paper_size: str
+    book_md_path: Path, pdf_path: Path, toc_depth: int, paper_size: str
 ) -> bool:
     """
     Generate PDF book using Pandoc.
@@ -356,7 +346,8 @@ async def _generate_pdf_book(
         cmd = [
             "C:\\Program Files\\Pandoc\\pandoc.exe",
             str(book_md_path),
-            "-o", str(pdf_path),
+            "-o",
+            str(pdf_path),
             "--pdf-engine=pdflatex",  # Use pdflatex for PDF generation
             f"--toc-depth={toc_depth}",
             "--toc",
@@ -372,9 +363,7 @@ async def _generate_pdf_book(
 
         # Execute Pandoc
         result = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
         stdout, stderr = await result.communicate()
@@ -382,7 +371,7 @@ async def _generate_pdf_book(
         if result.returncode == 0:
             return True
         else:
-            error_msg = stderr.decode('utf-8', errors='ignore')
+            error_msg = stderr.decode("utf-8", errors="ignore")
             logger.error(f"Pandoc PDF book error: {error_msg}")
             return False
 
@@ -396,7 +385,7 @@ def _estimate_page_count(notes_data: list[dict[str, Any]]) -> int:
     Estimate the number of pages based on content length.
     Rough estimate: ~500 words per page.
     """
-    total_words = sum(len(note['content'].split()) for note in notes_data)
+    total_words = sum(len(note["content"].split()) for note in notes_data)
     return max(1, round(total_words / 500))
 
 
@@ -408,7 +397,7 @@ def _get_file_size(file_path: Path) -> str:
         return "Unknown"
 
     size_bytes = file_path.stat().st_size
-    for unit in ['B', 'KB', 'MB', 'GB']:
+    for unit in ["B", "KB", "MB", "GB"]:
         if size_bytes < 1024.0:
             return f"{size_bytes:.1f} {unit}"
         size_bytes /= 1024.0
@@ -423,23 +412,23 @@ def _sanitize_filename(title: str) -> str:
     import unicodedata
 
     # Normalize unicode characters
-    title = unicodedata.normalize('NFKD', title)
+    title = unicodedata.normalize("NFKD", title)
 
     # Replace problematic characters
-    title = title.replace(':', '-').replace('.', '_').replace('/', '-')
+    title = title.replace(":", "-").replace(".", "_").replace("/", "-")
 
     # Remove or replace other unsafe characters
-    title = re.sub(r'[<>:"|?*\\]', '_', title)
+    title = re.sub(r'[<>:"|?*\\]', "_", title)
 
     # Collapse multiple underscores/spaces
-    title = re.sub(r'[_ ]+', '_', title)
+    title = re.sub(r"[_ ]+", "_", title)
 
     # Trim underscores and spaces
-    title = title.strip('_ ')
+    title = title.strip("_ ")
 
     # Limit length
     if len(title) > 100:
-        title = title[:100].rstrip('_ ')
+        title = title[:100].rstrip("_ ")
 
     # Ensure not empty
     if not title:

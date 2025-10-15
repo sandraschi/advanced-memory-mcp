@@ -285,7 +285,9 @@ class ProjectService:
         # Projects in DB but not in config will be marked as inactive instead
         for name, project in db_projects_by_permalink.items():
             if name not in config_projects:
-                logger.info(f"Project '{name}' exists in database but not in config - marking inactive")
+                logger.info(
+                    f"Project '{name}' exists in database but not in config - marking inactive"
+                )
                 await self.repository.update(project.id, {"is_active": False})
 
         # Ensure database default project state is consistent

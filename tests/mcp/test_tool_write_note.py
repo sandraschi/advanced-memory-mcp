@@ -34,7 +34,7 @@ async def test_write_note(app):
     # Try reading it back via permalink
     content = await read_note.fn("test/test-note")
     # Normalize line endings for cross-platform compatibility
-    normalized_content = content.replace('\r\n', '\n')
+    normalized_content = content.replace("\r\n", "\n")
     expected_content = dedent("""
         ---
         title: Test Note
@@ -73,7 +73,7 @@ async def test_write_note_no_tags(app):
     Just some text
     """).strip()
     # Normalize line endings for cross-platform compatibility
-    expected_content = expected_content.replace('\n', '\r\n')
+    expected_content = expected_content.replace("\n", "\r\n")
     assert expected_content in content
 
 
@@ -131,7 +131,7 @@ async def test_write_note_update_existing(app):
         """
     ).strip()
     # Normalize line endings for cross-platform compatibility
-    expected_content = expected_content.replace('\n', '\r\n')
+    expected_content = expected_content.replace("\n", "\r\n")
     assert expected_content == content
 
 
@@ -413,7 +413,7 @@ async def test_write_note_preserves_content_frontmatter(app):
         """
     ).strip()
     # Normalize line endings for cross-platform compatibility
-    expected_content = expected_content.replace('\n', '\r\n')
+    expected_content = expected_content.replace("\n", "\r\n")
     assert expected_content in content
 
 
@@ -512,7 +512,7 @@ async def test_write_note_with_custom_entity_type(app):
     This is a guide
     """).strip()
     # Normalize line endings for cross-platform compatibility
-    expected_content = expected_content.replace('\n', '\r\n')
+    expected_content = expected_content.replace("\n", "\r\n")
     assert expected_content in content
 
 

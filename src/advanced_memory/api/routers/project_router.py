@@ -1,6 +1,5 @@
 """Router for project management."""
 
-
 from fastapi import APIRouter, Body, HTTPException, Path
 
 from advanced_memory.deps import ProjectPathDep, ProjectServiceDep

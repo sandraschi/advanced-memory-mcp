@@ -1,4 +1,3 @@
-
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.repository.search_repository import SearchIndexRow
@@ -27,7 +26,9 @@ async def to_graph_context(
     page_size: int | None = None,
 ) -> GraphContext:
     # Helper function to convert items to summaries
-    async def to_summary(item: SearchIndexRow | ContextResultRow) -> EntitySummary | ObservationSummary | RelationSummary:
+    async def to_summary(
+        item: SearchIndexRow | ContextResultRow,
+    ) -> EntitySummary | ObservationSummary | RelationSummary:
         match item.type:
             case SearchItemType.ENTITY:
                 return EntitySummary(
@@ -48,7 +49,9 @@ async def to_graph_context(
                 )
             case SearchItemType.RELATION:
                 from_entity: Entity | None = await entity_repository.find_by_id(item.from_id or 0)
-                to_entity: Entity | None = await entity_repository.find_by_id(item.to_id) if item.to_id else None
+                to_entity: Entity | None = (
+                    await entity_repository.find_by_id(item.to_id) if item.to_id else None
+                )
                 return RelationSummary(
                     title=item.title or "",
                     file_path=item.file_path,
@@ -109,7 +112,9 @@ async def to_graph_context(
     )
 
 
-async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[SearchResult]:
+async def to_search_results(
+    entity_service: EntityService, results: list[SearchIndexRow]
+) -> list[SearchResult]:
     search_results: list[SearchResult] = []
     for r in results:
         entities = await entity_service.get_entities_by_id([r.entity_id, r.from_id, r.to_id])  # pyright: ignore

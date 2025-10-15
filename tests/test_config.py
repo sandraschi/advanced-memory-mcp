@@ -68,6 +68,7 @@ class TestAdvancedMemoryConfig:
         # Should use the exact value from environment variable
         # Note: Path conversion may change separators on Windows
         import os
+
         expected_path = os.path.normpath(relative_path)
         assert config.projects["main"] == expected_path
 

@@ -15,10 +15,10 @@ from .permalink_utils import generate_permalink
 from .types import FilePath, PathLike
 
 __all__ = [
-    'PathLike',
-    'FilePath',
-    'setup_logging',
-    'generate_permalink',
-    '__version__',
-    '__api_version__',
+    "PathLike",
+    "FilePath",
+    "setup_logging",
+    "generate_permalink",
+    "__version__",
+    "__api_version__",
 ]

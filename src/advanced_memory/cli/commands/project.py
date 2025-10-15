@@ -231,7 +231,9 @@ def display_project_info(
 
             # System status
             system_tree = Tree("System Status")
-            system_tree.add(f"Advanced Memory version: [bold green]{info.system.version}[/bold green]")
+            system_tree.add(
+                f"Advanced Memory version: [bold green]{info.system.version}[/bold green]"
+            )
             system_tree.add(
                 f"Database: [cyan]{info.system.database_path}[/cyan] ([green]{info.system.database_size}[/green])"
             )

@@ -35,7 +35,7 @@ async def test_get_resource_content(client, project_config, entity_repository, p
     response = await client.get(f"{project_url}/resource/{entity.permalink}")
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
-    assert response.text.replace('\r\n', '\n') == content
+    assert response.text.replace("\r\n", "\n") == content
 
 
 @pytest.mark.asyncio
@@ -66,7 +66,7 @@ async def test_get_resource_pagination(client, project_config, entity_repository
     )
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
-    assert response.text.replace('\r\n', '\n') == content
+    assert response.text.replace("\r\n", "\n") == content
 
 
 @pytest.mark.asyncio
@@ -159,7 +159,7 @@ permalink: test/test-entity
 
 - [note] an observation.
     """.strip()
-        in response.text.replace('\r\n', '\n')
+        in response.text.replace("\r\n", "\n")
     )
 
 
@@ -207,7 +207,7 @@ async def test_get_resource_entities(client, project_config, entity_repository, 
 - links to [[Test Entity]]
 
     """.strip()
-        in response.text.replace('\r\n', '\n')
+        in response.text.replace("\r\n", "\n")
     )
 
 
@@ -259,7 +259,7 @@ permalink: test/related-entity
 # Related Content
 - links to [[Test Entity]]
     """.strip()
-        in response.text.replace('\r\n', '\n')
+        in response.text.replace("\r\n", "\n")
     )
 
 
@@ -308,7 +308,7 @@ async def test_get_resource_relation(client, project_config, entity_repository, 
 - links to [[Test Entity]]
 
     """.strip()
-        in response.text.replace('\r\n', '\n')
+        in response.text.replace("\r\n", "\n")
     )
 
 

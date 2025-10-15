@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Link:
     """Represents a parsed link."""
+
     type: str  # 'wikilink', 'markdown', 'url', 'image'
     target: str
     text: str | None = None
@@ -43,6 +44,7 @@ class Link:
 @dataclass
 class LinkParseResult:
     """Result of link parsing."""
+
     is_valid: bool
     content: str
     links: list[Link] = field(default_factory=list)
@@ -87,25 +89,22 @@ class LinkParser:
 
     # Regex patterns (non-greedy to prevent catastrophic backtracking)
     WIKILINK_PATTERN = re.compile(
-        r'\[\[([^\[\]]+?)\]\]',  # Non-greedy, no nested brackets
-        re.MULTILINE
+        r"\[\[([^\[\]]+?)\]\]",  # Non-greedy, no nested brackets
+        re.MULTILINE,
     )
 
     MARKDOWN_LINK_PATTERN = re.compile(
-        r'\[([^\[\]]+?)\]\(([^\(\)]+?)\)',  # Non-greedy
-        re.MULTILINE
+        r"\[([^\[\]]+?)\]\(([^\(\)]+?)\)",  # Non-greedy
+        re.MULTILINE,
     )
 
     IMAGE_PATTERN = re.compile(
-        r'!\[([^\[\]]*?)\]\(([^\(\)]+?)\)',  # Non-greedy
-        re.MULTILINE
+        r"!\[([^\[\]]*?)\]\(([^\(\)]+?)\)",  # Non-greedy
+        re.MULTILINE,
     )
 
     # Simple URL pattern (more permissive, less complex)
-    URL_PATTERN = re.compile(
-        r'https?://[^\s<>"{}|\\^`\[\]]+',
-        re.MULTILINE
-    )
+    URL_PATTERN = re.compile(r'https?://[^\s<>"{}|\\^`\[\]]+', re.MULTILINE)
 
     def __init__(
         self,
@@ -139,13 +138,10 @@ class LinkParser:
             LinkParseResult with extracted links or errors
         """
         start_time = time.time()
-        result = LinkParseResult(
-            is_valid=True,
-            content=content
-        )
+        result = LinkParseResult(is_valid=True, content=content)
 
         # Check content size
-        content_size = len(content.encode('utf-8'))
+        content_size = len(content.encode("utf-8"))
         if content_size > self.max_content_size:
             result.add_error(
                 f"Content too large for link parsing "
@@ -167,15 +163,13 @@ class LinkParser:
             # Check if too many links
             if len(result.links) >= self.max_links:
                 result.add_warning(
-                    f"Maximum links reached ({self.max_links}), "
-                    f"some links may be missing"
+                    f"Maximum links reached ({self.max_links}), some links may be missing"
                 )
 
             # Warn if many links
             if len(result.links) > self.WARN_LINK_COUNT:
                 result.add_warning(
-                    f"Large number of links ({len(result.links)}) "
-                    f"may impact performance"
+                    f"Large number of links ({len(result.links)}) may impact performance"
                 )
 
             # Calculate parse time
@@ -184,15 +178,13 @@ class LinkParser:
             logger.debug(
                 "link_parsing_complete: link_count=%d, parse_time_ms=%.2f",
                 len(result.links),
-                result.parse_time_ms
+                result.parse_time_ms,
             )
 
         except Exception as e:
             result.add_error(f"Link parsing failed: {type(e).__name__}: {e}")
             logger.error(
-                "link_parsing_exception: error=%s, error_type=%s",
-                str(e),
-                type(e).__name__
+                "link_parsing_exception: error=%s, error_type=%s", str(e), type(e).__name__
             )
 
         return result
@@ -201,9 +193,7 @@ class LinkParser:
         """Check if parsing has exceeded timeout."""
         elapsed = time.time() - start_time
         if elapsed > self.max_parse_time:
-            result.add_error(
-                f"Link parsing timeout ({elapsed:.2f}s > {self.max_parse_time}s)"
-            )
+            result.add_error(f"Link parsing timeout ({elapsed:.2f}s > {self.max_parse_time}s)")
             return True
         return False
 
@@ -211,12 +201,7 @@ class LinkParser:
         """Check if link limit reached."""
         return len(result.links) >= self.max_links
 
-    def _parse_wikilinks(
-        self,
-        content: str,
-        result: LinkParseResult,
-        start_time: float
-    ) -> None:
+    def _parse_wikilinks(self, content: str, result: LinkParseResult, start_time: float) -> None:
         """Parse wikilinks: [[Page]] or [[Page|Display]]."""
         try:
             for match in self.WIKILINK_PATTERN.finditer(content):
@@ -229,19 +214,19 @@ class LinkParser:
                 raw_link = match.group(1)
 
                 # Parse [[target|text]] format
-                if '|' in raw_link:
-                    target, text = raw_link.split('|', 1)
+                if "|" in raw_link:
+                    target, text = raw_link.split("|", 1)
                 else:
                     target = raw_link
                     text = None
 
                 link = Link(
-                    type='wikilink',
+                    type="wikilink",
                     target=target.strip(),
                     text=text.strip() if text else None,
                     start_pos=match.start(),
                     end_pos=match.end(),
-                    raw=match.group(0)
+                    raw=match.group(0),
                 )
 
                 result.links.append(link)
@@ -251,12 +236,7 @@ class LinkParser:
         except Exception as e:
             result.add_warning(f"Wikilink parsing error: {e}")
 
-    def _parse_images(
-        self,
-        content: str,
-        result: LinkParseResult,
-        start_time: float
-    ) -> None:
+    def _parse_images(self, content: str, result: LinkParseResult, start_time: float) -> None:
         """Parse image links: ![alt](url)."""
         try:
             for match in self.IMAGE_PATTERN.finditer(content):
@@ -270,12 +250,12 @@ class LinkParser:
                 url = match.group(2)
 
                 link = Link(
-                    type='image',
+                    type="image",
                     target=url.strip(),
                     text=alt_text.strip() if alt_text else None,
                     start_pos=match.start(),
                     end_pos=match.end(),
-                    raw=match.group(0)
+                    raw=match.group(0),
                 )
 
                 result.links.append(link)
@@ -286,19 +266,12 @@ class LinkParser:
             result.add_warning(f"Image parsing error: {e}")
 
     def _parse_markdown_links(
-        self,
-        content: str,
-        result: LinkParseResult,
-        start_time: float
+        self, content: str, result: LinkParseResult, start_time: float
     ) -> None:
         """Parse markdown links: [text](url)."""
         try:
             # Skip positions already covered by images
-            {
-                (link.start_pos, link.end_pos)
-                for link in result.links
-                if link.type == 'image'
-            }
+            {(link.start_pos, link.end_pos) for link in result.links if link.type == "image"}
 
             for match in self.MARKDOWN_LINK_PATTERN.finditer(content):
                 # Check limits
@@ -308,19 +281,19 @@ class LinkParser:
                     return
 
                 # Skip if this is an image (starts with !)
-                if match.start() > 0 and content[match.start() - 1] == '!':
+                if match.start() > 0 and content[match.start() - 1] == "!":
                     continue
 
                 text = match.group(1)
                 url = match.group(2)
 
                 link = Link(
-                    type='markdown',
+                    type="markdown",
                     target=url.strip(),
                     text=text.strip() if text else None,
                     start_pos=match.start(),
                     end_pos=match.end(),
-                    raw=match.group(0)
+                    raw=match.group(0),
                 )
 
                 result.links.append(link)
@@ -330,19 +303,11 @@ class LinkParser:
         except Exception as e:
             result.add_warning(f"Markdown link parsing error: {e}")
 
-    def _parse_raw_urls(
-        self,
-        content: str,
-        result: LinkParseResult,
-        start_time: float
-    ) -> None:
+    def _parse_raw_urls(self, content: str, result: LinkParseResult, start_time: float) -> None:
         """Parse raw URLs: http://example.com."""
         try:
             # Skip positions already covered by other links
-            existing_ranges = {
-                range(link.start_pos, link.end_pos)
-                for link in result.links
-            }
+            existing_ranges = {range(link.start_pos, link.end_pos) for link in result.links}
 
             for match in self.URL_PATTERN.finditer(content):
                 # Check limits
@@ -359,12 +324,12 @@ class LinkParser:
                 url = match.group(0)
 
                 link = Link(
-                    type='url',
+                    type="url",
                     target=url.strip(),
                     text=None,
                     start_pos=match.start(),
                     end_pos=match.end(),
-                    raw=url
+                    raw=url,
                 )
 
                 result.links.append(link)
@@ -393,10 +358,10 @@ class LinkParser:
 
         return {
             "total_links": len(result.links),
-            "wikilinks": len(groups.get('wikilink', [])),
-            "markdown_links": len(groups.get('markdown', [])),
-            "images": len(groups.get('image', [])),
-            "raw_urls": len(groups.get('url', [])),
+            "wikilinks": len(groups.get("wikilink", [])),
+            "markdown_links": len(groups.get("markdown", [])),
+            "images": len(groups.get("image", [])),
+            "raw_urls": len(groups.get("url", [])),
             "unique_targets": len(self.extract_unique_targets(result.links)),
             "parse_time_ms": result.parse_time_ms,
             "errors": len(result.errors),
@@ -414,15 +379,10 @@ def parse_links_safe(content: str) -> LinkParseResult:
     try:
         return parser.parse_links(content)
     except Exception as e:
-        result = LinkParseResult(
-            is_valid=False,
-            content=content
-        )
+        result = LinkParseResult(is_valid=False, content=content)
         result.add_error(f"Catastrophic link parsing failure: {e}")
         logger.error(
-            "link_parsing_catastrophic_failure: error=%s, error_type=%s",
-            str(e),
-            type(e).__name__
+            "link_parsing_catastrophic_failure: error=%s, error_type=%s", str(e), type(e).__name__
         )
         return result
 
@@ -436,13 +396,14 @@ if __name__ == "__main__":
         sys.exit(1)
 
     from pathlib import Path
+
     file_path = Path(sys.argv[1])
 
     if not file_path.exists():
         print(f"Error: File not found: {file_path}")
         sys.exit(1)
 
-    content = file_path.read_text(encoding='utf-8')
+    content = file_path.read_text(encoding="utf-8")
 
     parser = LinkParser()
     result = parser.parse_links(content)
@@ -467,4 +428,3 @@ if __name__ == "__main__":
         print("\nFirst 10 links:")
         for link in result.links[:10]:
             print(f"  [{link.type}] {link.target}")
-

@@ -118,11 +118,7 @@ async def load_obsidian_canvas(
 
         # Process the canvas
         result = await _process_canvas(
-            canvas_data,
-            canvas_path,
-            destination_folder,
-            create_missing_files,
-            project
+            canvas_data, canvas_path, destination_folder, create_missing_files, project
         )
 
         return result
@@ -172,7 +168,7 @@ async def _process_canvas(
     canvas_path: str,
     destination_folder: str,
     create_missing_files: bool,
-    project: str | None
+    project: str | None,
 ) -> str:
     """Process the canvas data and create entities and relations."""
     nodes = canvas_data["nodes"]
@@ -198,7 +194,9 @@ async def _process_canvas(
                 if entity_path not in created_entities:
                     created_entities.append(entity_path)
             else:
-                skipped_items.append(f"Node {node['id']}: {node.get('text', node.get('file', 'unknown'))}")
+                skipped_items.append(
+                    f"Node {node['id']}: {node.get('text', node.get('file', 'unknown'))}"
+                )
         except Exception as e:
             logger.error(f"Failed to process node {node.get('id', 'unknown')}: {e}")
             skipped_items.append(f"Node {node.get('id', 'unknown')}: {e}")
@@ -206,9 +204,7 @@ async def _process_canvas(
     # Process edges
     for edge in edges:
         try:
-            relation_created = await _process_canvas_edge(
-                edge, node_map, project
-            )
+            relation_created = await _process_canvas_edge(edge, node_map, project)
             if relation_created:
                 created_relations.append(relation_created)
         except Exception as e:
@@ -247,10 +243,7 @@ async def _process_canvas(
 
 
 async def _process_canvas_node(
-    node: dict,
-    destination_folder: str,
-    create_missing_files: bool,
-    project: str | None
+    node: dict, destination_folder: str, create_missing_files: bool, project: str | None
 ) -> str | None:
     """Process a single canvas node and create a Advanced Memory entity."""
     node_type = node.get("type")
@@ -269,10 +262,7 @@ async def _process_canvas_node(
 
         # Create the note
         await write_note.fn(
-            title=title,
-            content=content,
-            folder=destination_folder,
-            project=project
+            title=title, content=content, folder=destination_folder, project=project
         )
 
         logger.info(f"Created text note from canvas node {node_id}: {title}")
@@ -287,9 +277,7 @@ async def _process_canvas_node(
         # Check if file exists
         try:
             existing = await search_notes.fn(
-                query=file_path,
-                search_type="permalink",
-                project=project
+                query=file_path, search_type="permalink", project=project
             )
 
             if existing.results:
@@ -301,7 +289,7 @@ async def _process_canvas_node(
                     title=f"Referenced: {Path(file_path).stem}",
                     content=f"This note was referenced in a canvas but the original file was not found.\n\nOriginal path: {file_path}",
                     folder=destination_folder,
-                    project=project
+                    project=project,
                 )
                 logger.info(f"Created placeholder note for missing file {file_path}")
                 return f"{destination_folder}/Referenced: {Path(file_path).stem}"
@@ -321,7 +309,7 @@ async def _process_canvas_node(
                 title=f"Link: {url[:50]}...",
                 content=f"External link referenced in canvas.\n\nURL: {url}",
                 folder=destination_folder,
-                project=project
+                project=project,
             )
             logger.info(f"Created link note from canvas node {node_id}: {url}")
             return f"{destination_folder}/Link: {url[:50]}..."
@@ -334,7 +322,7 @@ async def _process_canvas_node(
             title=f"Group: {label}",
             content=f"Canvas group node: {label}\n\nThis represents a grouped collection of items from the imported canvas.",
             folder=destination_folder,
-            project=project
+            project=project,
         )
         logger.info(f"Created group note from canvas node {node_id}: {label}")
         return f"{destination_folder}/Group: {label}"
@@ -344,11 +332,7 @@ async def _process_canvas_node(
         return None
 
 
-async def _process_canvas_edge(
-    edge: dict,
-    node_map: dict,
-    project: str | None
-) -> str | None:
+async def _process_canvas_edge(edge: dict, node_map: dict, project: str | None) -> str | None:
     """Process a canvas edge and create a Advanced Memory relation."""
     from_node = edge.get("fromNode")
     to_node = edge.get("toNode")
@@ -374,7 +358,7 @@ async def _process_canvas_edge(
 This relation was automatically created during canvas import.
 """,
         folder="relations",
-        project=project
+        project=project,
     )
 
     logger.info(f"Created relation note: {from_entity} [UNICODE] {to_entity}")

@@ -43,6 +43,7 @@ def entity_model_from_markdown(
         model.permalink = markdown.frontmatter.permalink
     # Normalize path for cross-platform consistency
     from advanced_memory.sync.sync_service import normalize_file_path
+
     model.file_path = normalize_file_path(str(file_path))
     model.content_type = "text/markdown"
     model.created_at = markdown.created

@@ -90,21 +90,57 @@ async def adn_knowledge(
     logger.info(f"MCP tool call tool=adn_knowledge operation={operation}")
 
     # Route to appropriate operation
-    if operation in ["bulk_update", "bulk_move", "bulk_delete", "tag_analytics", "consolidate_tags", "tag_maintenance", "validate_content", "project_stats", "find_duplicates"]:
+    if operation in [
+        "bulk_update",
+        "bulk_move",
+        "bulk_delete",
+        "tag_analytics",
+        "consolidate_tags",
+        "tag_maintenance",
+        "validate_content",
+        "project_stats",
+        "find_duplicates",
+    ]:
         return await _knowledge_operations(operation, filters, action, dry_run, limit, project)
-    elif operation in ["research_plan", "research_methodology", "research_questions", "note_blueprint", "research_workflow"]:
-        return await _research_orchestrator(operation, topic, topic_type, research_type, step, parameters)
+    elif operation in [
+        "research_plan",
+        "research_methodology",
+        "research_questions",
+        "note_blueprint",
+        "research_workflow",
+    ]:
+        return await _research_orchestrator(
+            operation, topic, topic_type, research_type, step, parameters
+        )
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: bulk_update, tag_analytics, research_plan, research_methodology, research_questions, note_blueprint, research_workflow, consolidate_tags, validate_content, project_stats, find_duplicates"
 
 
-async def _knowledge_operations(operation: str, filters: dict[str, Any] | None, action: dict[str, Any] | None, dry_run: bool, limit: int, project: str | None) -> str:
+async def _knowledge_operations(
+    operation: str,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    dry_run: bool,
+    limit: int,
+    project: str | None,
+) -> str:
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import knowledge_operations
+
     return await knowledge_operations(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
-async def _research_orchestrator(operation: str, topic: str | None, topic_type: str | None, research_type: str | None, step: int | None, parameters: dict[str, Any] | None) -> str:
+async def _research_orchestrator(
+    operation: str,
+    topic: str | None,
+    topic_type: str | None,
+    research_type: str | None,
+    step: int | None,
+    parameters: dict[str, Any] | None,
+) -> str:
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
-    return await research_orchestrator(operation, topic, topic_type, research_type, step, parameters)  # type: ignore[operator,no-any-return]
+
+    return await research_orchestrator(
+        operation, topic, topic_type, research_type, step, parameters
+    )  # type: ignore[operator,no-any-return]

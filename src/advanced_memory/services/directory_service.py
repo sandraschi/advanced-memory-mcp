@@ -126,9 +126,7 @@ class DirectoryService:
 
         return result
 
-    def _find_directory_node(
-        self, root: DirectoryNode, target_path: str
-    ) -> DirectoryNode | None:
+    def _find_directory_node(self, root: DirectoryNode, target_path: str) -> DirectoryNode | None:
         """Find a directory node by path in the tree."""
         if root.directory_path == target_path:
             return root

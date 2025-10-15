@@ -56,6 +56,7 @@ class EntityRepository(Repository):
             file_path: Path to the entity file (will be converted to string internally)
         """
         from advanced_memory.sync.sync_service import normalize_file_path
+
         query = (
             self.select()
             .where(Entity.file_path == normalize_file_path(str(file_path)))
@@ -70,6 +71,7 @@ class EntityRepository(Repository):
             file_path: Path to the entity file (will be converted to string internally)
         """
         from advanced_memory.sync.sync_service import normalize_file_path
+
         return await self.delete_by_fields(file_path=normalize_file_path(str(file_path)))
 
     def get_load_options(self) -> list[LoaderOption]:

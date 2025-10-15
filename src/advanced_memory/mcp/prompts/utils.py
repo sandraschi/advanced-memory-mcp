@@ -132,7 +132,7 @@ def format_prompt_context(context: PromptContext) -> str:
                         """)
                 sections.append(section)
 
-        if hasattr(context, 'related_results') and context.related_results:  # pyright: ignore
+        if hasattr(context, "related_results") and context.related_results:  # pyright: ignore
             section += dedent(  # pyright: ignore
                 """
                 ## Related Context

@@ -48,6 +48,7 @@ def configure_mcp_logging():
     if not sys.stdout.isatty():  # MCP stdio mode
         try:
             from loguru import logger
+
             # Remove all existing handlers
             logger.remove()
             # Add a minimal handler that only logs critical errors to stderr
@@ -69,4 +70,5 @@ server = mcp
 # Add stdio runner for MCP protocol
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(server.run_stdio_async())

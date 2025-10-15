@@ -1,6 +1,5 @@
 """Help and system information tool for Advanced Memory MCP server."""
 
-
 from advanced_memory.mcp.mcp_instance import mcp
 
 

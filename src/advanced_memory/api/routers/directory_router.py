@@ -1,6 +1,5 @@
 """Router for directory tree operations."""
 
-
 from fastapi import APIRouter, Query
 
 from advanced_memory.deps import DirectoryServiceDep, ProjectIdDep
@@ -36,9 +35,7 @@ async def list_directory(
     project_id: ProjectIdDep,
     dir_name: str = Query("/", description="Directory path to list"),
     depth: int = Query(1, ge=1, le=10, description="Recursion depth (1-10)"),
-    file_name_glob: str | None = Query(
-        None, description="Glob pattern for filtering file names"
-    ),
+    file_name_glob: str | None = Query(None, description="Glob pattern for filtering file names"),
 ):
     """List directory contents with filtering and depth control.
 

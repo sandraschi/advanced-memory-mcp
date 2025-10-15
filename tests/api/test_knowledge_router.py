@@ -693,7 +693,7 @@ permalink: test/test-note
 Prepended content
 Original content"""
 
-    assert file_content.strip().replace('\r\n', '\n') == expected_content.strip()
+    assert file_content.strip().replace("\r\n", "\n") == expected_content.strip()
 
 
 @pytest.mark.asyncio

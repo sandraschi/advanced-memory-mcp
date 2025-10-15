@@ -133,9 +133,10 @@ async def export_notion_compatible(
         )
 
         from advanced_memory.schemas.search import SearchResponse
+
         search_response = SearchResponse.model_validate(search_response_raw.json())
 
-        if not search_response or not hasattr(search_response, 'results'):
+        if not search_response or not hasattr(search_response, "results"):
             return f"No notes found matching query: {query}"
 
         # Convert SearchResult objects to dicts
@@ -152,9 +153,16 @@ async def export_notion_compatible(
             return f"Failed to retrieve entities: {response.status_code} - {response.text}"
 
         entities_data = response.json()
-        entities_raw = entities_data.get('results', [])
+        entities_raw = entities_data.get("results", [])
         # Convert SearchResult objects to dicts
-        entities = [entity.model_dump() if hasattr(entity, 'model_dump') else dict(entity) if hasattr(entity, '__dict__') else entity for entity in entities_raw]
+        entities = [
+            entity.model_dump()
+            if hasattr(entity, "model_dump")
+            else dict(entity)
+            if hasattr(entity, "__dict__")
+            else entity
+            for entity in entities_raw
+        ]
 
     if not entities:
         return "No entities found to export"
@@ -168,11 +176,13 @@ async def export_notion_compatible(
             file_path = await _export_entity_to_notion_markdown(
                 entity, output_dir, project_url, include_observations, include_relations
             )
-            exported_files.append({
-                'title': entity.get('title', 'Unknown'),
-                'file_path': str(file_path),
-                'permalink': entity.get('permalink', '')
-            })
+            exported_files.append(
+                {
+                    "title": entity.get("title", "Unknown"),
+                    "file_path": str(file_path),
+                    "permalink": entity.get("permalink", ""),
+                }
+            )
         except Exception as e:
             errors.append(f"{entity.get('title', 'Unknown')}: {str(e)}")
 
@@ -211,14 +221,14 @@ async def _export_entity_to_notion_markdown(
     output_dir: Path,
     project_url: str,
     include_observations: bool,
-    include_relations: bool
+    include_relations: bool,
 ) -> Path:
     """Export a single entity to Notion-compatible markdown."""
 
-    title = entity.get('title', 'Untitled')
-    permalink = entity.get('permalink', '')
-    content = entity.get('content', '')
-    folder = entity.get('folder', '')
+    title = entity.get("title", "Untitled")
+    permalink = entity.get("permalink", "")
+    content = entity.get("content", "")
+    folder = entity.get("folder", "")
 
     # Create filename from title (Notion-safe)
     safe_filename = _sanitize_notion_filename(title)
@@ -253,26 +263,26 @@ async def _export_entity_to_notion_markdown(
 
     # Add observations if requested
     if include_observations:
-        observations = entity.get('observations', [])
+        observations = entity.get("observations", [])
         if observations:
             markdown_lines.append("## Observations")
             markdown_lines.append("")
             for obs in observations:
-                category = obs.get('category', 'note')
-                content_obs = obs.get('content', '')
+                category = obs.get("category", "note")
+                content_obs = obs.get("content", "")
                 markdown_lines.append(f"- **{category}**: {content_obs}")
             markdown_lines.append("")
 
     # Add relations if requested
     if include_relations:
-        relations = entity.get('relations', [])
+        relations = entity.get("relations", [])
         if relations:
             markdown_lines.append("## Relations")
             markdown_lines.append("")
             for relation in relations:
-                rel_type = relation.get('type', 'relates_to')
-                target_title = relation.get('target_title', 'Unknown')
-                target_permalink = relation.get('target_permalink', '')
+                rel_type = relation.get("type", "relates_to")
+                target_title = relation.get("target_title", "Unknown")
+                target_permalink = relation.get("target_permalink", "")
                 if target_permalink:
                     markdown_lines.append(f"- **{rel_type}**: [{target_title}]({target_permalink})")
                 else:
@@ -280,8 +290,8 @@ async def _export_entity_to_notion_markdown(
             markdown_lines.append("")
 
     # Write file
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(markdown_lines))
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(markdown_lines))
 
     return file_path
 
@@ -293,23 +303,23 @@ def _sanitize_notion_filename(filename: str) -> str:
     safe_name = filename
 
     # Replace slashes and backslashes with dashes
-    safe_name = safe_name.replace('/', '-').replace('\\', '-')
+    safe_name = safe_name.replace("/", "-").replace("\\", "-")
 
     # Replace other problematic characters
-    safe_name = re.sub(r'[<>:"|?*]', '-', safe_name)
+    safe_name = re.sub(r'[<>:"|?*]', "-", safe_name)
 
     # Replace multiple spaces/dashes with single dash
-    safe_name = re.sub(r'[-_\s]+', '-', safe_name)
+    safe_name = re.sub(r"[-_\s]+", "-", safe_name)
 
     # Remove leading/trailing dashes
-    safe_name = safe_name.strip('-')
+    safe_name = safe_name.strip("-")
 
     # Limit length
     if len(safe_name) > 100:
-        safe_name = safe_name[:100].rstrip('-')
+        safe_name = safe_name[:100].rstrip("-")
 
     # Ensure not empty
     if not safe_name:
-        safe_name = 'untitled'
+        safe_name = "untitled"
 
     return safe_name

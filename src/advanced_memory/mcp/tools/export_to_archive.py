@@ -19,19 +19,19 @@ def _parse_since_date(since_date: str) -> datetime:
         return datetime.min
 
     # Handle relative dates
-    if since_date.endswith('d'):
+    if since_date.endswith("d"):
         days = int(since_date[:-1])
         return datetime.now() - timedelta(days=days)
-    elif since_date.endswith('m'):
+    elif since_date.endswith("m"):
         months = int(since_date[:-1])
-        return datetime.now() - timedelta(days=months*30)  # Approximate
-    elif since_date.endswith('y'):
+        return datetime.now() - timedelta(days=months * 30)  # Approximate
+    elif since_date.endswith("y"):
         years = int(since_date[:-1])
-        return datetime.now() - timedelta(days=years*365)  # Approximate
+        return datetime.now() - timedelta(days=years * 365)  # Approximate
 
     # Handle ISO format
     try:
-        return datetime.fromisoformat(since_date.replace('Z', '+00:00'))
+        return datetime.fromisoformat(since_date.replace("Z", "+00:00"))
     except ValueError:
         logger.warning(f"Invalid date format: {since_date}, using no date filter")
         return datetime.min
@@ -42,7 +42,7 @@ def _filter_database(
     dest_db: Path,
     exclude_tags: list[str] | None = None,
     since_date: datetime | None = None,
-    project_ids: set[int] | None = None
+    project_ids: set[int] | None = None,
 ) -> tuple[int, int]:
     """
     Filter database content based on tags, date, and projects.
@@ -80,13 +80,15 @@ def _filter_database(
             source_cursor.fetchall()
 
             # Get CREATE TABLE statement
-            source_cursor.execute(f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table}'")
+            source_cursor.execute(
+                f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table}'"
+            )
             create_sql = source_cursor.fetchone()
             if create_sql and create_sql[0]:
                 dest_cursor.execute(create_sql[0])
 
         # Filter and copy entity table (this is the main filtering)
-        if 'entity' in tables:
+        if "entity" in tables:
             # Get entities to keep
             where_conditions = []
             params = []
@@ -95,7 +97,9 @@ def _filter_database(
                 # Find entities with excluded tags
                 tag_conditions = " OR ".join(["entity_metadata LIKE ?" for _ in exclude_tags])
                 tag_params = [f'%"tags":%"{tag}"%' for tag in exclude_tags]
-                where_conditions.append(f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))")
+                where_conditions.append(
+                    f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))"
+                )
                 params.extend(tag_params)
 
             if since_date and since_date > datetime.min:
@@ -127,7 +131,7 @@ def _filter_database(
 
         # Copy other tables (with foreign key constraints this will only copy related data)
         for table in tables:
-            if table == 'entity':
+            if table == "entity":
                 continue  # Already handled
 
             try:
@@ -196,7 +200,7 @@ async def export_to_archive(
     exclude_tags: list[str] | None = None,
     since_date: str | None = None,
     compress: bool = True,
-    project: str | None = None
+    project: str | None = None,
 ) -> str:
     """
     Export complete Advanced Memory system to archive for migration/backup.
@@ -219,10 +223,10 @@ async def export_to_archive(
 
         # Ensure archive path has extension
         archive_path = Path(archive_path)
-        if compress and archive_path.suffix.lower() != '.zip':
-            archive_path = archive_path.with_suffix('.zip')
+        if compress and archive_path.suffix.lower() != ".zip":
+            archive_path = archive_path.with_suffix(".zip")
         elif not compress and not archive_path.suffix:
-            archive_path = archive_path.with_suffix('.tar')
+            archive_path = archive_path.with_suffix(".tar")
 
         # Validate and parse parameters
         filters_applied = []
@@ -274,7 +278,9 @@ async def export_to_archive(
                     entities_kept, entities_filtered = _filter_database(
                         db_source, db_dest, exclude_tags, cutoff_date, project_ids
                     )
-                    logger.info(f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered")
+                    logger.info(
+                        f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered"
+                    )
                 else:
                     # Simple copy
                     shutil.copy2(db_source, db_dest)
@@ -308,14 +314,14 @@ async def export_to_archive(
             if exclude_projects:
                 # Exclude specified projects
                 projects_to_export = {
-                    name: path for name, path in all_projects.items()
+                    name: path
+                    for name, path in all_projects.items()
                     if name not in exclude_projects
                 }
             elif include_projects:
                 # Include only specified projects
                 projects_to_export = {
-                    name: path for name, path in all_projects.items()
-                    if name in include_projects
+                    name: path for name, path in all_projects.items() if name in include_projects
                 }
             else:
                 # Include all projects
@@ -333,12 +339,14 @@ async def export_to_archive(
                     shutil.copytree(project_path, dest_path, dirs_exist_ok=True)
 
                     # Count files and size for this project
-                    project_files = list(dest_path.rglob('*'))
+                    project_files = list(dest_path.rglob("*"))
                     project_size = sum(f.stat().st_size for f in project_files if f.is_file())
                     total_files += len([f for f in project_files if f.is_file()])
                     total_size += project_size
 
-                    logger.info(f"Project '{project_name}': {len([f for f in project_files if f.is_file()])} files, {project_size} bytes")
+                    logger.info(
+                        f"Project '{project_name}': {len([f for f in project_files if f.is_file()])} files, {project_size} bytes"
+                    )
                 else:
                     logger.warning(f"Project directory not found: {project_path}")
 
@@ -356,17 +364,17 @@ async def export_to_archive(
                     "exclude_projects": exclude_projects or [],
                     "include_projects": include_projects or [],
                     "exclude_tags": exclude_tags or [],
-                    "since_date": since_date
+                    "since_date": since_date,
                 },
                 "filtering_results": {
                     "entities_kept": entities_kept,
                     "entities_filtered": entities_filtered,
-                    "filtering_implemented": filtering_enabled
-                }
+                    "filtering_implemented": filtering_enabled,
+                },
             }
 
             metadata_file = archive_root / "metadata.json"
-            with open(metadata_file, 'w') as f:
+            with open(metadata_file, "w") as f:
                 json.dump(metadata, f, indent=2)
 
             # 5. Create archive
@@ -374,25 +382,27 @@ async def export_to_archive(
             if compress:
                 # Create ZIP archive
                 shutil.make_archive(
-                    str(archive_path.with_suffix('')),  # remove extension for make_archive
-                    'zip',
+                    str(archive_path.with_suffix("")),  # remove extension for make_archive
+                    "zip",
                     temp_path,
-                    "advanced-memory-backup"
+                    "advanced-memory-backup",
                 )
             else:
                 # Create uncompressed tar archive
                 shutil.make_archive(
-                    str(archive_path.with_suffix('')),  # remove extension for make_archive
-                    'tar',
+                    str(archive_path.with_suffix("")),  # remove extension for make_archive
+                    "tar",
                     temp_path,
-                    "advanced-memory-backup"
+                    "advanced-memory-backup",
                 )
 
             # Get final archive size
             final_size = archive_path.stat().st_size
 
             # Format results
-            projects_list = "\n".join(f"  - {name}: {path}" for name, path in projects_to_export.items())
+            projects_list = "\n".join(
+                f"  - {name}: {path}" for name, path in projects_to_export.items()
+            )
 
             filter_info = ""
             if filters_applied:
@@ -442,7 +452,7 @@ import_from_archive("{archive_path}")
 
 def _format_size(bytes_size: float) -> str:
     """Format bytes to human readable size."""
-    for _unit in ['B', 'KB', 'MB', 'GB']:
+    for _unit in ["B", "KB", "MB", "GB"]:
         if bytes_size < 1024.0:
             return ".1f"
         bytes_size /= 1024.0

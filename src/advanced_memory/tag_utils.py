@@ -1,7 +1,6 @@
 """Tag parsing and manipulation utilities for advanced-memory."""
 
 
-
 def parse_tags(tags: list[str] | str | None) -> list[str]:
     """Parse tags from various input formats into a consistent list.
 
@@ -33,6 +32,7 @@ def parse_tags(tags: list[str] | str | None) -> list[str]:
         return parse_tags(str(tags))
     except (ValueError, TypeError):  # pragma: no cover
         import logging
+
         logger = logging.getLogger(__name__)
         logger.warning(f"Couldn't parse tags from input of type {type(tags)}: {tags}")
         return []

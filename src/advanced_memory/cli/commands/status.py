@@ -86,7 +86,9 @@ def build_directory_summary(counts: dict[str, int]) -> str:
     return " ".join(parts)
 
 
-def display_changes(project_name: str, title: str, changes: SyncReport, verbose: bool = False) -> None:
+def display_changes(
+    project_name: str, title: str, changes: SyncReport, verbose: bool = False
+) -> None:
     """Display changes using Rich for better visualization."""
     tree = Tree(f"{project_name}: {title}")
 

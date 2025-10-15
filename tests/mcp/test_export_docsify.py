@@ -1,6 +1,5 @@
 """Tests for docsify export functionality."""
 
-
 import pytest
 
 from advanced_memory.mcp.tools import write_note
@@ -67,7 +66,9 @@ Nested content.
 async def test_export_docsify_enhanced_plugins(tmp_path, config_home, app):
     """Test that enhanced features/plugins are properly configured."""
     # Create note through API
-    await write_note.fn(title="Simple Note", folder="plugin_test", content="# Simple Note\n\nContent.")
+    await write_note.fn(
+        title="Simple Note", folder="plugin_test", content="# Simple Note\n\nContent."
+    )
 
     export_path = tmp_path / "docsify_plugins"
 
@@ -142,7 +143,11 @@ Content with <special> &characters.
 async def test_export_docsify_enhanced_nested_folders(tmp_path, config_home, app):
     """Test export preserves nested folder structure."""
     # Create nested structure through API
-    await write_note.fn(title="Deep Note", folder="nested_test/folder1/folder2", content="# Deep Note\n\nNested content.")
+    await write_note.fn(
+        title="Deep Note",
+        folder="nested_test/folder1/folder2",
+        content="# Deep Note\n\nNested content.",
+    )
 
     export_path = tmp_path / "docsify_nested"
 
@@ -164,7 +169,9 @@ async def test_export_docsify_enhanced_no_subfolders(tmp_path, config_home, app)
     """Test export without including subfolders."""
     # Create notes through API
     await write_note.fn(title="Root", folder="no_sub_test", content="# Root\n\nRoot level.")
-    await write_note.fn(title="Sub", folder="no_sub_test/subfolder", content="# Sub\n\nShould not be exported.")
+    await write_note.fn(
+        title="Sub", folder="no_sub_test/subfolder", content="# Sub\n\nShould not be exported."
+    )
 
     export_path = tmp_path / "docsify_no_sub"
 
@@ -268,5 +275,3 @@ async def test_export_docsify_sidebar_generation(tmp_path, config_home, app):
     # Sidebar should have markdown list structure
     assert "-" in sidebar_content or "*" in sidebar_content  # Markdown list
     assert len(sidebar_content.split("\n")) > 1  # Multiple lines
-
-

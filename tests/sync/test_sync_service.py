@@ -631,12 +631,8 @@ Testing file timestamps
     # Check file timestamps
     file_entity = await entity_service.get_by_permalink("file-dates")
     file_stats = file_path.stat()
-    assert (
-        abs(file_entity.created_at.timestamp() - file_stats.st_ctime) < 1
-    )  # Allow 1s difference
-    assert (
-        abs(file_entity.updated_at.timestamp() - file_stats.st_mtime) < 1
-    )  # Allow 1s difference
+    assert abs(file_entity.created_at.timestamp() - file_stats.st_ctime) < 1  # Allow 1s difference
+    assert abs(file_entity.updated_at.timestamp() - file_stats.st_mtime) < 1  # Allow 1s difference
 
 
 @pytest.mark.asyncio

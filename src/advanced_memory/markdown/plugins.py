@@ -123,24 +123,20 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
         if not result.is_valid:
             # Parsing failed - log and return empty
             from loguru import logger
-            logger.warning("link_parsing_failed",
-                          content_size=len(content),
-                          errors=result.errors)
+
+            logger.warning("link_parsing_failed", content_size=len(content), errors=result.errors)
             return []  # Graceful degradation
 
         # Convert wikilinks to expected format
         relations = []
         for link in result.links:
-            if link.type == 'wikilink':
-                relations.append({
-                    "type": "links to",
-                    "target": link.target,
-                    "context": None
-                })
+            if link.type == "wikilink":
+                relations.append({"type": "links to", "target": link.target, "context": None})
 
         # Log warnings if any
         if result.warnings:
             from loguru import logger
+
             for warning in result.warnings:
                 logger.info("link_warning", warning=warning)
 
@@ -149,6 +145,7 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
     except ImportError:
         # Fallback to original implementation if mcp-commons not available
         from loguru import logger
+
         logger.warning("mcp_commons_not_available_using_fallback")
 
         # ORIGINAL IMPLEMENTATION (FALLBACK) with safety limits
@@ -194,7 +191,9 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
             start = end + 2
 
         if len(relations) >= MAX_LINKS:
-            logger.warning(f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links")
+            logger.warning(
+                f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links"
+            )
 
         return relations
 

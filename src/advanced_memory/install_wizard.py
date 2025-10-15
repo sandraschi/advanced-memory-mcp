@@ -15,7 +15,8 @@ from pathlib import Path
 
 def clear_screen() -> None:
     """Clear the terminal screen."""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
+
 
 def print_banner() -> None:
     """Display the ASCII banner."""
@@ -32,15 +33,17 @@ def print_banner() -> None:
     """
     print(banner)
 
+
 def get_config_path(app_name: str) -> Path:
     """Get the configuration file path for the given application."""
     system = platform.system()
     if system == "Windows":
-        return Path(os.environ['APPDATA']) / app_name / 'config.json'
+        return Path(os.environ["APPDATA"]) / app_name / "config.json"
     elif system == "Darwin":  # macOS
-        return Path.home() / 'Library' / 'Application Support' / app_name / 'config.json'
+        return Path.home() / "Library" / "Application Support" / app_name / "config.json"
     else:  # Linux and others
-        return Path.home() / '.config' / app_name / 'config.json'
+        return Path.home() / ".config" / app_name / "config.json"
+
 
 def backup_file(file_path: Path) -> Path:
     """Create a backup of the file if it exists."""
@@ -50,40 +53,42 @@ def backup_file(file_path: Path) -> Path:
     shutil.copy2(file_path, backup_path)
     return backup_path
 
+
 def configure_windsurf() -> tuple[Path, Path]:
     """Configure Windsurf to use Advanced Memory as an MCP client."""
-    config_path = get_config_path('windsurf')
+    config_path = get_config_path("windsurf")
     backup_path = backup_file(config_path)
 
     # Create or update config
     config = {}
     if config_path.exists():
-        with open(config_path, encoding='utf-8') as f:
+        with open(config_path, encoding="utf-8") as f:
             try:
                 config = json.load(f)
             except json.JSONDecodeError:
                 config = {}
 
     # Update MCP settings
-    if 'mcp' not in config:
-        config['mcp'] = {}
-    if 'clients' not in config['mcp']:
-        config['mcp']['clients'] = {}
+    if "mcp" not in config:
+        config["mcp"] = {}
+    if "clients" not in config["mcp"]:
+        config["mcp"]["clients"] = {}
 
-    config['mcp']['clients']['advanced-memory'] = {
-        'enabled': True,
-        'transport': 'stdio',
-        'command': os.path.abspath(sys.executable),
-        'args': ['mcp', '--transport', 'stdio'],
-        'cwd': str(Path.home() / 'Documents' / 'Notes')
+    config["mcp"]["clients"]["advanced-memory"] = {
+        "enabled": True,
+        "transport": "stdio",
+        "command": os.path.abspath(sys.executable),
+        "args": ["mcp", "--transport", "stdio"],
+        "cwd": str(Path.home() / "Documents" / "Notes"),
     }
 
     # Save config
     config_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(config_path, 'w', encoding='utf-8') as f:
+    with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
 
     return config_path, backup_path
+
 
 def show_help() -> None:
     """Display the help information."""
@@ -109,6 +114,7 @@ def show_help() -> None:
     """
     input(help_text)
 
+
 def main() -> None:
     """Main entry point for the installation wizard."""
     clear_screen()
@@ -121,9 +127,9 @@ def main() -> None:
 
     choice = input("\nSelect an option (1-4): ").strip()
 
-    if choice == '1':
+    if choice == "1":
         print("\nClaude integration is automatic when using Claude Desktop.")
-    elif choice == '2':
+    elif choice == "2":
         try:
             config_path, backup_path = configure_windsurf()
             print("\nOK Windsurf configuration updated!")
@@ -132,7 +138,7 @@ def main() -> None:
                 print(f"  Backup saved to: {backup_path}")
         except Exception as e:
             print(f"\nError configuring Windsurf: {e}")
-    elif choice == '3':
+    elif choice == "3":
         print("\nCursor IDE integration coming soon!")
     else:
         print("\nInstallation cancelled.")
@@ -140,6 +146,7 @@ def main() -> None:
 
     input("\nPress Enter to show help...")
     show_help()
+
 
 if __name__ == "__main__":
     try:

@@ -22,7 +22,10 @@ console = Console()
 CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
     "developer": {
         "python": [
-            {"title": "Python Fundamentals", "folder": "development/python", "content": """# Python Fundamentals
+            {
+                "title": "Python Fundamentals",
+                "folder": "development/python",
+                "content": """# Python Fundamentals
 
 ## Core Concepts
 - **Variables & Types**: int, float, str, bool, list, dict, tuple
@@ -45,8 +48,12 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
 - [[PEP 8 Style Guide]]
 - [[Python Data Model]]
 
-*Start with small scripts, build understanding gradually.*"""},
-            {"title": "Object-Oriented Programming", "folder": "development/python", "content": """# Object-Oriented Programming in Python
+*Start with small scripts, build understanding gradually.*""",
+            },
+            {
+                "title": "Object-Oriented Programming",
+                "folder": "development/python",
+                "content": """# Object-Oriented Programming in Python
 
 ## Core Concepts
 - **Classes**: Blueprint for creating objects
@@ -86,10 +93,14 @@ class Dog(Animal):
 - [[Design Patterns]]
 - [[SOLID Principles]]
 
-*OOP is a tool, not a requirement. Use when it simplifies your code.*"""},
+*OOP is a tool, not a requirement. Use when it simplifies your code.*""",
+            },
         ],
         "web-development": [
-            {"title": "Web Development Fundamentals", "folder": "development/web", "content": """# Web Development Fundamentals
+            {
+                "title": "Web Development Fundamentals",
+                "folder": "development/web",
+                "content": """# Web Development Fundamentals
 
 ## Frontend Technologies
 - **HTML**: Structure and content of web pages
@@ -127,10 +138,14 @@ class Dog(Animal):
 - [[Security Best Practices]]
 - [[Performance Optimization]]
 
-*Web development is about creating experiences, not just code.*"""},
+*Web development is about creating experiences, not just code.*""",
+            },
         ],
         "ai-ml": [
-            {"title": "Machine Learning Fundamentals", "folder": "research/ai", "content": """# Machine Learning Fundamentals
+            {
+                "title": "Machine Learning Fundamentals",
+                "folder": "research/ai",
+                "content": """# Machine Learning Fundamentals
 
 ## Core Concepts
 - **Supervised Learning**: Learning from labeled examples
@@ -182,12 +197,16 @@ class Dog(Animal):
 - [[Data Science]]
 - [[Deep Learning]]
 
-*Machine learning is about finding patterns in data to make predictions.*"""},
+*Machine learning is about finding patterns in data to make predictions.*""",
+            },
         ],
     },
     "cooking": {
         "general": [
-            {"title": "Cooking Fundamentals", "folder": "cooking/basics", "content": """# Cooking Fundamentals
+            {
+                "title": "Cooking Fundamentals",
+                "folder": "cooking/basics",
+                "content": """# Cooking Fundamentals
 
 ## Essential Techniques
 - **Knife Skills**: Proper cutting techniques for safety and efficiency
@@ -241,10 +260,14 @@ class Dog(Animal):
 4. **Document**: Keep notes on what works and what to improve
 5. **Share**: Cook for others to get feedback and learn
 
-*Cooking is both science and art - learn the rules, then break them creatively.*"""},
+*Cooking is both science and art - learn the rules, then break them creatively.*""",
+            },
         ],
         "techniques": [
-            {"title": "Knife Skills", "folder": "cooking/techniques", "content": """# Knife Skills
+            {
+                "title": "Knife Skills",
+                "folder": "cooking/techniques",
+                "content": """# Knife Skills
 
 ## Essential Cuts
 ### Basic Cuts
@@ -293,12 +316,16 @@ class Dog(Animal):
 - **Efficiency**: As skills improve, speed will follow
 - **Quality**: Consistent cuts = consistent cooking results
 
-*Good knife skills are the foundation of good cooking.*"""},
+*Good knife skills are the foundation of good cooking.*""",
+            },
         ],
     },
     "philosophy": {
         "general": [
-            {"title": "Philosophy Fundamentals", "folder": "philosophy/foundations", "content": """# Philosophy Fundamentals
+            {
+                "title": "Philosophy Fundamentals",
+                "folder": "philosophy/foundations",
+                "content": """# Philosophy Fundamentals
 
 ## Major Branches of Philosophy
 - **Metaphysics**: Nature of reality, existence, causality
@@ -361,12 +388,16 @@ class Dog(Animal):
 4. **Discuss and Debate**: Philosophy is meant to be discussed
 5. **Apply to Life**: Connect philosophical ideas to real-world issues
 
-*Philosophy begins in wonder and ends in wisdom.*"""},
+*Philosophy begins in wonder and ends in wisdom.*""",
+            },
         ],
     },
     "ai": {
         "general": [
-            {"title": "AI Fundamentals", "folder": "research/ai", "content": """# AI Fundamentals
+            {
+                "title": "AI Fundamentals",
+                "folder": "research/ai",
+                "content": """# AI Fundamentals
 
 ## What is Artificial Intelligence?
 **Artificial Intelligence (AI)** is the ability of machines to perform tasks that typically require human intelligence, such as:
@@ -444,7 +475,8 @@ class Dog(Animal):
 - **Explainable AI**: Understanding how AI makes decisions
 - **AI Governance**: Policies and regulations for AI development
 
-*AI is a tool that amplifies human capabilities, but its development requires wisdom and responsibility.*"""},
+*AI is a tool that amplifies human capabilities, but its development requires wisdom and responsibility.*""",
+            },
         ],
     },
 }
@@ -457,20 +489,22 @@ async def create_note_from_template(template: dict[str, Any]) -> None:
         content=template["content"],
         folder=template["folder"],
         tags=["starter-content", "auto-generated"],
-        entity_type="note"
+        entity_type="note",
     )
 
 
 def get_user_interests() -> dict[str, list[str]]:
     """Interactive prompt to get user interests."""
     console.print()
-    console.print(Panel.fit(
-        "🎨 [bold blue]Welcome to Advanced Memory![/bold blue]\n\n"
-        "Let's create your personalized starter Zettelkasten.\n"
-        "We'll generate 50-150 curated notes based on your interests.\n\n"
-        "[dim]This will take 2-5 minutes and give you a rich knowledge foundation.[/dim]",
-        title="🚀 Starter Zettelkasten Setup"
-    ))
+    console.print(
+        Panel.fit(
+            "🎨 [bold blue]Welcome to Advanced Memory![/bold blue]\n\n"
+            "Let's create your personalized starter Zettelkasten.\n"
+            "We'll generate 50-150 curated notes based on your interests.\n\n"
+            "[dim]This will take 2-5 minutes and give you a rich knowledge foundation.[/dim]",
+            title="🚀 Starter Zettelkasten Setup",
+        )
+    )
 
     interests = {}
 
@@ -487,7 +521,7 @@ def get_user_interests() -> dict[str, list[str]]:
 
     for category, description in categories.items():
         response = Prompt.ask(f"Interested in {description}?", default="n")
-        if response.lower() in ['y', 'yes']:
+        if response.lower() in ["y", "yes"]:
             # Get sub-interests
             sub_interests = get_sub_interests(category)
             if sub_interests:
@@ -514,7 +548,7 @@ def get_sub_interests(category: str) -> list[str]:
 
     for sub in subs:
         response = Prompt.ask(f"Include {sub.replace('-', ' ')} content?", default="y")
-        if response.lower() in ['y', 'yes']:
+        if response.lower() in ["y", "yes"]:
             selected.append(sub)
 
     return selected
@@ -529,17 +563,13 @@ async def generate_starter_content(interests: dict[str, list[str]]) -> int:
         TextColumn("[progress.description]{task.description}"),
         console=console,
     ) as progress:
-
         for category, sub_interests in interests.items():
             for sub_interest in sub_interests:
                 if category in CONTENT_TEMPLATES and sub_interest in CONTENT_TEMPLATES[category]:
                     templates = CONTENT_TEMPLATES[category][sub_interest]
 
                     for template in templates:
-                        task = progress.add_task(
-                            f"Creating: {template['title']}",
-                            total=1
-                        )
+                        task = progress.add_task(f"Creating: {template['title']}", total=1)
 
                         await create_note_from_template(template)
                         total_notes += 1
@@ -565,17 +595,23 @@ def onboard_wizard():
         total_categories = len(interests)
         total_sub_interests = sum(len(subs) for subs in interests.values())
 
-        console.print(f"\n[bold green]Selected {total_categories} categories with {total_sub_interests} focus areas[/bold green]")
+        console.print(
+            f"\n[bold green]Selected {total_categories} categories with {total_sub_interests} focus areas[/bold green]"
+        )
         console.print("This will create approximately 50-150 starter notes.")
 
         # Confirm
         proceed = Prompt.ask("Ready to create your starter Zettelkasten?", default="y")
-        if proceed.lower() not in ['y', 'yes']:
-            console.print("[yellow]Cancelled. Run 'advanced-memory onboard wizard' anytime to start over.[/yellow]")
+        if proceed.lower() not in ["y", "yes"]:
+            console.print(
+                "[yellow]Cancelled. Run 'advanced-memory onboard wizard' anytime to start over.[/yellow]"
+            )
             return
 
         # Generate content
-        console.print("\n[bold blue]Generating your personalized starter Zettelkasten...[/bold blue]")
+        console.print(
+            "\n[bold blue]Generating your personalized starter Zettelkasten...[/bold blue]"
+        )
 
         async def run_generation():
             return await generate_starter_content(interests)
@@ -586,7 +622,9 @@ def onboard_wizard():
         console.print("\n[bold green]🎉 Success![/bold green]")
         console.print(f"Created [bold]{total_notes}[/bold] starter notes in your knowledge base!")
         console.print("\n[bold]What's next?[/bold]")
-        console.print("• Explore your new notes with: [cyan]advanced-memory search \"starter\"[/cyan]")
+        console.print(
+            '• Explore your new notes with: [cyan]advanced-memory search "starter"[/cyan]'
+        )
         console.print("• Start connecting ideas by adding wikilinks [[Note Name]]")
         console.print("• Create your own notes to build on this foundation")
         console.print("• Use Claude with your MCP connection for seamless note creation")
@@ -603,7 +641,12 @@ def onboard_wizard():
 
 @onboard_app.command("quick")
 def onboard_quick(
-    interests: str = typer.Option(..., "--interests", "-i", help="Comma-separated interests (developer, cooking, philosophy, ai)")
+    interests: str = typer.Option(
+        ...,
+        "--interests",
+        "-i",
+        help="Comma-separated interests (developer, cooking, philosophy, ai)",
+    ),
 ):
     """Quick setup with predefined interests."""
     try:
@@ -621,7 +664,9 @@ def onboard_quick(
             console.print(f"Available: {', '.join(CONTENT_TEMPLATES.keys())}")
             return
 
-        console.print(f"[bold blue]Creating starter Zettelkasten for: {', '.join(interests_dict.keys())}[/bold blue]")
+        console.print(
+            f"[bold blue]Creating starter Zettelkasten for: {', '.join(interests_dict.keys())}[/bold blue]"
+        )
 
         async def run_generation():
             return await generate_starter_content(interests_dict)
@@ -629,7 +674,9 @@ def onboard_quick(
         total_notes = asyncio.run(run_generation())
 
         console.print(f"\n[bold green]✅ Created {total_notes} starter notes![/bold green]")
-        console.print("Run [cyan]advanced-memory onboard wizard[/cyan] for interactive setup anytime.")
+        console.print(
+            "Run [cyan]advanced-memory onboard wizard[/cyan] for interactive setup anytime."
+        )
 
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")

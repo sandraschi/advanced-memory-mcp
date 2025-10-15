@@ -97,7 +97,9 @@ async def test_start_watch_service_when_not_running(
     # Mock the create_background_sync_task function
     with (
         patch("advanced_memory.sync.WatchService") as mock_watch_service_class,
-        patch("advanced_memory.sync.background_sync.create_background_sync_task") as mock_create_task,
+        patch(
+            "advanced_memory.sync.background_sync.create_background_sync_task"
+        ) as mock_create_task,
     ):
         # Create a mock task
         mock_task = MagicMock()
@@ -136,7 +138,9 @@ async def test_start_watch_service_already_running(
     # Create mock request
     mock_request = MockRequest(mock_app)
 
-    with patch("advanced_memory.sync.background_sync.create_background_sync_task") as mock_create_task:
+    with patch(
+        "advanced_memory.sync.background_sync.create_background_sync_task"
+    ) as mock_create_task:
         # Call endpoint directly
         response = await start_watch_service(
             mock_request, mock_project_repository, mock_sync_service

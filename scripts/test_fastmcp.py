@@ -4,24 +4,28 @@
 from fastmcp import FastMCP
 
 # Check if multiline descriptions work
-server = FastMCP('test')
+server = FastMCP("test")
 
-@server.tool(description='''This is a multiline
+
+@server.tool(
+    description="""This is a multiline
 description that spans
-multiple lines.''')
+multiple lines."""
+)
 def test_tool():
-    return 'test'
+    return "test"
+
 
 # Check the tool registration
 tools = server.get_tools()
 if tools:
     tool = tools[0]
-    desc = tool.description or ''
-    print(f'Tool name: {tool.name}')
-    print(f'Description length: {len(desc)}')
-    print(f'Description contains newlines: {chr(10) in desc}')
-    print(f'Description preview: {desc[:100]}...')
-    print('Full description:')
+    desc = tool.description or ""
+    print(f"Tool name: {tool.name}")
+    print(f"Description length: {len(desc)}")
+    print(f"Description contains newlines: {chr(10) in desc}")
+    print(f"Description preview: {desc[:100]}...")
+    print("Full description:")
     print(repr(desc))
 else:
-    print('No tools registered')
+    print("No tools registered")

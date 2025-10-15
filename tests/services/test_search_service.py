@@ -341,7 +341,10 @@ async def test_boolean_group_search(search_service, test_graph):
     """Test boolean grouping with parentheses."""
     # Test simple boolean search first - filter to entities only
     from advanced_memory.schemas.search import SearchItemType
-    results = await search_service.search(SearchQuery(title="Connected AND Entity", entity_types=[SearchItemType.ENTITY]))
+
+    results = await search_service.search(
+        SearchQuery(title="Connected AND Entity", entity_types=[SearchItemType.ENTITY])
+    )
 
     # Should find the two "Connected Entity" entities
     assert len(results) == 2

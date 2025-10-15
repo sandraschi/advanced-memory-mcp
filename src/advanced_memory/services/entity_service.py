@@ -63,12 +63,14 @@ class EntityService(BaseService[EntityModel]):
 
             # If no conflict or it's our own file, use as is
             from advanced_memory.sync.sync_service import normalize_file_path
+
             normalized_path = normalize_file_path(str(file_path))
             if not existing or existing.file_path == normalized_path:
                 return desired_permalink
 
         # For existing files, try to find current permalink
         from advanced_memory.sync.sync_service import normalize_file_path
+
         normalized_path = normalize_file_path(str(file_path))
         existing = await self.repository.get_by_file_path(normalized_path)
         if existing:
@@ -299,6 +301,7 @@ class EntityService(BaseService[EntityModel]):
     async def delete_entity_by_file_path(self, file_path: str | Path) -> None:
         """Delete entity by file path."""
         from advanced_memory.sync.sync_service import normalize_file_path
+
         await self.repository.delete_by_file_path(normalize_file_path(str(file_path)))
 
     async def create_entity_from_markdown(
@@ -335,6 +338,7 @@ class EntityService(BaseService[EntityModel]):
         logger.debug(f"Updating entity and observations: {file_path}")
 
         from advanced_memory.sync.sync_service import normalize_file_path
+
         db_entity = await self.repository.get_by_file_path(normalize_file_path(str(file_path)))
 
         # Clear observations for entity

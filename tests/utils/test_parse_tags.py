@@ -1,6 +1,5 @@
 """Tests for parse_tags utility function."""
 
-
 import pytest
 
 from advanced_memory.utils import parse_tags

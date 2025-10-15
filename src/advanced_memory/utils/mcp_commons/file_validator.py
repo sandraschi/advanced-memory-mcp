@@ -29,6 +29,7 @@ from typing import Any
 
 try:
     import yaml  # type: ignore[import]
+
     HAS_YAML = True
 except ImportError:
     yaml = None  # type: ignore[assignment]
@@ -40,6 +41,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ValidationResult:
     """Result of file validation."""
+
     is_valid: bool
     file_path: str
     errors: list[str] = field(default_factory=list)
@@ -82,16 +84,35 @@ class FileValidator:
 
     # Reserved Windows filenames
     WINDOWS_RESERVED = {
-        'CON', 'PRN', 'AUX', 'NUL',
-        'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
-        'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        "COM1",
+        "COM2",
+        "COM3",
+        "COM4",
+        "COM5",
+        "COM6",
+        "COM7",
+        "COM8",
+        "COM9",
+        "LPT1",
+        "LPT2",
+        "LPT3",
+        "LPT4",
+        "LPT5",
+        "LPT6",
+        "LPT7",
+        "LPT8",
+        "LPT9",
     }
 
     # Dangerous filename characters (beyond OS restrictions)
     DANGEROUS_CHARS = set('<>:"|?*\x00')
 
     # Encodings to try in order
-    ENCODINGS = ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252', 'iso-8859-1']
+    ENCODINGS = ["utf-8", "utf-8-sig", "latin-1", "cp1252", "iso-8859-1"]
 
     def __init__(
         self,
@@ -122,10 +143,7 @@ class FileValidator:
             ValidationResult with details
         """
         file_path = Path(file_path)
-        result = ValidationResult(
-            is_valid=True,
-            file_path=str(file_path)
-        )
+        result = ValidationResult(is_valid=True, file_path=str(file_path))
 
         # Check file exists
         if not file_path.exists():
@@ -172,37 +190,27 @@ class FileValidator:
         # Check for dangerous characters
         dangerous = self.DANGEROUS_CHARS & set(filename)
         if dangerous:
-            result.add_error(
-                f"Dangerous characters in filename: {dangerous} in {filename}"
-            )
+            result.add_error(f"Dangerous characters in filename: {dangerous} in {filename}")
 
         # Check for Windows reserved names
         name_without_ext = file_path.stem.upper()
         if name_without_ext in self.WINDOWS_RESERVED:
-            result.add_error(
-                f"Reserved Windows filename: {name_without_ext}"
-            )
+            result.add_error(f"Reserved Windows filename: {name_without_ext}")
 
         # Check for control characters
         if any(ord(c) < 32 for c in filename):
-            result.add_error(
-                f"Control characters in filename: {filename}"
-            )
+            result.add_error(f"Control characters in filename: {filename}")
 
         # Warn about unicode characters (not an error, but worth noting)
         if not filename.isascii():
-            result.add_warning(
-                f"Non-ASCII characters in filename: {filename}"
-            )
+            result.add_warning(f"Non-ASCII characters in filename: {filename}")
 
         # Warn about spaces or special chars that might cause issues
-        if ' ' in filename:
-            result.add_warning(
-                f"Spaces in filename (consider using underscores): {filename}"
-            )
+        if " " in filename:
+            result.add_warning(f"Spaces in filename (consider using underscores): {filename}")
 
         # Check extension
-        if file_path.suffix.lower() not in ['.md', '.markdown']:
+        if file_path.suffix.lower() not in [".md", ".markdown"]:
             result.add_warning(
                 f"Unexpected extension: {file_path.suffix} (expected .md or .markdown)"
             )
@@ -216,19 +224,13 @@ class FileValidator:
 
             # Check read permissions
             if not os.access(file_path, os.R_OK):
-                result.add_error(
-                    f"No read permission: {file_path}"
-                )
+                result.add_error(f"No read permission: {file_path}")
 
         except PermissionError as e:
-            result.add_error(
-                f"Permission denied: {file_path}: {e}"
-            )
+            result.add_error(f"Permission denied: {file_path}: {e}")
 
         except OSError as e:
-            result.add_error(
-                f"Cannot access file: {file_path}: {e}"
-            )
+            result.add_error(f"Cannot access file: {file_path}: {e}")
 
     def _validate_size(self, file_path: Path, result: ValidationResult) -> None:
         """Validate file size is reasonable."""
@@ -237,25 +239,17 @@ class FileValidator:
         # Check if empty
         if size == 0:
             if self.allow_empty:
-                result.add_warning(
-                    f"Empty file (0 bytes): {file_path}"
-                )
+                result.add_warning(f"Empty file (0 bytes): {file_path}")
             else:
-                result.add_error(
-                    f"Empty file not allowed: {file_path}"
-                )
+                result.add_error(f"Empty file not allowed: {file_path}")
 
         # Check if too large
         if size > self.max_file_size:
-            result.add_error(
-                f"File too large ({size} > {self.max_file_size}): {file_path}"
-            )
+            result.add_error(f"File too large ({size} > {self.max_file_size}): {file_path}")
 
         # Warn if suspiciously large for markdown
         if size > 1024 * 1024:  # > 1 MB
-            result.add_warning(
-                f"Large markdown file ({size / 1024 / 1024:.2f} MB): {file_path}"
-            )
+            result.add_warning(f"Large markdown file ({size / 1024 / 1024:.2f} MB): {file_path}")
 
     def _validate_content(self, file_path: Path, result: ValidationResult) -> None:
         """Try to read file content with multiple encodings."""
@@ -264,7 +258,7 @@ class FileValidator:
 
         for encoding in self.ENCODINGS:
             try:
-                with open(file_path, encoding=encoding, errors='strict') as f:
+                with open(file_path, encoding=encoding, errors="strict") as f:
                     content = f.read()
                 result.encoding = encoding
                 break
@@ -274,31 +268,25 @@ class FileValidator:
                 continue
 
             except Exception as e:
-                result.add_error(
-                    f"Failed to read file: {file_path}: {type(e).__name__}: {e}"
-                )
+                result.add_error(f"Failed to read file: {file_path}: {type(e).__name__}: {e}")
                 return
 
         if content is None:
             # Try binary read to check if it's actually binary
             try:
-                with open(file_path, 'rb') as f:
+                with open(file_path, "rb") as f:
                     raw = f.read(1024)  # Read first 1KB
 
                 # Check for null bytes (binary indicator)
-                if b'\x00' in raw:
-                    result.add_error(
-                        f"Binary file detected (contains null bytes): {file_path}"
-                    )
+                if b"\x00" in raw:
+                    result.add_error(f"Binary file detected (contains null bytes): {file_path}")
                 else:
                     result.add_error(
                         f"Encoding error (tried {', '.join(self.ENCODINGS)}): {file_path}: {last_error}"
                     )
 
             except Exception as e:
-                result.add_error(
-                    f"Cannot read file at all: {file_path}: {e}"
-                )
+                result.add_error(f"Cannot read file at all: {file_path}: {e}")
 
             return
 
@@ -306,18 +294,14 @@ class FileValidator:
         result.content = content
 
         # Warn if content has weird line endings
-        if '\r\n' in content and '\n' in content.replace('\r\n', ''):
-            result.add_warning(
-                f"Mixed line endings detected: {file_path}"
-            )
+        if "\r\n" in content and "\n" in content.replace("\r\n", ""):
+            result.add_warning(f"Mixed line endings detected: {file_path}")
 
         # Warn if very long lines (might be minified/corrupted)
-        lines = content.split('\n')
+        lines = content.split("\n")
         max_line_len = max(len(line) for line in lines) if lines else 0
         if max_line_len > 10000:
-            result.add_warning(
-                f"Very long line detected ({max_line_len} chars): {file_path}"
-            )
+            result.add_warning(f"Very long line detected ({max_line_len} chars): {file_path}")
 
     def _validate_frontmatter(self, result: ValidationResult) -> None:
         """Validate YAML frontmatter if present."""
@@ -325,41 +309,35 @@ class FileValidator:
             return
 
         # Check for frontmatter markers
-        if not result.content.startswith('---'):
+        if not result.content.startswith("---"):
             # No frontmatter is fine
             return
 
         # Extract frontmatter
-        lines = result.content.split('\n')
+        lines = result.content.split("\n")
         if len(lines) < 3:
             # Too short to have valid frontmatter
             if self.strict_frontmatter:
-                result.add_error(
-                    "Invalid frontmatter: too short"
-                )
+                result.add_error("Invalid frontmatter: too short")
             return
 
         # Find closing marker
         end_idx = None
         for i, line in enumerate(lines[1:], start=1):
-            if line.strip() == '---' or line.strip() == '...':
+            if line.strip() == "---" or line.strip() == "...":
                 end_idx = i
                 break
 
         if end_idx is None:
             if self.strict_frontmatter:
-                result.add_error(
-                    "Invalid frontmatter: no closing marker"
-                )
+                result.add_error("Invalid frontmatter: no closing marker")
             else:
-                result.add_warning(
-                    "Frontmatter appears incomplete (no closing ---)"
-                )
+                result.add_warning("Frontmatter appears incomplete (no closing ---)")
             return
 
         # Extract frontmatter content
         frontmatter_lines = lines[1:end_idx]
-        frontmatter_text = '\n'.join(frontmatter_lines)
+        frontmatter_text = "\n".join(frontmatter_lines)
 
         # Try to parse as YAML
         if HAS_YAML and yaml is not None:
@@ -369,22 +347,14 @@ class FileValidator:
 
             except yaml.YAMLError as e:  # type: ignore[union-attr]
                 if self.strict_frontmatter:
-                    result.add_error(
-                        f"Invalid YAML in frontmatter: {e}"
-                    )
+                    result.add_error(f"Invalid YAML in frontmatter: {e}")
                 else:
-                    result.add_warning(
-                        f"Malformed frontmatter YAML: {e}"
-                    )
+                    result.add_warning(f"Malformed frontmatter YAML: {e}")
         else:
-            result.add_warning(
-                "Cannot validate frontmatter (PyYAML not installed)"
-            )
+            result.add_warning("Cannot validate frontmatter (PyYAML not installed)")
 
     def validate_batch(
-        self,
-        file_paths: list[str | Path],
-        on_error: str = 'continue'
+        self, file_paths: list[str | Path], on_error: str = "continue"
     ) -> dict[str, ValidationResult]:
         """
         Validate multiple files.
@@ -402,7 +372,7 @@ class FileValidator:
             result = self.validate_file(file_path)
             results[str(file_path)] = result
 
-            if on_error == 'stop' and not result.is_valid:
+            if on_error == "stop" and not result.is_valid:
                 break
 
         return results
@@ -420,8 +390,8 @@ class FileValidator:
 # File Validation Summary
 
 **Total Files:** {total}
-**Valid:** {valid} ({valid/total*100:.1f}%)
-**Invalid:** {invalid} ({invalid/total*100:.1f}%)
+**Valid:** {valid} ({valid / total * 100:.1f}%)
+**Invalid:** {invalid} ({invalid / total * 100:.1f}%)
 
 **Errors:** {total_errors}
 **Warnings:** {total_warnings}
@@ -478,4 +448,3 @@ if __name__ == "__main__":
     else:
         print(f"Error: {path} is not a file or directory")
         sys.exit(1)
-

@@ -36,26 +36,18 @@ class TyporaRPCClient:
         if params is None:
             params = {}
 
-        request = {
-            "jsonrpc": "2.0",
-            "id": self._generate_id(),
-            "method": method,
-            "params": params
-        }
+        request = {"jsonrpc": "2.0", "id": self._generate_id(), "method": method, "params": params}
 
         try:
             async with websockets.connect(
                 self.uri,
                 extra_headers={"Origin": "advanced-memory-mcp"},
-                open_timeout=self.connection_timeout
+                open_timeout=self.connection_timeout,
             ) as websocket:
                 await websocket.send(json.dumps(request))
 
                 # Set timeout for response
-                response = await asyncio.wait_for(
-                    websocket.recv(),
-                    timeout=self.request_timeout
-                )
+                response = await asyncio.wait_for(websocket.recv(), timeout=self.request_timeout)
 
                 result = json.loads(response)
 
@@ -63,13 +55,10 @@ class TyporaRPCClient:
                     return {
                         "success": False,
                         "error": result["error"].get("message", "Unknown error"),
-                        "code": result["error"].get("code", -1)
+                        "code": result["error"].get("code", -1),
                     }
 
-                return {
-                    "success": True,
-                    "result": result.get("result")
-                }
+                return {"success": True, "result": result.get("result")}
 
         except TimeoutError:
             return {"success": False, "error": "Request timeout"}
@@ -81,6 +70,7 @@ class TyporaRPCClient:
     def _generate_id(self) -> int:
         """Generate unique request ID."""
         import time
+
         return int(time.time() * 1000000) % 1000000
 
 
@@ -146,7 +136,7 @@ async def typora_control(
     # Template parameters
     template_name: str | None = None,
     # Advanced parameters
-    options: dict[str, Any] | None = None
+    options: dict[str, Any] | None = None,
 ) -> str:
     """Swiss Army Knife tool for Typora control via json_rpc."""
 
@@ -204,7 +194,9 @@ async def typora_control(
         return f"[UNICODE] **Typora Control Error**\n\nOperation '{operation}' failed: {str(e)}\n\n**Troubleshooting**:\n[UNICODE] Ensure Typora is running\n[UNICODE] Check json_rpc plugin is enabled\n[UNICODE] Verify port 8888 is available\n[UNICODE] Restart Typora if issues persist"
 
 
-async def _handle_export(format: str | None, output_path: str | None, options: dict[str, Any]) -> str:
+async def _handle_export(
+    format: str | None, output_path: str | None, options: dict[str, Any]
+) -> str:
     """Handle document export operation."""
     if not format:
         return "[UNICODE] Export requires 'format' parameter (pdf, html, docx, odt, etc.)"
@@ -222,21 +214,25 @@ async def _handle_export(format: str | None, output_path: str | None, options: d
         "includeImages": options.get("include_images", True),
         "embedStyles": options.get("embed_styles", True),
         "embedImages": options.get("embed_images", True),
-        "keepSource": options.get("keep_source", False)
+        "keepSource": options.get("keep_source", False),
     }
 
     # Add format-specific options
     if format == "pdf":
-        export_params.update({
-            "pageSize": options.get("page_size", "A4"),
-            "margins": options.get("margins", "1cm"),
-            "printBackground": options.get("print_background", True)
-        })
+        export_params.update(
+            {
+                "pageSize": options.get("page_size", "A4"),
+                "margins": options.get("margins", "1cm"),
+                "printBackground": options.get("print_background", True),
+            }
+        )
     elif format in ["html", "docx"]:
-        export_params.update({
-            "embedImages": options.get("embed_images", True),
-            "keepSource": options.get("keep_source", False)
-        })
+        export_params.update(
+            {
+                "embedImages": options.get("embed_images", True),
+                "keepSource": options.get("keep_source", False),
+            }
+        )
 
     result = await typora_client.call("export", export_params)
 
@@ -247,7 +243,7 @@ async def _handle_export(format: str | None, output_path: str | None, options: d
 
 **Format**: {format.upper()}
 **Output**: {output_path}
-**Options**: {'Images embedded' if export_params.get('embedImages') else 'Images referenced'}
+**Options**: {"Images embedded" if export_params.get("embedImages") else "Images referenced"}
 
 **Next Steps**:
 [UNICODE] Open {output_path} to verify export
@@ -267,13 +263,13 @@ async def _handle_get_content() -> str:
         return "[DOC] **Current Document**: Empty or no document open"
 
     # Provide summary and preview
-    lines = content.split('\n')
+    lines = content.split("\n")
     line_count = len(lines)
     char_count = len(content)
 
     # Get first few lines as preview
     preview_lines = lines[:10] if len(lines) > 10 else lines
-    preview = '\n'.join(preview_lines)
+    preview = "\n".join(preview_lines)
     if len(lines) > 10:
         preview += f"\n... ({len(lines) - 10} more lines)"
 
@@ -328,8 +324,8 @@ async def _handle_insert_text(text: str | None, position: str | None) -> str:
 
     return f"""[UNICODE] **Text Inserted Successfully**
 
-**Inserted Text**: {text[:50]}{'...' if len(text) > 50 else ''}
-**Position**: {position or 'current cursor'}
+**Inserted Text**: {text[:50]}{"..." if len(text) > 50 else ""}
+**Position**: {position or "current cursor"}
 
 **Tip**: Use `get_cursor` to check current position before inserting."""
 
@@ -344,11 +340,11 @@ async def _handle_get_cursor() -> str:
     cursor_info = result["result"]
     return f"""[LOCATION] **Cursor Position**
 
-**Line**: {cursor_info.get('line', 'N/A')}
-**Column**: {cursor_info.get('column', 'N/A')}
-**Selection Start**: {cursor_info.get('selectionStart', 'N/A')}
-**Selection End**: {cursor_info.get('selectionEnd', 'N/A')}
-**Selected Text Length**: {cursor_info.get('selectedTextLength', 0)} characters
+**Line**: {cursor_info.get("line", "N/A")}
+**Column**: {cursor_info.get("column", "N/A")}
+**Selection Start**: {cursor_info.get("selectionStart", "N/A")}
+**Selection End**: {cursor_info.get("selectionEnd", "N/A")}
+**Selected Text Length**: {cursor_info.get("selectedTextLength", 0)} characters
 
 **Use this info for**:
 [UNICODE] Precise text insertion with `insert_text`
@@ -439,12 +435,14 @@ async def _handle_set_metadata(options: dict[str, Any]) -> str:
     updated_fields = list(options.keys())
     return f"""[UNICODE] **Metadata Updated**
 
-**Fields Updated**: {', '.join(updated_fields)}
+**Fields Updated**: {", ".join(updated_fields)}
 
 **Use `get_metadata` to verify changes**"""
 
 
-async def _handle_search_replace(find_text: str | None, replace_text: str | None, options: dict[str, Any]) -> str:
+async def _handle_search_replace(
+    find_text: str | None, replace_text: str | None, options: dict[str, Any]
+) -> str:
     """Search and replace text."""
     if find_text is None:
         return "[UNICODE] search_replace requires 'find_text' parameter"
@@ -455,7 +453,7 @@ async def _handle_search_replace(find_text: str | None, replace_text: str | None
         "caseSensitive": options.get("case_sensitive", False),
         "wholeWord": options.get("whole_word", False),
         "regex": options.get("regex", False),
-        "replaceAll": options.get("replace_all", True)
+        "replaceAll": options.get("replace_all", True),
     }
 
     result = await typora_client.call("searchReplace", params)
@@ -469,9 +467,9 @@ async def _handle_search_replace(find_text: str | None, replace_text: str | None
     return f"""[UNICODE] **Search and Replace Completed**
 
 **Search Term**: "{find_text}"
-**Replace With**: "{replace_text or '(empty)'}"
+**Replace With**: "{replace_text or "(empty)"}"
 **Replacements Made**: {replacements}
-**Options**: Case {'sensitive' if params['caseSensitive'] else 'insensitive'}, {'Whole word' if params['wholeWord'] else 'Partial match'}
+**Options**: Case {"sensitive" if params["caseSensitive"] else "insensitive"}, {"Whole word" if params["wholeWord"] else "Partial match"}
 
 **Tip**: Use `save_file` to persist changes"""
 
@@ -544,7 +542,9 @@ async def _handle_toggle_toolbar(visible: bool | None) -> str:
 **Use `visible=true/false` to explicitly show/hide**"""
 
 
-async def _handle_batch_export(files: list[str] | None, format: str | None, output_path: str | None, options: dict[str, Any]) -> str:
+async def _handle_batch_export(
+    files: list[str] | None, format: str | None, output_path: str | None, options: dict[str, Any]
+) -> str:
     """Export multiple files."""
     if not files:
         return "[UNICODE] batch_export requires 'files' parameter (list of file paths)"
@@ -564,7 +564,9 @@ async def _handle_batch_export(files: list[str] | None, format: str | None, outp
             # Open file
             open_result = await typora_client.call("openFile", {"path": file_path})
             if not open_result["success"]:
-                results.append(f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}")
+                results.append(
+                    f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}"
+                )
                 continue
 
             # Brief pause for loading - configurable via environment
@@ -575,18 +577,23 @@ async def _handle_batch_export(files: list[str] | None, format: str | None, outp
             export_filename = Path(file_path).stem + f".{format}"
             export_path = output_dir / export_filename
 
-            export_result = await typora_client.call("export", {
-                "format": format,
-                "outputPath": str(export_path),
-                "includeImages": options.get("include_images", True),
-                "embedStyles": options.get("embed_styles", True)
-            })
+            export_result = await typora_client.call(
+                "export",
+                {
+                    "format": format,
+                    "outputPath": str(export_path),
+                    "includeImages": options.get("include_images", True),
+                    "embedStyles": options.get("embed_styles", True),
+                },
+            )
 
             if export_result["success"]:
                 results.append(f"[UNICODE] {export_filename}: Exported successfully")
                 successful_exports += 1
             else:
-                results.append(f"[UNICODE] {export_filename}: Export failed - {export_result['error']}")
+                results.append(
+                    f"[UNICODE] {export_filename}: Export failed - {export_result['error']}"
+                )
 
         except Exception as e:
             results.append(f"[UNICODE] {Path(file_path).name}: Error - {str(e)}")
@@ -616,11 +623,11 @@ async def _handle_content_analysis() -> str:
         return "[DOC] **Document Analysis**: Empty document"
 
     # Analyze content
-    lines = content.split('\n')
-    headings = [line for line in lines if line.startswith('#')]
-    links = len([line for line in lines if '[' in line and '](' in line])
-    code_blocks = content.count('```')
-    images = len([line for line in lines if '![' in line and '](' in line])
+    lines = content.split("\n")
+    headings = [line for line in lines if line.startswith("#")]
+    links = len([line for line in lines if "[" in line and "](" in line])
+    code_blocks = content.count("```")
+    images = len([line for line in lines if "![" in line and "](" in line])
 
     word_count = len(content.split())
     char_count = len(content)
@@ -628,7 +635,7 @@ async def _handle_content_analysis() -> str:
     # Heading structure
     heading_levels: dict[int, int] = {}
     for heading in headings:
-        level = len(heading) - len(heading.lstrip('#'))
+        level = len(heading) - len(heading.lstrip("#"))
         heading_levels[level] = heading_levels.get(level, 0) + 1
 
     return f"""[CHART] **Document Analysis**
@@ -648,9 +655,9 @@ async def _handle_content_analysis() -> str:
 {chr(10).join(f"[UNICODE] Level {level}: {count} headings" for level, count in sorted(heading_levels.items()))}
 
 **Document Health**:
-[UNICODE] Has content: {'[UNICODE]' if content.strip() else '[UNICODE]'}
-[UNICODE] Has structure: {'[UNICODE]' if headings else '[UNICODE]'}
-[UNICODE] Has links: {'[UNICODE]' if links > 0 else '[UNICODE]'}"""
+[UNICODE] Has content: {"[UNICODE]" if content.strip() else "[UNICODE]"}
+[UNICODE] Has structure: {"[UNICODE]" if headings else "[UNICODE]"}
+[UNICODE] Has links: {"[UNICODE]" if links > 0 else "[UNICODE]"}"""
 
 
 async def _handle_link_validation() -> str:
@@ -661,25 +668,22 @@ async def _handle_link_validation() -> str:
         return f"[UNICODE] **Link Validation Failed**\n\nError: {result['error']}"
 
     content = result["result"]
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Find links
     links_found = []
     for i, line in enumerate(lines, 1):
-        if '[' in line and '](' in line:
+        if "[" in line and "](" in line:
             # Extract link text and URL
-            start = line.find('](')
+            start = line.find("](")
             if start > 0:
-                end = line.find(')', start)
+                end = line.find(")", start)
                 if end > 0:
-                    link_text = line[line.find('[')+1:start]
-                    link_url = line[start+2:end]
-                    links_found.append({
-                        'line': i,
-                        'text': link_text,
-                        'url': link_url,
-                        'full_match': line
-                    })
+                    link_text = line[line.find("[") + 1 : start]
+                    link_url = line[start + 2 : end]
+                    links_found.append(
+                        {"line": i, "text": link_text, "url": link_url, "full_match": line}
+                    )
 
     if not links_found:
         return "[LINK] **Link Validation**: No links found in document"
@@ -693,28 +697,32 @@ async def _handle_link_validation() -> str:
         is_valid = True
         issues = []
 
-        url = link['url']
+        url = link["url"]
 
         # Check for basic issues
         if not url.strip():
             issues.append("Empty URL")
             is_valid = False
-        elif url.startswith('http') and not url.startswith(('http://', 'https://')):
+        elif url.startswith("http") and not url.startswith(("http://", "https://")):
             issues.append("Invalid HTTP/HTTPS URL")
             is_valid = False
-        elif url.startswith(('http://', 'https://')):
+        elif url.startswith(("http://", "https://")):
             # Could add HTTP validation here, but keeping it simple
             pass
-        elif not Path(url).exists() and not url.startswith(('http://', 'https://')):
+        elif not Path(url).exists() and not url.startswith(("http://", "https://")):
             issues.append("Local file not found")
             is_valid = False
 
         if is_valid:
             valid_links += 1
-            validation_results.append(f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}")
+            validation_results.append(
+                f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}"
+            )
         else:
             broken_links += 1
-            validation_results.append(f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url} ({', '.join(issues)})")
+            validation_results.append(
+                f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url} ({', '.join(issues)})"
+            )
 
     return f"""[LINK] **Link Validation Results**
 
@@ -760,7 +768,6 @@ async def _handle_template_apply(template_name: str | None, options: dict[str, A
 
 ## Tags
 #research #notes""",
-
         "meeting_notes": """# Meeting Notes
 
 **Date**: [Meeting Date]
@@ -794,7 +801,6 @@ async def _handle_template_apply(template_name: str | None, options: dict[str, A
 
 ## Tags
 #meeting #notes""",
-
         "project_plan": """# Project Plan
 
 ## Project Overview
@@ -841,7 +847,6 @@ async def _handle_template_apply(template_name: str | None, options: dict[str, A
 
 ## Tags
 #project #planning""",
-
         "code_review": """# Code Review
 
 ## Pull Request
@@ -890,11 +895,11 @@ async def _handle_template_apply(template_name: str | None, options: dict[str, A
 - [ ] Ready for merge
 
 ## Tags
-#code-review #development"""
+#code-review #development""",
     }
 
     if template_name not in templates:
-        available_templates = ', '.join(templates.keys())
+        available_templates = ", ".join(templates.keys())
         return f"""[UNICODE] **Unknown Template**
 
 Template '{template_name}' not found.
@@ -971,7 +976,7 @@ async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> str:
    ```
 
 **Content Preview**:
-{content[:200]}{'...' if len(content) > 200 else ''}
+{content[:200]}{"..." if len(content) > 200 else ""}
 
 **Future Enhancement**: Direct API integration for seamless sync"""
 
@@ -979,11 +984,26 @@ async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> str:
 async def _handle_unknown_operation(operation: str) -> str:
     """Handle unknown operations."""
     available_ops = [
-        "export", "get_content", "set_content", "insert_text", "get_cursor",
-        "open_file", "save_file", "new_file", "get_metadata", "set_metadata",
-        "search_replace", "get_themes", "set_theme", "toggle_sidebar", "toggle_toolbar",
-        "batch_export", "content_analysis", "link_validation", "template_apply",
-        "sync_to_advanced_memory"
+        "export",
+        "get_content",
+        "set_content",
+        "insert_text",
+        "get_cursor",
+        "open_file",
+        "save_file",
+        "new_file",
+        "get_metadata",
+        "set_metadata",
+        "search_replace",
+        "get_themes",
+        "set_theme",
+        "toggle_sidebar",
+        "toggle_toolbar",
+        "batch_export",
+        "content_analysis",
+        "link_validation",
+        "template_apply",
+        "sync_to_advanced_memory",
     ]
 
     return f"""[UNICODE] **Unknown Operation**: {operation}
@@ -1004,6 +1024,7 @@ async def _handle_unknown_operation(operation: str) -> str:
 
 # Additional utility functions for integration
 
+
 async def check_typora_connection() -> bool:
     """Check if Typora json_rpc is available."""
     try:
@@ -1019,7 +1040,7 @@ async def get_typora_status() -> dict[str, Any]:
         "connection": False,
         "current_file": None,
         "theme": None,
-        "ui_state": {}
+        "ui_state": {},
     }
 
     # Check connection

@@ -106,12 +106,12 @@ async def load_notion_export(
 
     # Extract files if it's a ZIP
     temp_dir = None
-    if export_path_obj.is_file() and export_path_obj.suffix.lower() == '.zip':
+    if export_path_obj.is_file() and export_path_obj.suffix.lower() == ".zip":
         temp_dir = Path(f"temp_notion_extract_{export_path_obj.stem}")
         temp_dir.mkdir(exist_ok=True)
 
         try:
-            with zipfile.ZipFile(export_path_obj, 'r') as zip_ref:
+            with zipfile.ZipFile(export_path_obj, "r") as zip_ref:
                 zip_ref.extractall(temp_dir)
             source_dir = temp_dir
         except Exception as e:
@@ -123,11 +123,11 @@ async def load_notion_export(
     html_files = []
     markdown_files = []
 
-    for file_path in source_dir.rglob('*'):
+    for file_path in source_dir.rglob("*"):
         if file_path.is_file():
-            if file_path.suffix.lower() == '.html':
+            if file_path.suffix.lower() == ".html":
                 html_files.append(file_path)
-            elif file_path.suffix.lower() in ['.md', '.markdown']:
+            elif file_path.suffix.lower() in [".md", ".markdown"]:
                 markdown_files.append(file_path)
 
     total_files = len(html_files) + len(markdown_files)
@@ -145,8 +145,8 @@ async def load_notion_export(
             result = await _process_notion_html_file(
                 html_file, source_dir, project_url, folder, preserve_hierarchy
             )
-            if result['success']:
-                created_entities.extend(result['entities'])
+            if result["success"]:
+                created_entities.extend(result["entities"])
                 processed += 1
             else:
                 errors.append(f"HTML {html_file.name}: {result['error']}")
@@ -159,8 +159,8 @@ async def load_notion_export(
             result = await _process_notion_markdown_file(
                 md_file, source_dir, project_url, folder, preserve_hierarchy
             )
-            if result['success']:
-                created_entities.extend(result['entities'])
+            if result["success"]:
+                created_entities.extend(result["entities"])
                 processed += 1
             else:
                 errors.append(f"MD {md_file.name}: {result['error']}")
@@ -170,6 +170,7 @@ async def load_notion_export(
     # Clean up temp directory
     if temp_dir and temp_dir.exists():
         import shutil
+
         shutil.rmtree(temp_dir)
 
     # Generate summary
@@ -195,34 +196,30 @@ async def load_notion_export(
 
 
 async def _process_notion_html_file(
-    html_file: Path,
-    source_dir: Path,
-    project_url: str,
-    base_folder: str,
-    preserve_hierarchy: bool
+    html_file: Path, source_dir: Path, project_url: str, base_folder: str, preserve_hierarchy: bool
 ) -> dict[str, Any]:
     """Process a single Notion HTML file."""
 
     try:
-        with open(html_file, encoding='utf-8') as f:
+        with open(html_file, encoding="utf-8") as f:
             html_content = f.read()
     except UnicodeDecodeError:
         # Try with different encoding
         try:
-            with open(html_file, encoding='latin-1') as f:
+            with open(html_file, encoding="latin-1") as f:
                 html_content = f.read()
         except Exception as e:
-            return {'success': False, 'error': f"Failed to read file: {e}"}
+            return {"success": False, "error": f"Failed to read file: {e}"}
 
     # Extract title from HTML
-    title_match = re.search(r'<title>(.*?)</title>', html_content, re.IGNORECASE)
+    title_match = re.search(r"<title>(.*?)</title>", html_content, re.IGNORECASE)
     if title_match:
         title = title_match.group(1).strip()
     else:
         title = html_file.stem
 
     # Clean up Notion-specific title prefixes
-    title = re.sub(r'^Notion\s*[-[UNICODE]]\s*', '', title)
+    title = re.sub(r"^Notion\s*[-[UNICODE]]\s*", "", title)
 
     # Extract main content
     content = _extract_notion_content(html_content)
@@ -230,17 +227,21 @@ async def _process_notion_html_file(
     # Determine folder structure
     if preserve_hierarchy:
         relative_path = html_file.relative_to(source_dir)
-        folder_path = f"{base_folder}/{relative_path.parent}" if relative_path.parent != Path('.') else base_folder
+        folder_path = (
+            f"{base_folder}/{relative_path.parent}"
+            if relative_path.parent != Path(".")
+            else base_folder
+        )
     else:
         folder_path = base_folder
 
     # Create entity in Advanced Memory
     try:
         entity_data = {
-            'title': title,
-            'content': content,
-            'folder': folder_path,
-            'content_type': 'markdown'  # Convert HTML to markdown
+            "title": title,
+            "content": content,
+            "folder": folder_path,
+            "content_type": "markdown",  # Convert HTML to markdown
         }
 
         # Create the note
@@ -250,69 +251,68 @@ async def _process_notion_html_file(
         if response.status_code == 200:
             result_data = response.json()
             return {
-                'success': True,
-                'entities': [{
-                    'title': title,
-                    'permalink': result_data.get('permalink', ''),
-                    'folder': folder_path
-                }]
+                "success": True,
+                "entities": [
+                    {
+                        "title": title,
+                        "permalink": result_data.get("permalink", ""),
+                        "folder": folder_path,
+                    }
+                ],
             }
         else:
-            return {
-                'success': False,
-                'error': f"API error {response.status_code}: {response.text}"
-            }
+            return {"success": False, "error": f"API error {response.status_code}: {response.text}"}
 
     except Exception as e:
-        return {'success': False, 'error': str(e)}
+        return {"success": False, "error": str(e)}
 
 
 async def _process_notion_markdown_file(
-    md_file: Path,
-    source_dir: Path,
-    project_url: str,
-    base_folder: str,
-    preserve_hierarchy: bool
+    md_file: Path, source_dir: Path, project_url: str, base_folder: str, preserve_hierarchy: bool
 ) -> dict[str, Any]:
     """Process a single Notion Markdown file."""
 
     try:
-        with open(md_file, encoding='utf-8') as f:
+        with open(md_file, encoding="utf-8") as f:
             content = f.read()
     except UnicodeDecodeError:
         try:
-            with open(md_file, encoding='latin-1') as f:
+            with open(md_file, encoding="latin-1") as f:
                 content = f.read()
         except Exception as e:
-            return {'success': False, 'error': f"Failed to read file: {e}"}
+            return {"success": False, "error": f"Failed to read file: {e}"}
 
     # Extract title from first heading or filename
-    lines = content.split('\n')
+    lines = content.split("\n")
     title = md_file.stem  # Default to filename
 
     for line in lines[:10]:  # Check first 10 lines
         line = line.strip()
-        if line.startswith('# '):
+        if line.startswith("# "):
             title = line[2:].strip()
             break
 
     # Clean up Notion-specific prefixes
-    title = re.sub(r'^Notion\s*[-[UNICODE]]\s*', '', title)
+    title = re.sub(r"^Notion\s*[-[UNICODE]]\s*", "", title)
 
     # Determine folder structure
     if preserve_hierarchy:
         relative_path = md_file.relative_to(source_dir)
-        folder_path = f"{base_folder}/{relative_path.parent}" if relative_path.parent != Path('.') else base_folder
+        folder_path = (
+            f"{base_folder}/{relative_path.parent}"
+            if relative_path.parent != Path(".")
+            else base_folder
+        )
     else:
         folder_path = base_folder
 
     # Create entity in Advanced Memory
     try:
         entity_data = {
-            'title': title,
-            'content': content,
-            'folder': folder_path,
-            'content_type': 'markdown'
+            "title": title,
+            "content": content,
+            "folder": folder_path,
+            "content_type": "markdown",
         }
 
         create_url = f"{project_url}/api/memory"
@@ -321,21 +321,20 @@ async def _process_notion_markdown_file(
         if response.status_code == 200:
             result_data = response.json()
             return {
-                'success': True,
-                'entities': [{
-                    'title': title,
-                    'permalink': result_data.get('permalink', ''),
-                    'folder': folder_path
-                }]
+                "success": True,
+                "entities": [
+                    {
+                        "title": title,
+                        "permalink": result_data.get("permalink", ""),
+                        "folder": folder_path,
+                    }
+                ],
             }
         else:
-            return {
-                'success': False,
-                'error': f"API error {response.status_code}: {response.text}"
-            }
+            return {"success": False, "error": f"API error {response.status_code}: {response.text}"}
 
     except Exception as e:
-        return {'success': False, 'error': str(e)}
+        return {"success": False, "error": str(e)}
 
 
 def _extract_notion_content(html_content: str) -> str:
@@ -346,7 +345,7 @@ def _extract_notion_content(html_content: str) -> str:
     content_match = re.search(
         r'<div[^>]*class="[^"]*notion-page-content[^"]*"[^>]*>(.*?)</div>',
         html_content,
-        re.DOTALL | re.IGNORECASE
+        re.DOTALL | re.IGNORECASE,
     )
 
     if content_match:
@@ -356,13 +355,15 @@ def _extract_notion_content(html_content: str) -> str:
         content_match = re.search(
             r'<div[^>]*class="[^"]*page[^"]*"[^>]*>(.*?)</div>',
             html_content,
-            re.DOTALL | re.IGNORECASE
+            re.DOTALL | re.IGNORECASE,
         )
         if content_match:
             content_html = content_match.group(1)
         else:
             # Last resort: extract body content
-            body_match = re.search(r'<body[^>]*>(.*?)</body>', html_content, re.DOTALL | re.IGNORECASE)
+            body_match = re.search(
+                r"<body[^>]*>(.*?)</body>", html_content, re.DOTALL | re.IGNORECASE
+            )
             content_html = body_match.group(1) if body_match else html_content
 
     # Basic HTML to Markdown conversion
@@ -378,35 +379,57 @@ def _html_to_markdown(html: str) -> str:
     markdown = html
 
     # Headers
-    markdown = re.sub(r'<h1[^>]*>(.*?)</h1>', r'# \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h2[^>]*>(.*?)</h2>', r'## \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h3[^>]*>(.*?)</h3>', r'### \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h4[^>]*>(.*?)</h4>', r'#### \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h5[^>]*>(.*?)</h5>', r'##### \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h6[^>]*>(.*?)</h6>', r'###### \1', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h1[^>]*>(.*?)</h1>", r"# \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h2[^>]*>(.*?)</h2>", r"## \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h3[^>]*>(.*?)</h3>", r"### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h4[^>]*>(.*?)</h4>", r"#### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<h5[^>]*>(.*?)</h5>", r"##### \1", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(
+        r"<h6[^>]*>(.*?)</h6>", r"###### \1", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
 
     # Lists
-    markdown = re.sub(r'<ul[^>]*>(.*?)</ul>', _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<ol[^>]*>(.*?)</ol>', _convert_ordered_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(
+        r"<ol[^>]*>(.*?)</ol>",
+        _convert_ordered_list_items,
+        markdown,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
 
     # Links
-    markdown = re.sub(r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', r'[\2](\1)', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>',
+        r"[\2](\1)",
+        markdown,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
 
     # Bold/Italic
-    markdown = re.sub(r'<strong[^>]*>(.*?)</strong>', r'**\1**', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<b[^>]*>(.*?)</b>', r'**\1**', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<em[^>]*>(.*?)</em>', r'*\1*', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<i[^>]*>(.*?)</i>', r'*\1*', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(r"<b[^>]*>(.*?)</b>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<em[^>]*>(.*?)</em>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<i[^>]*>(.*?)</i>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Code
-    markdown = re.sub(r'<code[^>]*>(.*?)</code>', r'`\1`', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<pre[^>]*>(.*?)</pre>', r'```\n\1\n```', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(
+        r"<pre[^>]*>(.*?)</pre>", r"```\n\1\n```", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
 
     # Remove remaining HTML tags
-    markdown = re.sub(r'<[^>]+>', '', markdown)
+    markdown = re.sub(r"<[^>]+>", "", markdown)
 
     # Clean up extra whitespace
-    markdown = re.sub(r'\n{3,}', '\n\n', markdown)
+    markdown = re.sub(r"\n{3,}", "\n\n", markdown)
     markdown = markdown.strip()
 
     return markdown
@@ -416,13 +439,13 @@ def _convert_list_items(match):
     """Convert HTML list items to markdown."""
     ul_content = match.group(1)
     # Convert <li> to - with proper indentation
-    items = re.findall(r'<li[^>]*>(.*?)</li>', ul_content, re.IGNORECASE | re.DOTALL)
-    return '\n'.join(f'- {item.strip()}' for item in items)
+    items = re.findall(r"<li[^>]*>(.*?)</li>", ul_content, re.IGNORECASE | re.DOTALL)
+    return "\n".join(f"- {item.strip()}" for item in items)
 
 
 def _convert_ordered_list_items(match):
     """Convert HTML ordered list items to markdown."""
     ol_content = match.group(1)
     # Convert <li> to numbered items
-    items = re.findall(r'<li[^>]*>(.*?)</li>', ol_content, re.IGNORECASE | re.DOTALL)
-    return '\n'.join(f'{i+1}. {item.strip()}' for i, item in enumerate(items))
+    items = re.findall(r"<li[^>]*>(.*?)</li>", ol_content, re.IGNORECASE | re.DOTALL)
+    return "\n".join(f"{i + 1}. {item.strip()}" for i, item in enumerate(items))

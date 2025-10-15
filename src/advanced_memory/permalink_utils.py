@@ -59,20 +59,16 @@ def generate_permalink(file_path: Path | str | Any) -> str:
         # General case using Unicode normalization
         else:
             # Normalize the character (NFD splits accented characters into base + diacritic)
-            normalized = unicodedata.normalize('NFD', char)
+            normalized = unicodedata.normalize("NFD", char)
             # Keep only the base character, discarding diacritics
-            base_char = ''.join(c for c in normalized if not unicodedata.combining(c))
+            base_char = "".join(c for c in normalized if not unicodedata.combining(c))
             result += base_char
 
     # Insert hyphens before uppercase letters that follow lowercase letters (camelCase)
-    result = re.sub(r'([a-z])([A-Z])', r'\1-\2', result)
+    result = re.sub(r"([a-z])([A-Z])", r"\1-\2", result)
 
     # Convert to lowercase and replace spaces/underscores with hyphens
-    clean_text = (
-        result.lower()
-        .replace(" ", "-")
-        .replace("_", "-")
-    )
+    clean_text = result.lower().replace(" ", "-").replace("_", "-")
 
     # Remove any remaining non-word characters except slashes and hyphens
     clean_text = re.sub(r"[^\w\-/]", "", clean_text)

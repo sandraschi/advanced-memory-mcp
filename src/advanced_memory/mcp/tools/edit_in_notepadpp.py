@@ -59,9 +59,7 @@ NOTE: This is for EDITING only. For exporting documents to PDF/HTML/DOCX, use ex
 """
 )
 async def edit_in_notepadpp(
-    note_identifier: str,
-    workspace_path: str | None = None,
-    create_backup: bool = True
+    note_identifier: str, workspace_path: str | None = None, create_backup: bool = True
 ) -> str:
     """
     Export an Advanced Memory note to Notepad++ for editing.
@@ -90,15 +88,17 @@ async def edit_in_notepadpp(
         # Create safe filename
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
-        backup_file = workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        backup_file = (
+            workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        )
 
         # Create backup if requested
         if create_backup:
-            backup_file.write_text(original_content, encoding='utf-8')
+            backup_file.write_text(original_content, encoding="utf-8")
             logger.info(f"Backup created: {backup_file}")
 
         # Write current content to workspace
-        md_file.write_text(original_content, encoding='utf-8')
+        md_file.write_text(original_content, encoding="utf-8")
 
         # Open in Notepad++
         notepadpp_path = _find_notepadpp_executable()
@@ -107,6 +107,7 @@ async def edit_in_notepadpp(
 
         # Launch Notepad++ with the file
         import subprocess
+
         try:
             subprocess.Popen([str(notepadpp_path), str(md_file)])
             logger.info(f"Opened {md_file} in Notepad++")
@@ -153,9 +154,7 @@ Confirmation of successful import with change summary.
 """
 )
 async def import_from_notepadpp(
-    note_identifier: str,
-    workspace_path: str | None = None,
-    keep_workspace: bool = False
+    note_identifier: str, workspace_path: str | None = None, keep_workspace: bool = False
 ) -> str:
     """
     Import an edited note back from Notepad++ workspace.
@@ -185,7 +184,7 @@ async def import_from_notepadpp(
             return f"[UNICODE] Edited file not found: {md_file}"
 
         # Read edited content
-        edited_content = md_file.read_text(encoding='utf-8')
+        edited_content = md_file.read_text(encoding="utf-8")
 
         # Get original content for comparison
         original_content = await mcp_read_note.fn(note_identifier)
@@ -204,7 +203,9 @@ The content in Notepad++ workspace is identical to the original note.
 {f"Workspace preserved at: {workspace_dir}" if keep_workspace else "Workspace cleaned up."}"""
 
         # Update the note
-        success = await mcp_write_note.fn(title=note_identifier, content=edited_content, folder="", tags=None, entity_type="note")
+        success = await mcp_write_note.fn(
+            title=note_identifier, content=edited_content, folder="", tags=None, entity_type="note"
+        )
         if not success:
             return "[UNICODE] Failed to update the note with edited content."
 
@@ -213,14 +214,14 @@ The content in Notepad++ workspace is identical to the original note.
             shutil.rmtree(workspace_dir, ignore_errors=True)
 
         # Calculate some stats
-        original_lines = len(original_content.split('\n'))
-        edited_lines = len(edited_content.split('\n'))
+        original_lines = len(original_content.split("\n"))
+        edited_lines = len(edited_content.split("\n"))
         line_diff = edited_lines - original_lines
 
         return f"""[UNICODE] **Note successfully imported from Notepad++!**
 
 **Updated:** `{note_identifier}`
-**Lines:** {original_lines} [UNICODE] {edited_lines} ({'+' if line_diff > 0 else ''}{line_diff})
+**Lines:** {original_lines} [UNICODE] {edited_lines} ({"+" if line_diff > 0 else ""}{line_diff})
 {f"**Workspace preserved:** `{workspace_dir}`" if keep_workspace else "**Workspace cleaned up**"}
 
 **Your edits have been saved to Advanced Memory!** [NOTE][UNICODE]"""
@@ -237,9 +238,9 @@ def _find_notepadpp_executable() -> Path | None:
     common_paths = [
         Path("C:/Program Files/Notepad++/notepad++.exe"),
         Path("C:/Program Files (x86)/Notepad++/notepad++.exe"),
-        Path(os.environ.get('LOCALAPPDATA', '')) / "Programs" / "Notepad++" / "notepad++.exe",
-        Path(os.environ.get('PROGRAMFILES', '')) / "Notepad++" / "notepad++.exe",
-        Path(os.environ.get('PROGRAMFILES(X86)', '')) / "Notepad++" / "notepad++.exe",
+        Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Notepad++" / "notepad++.exe",
+        Path(os.environ.get("PROGRAMFILES", "")) / "Notepad++" / "notepad++.exe",
+        Path(os.environ.get("PROGRAMFILES(X86)", "")) / "Notepad++" / "notepad++.exe",
     ]
 
     for path in common_paths:
@@ -248,6 +249,7 @@ def _find_notepadpp_executable() -> Path | None:
 
     # Try to find in PATH
     import shutil
+
     notepadpp_exe = shutil.which("notepad++")
     if notepadpp_exe:
         return Path(notepadpp_exe)
@@ -263,27 +265,26 @@ def _sanitize_filename(title: str) -> str:
     import unicodedata
 
     # Normalize unicode characters
-    title = unicodedata.normalize('NFKD', title)
+    title = unicodedata.normalize("NFKD", title)
 
     # Replace problematic characters
-    title = title.replace(':', '-').replace('.', '_').replace('/', '-')
+    title = title.replace(":", "-").replace(".", "_").replace("/", "-")
 
     # Remove or replace other unsafe characters
-    title = re.sub(r'[<>:"|?*\\]', '_', title)
+    title = re.sub(r'[<>:"|?*\\]', "_", title)
 
     # Collapse multiple underscores/spaces
-    title = re.sub(r'[_ ]+', '_', title)
+    title = re.sub(r"[_ ]+", "_", title)
 
     # Trim underscores and spaces
-    title = title.strip('_ ')
+    title = title.strip("_ ")
 
     # Limit length
     if len(title) > 100:
-        title = title[:100].rstrip('_ ')
+        title = title[:100].rstrip("_ ")
 
     # Ensure not empty
     if not title:
         title = "untitled"
 
     return title
-

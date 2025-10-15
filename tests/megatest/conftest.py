@@ -33,6 +33,7 @@ PRODUCTION_PATHS_TO_PROTECT = [
 # SAFETY FUNCTIONS
 # ============================================================================
 
+
 def is_production_path(path: Path) -> bool:
     """Check if a path is in production directories."""
     path = path.resolve()
@@ -93,6 +94,7 @@ def compute_checksum_file(file_path: Path) -> str:
 # SAFETY FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session", autouse=True)
 def verify_not_production():
     """
@@ -110,7 +112,7 @@ def verify_not_production():
             pytest.exit(
                 "FATAL: Current config uses production database! "
                 "Megatest cannot run with production configuration.",
-                returncode=1
+                returncode=1,
             )
 
         for project in config.projects.values():
@@ -118,7 +120,7 @@ def verify_not_production():
                 pytest.exit(
                     f"FATAL: Project '{project.name}' uses production path! "
                     f"Megatest cannot run with production projects.",
-                    returncode=1
+                    returncode=1,
                 )
     except Exception:
         # No config yet - safe to proceed
@@ -180,7 +182,7 @@ def isolated_test_env() -> Generator[dict, None, None]:
                 "name": "test_archive",
                 "home": str(test_dir / "test_archive"),
             },
-        }
+        },
     )
 
     # Display test environment
@@ -246,6 +248,7 @@ def assert_production_safe():
 
     Use in tests that perform destructive operations.
     """
+
     def _assert_safe(test_path: Path):
         """Assert path is not production."""
         if is_production_path(test_path):
@@ -260,25 +263,24 @@ def assert_production_safe():
 # SAFETY MARKERS
 # ============================================================================
 
+
 def pytest_configure(config):
     """Register custom markers."""
     config.addinivalue_line(
-        "markers",
-        "megatest: Comprehensive integration test (90+ minutes, ISOLATED environment)"
+        "markers", "megatest: Comprehensive integration test (90+ minutes, ISOLATED environment)"
     )
     config.addinivalue_line(
-        "markers",
-        "megatest_quick: Quick validation (10 minutes, ISOLATED environment)"
+        "markers", "megatest_quick: Quick validation (10 minutes, ISOLATED environment)"
     )
     config.addinivalue_line(
-        "markers",
-        "destructive: Test performs destructive operations (MUST be isolated)"
+        "markers", "destructive: Test performs destructive operations (MUST be isolated)"
     )
 
 
 # ============================================================================
 # SAFETY VALIDATION
 # ============================================================================
+
 
 @pytest.fixture(autouse=True)
 def validate_test_isolation(request):
@@ -300,4 +302,3 @@ def validate_test_isolation(request):
         assert is_safe_test_path(env["test_db"])
         assert not is_production_path(env["test_dir"])
         assert not is_production_path(env["test_db"])
-

@@ -27,29 +27,44 @@ def normalize_file_path(path: str) -> str:
     This helps prevent duplicate path issues due to different path formats.
     """
     # Convert backslashes to forward slashes for consistency
-    normalized = path.replace('\\', '/')
+    normalized = path.replace("\\", "/")
     # Remove any duplicate slashes
-    while '//' in normalized:
-        normalized = normalized.replace('//', '/')
+    while "//" in normalized:
+        normalized = normalized.replace("//", "/")
     # Ensure it doesn't start with /
-    if normalized.startswith('/'):
+    if normalized.startswith("/"):
         normalized = normalized[1:]
     return normalized
+
 
 # Common directories to ignore during file scanning and sync
 IGNORE_PATTERNS = {
     # Node.js
     "node_modules",
     # Build outputs
-    "dist", "build", "target", "out", ".next", ".nuxt",
+    "dist",
+    "build",
+    "target",
+    "out",
+    ".next",
+    ".nuxt",
     # Python
-    "__pycache__", ".pytest_cache", ".tox", "venv", ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".tox",
+    "venv",
+    ".venv",
     # Other package managers / build tools
-    "vendor", ".gradle", ".cargo", "coverage",
+    "vendor",
+    ".gradle",
+    ".cargo",
+    "coverage",
     # IDE and editor files
-    ".vscode", ".idea",
+    ".vscode",
+    ".idea",
     # OS files
-    ".DS_Store", "Thumbs.db"
+    ".DS_Store",
+    "Thumbs.db",
 }
 
 
@@ -159,7 +174,9 @@ class SyncService:
                 else:
                     await self.handle_move(old_path, new_path)
             except Exception as e:  # pragma: no cover
-                logger.error(f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}")
+                logger.error(
+                    f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}"
+                )
                 # Continue with other files
 
             files_processed += 1
@@ -211,7 +228,9 @@ class SyncService:
                 if entity is None:
                     logger.warning(f"Skipped modified file due to errors: {path}")
             except Exception as e:  # pragma: no cover
-                logger.error(f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}")
+                logger.error(
+                    f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}"
+                )
                 # Continue with other files
             files_processed += 1
             if project_name:
@@ -294,9 +313,7 @@ class SyncService:
         logger.info(f"Found {len(db_records)} db records")
         return {r.file_path: r.checksum or "" for r in db_records}
 
-    async def sync_file(
-        self, path: str, new: bool = True
-    ) -> tuple[Entity | None, str | None]:
+    async def sync_file(self, path: str, new: bool = True) -> tuple[Entity | None, str | None]:
         """Sync a single file.
 
         Args:
@@ -331,15 +348,23 @@ class SyncService:
             # Provide more specific error messages for common issues
             if "mapping values are not allowed" in error_msg:
                 logger.warning(f"Malformed YAML frontmatter in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to invalid YAML frontmatter. Fix the YAML syntax to include this file in sync.")
+                logger.info(
+                    f"File {path} will be skipped due to invalid YAML frontmatter. Fix the YAML syntax to include this file in sync."
+                )
             elif "scanning an alias" in error_msg or "alias" in error_msg.lower():
                 logger.warning(f"Invalid YAML alias in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax.")
+                logger.info(
+                    f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax."
+                )
             elif "yaml" in error_msg.lower() or "yamlload" in error_type.lower():
                 logger.warning(f"YAML parsing error in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter.")
+                logger.info(
+                    f"File {path} will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter."
+                )
             else:
-                logger.error(f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}")
+                logger.error(
+                    f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}"
+                )
 
             # Return None to indicate sync failure, but don't crash the entire process
             return None, None
@@ -408,7 +433,7 @@ class SyncService:
                 dirs[:] = [d for d in dirs if d not in IGNORE_PATTERNS]
 
                 for file in files:
-                    if file.endswith('.md'):
+                    if file.endswith(".md"):
                         rel_path = os.path.relpath(os.path.join(root, file), project_path)
                         rel_path = normalize_file_path(rel_path)
                         all_files.append(rel_path)
@@ -560,7 +585,9 @@ class SyncService:
                     entity = await self.entity_repository.get_by_file_path(path)
                     if entity is None:  # pragma: no cover
                         logger.error(f"Entity not found after constraint violation, path={path}")
-                        raise ValueError(f"Entity not found after constraint violation: {path}") from e
+                        raise ValueError(
+                            f"Entity not found after constraint violation: {path}"
+                        ) from e
 
                     updated = await self.entity_repository.update(
                         entity.id, {"file_path": path, "checksum": checksum}
@@ -769,7 +796,9 @@ class SyncService:
 
         for root, dirnames, filenames in os.walk(str(directory)):
             # Skip dot directories and common ignore patterns in-place
-            dirnames[:] = [d for d in dirnames if not d.startswith(".") and d not in IGNORE_PATTERNS]
+            dirnames[:] = [
+                d for d in dirnames if not d.startswith(".") and d not in IGNORE_PATTERNS
+            ]
 
             for filename in filenames:
                 # Skip dot files and files in ignore patterns

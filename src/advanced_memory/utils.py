@@ -97,9 +97,7 @@ def generate_permalink(file_path: Path | str | Any) -> str:
 
     # Replace spaces and unsafe ASCII characters with hyphens, but preserve non-ASCII characters
     # Include common Chinese character ranges and other non-ASCII characters
-    clean_text = re.sub(
-        r"[^a-z0-9\u4e00-\u9fff/\-]", "-", text_with_hyphens
-    )
+    clean_text = re.sub(r"[^a-z0-9\u4e00-\u9fff/\-]", "-", text_with_hyphens)
 
     # Collapse multiple hyphens
     clean_text = re.sub(r"-+", "-", clean_text)
@@ -110,8 +108,12 @@ def generate_permalink(file_path: Path | str | Any) -> str:
 
     # NOW insert dash between Chinese and Latin character boundaries (after cleanup)
     # This handles cases like "中文english" -> "中文-english" and "english中文" -> "english-中文"
-    clean_text = re.sub(r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
-    clean_text = re.sub(r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
+    clean_text = re.sub(
+        r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
+    )
+    clean_text = re.sub(
+        r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
+    )
 
     # Clean each path segment
     segments = clean_text.split("/")
@@ -229,7 +231,7 @@ def validate_project_path(path: str, project_path: Path) -> bool:
         return False
 
     # Block paths with control characters (but allow whitespace that will be stripped)
-    if path.strip() and any(ord(c) < 32 and c not in [' ', '\t'] for c in path):
+    if path.strip() and any(ord(c) < 32 and c not in [" ", "\t"] for c in path):
         return False
 
     try:

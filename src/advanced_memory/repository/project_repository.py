@@ -47,6 +47,7 @@ class ProjectRepository(Repository):
             path: Path to the project directory (will be converted to string internally)
         """
         from advanced_memory.sync.sync_service import normalize_file_path
+
         normalized_path = normalize_file_path(str(path))
         query = self.select().where(Project.path == normalized_path)
         return await self.find_one(query)

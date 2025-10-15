@@ -107,19 +107,22 @@ async def _get_basic_status() -> str:
     status_lines.append(sync_info)
 
     # Add quick system info
-    status_lines.extend([
-        "",
-        "---",
-        "",
-        "## System Information",
-        f"- **Platform**: {platform.system()} {platform.release()}",
-        f"- **Python**: {platform.python_version()}",
-        f"- **Architecture**: {platform.machine()}",
-    ])
+    status_lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## System Information",
+            f"- **Platform**: {platform.system()} {platform.release()}",
+            f"- **Python**: {platform.python_version()}",
+            f"- **Architecture**: {platform.machine()}",
+        ]
+    )
 
     # Add quick tool count
     try:
         from advanced_memory.mcp.tools import __all__ as tools
+
         status_lines.append(f"- **Available Tools**: {len(tools)}")
     except Exception:
         status_lines.append("- **Available Tools**: Unable to count")
@@ -141,19 +144,23 @@ async def _get_intermediate_status() -> str:
         from advanced_memory.mcp.tools import __all__ as tools
 
         # Categorize tools
-        import_tools = [t for t in tools if t.startswith(('load_', 'import_'))]
-        export_tools = [t for t in tools if t.startswith(('export_', 'save_'))]
-        search_tools = [t for t in tools if 'search' in t or 'find' in t]
-        editing_tools = [t for t in tools if 'edit' in t or 'typora' in t]
-        core_tools = [t for t in tools if t not in import_tools + export_tools + search_tools + editing_tools]
+        import_tools = [t for t in tools if t.startswith(("load_", "import_"))]
+        export_tools = [t for t in tools if t.startswith(("export_", "save_"))]
+        search_tools = [t for t in tools if "search" in t or "find" in t]
+        editing_tools = [t for t in tools if "edit" in t or "typora" in t]
+        core_tools = [
+            t for t in tools if t not in import_tools + export_tools + search_tools + editing_tools
+        ]
 
-        status_lines.extend([
-            f"- **Core Tools** ({len(core_tools)}): {', '.join(core_tools[:5])}{'...' if len(core_tools) > 5 else ''}",
-            f"- **Import Tools** ({len(import_tools)}): {', '.join(import_tools[:5])}{'...' if len(import_tools) > 5 else ''}",
-            f"- **Export Tools** ({len(export_tools)}): {', '.join(export_tools[:5])}{'...' if len(export_tools) > 5 else ''}",
-            f"- **Search Tools** ({len(search_tools)}): {', '.join(search_tools[:5])}{'...' if len(search_tools) > 5 else ''}",
-            f"- **Editing Tools** ({len(editing_tools)}): {', '.join(editing_tools[:5])}{'...' if len(editing_tools) > 5 else ''}",
-        ])
+        status_lines.extend(
+            [
+                f"- **Core Tools** ({len(core_tools)}): {', '.join(core_tools[:5])}{'...' if len(core_tools) > 5 else ''}",
+                f"- **Import Tools** ({len(import_tools)}): {', '.join(import_tools[:5])}{'...' if len(import_tools) > 5 else ''}",
+                f"- **Export Tools** ({len(export_tools)}): {', '.join(export_tools[:5])}{'...' if len(export_tools) > 5 else ''}",
+                f"- **Search Tools** ({len(search_tools)}): {', '.join(search_tools[:5])}{'...' if len(search_tools) > 5 else ''}",
+                f"- **Editing Tools** ({len(editing_tools)}): {', '.join(editing_tools[:5])}{'...' if len(editing_tools) > 5 else ''}",
+            ]
+        )
     except Exception as e:
         status_lines.append(f"- **Tool Inventory**: Error loading - {e}")
 
@@ -161,25 +168,30 @@ async def _get_intermediate_status() -> str:
     status_lines.extend(["", "## Configuration Summary"])
     try:
         from advanced_memory.config import ConfigManager
+
         config = ConfigManager().config
 
-        status_lines.extend([
-            f"- **Active Projects**: {len(config.projects)}",
-            f"- **Default Project**: {config.default_project}",
-            f"- **Sync Delay**: {config.sync_delay}ms",
-            f"- **Log Level**: {config.log_level}",
-        ])
+        status_lines.extend(
+            [
+                f"- **Active Projects**: {len(config.projects)}",
+                f"- **Default Project**: {config.default_project}",
+                f"- **Sync Delay**: {config.sync_delay}ms",
+                f"- **Log Level**: {config.log_level}",
+            ]
+        )
     except Exception as e:
         status_lines.append(f"- **Configuration**: Error loading - {e}")
 
     # Platform details
     status_lines.extend(["", "## Platform Details"])
-    status_lines.extend([
-        f"- **OS**: {platform.system()} {platform.release()}",
-        f"- **Python**: {platform.python_version()}",
-        f"- **Architecture**: {platform.machine()}",
-        f"- **Processor**: {platform.processor() or 'Unknown'}",
-    ])
+    status_lines.extend(
+        [
+            f"- **OS**: {platform.system()} {platform.release()}",
+            f"- **Python**: {platform.python_version()}",
+            f"- **Architecture**: {platform.machine()}",
+            f"- **Processor**: {platform.processor() or 'Unknown'}",
+        ]
+    )
 
     return "\n".join(status_lines)
 
@@ -203,11 +215,13 @@ async def _get_advanced_status() -> str:
         memory_mb = process.memory_info().rss / 1024 / 1024
         cpu_percent = process.cpu_percent(interval=0.1)
 
-        status_lines.extend([
-            f"- **Memory Usage**: {memory_mb:.1f} MB",
-            f"- **CPU Usage**: {cpu_percent:.1f}%",
-            f"- **Process ID**: {os.getpid()}",
-        ])
+        status_lines.extend(
+            [
+                f"- **Memory Usage**: {memory_mb:.1f} MB",
+                f"- **CPU Usage**: {cpu_percent:.1f}%",
+                f"- **Process ID**: {os.getpid()}",
+            ]
+        )
     except ImportError:
         status_lines.append("- **Performance Metrics**: psutil not available")
     except Exception as e:
@@ -217,6 +231,7 @@ async def _get_advanced_status() -> str:
     status_lines.extend(["", "## Database Information"])
     try:
         from advanced_memory.config import ConfigManager
+
         config = ConfigManager().config
 
         for project_name, project_path in config.projects.items():
@@ -236,9 +251,13 @@ async def _get_advanced_status() -> str:
         for project_name, project_path in config_mgr.config.projects.items():
             path_obj = Path(project_path)
             if path_obj.exists():
-                total_files = sum(1 for _ in path_obj.rglob('*') if _.is_file())
-                total_size_mb = sum(_.stat().st_size for _ in path_obj.rglob('*') if _.is_file()) / 1024 / 1024
-                status_lines.append(f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB")
+                total_files = sum(1 for _ in path_obj.rglob("*") if _.is_file())
+                total_size_mb = (
+                    sum(_.stat().st_size for _ in path_obj.rglob("*") if _.is_file()) / 1024 / 1024
+                )
+                status_lines.append(
+                    f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB"
+                )
             else:
                 status_lines.append(f"- **{project_name}**: Path not found")
     except Exception as e:
@@ -248,6 +267,7 @@ async def _get_advanced_status() -> str:
     status_lines.extend(["", "## Connectivity Status"])
     try:
         import socket
+
         hostname = socket.gethostname()
         status_lines.append(f"- **Hostname**: {hostname}")
         status_lines.append("- **MCP Connection**: Active (stdio)")
@@ -263,15 +283,16 @@ async def _get_diagnostic_status() -> str:
 
     # Basic sync status
     from advanced_memory.services.sync_status_service import SyncStatusTracker
+
     sync_status_tracker = SyncStatusTracker()
     sync_info = sync_status_tracker.get_summary()
     status_lines.extend([sync_info, "", "---", ""])
 
     # Environment variables
     status_lines.extend(["## Environment Variables"])
-    relevant_vars = ['ADVANCED_MEMORY_HOME', 'PYTHONPATH', 'PATH']
+    relevant_vars = ["ADVANCED_MEMORY_HOME", "PYTHONPATH", "PATH"]
     for var in relevant_vars:
-        value = os.environ.get(var, 'Not set')
+        value = os.environ.get(var, "Not set")
         # Truncate long paths
         if len(value) > 100:
             value = value[:97] + "..."
@@ -281,18 +302,21 @@ async def _get_diagnostic_status() -> str:
     status_lines.extend(["", "## Key Dependencies"])
     try:
         import fastmcp
+
         status_lines.append(f"- **FastMCP**: {fastmcp.__version__}")
     except Exception:
         status_lines.append("- **FastMCP**: Not found")
 
     try:
         import sqlalchemy
+
         status_lines.append(f"- **SQLAlchemy**: {sqlalchemy.__version__}")
     except Exception:
         status_lines.append("- **SQLAlchemy**: Not found")
 
     try:
         import pydantic
+
         status_lines.append(f"- **Pydantic**: {pydantic.VERSION}")
     except Exception:
         status_lines.append("- **Pydantic**: Not found")
@@ -301,6 +325,7 @@ async def _get_diagnostic_status() -> str:
     status_lines.extend(["", "## Log Configuration"])
     try:
         from advanced_memory.config import ConfigManager
+
         config = ConfigManager().config
         status_lines.append(f"- **Log Level**: {config.log_level}")
         status_lines.append("- **Logging**: Enabled via loguru")
@@ -311,6 +336,7 @@ async def _get_diagnostic_status() -> str:
     status_lines.extend(["", "## Project Path Validation"])
     try:
         from advanced_memory.config import ConfigManager
+
         config = ConfigManager().config
 
         for project_name, project_path in config.projects.items():
@@ -319,7 +345,9 @@ async def _get_diagnostic_status() -> str:
             is_dir = path_obj.is_dir() if exists else False
             writable = os.access(path_obj, os.W_OK) if exists else False
 
-            status_lines.append(f"- **{project_name}**: Path={project_path}, Exists={exists}, Dir={is_dir}, Writable={writable}")
+            status_lines.append(
+                f"- **{project_name}**: Path={project_path}, Exists={exists}, Dir={is_dir}, Writable={writable}"
+            )
     except Exception as e:
         status_lines.append(f"- **Project Validation**: Error - {e}")
 
@@ -327,6 +355,7 @@ async def _get_diagnostic_status() -> str:
     status_lines.extend(["", "## Recent Activity Summary"])
     try:
         from advanced_memory.services.sync_status_service import sync_status_tracker
+
         summary = sync_status_tracker.get_summary()
         status_lines.append(f"- **Sync Summary**: {summary}")
 
@@ -342,14 +371,16 @@ async def _get_diagnostic_status() -> str:
 
     # Troubleshooting tips
     status_lines.extend(["", "## Troubleshooting Tips"])
-    status_lines.extend([
-        "- Check project paths exist and are writable",
-        "- Verify Python dependencies are installed",
-        "- Ensure database files are not corrupted",
-        "- Check log files for detailed error messages",
-        "- Try restarting the MCP server",
-        "- Verify file permissions on project directories",
-    ])
+    status_lines.extend(
+        [
+            "- Check project paths exist and are writable",
+            "- Verify Python dependencies are installed",
+            "- Ensure database files are not corrupted",
+            "- Check log files for detailed error messages",
+            "- Try restarting the MCP server",
+            "- Verify file permissions on project directories",
+        ]
+    )
 
     return "\n".join(status_lines)
 
@@ -365,6 +396,7 @@ async def _get_focused_status(focus: str, level: str) -> str:
         if level == "basic":
             try:
                 from advanced_memory.mcp.tools import __all__ as tools
+
                 return f"# Tool Status\n\n- **Total Tools**: {len(tools)}\n- **Tools**: {', '.join(tools)}"
             except Exception as e:
                 return f"# Tool Status\n\n**Error**: {e}"
@@ -375,13 +407,16 @@ async def _get_focused_status(focus: str, level: str) -> str:
     elif focus == "projects":
         try:
             from advanced_memory.config import ConfigManager
+
             config = ConfigManager().config
 
             status_lines = ["# Project Status"]
             for project_name, project_path in config.projects.items():
                 path_obj = Path(project_path)
                 exists = path_obj.exists()
-                status_lines.append(f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})")
+                status_lines.append(
+                    f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})"
+                )
 
             return "\n".join(status_lines)
         except Exception as e:

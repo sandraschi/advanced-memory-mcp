@@ -8,9 +8,9 @@ from typing import TypeVar
 
 # Define PathLike and FilePath types
 PathLike = str | Path
-FilePath = TypeVar('FilePath', str, Path)
+FilePath = TypeVar("FilePath", str, Path)
 
 __all__ = [
-    'PathLike',
-    'FilePath',
+    "PathLike",
+    "FilePath",
 ]

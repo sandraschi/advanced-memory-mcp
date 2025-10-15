@@ -142,13 +142,19 @@ async def read_note(
 
     # If direct lookup failed and identifier looks like a title (not a permalink),
     # try with sanitized filename for markdown files
-    if not identifier.startswith("memory://") and "/" not in identifier and not identifier.endswith(".md"):
+    if (
+        not identifier.startswith("memory://")
+        and "/" not in identifier
+        and not identifier.endswith(".md")
+    ):
         sanitized_path = sanitize_filename(identifier)
         if sanitized_path != identifier:  # Only try if different
             sanitized_full_path = f"{project_url}/resource/{sanitized_path}.md"
             logger.info(f"Trying sanitized path: {sanitized_full_path}")
             try:
-                response = await call_get(client, sanitized_full_path, params={"page": page, "page_size": page_size})
+                response = await call_get(
+                    client, sanitized_full_path, params={"page": page, "page_size": page_size}
+                )
                 if response.status_code == 200:
                     logger.info(f"Found note using sanitized path: {sanitized_full_path}")
                     return sanitize_unicode_content(response.text)

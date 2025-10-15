@@ -1,4 +1,5 @@
 """Path-related utility functions."""
+
 from pathlib import Path
 
 
@@ -33,7 +34,7 @@ def validate_project_path(path: str, project_path: str | Path) -> bool:
         return False
 
     # Block paths with control characters (but allow whitespace that will be stripped)
-    if path.strip() and any(ord(c) < 32 and c not in [' ', '\t'] for c in path):
+    if path.strip() and any(ord(c) < 32 and c not in [" ", "\t"] for c in path):
         return False
 
     try:

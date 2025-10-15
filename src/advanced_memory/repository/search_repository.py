@@ -401,7 +401,9 @@ class SearchRepository:
             if not is_boolean_query:
                 sanitized_title = sanitize_filename(title.strip())
                 if sanitized_title != title.strip():  # Only add if different
-                    sanitized_title_text = self._prepare_search_term(sanitized_title, is_prefix=False)
+                    sanitized_title_text = self._prepare_search_term(
+                        sanitized_title, is_prefix=False
+                    )
                     params["sanitized_title_text"] = sanitized_title_text
                     conditions.append("title MATCH :sanitized_title_text")
 

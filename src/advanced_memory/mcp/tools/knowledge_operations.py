@@ -56,7 +56,7 @@ async def knowledge_operations(
     action: dict[str, Any] | None = None,
     dry_run: bool = True,
     limit: int = 100,
-    project: str | None = None
+    project: str | None = None,
 ) -> str:
     """
     Comprehensive knowledge operations tool.
@@ -85,7 +85,9 @@ async def knowledge_operations(
         elif operation == "bulk_update":
             return await _handle_bulk_update(filters or {}, action or {}, dry_run, limit, project)
         elif operation == "validate_content":
-            return await _handle_content_validation(filters or {}, action or {}, dry_run, limit, project)
+            return await _handle_content_validation(
+                filters or {}, action or {}, dry_run, limit, project
+            )
         elif operation == "project_stats":
             return await _handle_project_stats(action or {}, project)
         elif operation == "find_duplicates":
@@ -108,16 +110,21 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
         # Get all entities from search API
         search_query = SearchQuery(
             text="*",  # Get all content
-            types=["note"]
+            types=["note"],
         )
 
-        response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump())
+        response = await call_post(
+            client,
+            "/api/search",
+            params={"page": 1, "page_size": 1000},
+            json=search_query.model_dump(),
+        )
 
         if not response:
             return "[UNICODE] No results found for tag analysis"
 
         response_data = response.json()
-        if not hasattr(response_data, 'results') or not response_data.results:
+        if not hasattr(response_data, "results") or not response_data.results:
             return "[UNICODE] No results found for tag analysis"
 
         # Extract tags from all entities
@@ -128,7 +135,7 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
         for result in response_data.results:
             # Extract tags from entity metadata (if available in result)
             # Note: This assumes tags are included in search results
-            entity_tags = getattr(result, 'tags', []) or []
+            entity_tags = getattr(result, "tags", []) or []
             if entity_tags:
                 entities_with_tags += 1
                 tag_counter.update(entity_tags)
@@ -146,23 +153,23 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
             "single_use": len([tag for tag, count in tag_counter.items() if count == 1]),
             "rare": len([tag for tag, count in tag_counter.items() if 2 <= count <= 5]),
             "common": len([tag for tag, count in tag_counter.items() if 6 <= count <= 20]),
-            "frequent": len([tag for tag, count in tag_counter.items() if count > 20])
+            "frequent": len([tag for tag, count in tag_counter.items() if count > 20]),
         }
 
         return f"""[CHART] **Tag Analytics Report**
 
 **Overall Statistics:**
 - Total entities: {total_entities}
-- Entities with tags: {entities_with_tags} ({entities_with_tags/total_entities*100:.1f}%)
+- Entities with tags: {entities_with_tags} ({entities_with_tags / total_entities * 100:.1f}%)
 - Total tag usages: {total_tags}
 - Unique tags: {unique_tags}
 - Average tags per tagged entity: {avg_tags_per_entity:.1f}
 
 **Tag Usage Distribution:**
-- Single-use tags: {tag_usage_distribution['single_use']}
-- Rare tags (2-5 uses): {tag_usage_distribution['rare']}
-- Common tags (6-20 uses): {tag_usage_distribution['common']}
-- Frequent tags (20+ uses): {tag_usage_distribution['frequent']}
+- Single-use tags: {tag_usage_distribution["single_use"]}
+- Rare tags (2-5 uses): {tag_usage_distribution["rare"]}
+- Common tags (6-20 uses): {tag_usage_distribution["common"]}
+- Frequent tags (20+ uses): {tag_usage_distribution["frequent"]}
 
 **Most Used Tags:**
 {chr(10).join(f"  {tag}: {count} uses" for tag, count in top_tags[:10])}
@@ -180,9 +187,11 @@ def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, 
     """Generate recommendations based on tag analysis."""
     recommendations = []
 
-    if distribution['single_use'] > 20:
-        recommendations.append(f"[UNICODE] Consider consolidating {distribution['single_use']} single-use tags")
-    if distribution['rare'] < 5:
+    if distribution["single_use"] > 20:
+        recommendations.append(
+            f"[UNICODE] Consider consolidating {distribution['single_use']} single-use tags"
+        )
+    if distribution["rare"] < 5:
         recommendations.append("[UNICODE] Good tag diversity - most tags are being reused")
     if len(tag_counter) > 100:
         recommendations.append("[UNICODE] Large tag vocabulary - consider tag consolidation")
@@ -190,10 +199,12 @@ def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, 
     return recommendations or ["[UNICODE] Tag usage looks healthy"]
 
 
-async def _handle_tag_consolidation(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
+async def _handle_tag_consolidation(
+    action: dict[str, Any], dry_run: bool, project: str | None
+) -> str:
     """Consolidate similar tags, including semantic similarity."""
-    semantic_groups = action.get('semantic_groups', [])
-    auto_detect = action.get('auto_detect', False)
+    semantic_groups = action.get("semantic_groups", [])
+    auto_detect = action.get("auto_detect", False)
 
     if not semantic_groups and not auto_detect:
         return "[UNICODE] Must provide either semantic_groups or enable auto_detect"
@@ -207,12 +218,14 @@ async def _handle_tag_consolidation(action: dict[str, Any], dry_run: bool, proje
                 continue
             primary_tag = group[0]
             aliases = group[1:]
-            alias_list = ', '.join(f'"{tag}"' for tag in aliases)
+            alias_list = ", ".join(f'"{tag}"' for tag in aliases)
             results.append(f"  [UNICODE] '{primary_tag}' [UNICODE] {alias_list}")
 
     if auto_detect:
         results.append("[UNICODE][UNICODE] **AI-Powered Tag Similarity Detection**")
-        results.append("  [UNICODE] Feature not yet implemented - would analyze tag similarity using embeddings")
+        results.append(
+            "  [UNICODE] Feature not yet implemented - would analyze tag similarity using embeddings"
+        )
 
     action_summary = "DRY RUN - No changes made" if dry_run else "CHANGES APPLIED"
 
@@ -231,22 +244,24 @@ async def _handle_tag_consolidation(action: dict[str, Any], dry_run: bool, proje
 """
 
 
-async def _handle_tag_maintenance(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
+async def _handle_tag_maintenance(
+    action: dict[str, Any], dry_run: bool, project: str | None
+) -> str:
     """Clean up tags - remove duplicates, standardize case, etc."""
-    actions = action.get('actions', ['remove_empty', 'standardize_case', 'remove_duplicates'])
+    actions = action.get("actions", ["remove_empty", "standardize_case", "remove_duplicates"])
 
     results = []
     total_changes = 0
 
     # Simulate maintenance operations
     for maintenance_action in actions:
-        if maintenance_action == 'remove_empty':
+        if maintenance_action == "remove_empty":
             results.append("  [UNICODE] Removed 0 empty tags")
-        elif maintenance_action == 'standardize_case':
+        elif maintenance_action == "standardize_case":
             results.append("  [UNICODE] Standardized 0 tag cases")
-        elif maintenance_action == 'remove_duplicates':
+        elif maintenance_action == "remove_duplicates":
             results.append("  [UNICODE] Removed 0 duplicate tags")
-        elif maintenance_action == 'remove_special_chars':
+        elif maintenance_action == "remove_special_chars":
             results.append("  [UNICODE] Cleaned 0 tags with special characters")
 
     status = "DRY RUN - No changes made" if dry_run else f"APPLIED {total_changes} changes"
@@ -268,7 +283,9 @@ async def _handle_tag_maintenance(action: dict[str, Any], dry_run: bool, project
 """
 
 
-async def _handle_bulk_update(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
+async def _handle_bulk_update(
+    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+) -> str:
     """Bulk update multiple notes based on filters."""
     if not action:
         return "[UNICODE] Must specify action to perform (add_tags, remove_tags, etc.)"
@@ -286,27 +303,31 @@ async def _handle_bulk_update(filters: dict[str, Any], action: dict[str, Any], d
         note_changes = []
 
         # Add tags
-        if 'add_tags' in action:
-            for tag in action['add_tags']:
+        if "add_tags" in action:
+            for tag in action["add_tags"]:
                 note_changes.append(f"Add tag '{tag}'")
                 total_changes += 1
 
         # Remove tags
-        if 'remove_tags' in action:
-            for tag in action['remove_tags']:
+        if "remove_tags" in action:
+            for tag in action["remove_tags"]:
                 note_changes.append(f"Remove tag '{tag}'")
                 total_changes += 1
 
         # Content replacement
-        if 'replace_text' in action and 'find_text' in action:
-            find_text = action['find_text']
-            replace_text = action['replace_text']
+        if "replace_text" in action and "find_text" in action:
+            find_text = action["find_text"]
+            replace_text = action["replace_text"]
             note_changes.append(f"Replace '{find_text}' [UNICODE] '{replace_text}'")
             total_changes += 1
 
         operations.append(f"  [UNICODE] {note.get('title', 'Unknown')}: {', '.join(note_changes)}")
 
-    status = "DRY RUN - No changes applied" if dry_run else f"APPLIED {total_changes} changes to {len(matching_notes)} notes"
+    status = (
+        "DRY RUN - No changes applied"
+        if dry_run
+        else f"APPLIED {total_changes} changes to {len(matching_notes)} notes"
+    )
 
     return f"""[UNICODE][UNICODE] **Bulk Update Results**
 
@@ -316,7 +337,7 @@ async def _handle_bulk_update(filters: dict[str, Any], action: dict[str, Any], d
 
 **Operations to Perform:**
 {chr(10).join(operations[:10])}
-{f"  ... and {len(operations)-10} more" if len(operations) > 10 else ""}
+{f"  ... and {len(operations) - 10} more" if len(operations) > 10 else ""}
 
 **Status:** {status}
 
@@ -324,40 +345,42 @@ async def _handle_bulk_update(filters: dict[str, Any], action: dict[str, Any], d
 """
 
 
-async def _handle_content_validation(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
+async def _handle_content_validation(
+    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+) -> str:
     """Validate content quality and identify issues."""
-    checks = action.get('checks', ['broken_links', 'formatting', 'missing_tags'])
+    checks = action.get("checks", ["broken_links", "formatting", "missing_tags"])
 
     # Get notes to validate
     notes_to_check = await _find_notes_with_filters(filters, limit, project)
 
     validation_results = {
-        'total_notes': len(notes_to_check),
-        'issues_found': 0,
-        'broken_links': 0,
-        'formatting_issues': 0,
-        'missing_tags': 0,
-        'old_content': 0
+        "total_notes": len(notes_to_check),
+        "issues_found": 0,
+        "broken_links": 0,
+        "formatting_issues": 0,
+        "missing_tags": 0,
+        "old_content": 0,
     }
 
     # Simulate validation (in real implementation, would analyze actual content)
     for _note in notes_to_check:
         # Placeholder validation logic
-        validation_results['issues_found'] += 1  # Simulate finding issues
+        validation_results["issues_found"] += 1  # Simulate finding issues
 
     return f"""[UNICODE] **Content Validation Results**
 
 **Validation Scope:**
-- Notes checked: {validation_results['total_notes']}
-- Checks performed: {', '.join(checks)}
+- Notes checked: {validation_results["total_notes"]}
+- Checks performed: {", ".join(checks)}
 - Filters applied: {filters}
 
 **Issues Found:**
-- Total issues: {validation_results['issues_found']}
-- Broken links: {validation_results['broken_links']}
-- Formatting issues: {validation_results['formatting_issues']}
-- Missing tags: {validation_results['missing_tags']}
-- Outdated content: {validation_results['old_content']}
+- Total issues: {validation_results["issues_found"]}
+- Broken links: {validation_results["broken_links"]}
+- Formatting issues: {validation_results["formatting_issues"]}
+- Missing tags: {validation_results["missing_tags"]}
+- Outdated content: {validation_results["old_content"]}
 
 **Status:** DRY RUN - Validation complete, no fixes applied
 
@@ -372,16 +395,18 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
     # Get project data
     search_query = SearchQuery(
         text="*",  # All content
-        types=["note"]
+        types=["note"],
     )
 
-    response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump())
+    response = await call_post(
+        client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump()
+    )
 
     if not response:
         return "[UNICODE] Could not retrieve project statistics"
 
     response_data = response.json()
-    if not hasattr(response_data, 'results') or not response_data.results:
+    if not hasattr(response_data, "results") or not response_data.results:
         return "[UNICODE] Could not retrieve project statistics"
 
     # Analyze results
@@ -391,12 +416,12 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
 
     for result in response_data.results:
         # Extract tags and folders (placeholder logic)
-        result_tags = getattr(result, 'tags', []) or []
+        result_tags = getattr(result, "tags", []) or []
         tag_counter.update(result_tags)
 
         # Extract folder from file_path
-        file_path = getattr(result, 'file_path', '')
-        folder = '/'.join(file_path.split('/')[:-1]) if '/' in file_path else '/'
+        file_path = getattr(result, "file_path", "")
+        folder = "/".join(file_path.split("/")[:-1]) if "/" in file_path else "/"
         folder_counter[folder] += 1
 
     # Generate report
@@ -426,7 +451,9 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
 """
 
 
-def _generate_project_recommendations(tag_counter: Counter, folder_counter: Counter, total_notes: int) -> list[str]:
+def _generate_project_recommendations(
+    tag_counter: Counter, folder_counter: Counter, total_notes: int
+) -> list[str]:
     """Generate project recommendations based on statistics."""
     recommendations = []
 
@@ -479,9 +506,11 @@ async def _handle_find_duplicates(filters: dict[str, Any], limit: int, project: 
 """
 
 
-async def _handle_bulk_move(filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
+async def _handle_bulk_move(
+    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+) -> str:
     """Move multiple notes to a new folder."""
-    destination = action.get('destination_folder')
+    destination = action.get("destination_folder")
     if not destination:
         return "[UNICODE] Must specify destination_folder in action"
 
@@ -493,11 +522,15 @@ async def _handle_bulk_move(filters: dict[str, Any], action: dict[str, Any], dry
 
     operations = []
     for note in notes_to_move:
-        old_path = note.get('file_path', '')
+        old_path = note.get("file_path", "")
         new_path = f"{destination}/{old_path.split('/')[-1]}"
         operations.append(f"  [UNICODE] {old_path} [UNICODE] {new_path}")
 
-    status = f"DRY RUN - Would move {len(notes_to_move)} notes" if dry_run else f"MOVED {len(notes_to_move)} notes"
+    status = (
+        f"DRY RUN - Would move {len(notes_to_move)} notes"
+        if dry_run
+        else f"MOVED {len(notes_to_move)} notes"
+    )
 
     return f"""[FOLDER] **Bulk Move Results**
 
@@ -507,7 +540,7 @@ async def _handle_bulk_move(filters: dict[str, Any], action: dict[str, Any], dry
 
 **Operations:**
 {chr(10).join(operations[:10])}
-{f"  ... and {len(operations)-10} more" if len(operations) > 10 else ""}
+{f"  ... and {len(operations) - 10} more" if len(operations) > 10 else ""}
 
 **Status:** {status}
 
@@ -515,7 +548,9 @@ async def _handle_bulk_move(filters: dict[str, Any], action: dict[str, Any], dry
 """
 
 
-async def _handle_bulk_delete(filters: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
+async def _handle_bulk_delete(
+    filters: dict[str, Any], dry_run: bool, limit: int, project: str | None
+) -> str:
     """Delete multiple notes with confirmation."""
     # Get notes to delete
     notes_to_delete = await _find_notes_with_filters(filters, limit, project)
@@ -532,13 +567,17 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 
 **Notes that would be deleted:**
 {chr(10).join(f"  [UNICODE] {note.get('title', 'Unknown')} ({note.get('file_path', '')})" for note in notes_to_delete[:5])}
-{f"  ... and {len(notes_to_delete)-5} more" if len(notes_to_delete) > 5 else ""}
+{f"  ... and {len(notes_to_delete) - 5} more" if len(notes_to_delete) > 5 else ""}
 
 **To proceed:** Add `confirm_deletion=True` to action parameters
 **To cancel:** Change filters or operation
 """
 
-    status = f"DRY RUN - Would delete {len(notes_to_delete)} notes" if dry_run else f"DELETED {len(notes_to_delete)} notes"
+    status = (
+        f"DRY RUN - Would delete {len(notes_to_delete)} notes"
+        if dry_run
+        else f"DELETED {len(notes_to_delete)} notes"
+    )
 
     return f"""[UNICODE][UNICODE][UNICODE] **Bulk Delete Results**
 
@@ -551,39 +590,45 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 """
 
 
-async def _find_notes_with_filters(filters: dict[str, Any], limit: int, project: str | None) -> list[dict[str, Any]]:
+async def _find_notes_with_filters(
+    filters: dict[str, Any], limit: int, project: str | None
+) -> list[dict[str, Any]]:
     """Find notes matching the given filters."""
     try:
         # Build search query from filters
         search_text = "*"
 
-        if 'content_match' in filters:
-            search_text = filters['content_match']
+        if "content_match" in filters:
+            search_text = filters["content_match"]
 
-        search_query = SearchQuery(
-            text=search_text,
-            types=["note"]
+        search_query = SearchQuery(text=search_text, types=["note"])
+
+        response = await call_post(
+            client,
+            "/api/search",
+            params={"page": 1, "page_size": min(limit, 1000)},
+            json=search_query.model_dump(),
         )
-
-        response = await call_post(client, "/api/search", params={"page": 1, "page_size": min(limit, 1000)}, json=search_query.model_dump())
 
         if not response:
             return []
 
         response_data = response.json()
-        if not hasattr(response_data, 'results') or not response_data.results:
+        if not hasattr(response_data, "results") or not response_data.results:
             return []
 
         # Apply additional filters
         filtered_results = []
         for result in response_data.results:
             if _matches_filters(result, filters):
-                filtered_results.append({
-                    'id': getattr(result, 'id', ''),
-                    'title': getattr(result, 'title', ''),
-                    'file_path': getattr(result, 'file_path', ''),
-                    'type': getattr(result, 'type', ''),
-                })
+                filtered_results.append(
+                    {
+                        "id": getattr(result, "id", ""),
+                        "title": getattr(result, "title", ""),
+                        "file_path": getattr(result, "file_path", ""),
+                        "type": getattr(result, "type", ""),
+                    }
+                )
 
         return filtered_results[:limit]
 
@@ -595,18 +640,18 @@ async def _find_notes_with_filters(filters: dict[str, Any], limit: int, project:
 def _matches_filters(result, filters: dict[str, Any]) -> bool:
     """Check if a result matches the given filters."""
     # Folder filter
-    if 'folder' in filters:
-        file_path = getattr(result, 'file_path', '')
-        if not file_path.startswith(filters['folder']):
+    if "folder" in filters:
+        file_path = getattr(result, "file_path", "")
+        if not file_path.startswith(filters["folder"]):
             return False
 
     # Tags filter (placeholder - would need tag data in results)
-    if 'tags' in filters:
+    if "tags" in filters:
         # This would require tags to be included in search results
         pass
 
     # Date filters
-    if 'created_after' in filters or 'created_before' in filters:
+    if "created_after" in filters or "created_before" in filters:
         # Would need created_at date in results
         pass
 

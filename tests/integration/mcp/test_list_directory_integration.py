@@ -177,7 +177,9 @@ async def test_list_directory_with_depth(mcp_server, app):
         assert "[FOLDER] ml" in list_text or "📁 ml" in list_text
         assert "[DOC] Research_Index.md" in list_text or "📄 Research_Index.md" in list_text
         assert "ML" in list_text  # ML Overview title should appear
-        assert "[FOLDER] algorithms" in list_text or "📁 algorithms" in list_text  # Should show nested dirs within depth
+        assert (
+            "[FOLDER] algorithms" in list_text or "📁 algorithms" in list_text
+        )  # Should show nested dirs within depth
 
 
 @pytest.mark.asyncio

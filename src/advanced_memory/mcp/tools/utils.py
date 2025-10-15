@@ -23,9 +23,7 @@ from loguru import logger
 from mcp.server.fastmcp.exceptions import ToolError
 
 
-def get_error_message(
-    status_code: int, url: URL | str, method: str, msg: str | None = None
-) -> str:
+def get_error_message(status_code: int, url: URL | str, method: str, msg: str | None = None) -> str:
     """Get a friendly error message based on the HTTP status code.
 
     Args:
@@ -559,6 +557,7 @@ async def wait_for_migration_or_return_status(
                 return None
             # Configurable polling interval
             import os
+
             poll_interval = float(os.getenv("SYNC_POLL_INTERVAL", "0.1"))
             await asyncio.sleep(poll_interval)
 
@@ -570,7 +569,9 @@ async def wait_for_migration_or_return_status(
                 error_msg = project_status.error or "Unknown sync error"
                 return f"[ERROR] Sync failed for project '{project_name}': {error_msg}"
             elif project_status:
-                return f"[STATUS] Project '{project_name}' is still syncing: {project_status.message}"
+                return (
+                    f"[STATUS] Project '{project_name}' is still syncing: {project_status.message}"
+                )
             else:
                 return f"[WARNING] Project '{project_name}' status unknown"
         else:
@@ -586,17 +587,32 @@ def sanitize_unicode_content(content: str) -> str:
     Sanitize Unicode characters that cause JSON parsing issues in Claude Desktop.
     """
     replacements = {
-        '[UNICODE]': '[OK]', '[UNICODE][UNICODE]': '[WARNING]',
-        '[TARGET]': '[TARGET]', '[FIX]': '[FIX]', '[FAST]': '[FAST]', '[LAUNCH]': '[LAUNCH]', '[SUCCESS]': '[SUCCESS]',
-        '[FOLDER]': '[FOLDER]', '[NOTE]': '[NOTE]', '[LIST]': '[LIST]',
-        '[UNICODE]YZ[UNICODE]': '[TARGET]', '[UNICODE]Y"[UNICODE]': '[FIX]', '[UNICODE]Y"<': '[INFO]', '[UNICODE]Ys?': '[STATUS]',
-        '[UNICODE]Y"^': '[METRIC]', 's[UNICODE]': '[NEXT]', 'o.': '[OK]', '?': '[CHECK]'
+        "[UNICODE]": "[OK]",
+        "[UNICODE][UNICODE]": "[WARNING]",
+        "[TARGET]": "[TARGET]",
+        "[FIX]": "[FIX]",
+        "[FAST]": "[FAST]",
+        "[LAUNCH]": "[LAUNCH]",
+        "[SUCCESS]": "[SUCCESS]",
+        "[FOLDER]": "[FOLDER]",
+        "[NOTE]": "[NOTE]",
+        "[LIST]": "[LIST]",
+        "[UNICODE]YZ[UNICODE]": "[TARGET]",
+        '[UNICODE]Y"[UNICODE]': "[FIX]",
+        '[UNICODE]Y"<': "[INFO]",
+        "[UNICODE]Ys?": "[STATUS]",
+        '[UNICODE]Y"^': "[METRIC]",
+        "s[UNICODE]": "[NEXT]",
+        "o.": "[OK]",
+        "?": "[CHECK]",
     }
     sanitized = content
     for unicode_char, ascii_replacement in replacements.items():
         sanitized = sanitized.replace(unicode_char, ascii_replacement)
     try:
-        sanitized.encode('utf-8').decode('utf-8')
+        sanitized.encode("utf-8").decode("utf-8")
     except UnicodeError:
-        sanitized = ''.join(char if ord(char) < 128 or char.isspace() else '?' for char in sanitized)
+        sanitized = "".join(
+            char if ord(char) < 128 or char.isspace() else "?" for char in sanitized
+        )
     return sanitized

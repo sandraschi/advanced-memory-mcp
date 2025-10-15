@@ -29,10 +29,12 @@ class TestTyporaRPCClient:
     async def test_successful_call(self, client):
         """Test successful JSON-RPC call."""
 
-        with patch('websockets.connect') as mock_connect:
+        with patch("websockets.connect") as mock_connect:
             mock_ws = AsyncMock()
             mock_ws.send = AsyncMock()
-            mock_ws.recv = AsyncMock(return_value='{"jsonrpc": "2.0", "id": 1, "result": {"content": "test content"}}')
+            mock_ws.recv = AsyncMock(
+                return_value='{"jsonrpc": "2.0", "id": 1, "result": {"content": "test content"}}'
+            )
             mock_connect.return_value.__aenter__.return_value = mock_ws
 
             result = await client.call("getContent")
@@ -43,10 +45,12 @@ class TestTyporaRPCClient:
     @pytest.mark.asyncio
     async def test_error_response(self, client):
         """Test handling of JSON-RPC error response."""
-        with patch('websockets.connect') as mock_connect:
+        with patch("websockets.connect") as mock_connect:
             mock_ws = AsyncMock()
             mock_ws.send = AsyncMock()
-            mock_ws.recv = AsyncMock(return_value='{"jsonrpc": "2.0", "id": 1, "error": {"code": -32601, "message": "Method not found"}}')
+            mock_ws.recv = AsyncMock(
+                return_value='{"jsonrpc": "2.0", "id": 1, "error": {"code": -32601, "message": "Method not found"}}'
+            )
             mock_connect.return_value.__aenter__.return_value = mock_ws
 
             result = await client.call("invalidMethod")
@@ -57,7 +61,7 @@ class TestTyporaRPCClient:
     @pytest.mark.asyncio
     async def test_connection_failure(self, client):
         """Test connection failure handling."""
-        with patch('websockets.connect', side_effect=Exception("Connection refused")):
+        with patch("websockets.connect", side_effect=Exception("Connection refused")):
             result = await client.call("getContent")
 
             assert result["success"] is False
@@ -70,7 +74,7 @@ class TestTyporaControlOperations:
     @pytest.fixture
     def mock_client(self):
         """Mock the global typora_client."""
-        with patch('advanced_memory.mcp.tools.typora_control.typora_client') as mock_client:
+        with patch("advanced_memory.mcp.tools.typora_control.typora_client") as mock_client:
             yield mock_client
 
     @pytest.mark.asyncio
@@ -100,7 +104,9 @@ class TestTyporaControlOperations:
     @pytest.mark.asyncio
     async def test_get_content_operation(self, mock_client):
         """Test get_content operation."""
-        mock_client.call = AsyncMock(return_value={"success": True, "result": "# Test Content\n\nSome content"})
+        mock_client.call = AsyncMock(
+            return_value={"success": True, "result": "# Test Content\n\nSome content"}
+        )
 
         result = await typora_control.fn("get_content")
 
@@ -145,15 +151,19 @@ class TestTyporaControlOperations:
     async def test_batch_export_operation(self, mock_client):
         """Test batch_export operation."""
         # Mock file opening and export calls
-        mock_client.call = AsyncMock(side_effect=[
-            {"success": True},  # openFile call 1
-            {"success": True},  # export call 1
-            {"success": True},  # openFile call 2
-            {"success": True},  # export call 2
-        ])
+        mock_client.call = AsyncMock(
+            side_effect=[
+                {"success": True},  # openFile call 1
+                {"success": True},  # export call 1
+                {"success": True},  # openFile call 2
+                {"success": True},  # export call 2
+            ]
+        )
 
         files = ["/test/file1.md", "/test/file2.md"]
-        result = await typora_control.fn("batch_export", files=files, format="html", output_path="/exports")
+        result = await typora_control.fn(
+            "batch_export", files=files, format="html", output_path="/exports"
+        )
 
         assert "[UNICODE][UNICODE] **Batch Export Completed**" in result
         assert "**Files Processed**: 2" in result
@@ -186,10 +196,12 @@ class TestTyporaControlOperations:
     @pytest.mark.asyncio
     async def test_content_analysis_operation(self, mock_client):
         """Test content_analysis operation."""
-        mock_client.call = AsyncMock(return_value={
-            "success": True,
-            "result": "# Heading 1\n\nSome content\n\n## Heading 2\n\n[Link](url)\n\n```code\nblock\n```"
-        })
+        mock_client.call = AsyncMock(
+            return_value={
+                "success": True,
+                "result": "# Heading 1\n\nSome content\n\n## Heading 2\n\n[Link](url)\n\n```code\nblock\n```",
+            }
+        )
 
         result = await typora_control.fn("content_analysis")
 
@@ -205,7 +217,7 @@ class TestUtilityFunctions:
     @pytest.mark.asyncio
     async def test_check_typora_connection_success(self):
         """Test successful connection check."""
-        with patch('advanced_memory.mcp.tools.typora_control.typora_client') as mock_client:
+        with patch("advanced_memory.mcp.tools.typora_control.typora_client") as mock_client:
             mock_client.call = AsyncMock(return_value={"success": True})
 
             result = await check_typora_connection()
@@ -214,7 +226,7 @@ class TestUtilityFunctions:
     @pytest.mark.asyncio
     async def test_check_typora_connection_failure(self):
         """Test failed connection check."""
-        with patch('advanced_memory.mcp.tools.typora_control.typora_client') as mock_client:
+        with patch("advanced_memory.mcp.tools.typora_control.typora_client") as mock_client:
             mock_client.call.side_effect = Exception("Connection failed")
 
             result = await check_typora_connection()
@@ -223,13 +235,25 @@ class TestUtilityFunctions:
     @pytest.mark.asyncio
     async def test_get_typora_status_connected(self):
         """Test getting Typora status when connected."""
-        with patch('advanced_memory.mcp.tools.typora_control.check_typora_connection', return_value=True), \
-             patch('advanced_memory.mcp.tools.typora_control.typora_client') as mock_client:
-
-            mock_client.call = AsyncMock(side_effect=[
-                {"success": True, "result": {"filePath": "/test/file.md", "title": "Test"}},  # metadata
-                {"success": True, "result": {"current": "dark", "themes": ["light", "dark"]}}  # themes
-            ])
+        with (
+            patch(
+                "advanced_memory.mcp.tools.typora_control.check_typora_connection",
+                return_value=True,
+            ),
+            patch("advanced_memory.mcp.tools.typora_control.typora_client") as mock_client,
+        ):
+            mock_client.call = AsyncMock(
+                side_effect=[
+                    {
+                        "success": True,
+                        "result": {"filePath": "/test/file.md", "title": "Test"},
+                    },  # metadata
+                    {
+                        "success": True,
+                        "result": {"current": "dark", "themes": ["light", "dark"]},
+                    },  # themes
+                ]
+            )
 
             status = await get_typora_status()
 
@@ -240,7 +264,9 @@ class TestUtilityFunctions:
     @pytest.mark.asyncio
     async def test_get_typora_status_disconnected(self):
         """Test getting Typora status when disconnected."""
-        with patch('advanced_memory.mcp.tools.typora_control.check_typora_connection', return_value=False):
+        with patch(
+            "advanced_memory.mcp.tools.typora_control.check_typora_connection", return_value=False
+        ):
             status = await get_typora_status()
 
             assert status["connection"] is False

@@ -59,7 +59,7 @@ async def test_note_unicode_content(app):
 
     # Read back should preserve unicode (normalize line endings for cross-platform compatibility)
     result = await read_note.fn("test/unicode-test")
-    assert content.replace('\n', '\r\n') in result
+    assert content.replace("\n", "\r\n") in result
 
 
 @pytest.mark.asyncio
@@ -452,7 +452,9 @@ class TestReadNoteSecurityValidation:
 
             assert isinstance(result, str)
             # Should not contain security error message
-            assert "# Error" not in result or "paths must stay within project boundaries" not in result
+            assert (
+                "# Error" not in result or "paths must stay within project boundaries" not in result
+            )
             # Should either succeed or fail for legitimate reasons (not found, etc.)
             # but not due to security validation
 

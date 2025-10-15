@@ -55,7 +55,9 @@ class SearchService:
 
         logger.info("Reindex complete")
 
-    async def search(self, query: SearchQuery, limit: int = 10, offset: int = 0) -> list[SearchIndexRow]:
+    async def search(
+        self, query: SearchQuery, limit: int = 10, offset: int = 0
+    ) -> list[SearchIndexRow]:
         """Search across all indexed content.
 
         Supports three modes:

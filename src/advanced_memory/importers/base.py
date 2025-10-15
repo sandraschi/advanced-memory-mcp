@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=ImportResult)
 
+
 class Importer:
     """Base class for all import services."""
 
@@ -63,9 +64,7 @@ class Importer:
         return folder_path
 
     @abstractmethod
-    def handle_error(
-        self, message: str, error: Exception | None = None
-    ) -> T:  # pragma: no cover
+    def handle_error(self, message: str, error: Exception | None = None) -> T:  # pragma: no cover
         """Handle errors during import.
 
         Args:

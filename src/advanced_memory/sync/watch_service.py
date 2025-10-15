@@ -21,15 +21,29 @@ IGNORE_PATTERNS = {
     # Node.js
     "node_modules",
     # Build outputs
-    "dist", "build", "target", "out", ".next", ".nuxt",
+    "dist",
+    "build",
+    "target",
+    "out",
+    ".next",
+    ".nuxt",
     # Python
-    "__pycache__", ".pytest_cache", ".tox", "venv", ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".tox",
+    "venv",
+    ".venv",
     # Other package managers / build tools
-    "vendor", ".gradle", ".cargo", "coverage",
+    "vendor",
+    ".gradle",
+    ".cargo",
+    "coverage",
     # IDE and editor files
-    ".vscode", ".idea",
+    ".vscode",
+    ".idea",
     # OS files
-    ".DS_Store", "Thumbs.db"
+    ".DS_Store",
+    "Thumbs.db",
 }
 
 

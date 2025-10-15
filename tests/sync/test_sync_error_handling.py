@@ -1,6 +1,5 @@
 """Test sync error handling for corrupted and weird files."""
 
-
 import pytest
 
 

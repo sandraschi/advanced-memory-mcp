@@ -30,6 +30,7 @@ from typing import Any
 
 try:
     import structlog  # type: ignore[import]
+
     logger = structlog.get_logger(__name__)
     HAS_STRUCTLOG = True
 except ImportError:
@@ -40,6 +41,7 @@ except ImportError:
 
 class SyncState(Enum):
     """Sync states with clear semantics."""
+
     INITIALIZING = "initializing"
     COUNTING = "counting"
     SCANNING = "scanning"
@@ -55,6 +57,7 @@ class SyncState(Enum):
 @dataclass
 class SyncMetrics:
     """Sync performance metrics."""
+
     files_total: int = 0
     files_scanned: int = 0
     files_per_second: float = 0.0
@@ -131,9 +134,11 @@ class SyncHealthMonitor:
         self._monitor_task: asyncio.Task | None = None
         self._is_monitoring = False
 
-        self._log("sync_monitor_initialized",
-                  project_path=str(self.project_path),
-                  stall_timeout=stall_timeout)
+        self._log(
+            "sync_monitor_initialized",
+            project_path=str(self.project_path),
+            stall_timeout=stall_timeout,
+        )
 
     def _log(self, event: str, level: str = "info", **kwargs) -> None:  # type: ignore[no-untyped-def]
         """Log with structured or standard logging."""
@@ -151,9 +156,7 @@ class SyncHealthMonitor:
 
             count = len(list(self.project_path.rglob("*.md")))
 
-            self._log("file_count_complete",
-                     count=count,
-                     path=str(self.project_path))
+            self._log("file_count_complete", count=count, path=str(self.project_path))
 
             return count
 
@@ -191,17 +194,12 @@ class SyncHealthMonitor:
                 return True
 
             self.state = SyncState.SCANNING
-            self._log("scan_started",
-                     total_files=self.metrics.files_total,
-                     state=self.state.value)
+            self._log("scan_started", total_files=self.metrics.files_total, state=self.state.value)
 
             return True
 
         except Exception as e:
-            self._log("scan_start_failed",
-                     level="error",
-                     error=str(e),
-                     error_type=type(e).__name__)
+            self._log("scan_start_failed", level="error", error=str(e), error_type=type(e).__name__)
             return False
 
     def update_scan_progress(self, files_scanned: int) -> None:
@@ -210,15 +208,15 @@ class SyncHealthMonitor:
 
         if files_scanned == self.metrics.files_total:
             self.state = SyncState.COMPLETED
-            self._log("scan_completed",
-                     files=files_scanned,
-                     duration=self.metrics.runtime_seconds)
+            self._log("scan_completed", files=files_scanned, duration=self.metrics.runtime_seconds)
         elif files_scanned % 100 == 0:
             # Log every 100 files
-            self._log("scan_progress",
-                     scanned=files_scanned,
-                     total=self.metrics.files_total,
-                     percent=self.metrics.progress_percent)
+            self._log(
+                "scan_progress",
+                scanned=files_scanned,
+                total=self.metrics.files_total,
+                percent=self.metrics.progress_percent,
+            )
 
     def _add_error(self, error_type: str, message: str, trace: str = "") -> None:
         """Add error to error log."""
@@ -231,10 +229,7 @@ class SyncHealthMonitor:
         self.errors.append(error)
         self.metrics.errors_count += 1
 
-        self._log("error_logged",
-                 level="error",
-                 error_type=error_type,
-                 message=message)
+        self._log("error_logged", level="error", error_type=error_type, message=message)
 
     async def start_monitoring(self) -> None:
         """Start background monitoring task."""
@@ -266,42 +261,43 @@ class SyncHealthMonitor:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                self._log("monitor_error",
-                         level="error",
-                         error=str(e))
+                self._log("monitor_error", level="error", error=str(e))
 
     async def _check_health(self) -> None:
         """Perform health check."""
         # Check for stall
         if self.state == SyncState.SCANNING:
             if self.metrics.time_since_progress > self.stall_timeout:
-                self._log("sync_stalled",
-                         level="warning",
-                         time_since_progress=self.metrics.time_since_progress,
-                         files_scanned=self.metrics.files_scanned)
+                self._log(
+                    "sync_stalled",
+                    level="warning",
+                    time_since_progress=self.metrics.time_since_progress,
+                    files_scanned=self.metrics.files_scanned,
+                )
 
                 self.state = SyncState.STALLED
                 await self._attempt_recovery()
 
         # Check watcher health
-        if self.watcher and hasattr(self.watcher, 'is_alive'):
+        if self.watcher and hasattr(self.watcher, "is_alive"):
             if not self.watcher.is_alive():
-                self._log("watcher_dead",
-                         level="error")
+                self._log("watcher_dead", level="error")
                 await self._attempt_recovery()
 
     async def _attempt_recovery(self):
         """Attempt to recover from errors."""
         if self.recovery_attempts >= self.max_recovery_attempts:
-            self._log("max_recovery_attempts_reached",
-                     level="error",
-                     attempts=self.recovery_attempts)
+            self._log(
+                "max_recovery_attempts_reached", level="error", attempts=self.recovery_attempts
+            )
             return
 
         self.recovery_attempts += 1
-        self._log("attempting_recovery",
-                 attempt=self.recovery_attempts,
-                 max_attempts=self.max_recovery_attempts)
+        self._log(
+            "attempting_recovery",
+            attempt=self.recovery_attempts,
+            max_attempts=self.max_recovery_attempts,
+        )
 
         try:
             # Reset state
@@ -312,14 +308,12 @@ class SyncHealthMonitor:
             # Restart scan
             self.start_scan()
 
-            self._log("recovery_successful",
-                     attempt=self.recovery_attempts)
+            self._log("recovery_successful", attempt=self.recovery_attempts)
 
         except Exception as e:
-            self._log("recovery_failed",
-                     level="error",
-                     attempt=self.recovery_attempts,
-                     error=str(e))
+            self._log(
+                "recovery_failed", level="error", attempt=self.recovery_attempts, error=str(e)
+            )
 
     def get_health_report(self) -> dict[str, Any]:
         """
@@ -329,7 +323,8 @@ class SyncHealthMonitor:
             Dictionary with health status, metrics, and diagnostics
         """
         return {
-            "healthy": self.state not in [
+            "healthy": self.state
+            not in [
                 SyncState.ERROR_PERMISSION,
                 SyncState.ERROR_NOT_FOUND,
                 SyncState.ERROR_TIMEOUT,
@@ -348,7 +343,9 @@ class SyncHealthMonitor:
             },
             "watcher": {
                 "exists": self.watcher is not None,
-                "alive": self.watcher.is_alive() if self.watcher and hasattr(self.watcher, 'is_alive') else None,
+                "alive": self.watcher.is_alive()
+                if self.watcher and hasattr(self.watcher, "is_alive")
+                else None,
             },
             "errors": self.errors[-10:],  # Last 10 errors
             "recovery_attempts": self.recovery_attempts,
@@ -368,7 +365,7 @@ class SyncHealthMonitor:
         if self.state == SyncState.STALLED:
             recs.append("🐛 Sync appears stalled - automatic recovery attempted")
 
-        if self.watcher and hasattr(self.watcher, 'is_alive') and not self.watcher.is_alive():
+        if self.watcher and hasattr(self.watcher, "is_alive") and not self.watcher.is_alive():
             recs.append("💀 Watcher is dead - restart server required")
 
         if self.metrics.files_per_second < 1 and self.metrics.files_scanned > 0:
@@ -389,33 +386,33 @@ class SyncHealthMonitor:
         output = f"""
 # Sync Health Report
 
-**Status:** {'✅ HEALTHY' if report['healthy'] else '❌ UNHEALTHY'}
-**State:** {report['state'].upper()}
+**Status:** {"✅ HEALTHY" if report["healthy"] else "❌ UNHEALTHY"}
+**State:** {report["state"].upper()}
 
 ## Metrics
-- **Progress:** {report['metrics']['files_scanned']} / {report['metrics']['files_total']} ({report['metrics']['progress_percent']:.1f}%)
-- **Speed:** {report['metrics']['files_per_second']:.2f} files/sec
-- **Runtime:** {report['metrics']['runtime_seconds']:.1f} seconds
-- **Last Progress:** {report['metrics']['time_since_progress']:.1f} seconds ago
-- **Errors:** {report['metrics']['errors_count']}
+- **Progress:** {report["metrics"]["files_scanned"]} / {report["metrics"]["files_total"]} ({report["metrics"]["progress_percent"]:.1f}%)
+- **Speed:** {report["metrics"]["files_per_second"]:.2f} files/sec
+- **Runtime:** {report["metrics"]["runtime_seconds"]:.1f} seconds
+- **Last Progress:** {report["metrics"]["time_since_progress"]:.1f} seconds ago
+- **Errors:** {report["metrics"]["errors_count"]}
 
 ## Watcher
-- **Status:** {'ALIVE' if report['watcher']['alive'] else 'DEAD' if report['watcher']['exists'] else 'NOT STARTED'}
+- **Status:** {"ALIVE" if report["watcher"]["alive"] else "DEAD" if report["watcher"]["exists"] else "NOT STARTED"}
 
 ## Recent Errors
 """
 
-        if report['errors']:
-            for err in report['errors']:
+        if report["errors"]:
+            for err in report["errors"]:
                 output += f"- [{err['timestamp']}] {err['type']}: {err['message']}\n"
         else:
             output += "- None\n"
 
         output += "\n## Recommendations\n"
-        for rec in report['recommendations']:
+        for rec in report["recommendations"]:
             output += f"- {rec}\n"
 
-        if report['recovery_attempts'] > 0:
+        if report["recovery_attempts"] > 0:
             output += f"\n**Recovery Attempts:** {report['recovery_attempts']}\n"
 
         return output
@@ -423,7 +420,6 @@ class SyncHealthMonitor:
 
 # Example usage in MCP server
 if __name__ == "__main__":
-
     # Demo
     monitor = SyncHealthMonitor("/tmp/test_project")
 
@@ -440,4 +436,3 @@ if __name__ == "__main__":
     else:
         print("Scan failed to start")
         print(monitor.format_health_report())
-

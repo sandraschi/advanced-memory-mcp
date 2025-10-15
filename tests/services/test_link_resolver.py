@@ -294,6 +294,7 @@ async def test_exact_match_types_in_strict_mode(link_resolver, test_entities):
 
     # 3. Exact file path match (use correct path separator for platform)
     import os
+
     file_path = os.path.join("components", "Core_Service.md")
     result = await link_resolver.resolve_link(file_path, strict=True)
     assert result is not None
@@ -301,6 +302,7 @@ async def test_exact_match_types_in_strict_mode(link_resolver, test_entities):
 
     # 4. Folder/title pattern with .md extension added (use correct filename with spaces)
     import os
+
     folder_path = os.path.join("components", "Core Service")
     result = await link_resolver.resolve_link(folder_path, strict=True)
     assert result is not None

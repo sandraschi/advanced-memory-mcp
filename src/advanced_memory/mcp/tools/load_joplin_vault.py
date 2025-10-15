@@ -135,7 +135,7 @@ async def load_joplin_vault(
             preserve_structure,
             convert_links,
             skip_existing,
-            project
+            project,
         )
 
         return result
@@ -169,16 +169,16 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
                         filename = item.name
                         file_path = str(item)
 
-                        if filename.endswith('.md'):
+                        if filename.endswith(".md"):
                             base_name = filename[:-3]  # Remove .md
                             if base_name not in file_groups:
                                 file_groups[base_name] = {}
-                            file_groups[base_name]['md'] = file_path
-                        elif filename.endswith('.json'):
+                            file_groups[base_name]["md"] = file_path
+                        elif filename.endswith(".json"):
                             base_name = filename[:-5]  # Remove .json
                             if base_name not in file_groups:
                                 file_groups[base_name] = {}
-                            file_groups[base_name]['json'] = file_path
+                            file_groups[base_name]["json"] = file_path
                     elif item.is_dir():
                         # Directory - recurse
                         subfiles = scan_recursive(str(item))
@@ -186,13 +186,15 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
 
                 # Only include complete pairs (both .md and .json)
                 for base_name, file_dict in file_groups.items():
-                    if 'md' in file_dict and 'json' in file_dict:
-                        files.append({
-                            'md': file_dict['md'],
-                            'json': file_dict['json'],
-                            'base_name': base_name,
-                            'directory': current_path
-                        })
+                    if "md" in file_dict and "json" in file_dict:
+                        files.append(
+                            {
+                                "md": file_dict["md"],
+                                "json": file_dict["json"],
+                                "base_name": base_name,
+                                "directory": current_path,
+                            }
+                        )
 
             except Exception as e:
                 logger.warning(f"Error scanning directory {current_path}: {e}")
@@ -202,10 +204,10 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
             joplin_files_raw = scan_recursive(str(export_path))
             [
                 {
-                    'md': Path(f['md']),
-                    'json': Path(f['json']),
-                    'base_name': f['base_name'],
-                    'directory': f['directory']
+                    "md": Path(f["md"]),
+                    "json": Path(f["json"]),
+                    "base_name": f["base_name"],
+                    "directory": f["directory"],
                 }
                 for f in joplin_files_raw
             ]
@@ -222,15 +224,15 @@ async def _build_notebook_mapping(joplin_files: list[dict[str, Path]]) -> dict[s
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
+            metadata = _read_joplin_metadata(file_info["json"])
 
             # Joplin stores parent relationships
-            parent_id = metadata.get('parent_id', '')
+            parent_id = metadata.get("parent_id", "")
 
             if parent_id:
                 # For simplicity, we'll use the directory structure
                 # In a full implementation, you'd resolve parent relationships
-                notebook_path = file_info['directory']
+                notebook_path = file_info["directory"]
                 notebook_mapping[parent_id] = notebook_path
 
         except Exception as e:
@@ -248,22 +250,24 @@ async def _process_joplin_import(
     preserve_structure: bool,
     convert_links: bool,
     skip_existing: bool,
-    project: str | None
+    project: str | None,
 ) -> str:
     """Process the Joplin export import with all files."""
 
     # Track import statistics
     stats: dict[str, Any] = {
-        'total_files': len(joplin_files),
-        'imported_files': 0,
-        'skipped_files': 0,
-        'failed_files': 0,
-        'converted_links': 0,
-        'folders_created': set()
+        "total_files": len(joplin_files),
+        "imported_files": 0,
+        "skipped_files": 0,
+        "failed_files": 0,
+        "converted_links": 0,
+        "folders_created": set(),
     }
 
     # Build file mapping for link conversion
-    file_mapping = await _build_file_mapping(export_path, joplin_files, destination_folder, preserve_structure)
+    file_mapping = await _build_file_mapping(
+        export_path, joplin_files, destination_folder, preserve_structure
+    )
 
     # Process Joplin files
     processed_files = []
@@ -271,8 +275,8 @@ async def _process_joplin_import(
     for file_info in joplin_files:
         try:
             # Read metadata and content
-            metadata = _read_joplin_metadata(file_info['json'])
-            content = file_info['md'].read_text(encoding='utf-8')
+            metadata = _read_joplin_metadata(file_info["json"])
+            content = file_info["md"].read_text(encoding="utf-8")
 
             # Calculate destination path
             dest_path = _calculate_destination_path(
@@ -283,56 +287,52 @@ async def _process_joplin_import(
             if skip_existing:
                 try:
                     existing = await search_notes.fn(
-                        query=dest_path,
-                        search_type="permalink",
-                        project=project
+                        query=dest_path, search_type="permalink", project=project
                     )
                     if existing.results:
                         logger.info(f"Skipping existing note: {dest_path}")
-                        stats['skipped_files'] += 1
+                        stats["skipped_files"] += 1
                         continue
                 except Exception:
                     pass  # Continue with import if search fails
 
             # Get title from metadata or content
-            title = metadata.get('title', _extract_title_from_content(content))
+            title = metadata.get("title", _extract_title_from_content(content))
 
             # Process content (convert links, add metadata)
             processed_content, link_conversions = _process_content(
                 content, convert_links, file_mapping, metadata
             )
-            stats['converted_links'] += link_conversions
+            stats["converted_links"] += link_conversions
 
             # Create the note
             await write_note.fn(
-                title=title,
-                content=processed_content,
-                folder=dest_path,
-                project=project
+                title=title, content=processed_content, folder=dest_path, project=project
             )
 
-            stats['imported_files'] += 1
-            processed_files.append({
-                'original_path': str(file_info['md'].relative_to(export_path)),
-                'destination_path': dest_path,
-                'title': title,
-                'id': metadata.get('id', 'unknown'),
-                'links_converted': link_conversions if convert_links else 0
-            })
+            stats["imported_files"] += 1
+            processed_files.append(
+                {
+                    "original_path": str(file_info["md"].relative_to(export_path)),
+                    "destination_path": dest_path,
+                    "title": title,
+                    "id": metadata.get("id", "unknown"),
+                    "links_converted": link_conversions if convert_links else 0,
+                }
+            )
 
             # Track folder creation
             folder_path = dest_path
-            while '/' in folder_path:
-                folder_path = folder_path.rsplit('/', 1)[0]
-                stats['folders_created'].add(folder_path)
+            while "/" in folder_path:
+                folder_path = folder_path.rsplit("/", 1)[0]
+                stats["folders_created"].add(folder_path)
 
         except Exception as e:
             logger.error(f"Failed to import {file_info['md']}: {e}")
-            stats['failed_files'] += 1
-            processed_files.append({
-                'original_path': str(file_info['md'].relative_to(export_path)),
-                'error': str(e)
-            })
+            stats["failed_files"] += 1
+            processed_files.append(
+                {"original_path": str(file_info["md"].relative_to(export_path)), "error": str(e)}
+            )
 
     # Generate summary report
     return _generate_import_report(stats, processed_files, str(export_path), destination_folder)
@@ -341,7 +341,7 @@ async def _process_joplin_import(
 def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
     """Read and parse Joplin JSON metadata."""
     try:
-        with open(json_path, encoding='utf-8') as f:
+        with open(json_path, encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
         logger.warning(f"Error reading Joplin metadata {json_path}: {e}")
@@ -350,11 +350,11 @@ def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
 
 def _extract_title_from_content(content: str) -> str:
     """Extract title from markdown content."""
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Look for first heading
     for line in lines:
-        if line.startswith('# '):
+        if line.startswith("# "):
             return line[2:].strip()
 
     # Fallback to first line
@@ -365,15 +365,15 @@ async def _build_file_mapping(
     export_path: Path,
     joplin_files: list[dict[str, Path]],
     destination_folder: str,
-    preserve_structure: bool
+    preserve_structure: bool,
 ) -> dict[str, str]:
     """Build mapping from Joplin IDs to new Advanced Memory paths for link conversion."""
     mapping = {}
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
-            note_id = metadata.get('id', '')
+            metadata = _read_joplin_metadata(file_info["json"])
+            note_id = metadata.get("id", "")
 
             dest_path = _calculate_destination_path(
                 file_info, export_path, destination_folder, preserve_structure, metadata
@@ -383,7 +383,9 @@ async def _build_file_mapping(
                 mapping[note_id] = dest_path
 
             # Also map by title for simpler links
-            title = metadata.get('title', _extract_title_from_content(file_info['md'].read_text(encoding='utf-8')))
+            title = metadata.get(
+                "title", _extract_title_from_content(file_info["md"].read_text(encoding="utf-8"))
+            )
             mapping[title] = dest_path
 
         except Exception as e:
@@ -398,26 +400,23 @@ def _calculate_destination_path(
     export_path: Path,
     destination_folder: str,
     preserve_structure: bool,
-    metadata: dict[str, Any]
+    metadata: dict[str, Any],
 ) -> str:
     """Calculate the destination path for a Joplin note."""
     if not preserve_structure:
         return destination_folder
 
     # Calculate relative path from export root
-    rel_path = Path(file_info['directory']).relative_to(export_path)
+    rel_path = Path(file_info["directory"]).relative_to(export_path)
 
-    if str(rel_path) == '.':
+    if str(rel_path) == ".":
         return f"{destination_folder}/{file_info['base_name']}"
     else:
         return f"{destination_folder}/{rel_path}/{file_info['base_name']}"
 
 
 def _process_content(
-    content: str,
-    convert_links: bool,
-    file_mapping: dict[str, str],
-    metadata: dict[str, Any]
+    content: str, convert_links: bool, file_mapping: dict[str, str], metadata: dict[str, Any]
 ) -> tuple[str, int]:
     """Process note content for import."""
     conversions = 0
@@ -433,11 +432,11 @@ def _process_content(
         "*Imported from Joplin export*",
         f"*Joplin ID: {metadata.get('id', 'unknown')}*",
         f"*Created: {_format_timestamp(metadata.get('created_time'))}*",
-        f"*Updated: {_format_timestamp(metadata.get('updated_time'))}*"
+        f"*Updated: {_format_timestamp(metadata.get('updated_time'))}*",
     ]
 
     # Add tags if present
-    tags = metadata.get('tags', [])
+    tags = metadata.get("tags", [])
     if tags:
         footer_lines.append(f"*Tags: {', '.join(tags)}*")
 
@@ -468,7 +467,7 @@ def _convert_joplin_links(content: str, file_mapping: dict[str, str]) -> tuple[s
 
     # Convert Joplin link format [:link](:id) or similar patterns
     # Joplin links can be in various formats, this is a basic implementation
-    pattern = r'\[:([^\]]+)\]\(:([^)]+)\)'
+    pattern = r"\[:([^\]]+)\]\(:([^)]+)\)"
     converted_content = re.sub(pattern, replace_link, content)
 
     return converted_content, conversions
@@ -481,7 +480,7 @@ def _format_timestamp(timestamp_ms: int | None) -> str:
 
     try:
         dt = datetime.fromtimestamp(timestamp_ms / 1000)
-        return dt.strftime('%Y-%m-%d %H:%M:%S')
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
     except Exception:
         return "unknown"
 
@@ -490,7 +489,7 @@ def _generate_import_report(
     stats: dict[str, Any],
     processed_files: list[dict[str, Any]],
     export_path: str,
-    destination_folder: str
+    destination_folder: str,
 ) -> str:
     """Generate a comprehensive import report."""
     lines = [
@@ -498,25 +497,27 @@ def _generate_import_report(
         f"**Source export:** {export_path}",
         f"**Destination folder:** {destination_folder}",
         f"**Import completed:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-        ""
+        "",
     ]
 
     # Statistics
-    lines.extend([
-        "## Import Statistics",
-        f"- **Total notes:** {stats['total_files']}",
-        f"- **Successfully imported:** {stats['imported_files']}",
-        f"- **Skipped (existing):** {stats['skipped_files']}",
-        f"- **Failed to import:** {stats['failed_files']}",
-        f"- **Links converted:** {stats['converted_links']}",
-        f"- **Folders created:** {len(stats['folders_created'])}",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Import Statistics",
+            f"- **Total notes:** {stats['total_files']}",
+            f"- **Successfully imported:** {stats['imported_files']}",
+            f"- **Skipped (existing):** {stats['skipped_files']}",
+            f"- **Failed to import:** {stats['failed_files']}",
+            f"- **Links converted:** {stats['converted_links']}",
+            f"- **Folders created:** {len(stats['folders_created'])}",
+            "",
+        ]
+    )
 
     # Success rate
-    total_processed = stats['imported_files'] + stats['skipped_files'] + stats['failed_files']
+    total_processed = stats["imported_files"] + stats["skipped_files"] + stats["failed_files"]
     if total_processed > 0:
-        success_rate = (stats['imported_files'] + stats['skipped_files']) / total_processed * 100
+        success_rate = (stats["imported_files"] + stats["skipped_files"]) / total_processed * 100
         lines.append(f"**Success rate:** {success_rate:.1f}%")
         lines.append("")
 
@@ -524,24 +525,34 @@ def _generate_import_report(
     if processed_files:
         lines.append("## Processed Notes")
         for file_info in processed_files[:20]:  # Limit to first 20
-            if 'error' in file_info:
-                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
+            if "error" in file_info:
+                lines.append(
+                    f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}"
+                )
             else:
-                links_text = f" ({file_info['links_converted']} links converted)" if file_info.get('links_converted', 0) > 0 else ""
-                lines.append(f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}")
+                links_text = (
+                    f" ({file_info['links_converted']} links converted)"
+                    if file_info.get("links_converted", 0) > 0
+                    else ""
+                )
+                lines.append(
+                    f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}"
+                )
 
         if len(processed_files) > 20:
             lines.append(f"- ... and {len(processed_files) - 20} more notes")
         lines.append("")
 
     # Recommendations
-    lines.extend([
-        "## Next Steps",
-        "1. **Review imported content** - Check that links and formatting converted correctly",
-        "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
-        "3. **Update remaining links** - Any unconverted Joplin links may need manual fixing",
-        "4. **Verify metadata** - Check that tags, dates, and other metadata imported correctly",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Next Steps",
+            "1. **Review imported content** - Check that links and formatting converted correctly",
+            "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
+            "3. **Update remaining links** - Any unconverted Joplin links may need manual fixing",
+            "4. **Verify metadata** - Check that tags, dates, and other metadata imported correctly",
+            "",
+        ]
+    )
 
     return "\n".join(lines)
