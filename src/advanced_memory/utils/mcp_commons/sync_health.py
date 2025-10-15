@@ -29,10 +29,11 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import structlog
+    import structlog  # type: ignore[import]
     logger = structlog.get_logger(__name__)
     HAS_STRUCTLOG = True
 except ImportError:
+    structlog = None  # type: ignore[assignment]
     logger = logging.getLogger(__name__)
     HAS_STRUCTLOG = False
 

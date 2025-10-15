@@ -28,9 +28,10 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import yaml
+    import yaml  # type: ignore[import]
     HAS_YAML = True
 except ImportError:
+    yaml = None  # type: ignore[assignment]
     HAS_YAML = False
 
 logger = logging.getLogger(__name__)
@@ -361,12 +362,12 @@ class FileValidator:
         frontmatter_text = '\n'.join(frontmatter_lines)
 
         # Try to parse as YAML
-        if HAS_YAML:
+        if HAS_YAML and yaml is not None:
             try:
-                parsed = yaml.safe_load(frontmatter_text)
+                parsed = yaml.safe_load(frontmatter_text)  # type: ignore[union-attr]
                 result.frontmatter = parsed if isinstance(parsed, dict) else {}
 
-            except yaml.YAMLError as e:
+            except yaml.YAMLError as e:  # type: ignore[union-attr]
                 if self.strict_frontmatter:
                     result.add_error(
                         f"Invalid YAML in frontmatter: {e}"
@@ -471,7 +472,7 @@ if __name__ == "__main__":
     elif path.is_dir():
         files = list(path.rglob("*.md"))
         print(f"\nValidating {len(files)} markdown files...")
-        results = validator.validate_batch(files)
+        results = validator.validate_batch([str(f) for f in files])
         print(validator.get_summary(results))
 
     else:
