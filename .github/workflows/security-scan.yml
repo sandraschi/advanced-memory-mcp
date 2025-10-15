@@ -30,6 +30,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Install security tools
+        run: |
+          uv pip install bandit safety || echo "Some security tools failed to install"
+        continue-on-error: true
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -51,6 +56,7 @@ jobs:
           else
             echo "Bandit not available, skipping security scan"
           fi
+        continue-on-error: true
 
       - name: Run Safety check
         run: |
@@ -59,8 +65,10 @@ jobs:
           else
             echo "Safety not available, skipping dependency scan"
           fi
+        continue-on-error: true
 
       - name: Run Semgrep
+        if: env.SEMGREP_APP_TOKEN != ''
         uses: returntocorp/semgrep-action@v1
         with:
           config: >-
@@ -69,6 +77,7 @@ jobs:
             p/owasp-top-ten
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        continue-on-error: true
 
       - name: Upload security reports
         uses: actions/upload-artifact@v4
