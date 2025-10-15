@@ -52,7 +52,7 @@ class Repository:
             and getattr(model, "project_id", None) is None
             and hasattr(model, "project_id")
         ):
-            model.project_id = self.project_id
+            model.project_id = self.project_id  # type: ignore[attr-defined]
 
     def get_model_data(self, entity_data: dict[str, Any]) -> dict[str, Any]:
         model_data = {
@@ -70,7 +70,7 @@ class Repository:
             Updated query with project filter if applicable
         """
         if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
-            query = query.filter(self.Model.project_id == self.project_id)
+            query = query.filter(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
         return query
 
     async def select_by_id(self, session: AsyncSession, entity_id: int) -> T | None:
@@ -309,7 +309,7 @@ class Repository:
 
             # Add project_id filter if applicable
             if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):  # pragma: no cover
-                conditions.append(self.Model.project_id == self.project_id)
+                conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -324,7 +324,7 @@ class Repository:
 
             # Add project_id filter if applicable
             if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
-                conditions.append(self.Model.project_id == self.project_id)
+                conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -345,7 +345,7 @@ class Repository:
                     and hasattr(self.Model, "project_id")
                 ):
                     query = query.where(
-                        self.Model.project_id == self.project_id
+                        self.Model.project_id == self.project_id  # type: ignore[attr-defined]
                     )  # pragma: no cover
 
             result = await session.execute(query)
