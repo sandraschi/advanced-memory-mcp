@@ -131,17 +131,24 @@ jobs:
 
       - name: Run bandit security scan
         run: uv run bandit -r src/ -f json -o bandit-report.json --skip B101,B601 || echo "Security scan completed with warnings"
+        continue-on-error: true
 
       - name: Run safety check
         run: uv run safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+        continue-on-error: true
 
       - name: Upload security reports
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: security-reports
           path: |
             bandit-report.json
             safety-report.json
+
+      - name: Security scan complete
+        if: always()
+        run: echo "Security scan completed. Check artifacts for detailed reports."
 
   build:
     name: Build Package
