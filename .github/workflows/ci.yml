@@ -44,8 +44,32 @@ jobs:
       - name: Run ruff formatting check
         run: uv run ruff format --check .
 
-      - name: Run mypy type checking
+      - name: Run mypy type checking (basic)
         run: uv run mypy src/ --ignore-missing-imports || echo "Type checking completed with warnings"
+
+      - name: Run mypy strict mode (progress tracking)
+        run: |
+          echo "=== Mypy Strict Mode Progress ==="
+          ERROR_COUNT=$(uv run mypy src/advanced_memory --strict --no-error-summary 2>&1 | grep -c "error:" || echo "0")
+          INITIAL=587
+          FIXED=$((INITIAL - ERROR_COUNT))
+          PERCENTAGE=$((100 * FIXED / INITIAL))
+          
+          echo "📊 Type Safety Metrics:"
+          echo "  • Initial errors: $INITIAL"
+          echo "  • Current errors: $ERROR_COUNT"
+          echo "  • Fixed: $FIXED errors"
+          echo "  • Progress: ${PERCENTAGE}%"
+          echo ""
+          echo "🎯 Milestones:"
+          if [ $ERROR_COUNT -lt 500 ]; then echo "  ✅ Sub-500 achieved!"; else echo "  ⏳ Sub-500 (target: 499)"; fi
+          if [ $ERROR_COUNT -lt 450 ]; then echo "  ✅ Sub-450 achieved!"; else echo "  ⏳ Sub-450 (target: 449)"; fi
+          if [ $ERROR_COUNT -lt 410 ]; then echo "  ✅ Sub-410 achieved!"; else echo "  ⏳ Sub-410 (target: 409)"; fi
+          if [ $ERROR_COUNT -lt 350 ]; then echo "  ✅ Sub-350 achieved!"; else echo "  ⏳ Sub-350 (target: 349)"; fi
+          if [ $ERROR_COUNT -eq 0 ]; then echo "  ✅ ZERO ERRORS - PERFECT TYPE SAFETY!"; else echo "  🎯 Target: 0 errors"; fi
+          echo ""
+          echo "📈 Current Grade: $(if [ $PERCENTAGE -ge 70 ]; then echo 'A+'; elif [ $PERCENTAGE -ge 50 ]; then echo 'B+'; elif [ $PERCENTAGE -ge 30 ]; then echo 'C+'; else echo 'D'; fi)"
+        continue-on-error: true
 
   test:
     name: Test Suite
