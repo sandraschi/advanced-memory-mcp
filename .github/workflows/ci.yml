@@ -163,7 +163,7 @@ jobs:
           version: "latest"
 
       - name: Install build dependencies
-        run: uv add --dev build twine
+        run: uv pip install build twine
 
       - name: Build package
         run: uv run python -m build
