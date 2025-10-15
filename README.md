@@ -43,6 +43,9 @@ enable any compatible LLM to read and write to your local knowledge base.
 - 📖 **PDF book creation** - Complete books with title pages and chapters
 - ✏️ **FREE Notepad++ editing** - Professional markdown editing with syntax highlighting
 - 🎯 **Portmanteau Tools** - **REVOLUTIONARY** architecture solving the critical "tool explosion" problem affecting the entire MCP ecosystem. While servers like office-365-mcp (50+ tools) are unusable in Cursor IDE, Advanced Memory consolidates 40+ tools into just 8 comprehensive tools with `adn_` prefix, achieving universal compatibility
+- 🎨 **Personalized Starter Zettelkästen** - Get 50-150 curated notes from day one based on your interests (developer, cooking, AI, philosophy, etc.) - no more empty systems!
+- 💰 **Cost-Conscious LLM Integration** - Choose from free FOSS LLMs (Ollama, Llama) or hybrid strategies ($10-15/month) - don't go bankrupt!
+- 🧪 **Universal Megatest Framework** - Multi-level testing (2-90 min) with user validation feature - the only MCP that tests itself!
 
 - Website: https://basicmemory.com
 - Company: https://basicmachines.co

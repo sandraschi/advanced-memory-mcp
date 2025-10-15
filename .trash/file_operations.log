@@ -6557,3 +6557,279 @@ did not find expected alphabetic or numeric character
 2025-10-10 15:13:53 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
 2025-10-10 15:14:01 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
 2025-10-10 15:14:39 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:15:15 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-10 15:15:16 | INFO     | Using in-memory SQLite database
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initializing search index
+2025-10-10 15:15:16 | INFO     | Initialized project session with default project: test-project
+2025-10-10 15:15:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:09:56 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:10:26 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | WARNING  | File too large to sync: huge.md (11.00 MB)
+2025-10-14 18:10:27 | ERROR    | Failed to sync file: path=huge.md, error_type=ValueError, error=File exceeds 10MB limit: huge.md
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | INFO     | Updating permalink for path: encoding_test.md, old_permalink: None, new_permalink: encoding-test
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:27 | WARNING  | File too large to sync: massive.md (15.00 MB)
+2025-10-14 18:10:27 | ERROR    | Failed to sync file: path=massive.md, error_type=ValueError, error=File exceeds 10MB limit: massive.md
+2025-10-14 18:10:27 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initializing search index
+2025-10-14 18:10:27 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:27 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:38 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | WARNING  | File too large to sync: huge.md (11.00 MB)
+2025-10-14 18:10:39 | ERROR    | Failed to sync file: path=huge.md, error_type=ValueError, error=File exceeds 10MB limit: huge.md
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | INFO     | Updating permalink for path: encoding_test.md, old_permalink: None, new_permalink: encoding-test
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | WARNING  | File too large to sync: massive.md (15.00 MB)
+2025-10-14 18:10:39 | ERROR    | Failed to sync file: path=massive.md, error_type=ValueError, error=File exceeds 10MB limit: massive.md
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:10:39 | WARNING  | YAML parse error in content: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:10:39 | INFO     | Updating permalink for path: bad_yaml.md, old_permalink: None, new_permalink: bad-yaml
+2025-10-14 18:10:39 | WARNING  | YAML parse error in content: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:10:39 | ERROR    | Failed to update frontmatter
+2025-10-14 18:10:39 | WARNING  | YAML parsing error in bad_yaml.md: Failed to update frontmatter: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:10:39 | INFO     | File bad_yaml.md will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter.
+2025-10-14 18:10:39 | INFO     | Using in-memory SQLite database
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initializing search index
+2025-10-14 18:10:39 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:10:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:00 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:12:00 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | WARNING  | File too large to sync: huge.md (11.00 MB)
+2025-10-14 18:12:01 | ERROR    | Failed to sync file: path=huge.md, error_type=ValueError, error=File exceeds 10MB limit: huge.md
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | INFO     | Updating permalink for path: encoding_test.md, old_permalink: None, new_permalink: encoding-test
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | WARNING  | File too large to sync: massive.md (15.00 MB)
+2025-10-14 18:12:01 | ERROR    | Failed to sync file: path=massive.md, error_type=ValueError, error=File exceeds 10MB limit: massive.md
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:12:01 | WARNING  | YAML parse error in content: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:12:01 | INFO     | Updating permalink for path: bad_yaml.md, old_permalink: None, new_permalink: bad-yaml
+2025-10-14 18:12:01 | WARNING  | YAML parse error in content: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:12:01 | ERROR    | Failed to update frontmatter
+2025-10-14 18:12:01 | WARNING  | YAML parsing error in bad_yaml.md: Failed to update frontmatter: Invalid YAML in frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 4, column 10:
+    invalid: [unclosed bracket
+             ^
+expected ',' or ']', but got ':'
+  in "<unicode string>", line 5, column 15:
+    mapping values: are not allowed here: problem
+                  ^
+2025-10-14 18:12:01 | INFO     | File bad_yaml.md will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter.
+2025-10-14 18:12:01 | INFO     | Using in-memory SQLite database
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initializing search index
+2025-10-14 18:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-14 18:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-14 18:28:46 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:29:22 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:29:45 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:29:52 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:49:27 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:50:15 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 18:51:53 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:32:40 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:32:57 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:33:12 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:33:51 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:34:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:36:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:38:30 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:39:42 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:40:31 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:41:23 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:42:08 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:42:59 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:43:29 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-14 23:43:50 | INFO     | Advanced Memory 1.0.0b1 (Project: main)
+2025-10-15 04:07:10 | INFO     | Advanced Memory 1.0.0b1 (Project: main)

@@ -40,22 +40,191 @@ Before ANY test operations:
 4. ✅ Display test paths for verification
 5. ✅ Require explicit confirmation if running outside pytest
 
-## 📊 Test Goals
+## 📊 Multi-Level Test Strategy
 
-### Primary Objectives
-1. **System Robustness**: Validate handling of edge cases and errors
-2. **Data Integrity**: Ensure no data loss or corruption
-3. **Performance**: Measure sync speed, search performance, export times
-4. **Error Recovery**: Test graceful degradation and recovery
-5. **Real-World Simulation**: Mimic actual user workflows
+### Test Levels (Pyramid Approach)
 
-### Success Criteria
-- ✅ All operations complete without crashes
-- ✅ Data integrity maintained (checksums match)
-- ✅ Sync never hangs (even with malformed files)
-- ✅ Error handling is graceful (logs, continues)
-- ✅ Performance within acceptable limits
-- ✅ All tests pass (100% success rate)
+```
+                   ┌─────────────────────┐
+                   │   LEVEL 5: FULL     │  90 min  (All features)
+                   │   BLAST             │
+                   └─────────────────────┘
+              ┌──────────────────────────────┐
+              │   LEVEL 4: INTEGRATION       │  45 min  (Export/Import)
+              └──────────────────────────────┘
+         ┌────────────────────────────────────────┐
+         │   LEVEL 3: ADVANCED                    │  20 min  (Search/Relations)
+         └────────────────────────────────────────┘
+    ┌──────────────────────────────────────────────────┐
+    │   LEVEL 2: STANDARD                              │  10 min  (CRUD + Multi-project)
+    └──────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│   LEVEL 1: SMOKE TEST                                      │  2 min   (Basic functions)
+└────────────────────────────────────────────────────────────┘
+```
+
+### Level 1: Smoke Test (2 minutes) ⚡
+**Purpose**: Quick validation that core system works
+
+**What's Tested**:
+- Cold start initialization
+- Create 10 simple notes
+- Read notes back
+- Basic search (5 queries)
+- Delete notes
+- Verify cleanup
+
+**Use Cases**:
+- ✅ Quick sanity check after changes
+- ✅ Pre-commit validation
+- ✅ Rapid development feedback
+- ✅ CI fast path
+
+**Run**: `pytest tests/megatest/ -v -m megatest_smoke`
+
+---
+
+### Level 2: Standard Test (10 minutes) 🔧
+**Purpose**: Validate core functionality
+
+**What's Tested**:
+- All Level 1 operations
+- Create 30 notes (simple + complex)
+- Multi-project operations (3 projects)
+- All CRUD operations (create, read, update, delete)
+- Basic search (20 queries)
+- Tag operations (add, remove, search by tag)
+- Basic edge cases (malformed frontmatter)
+
+**Use Cases**:
+- ✅ Pre-PR validation
+- ✅ Feature development testing
+- ✅ Regression prevention
+- ✅ Daily CI run
+
+**Run**: `pytest tests/megatest/ -v -m megatest_standard`
+
+---
+
+### Level 3: Advanced Test (20 minutes) 🚀
+**Purpose**: Validate advanced features
+
+**What's Tested**:
+- All Level 2 operations
+- Create 60 notes (varied complexity)
+- Advanced search (50 queries with boolean, phrases)
+- Relationship traversal (knowledge graph)
+- Context building (memory:// URLs)
+- Performance metrics collection
+- Edge cases (large files, special chars)
+
+**Use Cases**:
+- ✅ Weekly validation
+- ✅ Before minor releases
+- ✅ Performance benchmarking
+- ✅ Feature integration testing
+
+**Run**: `pytest tests/megatest/ -v -m megatest_advanced`
+
+---
+
+### Level 4: Integration Test (45 minutes) 📦
+**Purpose**: Validate import/export ecosystem
+
+**What's Tested**:
+- All Level 3 operations
+- Create 80 notes
+- **All Export Formats**:
+  - Docsify (basic + enhanced)
+  - HTML (standalone)
+  - Joplin (with metadata)
+  - Pandoc (PDF, DOCX, HTML)
+  - Archive (full backup)
+- **All Import Formats**:
+  - Obsidian vault
+  - Joplin export
+  - Notion export
+  - Evernote ENEX
+  - Archive restore
+- **Round-trip Testing**:
+  - Export → Import → Verify integrity
+
+**Use Cases**:
+- ✅ Before major releases
+- ✅ Integration validation
+- ✅ Data portability testing
+- ✅ Weekly comprehensive check
+
+**Run**: `pytest tests/megatest/ -v -m megatest_integration`
+
+---
+
+### Level 5: Full Blast (90 minutes) 💥
+**Purpose**: Complete system validation
+
+**What's Tested**:
+- All Level 4 operations
+- Create 100+ notes (all types)
+- All edge cases (30 scenarios)
+- Stress testing (high volume)
+- Concurrent operations
+- Resource exhaustion tests
+- **Working Docsify site** (validate browseable)
+- **Working HTML site** (validate links work)
+- Error recovery scenarios
+- Long-running operations
+- Comprehensive analysis
+
+**Use Cases**:
+- ✅ Before stable releases
+- ✅ Monthly comprehensive validation
+- ✅ Pre-production deployment
+- ✅ Full system certification
+
+**Run**: `pytest tests/megatest/ -v -m megatest_full`
+
+---
+
+## 🎯 Test Goals by Level
+
+### Level 1: Smoke (Quick & Dirty)
+- ✅ System initializes
+- ✅ Basic CRUD works
+- ✅ No crashes on simple operations
+- **Time**: 2 minutes
+- **Coverage**: 20% of features
+
+### Level 2: Standard
+- ✅ Multi-project works
+- ✅ All CRUD operations
+- ✅ Basic search works
+- ✅ Tag operations work
+- **Time**: 10 minutes
+- **Coverage**: 40% of features
+
+### Level 3: Advanced
+- ✅ Advanced search works
+- ✅ Knowledge graph navigation
+- ✅ Performance acceptable
+- ✅ Edge cases handled
+- **Time**: 20 minutes
+- **Coverage**: 60% of features
+
+### Level 4: Integration
+- ✅ All exports work
+- ✅ All imports work
+- ✅ Round-trip integrity
+- ✅ Data portability
+- **Time**: 45 minutes
+- **Coverage**: 80% of features
+
+### Level 5: Full Blast
+- ✅ Everything works
+- ✅ Stress tested
+- ✅ Production-ready
+- ✅ Complete confidence
+- **Time**: 90 minutes
+- **Coverage**: 100% of features
 
 ## 🏗️ Test Architecture
 
