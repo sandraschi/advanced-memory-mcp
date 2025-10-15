@@ -212,7 +212,36 @@ mkdir -p docs/testing
 - Generate ER diagram (working image)
 ```
 
-### Step 3: Implement Safety Layer (30 minutes)
+### Step 3: Choose Test Location and Cleanup Strategy (5 minutes)
+
+**Configure where tests run and how they clean up:**
+
+See `MEGATEST_LOCATION_AND_CLEANUP.md` for complete guide.
+
+**Quick decisions**:
+
+**Location**:
+- `hidden` (default) - System temp, auto-cleaned
+- `visible` - Documents folder, easy to find
+- `local` - Repo test-results, gitignored
+- `custom` - Your specified path
+
+**Cleanup**:
+- `immediate` (default) - Always delete
+- `on-success` - Keep failures for debugging
+- `archive` - Keep all with timestamps
+- `smart-archive` - Intelligent retention
+
+**Configuration**:
+```bash
+# Set environment variables
+export MEGATEST_LOCATION=local         # or hidden/visible/custom
+export MEGATEST_CLEANUP=on-success     # or immediate/archive/smart-archive
+```
+
+---
+
+### Step 4: Implement Safety Layer (30 minutes)
 
 **COPY THIS EXACTLY** - It's universal for all MCP servers:
 
