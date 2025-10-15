@@ -162,11 +162,11 @@ jobs:
         with:
           version: "latest"
 
-      - name: Install build dependencies
-        run: uv pip install build twine
+      - name: Install dependencies
+        run: uv sync --dev
 
       - name: Build package
-        run: uv run python -m build
+        run: uv build
 
       - name: Check package
         run: uv run twine check dist/*
