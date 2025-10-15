@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.2",
   "name": "advanced-memory-mcp",
-  "version": "1.0.0",
+  "version": "1.0.0b2",
   "description": "Advanced Memory MCP - A powerful knowledge management system with portmanteau tools for Cursor IDE compatibility. Consolidates 40+ tools into 8 comprehensive tools with full functionality.",
   "author": {
     "name": "Advanced Memory Team",
