@@ -53,10 +53,10 @@ jobs:
           fi
         continue-on-error: true
 
-      - name: Run Safety check
+      - name: Run Safety scan
         run: |
           if command -v safety >/dev/null 2>&1; then
-            uv run safety check --json --output safety-results.json || echo "Safety check completed with warnings"
+            uv run safety scan --output json --save-as safety-results.json || echo "Safety scan completed with warnings"
           else
             echo "Safety not available, skipping dependency scan"
           fi

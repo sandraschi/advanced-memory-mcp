@@ -39,6 +39,8 @@ dependencies = [
     "types-pyyaml>=6.0.12.20250915",
     "types-markdown>=3.9.0.20250906",
     "defusedxml>=0.7.1",
+    "starlette>=0.47.2",
+    "regex>=2025.2.10",
 ]
 
 

@@ -30,7 +30,7 @@ jobs:
       run: uv sync --dev
 
     - name: Run Safety (Python vulnerability scanner)
-      run: uv run safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+      run: uv run safety scan --output json --save-as safety-report.json || echo "Safety scan completed with warnings"
       continue-on-error: true
 
     - name: Run Bandit (Python security linter)

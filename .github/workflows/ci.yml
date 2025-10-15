@@ -133,8 +133,8 @@ jobs:
         run: uv run bandit -r src/ -f json -o bandit-report.json --skip B101,B601 || echo "Security scan completed with warnings"
         continue-on-error: true
 
-      - name: Run safety check
-        run: uv run safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+      - name: Run safety scan
+        run: uv run safety scan --output json --save-as safety-report.json || echo "Safety scan completed with warnings"
         continue-on-error: true
 
       - name: Upload security reports
