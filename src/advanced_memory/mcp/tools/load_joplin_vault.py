@@ -155,61 +155,52 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
     joplin_files = []
 
     try:
-        # Use MCP filesystem if available, otherwise direct access
-        try:
-            from mcp_filesystem import list_directory
+        # Direct filesystem access
+        def scan_recursive(current_path: str) -> list[dict[str, str]]:
+            files = []
+            try:
+                path_obj = Path(current_path)
 
-            async def scan_recursive(current_path: str) -> list[dict[str, str]]:
-                files = []
-                try:
-                    dir_contents = await list_directory(current_path)
+                # Group files by base name (without extension)
+                file_groups: dict[str, dict[str, str]] = {}
 
-                    # Group files by base name (without extension)
-                    file_groups: dict[str, dict[str, str]] = {}
-                    for line in dir_contents.split('\n'):
-                        if '[DOC]' in line:
-                            parts = line.split()
-                            if len(parts) >= 2:
-                                filename = parts[1].strip()
-                                file_path = str(Path(current_path) / filename)
+                for item in path_obj.iterdir():
+                    if item.is_file():
+                        filename = item.name
+                        file_path = str(item)
 
-                                if filename.endswith('.md'):
-                                    base_name = filename[:-3]  # Remove .md
-                                    if base_name not in file_groups:
-                                        file_groups[base_name] = {}
-                                    file_groups[base_name]['md'] = file_path
-                                elif filename.endswith('.json'):
-                                    base_name = filename[:-5]  # Remove .json
-                                    if base_name not in file_groups:
-                                        file_groups[base_name] = {}
-                                    file_groups[base_name]['json'] = file_path
+                        if filename.endswith('.md'):
+                            base_name = filename[:-3]  # Remove .md
+                            if base_name not in file_groups:
+                                file_groups[base_name] = {}
+                            file_groups[base_name]['md'] = file_path
+                        elif filename.endswith('.json'):
+                            base_name = filename[:-5]  # Remove .json
+                            if base_name not in file_groups:
+                                file_groups[base_name] = {}
+                            file_groups[base_name]['json'] = file_path
+                    elif item.is_dir():
+                        # Directory - recurse
+                        subfiles = scan_recursive(str(item))
+                        files.extend(subfiles)
 
-                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
-                            # Directory - recurse
-                            parts = line.split()
-                            if len(parts) >= 2:
-                                dirname = parts[1].strip()
-                                subdir_path = str(Path(current_path) / dirname)
-                                subfiles = await scan_recursive(subdir_path)
-                                files.extend(subfiles)
+                # Only include complete pairs (both .md and .json)
+                for base_name, file_dict in file_groups.items():
+                    if 'md' in file_dict and 'json' in file_dict:
+                        files.append({
+                            'md': file_dict['md'],
+                            'json': file_dict['json'],
+                            'base_name': base_name,
+                            'directory': current_path
+                        })
 
-                    # Only include complete pairs (both .md and .json)
-                    for base_name, file_dict in file_groups.items():
-                        if 'md' in file_dict and 'json' in file_dict:
-                            files.append({
-                                'md': file_dict['md'],
-                                'json': file_dict['json'],
-                                'base_name': base_name,
-                                'directory': current_path
-                            })
+            except Exception as e:
+                logger.warning(f"Error scanning directory {current_path}: {e}")
 
-                except Exception as e:
-                    logger.warning(f"Error scanning directory {current_path}: {e}")
+            return files
 
-                return files
-
-            joplin_files_raw = await scan_recursive(str(export_path))
-            joplin_files = [
+            joplin_files_raw = scan_recursive(str(export_path))
+            [
                 {
                     'md': Path(f['md']),
                     'json': Path(f['json']),
@@ -218,39 +209,6 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
                 }
                 for f in joplin_files_raw
             ]
-
-        except ImportError:
-            # Fallback to direct filesystem access
-            logger.warning("MCP filesystem not available, using direct access")
-
-            file_groups: dict[str, dict[str, Path]] = {}
-            for file_path in export_path.rglob("*"):
-                if file_path.is_file():
-                    if file_path.suffix.lower() == '.md':
-                        base_name = file_path.stem
-                        dir_path = str(file_path.parent)
-                        key = f"{dir_path}/{base_name}"
-                        if key not in file_groups:
-                            file_groups[key] = {}
-                        file_groups[key]['md'] = file_path
-                    elif file_path.suffix.lower() == '.json':
-                        base_name = file_path.stem
-                        dir_path = str(file_path.parent)
-                        key = f"{dir_path}/{base_name}"
-                        if key not in file_groups:
-                            file_groups[key] = {}
-                        file_groups[key]['json'] = file_path
-
-            # Only include complete pairs
-            for _key, file_dict in file_groups.items():
-                if 'md' in file_dict and 'json' in file_dict:
-                    md_path = file_dict['md']
-                    joplin_files.append({
-                        'md': md_path,
-                        'json': file_dict['json'],
-                        'base_name': md_path.stem,
-                        'directory': str(md_path.parent)
-                    })
 
     except Exception as e:
         logger.error(f"Error finding Joplin files: {e}")
@@ -377,7 +335,7 @@ async def _process_joplin_import(
             })
 
     # Generate summary report
-    return _generate_import_report(stats, processed_files, export_path, destination_folder)
+    return _generate_import_report(stats, processed_files, str(export_path), destination_folder)
 
 
 def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:

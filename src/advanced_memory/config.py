@@ -111,7 +111,7 @@ class AdvancedMemoryConfig(BaseSettings):
     def model_post_init(self, __context: Any) -> None:
         """Ensure configuration is valid after initialization."""
         # Note: Removed auto-creation of "main" project - users should explicitly create projects
-        
+
         # Ensure default project is valid
         if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
             # Set default to first available project instead of auto-creating "main"

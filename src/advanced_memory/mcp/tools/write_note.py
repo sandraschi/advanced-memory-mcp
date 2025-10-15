@@ -165,7 +165,8 @@ async def write_note(
     categories: dict[str, int] = {}
     if result.observations:
         for obs in result.observations:
-            categories[obs.category] = categories.get(obs.category, 0) + 1
+            if obs.category:  # Only count observations with categories
+                categories[obs.category] = categories.get(obs.category, 0) + 1
 
         summary.append("\n## Observations")
         for category, count in sorted(categories.items()):

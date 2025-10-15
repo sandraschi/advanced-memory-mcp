@@ -7,15 +7,15 @@ CRITICAL: This test suite must NEVER touch production data!
 All fixtures ensure complete isolation from production database and MD folders.
 """
 
-import pytest
-import tempfile
-import shutil
-from pathlib import Path
-from typing import Generator
 import hashlib
+import shutil
+import tempfile
+from collections.abc import Generator
+from pathlib import Path
+
+import pytest
 
 from advanced_memory.config import AdvancedMemoryConfig, ConfigManager
-
 
 # ============================================================================
 # SAFETY CONSTANTS - DO NOT MODIFY
@@ -36,23 +36,23 @@ PRODUCTION_PATHS_TO_PROTECT = [
 def is_production_path(path: Path) -> bool:
     """Check if a path is in production directories."""
     path = path.resolve()
-    
+
     # Check against known production paths
     for prod_path in PRODUCTION_PATHS_TO_PROTECT:
         if path == prod_path or path.is_relative_to(prod_path):
             return True
-    
+
     # Check for common production indicators
     if ".advanced-memory" in str(path) and "test" not in str(path).lower():
         return True
-    
+
     return False
 
 
 def is_safe_test_path(path: Path) -> bool:
     """Verify path is safe for testing."""
     path = path.resolve()
-    
+
     # Must be in temp, test_data, or tests directory
     safe_indicators = [
         "test_data",
@@ -62,7 +62,7 @@ def is_safe_test_path(path: Path) -> bool:
         "/tmp/",
         "temp/",
     ]
-    
+
     path_str = str(path).lower()
     return any(indicator.lower() in path_str for indicator in safe_indicators)
 
@@ -97,14 +97,14 @@ def compute_checksum_file(file_path: Path) -> str:
 def verify_not_production():
     """
     Session-level safety check - runs BEFORE any tests.
-    
+
     This fixture ensures we're not accidentally running tests
     against production data.
     """
     # Get current config (if any)
     try:
         config = ConfigManager().config
-        
+
         # Check if config points to production
         if config.database_path and is_production_path(Path(config.database_path)):
             pytest.exit(
@@ -112,7 +112,7 @@ def verify_not_production():
                 "Megatest cannot run with production configuration.",
                 returncode=1
             )
-        
+
         for project in config.projects.values():
             if is_production_path(Path(project.home)):
                 pytest.exit(
@@ -123,7 +123,7 @@ def verify_not_production():
     except Exception:
         # No config yet - safe to proceed
         pass
-    
+
     print("\n" + "=" * 60)
     print("🛡️  MEGATEST SAFETY CHECK: PASSED")
     print("=" * 60 + "\n")
@@ -133,7 +133,7 @@ def verify_not_production():
 def isolated_test_env() -> Generator[dict, None, None]:
     """
     Create completely isolated test environment.
-    
+
     Returns:
         dict with:
         - test_dir: Path to test MD folder
@@ -144,16 +144,16 @@ def isolated_test_env() -> Generator[dict, None, None]:
     temp_base = Path(tempfile.mkdtemp(prefix="megatest_"))
     test_dir = temp_base / "md_files"
     test_db = temp_base / "test.db"
-    
+
     # Create directories
     test_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # CRITICAL: Verify paths are safe
     assert is_safe_test_path(test_dir), f"Unsafe test dir: {test_dir}"
     assert is_safe_test_path(test_db), f"Unsafe test db: {test_db}"
     assert not is_production_path(test_dir), f"Test dir is production: {test_dir}"
     assert not is_production_path(test_db), f"Test db is production: {test_db}"
-    
+
     # Get production paths for monitoring
     try:
         prod_config = ConfigManager().config
@@ -162,7 +162,7 @@ def isolated_test_env() -> Generator[dict, None, None]:
     except Exception:
         prod_db = None
         prod_checksum = None
-    
+
     # Create test configuration
     test_config = AdvancedMemoryConfig(
         database_path=str(test_db),
@@ -182,7 +182,7 @@ def isolated_test_env() -> Generator[dict, None, None]:
             },
         }
     )
-    
+
     # Display test environment
     print("\n" + "╔" + "═" * 58 + "╗")
     print("║" + " " * 15 + "MEGATEST ENVIRONMENT - ISOLATED" + " " * 12 + "║")
@@ -194,7 +194,7 @@ def isolated_test_env() -> Generator[dict, None, None]:
     print("║                                                            ║")
     print("║ Status: ✅ ISOLATED - Safe to proceed                      ║")
     print("╚" + "═" * 58 + "╝\n")
-    
+
     # Yield test environment
     yield {
         "test_dir": test_dir,
@@ -202,12 +202,12 @@ def isolated_test_env() -> Generator[dict, None, None]:
         "config": test_config,
         "temp_base": temp_base,
     }
-    
+
     # CLEANUP: Verify production untouched, then delete test data
     if prod_db and prod_checksum:
         verify_production_untouched(prod_db, prod_checksum)
         print("✅ Production database verified: UNTOUCHED")
-    
+
     # Remove test data
     try:
         shutil.rmtree(temp_base)
@@ -220,22 +220,22 @@ def isolated_test_env() -> Generator[dict, None, None]:
 def megatest_context(isolated_test_env):
     """
     Megatest context with all necessary setup.
-    
+
     Provides high-level interface to test environment.
     """
     from .test_megatest_runner import MegatestContext
-    
+
     context = MegatestContext(
         test_dir=isolated_test_env["test_dir"],
         test_db=isolated_test_env["test_db"],
         config=isolated_test_env["config"],
     )
-    
+
     # Initialize (creates DB, sets up projects)
     context.initialize()
-    
+
     yield context
-    
+
     # Cleanup handled by isolated_test_env fixture
 
 
@@ -243,7 +243,7 @@ def megatest_context(isolated_test_env):
 def assert_production_safe():
     """
     Fixture that provides production safety assertion function.
-    
+
     Use in tests that perform destructive operations.
     """
     def _assert_safe(test_path: Path):
@@ -252,7 +252,7 @@ def assert_production_safe():
             pytest.fail(f"FATAL: Test attempted to use production path: {test_path}")
         if not is_safe_test_path(test_path):
             pytest.fail(f"FATAL: Test path is not safe: {test_path}")
-    
+
     return _assert_safe
 
 
@@ -284,17 +284,17 @@ def pytest_configure(config):
 def validate_test_isolation(request):
     """
     Auto-runs before EVERY test to ensure isolation.
-    
+
     This is the last line of defense against production data corruption.
     """
     # Skip for non-megatest tests
     if "megatest" not in request.node.name.lower():
         return
-    
+
     # Get isolated_test_env if available
     if "isolated_test_env" in request.fixturenames:
         env = request.getfixturevalue("isolated_test_env")
-        
+
         # Verify test paths are still safe
         assert is_safe_test_path(env["test_dir"])
         assert is_safe_test_path(env["test_db"])

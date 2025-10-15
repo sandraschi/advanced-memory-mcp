@@ -23,7 +23,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 class TyporaRPCClient:
     """WebSocket client for Typora json_rpc communication."""
 
-    def __init__(self, host: str = None, port: int = None):
+    def __init__(self, host: str | None = None, port: int | None = None):
         # Use environment variables or defaults
         self.host = host or os.getenv("TYPORA_HOST", "localhost")
         self.port = port or int(os.getenv("TYPORA_PORT", "8888"))

@@ -190,7 +190,7 @@ NOTE: Filtering may break some semantic links, but rescan rebuilds them quickly
 """
 )
 async def export_to_archive(
-    archive_path: str,
+    archive_path: str | Path,
     include_projects: list[str] | None = None,
     exclude_projects: list[str] | None = None,
     exclude_tags: list[str] | None = None,
@@ -440,7 +440,7 @@ import_from_archive("{archive_path}")
         return f"[UNICODE] **Archive Creation Failed**\n\nError: {str(e)}"
 
 
-def _format_size(bytes_size: int) -> str:
+def _format_size(bytes_size: float) -> str:
     """Format bytes to human readable size."""
     for _unit in ['B', 'KB', 'MB', 'GB']:
         if bytes_size < 1024.0:

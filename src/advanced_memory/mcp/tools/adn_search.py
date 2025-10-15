@@ -104,7 +104,7 @@ async def adn_search(
 
 async def _notes_search(query: str, page: int, page_size: int, types: list[str] | None, entity_types: list[str] | None, after_date: str | None, project: str | None) -> str:
     """Handle Advanced Memory notes search operation."""
-    from advanced_memory.mcp.tools.search_notes import search_notes
+    from advanced_memory.mcp.tools.search import search_notes
     return await search_notes(query, page, page_size, "text", types, entity_types, after_date, project)  # type: ignore[operator,no-any-return]
 
 

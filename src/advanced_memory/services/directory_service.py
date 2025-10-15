@@ -3,7 +3,9 @@
 import fnmatch
 import logging
 import os
+from collections.abc import Sequence
 
+from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.schemas.directory import DirectoryNode
 

@@ -50,7 +50,7 @@ NOTE: Can restore archives created with export_to_archive tool
 """
 )
 async def import_from_archive(
-    archive_path: str,
+    archive_path: str | Path,
     restore_mode: str = "overwrite",
     backup_existing: bool = True,
     dry_run: bool = False,
@@ -109,6 +109,7 @@ async def import_from_archive(
 
             # Create backup if requested
             backup_info = ""
+            backup_path = None
             if backup_existing:
                 backup_path = await _create_backup(config_manager)
                 backup_info = f"\n\n[UNICODE][UNICODE] **Backup Created:** {backup_path}"
@@ -263,7 +264,7 @@ async def _update_project_registry(archive_root: Path, config_manager: ConfigMan
         logger.info(f"Projects to register: {[d.name for d in project_dirs]}")
 
 
-def _format_size(bytes_size: int) -> str:
+def _format_size(bytes_size: float) -> str:
     """Format bytes to human readable size."""
     for _unit in ['B', 'KB', 'MB', 'GB']:
         if bytes_size < 1024.0:

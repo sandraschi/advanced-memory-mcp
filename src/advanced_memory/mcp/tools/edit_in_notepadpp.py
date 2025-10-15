@@ -23,8 +23,8 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.read_note import read_note
-from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.tools import read_note as mcp_read_note
+from advanced_memory.mcp.tools import write_note as mcp_write_note
 
 
 @mcp.tool(
@@ -79,7 +79,7 @@ async def edit_in_notepadpp(
     """
     try:
         # Get the note content
-        original_content = await read_note(note_identifier)
+        original_content = await mcp_read_note.fn(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 
@@ -188,7 +188,7 @@ async def import_from_notepadpp(
         edited_content = md_file.read_text(encoding='utf-8')
 
         # Get original content for comparison
-        original_content = await read_note(note_identifier)
+        original_content = await mcp_read_note.fn(note_identifier)
         if not original_content:
             return f"[UNICODE] Original note '{note_identifier}' not found."
 
@@ -204,7 +204,7 @@ The content in Notepad++ workspace is identical to the original note.
 {f"Workspace preserved at: {workspace_dir}" if keep_workspace else "Workspace cleaned up."}"""
 
         # Update the note
-        success = await write_note(note_identifier, edited_content)
+        success = await mcp_write_note.fn(title=note_identifier, content=edited_content, folder="", tags=None, entity_type="note")
         if not success:
             return "[UNICODE] Failed to update the note with edited content."
 

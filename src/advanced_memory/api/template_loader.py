@@ -23,7 +23,7 @@ TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 def _date_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Format a date using the given format string."""
     if len(args) < 1:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     timestamp = args[0]
     format_str = args[1] if len(args) > 1 else "%Y-%m-%d %H:%M"
@@ -45,7 +45,7 @@ def _date_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
 def _default_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Return a default value if the given value is None or empty."""
     if len(args) < 2:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     value = args[0]
     default_value = args[1]
@@ -58,7 +58,7 @@ def _default_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-d
 def _capitalize_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Capitalize the first letter of a string."""
     if len(args) < 1:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     text = args[0]
     if not text or not isinstance(text, str):  # pragma: no cover
@@ -72,7 +72,7 @@ def _capitalize_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untype
 def _round_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Round a number to the specified number of decimal places."""
     if len(args) < 1:
-        return ""
+        return pybars.strlist([""])
 
     value = args[0]
     decimal_places = args[1] if len(args) > 1 else 2
@@ -88,7 +88,7 @@ def _round_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def
 def _size_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Return the size/length of a collection."""
     if len(args) < 1:
-        return 0
+        return pybars.strlist(["0"])
 
     value = args[0]
     if value is None:
@@ -104,7 +104,7 @@ def _size_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
 def _json_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Convert a value to a JSON string."""
     if len(args) < 1:  # pragma: no cover
-        return "{}"
+        return pybars.strlist(["{}"])
 
     value = args[0]
     # For pybars, we need to return a SafeString to prevent HTML escaping
@@ -198,8 +198,8 @@ def _dedent_helper(this, options: dict[str, Any]) -> str:
     # Use textwrap to dedent the content and remove the extra newlines we added
     dedented = textwrap.dedent(content_str)[1:-1]
 
-    # Return as a SafeString to prevent HTML escaping
-    return pybars.strlist([dedented])  # pragma: no cover
+    # Return as a string
+    return dedented  # pragma: no cover
 
 
 class TemplateLoader:

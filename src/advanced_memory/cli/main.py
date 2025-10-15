@@ -10,6 +10,7 @@ from advanced_memory.cli.commands import (  # noqa: F401  # pragma: no cover
     import_claude_projects,
     import_memory_json,
     mcp,
+    onboard,
     project,
     status,
     sync,

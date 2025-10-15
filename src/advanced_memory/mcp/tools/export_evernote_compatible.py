@@ -7,8 +7,11 @@ from typing import Any
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.utils import call_get, call_post
+from advanced_memory.schemas.search import SearchQuery
 
 
 @mcp.tool(
@@ -113,8 +116,7 @@ async def export_evernote_compatible(
         export_evernote_compatible("export", folder_filter="notes/project", notebook_name="Project Notes")
     """
 
-    # Get the active project
-    from advanced_memory.mcp.tools.utils import get_active_project
+    # Get the active project (imported at module level)
     active_project = get_active_project(project)
     project_url = active_project.project_url
 
@@ -125,14 +127,6 @@ async def export_evernote_compatible(
     # Search for notes to export
     if query:
         # Make HTTP call to search API to find matching notes
-        from advanced_memory.mcp.async_client import client
-        from advanced_memory.mcp.project_session import get_active_project
-        from advanced_memory.mcp.tools.utils import call_post
-        from advanced_memory.schemas.search import SearchQuery
-
-        active_project = get_active_project(project)
-        project_url = active_project.project_url
-
         # Create search query
         search_query = SearchQuery(text=query)
 
@@ -157,12 +151,14 @@ async def export_evernote_compatible(
         if folder_filter:
             params["folder"] = folder_filter
 
-        response = await call_get(client, entities_url, params=params)
+        response = await call_get(client, entities_url, params=params)  # type: ignore[possibly-unbound]
         if response.status_code != 200:
             return f"Failed to retrieve entities: {response.status_code} - {response.text}"
 
         entities_data = response.json()
-        entities = entities_data.get('results', [])
+        entities_raw = entities_data.get('results', [])
+        # Convert SearchResult objects to dicts
+        entities = [entity.model_dump() if hasattr(entity, 'model_dump') else dict(entity) if hasattr(entity, '__dict__') else entity for entity in entities_raw]
 
     if not entities:
         return "No entities found to export"

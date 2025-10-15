@@ -55,6 +55,9 @@ from pathlib import Path
 
 import pytest
 import pytest_asyncio
+from fastapi import FastAPI
+from httpx import ASGITransport, AsyncClient
+
 from advanced_memory.config import AdvancedMemoryConfig, ConfigManager, ProjectConfig
 from advanced_memory.db import DatabaseType, engine_session_factory
 from advanced_memory.deps import get_app_config, get_engine_factory, get_project_config
@@ -63,8 +66,6 @@ from advanced_memory.deps import get_app_config, get_engine_factory, get_project
 from advanced_memory.mcp import tools  # noqa: F401
 from advanced_memory.models import Project
 from advanced_memory.repository.project_repository import ProjectRepository
-from fastapi import FastAPI
-from httpx import ASGITransport, AsyncClient
 
 
 @pytest_asyncio.fixture(scope="function")

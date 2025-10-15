@@ -9,9 +9,10 @@ from typing import Any
 
 from loguru import logger
 
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.tools.utils import call_post
 
 
 @mcp.tool(
@@ -211,7 +212,7 @@ async def _process_enex_file(
 
                 if entity_data:
                     # Create the note in Advanced Memory
-                    response = await call_get(project_url + "/api/memory", method='POST', json=entity_data)
+                    response = await call_post(client, project_url + "/api/memory", json=entity_data)
 
                     if response.status_code == 200:
                         result_data = response.json()
@@ -322,7 +323,7 @@ def _parse_enex_note(
 
     # Add tags if any
     if tags:
-        entity_data['tags'] = tags
+        entity_data['tags'] = tags  # type: ignore[assignment]
 
     # Add creation date as frontmatter if available
     if created_date:

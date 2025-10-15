@@ -6,10 +6,11 @@ from typing import Any
 from loguru import logger
 
 from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import SearchQuery
 
 
 @mcp.tool(
@@ -107,22 +108,24 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
         # Get all entities from search API
         search_query = SearchQuery(
             text="*",  # Get all content
-            types=["note"],
-            page=1,
-            page_size=1000
+            types=["note"]
         )
 
-        response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+        response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump())
 
-        if not response or not hasattr(response, 'results'):
+        if not response:
+            return "[UNICODE] No results found for tag analysis"
+
+        response_data = response.json()
+        if not hasattr(response_data, 'results') or not response_data.results:
             return "[UNICODE] No results found for tag analysis"
 
         # Extract tags from all entities
         tag_counter: Counter[str] = Counter()
         entities_with_tags = 0
-        total_entities = len(response.results)
+        total_entities = len(response_data.results)
 
-        for result in response.results:
+        for result in response_data.results:
             # Extract tags from entity metadata (if available in result)
             # Note: This assumes tags are included in search results
             entity_tags = getattr(result, 'tags', []) or []
@@ -364,27 +367,29 @@ async def _handle_content_validation(filters: dict[str, Any], action: dict[str, 
 
 async def _handle_project_stats(action: dict[str, Any], project: str | None) -> str:
     """Generate comprehensive project statistics."""
-    target_project = project or (await get_active_project())
+    target_project = project or get_active_project().name
 
     # Get project data
     search_query = SearchQuery(
         text="*",  # All content
-        types=["note"],
-        page=1,
-        page_size=1000
+        types=["note"]
     )
 
-    response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+    response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump())
 
-    if not response or not hasattr(response, 'results'):
+    if not response:
+        return "[UNICODE] Could not retrieve project statistics"
+
+    response_data = response.json()
+    if not hasattr(response_data, 'results') or not response_data.results:
         return "[UNICODE] Could not retrieve project statistics"
 
     # Analyze results
-    total_notes = len(response.results)
+    total_notes = len(response_data.results)
     tag_counter: Counter[str] = Counter()
     folder_counter: Counter[str] = Counter()
 
-    for result in response.results:
+    for result in response_data.results:
         # Extract tags and folders (placeholder logic)
         result_tags = getattr(result, 'tags', []) or []
         tag_counter.update(result_tags)
@@ -557,19 +562,21 @@ async def _find_notes_with_filters(filters: dict[str, Any], limit: int, project:
 
         search_query = SearchQuery(
             text=search_text,
-            types=["note"],
-            page=1,
-            page_size=min(limit, 1000)
+            types=["note"]
         )
 
-        response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+        response = await call_post(client, "/api/search", params={"page": 1, "page_size": min(limit, 1000)}, json=search_query.model_dump())
 
-        if not response or not hasattr(response, 'results'):
+        if not response:
+            return []
+
+        response_data = response.json()
+        if not hasattr(response_data, 'results') or not response_data.results:
             return []
 
         # Apply additional filters
         filtered_results = []
-        for result in response.results:
+        for result in response_data.results:
             if _matches_filters(result, filters):
                 filtered_results.append({
                     'id': getattr(result, 'id', ''),

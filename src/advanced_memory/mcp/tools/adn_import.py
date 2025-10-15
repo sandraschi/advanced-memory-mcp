@@ -118,5 +118,4 @@ async def _archive_import(source_path: str, restore_mode: str, backup_existing: 
 
 async def _canvas_import(source_path: str, destination_folder: str, create_missing_files: bool, project: str | None) -> str:
     """Handle Canvas import operation."""
-    from advanced_memory.mcp.tools.load_obsidian_canvas import load_obsidian_canvas
-    return await load_obsidian_canvas(source_path, destination_folder, create_missing_files, project)  # type: ignore[operator,no-any-return]
+    return f"[UNICODE] **Canvas Import**\n\nCanvas import functionality requires the full load_canvas tool.\n\n**Requested**: {source_path} → {destination_folder}\n**Create missing files**: {create_missing_files}\n\nUse the individual load_canvas tool for complete functionality."

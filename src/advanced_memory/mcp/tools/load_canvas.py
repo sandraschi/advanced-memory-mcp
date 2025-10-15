@@ -10,7 +10,7 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.read_content import read_content
+from advanced_memory.mcp.tools import read_content as mcp_read_content
 from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
@@ -98,7 +98,7 @@ async def load_obsidian_canvas(
         logger.info(f"Starting canvas import: {canvas_path}")
 
         # Read the canvas file
-        canvas_content = await read_content(canvas_path, project)
+        canvas_content = await mcp_read_content.fn(canvas_path, project)
         if canvas_content.get("type") == "error":
             return f"# Canvas Import Failed\n\nError reading canvas file '{canvas_path}': {canvas_content['error']}"
 

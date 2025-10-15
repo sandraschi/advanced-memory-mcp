@@ -63,7 +63,7 @@ class ObservationRepository(Repository):
         observations = result.scalars().all()
 
         # Group observations by entity_id
-        observations_by_entity: dict[str, list[Observation]] = {}
+        observations_by_entity: dict[int, list[Observation]] = {}
         for obs in observations:
             if obs.entity_id not in observations_by_entity:
                 observations_by_entity[obs.entity_id] = []

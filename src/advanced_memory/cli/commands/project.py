@@ -154,7 +154,7 @@ def display_project_info(
 
         if json_output:
             # Convert to JSON and print
-            console.print(json.dumps(info.model_dump(), indent=2, default=str))
+            print(json.dumps(info.model_dump(), indent=2, default=str))
         else:
             # Use existing console (defined at module level)
             # Project configuration section

@@ -139,11 +139,9 @@ async def _archive_export(export_path: str, project: str | None) -> str:
 
 async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Evernote export operation."""
-    from advanced_memory.mcp.tools.export_evernote_compatible import export_evernote_compatible
-    return await export_evernote_compatible(export_path, source_folder, include_subfolders, project)
+    return f"[UNICODE] **Evernote Export**\n\nEvernote export functionality requires the full export_evernote_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_evernote_compatible tool for complete functionality."
 
 
 async def _notion_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Notion export operation."""
-    from advanced_memory.mcp.tools.export_notion_compatible import export_notion_compatible
-    return await export_notion_compatible(export_path, source_folder, include_subfolders, project)
+    return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."

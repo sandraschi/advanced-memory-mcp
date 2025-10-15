@@ -1,4 +1,5 @@
 
+from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.repository.search_repository import SearchIndexRow
 from advanced_memory.schemas.memory import (
@@ -108,8 +109,8 @@ async def to_graph_context(
     )
 
 
-async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[EntitySummary | ObservationSummary | RelationSummary]:
-    search_results: list[EntitySummary | ObservationSummary | RelationSummary] = []
+async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[SearchResult]:
+    search_results: list[SearchResult] = []
     for r in results:
         entities = await entity_service.get_entities_by_id([r.entity_id, r.from_id, r.to_id])  # pyright: ignore
         search_results.append(  # type: ignore[misc]

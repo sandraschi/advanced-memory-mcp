@@ -2,6 +2,7 @@
 
 import os
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -434,7 +435,7 @@ class SyncService:
         logger.debug(f"Parsing markdown file, path: {path}, new: {new}")
 
         file_path = self.entity_parser.base_path / path
-        
+
         # Check file size before reading to prevent hanging on huge files
         try:
             file_size = file_path.stat().st_size
@@ -444,7 +445,7 @@ class SyncService:
         except OSError as e:
             logger.error(f"Cannot access file: {path}, error: {e}")
             raise
-        
+
         # Read file with encoding error handling
         try:
             file_content = file_path.read_text(encoding="utf-8")
@@ -454,8 +455,8 @@ class SyncService:
                 file_content = file_path.read_text(encoding="utf-8", errors="replace")
             except Exception as e:
                 logger.error(f"Cannot read file {path}: {e}")
-                raise ValueError(f"File is unreadable: {path}")
-        
+                raise ValueError(f"File is unreadable: {path}") from e
+
         file_contains_frontmatter = has_frontmatter(file_content)
 
         # entity markdown will always contain front matter, so it can be used up create/update the entity
@@ -464,7 +465,7 @@ class SyncService:
             entity_markdown = await self.entity_parser.parse_file(path)
         except Exception as e:
             logger.error(f"Failed to parse markdown file {path}: {type(e).__name__}: {e}")
-            raise ValueError(f"Markdown parsing failed for {path}: {e}")
+            raise ValueError(f"Markdown parsing failed for {path}: {e}") from e
 
         # if the file contains frontmatter, resolve a permalink
         if file_contains_frontmatter:

@@ -107,20 +107,32 @@ async def adn_content(
 
     # Route to appropriate operation
     if operation == "write":
+        if identifier is None or content is None or folder is None:
+            return "# Error\n\nWrite operation requires: identifier, content, folder"
         return await _write_operation(
             active_project, identifier, content, folder, tags, entity_type
         )
     elif operation == "read":
+        if identifier is None:
+            return "# Error\n\nRead operation requires: identifier"
         return await _read_operation(active_project, identifier, page, page_size)
     elif operation == "view":
+        if identifier is None:
+            return "# Error\n\nView operation requires: identifier"
         return await _view_operation(active_project, identifier, page, page_size)
     elif operation == "edit":
+        if identifier is None or edit_operation is None or content is None:
+            return "# Error\n\nEdit operation requires: identifier, edit_operation, content"
         return await _edit_operation(
             active_project, identifier, edit_operation, content, find_text, expected_replacements, section
         )
     elif operation == "move":
+        if identifier is None or destination_path is None:
+            return "# Error\n\nMove operation requires: identifier, destination_path"
         return await _move_operation(active_project, identifier, destination_path)
     elif operation == "delete":
+        if identifier is None:
+            return "# Error\n\nDelete operation requires: identifier"
         return await _delete_operation(active_project, identifier)
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, edit, move, delete"
@@ -175,7 +187,8 @@ async def _write_operation(
     categories: dict[str, int] = {}
     if result.observations:
         for obs in result.observations:
-            categories[obs.category] = categories.get(obs.category, 0) + 1
+            if obs.category:  # Only count observations with categories
+                categories[obs.category] = categories.get(obs.category, 0) + 1
 
         summary.append("\n## Observations")
         for category, count in sorted(categories.items()):

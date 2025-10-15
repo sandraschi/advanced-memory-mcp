@@ -13,9 +13,10 @@ from typing import Any
 
 from loguru import logger
 
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import SearchQuery
 
 
 @mcp.tool()
@@ -133,10 +134,8 @@ async def _get_notes_from_folder(
     try:
         # Use search API to find notes (exclude entities for now)
         query = SearchQuery(
-            query="",  # Empty query to get all notes
-            types=["note"],  # Only notes, not entities
-            page=1,
-            page_size=1000  # Large limit for batch export
+            text="",  # Empty query to get all notes
+            types=["note"]  # Only notes, not entities
         )
 
         # Add project filter if specified
@@ -145,17 +144,17 @@ async def _get_notes_from_folder(
             # May need adjustment based on actual API
             pass
 
-        response = await call_post(
-            "/api/search",
-            query.model_dump(),
-            SearchResponse
-        )
+        response = await call_post(client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump())
 
-        if not response or not hasattr(response, 'results'):
+        if not response:
+            return []
+
+        response_data = response.json()
+        if not hasattr(response_data, 'results') or not response_data.results:
             return []
 
         notes_data = []
-        for note in response.results:
+        for note in response_data.results:
             # Filter by folder path
             note_path = getattr(note, 'file_path', '')
             if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
@@ -182,7 +181,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools.read_note import read_note
+        from advanced_memory.mcp.tools import read_note as mcp_read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, 'permalink', None) or getattr(note, 'title', '')
@@ -190,7 +189,7 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await read_note(identifier)
+        content = await mcp_read_note.fn(identifier)
         return content if content else None
 
     except Exception as e:

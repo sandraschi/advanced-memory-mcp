@@ -2,6 +2,7 @@
 
 import json
 import logging
+from typing import TypeVar
 
 from fastapi import APIRouter, Form, HTTPException, UploadFile, status
 
@@ -15,8 +16,11 @@ from advanced_memory.importers import Importer
 from advanced_memory.schemas.importer import (
     ChatImportResult,
     EntityImportResult,
+    ImportResult,
     ProjectImportResult,
 )
+
+T = TypeVar("T", bound=ImportResult)
 
 logger = logging.getLogger(__name__)
 
@@ -131,11 +135,11 @@ async def import_memory_json(
     return result
 
 
-async def import_file(importer: Importer, file: UploadFile, destination_folder: str):
+async def import_file(importer: Importer, file: UploadFile, destination_folder: str) -> T:
     try:
         # Process file
         json_data = json.load(file.file)
-        result: ImportResult = await importer.import_data(json_data, destination_folder)
+        result = await importer.import_data(json_data, destination_folder)
         if not result.success:  # pragma: no cover
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

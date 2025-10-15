@@ -86,14 +86,22 @@ async def research_orchestrator(
     """
     try:
         if operation == "research_plan":
+            if not topic:
+                return "# Error\n\nResearch plan requires: topic parameter"
             return await _create_research_plan(topic, parameters or {})
         elif operation == "research_methodology":
             return await _get_research_methodology(topic_type or "general", parameters or {})
         elif operation == "research_questions":
+            if not topic:
+                return "# Error\n\nResearch questions requires: topic parameter"
             return await _generate_research_questions(topic, parameters or {})
         elif operation == "note_blueprint":
+            if not topic:
+                return "# Error\n\nNote blueprint requires: topic parameter"
             return await _create_note_blueprint(research_type or "general", topic, parameters or {})
         elif operation == "research_workflow":
+            if not topic:
+                return "# Error\n\nResearch workflow requires: topic parameter"
             return await _execute_research_workflow(topic, step or 1, parameters or {})
         else:
             return _get_available_operations()

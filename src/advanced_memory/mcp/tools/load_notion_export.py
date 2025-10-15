@@ -8,7 +8,7 @@ from typing import Any
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.tools.utils import call_post
 
 
 @mcp.tool(
@@ -245,7 +245,7 @@ async def _process_notion_html_file(
 
         # Create the note
         create_url = f"{project_url}/api/memory"
-        response = await call_get(client, create_url, method='POST', json=entity_data)
+        response = await call_post(client, create_url, json=entity_data)
 
         if response.status_code == 200:
             result_data = response.json()
@@ -316,7 +316,7 @@ async def _process_notion_markdown_file(
         }
 
         create_url = f"{project_url}/api/memory"
-        response = await call_get(client, create_url, method='POST', json=entity_data)
+        response = await call_post(client, create_url, json=entity_data)
 
         if response.status_code == 200:
             result_data = response.json()

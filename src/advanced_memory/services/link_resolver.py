@@ -1,5 +1,6 @@
 """Service for resolving markdown links to permalinks."""
 
+from collections.abc import Sequence
 
 from loguru import logger
 

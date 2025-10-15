@@ -154,49 +154,25 @@ async def _find_markdown_files(vault_path: Path) -> list[Path]:
     """Find all markdown files in the vault."""
     markdown_files = []
 
-    # Use MCP filesystem to list directory recursively
-    try:
-        from mcp_filesystem import list_directory
+    # Direct filesystem access
+    def find_recursive(current_path: str) -> list[str]:
+        """Recursively find markdown files."""
+        files = []
+        try:
+            path_obj = Path(current_path)
 
-        async def find_recursive(current_path: str) -> list[str]:
-            """Recursively find markdown files."""
-            files = []
-            try:
-                # List current directory
-                dir_contents = await list_directory(current_path)
+            for item in path_obj.rglob("*.md"):
+                if item.is_file():
+                    files.append(str(item))
 
-                # Parse the directory listing (it's returned as formatted text)
-                lines = dir_contents.split('\n')
-                for line in lines:
-                    if '[DOC]' in line and '.md' in line:
-                        # Extract filename from the formatted line
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            filename = parts[1].strip()
-                            if filename.endswith('.md'):
-                                files.append(str(Path(current_path) / filename))
-                    elif '[FOLDER]' in line and not line.strip().endswith('.'):
-                        # Directory - recurse
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            dirname = parts[1].strip()
-                            subdir_path = str(Path(current_path) / dirname)
-                            subfiles = await find_recursive(subdir_path)
-                            files.extend(subfiles)
+        except Exception as e:
+            logger.warning(f"Error listing directory {current_path}: {e}")
 
-            except Exception as e:
-                logger.warning(f"Error listing directory {current_path}: {e}")
+        return files
 
-            return files
-
-        # Start recursive search from vault root
-        markdown_files_str = await find_recursive(str(vault_path))
-        markdown_files = [Path(f) for f in markdown_files_str]
-
-    except ImportError:
-        # Fallback to direct filesystem access if MCP filesystem not available
-        logger.warning("MCP filesystem not available, using direct access")
-        markdown_files = list(vault_path.rglob("*.md"))
+    # Start recursive search from vault root
+    markdown_files_str = find_recursive(str(vault_path))
+    markdown_files = [Path(f) for f in markdown_files_str]
 
     return markdown_files
 

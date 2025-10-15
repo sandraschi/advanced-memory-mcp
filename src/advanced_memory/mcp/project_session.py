@@ -71,13 +71,13 @@ class ProjectSession:
         """
         if self.default_project:
             return self.default_project
-        
+
         # Fallback to first available project from config
         config_manager = ConfigManager()
         projects = config_manager.projects
         if projects:
             return list(projects.keys())[0]
-        
+
         return "main"  # Last resort fallback
 
     def reset_to_default(self) -> None:  # pragma: no cover

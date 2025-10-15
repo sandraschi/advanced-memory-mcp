@@ -1,6 +1,7 @@
 """Service for search operations."""
 
 import ast
+from collections.abc import Sequence
 from datetime import datetime
 
 from dateparser import parse

@@ -6,9 +6,9 @@ Bulletproof components:
 - link_parser: Timeout-safe link parsing
 """
 
-from .sync_health import SyncHealthMonitor, SyncState, SyncMetrics
 from .file_validator import FileValidator, validate_markdown_file
 from .link_parser import LinkParser, parse_links_safe
+from .sync_health import SyncHealthMonitor, SyncMetrics, SyncState
 
 __version__ = "1.0.0"
 __all__ = [

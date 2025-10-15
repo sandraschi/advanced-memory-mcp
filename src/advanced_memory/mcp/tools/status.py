@@ -4,6 +4,7 @@ import os
 import platform
 from pathlib import Path
 
+from advanced_memory.config import ConfigManager  # noqa: F401 - Used in inner functions
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
@@ -231,7 +232,8 @@ async def _get_advanced_status() -> str:
     # File system information
     status_lines.extend(["", "## File System Information"])
     try:
-        for project_name, project_path in ConfigManager().config.projects.items():
+        config_mgr = ConfigManager()  # type: ignore[possibly-unbound]
+        for project_name, project_path in config_mgr.config.projects.items():
             path_obj = Path(project_path)
             if path_obj.exists():
                 total_files = sum(1 for _ in path_obj.rglob('*') if _.is_file())

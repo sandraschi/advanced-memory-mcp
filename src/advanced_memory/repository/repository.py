@@ -50,6 +50,7 @@ class Repository:
             self.has_project_id
             and self.project_id is not None
             and getattr(model, "project_id", None) is None
+            and hasattr(model, "project_id")
         ):
             model.project_id = self.project_id
 
@@ -68,7 +69,7 @@ class Repository:
         Returns:
             Updated query with project filter if applicable
         """
-        if self.has_project_id and self.project_id is not None:
+        if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
             query = query.filter(self.Model.project_id == self.project_id)
         return query
 
@@ -307,7 +308,7 @@ class Repository:
             conditions = [self.primary_key.in_(ids)]
 
             # Add project_id filter if applicable
-            if self.has_project_id and self.project_id is not None:  # pragma: no cover
+            if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):  # pragma: no cover
                 conditions.append(self.Model.project_id == self.project_id)
 
             query = delete(self.Model).where(and_(*conditions))
@@ -322,7 +323,7 @@ class Repository:
             conditions = [getattr(self.Model, field) == value for field, value in filters.items()]
 
             # Add project_id filter if applicable
-            if self.has_project_id and self.project_id is not None:
+            if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
                 conditions.append(self.Model.project_id == self.project_id)
 
             query = delete(self.Model).where(and_(*conditions))
@@ -341,6 +342,7 @@ class Repository:
                     isinstance(query, Select)
                     and self.has_project_id
                     and self.project_id is not None
+                    and hasattr(self.Model, "project_id")
                 ):
                     query = query.where(
                         self.Model.project_id == self.project_id
