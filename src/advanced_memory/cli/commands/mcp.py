@@ -20,7 +20,7 @@ from advanced_memory.mcp.server import mcp as mcp_server  # pragma: no cover
 @app.command()
 def mcp(
     transport: str = typer.Option("stdio", help="Transport type: stdio, streamable-http, or sse"),
-    host: str = typer.Option(
+    host: str = typer.Option(  # nosec B104 - binding to 0.0.0.0 is intentional for LAN access
         "0.0.0.0", help="Host for HTTP transports (use 0.0.0.0 to allow external connections)"
     ),
     port: int = typer.Option(8000, help="Port for HTTP transports"),

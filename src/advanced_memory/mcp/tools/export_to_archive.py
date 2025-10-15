@@ -80,7 +80,7 @@ def _filter_database(
             source_cursor.fetchall()
 
             # Get CREATE TABLE statement
-            source_cursor.execute(
+            source_cursor.execute(  # nosec B608 - table name from schema, not user input
                 f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table}'"
             )
             create_sql = source_cursor.fetchone()
@@ -114,7 +114,9 @@ def _filter_database(
             where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
 
             # Count total entities
-            source_cursor.execute(f"SELECT COUNT(*) FROM entity WHERE {where_clause}", params)
+            source_cursor.execute(  # nosec B608 - uses parameterized query with params
+                f"SELECT COUNT(*) FROM entity WHERE {where_clause}", params
+            )
             entities_kept = source_cursor.fetchone()[0]
 
             source_cursor.execute("SELECT COUNT(*) FROM entity")
@@ -122,12 +124,16 @@ def _filter_database(
             entities_filtered = total_entities - entities_kept
 
             # Copy filtered entities
-            source_cursor.execute(f"SELECT * FROM entity WHERE {where_clause}", params)
+            source_cursor.execute(  # nosec B608 - uses parameterized query with params
+                f"SELECT * FROM entity WHERE {where_clause}", params
+            )
             entities = source_cursor.fetchall()
 
             for entity in entities:
                 placeholders = ",".join(["?" for _ in entity])
-                dest_cursor.execute(f"INSERT INTO entity VALUES ({placeholders})", entity)
+                dest_cursor.execute(  # nosec B608 - uses placeholders, not direct insertion
+                    f"INSERT INTO entity VALUES ({placeholders})", entity
+                )
 
         # Copy other tables (with foreign key constraints this will only copy related data)
         for table in tables:
@@ -136,13 +142,17 @@ def _filter_database(
 
             try:
                 # Try to copy all data (foreign keys will prevent orphaned records)
-                source_cursor.execute(f"SELECT * FROM {table}")
+                source_cursor.execute(  # nosec B608 - table name from schema, not user input
+                    f"SELECT * FROM {table}"
+                )
                 rows = source_cursor.fetchall()
 
                 for row in rows:
                     try:
                         placeholders = ",".join(["?" for _ in row])
-                        dest_cursor.execute(f"INSERT INTO {table} VALUES ({placeholders})", row)
+                        dest_cursor.execute(  # nosec B608 - uses placeholders, table from schema
+                            f"INSERT INTO {table} VALUES ({placeholders})", row
+                        )
                     except sqlite3.IntegrityError:
                         # Foreign key constraint failed, skip this record
                         pass

@@ -15,7 +15,13 @@ from pathlib import Path
 
 def clear_screen() -> None:
     """Clear the terminal screen."""
-    os.system("cls" if os.name == "nt" else "clear")
+    # Use subprocess instead of os.system for safety
+    import subprocess
+    
+    if os.name == "nt":
+        subprocess.run(["cmd", "/c", "cls"], check=False)
+    else:
+        subprocess.run(["clear"], check=False)
 
 
 def print_banner() -> None:

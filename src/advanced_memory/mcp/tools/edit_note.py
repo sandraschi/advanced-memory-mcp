@@ -58,6 +58,7 @@ The text '{find_text}' was not found in the note '{identifier}'.
             match = re.search(r"found (\d+)", error_message)
             actual_count = match.group(1) if match else "a different number of"
 
+            # nosec B608 - This is markdown help text, not SQL
             return f"""# Edit Failed - Wrong Replacement Count
 
 Expected {expected_replacements} occurrences of '{find_text}' but found {actual_count}.

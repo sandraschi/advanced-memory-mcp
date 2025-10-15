@@ -260,6 +260,7 @@ class ContextService:
 
         # Use a CTE that operates directly on entity and relation tables
         # This avoids the overhead of the search_index virtual table
+        # nosec B608 - uses parameterized query with :max_depth and :max_results params
         query = text(f"""
         WITH RECURSIVE entity_graph AS (
             -- Base case: seed entities

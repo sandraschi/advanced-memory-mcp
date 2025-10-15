@@ -2,8 +2,9 @@
 
 import base64
 import re
-import xml.etree.ElementTree as ET
 from datetime import datetime
+
+import defusedxml.ElementTree as ET
 from pathlib import Path
 from typing import Any
 

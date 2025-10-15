@@ -421,7 +421,7 @@ class SyncHealthMonitor:
 # Example usage in MCP server
 if __name__ == "__main__":
     # Demo
-    monitor = SyncHealthMonitor("/tmp/test_project")
+    monitor = SyncHealthMonitor("/tmp/test_project")  # nosec B108 - demo code only
 
     print("Starting scan...")
     if monitor.start_scan():

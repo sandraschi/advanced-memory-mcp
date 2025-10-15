@@ -4,8 +4,9 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from xml.dom import minidom
-from xml.etree.ElementTree import Element, SubElement, tostring
+
+import defusedxml.minidom as minidom
+from defusedxml.ElementTree import Element, SubElement, tostring
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp

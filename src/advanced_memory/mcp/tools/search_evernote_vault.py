@@ -1,8 +1,9 @@
 """Search Evernote vault tool for Advanced Memory MCP server."""
 
 import re
-import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import defusedxml.ElementTree as ET
 from typing import Any
 
 from loguru import logger

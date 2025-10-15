@@ -136,7 +136,7 @@ class FileSafety:
 
         # Generate unique name in trash with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        name_hash = hashlib.md5(str(path).encode()).hexdigest()[:8]
+        name_hash = hashlib.md5(str(path).encode(), usedforsecurity=False).hexdigest()[:8]
         trash_name = f"{timestamp}_{name_hash}_{path.name}"
         trash_path = self.trash_dir / trash_name
 

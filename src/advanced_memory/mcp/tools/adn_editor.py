@@ -176,7 +176,7 @@ async def _notepadpp_edit_operation(
         # Try PATH
         try:
             result = subprocess.run(
-                ["where", "notepad++"], capture_output=True, text=True, shell=True
+                ["where", "notepad++"], capture_output=True, text=True, shell=False
             )
             if result.returncode == 0 and result.stdout.strip():
                 return Path(result.stdout.strip().split("\n")[0])

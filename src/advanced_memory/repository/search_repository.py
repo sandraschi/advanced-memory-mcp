@@ -459,6 +459,7 @@ class SearchRepository:
         # Build WHERE clause
         where_clause = " AND ".join(conditions) if conditions else "1=1"
 
+        # nosec B608 - uses parameterized query with :limit and :offset params
         sql = f"""
             SELECT
                 project_id,
