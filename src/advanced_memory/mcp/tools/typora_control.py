@@ -626,7 +626,7 @@ async def _handle_content_analysis() -> str:
     char_count = len(content)
 
     # Heading structure
-    heading_levels = {}
+    heading_levels: dict[int, int] = {}
     for heading in headings:
         level = len(heading) - len(heading.lstrip('#'))
         heading_levels[level] = heading_levels.get(level, 0) + 1
@@ -1015,7 +1015,7 @@ async def check_typora_connection() -> bool:
 
 async def get_typora_status() -> dict[str, Any]:
     """Get comprehensive Typora status."""
-    status = {
+    status: dict[str, Any] = {
         "connection": False,
         "current_file": None,
         "theme": None,

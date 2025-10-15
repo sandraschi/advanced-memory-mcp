@@ -53,7 +53,7 @@ class Repository:
         ):
             model.project_id = self.project_id
 
-    def get_model_data(self, entity_data):
+    def get_model_data(self, entity_data: dict[str, Any]) -> dict[str, Any]:
         model_data = {
             k: v for k, v in entity_data.items() if k in self.valid_columns and v is not None
         }

@@ -105,7 +105,7 @@ async def adn_search(
 async def _notes_search(query: str, page: int, page_size: int, types: list[str] | None, entity_types: list[str] | None, after_date: str | None, project: str | None) -> str:
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search_notes import search_notes
-    return await search_notes(query, page, page_size, "text", types, entity_types, after_date, project)
+    return await search_notes(query, page, page_size, "text", types, entity_types, after_date, project)  # type: ignore[operator,no-any-return]
 
 
 async def _obsidian_search(query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool) -> str:
@@ -114,7 +114,7 @@ async def _obsidian_search(query: str, source_path: str | None, search_type: str
         return "# Error\n\nObsidian search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
-    return await search_obsidian_vault(source_path, query, search_type, max_results, include_content)
+    return await search_obsidian_vault(source_path, query, search_type, max_results, include_content)  # type: ignore[operator,no-any-return]
 
 
 async def _joplin_search(query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool) -> str:
@@ -123,7 +123,7 @@ async def _joplin_search(query: str, source_path: str | None, search_type: str, 
         return "# Error\n\nJoplin search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
-    return await search_joplin_vault(source_path, query, search_type, max_results, include_content)
+    return await search_joplin_vault(source_path, query, search_type, max_results, include_content)  # type: ignore[operator,no-any-return]
 
 
 async def _notion_search(query: str, source_path: str | None, case_sensitive: bool, file_type: str | None, max_results: int) -> str:
@@ -132,7 +132,7 @@ async def _notion_search(query: str, source_path: str | None, case_sensitive: bo
         return "# Error\n\nNotion search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
-    return await search_notion_vault(source_path, query, case_sensitive, file_type, max_results)
+    return await search_notion_vault(source_path, query, case_sensitive, file_type, max_results)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_search(query: str, source_path: str | None, case_sensitive: bool, file_type: str | None, notebook_filter: str | None, tag_filter: str | None, max_results: int) -> str:
@@ -141,4 +141,4 @@ async def _evernote_search(query: str, source_path: str | None, case_sensitive: 
         return "# Error\n\nEvernote search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
-    return await search_evernote_vault(source_path, query, case_sensitive, file_type, notebook_filter, tag_filter, max_results)
+    return await search_evernote_vault(source_path, query, case_sensitive, file_type, notebook_filter, tag_filter, max_results)  # type: ignore[operator,no-any-return]

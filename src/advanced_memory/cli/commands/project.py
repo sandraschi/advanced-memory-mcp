@@ -156,9 +156,7 @@ def display_project_info(
             # Convert to JSON and print
             console.print(json.dumps(info.model_dump(), indent=2, default=str))
         else:
-            # Create rich display
-            console = Console()
-
+            # Use existing console (defined at module level)
             # Project configuration section
             console.print(
                 Panel(

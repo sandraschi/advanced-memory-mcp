@@ -17,7 +17,7 @@ class ClaudeConversationsImporter(Importer):
     """Service for importing Claude conversations."""
 
     async def import_data(
-        self, source_data, destination_folder: str, **kwargs: Any
+        self, source_data: Any, destination_folder: str, **kwargs: Any
     ) -> ChatImportResult:
         """Import conversations from Claude JSON export.
 

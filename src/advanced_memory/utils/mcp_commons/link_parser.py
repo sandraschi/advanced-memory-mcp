@@ -50,12 +50,12 @@ class LinkParseResult:
     warnings: List[str] = field(default_factory=list)
     parse_time_ms: float = 0
     
-    def add_error(self, error: str):
+    def add_error(self, error: str) -> None:
         """Add parse error."""
         self.errors.append(error)
         self.is_valid = False
     
-    def add_warning(self, warning: str):
+    def add_warning(self, warning: str) -> None:
         """Add parse warning."""
         self.warnings.append(warning)
 
@@ -212,7 +212,7 @@ class LinkParser:
         content: str,
         result: LinkParseResult,
         start_time: float
-    ):
+    ) -> None:
         """Parse wikilinks: [[Page]] or [[Page|Display]]."""
         try:
             for match in self.WIKILINK_PATTERN.finditer(content):
@@ -252,7 +252,7 @@ class LinkParser:
         content: str,
         result: LinkParseResult,
         start_time: float
-    ):
+    ) -> None:
         """Parse image links: ![alt](url)."""
         try:
             for match in self.IMAGE_PATTERN.finditer(content):
@@ -286,7 +286,7 @@ class LinkParser:
         content: str,
         result: LinkParseResult,
         start_time: float
-    ):
+    ) -> None:
         """Parse markdown links: [text](url)."""
         try:
             # Skip positions already covered by images
@@ -331,7 +331,7 @@ class LinkParser:
         content: str,
         result: LinkParseResult,
         start_time: float
-    ):
+    ) -> None:
         """Parse raw URLs: http://example.com."""
         try:
             # Skip positions already covered by other links

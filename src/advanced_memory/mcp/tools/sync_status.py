@@ -34,14 +34,15 @@ def _get_all_projects_status() -> list[str]:
                         status_icon = "[OK]"
                         status_text = "Sync completed"
                     elif project_sync_status.status.value in ["scanning", "syncing"]:
-                        status_icon = "[SYNC]"
-                        status_text = "Sync in progress"
+                        status_icon = "[SYNCING]"
                         if project_sync_status.files_total > 0:
                             progress_pct = (
                                 project_sync_status.files_processed
                                 / project_sync_status.files_total
                             ) * 100
-                            status_text += f" ({project_sync_status.files_processed}/{project_sync_status.files_total}, {progress_pct:.0f}%)"
+                            status_text = f"Syncing: {project_sync_status.files_processed}/{project_sync_status.files_total} files ({progress_pct:.0f}% complete)"
+                        else:
+                            status_text = f"Syncing: {project_sync_status.message}"
                     elif project_sync_status.status.value == "failed":
                         status_icon = "[ERROR]"
                         status_text = f"Sync error: {project_sync_status.error or 'Unknown error'}"
@@ -50,8 +51,8 @@ def _get_all_projects_status() -> list[str]:
                         status_text = project_sync_status.status.value.title()
                 else:
                     # Project has no tracked sync activity - will be synced automatically
-                    status_icon = "[PENDING]"
-                    status_text = "Pending sync"
+                    status_icon = "[READY]"
+                    status_text = "Ready (will auto-sync on first access)"
 
                 status_lines.append(f"- {status_icon} **{project_name}**: {status_text}")
 
@@ -234,13 +235,20 @@ async def sync_status(project: str | None = None) -> str:
                     ]
                 )
             elif not active_projects:
-                # No active or failed projects - must be pending
+                # No active or failed projects - must be initializing
                 status_lines.extend(
                     [
-                        "[UNICODE] **Sync operations pending**",
+                        "[INITIALIZING] **System is starting up**",
                         "",
-                        "File synchronization has been queued but hasn't started yet.",
-                        "This usually resolves automatically within a few seconds.",
+                        "Advanced Memory is initializing projects and preparing to sync.",
+                        "File synchronization will start automatically within a few seconds.",
+                        "",
+                        "**What's happening:**",
+                        "- Loading project configurations",
+                        "- Preparing database connections",
+                        "- Initializing file watchers",
+                        "",
+                        "Check back in a moment to see active sync progress.",
                     ]
                 )
 
@@ -250,7 +258,7 @@ async def sync_status(project: str | None = None) -> str:
             status_lines.extend(all_projects_status)
 
             # Add explanation about automatic syncing if there are unsynced projects
-            unsynced_count = sum(1 for line in all_projects_status if "[UNICODE]" in line)
+            unsynced_count = sum(1 for line in all_projects_status if "[READY]" in line)
             if unsynced_count > 0 and not is_ready:
                 status_lines.extend(
                     [
@@ -279,13 +287,17 @@ async def sync_status(project: str | None = None) -> str:
         return "\n".join(status_lines)
 
     except Exception as e:
+        logger.error(f"Error getting sync status: {e}")
         return f"""# Sync Status - Error
 
-[UNICODE] **Unable to check sync status**: {str(e)}
+[ERROR] **Unable to check sync status**: {str(e)}
 
 **Troubleshooting:**
 - The system may still be starting up
 - Try waiting a few seconds and checking again
 - Check logs for detailed error information
 - Consider restarting if the issue persists
+
+**Error Details:**
+{str(e)}
 """

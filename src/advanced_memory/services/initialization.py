@@ -35,7 +35,7 @@ async def initialize_database(app_config: AdvancedMemoryConfig) -> None:
         # more specific error if the database is actually unusable
 
 
-async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig):
+async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> None:
     """Ensure all projects in config.json exist in the projects table and vice versa.
 
     This uses the ProjectService's synchronize_projects method to ensure bidirectional
@@ -70,7 +70,7 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig):
 
 async def initialize_file_sync(
     app_config: AdvancedMemoryConfig,
-):
+) -> None:
     """Initialize file synchronization services. This function starts the watch service and does not return
 
     Args:
@@ -141,7 +141,7 @@ async def initialize_file_sync(
 
 async def initialize_app(
     app_config: AdvancedMemoryConfig,
-):
+) -> None:
     """Initialize the Advanced Memory application.
 
     This function handles all initialization steps:

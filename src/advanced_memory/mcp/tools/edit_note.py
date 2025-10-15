@@ -327,7 +327,7 @@ async def edit_note(
             summary.append(f"operation: Replaced content under section '{section}'")
 
         # Count observations by category (reuse logic from write_note)
-        categories = {}
+        categories: dict[str, int] = {}
         if result.observations:
             for obs in result.observations:
                 categories[obs.category] = categories.get(obs.category, 0) + 1

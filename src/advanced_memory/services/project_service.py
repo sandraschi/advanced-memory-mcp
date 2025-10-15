@@ -120,7 +120,7 @@ class ProjectService:
             # Don't set is_default=False to avoid UNIQUE constraint issues
             # Let it default to NULL, only set to True when explicitly making default
         }
-        created_project = await self.repository.create(project_data)
+        created_project: Project = await self.repository.create(project_data)
 
         # If this should be the default project, ensure only one default exists
         if set_default:
@@ -197,7 +197,7 @@ class ProjectService:
             )  # pragma: no cover
 
         # Get all projects with is_default=True
-        db_projects = await self.repository.find_all()
+        db_projects: Sequence[Project] = await self.repository.find_all()
         default_projects = [p for p in db_projects if p.is_default is True]
 
         if len(default_projects) > 1:  # pragma: no cover

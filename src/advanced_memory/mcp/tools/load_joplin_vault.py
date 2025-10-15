@@ -165,7 +165,7 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
                     dir_contents = await list_directory(current_path)
 
                     # Group files by base name (without extension)
-                    file_groups = {}
+                    file_groups: dict[str, dict[str, str]] = {}
                     for line in dir_contents.split('\n'):
                         if '[DOC]' in line:
                             parts = line.split()
@@ -223,7 +223,7 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
             # Fallback to direct filesystem access
             logger.warning("MCP filesystem not available, using direct access")
 
-            file_groups = {}
+            file_groups: dict[str, dict[str, Path]] = {}
             for file_path in export_path.rglob("*"):
                 if file_path.is_file():
                     if file_path.suffix.lower() == '.md':
@@ -295,7 +295,7 @@ async def _process_joplin_import(
     """Process the Joplin export import with all files."""
 
     # Track import statistics
-    stats = {
+    stats: dict[str, Any] = {
         'total_files': len(joplin_files),
         'imported_files': 0,
         'skipped_files': 0,

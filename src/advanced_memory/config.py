@@ -30,7 +30,7 @@ class ProjectConfig:
     home: Path
 
     @property
-    def project(self):
+    def project(self) -> str:
         return self.name
 
     @property
@@ -331,7 +331,7 @@ log_dir.mkdir(parents=True, exist_ok=True)
 
 
 # Process info for logging
-def get_process_name():  # pragma: no cover
+def get_process_name() -> str:  # pragma: no cover
     """
     get the type of process for logging
     """
@@ -356,7 +356,7 @@ _LOGGING_SETUP = False
 # Logging
 
 
-def setup_advanced_memory_logging():  # pragma: no cover
+def setup_advanced_memory_logging() -> None:  # pragma: no cover
     """Set up logging for advanced-memory, ensuring it only happens once."""
     global _LOGGING_SETUP
     if _LOGGING_SETUP:

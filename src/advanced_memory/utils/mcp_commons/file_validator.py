@@ -49,12 +49,12 @@ class ValidationResult:
     encoding: str = "utf-8"
     size_bytes: int = 0
     
-    def add_error(self, error: str):
+    def add_error(self, error: str) -> None:
         """Add validation error."""
         self.errors.append(error)
         self.is_valid = False
     
-    def add_warning(self, warning: str):
+    def add_warning(self, warning: str) -> None:
         """Add validation warning (doesn't invalidate)."""
         self.warnings.append(warning)
 
@@ -159,7 +159,7 @@ class FileValidator:
         
         return result
     
-    def _validate_filename(self, file_path: Path, result: ValidationResult):
+    def _validate_filename(self, file_path: Path, result: ValidationResult) -> None:
         """Validate filename is safe."""
         filename = file_path.name
         
@@ -207,7 +207,7 @@ class FileValidator:
                 f"Unexpected extension: {file_path.suffix} (expected .md or .markdown)"
             )
     
-    def _validate_accessibility(self, file_path: Path, result: ValidationResult):
+    def _validate_accessibility(self, file_path: Path, result: ValidationResult) -> None:
         """Check if file can be accessed."""
         try:
             # Try to stat the file
@@ -230,7 +230,7 @@ class FileValidator:
                 f"Cannot access file: {file_path}: {e}"
             )
     
-    def _validate_size(self, file_path: Path, result: ValidationResult):
+    def _validate_size(self, file_path: Path, result: ValidationResult) -> None:
         """Validate file size is reasonable."""
         size = result.size_bytes
         
@@ -257,7 +257,7 @@ class FileValidator:
                 f"Large markdown file ({size / 1024 / 1024:.2f} MB): {file_path}"
             )
     
-    def _validate_content(self, file_path: Path, result: ValidationResult):
+    def _validate_content(self, file_path: Path, result: ValidationResult) -> None:
         """Try to read file content with multiple encodings."""
         content = None
         last_error = None
@@ -319,7 +319,7 @@ class FileValidator:
                 f"Very long line detected ({max_line_len} chars): {file_path}"
             )
     
-    def _validate_frontmatter(self, result: ValidationResult):
+    def _validate_frontmatter(self, result: ValidationResult) -> None:
         """Validate YAML frontmatter if present."""
         if not result.content:
             return

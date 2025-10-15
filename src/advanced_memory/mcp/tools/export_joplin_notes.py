@@ -250,7 +250,7 @@ async def _process_joplin_export(
     """Process the export of notes to Joplin format."""
 
     # Track export statistics
-    stats = {
+    stats: dict[str, Any] = {
         'total_notes': len(notes_data),
         'exported_notes': 0,
         'created_folders': 0,

@@ -15,7 +15,7 @@ class ClaudeProjectsImporter(Importer):
     """Service for importing Claude projects."""
 
     async def import_data(
-        self, source_data, destination_folder: str, **kwargs: Any
+        self, source_data: Any, destination_folder: str, **kwargs: Any
     ) -> ProjectImportResult:
         """Import projects from Claude JSON export.
 

@@ -79,7 +79,7 @@ class WatchServiceState(BaseModel):
         self.recent_events = self.recent_events[:100]  # Keep last 100
         return event
 
-    def record_error(self, error: str):
+    def record_error(self, error: str) -> None:
         self.error_count += 1
         self.add_event(path="", action="sync", status="error", error=error)
         self.last_error = datetime.now()
@@ -101,7 +101,7 @@ class WatchService:
         # quiet mode for mcp so it doesn't mess up stdout
         self.console = Console(quiet=quiet)
 
-    async def run(self):  # pragma: no cover
+    async def run(self) -> None:  # pragma: no cover
         """Watch for file changes and sync them"""
 
         projects = await self.project_repository.get_active_projects()
@@ -181,11 +181,11 @@ class WatchService:
 
         return True
 
-    async def write_status(self):
+    async def write_status(self) -> None:
         """Write current state to status file"""
         self.status_path.write_text(WatchServiceState.model_dump_json(self.state, indent=2))
 
-    def is_project_path(self, project: Project, path):
+    def is_project_path(self, project: Project, path: str) -> bool:
         """
         Checks if path is a subdirectory or file within a project
         """

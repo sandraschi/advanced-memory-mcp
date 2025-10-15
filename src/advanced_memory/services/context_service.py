@@ -89,8 +89,8 @@ class ContextService:
         types: list[SearchItemType] | None = None,
         depth: int = 1,
         since: datetime | None = None,
-        limit=10,
-        offset=0,
+        limit: int = 10,
+        offset: int = 0,
         max_related: int = 10,
         include_observations: bool = True,
     ) -> ContextResult:

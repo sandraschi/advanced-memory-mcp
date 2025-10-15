@@ -94,7 +94,7 @@ def group_issues_by_directory(issues: list[ValidationIssue]) -> dict[str, list[V
     return dict(grouped)
 
 
-def display_sync_summary(knowledge: SyncReport):
+def display_sync_summary(knowledge: SyncReport) -> None:
     """Display a one-line summary of sync changes."""
     config = get_project_config()
     total_changes = knowledge.total
@@ -123,7 +123,7 @@ def display_sync_summary(knowledge: SyncReport):
     console.print(f"Project '{project_name}': Synced {total_changes} files ({', '.join(changes)})")
 
 
-def display_detailed_sync_results(knowledge: SyncReport):
+def display_detailed_sync_results(knowledge: SyncReport) -> None:
     """Display detailed sync results with trees."""
     config = get_project_config()
     project_name = config.project
@@ -158,7 +158,7 @@ def display_detailed_sync_results(knowledge: SyncReport):
         console.print(knowledge_tree)
 
 
-async def run_sync(verbose: bool = False):
+async def run_sync(verbose: bool = False) -> None:
     """Run sync operation."""
     app_config = ConfigManager().config
     config = get_project_config()

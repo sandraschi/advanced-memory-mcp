@@ -26,7 +26,7 @@ class Importer:
         self.markdown_processor = markdown_processor
 
     @abstractmethod
-    async def import_data(self, source_data, destination_folder: str, **kwargs: Any) -> T:
+    async def import_data(self, source_data: Any, destination_folder: str, **kwargs: Any) -> T:
         """Import data from source file to destination folder.
 
         Args:

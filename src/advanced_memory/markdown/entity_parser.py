@@ -106,11 +106,11 @@ class EntityParser:
         file_content = absolute_path.read_text(encoding="utf-8")
         return await self.parse_file_content(absolute_path, file_content)
 
-    def get_file_path(self, path):
+    def get_file_path(self, path: str | Path) -> Path:
         """Get absolute path for a file using the base path for the project."""
         return self.base_path / path
 
-    async def parse_file_content(self, absolute_path, file_content):
+    async def parse_file_content(self, absolute_path: Path, file_content: str) -> EntityMarkdown:
         # Use resilient parsing that handles malformed YAML gracefully
         try:
             metadata = parse_frontmatter(file_content)

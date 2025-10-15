@@ -8,7 +8,7 @@ from advanced_memory.sync import SyncService, WatchService
 
 async def sync_and_watch(
     sync_service: SyncService, watch_service: WatchService
-):  # pragma: no cover
+) -> None:  # pragma: no cover
     """Run sync and watch service."""
 
     config = get_project_config()

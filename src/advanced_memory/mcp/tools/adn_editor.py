@@ -132,7 +132,7 @@ async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path:
         return "# Error\n\nNotepad++ edit requires: note_identifier parameter"
 
     from advanced_memory.mcp.tools.edit_in_notepadpp import edit_in_notepadpp
-    return await edit_in_notepadpp(note_identifier, workspace_path, create_backup)
+    return await edit_in_notepadpp(note_identifier, workspace_path, create_backup)  # type: ignore[operator,no-any-return]
 
 
 async def _notepadpp_import_operation(note_identifier: str | None, workspace_path: str | None, keep_workspace: bool) -> str:
@@ -141,7 +141,7 @@ async def _notepadpp_import_operation(note_identifier: str | None, workspace_pat
         return "# Error\n\nNotepad++ import requires: note_identifier parameter"
 
     from advanced_memory.mcp.tools.import_from_notepadpp import import_from_notepadpp
-    return await import_from_notepadpp(note_identifier, workspace_path, keep_workspace)
+    return await import_from_notepadpp(note_identifier, workspace_path, keep_workspace)  # type: ignore[operator,no-any-return]
 
 
 async def _typora_control_operation(

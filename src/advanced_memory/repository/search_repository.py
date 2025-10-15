@@ -47,8 +47,8 @@ class SearchIndexRow:
     relation_type: str | None = None  # relations
 
     @property
-    def content(self):
-        return self.content_snippet
+    def content(self) -> str:
+        return self.content_snippet or ""  # type: ignore[return-value]
 
     @property
     def directory(self) -> str:
@@ -71,7 +71,7 @@ class SearchIndexRow:
         directory_path = "/".join(parts[:-1])
         return f"/{directory_path}"
 
-    def to_insert(self):
+    def to_insert(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "title": self.title,
@@ -111,7 +111,7 @@ class SearchRepository:
         self.session_maker = session_maker
         self.project_id = project_id
 
-    async def init_search_index(self):
+    async def init_search_index(self) -> None:
         """Create or recreate the search index."""
         logger.info("Initializing search index")
         try:
@@ -531,7 +531,7 @@ class SearchRepository:
     async def index_item(
         self,
         search_index_row: SearchIndexRow,
-    ):
+    ) -> None:
         """Index or update a single item."""
         async with db.scoped_session(self.session_maker) as session:
             # Delete existing record if any
@@ -566,7 +566,7 @@ class SearchRepository:
             logger.debug(f"indexed row {search_index_row}")
             await session.commit()
 
-    async def delete_by_entity_id(self, entity_id: int):
+    async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index by entity_id."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(
@@ -577,7 +577,7 @@ class SearchRepository:
             )
             await session.commit()
 
-    async def delete_by_permalink(self, permalink: str):
+    async def delete_by_permalink(self, permalink: str) -> None:
         """Delete an item from the search index."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(

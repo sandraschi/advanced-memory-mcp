@@ -21,10 +21,10 @@ console = Console()
 
 def add_files_to_tree(
     tree: Tree, paths: set[str], style: str, checksums: dict[str, str] | None = None
-):
+) -> None:
     """Add files to tree, grouped by directory."""
     # Group by directory
-    by_dir = {}
+    by_dir: dict[str, list[tuple[str, str]]] = {}
     for path in sorted(paths):
         parts = path.split("/", 1)
         dir_name = parts[0] if len(parts) > 1 else ""
@@ -48,7 +48,7 @@ def add_files_to_tree(
 
 def group_changes_by_directory(changes: SyncReport) -> dict[str, dict[str, int]]:
     """Group changes by directory for summary view."""
-    by_dir = {}
+    by_dir: dict[str, dict[str, int]] = {}
     for change_type, paths in [
         ("new", changes.new),
         ("modified", changes.modified),
@@ -86,7 +86,7 @@ def build_directory_summary(counts: dict[str, int]) -> str:
     return " ".join(parts)
 
 
-def display_changes(project_name: str, title: str, changes: SyncReport, verbose: bool = False):
+def display_changes(project_name: str, title: str, changes: SyncReport, verbose: bool = False) -> None:
     """Display changes using Rich for better visualization."""
     tree = Tree(f"{project_name}: {title}")
 
@@ -121,7 +121,7 @@ def display_changes(project_name: str, title: str, changes: SyncReport, verbose:
     console.print(Panel(tree, expand=False))
 
 
-async def run_status(verbose: bool = False):  # pragma: no cover
+async def run_status(verbose: bool = False) -> None:  # pragma: no cover
     """Check sync status of files vs database."""
     # Check knowledge/ directory
 

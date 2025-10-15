@@ -94,12 +94,12 @@ class Entity(Base):
     )
 
     @property
-    def relations(self):
+    def relations(self):  # type: ignore[no-untyped-def]
         """Get all relations (incoming and outgoing) for this entity."""
         return self.incoming_relations + self.outgoing_relations
 
     @property
-    def is_markdown(self):
+    def is_markdown(self) -> bool:
         """Check if the entity is a markdown file."""
         return self.content_type == "text/markdown"
 

@@ -153,19 +153,13 @@ async def export_docsify_enhanced(
         with open(index_path, 'w', encoding='utf-8') as f:
             f.write(enhanced_html)
 
-        # Create enhanced sidebar with icons and metadata
-        enhanced_sidebar = _create_enhanced_sidebar(notes_data, export_path_obj)
-        sidebar_path = export_path_obj / '_sidebar.md'
-        with open(sidebar_path, 'w', encoding='utf-8') as f:
-            f.write(enhanced_sidebar)
-
         # Create enhanced README with feature overview
         enhanced_readme = _create_enhanced_readme(site_title, site_description, notes_analysis)
         readme_path = export_path_obj / 'README.md'
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(enhanced_readme)
 
-        # Export all notes as enhanced markdown files
+        # Export all notes as enhanced markdown files (MOVED UP - must come before sidebar)
         exported_files = []
         for note_info in notes_data:
             try:
@@ -183,13 +177,20 @@ async def export_docsify_enhanced(
                 exported_files.append({
                     'path': str(md_path),
                     'title': note_info['title'],
-                    'folder': note_info.get('folder', 'root')
+                    'folder': note_info.get('folder', 'root'),
+                    'md_path': safe_filename  # Add md_path for sidebar generation
                 })
 
                 logger.info(f"Exported enhanced note: {note_info['title']} -> {md_path}")
 
             except Exception as e:
                 logger.error(f"Failed to export note {note_info['title']}: {str(e)}")
+
+        # NOW create enhanced sidebar with icons and metadata (uses exported_files)
+        enhanced_sidebar = _create_enhanced_sidebar(exported_files, export_path_obj)
+        sidebar_path = export_path_obj / '_sidebar.md'
+        with open(sidebar_path, 'w', encoding='utf-8') as f:
+            f.write(enhanced_sidebar)
 
         # Create .nojekyll for GitHub Pages
         nojekyll_path = export_path_obj / '.nojekyll'
@@ -1556,12 +1557,13 @@ async def _process_docsify_export(
 ) -> str:
     """Process the export of notes to Docsify format."""
 
-    # Track export statistics
-    stats = {
+    # Track export statistics - use explicit int values for mypy
+    stats: dict[str, Any] = {
         'total_notes': len(notes_data),
         'exported_notes': 0,
         'created_folders': 0,
-        'failed_exports': 0
+        'failed_exports': 0,
+        'total_size_kb': 0  # Add this to fix operator error
     }
 
     # Group notes by folder for sidebar generation

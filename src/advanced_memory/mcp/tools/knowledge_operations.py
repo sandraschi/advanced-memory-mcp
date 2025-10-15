@@ -118,7 +118,7 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
             return "[UNICODE] No results found for tag analysis"
 
         # Extract tags from all entities
-        tag_counter = Counter()
+        tag_counter: Counter[str] = Counter()
         entities_with_tags = 0
         total_entities = len(response.results)
 
@@ -381,8 +381,8 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
 
     # Analyze results
     total_notes = len(response.results)
-    tag_counter = Counter()
-    folder_counter = Counter()
+    tag_counter: Counter[str] = Counter()
+    folder_counter: Counter[str] = Counter()
 
     for result in response.results:
         # Extract tags and folders (placeholder logic)

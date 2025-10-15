@@ -73,7 +73,7 @@ class EditEntityRequest(BaseModel):
 
     @field_validator("section")
     @classmethod
-    def validate_section_for_replace_section(cls, v, info):
+    def validate_section_for_replace_section(cls, v: str | None, info) -> str | None:  # type: ignore[no-untyped-def]
         """Ensure section is provided for replace_section operation."""
         if info.data.get("operation") == "replace_section" and not v:
             raise ValueError("section parameter is required for replace_section operation")
@@ -81,7 +81,7 @@ class EditEntityRequest(BaseModel):
 
     @field_validator("find_text")
     @classmethod
-    def validate_find_text_for_find_replace(cls, v, info):
+    def validate_find_text_for_find_replace(cls, v: str | None, info) -> str | None:  # type: ignore[no-untyped-def]
         """Ensure find_text is provided for find_replace operation."""
         if info.data.get("operation") == "find_replace" and not v:
             raise ValueError("find_text parameter is required for find_replace operation")
@@ -101,7 +101,7 @@ class MoveEntityRequest(BaseModel):
 
     @field_validator("destination_path")
     @classmethod
-    def validate_destination_path(cls, v):
+    def validate_destination_path(cls, v: str) -> str:
         """Ensure destination path is relative and valid."""
         if v.startswith("/"):
             raise ValueError("destination_path must be relative, not absolute")

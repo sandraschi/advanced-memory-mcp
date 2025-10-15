@@ -323,7 +323,7 @@ async def _search_files(markdown_files: list[Path], query: str) -> list[dict[str
 
 async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for wikilinks in markdown files."""
-    results = []
+    results: list[dict[str, Any]] = []
 
     # Extract link target from [[link]]
     link_match = re.search(r'\[\[([^\]]+)\]\]', query)
@@ -360,7 +360,7 @@ async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str
 
 async def _search_frontmatter(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search in YAML frontmatter of markdown files."""
-    results = []
+    results: list[dict[str, Any]] = []
 
     # Parse query like "field: value"
     if ':' not in query:

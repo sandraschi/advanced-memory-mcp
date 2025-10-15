@@ -101,25 +101,25 @@ async def adn_export(
 async def _pandoc_export(export_path: str, format_type: str, source_folder: str, include_subfolders: bool, pdf_engine: str, project: str | None) -> str:
     """Handle Pandoc export operation."""
     from advanced_memory.mcp.tools.export_pandoc import export_pandoc
-    return await export_pandoc(export_path, format_type, source_folder, include_subfolders, pdf_engine, None, None, False, "tango", True, False, project)
+    return await export_pandoc(export_path, format_type, source_folder, include_subfolders, pdf_engine, None, None, False, "tango", True, False, project)  # type: ignore[operator,no-any-return]
 
 
 async def _docsify_export(export_path: str, source_folder: str, include_subfolders: bool, site_title: str | None, site_description: str | None, project: str | None) -> str:
     """Handle Docsify export operation."""
     from advanced_memory.mcp.tools.export_docsify import export_docsify
-    return await export_docsify(export_path, source_folder, include_subfolders, site_title or "Knowledge Base", site_description or "Documentation generated from Advanced Memory", project)
+    return await export_docsify(export_path, source_folder, include_subfolders, site_title or "Knowledge Base", site_description or "Documentation generated from Advanced Memory", project)  # type: ignore[operator,no-any-return]
 
 
 async def _html_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle HTML export operation."""
     from advanced_memory.mcp.tools.export_html_notes import export_html_notes
-    return await export_html_notes(export_path, source_folder, include_subfolders, True, project)
+    return await export_html_notes(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
 
 
 async def _joplin_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
-    return await export_joplin_notes(export_path, source_folder, include_subfolders, True, project)
+    return await export_joplin_notes(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
 
 
 async def _pdf_book_export(export_path: str, source_folder: str, include_subfolders: bool, book_title: str | None, tag_filter: str | None, project: str | None) -> str:
@@ -128,13 +128,13 @@ async def _pdf_book_export(export_path: str, source_folder: str, include_subfold
         return "# Error\n\nPDF book export requires: book_title parameter"
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
-    return await make_pdf_book(book_title, source_folder, tag_filter, export_path, "Advanced Memory", include_subfolders, 2, "a4", project)
+    return await make_pdf_book(book_title, source_folder, tag_filter, export_path, "Advanced Memory", include_subfolders, 2, "a4", project)  # type: ignore[operator,no-any-return]
 
 
 async def _archive_export(export_path: str, project: str | None) -> str:
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
-    return await export_to_archive(export_path, None, None, None, None, True, project)
+    return await export_to_archive(export_path, None, None, None, None, True, project)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:

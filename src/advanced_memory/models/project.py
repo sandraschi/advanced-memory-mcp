@@ -66,7 +66,7 @@ class Project(Base):
 
 @event.listens_for(Project, "before_insert")
 @event.listens_for(Project, "before_update")
-def set_project_permalink(mapper, connection, project):
+def set_project_permalink(mapper, connection, project) -> None:  # type: ignore[no-untyped-def]
     """Generate URL-friendly permalink for the project if needed.
 
     This event listener ensures the permalink is always derived from the name,

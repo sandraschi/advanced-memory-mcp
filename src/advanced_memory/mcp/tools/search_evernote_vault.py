@@ -121,7 +121,7 @@ async def search_evernote_vault(
         return f"Error: Vault path '{vault_path}' is not a directory"
 
     # Find all relevant files
-    files_to_search = []
+    files_to_search: list[Path] = []
 
     if file_type in ('enex', None):
         files_to_search.extend(vault_dir.rglob('*.enex'))

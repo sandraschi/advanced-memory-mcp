@@ -251,7 +251,7 @@ async def _process_html_export(
     """Process the export of notes to HTML format."""
 
     # Track export statistics
-    stats = {
+    stats: dict[str, Any] = {
         'total_notes': len(notes_data),
         'exported_notes': 0,
         'created_folders': 0,
@@ -259,8 +259,8 @@ async def _process_html_export(
     }
 
     # Group notes by folder for index generation
-    notes_by_folder = {}
-    all_notes = []
+    notes_by_folder: dict[str, list[dict[str, Any]]] = {}
+    all_notes: list[dict[str, Any]] = []
 
     # Process each note
     for note_info in notes_data:

@@ -147,15 +147,19 @@ class SyncService:
 
         # sync moves first
         for old_path, new_path in report.moves.items():
-            # in the case where a file has been deleted and replaced by another file
-            # it will show up in the move and modified lists, so handle it in modified
-            if new_path in report.modified:
-                report.modified.remove(new_path)
-                logger.debug(
-                    f"File marked as moved and modified: old_path={old_path}, new_path={new_path}"
-                )
-            else:
-                await self.handle_move(old_path, new_path)
+            try:
+                # in the case where a file has been deleted and replaced by another file
+                # it will show up in the move and modified lists, so handle it in modified
+                if new_path in report.modified:
+                    report.modified.remove(new_path)
+                    logger.debug(
+                        f"File marked as moved and modified: old_path={old_path}, new_path={new_path}"
+                    )
+                else:
+                    await self.handle_move(old_path, new_path)
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}")
+                # Continue with other files
 
             files_processed += 1
             if project_name:
@@ -168,7 +172,11 @@ class SyncService:
 
         # deleted next
         for path in report.deleted:
-            await self.handle_delete(path)
+            try:
+                await self.handle_delete(path)
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error deleting file {path}: {type(e).__name__}: {e}")
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(  # pragma: no cover
@@ -180,7 +188,13 @@ class SyncService:
 
         # then new and modified
         for path in report.new:
-            await self.sync_file(path, new=True)
+            try:
+                entity, checksum = await self.sync_file(path, new=True)
+                if entity is None:
+                    logger.warning(f"Skipped new file due to errors: {path}")
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error syncing new file {path}: {type(e).__name__}: {e}")
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(
@@ -191,7 +205,13 @@ class SyncService:
                 )
 
         for path in report.modified:
-            await self.sync_file(path, new=False)
+            try:
+                entity, checksum = await self.sync_file(path, new=False)
+                if entity is None:
+                    logger.warning(f"Skipped modified file due to errors: {path}")
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}")
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(  # pragma: no cover
@@ -214,7 +234,7 @@ class SyncService:
 
         return report
 
-    async def scan(self, directory):
+    async def scan(self, directory: Path) -> SyncReport:
         """Scan directory for changes compared to database state."""
 
         db_paths = await self.get_db_file_state()
@@ -269,7 +289,7 @@ class SyncService:
             Dict mapping file paths to FileState
             :param db_records: the data from the db
         """
-        db_records = await self.entity_repository.find_all()
+        db_records: Sequence[Entity] = await self.entity_repository.find_all()
         logger.info(f"Found {len(db_records)} db records")
         return {r.file_path: r.checksum or "" for r in db_records}
 
@@ -554,7 +574,7 @@ class SyncService:
                     # Re-raise if it's a different integrity error
                     raise
         else:
-            entity = await self.entity_repository.get_by_file_path(path)
+            entity: Entity | None = await self.entity_repository.get_by_file_path(path)
             if entity is None:  # pragma: no cover
                 logger.error(f"Entity not found for existing file, path={path}")
                 raise ValueError(f"Entity not found for existing file: {path}")
@@ -590,7 +610,7 @@ class SyncService:
 
             return updated, checksum
 
-    async def handle_delete(self, file_path: str):
+    async def handle_delete(self, file_path: str) -> None:
         """Handle complete entity deletion including search index cleanup."""
 
         # First get entity to get permalink before deletion
@@ -621,7 +641,7 @@ class SyncService:
                 else:
                     await self.search_service.delete_by_entity_id(entity.id)
 
-    async def handle_move(self, old_path, new_path):
+    async def handle_move(self, old_path: str, new_path: str) -> None:
         logger.debug("Moving entity", old_path=old_path, new_path=new_path)
 
         entity = await self.entity_repository.get_by_file_path(old_path)
@@ -685,7 +705,7 @@ class SyncService:
             # update search index
             await self.search_service.index_entity(updated)
 
-    async def resolve_relations(self):
+    async def resolve_relations(self) -> None:
         """Try to resolve any unresolved relations"""
 
         unresolved_relations = await self.relation_repository.find_unresolved_relations()

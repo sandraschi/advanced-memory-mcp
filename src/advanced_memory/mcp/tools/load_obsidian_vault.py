@@ -235,7 +235,7 @@ async def _process_vault_import(
     """Process the vault import with all files."""
 
     # Track import statistics
-    stats = {
+    stats: dict[str, Any] = {
         'total_files': len(markdown_files),
         'imported_files': 0,
         'skipped_files': 0,

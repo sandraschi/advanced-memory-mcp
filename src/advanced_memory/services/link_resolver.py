@@ -91,7 +91,7 @@ class LinkResolver:
                     logger.debug(f"No entity found with path: {file_path_normalized}")
                     # Try case-insensitive search by looking up all entities and matching file paths
                     # This handles cases where the input case doesn't match the stored case
-                    all_entities = await self.entity_repository.find_all()
+                    all_entities: Sequence[Entity] = await self.entity_repository.find_all()
                     for entity in all_entities:
                         if entity.file_path and entity.file_path.lower() == file_path_normalized.lower():
                             logger.debug(f"Found entity with case-insensitive path match: {entity.file_path}")

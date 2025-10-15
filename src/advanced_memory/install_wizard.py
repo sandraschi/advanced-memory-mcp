@@ -13,11 +13,11 @@ import sys
 from pathlib import Path
 
 
-def clear_screen():
+def clear_screen() -> None:
     """Clear the terminal screen."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def print_banner():
+def print_banner() -> None:
     """Display the ASCII banner."""
     banner = r"""
      ____        _      _____
@@ -32,7 +32,7 @@ def print_banner():
     """
     print(banner)
 
-def get_config_path(app_name):
+def get_config_path(app_name: str) -> Path:
     """Get the configuration file path for the given application."""
     system = platform.system()
     if system == "Windows":
@@ -42,7 +42,7 @@ def get_config_path(app_name):
     else:  # Linux and others
         return Path.home() / '.config' / app_name / 'config.json'
 
-def backup_file(file_path):
+def backup_file(file_path: Path) -> Path:
     """Create a backup of the file if it exists."""
     if not file_path.exists():
         return file_path
@@ -50,7 +50,7 @@ def backup_file(file_path):
     shutil.copy2(file_path, backup_path)
     return backup_path
 
-def configure_windsurf():
+def configure_windsurf() -> tuple[Path, Path]:
     """Configure Windsurf to use Advanced Memory as an MCP client."""
     config_path = get_config_path('windsurf')
     backup_path = backup_file(config_path)
@@ -85,7 +85,7 @@ def configure_windsurf():
 
     return config_path, backup_path
 
-def show_help():
+def show_help() -> None:
     """Display the help information."""
     help_text = """
     ===== Advanced Memory - Quick Start Guide =====
@@ -109,7 +109,7 @@ def show_help():
     """
     input(help_text)
 
-def main():
+def main() -> None:
     """Main entry point for the installation wizard."""
     clear_screen()
     print_banner()

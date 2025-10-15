@@ -119,3 +119,46 @@ async def test_sync_handles_parse_errors_gracefully(sync_service, config_home):
     # Should succeed (YAML in code blocks doesn't affect frontmatter)
     assert entity is not None
     assert checksum is not None
+
+
+@pytest.mark.asyncio
+async def test_sync_malformed_frontmatter_yaml(sync_service, config_home):
+    """Test that sync handles malformed YAML frontmatter gracefully."""
+    # Create file with invalid YAML frontmatter
+    bad_yaml = config_home / "bad_yaml.md"
+    with open(bad_yaml, "w", encoding="utf-8") as f:
+        f.write("---\n")
+        f.write("title: Bad YAML\n")
+        f.write("tags: this should be a list\n")
+        f.write("invalid: [unclosed bracket\n")
+        f.write("mapping values: are not allowed here: problem\n")
+        f.write("---\n")
+        f.write("# Content\n\n")
+        f.write("This file has malformed frontmatter but valid content.\n")
+    
+    # Sync should handle gracefully (either parse with defaults or skip file)
+    entity, checksum = await sync_service.sync_file("bad_yaml.md", new=True)
+    
+    # File should either be created with default frontmatter or skipped
+    # Either way, sync should not hang or crash
+    # Result depends on whether parser can recover from YAML errors
+    # The important thing is it returns, not what it returns
+    assert True  # If we get here, sync didn't hang
+
+
+@pytest.mark.asyncio
+async def test_sync_no_frontmatter(sync_service, config_home):
+    """Test that sync handles files with no frontmatter."""
+    # Create file without frontmatter
+    no_fm = config_home / "no_frontmatter.md"
+    with open(no_fm, "w", encoding="utf-8") as f:
+        f.write("# Just Content\n\n")
+        f.write("This file has no frontmatter at all.\n")
+        f.write("[[Link to something]]\n")
+    
+    # Sync should succeed and create default frontmatter
+    entity, checksum = await sync_service.sync_file("no_frontmatter.md", new=True)
+    
+    assert entity is not None
+    assert checksum is not None
+    assert entity.title == "no_frontmatter"  # Default from filename

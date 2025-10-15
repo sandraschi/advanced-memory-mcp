@@ -34,7 +34,7 @@ class SearchService:
         self.entity_repository = entity_repository
         self.file_service = file_service
 
-    async def init_search_index(self):
+    async def init_search_index(self) -> None:
         """Create FTS5 virtual table if it doesn't exist."""
         await self.repository.init_search_index()
 
@@ -48,13 +48,13 @@ class SearchService:
 
         # Reindex all entities
         logger.debug("Indexing entities")
-        entities = await self.entity_repository.find_all()
+        entities: Sequence[Entity] = await self.entity_repository.find_all()
         for entity in entities:
             await self.index_entity(entity, background_tasks)
 
         logger.info("Reindex complete")
 
-    async def search(self, query: SearchQuery, limit=10, offset=0) -> list[SearchIndexRow]:
+    async def search(self, query: SearchQuery, limit: int = 10, offset: int = 0) -> list[SearchIndexRow]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -218,7 +218,7 @@ class SearchService:
         The project_id is automatically added by the repository when indexing.
         """
 
-        content_stems = []
+        content_stems: list[str] = []
         content_snippet = ""
         title_variants = self._generate_variants(entity.title)
         content_stems.extend(title_variants)
@@ -316,15 +316,15 @@ class SearchService:
                 )
             )
 
-    async def delete_by_permalink(self, permalink: str):
+    async def delete_by_permalink(self, permalink: str) -> None:
         """Delete an item from the search index."""
         await self.repository.delete_by_permalink(permalink)
 
-    async def delete_by_entity_id(self, entity_id: int):
+    async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index."""
         await self.repository.delete_by_entity_id(entity_id)
 
-    async def handle_delete(self, entity: Entity):
+    async def handle_delete(self, entity: Entity) -> None:
         """Handle complete entity deletion from search index including observations and relations.
 
         This replicates the logic from sync_service.handle_delete() to properly clean up

@@ -79,7 +79,7 @@ class SyncMetrics:
         """Time since last progress update."""
         return time.time() - self.last_progress_time
     
-    def update_progress(self, files_scanned: int):
+    def update_progress(self, files_scanned: int) -> None:
         """Update progress metrics."""
         self.files_scanned = files_scanned
         self.last_progress_time = time.time()
@@ -134,7 +134,7 @@ class SyncHealthMonitor:
                   project_path=str(self.project_path),
                   stall_timeout=stall_timeout)
     
-    def _log(self, event: str, level: str = "info", **kwargs):
+    def _log(self, event: str, level: str = "info", **kwargs) -> None:  # type: ignore[no-untyped-def]
         """Log with structured or standard logging."""
         if HAS_STRUCTLOG:
             getattr(logger, level)(event, **kwargs)
@@ -203,7 +203,7 @@ class SyncHealthMonitor:
                      error_type=type(e).__name__)
             return False
     
-    def update_scan_progress(self, files_scanned: int):
+    def update_scan_progress(self, files_scanned: int) -> None:
         """Update scan progress."""
         self.metrics.update_progress(files_scanned)
         
@@ -219,7 +219,7 @@ class SyncHealthMonitor:
                      total=self.metrics.files_total,
                      percent=self.metrics.progress_percent)
     
-    def _add_error(self, error_type: str, message: str, trace: str = ""):
+    def _add_error(self, error_type: str, message: str, trace: str = "") -> None:
         """Add error to error log."""
         error = {
             "type": error_type,
@@ -235,7 +235,7 @@ class SyncHealthMonitor:
                  error_type=error_type,
                  message=message)
     
-    async def start_monitoring(self):
+    async def start_monitoring(self) -> None:
         """Start background monitoring task."""
         if self._is_monitoring:
             self._log("monitoring_already_running", level="warning")
@@ -245,7 +245,7 @@ class SyncHealthMonitor:
         self._monitor_task = asyncio.create_task(self._monitor_loop())
         self._log("monitoring_started")
     
-    async def stop_monitoring(self):
+    async def stop_monitoring(self) -> None:
         """Stop background monitoring."""
         self._is_monitoring = False
         if self._monitor_task:
@@ -256,7 +256,7 @@ class SyncHealthMonitor:
                 pass
         self._log("monitoring_stopped")
     
-    async def _monitor_loop(self):
+    async def _monitor_loop(self) -> None:
         """Background monitoring loop."""
         while self._is_monitoring:
             try:
@@ -269,7 +269,7 @@ class SyncHealthMonitor:
                          level="error",
                          error=str(e))
     
-    async def _check_health(self):
+    async def _check_health(self) -> None:
         """Perform health check."""
         # Check for stall
         if self.state == SyncState.SCANNING:

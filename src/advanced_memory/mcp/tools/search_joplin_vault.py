@@ -169,7 +169,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
                     dir_contents = await list_directory(current_path)
 
                     # Group files by base name (without extension)
-                    file_groups = {}
+                    file_groups: dict[str, dict[str, str]] = {}
                     for line in dir_contents.split('\n'):
                         if '[DOC]' in line:
                             parts = line.split()
@@ -221,7 +221,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
             # Fallback to direct filesystem access
             logger.warning("MCP filesystem not available, using direct access")
 
-            file_groups = {}
+            file_groups: dict[str, dict[str, Path]] = {}
             for file_path in vault_path.rglob("*"):
                 if file_path.is_file():
                     if file_path.suffix.lower() == '.md':

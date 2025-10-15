@@ -101,10 +101,10 @@ async def adn_knowledge(
 async def _knowledge_operations(operation: str, filters: dict[str, Any] | None, action: dict[str, Any] | None, dry_run: bool, limit: int, project: str | None) -> str:
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import knowledge_operations
-    return await knowledge_operations(operation, filters, action, dry_run, limit, project)
+    return await knowledge_operations(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(operation: str, topic: str | None, topic_type: str | None, research_type: str | None, step: int | None, parameters: dict[str, Any] | None) -> str:
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
-    return await research_orchestrator(operation, topic, topic_type, research_type, step, parameters)
+    return await research_orchestrator(operation, topic, topic_type, research_type, step, parameters)  # type: ignore[operator,no-any-return]

@@ -162,8 +162,8 @@ async def engine_session_factory(
 
 
 async def run_migrations(
-    app_config: AdvancedMemoryConfig, database_type=DatabaseType.FILESYSTEM, force: bool = False
-):  # pragma: no cover
+    app_config: AdvancedMemoryConfig, database_type: DatabaseType = DatabaseType.FILESYSTEM, force: bool = False
+) -> None:  # pragma: no cover
     """Run any pending alembic migrations."""
     global _migrations_completed
 

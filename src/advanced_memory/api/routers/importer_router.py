@@ -135,7 +135,7 @@ async def import_file(importer: Importer, file: UploadFile, destination_folder: 
     try:
         # Process file
         json_data = json.load(file.file)
-        result = await importer.import_data(json_data, destination_folder)
+        result: ImportResult = await importer.import_data(json_data, destination_folder)
         if not result.success:  # pragma: no cover
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

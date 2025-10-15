@@ -24,13 +24,13 @@ async def to_graph_context(
     entity_repository: EntityRepository,
     page: int | None = None,
     page_size: int | None = None,
-):
+) -> GraphContext:
     # Helper function to convert items to summaries
-    async def to_summary(item: SearchIndexRow | ContextResultRow):
+    async def to_summary(item: SearchIndexRow | ContextResultRow) -> EntitySummary | ObservationSummary | RelationSummary:
         match item.type:
             case SearchItemType.ENTITY:
                 return EntitySummary(
-                    title=item.title,  # pyright: ignore
+                    title=item.title or "",
                     permalink=item.permalink,
                     content=item.content,
                     file_path=item.file_path,
@@ -38,21 +38,21 @@ async def to_graph_context(
                 )
             case SearchItemType.OBSERVATION:
                 return ObservationSummary(
-                    title=item.title,  # pyright: ignore
+                    title=item.title or "",
                     file_path=item.file_path,
-                    category=item.category,  # pyright: ignore
-                    content=item.content,  # pyright: ignore
-                    permalink=item.permalink,  # pyright: ignore
+                    category=item.category or "",
+                    content=item.content or "",
+                    permalink=item.permalink or "",
                     created_at=item.created_at,
                 )
             case SearchItemType.RELATION:
-                from_entity = await entity_repository.find_by_id(item.from_id)  # pyright: ignore
-                to_entity = await entity_repository.find_by_id(item.to_id) if item.to_id else None
+                from_entity: Entity | None = await entity_repository.find_by_id(item.from_id or 0)
+                to_entity: Entity | None = await entity_repository.find_by_id(item.to_id) if item.to_id else None
                 return RelationSummary(
-                    title=item.title,  # pyright: ignore
+                    title=item.title or "",
                     file_path=item.file_path,
-                    permalink=item.permalink,  # pyright: ignore
-                    relation_type=item.relation_type,  # pyright: ignore
+                    permalink=item.permalink or "",
+                    relation_type=item.relation_type or "",
                     from_entity=from_entity.title if from_entity else None,
                     to_entity=to_entity.title if to_entity else None,
                     created_at=item.created_at,
@@ -80,7 +80,7 @@ async def to_graph_context(
         hierarchical_results.append(
             ContextResult(
                 primary_result=primary_result,
-                observations=observations,
+                observations=observations,  # type: ignore[arg-type]
                 related_results=related,
             )
         )
@@ -108,16 +108,16 @@ async def to_graph_context(
     )
 
 
-async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]):
-    search_results = []
+async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[EntitySummary | ObservationSummary | RelationSummary]:
+    search_results: list[EntitySummary | ObservationSummary | RelationSummary] = []
     for r in results:
         entities = await entity_service.get_entities_by_id([r.entity_id, r.from_id, r.to_id])  # pyright: ignore
-        search_results.append(
+        search_results.append(  # type: ignore[misc]
             SearchResult(
-                title=r.title,  # pyright: ignore
-                type=r.type,  # pyright: ignore
+                title=r.title or "",
+                type=SearchItemType(r.type) if r.type else SearchItemType.ENTITY,
                 permalink=r.permalink,
-                score=r.score,  # pyright: ignore
+                score=r.score or 0.0,
                 entity=entities[0].permalink if entities else None,
                 content=r.content,
                 file_path=r.file_path,
