@@ -29,11 +29,6 @@ jobs:
     - name: Install dependencies
       run: uv sync --dev
 
-    - name: Install security tools
-      run: |
-        uv pip install bandit safety semgrep || echo "Some security tools failed to install"
-      continue-on-error: true
-
     - name: Run Safety (Python vulnerability scanner)
       run: uv run safety check --json --output safety-report.json || echo "Safety check completed with warnings"
       continue-on-error: true
