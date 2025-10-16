@@ -12,9 +12,15 @@ from fastmcp import Context
 from loguru import logger
 
 from advanced_memory.cli.zettelkasten_content import (
+    CREATIVE_TEMPLATES,
+    DATA_SCIENTIST_TEMPLATES,
     DEVELOPER_TEMPLATES,
+    DEVOPS_TEMPLATES,
+    ENTREPRENEUR_TEMPLATES,
     KNOWLEDGE_WORKER_TEMPLATES,
+    PRODUCT_MANAGER_TEMPLATES,
     RESEARCHER_TEMPLATES,
+    UIUX_DESIGNER_TEMPLATES,
     WRITER_TEMPLATES,
 )
 from advanced_memory.mcp.async_client import client
@@ -29,6 +35,12 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
     "researcher": RESEARCHER_TEMPLATES,
     "writer": WRITER_TEMPLATES,
     "knowledge-worker": KNOWLEDGE_WORKER_TEMPLATES,
+    "devops": DEVOPS_TEMPLATES,
+    "data-scientist": DATA_SCIENTIST_TEMPLATES,
+    "uiux-designer": UIUX_DESIGNER_TEMPLATES,
+    "product-manager": PRODUCT_MANAGER_TEMPLATES,
+    "entrepreneur": ENTREPRENEUR_TEMPLATES,
+    "creative": CREATIVE_TEMPLATES,
 }
 
 
@@ -57,11 +69,17 @@ async def adn_zettelmaker(
     - connect: Auto-create relationships between related notes
     - analyze: Analyze knowledge gaps and recommend templates
 
-    CATEGORIES:
-    - developer: Python, Git, Testing, Architecture, etc.
+    CATEGORIES (10 total):
+    - developer: Python, Git, Testing, Architecture
     - researcher: Research methods, critical thinking, writing
     - writer: Craft, storytelling, publishing
     - knowledge-worker: Productivity, PKM, communication
+    - devops: Docker, Kubernetes, CI/CD, Infrastructure as Code
+    - data-scientist: Machine Learning, Statistics, Data Analysis
+    - uiux-designer: Design Principles, Figma, User Research
+    - product-manager: Strategy, Roadmaps, Metrics, OKRs
+    - entrepreneur: Business Models, Fundraising, Growth
+    - creative: Photography, Video, Audio, Design
 
     TOPICS (examples by category):
     - developer: python-core, git, testing, architecture

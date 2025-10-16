@@ -10,9 +10,15 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Prompt
 
 from advanced_memory.cli.app import app
+from advanced_memory.cli.zettelkasten_content.creative import CREATIVE_TEMPLATES
+from advanced_memory.cli.zettelkasten_content.data_scientist import DATA_SCIENTIST_TEMPLATES
 from advanced_memory.cli.zettelkasten_content.developer import DEVELOPER_TEMPLATES
+from advanced_memory.cli.zettelkasten_content.devops import DEVOPS_TEMPLATES
+from advanced_memory.cli.zettelkasten_content.entrepreneur import ENTREPRENEUR_TEMPLATES
 from advanced_memory.cli.zettelkasten_content.knowledge_worker import KNOWLEDGE_WORKER_TEMPLATES
+from advanced_memory.cli.zettelkasten_content.product_manager import PRODUCT_MANAGER_TEMPLATES
 from advanced_memory.cli.zettelkasten_content.researcher import RESEARCHER_TEMPLATES
+from advanced_memory.cli.zettelkasten_content.uiux_designer import UIUX_DESIGNER_TEMPLATES
 from advanced_memory.cli.zettelkasten_content.writer import WRITER_TEMPLATES
 from advanced_memory.mcp.tools import write_note as mcp_write_note
 
@@ -28,6 +34,12 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
     "researcher": RESEARCHER_TEMPLATES,
     "writer": WRITER_TEMPLATES,
     "knowledge-worker": KNOWLEDGE_WORKER_TEMPLATES,
+    "devops": DEVOPS_TEMPLATES,
+    "data-scientist": DATA_SCIENTIST_TEMPLATES,
+    "uiux-designer": UIUX_DESIGNER_TEMPLATES,
+    "product-manager": PRODUCT_MANAGER_TEMPLATES,
+    "entrepreneur": ENTREPRENEUR_TEMPLATES,
+    "creative": CREATIVE_TEMPLATES,
 }
 
 
@@ -57,6 +69,12 @@ def get_user_interests() -> dict[str, list[str]]:
         "2": "researcher",
         "3": "writer",
         "4": "knowledge-worker",
+        "5": "devops",
+        "6": "data-scientist",
+        "7": "uiux-designer",
+        "8": "product-manager",
+        "9": "entrepreneur",
+        "10": "creative",
     }
 
     console.print("\n[bold]Available Categories:[/bold]")
@@ -64,6 +82,12 @@ def get_user_interests() -> dict[str, list[str]]:
     console.print("2. Researcher (Methods, Critical Thinking, Writing)")
     console.print("3. Writer (Craft, Storytelling, Publishing)")
     console.print("4. Knowledge Worker (Productivity, PKM, Communication)")
+    console.print("5. DevOps Engineer (Docker, Kubernetes, CI/CD, IaC)")
+    console.print("6. Data Scientist (ML, Statistics, Data Analysis)")
+    console.print("7. UI/UX Designer (Design Principles, Figma, Research)")
+    console.print("8. Product Manager (Strategy, Roadmaps, Metrics)")
+    console.print("9. Entrepreneur (Business Models, Fundraising, Growth)")
+    console.print("10. Creative Professional (Photography, Video, Design)")
 
     # Get category selection
     selection = Prompt.ask(
