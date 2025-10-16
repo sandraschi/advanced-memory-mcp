@@ -329,9 +329,15 @@ class TemplateGenerator:
             Dictionary of category -> topic list
         """
         from advanced_memory.cli.zettelkasten_content import (
+            CREATIVE_TEMPLATES,
+            DATA_SCIENTIST_TEMPLATES,
             DEVELOPER_TEMPLATES,
+            DEVOPS_TEMPLATES,
+            ENTREPRENEUR_TEMPLATES,
             KNOWLEDGE_WORKER_TEMPLATES,
+            PRODUCT_MANAGER_TEMPLATES,
             RESEARCHER_TEMPLATES,
+            UIUX_DESIGNER_TEMPLATES,
             WRITER_TEMPLATES,
         )
 
@@ -340,6 +346,12 @@ class TemplateGenerator:
             "researcher": list(RESEARCHER_TEMPLATES.keys()),
             "writer": list(WRITER_TEMPLATES.keys()),
             "knowledge-worker": list(KNOWLEDGE_WORKER_TEMPLATES.keys()),
+            "devops": list(DEVOPS_TEMPLATES.keys()),
+            "data-scientist": list(DATA_SCIENTIST_TEMPLATES.keys()),
+            "uiux-designer": list(UIUX_DESIGNER_TEMPLATES.keys()),
+            "product-manager": list(PRODUCT_MANAGER_TEMPLATES.keys()),
+            "entrepreneur": list(ENTREPRENEUR_TEMPLATES.keys()),
+            "creative": list(CREATIVE_TEMPLATES.keys()),
         }
 
         if category:
