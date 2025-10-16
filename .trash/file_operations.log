@@ -18926,3 +18926,858 @@ expected ',' or ']', but got ':'
 2025-10-16 12:35:06 | INFO     | Initializing search index
 2025-10-16 12:35:06 | INFO     | Initialized project session with default project: test-project
 2025-10-16 12:35:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:41:56 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:42:40 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:41 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initializing search index
+2025-10-16 12:42:41 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:42:42 | INFO     | Using in-memory SQLite database
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initializing search index
+2025-10-16 12:42:42 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:42:42 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:37 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initializing search index
+2025-10-16 12:43:38 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:38 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:38 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:43:39 | INFO     | Using in-memory SQLite database
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initializing search index
+2025-10-16 12:43:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:43:39 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:16 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:17 | INFO     | Using in-memory SQLite database
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initializing search index
+2025-10-16 12:44:17 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:44:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:44:26 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:45:10 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:49:16 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:53:23 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:53:25 | INFO     | Using in-memory SQLite database
+2025-10-16 12:53:25 | INFO     | Initializing search index
+2025-10-16 12:53:25 | INFO     | Initializing search index
+2025-10-16 12:53:25 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:53:25 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:53:25 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:53:25 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:53:25 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:53:25 | INFO     | Resolving forward references
+2025-10-16 12:53:25 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:53:25 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:53:26 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='target/MovedNote.md'
+2025-10-16 12:53:26 | INFO     | Moved file: source/Test_Note.md -> target/MovedNote.md
+2025-10-16 12:53:26 | INFO     | Updated permalink: source/test-note -> target/moved-note
+2025-10-16 12:53:26 | INFO     | API response
+2025-10-16 12:53:26 | INFO     | Move note completed
+2025-10-16 12:53:58 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:54:00 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:00 | INFO     | Initializing search index
+2025-10-16 12:54:00 | INFO     | Initializing search index
+2025-10-16 12:54:00 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:00 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:00 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:00 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:00 | INFO     | Resolving forward references
+2025-10-16 12:54:00 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:00 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:00 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='target/MovedNote.md'
+2025-10-16 12:54:00 | INFO     | Moved file: source/Test_Note.md -> target/MovedNote.md
+2025-10-16 12:54:00 | INFO     | Updated permalink: source/test-note -> target/moved-note
+2025-10-16 12:54:00 | INFO     | API response
+2025-10-16 12:54:00 | INFO     | Move note completed
+2025-10-16 12:54:00 | INFO     | Attempting to read note from URL: /test-project/resource/source/test-note
+2025-10-16 12:54:01 | INFO     | Client error: GET /test-project/resource/source/test-note: Resource not found: source/test-note
+2025-10-16 12:54:01 | INFO     | Direct lookup failed for '/test-project/resource/source/test-note': Resource not found: source/test-note
+2025-10-16 12:54:01 | INFO     | Search title for: source/test-note
+2025-10-16 12:54:01 | INFO     | Searching for permalink=None permalink_match=None text=None title='source/test-note' types=None entity_types=None after_date=None
+2025-10-16 12:54:01 | INFO     | Search returned no results for query: source/test-note
+2025-10-16 12:54:01 | INFO     | No results in title search for: source/test-note
+2025-10-16 12:54:01 | INFO     | Title search failed, trying text search for: source/test-note
+2025-10-16 12:54:01 | INFO     | Searching for permalink=None permalink_match=None text='source/test-note' title=None types=None entity_types=None after_date=None
+2025-10-16 12:54:01 | INFO     | Search returned no results for query: source/test-note
+2025-10-16 12:54:01 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-note
+2025-10-16 12:54:01 | INFO     | Returning read_note result from resource: target/moved-note
+2025-10-16 12:54:01 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:01 | INFO     | Initializing search index
+2025-10-16 12:54:01 | INFO     | Initializing search index
+2025-10-16 12:54:01 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:01 | INFO     | MCP tool call tool=write_note folder=, title=Deep Note, tags=None
+2025-10-16 12:54:01 | INFO     | API request: create_or_update_entity for project='test-project', permalink='deep-note', data.entity_type='note', data.title='Deep Note'
+2025-10-16 12:54:01 | INFO     | Writing file: Deep_Note.md, is_markdown=True
+2025-10-16 12:54:01 | INFO     | Resolving forward references
+2025-10-16 12:54:01 | INFO     | API response: result.title='Deep Note', result.permalink='deep-note', created=True, status_code=201
+2025-10-16 12:54:01 | INFO     | MCP tool response: tool=write_note action=Created permalink=deep-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:01 | INFO     | API request: endpoint='move_entity', identifier='deep-note', destination='deeply/nested/folder/DeepNote.md'
+2025-10-16 12:54:01 | INFO     | Moved file: Deep_Note.md -> deeply/nested/folder/DeepNote.md
+2025-10-16 12:54:01 | INFO     | Updated permalink: deep-note -> deeply/nested/folder/deep-note
+2025-10-16 12:54:01 | INFO     | API response
+2025-10-16 12:54:01 | INFO     | Move note completed
+2025-10-16 12:54:01 | INFO     | Attempting to read note from URL: /test-project/resource/deeply/nested/folder/deep-note
+2025-10-16 12:54:01 | INFO     | Returning read_note result from resource: deeply/nested/folder/deep-note
+2025-10-16 12:54:01 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:01 | INFO     | Initializing search index
+2025-10-16 12:54:01 | INFO     | Initializing search index
+2025-10-16 12:54:01 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:01 | INFO     | MCP tool call tool=write_note folder=source, title=Complex Entity, tags=None
+2025-10-16 12:54:01 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/complex-entity', data.entity_type='note', data.title='Complex Entity'
+2025-10-16 12:54:01 | INFO     | Writing file: source\Complex_Entity.md, is_markdown=True
+2025-10-16 12:54:01 | INFO     | Resolving forward references
+2025-10-16 12:54:01 | INFO     | API response: result.title='Complex Entity', result.permalink='source/complex-entity', created=True, status_code=201
+2025-10-16 12:54:02 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/complex-entity observations_count=2 relations_count=2 resolved_relations=0 unresolved_relations=2 status_code=201
+2025-10-16 12:54:02 | INFO     | API request: endpoint='move_entity', identifier='source/complex-entity', destination='target/MovedComplex.md'
+2025-10-16 12:54:02 | INFO     | Moved file: source/Complex_Entity.md -> target/MovedComplex.md
+2025-10-16 12:54:02 | INFO     | Updated permalink: source/complex-entity -> target/moved-complex
+2025-10-16 12:54:02 | INFO     | API response
+2025-10-16 12:54:02 | INFO     | Move note completed
+2025-10-16 12:54:02 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-complex
+2025-10-16 12:54:02 | INFO     | Returning read_note result from resource: target/moved-complex
+2025-10-16 12:54:02 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:02 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:02 | INFO     | MCP tool call tool=write_note folder=source, title=UniqueTestTitle, tags=None
+2025-10-16 12:54:02 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/unique-test-title', data.entity_type='note', data.title='UniqueTestTitle'
+2025-10-16 12:54:02 | INFO     | Writing file: source\UniqueTestTitle.md, is_markdown=True
+2025-10-16 12:54:02 | INFO     | Resolving forward references
+2025-10-16 12:54:02 | INFO     | API response: result.title='UniqueTestTitle', result.permalink='source/unique-test-title', created=True, status_code=201
+2025-10-16 12:54:02 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/unique-test-title observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:02 | INFO     | API request: endpoint='move_entity', identifier='UniqueTestTitle', destination='target/MovedByTitle.md'
+2025-10-16 12:54:02 | INFO     | Moved file: source/UniqueTestTitle.md -> target/MovedByTitle.md
+2025-10-16 12:54:02 | INFO     | Updated permalink: source/unique-test-title -> target/moved-by-title
+2025-10-16 12:54:02 | INFO     | API response
+2025-10-16 12:54:02 | INFO     | Move note completed
+2025-10-16 12:54:02 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-by-title
+2025-10-16 12:54:02 | INFO     | Returning read_note result from resource: target/moved-by-title
+2025-10-16 12:54:02 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:02 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:02 | INFO     | MCP tool call tool=write_note folder=source, title=PathTest, tags=None
+2025-10-16 12:54:02 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/path-test', data.entity_type='note', data.title='PathTest'
+2025-10-16 12:54:02 | INFO     | Writing file: source\PathTest.md, is_markdown=True
+2025-10-16 12:54:02 | INFO     | Resolving forward references
+2025-10-16 12:54:02 | INFO     | API response: result.title='PathTest', result.permalink='source/path-test', created=True, status_code=201
+2025-10-16 12:54:02 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/path-test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:02 | INFO     | API request: endpoint='move_entity', identifier='source/PathTest.md', destination='target/MovedByPath.md'
+2025-10-16 12:54:02 | INFO     | Moved file: source/PathTest.md -> target/MovedByPath.md
+2025-10-16 12:54:02 | INFO     | Updated permalink: source/path-test -> target/moved-by-path
+2025-10-16 12:54:02 | INFO     | API response
+2025-10-16 12:54:02 | INFO     | Move note completed
+2025-10-16 12:54:02 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-by-path
+2025-10-16 12:54:02 | INFO     | Returning read_note result from resource: target/moved-by-path
+2025-10-16 12:54:02 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initializing search index
+2025-10-16 12:54:02 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:02 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:03 | INFO     | API request: endpoint='move_entity', identifier='nonexistent/note', destination='target/SomeFile.md'
+2025-10-16 12:54:03 | ERROR    | Error moving entity: Entity not found: nonexistent/note
+2025-10-16 12:54:03 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: nonexistent/note
+2025-10-16 12:54:03 | ERROR    | Move failed for 'nonexistent/note' to 'target/SomeFile.md': Entity not found: nonexistent/note
+2025-10-16 12:54:03 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:03 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:03 | INFO     | MCP tool call tool=write_note folder=source, title=TestNote, tags=None
+2025-10-16 12:54:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='TestNote'
+2025-10-16 12:54:03 | INFO     | Writing file: source\TestNote.md, is_markdown=True
+2025-10-16 12:54:03 | INFO     | Resolving forward references
+2025-10-16 12:54:03 | INFO     | API response: result.title='TestNote', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:03 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:03 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:03 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:03 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:03 | INFO     | MCP tool call tool=write_note folder=source, title=SourceNote, tags=None
+2025-10-16 12:54:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/source-note', data.entity_type='note', data.title='SourceNote'
+2025-10-16 12:54:03 | INFO     | Writing file: source\SourceNote.md, is_markdown=True
+2025-10-16 12:54:03 | INFO     | Resolving forward references
+2025-10-16 12:54:03 | INFO     | API response: result.title='SourceNote', result.permalink='source/source-note', created=True, status_code=201
+2025-10-16 12:54:03 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/source-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:03 | INFO     | MCP tool call tool=write_note folder=target, title=DestinationNote, tags=None
+2025-10-16 12:54:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='target/destination-note', data.entity_type='note', data.title='DestinationNote'
+2025-10-16 12:54:03 | INFO     | Writing file: target\DestinationNote.md, is_markdown=True
+2025-10-16 12:54:03 | INFO     | Resolving forward references
+2025-10-16 12:54:03 | INFO     | API response: result.title='DestinationNote', result.permalink='target/destination-note', created=True, status_code=201
+2025-10-16 12:54:03 | INFO     | MCP tool response: tool=write_note action=Created permalink=target/destination-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:03 | INFO     | API request: endpoint='move_entity', identifier='source/source-note', destination='target/DestinationNote.md'
+2025-10-16 12:54:03 | ERROR    | Error moving entity: Destination already exists: target/DestinationNote.md
+2025-10-16 12:54:03 | INFO     | Client error: POST /test-project/knowledge/move: Destination already exists: target/DestinationNote.md
+2025-10-16 12:54:03 | ERROR    | Move failed for 'source/source-note' to 'target/DestinationNote.md': Destination already exists: target/DestinationNote.md
+2025-10-16 12:54:03 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initializing search index
+2025-10-16 12:54:03 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:03 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:03 | INFO     | MCP tool call tool=write_note folder=test, title=SameLocationTest, tags=None
+2025-10-16 12:54:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/same-location-test', data.entity_type='note', data.title='SameLocationTest'
+2025-10-16 12:54:03 | INFO     | Writing file: test\SameLocationTest.md, is_markdown=True
+2025-10-16 12:54:04 | INFO     | Resolving forward references
+2025-10-16 12:54:04 | INFO     | API response: result.title='SameLocationTest', result.permalink='test/same-location-test', created=True, status_code=201
+2025-10-16 12:54:04 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/same-location-test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:04 | INFO     | API request: endpoint='move_entity', identifier='test/same-location-test', destination='test/SameLocationTest.md'
+2025-10-16 12:54:04 | ERROR    | Error moving entity: Destination already exists: test/SameLocationTest.md
+2025-10-16 12:54:04 | INFO     | Client error: POST /test-project/knowledge/move: Destination already exists: test/SameLocationTest.md
+2025-10-16 12:54:04 | ERROR    | Move failed for 'test/same-location-test' to 'test/SameLocationTest.md': Destination already exists: test/SameLocationTest.md
+2025-10-16 12:54:04 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:04 | INFO     | MCP tool call tool=write_note folder=test, title=OriginalName, tags=None
+2025-10-16 12:54:04 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/original-name', data.entity_type='note', data.title='OriginalName'
+2025-10-16 12:54:04 | INFO     | Writing file: test\OriginalName.md, is_markdown=True
+2025-10-16 12:54:04 | INFO     | Resolving forward references
+2025-10-16 12:54:04 | INFO     | API response: result.title='OriginalName', result.permalink='test/original-name', created=True, status_code=201
+2025-10-16 12:54:04 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/original-name observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:04 | INFO     | API request: endpoint='move_entity', identifier='test/original-name', destination='test/NewName.md'
+2025-10-16 12:54:04 | INFO     | Moved file: test/OriginalName.md -> test/NewName.md
+2025-10-16 12:54:04 | INFO     | Updated permalink: test/original-name -> test/new-name
+2025-10-16 12:54:04 | INFO     | API response
+2025-10-16 12:54:04 | INFO     | Move note completed
+2025-10-16 12:54:04 | INFO     | Attempting to read note from URL: /test-project/resource/test/original-name
+2025-10-16 12:54:04 | INFO     | Client error: GET /test-project/resource/test/original-name: Resource not found: test/original-name
+2025-10-16 12:54:04 | INFO     | Direct lookup failed for '/test-project/resource/test/original-name': Resource not found: test/original-name
+2025-10-16 12:54:04 | INFO     | Search title for: test/original-name
+2025-10-16 12:54:04 | INFO     | Searching for permalink=None permalink_match=None text=None title='test/original-name' types=None entity_types=None after_date=None
+2025-10-16 12:54:04 | INFO     | Search returned no results for query: test/original-name
+2025-10-16 12:54:04 | INFO     | No results in title search for: test/original-name
+2025-10-16 12:54:04 | INFO     | Title search failed, trying text search for: test/original-name
+2025-10-16 12:54:04 | INFO     | Searching for permalink=None permalink_match=None text='test/original-name' title=None types=None entity_types=None after_date=None
+2025-10-16 12:54:04 | INFO     | Search returned no results for query: test/original-name
+2025-10-16 12:54:04 | INFO     | Attempting to read note from URL: /test-project/resource/test/new-name
+2025-10-16 12:54:04 | INFO     | Returning read_note result from resource: test/new-name
+2025-10-16 12:54:04 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:04 | INFO     | MCP tool call tool=write_note folder=meetings, title=Meeting Notes 2025, tags=None
+2025-10-16 12:54:04 | INFO     | API request: create_or_update_entity for project='test-project', permalink='meetings/meeting-notes-2025', data.entity_type='note', data.title='Meeting Notes 2025'
+2025-10-16 12:54:04 | INFO     | Writing file: meetings\Meeting_Notes_2025.md, is_markdown=True
+2025-10-16 12:54:04 | INFO     | Resolving forward references
+2025-10-16 12:54:04 | INFO     | API response: result.title='Meeting Notes 2025', result.permalink='meetings/meeting-notes-2025', created=True, status_code=201
+2025-10-16 12:54:04 | INFO     | MCP tool response: tool=write_note action=Created permalink=meetings/meeting-notes-2025 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:04 | INFO     | API request: endpoint='move_entity', identifier='meetings/meeting-notes-2025', destination='archive/2025/meetings/Meeting Notes 2025.md'
+2025-10-16 12:54:04 | INFO     | Moved file: meetings/Meeting_Notes_2025.md -> archive/2025/meetings/Meeting Notes 2025.md
+2025-10-16 12:54:04 | INFO     | Updated permalink: meetings/meeting-notes-2025 -> archive/2025/meetings/meeting-notes-2025
+2025-10-16 12:54:04 | INFO     | API response
+2025-10-16 12:54:04 | INFO     | Move note completed
+2025-10-16 12:54:04 | INFO     | Attempting to read note from URL: /test-project/resource/archive/2025/meetings/meeting-notes-2025
+2025-10-16 12:54:04 | INFO     | Returning read_note result from resource: archive/2025/meetings/meeting-notes-2025
+2025-10-16 12:54:04 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initializing search index
+2025-10-16 12:54:04 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:04 | INFO     | MCP tool call tool=write_note folder=source, title=Tagged Note, tags=['important', 'work', 'project']
+2025-10-16 12:54:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/tagged-note', data.entity_type='note', data.title='Tagged Note'
+2025-10-16 12:54:05 | INFO     | Writing file: source\Tagged_Note.md, is_markdown=True
+2025-10-16 12:54:05 | INFO     | Resolving forward references
+2025-10-16 12:54:05 | INFO     | API response: result.title='Tagged Note', result.permalink='source/tagged-note', created=True, status_code=201
+2025-10-16 12:54:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/tagged-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:05 | INFO     | API request: endpoint='move_entity', identifier='source/tagged-note', destination='target/MovedTaggedNote.md'
+2025-10-16 12:54:05 | INFO     | Moved file: source/Tagged_Note.md -> target/MovedTaggedNote.md
+2025-10-16 12:54:05 | INFO     | Updated permalink: source/tagged-note -> target/moved-tagged-note
+2025-10-16 12:54:05 | INFO     | API response
+2025-10-16 12:54:05 | INFO     | Move note completed
+2025-10-16 12:54:05 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-tagged-note
+2025-10-16 12:54:05 | INFO     | Returning read_note result from resource: target/moved-tagged-note
+2025-10-16 12:54:05 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:05 | INFO     | MCP tool call tool=write_note folder=source, title=TestNote, tags=None
+2025-10-16 12:54:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='TestNote'
+2025-10-16 12:54:05 | INFO     | Writing file: source\TestNote.md, is_markdown=True
+2025-10-16 12:54:05 | INFO     | Resolving forward references
+2025-10-16 12:54:05 | INFO     | API response: result.title='TestNote', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:05 | INFO     | Client error: POST /test-project/knowledge/move: [{'type': 'string_too_short', 'loc': ['body', 'destination_path'], 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2025-10-16 12:54:05 | ERROR    | Move failed for 'source/test-note' to '': [{'type': 'string_too_short', 'loc': ['body', 'destination_path'], 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2025-10-16 12:54:05 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:05 | INFO     | MCP tool call tool=write_note folder=source, title=TestNote, tags=None
+2025-10-16 12:54:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='TestNote'
+2025-10-16 12:54:05 | INFO     | Writing file: source\TestNote.md, is_markdown=True
+2025-10-16 12:54:05 | INFO     | Resolving forward references
+2025-10-16 12:54:05 | INFO     | API response: result.title='TestNote', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:05 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:05 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initializing search index
+2025-10-16 12:54:05 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:05 | INFO     | MCP tool call tool=write_note folder=docs, title=Test Document, tags=None
+2025-10-16 12:54:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='docs/test-document', data.entity_type='note', data.title='Test Document'
+2025-10-16 12:54:05 | INFO     | Writing file: docs\Test_Document.md, is_markdown=True
+2025-10-16 12:54:06 | INFO     | Resolving forward references
+2025-10-16 12:54:06 | INFO     | API response: result.title='Test Document', result.permalink='docs/test-document', created=True, status_code=201
+2025-10-16 12:54:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=docs/test-document observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:06 | INFO     | API request: endpoint='move_entity', identifier='docs/test-document', destination='moved/TestDocument.md'
+2025-10-16 12:54:06 | INFO     | Moved file: docs/Test_Document.md -> moved/TestDocument.md
+2025-10-16 12:54:06 | INFO     | Updated permalink: docs/test-document -> moved/test-document
+2025-10-16 12:54:06 | INFO     | API response
+2025-10-16 12:54:06 | INFO     | Move note completed
+2025-10-16 12:54:06 | INFO     | Attempting to read note from URL: /test-project/resource/moved/test-document
+2025-10-16 12:54:06 | INFO     | Returning read_note result from resource: moved/test-document
+2025-10-16 12:54:06 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:06 | INFO     | MCP tool call tool=write_note folder=source, title=Custom Frontmatter Note, tags=None
+2025-10-16 12:54:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/custom-frontmatter-note', data.entity_type='note', data.title='Custom Frontmatter Note'
+2025-10-16 12:54:06 | INFO     | Writing file: source\Custom_Frontmatter_Note.md, is_markdown=True
+2025-10-16 12:54:06 | INFO     | Resolving forward references
+2025-10-16 12:54:06 | INFO     | API response: result.title='Custom Frontmatter Note', result.permalink='source/custom-frontmatter-note', created=True, status_code=201
+2025-10-16 12:54:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/custom-frontmatter-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:06 | INFO     | API request: endpoint='move_entity', identifier='source/custom-frontmatter-note', destination='target/MovedCustomNote.md'
+2025-10-16 12:54:06 | INFO     | Moved file: source/Custom_Frontmatter_Note.md -> target/MovedCustomNote.md
+2025-10-16 12:54:06 | INFO     | Updated permalink: source/custom-frontmatter-note -> target/moved-custom-note
+2025-10-16 12:54:06 | INFO     | API response
+2025-10-16 12:54:06 | INFO     | Move note completed
+2025-10-16 12:54:06 | INFO     | Attempting to read note from URL: /test-project/resource/target/moved-custom-note
+2025-10-16 12:54:06 | INFO     | Returning read_note result from resource: target/moved-custom-note
+2025-10-16 12:54:06 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:06 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:06 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:06 | INFO     | Resolving forward references
+2025-10-16 12:54:06 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:06 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initializing search index
+2025-10-16 12:54:06 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:06 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:07 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:07 | INFO     | Resolving forward references
+2025-10-16 12:54:07 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:07 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:07 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:07 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:07 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:07 | INFO     | Resolving forward references
+2025-10-16 12:54:07 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:07 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:07 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:07 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:07 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:07 | INFO     | Resolving forward references
+2025-10-16 12:54:07 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:07 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:07 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:07 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:07 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:07 | INFO     | Resolving forward references
+2025-10-16 12:54:07 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:07 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initializing search index
+2025-10-16 12:54:07 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:07 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:07 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:07 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:07 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:07 | INFO     | Resolving forward references
+2025-10-16 12:54:07 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:07 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='notes/meeting.md'
+2025-10-16 12:54:07 | INFO     | Moved file: source/Test_Note.md -> notes/meeting.md
+2025-10-16 12:54:07 | INFO     | Updated permalink: source/test-note -> notes/meeting
+2025-10-16 12:54:07 | INFO     | API response
+2025-10-16 12:54:07 | INFO     | Move note completed
+2025-10-16 12:54:07 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='docs/readme.txt'
+2025-10-16 12:54:08 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to 'docs/readme.txt': Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='projects/2025/planning.md'
+2025-10-16 12:54:08 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to 'projects/2025/planning.md': Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='archive/old-notes/backup.md'
+2025-10-16 12:54:08 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to 'archive/old-notes/backup.md': Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='deep/nested/directory/structure/file.txt'
+2025-10-16 12:54:08 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to 'deep/nested/directory/structure/file.txt': Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='folder/subfolder/document.md'
+2025-10-16 12:54:08 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to 'folder/subfolder/document.md': Entity not found: source/test-note
+2025-10-16 12:54:08 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:08 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:08 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:08 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:08 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:08 | INFO     | Resolving forward references
+2025-10-16 12:54:08 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:08 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:08 | WARNING  | Attempted path traversal attack blocked
+2025-10-16 12:54:08 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:08 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:08 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:08 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:08 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:08 | INFO     | Resolving forward references
+2025-10-16 12:54:08 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:08 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:08 | INFO     | Client error: POST /test-project/knowledge/move: [{'type': 'string_too_short', 'loc': ['body', 'destination_path'], 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2025-10-16 12:54:08 | ERROR    | Move failed for 'source/test-note' to '': [{'type': 'string_too_short', 'loc': ['body', 'destination_path'], 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2025-10-16 12:54:08 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initializing search index
+2025-10-16 12:54:08 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:08 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:08 | INFO     | MCP tool call tool=write_note folder=source, title=Test Note, tags=None
+2025-10-16 12:54:09 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-16 12:54:09 | INFO     | Writing file: source\Test_Note.md, is_markdown=True
+2025-10-16 12:54:09 | INFO     | Resolving forward references
+2025-10-16 12:54:09 | INFO     | API response: result.title='Test Note', result.permalink='source/test-note', created=True, status_code=201
+2025-10-16 12:54:09 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:54:09 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='./notes/file.md'
+2025-10-16 12:54:09 | INFO     | Moved file: source/Test_Note.md -> ./notes/file.md
+2025-10-16 12:54:09 | INFO     | Updated permalink: source/test-note -> /notes/file
+2025-10-16 12:54:09 | INFO     | API response
+2025-10-16 12:54:09 | INFO     | Move note completed
+2025-10-16 12:54:09 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='folder/./file.md'
+2025-10-16 12:54:09 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:09 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:09 | ERROR    | Move failed for 'source/test-note' to 'folder/./file.md': Entity not found: source/test-note
+2025-10-16 12:54:09 | INFO     | API request: endpoint='move_entity', identifier='source/test-note', destination='./folder/subfolder/file.md'
+2025-10-16 12:54:09 | ERROR    | Error moving entity: Entity not found: source/test-note
+2025-10-16 12:54:09 | INFO     | Client error: POST /test-project/knowledge/move: Entity not found: source/test-note
+2025-10-16 12:54:09 | ERROR    | Move failed for 'source/test-note' to './folder/subfolder/file.md': Entity not found: source/test-note
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:09 | ERROR    | Move failed for 'test-note' to 'target/file.md': entity not found
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:09 | ERROR    | Move failed for 'test-note' to 'target/file.md': permission denied
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:09 | INFO     | Using in-memory SQLite database
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initializing search index
+2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project

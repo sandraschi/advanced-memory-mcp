@@ -26,7 +26,7 @@ async def test_move_note_success(app, client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify original location no longer exists
     try:
@@ -59,7 +59,7 @@ async def test_move_note_with_folder_creation(client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify note exists at new location
     content = await read_note.fn("deeply/nested/folder/deep-note")
@@ -95,7 +95,7 @@ Some additional content.
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify moved note preserves all content
     content = await read_note.fn("target/moved-complex")
@@ -123,7 +123,7 @@ async def test_move_note_by_title(client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify note exists at new location
     content = await read_note.fn("target/moved-by-title")
@@ -148,7 +148,7 @@ async def test_move_note_by_file_path(client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify note exists at new location
     content = await read_note.fn("target/moved-by-path")
@@ -291,7 +291,7 @@ async def test_move_note_complex_filename(client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify note exists at new location with correct content
     content = await read_note.fn("archive/2025/meetings/meeting-notes-2025")
@@ -317,7 +317,7 @@ async def test_move_note_with_tags(app, client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify tags are preserved in correct YAML format
     content = await read_note.fn("target/moved-tagged-note")
@@ -387,7 +387,7 @@ async def test_move_note_identifier_variations(client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify it moved correctly
     content = await read_note.fn("moved/test-document")
@@ -412,7 +412,7 @@ async def test_move_note_preserves_frontmatter(app, client):
     )
 
     assert isinstance(result, str)
-    assert "[UNICODE] Note moved successfully" in result
+    assert "✅ Note moved successfully" in result
 
     # Verify the moved note has proper frontmatter structure
     content = await read_note.fn("target/moved-custom-note")
