@@ -19781,3 +19781,64 @@ expected ',' or ']', but got ':'
 2025-10-16 12:54:09 | INFO     | Initializing search index
 2025-10-16 12:54:09 | INFO     | Initialized project session with default project: test-project
 2025-10-16 12:54:09 | INFO     | Switched project context: test-project -> test-project
+2025-10-16 12:54:35 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:58:51 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:58:53 | INFO     | Initializing search index
+2025-10-16 12:58:53 | INFO     | Initializing search index
+2025-10-16 12:58:53 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:58:53 | INFO     | Initializing app...
+2025-10-16 12:58:53 | INFO     | Database initialization completed
+2025-10-16 12:58:53 | INFO     | Reconciling projects from config with database...
+2025-10-16 12:58:53 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 12:58:53 | INFO     | Project synchronization complete
+2025-10-16 12:58:53 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:58:53 | INFO     | Refreshed project session from config, new default: test-project
+2025-10-16 12:58:53 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 12:58:53 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 12:58:53 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:58:53 | INFO     | MCP tool call tool=write_note folder=source, title=Source Note, tags=test,source
+2025-10-16 12:58:54 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/source-note', data.entity_type='note', data.title='Source Note'
+2025-10-16 12:58:54 | INFO     | Writing file: source\Source_Note.md, is_markdown=True
+2025-10-16 12:58:54 | INFO     | Resolving forward references
+2025-10-16 12:58:54 | INFO     | API response: result.title='Source Note', result.permalink='source/source-note', created=True, status_code=201
+2025-10-16 12:58:54 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/source-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:58:54 | INFO     | MCP tool call tool=write_note folder=destination, title=Existing Note, tags=test,existing
+2025-10-16 12:58:54 | INFO     | API request: create_or_update_entity for project='test-project', permalink='destination/existing-note', data.entity_type='note', data.title='Existing Note'
+2025-10-16 12:58:54 | INFO     | Writing file: destination\Existing_Note.md, is_markdown=True
+2025-10-16 12:58:54 | INFO     | Resolving forward references
+2025-10-16 12:58:54 | INFO     | API response: result.title='Existing Note', result.permalink='destination/existing-note', created=True, status_code=201
+2025-10-16 12:58:54 | INFO     | MCP tool response: tool=write_note action=Created permalink=destination/existing-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:58:54 | INFO     | API request: endpoint='move_entity', identifier='Source Note', destination='destination/Existing_Note.md'
+2025-10-16 12:58:54 | ERROR    | Error moving entity: Destination already exists: destination/Existing_Note.md
+2025-10-16 12:58:54 | INFO     | Client error: POST /test-project/knowledge/move: Destination already exists: destination/Existing_Note.md
+2025-10-16 12:58:54 | ERROR    | Move failed for 'Source Note' to 'destination/Existing_Note.md': Destination already exists: destination/Existing_Note.md
+2025-10-16 12:59:36 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 12:59:39 | INFO     | Initializing search index
+2025-10-16 12:59:39 | INFO     | Initializing search index
+2025-10-16 12:59:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:59:39 | INFO     | Initializing app...
+2025-10-16 12:59:39 | INFO     | Database initialization completed
+2025-10-16 12:59:39 | INFO     | Reconciling projects from config with database...
+2025-10-16 12:59:39 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 12:59:39 | INFO     | Project synchronization complete
+2025-10-16 12:59:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:59:39 | INFO     | Refreshed project session from config, new default: test-project
+2025-10-16 12:59:39 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 12:59:39 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 12:59:39 | INFO     | Initialized project session with default project: test-project
+2025-10-16 12:59:39 | INFO     | MCP tool call tool=write_note folder=source, title=Source Note, tags=test,source
+2025-10-16 12:59:39 | INFO     | API request: create_or_update_entity for project='test-project', permalink='source/source-note', data.entity_type='note', data.title='Source Note'
+2025-10-16 12:59:39 | INFO     | Writing file: source\Source_Note.md, is_markdown=True
+2025-10-16 12:59:39 | INFO     | Resolving forward references
+2025-10-16 12:59:39 | INFO     | API response: result.title='Source Note', result.permalink='source/source-note', created=True, status_code=201
+2025-10-16 12:59:39 | INFO     | MCP tool response: tool=write_note action=Created permalink=source/source-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:59:39 | INFO     | MCP tool call tool=write_note folder=destination, title=Existing Note, tags=test,existing
+2025-10-16 12:59:39 | INFO     | API request: create_or_update_entity for project='test-project', permalink='destination/existing-note', data.entity_type='note', data.title='Existing Note'
+2025-10-16 12:59:39 | INFO     | Writing file: destination\Existing_Note.md, is_markdown=True
+2025-10-16 12:59:39 | INFO     | Resolving forward references
+2025-10-16 12:59:39 | INFO     | API response: result.title='Existing Note', result.permalink='destination/existing-note', created=True, status_code=201
+2025-10-16 12:59:39 | INFO     | MCP tool response: tool=write_note action=Created permalink=destination/existing-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-16 12:59:39 | INFO     | API request: endpoint='move_entity', identifier='Source Note', destination='destination/Existing_Note.md'
+2025-10-16 12:59:39 | ERROR    | Error moving entity: Destination already exists: destination/Existing_Note.md
+2025-10-16 12:59:39 | INFO     | Client error: POST /test-project/knowledge/move: Destination already exists: destination/Existing_Note.md
+2025-10-16 12:59:39 | ERROR    | Move failed for 'Source Note' to 'destination/Existing_Note.md': Destination already exists: destination/Existing_Note.md
