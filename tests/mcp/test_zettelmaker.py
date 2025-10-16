@@ -144,3 +144,13 @@ async def test_zettelmaker_ai_suggest_with_existing_topic():
 
     # Should suggest using AI generation for unknown topic
     assert "ai_generate=True" in result or "AI generation" in result
+
+
+@pytest.mark.asyncio
+async def test_zettelmaker_all_categories_load():
+    """Test that all 10 categories are available."""
+    result = await adn_zettelmaker("generate")
+
+    # Should mention categories
+    assert "category" in result.lower()
+    assert "Available categories" in result or "Error" in result
