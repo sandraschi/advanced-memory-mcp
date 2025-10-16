@@ -227,7 +227,7 @@ T = TypeVar('T')
 class Box(Generic[T]):
     def __init__(self, content: T):
         self.content = content
-    
+
     def get(self) -> T:
         return self.content
 
@@ -302,12 +302,12 @@ strict = true
 3. **Type complex structures**
    ```python
    from typing import TypedDict
-   
+
    class UserDict(TypedDict):
        name: str
        age: int
        email: str
-   
+
    def create_user(data: UserDict) -> User:
        ...
    ```
@@ -484,7 +484,7 @@ uv sync --dev  # Include dev dependencies
    ```bash
    # UV automatically creates uv.lock
    uv lock
-   
+
    # Poetry creates poetry.lock
    poetry lock
    ```
@@ -824,7 +824,7 @@ import unittest
 class TestMath(unittest.TestCase):
     def test_addition(self):
         self.assertEqual(2 + 2, 4)
-    
+
     def test_subtraction(self):
         self.assertEqual(5 - 3, 2)
 
@@ -855,11 +855,11 @@ Test how components work together.
 def test_user_registration_flow():
     # Create user
     user = create_user("alice@example.com", "password123")
-    
+
     # Verify in database
     stored_user = db.get_user(user.id)
     assert stored_user.email == "alice@example.com"
-    
+
     # Verify can login
     token = login(user.email, "password123")
     assert token is not None
@@ -873,11 +873,11 @@ def test_complete_checkout_process(client):
     # Add items to cart
     response = client.post("/cart/add", json={"item_id": 123})
     assert response.status_code == 200
-    
+
     # Proceed to checkout
     response = client.post("/checkout")
     assert response.status_code == 200
-    
+
     # Verify order created
     orders = client.get("/orders").json()
     assert len(orders) == 1
@@ -962,7 +962,7 @@ from unittest.mock import Mock, patch
 def test_api_call():
     with patch('requests.get') as mock_get:
         mock_get.return_value.json.return_value = {"status": "ok"}
-        
+
         result = fetch_data()
         assert result["status"] == "ok"
         mock_get.assert_called_once()
@@ -972,7 +972,7 @@ def test_api_call():
 ```python
 def test_file_operation(mocker):
     mock_open = mocker.patch('builtins.open')
-    
+
     read_file("test.txt")
     mock_open.assert_called_with("test.txt", "r")
 ```
@@ -1035,10 +1035,10 @@ def validate_email(email: str) -> bool:
        # Arrange
        email = "user@example.com"
        password = "secure123"
-       
+
        # Act
        user = create_user(email, password)
-       
+
        # Assert
        assert user.email == email
        assert user.is_active == True
@@ -1362,11 +1362,11 @@ Bundle data and methods that operate on that data within a single unit (class).
 class BankAccount:
     def __init__(self, balance: float = 0):
         self._balance = balance  # Private attribute
-    
+
     def deposit(self, amount: float) -> None:
         if amount > 0:
             self._balance += amount
-    
+
     def get_balance(self) -> float:
         return self._balance  # Controlled access
 ```
@@ -1383,7 +1383,7 @@ Create new classes based on existing classes, inheriting their attributes and me
 class Animal:
     def __init__(self, name: str):
         self.name = name
-    
+
     def speak(self) -> str:
         return f"{self.name} makes a sound"
 
@@ -1432,7 +1432,7 @@ class Shape(ABC):
     @abstractmethod
     def area(self) -> float:
         pass
-    
+
     @abstractmethod
     def perimeter(self) -> float:
         pass
@@ -1441,10 +1441,10 @@ class Rectangle(Shape):
     def __init__(self, width: float, height: float):
         self.width = width
         self.height = height
-    
+
     def area(self) -> float:
         return self.width * self.height
-    
+
     def perimeter(self) -> float:
         return 2 * (self.width + self.height)
 ```
@@ -1536,7 +1536,7 @@ Depend on abstractions, not concrete implementations.
 class UserService:
     def __init__(self, db: Database):  # Abstract interface
         self.db = db
-    
+
     def get_user(self, id: int):
         return self.db.find_by_id(id)
 
@@ -1573,7 +1573,7 @@ class Engine:
 class Car:
     def __init__(self):
         self.engine = Engine()  # Has-a relationship
-    
+
     def start(self):
         self.engine.start()
 ```
@@ -1706,7 +1706,7 @@ async def main():
     task1 = asyncio.create_task(fetch_data(1))
     task2 = asyncio.create_task(fetch_data(2))
     task3 = asyncio.create_task(fetch_data(3))
-    
+
     # Wait for all
     results = await asyncio.gather(task1, task2, task3)
 ```
@@ -1717,7 +1717,7 @@ class AsyncDatabase:
     async def __aenter__(self):
         await self.connect()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.disconnect()
 
@@ -1732,10 +1732,10 @@ class AsyncRange:
     def __init__(self, n):
         self.n = n
         self.i = 0
-    
+
     def __aiter__(self):
         return self
-    
+
     async def __anext__(self):
         if self.i >= self.n:
             raise StopAsyncIteration
@@ -1959,7 +1959,7 @@ Nodes and relationships, optimized for connected data.
 
 #### Create
 ```sql
-INSERT INTO users (name, email) 
+INSERT INTO users (name, email)
 VALUES ('Alice', 'alice@example.com');
 ```
 
@@ -1982,7 +1982,7 @@ JOIN posts ON users.id = posts.user_id;
 
 #### Update
 ```sql
-UPDATE users 
+UPDATE users
 SET email = 'newemail@example.com'
 WHERE id = 123;
 ```
@@ -2010,7 +2010,7 @@ SELECT * FROM users LIMIT 10 OFFSET 20;
 SELECT COUNT(*) FROM users;
 
 -- Sum, Average, Min, Max
-SELECT 
+SELECT
     COUNT(*) as total_users,
     AVG(age) as average_age,
     MIN(created_at) as first_user,
@@ -2128,7 +2128,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     email = Column(String(100), unique=True)
@@ -2311,7 +2311,7 @@ services:
       - DATABASE_URL=postgresql://db:5432/myapp
     depends_on:
       - db
-  
+
   db:
     image: postgres:15
     environment:
@@ -2551,7 +2551,7 @@ def process_order(order):
 def process_order(order):
     if not is_valid_order(order):
         raise ValidationError()
-    
+
     total = calculate_total(order)
     payment = charge_payment(order, total)
     send_confirmation(order, payment)
@@ -2631,7 +2631,7 @@ from .validators import validate_email
 class UserService:
     def __init__(self, repo: UserRepository):
         self.repo = repo
-    
+
     def create_user(self, email: str, name: str) -> User:
         if not validate_email(email):
             raise ValueError("Invalid email")
@@ -2666,7 +2666,7 @@ def process_user(user_id: int, email: str):
         raise ValueError("Invalid user_id")
     if not email or "@" not in email:
         raise ValueError("Invalid email")
-    
+
     # Now proceed with confidence
     ...
 ```
@@ -2730,7 +2730,7 @@ def process(user):
         return None
     if user.is_banned:
         return None
-    
+
     return do_something()
 ```
 
@@ -2898,16 +2898,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-      
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      
+
       - name: Run tests
         run: |
           pytest
@@ -2947,13 +2947,13 @@ steps:
 jobs:
   lint:
     # Code quality checks
-  
+
   test:
     # Unit and integration tests
-  
+
   security:
     # Security scanning
-  
+
   build:
     needs: [lint, test, security]
     # Build only if all pass
@@ -3010,7 +3010,7 @@ def health_check():
 ```yaml
 - name: Deploy
   run: deploy.sh
-  
+
 - name: Health Check
   run: |
     sleep 30  # Wait for startup
@@ -3199,7 +3199,7 @@ git bisect good  # or 'bad'
 ### Off-by-One Errors
 ```python
 # ❌ Bug: Misses last element
-for i in range(len(items) - 1):  
+for i in range(len(items) - 1):
     process(items[i])
 
 # ✅ Fix
@@ -3286,7 +3286,7 @@ async def get_data():
 # ❌ Bug: Blocks event loop
 async def process():
     time.sleep(1)  # Blocks!
-    
+
 # ✅ Fix: Use async sleep
 async def process():
     await asyncio.sleep(1)
@@ -3614,7 +3614,7 @@ def get_user(user_id):
     cached = cache.get(f"user:{user_id}")
     if cached:
         return json.loads(cached)
-    
+
     # Cache miss - query database
     user = db.query(User).get(user_id)
     cache.setex(f"user:{user_id}", 3600, json.dumps(user))
@@ -3728,7 +3728,7 @@ class LazyProperty:
     def __init__(self, function):
         self.function = function
         self.name = function.__name__
-    
+
     def __get__(self, obj, type=None):
         if obj is None:
             return self
