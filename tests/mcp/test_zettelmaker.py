@@ -54,7 +54,7 @@ async def test_zettelmaker_generate_unknown_topic():
 
 
 @pytest.mark.asyncio
-async def test_zettelmaker_suggest(db):
+async def test_zettelmaker_suggest():
     """Test suggest operation."""
     result = await adn_zettelmaker("suggest", category="developer", count=3)
 
@@ -64,7 +64,7 @@ async def test_zettelmaker_suggest(db):
 
 
 @pytest.mark.asyncio
-async def test_zettelmaker_analyze(db):
+async def test_zettelmaker_analyze():
     """Test analyze operation."""
     result = await adn_zettelmaker("analyze", category="developer", depth=3)
 
