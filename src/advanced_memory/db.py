@@ -85,15 +85,27 @@ def _create_engine_and_session(
         "timeout": 30.0,  # 30 second timeout prevents indefinite hanging
     }
 
-    engine = create_async_engine(db_url, connect_args=connect_args)
+    # Add connection pooling for better concurrency (not for in-memory databases)
+    engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
+    if db_type != DatabaseType.MEMORY:
+        # Only add pool settings for file-based databases
+        # In-memory databases use StaticPool which doesn't support these parameters
+        engine_kwargs["pool_size"] = 5  # Keep 5 connections ready
+        engine_kwargs["max_overflow"] = 10  # Allow 10 extra connections under load
+
+    engine = create_async_engine(db_url, **engine_kwargs)
 
     # Configure SQLite for better concurrency (WAL mode allows concurrent reads/writes)
     @event.listens_for(engine.sync_engine, "connect")
     def set_sqlite_pragma(dbapi_connection, connection_record):  # type: ignore[misc]
         cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA journal_mode=WAL")  # Write-Ahead Logging for concurrency
-        cursor.execute("PRAGMA busy_timeout=30000")  # 30 second busy timeout in milliseconds
-        cursor.execute("PRAGMA synchronous=NORMAL")  # Balance between safety and performance
+        cursor.execute("PRAGMA journal_mode=WAL")      # Write-Ahead Logging for concurrency
+        cursor.execute("PRAGMA busy_timeout=5000")      # Reduced to 5s since we have connection pooling
+        cursor.execute("PRAGMA synchronous=NORMAL")     # Balance between safety and performance
+        cursor.execute("PRAGMA cache_size=-64000")      # 64MB cache for better performance
+        cursor.execute("PRAGMA temp_store=MEMORY")      # Keep temp tables in memory
+        cursor.execute("PRAGMA mmap_size=268435456")    # 256MB memory-mapped I/O
+        cursor.execute("PRAGMA wal_autocheckpoint=1000") # Checkpoint every 1000 pages
         cursor.close()
 
     session_maker = async_sessionmaker(engine, expire_on_commit=False)
@@ -162,15 +174,27 @@ async def engine_session_factory(
         "timeout": 30.0,  # 30 second timeout prevents indefinite hanging
     }
 
-    _engine = create_async_engine(db_url, connect_args=connect_args)
+    # Add connection pooling for better concurrency (not for in-memory databases)
+    engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
+    if db_type != DatabaseType.MEMORY:
+        # Only add pool settings for file-based databases
+        # In-memory databases use StaticPool which doesn't support these parameters
+        engine_kwargs["pool_size"] = 5  # Keep 5 connections ready
+        engine_kwargs["max_overflow"] = 10  # Allow 10 extra connections under load
+
+    _engine = create_async_engine(db_url, **engine_kwargs)
 
     # Configure SQLite for better concurrency (WAL mode allows concurrent reads/writes)
     @event.listens_for(_engine.sync_engine, "connect")
     def set_sqlite_pragma(dbapi_connection, connection_record):  # type: ignore[misc]
         cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA journal_mode=WAL")  # Write-Ahead Logging for concurrency
-        cursor.execute("PRAGMA busy_timeout=30000")  # 30 second busy timeout in milliseconds
-        cursor.execute("PRAGMA synchronous=NORMAL")  # Balance between safety and performance
+        cursor.execute("PRAGMA journal_mode=WAL")      # Write-Ahead Logging for concurrency
+        cursor.execute("PRAGMA busy_timeout=5000")      # Reduced to 5s since we have connection pooling
+        cursor.execute("PRAGMA synchronous=NORMAL")     # Balance between safety and performance
+        cursor.execute("PRAGMA cache_size=-64000")      # 64MB cache for better performance
+        cursor.execute("PRAGMA temp_store=MEMORY")      # Keep temp tables in memory
+        cursor.execute("PRAGMA mmap_size=268435456")    # 256MB memory-mapped I/O
+        cursor.execute("PRAGMA wal_autocheckpoint=1000") # Checkpoint every 1000 pages
         cursor.close()
     try:
         _session_maker = async_sessionmaker(_engine, expire_on_commit=False)
