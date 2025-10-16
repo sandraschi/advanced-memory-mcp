@@ -19842,3 +19842,77 @@ expected ',' or ']', but got ':'
 2025-10-16 12:59:39 | ERROR    | Error moving entity: Destination already exists: destination/Existing_Note.md
 2025-10-16 12:59:39 | INFO     | Client error: POST /test-project/knowledge/move: Destination already exists: destination/Existing_Note.md
 2025-10-16 12:59:39 | ERROR    | Move failed for 'Source Note' to 'destination/Existing_Note.md': Destination already exists: destination/Existing_Note.md
+2025-10-16 13:29:31 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 13:29:33 | INFO     | Initializing app...
+2025-10-16 13:29:33 | INFO     | Running database migrations...
+2025-10-16 13:29:33 | INFO     | Migrations completed successfully
+2025-10-16 13:29:33 | INFO     | Initializing search index
+2025-10-16 13:29:34 | INFO     | Database initialization completed
+2025-10-16 13:29:34 | INFO     | Reconciling projects from config with database...
+2025-10-16 13:29:34 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 13:29:34 | INFO     | Project synchronization complete
+2025-10-16 13:29:34 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 13:29:34 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 13:29:34 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 13:29:34 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 13:29:34 | INFO     | Initialization completed successfully: result=None
+2025-10-16 13:29:34 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 13:29:34 | INFO     | Sync command started
+2025-10-16 13:29:34 | INFO     | Running one-time sync
+2025-10-16 13:29:34 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-16 13:29:34 | INFO     | Found 2110 db records
+2025-10-16 13:29:34 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 13:29:50 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 13:29:52 | INFO     | Initializing app...
+2025-10-16 13:29:52 | INFO     | Running database migrations...
+2025-10-16 13:29:52 | INFO     | Migrations completed successfully
+2025-10-16 13:29:52 | INFO     | Initializing search index
+2025-10-16 13:29:52 | INFO     | Database initialization completed
+2025-10-16 13:29:52 | INFO     | Reconciling projects from config with database...
+2025-10-16 13:29:52 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 13:29:52 | INFO     | Project synchronization complete
+2025-10-16 13:29:52 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 13:29:52 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 13:29:52 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 13:29:52 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 13:29:52 | INFO     | Initialization completed successfully: result=None
+2025-10-16 13:29:52 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 13:29:52 | INFO     | Found 2110 db records
+2025-10-16 13:29:52 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 13:29:55 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 13:29:55 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=2027
+2025-10-16 13:29:55 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 13:30:07 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:06:49 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:06:53 | INFO     | Initializing app...
+2025-10-16 16:06:53 | INFO     | Running database migrations...
+2025-10-16 16:06:53 | INFO     | Migrations completed successfully
+2025-10-16 16:06:53 | INFO     | Initializing search index
+2025-10-16 16:06:53 | INFO     | Database initialization completed
+2025-10-16 16:06:53 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:06:53 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:06:53 | INFO     | Project 'veogen' exists in database but not in config - marking inactive
+2025-10-16 16:06:58 | ERROR    | Error during project synchronization: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE project SET is_active=?, updated_at=? WHERE project.id = ?]
+[parameters: (0, '2025-10-16 14:06:53.217530', 6)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:06:58 | INFO     | Continuing with initialization despite synchronization error
+2025-10-16 16:06:58 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:06:58 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:06:58 | INFO     | Switched project context: None -> claude-depot-consolidated
+2025-10-16 16:20:55 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:20:58 | INFO     | Initializing app...
+2025-10-16 16:20:58 | INFO     | Running database migrations...
+2025-10-16 16:20:58 | INFO     | Migrations completed successfully
+2025-10-16 16:20:58 | INFO     | Initializing search index
+2025-10-16 16:20:58 | INFO     | Database initialization completed
+2025-10-16 16:20:58 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:20:58 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:20:58 | INFO     | Project 'veogen' exists in database but not in config - marking inactive
+2025-10-16 16:20:58 | INFO     | Project synchronization complete
+2025-10-16 16:20:58 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:20:58 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:20:58 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:20:58 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:20:58 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:20:58 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
