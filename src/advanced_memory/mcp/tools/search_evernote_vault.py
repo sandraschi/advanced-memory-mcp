@@ -2,10 +2,10 @@
 
 import re
 from pathlib import Path
+from typing import Any
+from xml.etree.ElementTree import Element
 
 import defusedxml.ElementTree as ET
-from typing import Any
-
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -307,7 +307,7 @@ async def _search_html_file(
         return []
 
 
-def _extract_enex_note_data(note_elem: ET.Element) -> dict[str, Any]:
+def _extract_enex_note_data(note_elem: Element) -> dict[str, Any]:
     """Extract metadata from an ENEX note element."""
 
     # Title

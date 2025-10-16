@@ -3,11 +3,11 @@
 import base64
 import re
 from datetime import datetime
-
-import defusedxml.ElementTree as ET
 from pathlib import Path
 from typing import Any
+from xml.etree.ElementTree import Element
 
+import defusedxml.ElementTree as ET
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -251,7 +251,7 @@ async def _process_enex_file(
 
 
 def _parse_enex_note(
-    note_elem: ET.Element,
+    note_elem: Element,
     base_folder: str,
     preserve_notebooks: bool,
     include_attachments: bool,
@@ -413,7 +413,7 @@ def _convert_ordered_list_items(match):
 
 
 def _process_enex_attachments(
-    note_elem: ET.Element, attachments_dir: Path, note_title: str
+    note_elem: Element, attachments_dir: Path, note_title: str
 ) -> tuple[str, list[dict[str, str]]]:
     """Process attachments in ENEX note."""
 
