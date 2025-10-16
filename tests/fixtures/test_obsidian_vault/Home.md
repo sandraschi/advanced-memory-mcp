@@ -1,6 +1,7 @@
 ---
 tags: home, main
 created: 2024-01-15
+permalink: tests/fixtures/test-obsidian-vault/home
 ---
 
 # Home

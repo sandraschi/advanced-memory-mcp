@@ -1,7 +1,12 @@
 ---
-title: "Project Planning with Mermaid"
-tags: ["project", "planning", "mermaid", "example"]
-created: "2024-01-15"
+title: Project Planning with Mermaid
+tags:
+- project
+- planning
+- mermaid
+- example
+created: '2024-01-15'
+permalink: docs/examples/mermaid/project-planning
 ---
 
 # Project Alpha Planning

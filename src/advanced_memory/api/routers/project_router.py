@@ -208,6 +208,53 @@ async def set_default_project(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
+# Sync a specific project's files
+@project_resource_router.post("/{name}/sync")
+async def sync_project(
+    project_service: ProjectServiceDep,
+    name: str = Path(..., description="Name of the project to sync"),
+):
+    """Sync a specific project's markdown files to the database.
+
+    Indexes all markdown files in the project directory without changing
+    the default project setting.
+
+    Args:
+        name: The name of the project to sync
+
+    Returns:
+        Sync results with file counts
+    """
+    try:  # pragma: no cover
+        # Import here to avoid circular dependencies
+        from advanced_memory.cli.commands.sync import get_sync_service
+        from advanced_memory.repository import ProjectRepository
+
+        # Get the project
+        project_repo = ProjectRepository(project_service.repository.session_maker)
+        project = await project_repo.get_by_name(name)
+
+        if not project:
+            raise HTTPException(status_code=404, detail=f"Project '{name}' not found")
+
+        # Get sync service and run sync
+        from pathlib import Path as PathLib
+
+        sync_service = await get_sync_service(project)
+        report = await sync_service.sync(PathLib(project.path), project_name=project.name)
+
+        return {
+            "new": len(report.new),
+            "modified": len(report.modified),
+            "deleted": len(report.deleted),
+            "moves": len(report.moves),
+            "total": report.total,
+        }
+
+    except ValueError as e:  # pragma: no cover
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
 # Synchronize projects between config and database
 @project_resource_router.post("/sync", response_model=ProjectStatusResponse)
 async def synchronize_projects(

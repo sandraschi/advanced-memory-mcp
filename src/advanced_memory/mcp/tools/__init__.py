@@ -47,6 +47,14 @@ from advanced_memory.mcp.tools.project_management import (
     set_default_project,
     switch_project,
 )
+from advanced_memory.mcp.tools.adn_project import (
+    adn_project_create,
+    adn_project_delete,
+    adn_project_list,
+    adn_project_set_default,
+    adn_project_status,
+    adn_project_sync,
+)
 from advanced_memory.mcp.tools.project_manager import adn_project
 from advanced_memory.mcp.tools.read_content import read_content
 from advanced_memory.mcp.tools.read_note import read_note
@@ -74,6 +82,13 @@ __all__ = [
     "adn_knowledge",  # Consolidates: knowledge_operations, research_orchestrator
     "adn_navigation",  # Consolidates: build_context, recent_activity, list_directory, status, sync_status
     "adn_editor",  # Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
+    # NEW: FastMCP 2.12 compliant project CRUD tools
+    "adn_project_create",
+    "adn_project_list",
+    "adn_project_sync",
+    "adn_project_set_default",
+    "adn_project_status",
+    "adn_project_delete",
     # Legacy individual tools (for backward compatibility)
     "build_context",
     "canvas",

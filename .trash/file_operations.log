@@ -19916,3 +19916,1457 @@ expected ',' or ']', but got ':'
 2025-10-16 16:20:58 | INFO     | App initialization completed (migration running in background if needed)
 2025-10-16 16:20:58 | INFO     | Initialization completed successfully: result=None
 2025-10-16 16:20:58 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:27:59 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:28:01 | INFO     | Initializing app...
+2025-10-16 16:28:01 | INFO     | Running database migrations...
+2025-10-16 16:28:01 | INFO     | Migrations completed successfully
+2025-10-16 16:28:01 | INFO     | Initializing search index
+2025-10-16 16:28:01 | INFO     | Database initialization completed
+2025-10-16 16:28:01 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:28:01 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:28:01 | INFO     | Project synchronization complete
+2025-10-16 16:28:01 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:28:01 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:28:01 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:28:01 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:28:01 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:28:01 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:28:01 | INFO     | Project 'advanced-memory-mcp' added at D:\Dev\repos\advanced-memory-mcp
+2025-10-16 16:28:03 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:28:06 | INFO     | Initializing app...
+2025-10-16 16:28:06 | INFO     | Running database migrations...
+2025-10-16 16:28:06 | INFO     | Migrations completed successfully
+2025-10-16 16:28:06 | INFO     | Initializing search index
+2025-10-16 16:28:06 | INFO     | Database initialization completed
+2025-10-16 16:28:06 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:28:06 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:28:06 | INFO     | Project synchronization complete
+2025-10-16 16:28:06 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:28:06 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:28:06 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:28:06 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:28:06 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:28:06 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:28:06 | INFO     | Sync command started
+2025-10-16 16:28:06 | INFO     | Running one-time sync
+2025-10-16 16:28:06 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-16 16:28:06 | INFO     | Found 2110 db records
+2025-10-16 16:28:06 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 16:28:25 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 16:28:25 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=2027
+2025-10-16 16:28:30 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:28:32 | INFO     | Initializing app...
+2025-10-16 16:28:32 | INFO     | Running database migrations...
+2025-10-16 16:28:32 | INFO     | Migrations completed successfully
+2025-10-16 16:28:32 | INFO     | Initializing search index
+2025-10-16 16:28:32 | INFO     | Database initialization completed
+2025-10-16 16:28:32 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:28:32 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:28:32 | INFO     | Project synchronization complete
+2025-10-16 16:28:32 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:28:32 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:28:32 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:28:32 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:28:32 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:28:32 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:29:15 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:29:18 | INFO     | Initializing app...
+2025-10-16 16:29:18 | INFO     | Running database migrations...
+2025-10-16 16:29:18 | INFO     | Migrations completed successfully
+2025-10-16 16:29:18 | INFO     | Initializing search index
+2025-10-16 16:29:18 | INFO     | Database initialization completed
+2025-10-16 16:29:18 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:29:18 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:29:18 | INFO     | Project synchronization complete
+2025-10-16 16:29:18 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:29:18 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:29:18 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:29:18 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:29:18 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:29:18 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:29:18 | INFO     | Found 2110 db records
+2025-10-16 16:29:18 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 16:29:18 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 16:29:29 | WARNING  | ADVANCED_MEMORY_PROJECT is not supported anymore. Use the --project flag or set the default project in the config instead. Setting default project to advanced-memory-mcp
+2025-10-16 16:30:05 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:30:08 | INFO     | Initializing app...
+2025-10-16 16:30:08 | INFO     | Running database migrations...
+2025-10-16 16:30:08 | INFO     | Migrations completed successfully
+2025-10-16 16:30:08 | INFO     | Initializing search index
+2025-10-16 16:30:08 | INFO     | Database initialization completed
+2025-10-16 16:30:08 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:30:08 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:30:08 | INFO     | Project synchronization complete
+2025-10-16 16:30:08 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:30:08 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:30:08 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:30:08 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:30:08 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:30:08 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:32:13 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:32:16 | INFO     | Initializing app...
+2025-10-16 16:32:16 | INFO     | Running database migrations...
+2025-10-16 16:32:16 | INFO     | Migrations completed successfully
+2025-10-16 16:32:16 | INFO     | Initializing search index
+2025-10-16 16:32:16 | INFO     | Database initialization completed
+2025-10-16 16:32:16 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:32:16 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:32:16 | INFO     | Project synchronization complete
+2025-10-16 16:32:16 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:32:16 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:32:16 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:32:16 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:32:16 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:32:16 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:32:18 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:32:20 | INFO     | Initializing app...
+2025-10-16 16:32:20 | INFO     | Running database migrations...
+2025-10-16 16:32:20 | INFO     | Migrations completed successfully
+2025-10-16 16:32:20 | INFO     | Initializing search index
+2025-10-16 16:32:20 | INFO     | Database initialization completed
+2025-10-16 16:32:20 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:32:20 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:32:20 | INFO     | Project synchronization complete
+2025-10-16 16:32:20 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:32:20 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:32:20 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:32:20 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:32:20 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:32:20 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:32:20 | INFO     | Sync command started
+2025-10-16 16:32:20 | INFO     | Running one-time sync
+2025-10-16 16:32:20 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-16 16:32:20 | INFO     | Found 2110 db records
+2025-10-16 16:32:20 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 16:32:21 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 16:32:21 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=2027
+2025-10-16 16:32:26 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/ide/windsurf/global_services/README.md -> 06-archive\imported\docs\SW_Development\ide\windsurf\global_services\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (54, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:27 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:32:29 | INFO     | Initializing app...
+2025-10-16 16:32:29 | INFO     | Running database migrations...
+2025-10-16 16:32:29 | INFO     | Migrations completed successfully
+2025-10-16 16:32:29 | INFO     | Initializing search index
+2025-10-16 16:32:29 | INFO     | Database initialization completed
+2025-10-16 16:32:29 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:32:29 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:32:29 | INFO     | Project synchronization complete
+2025-10-16 16:32:29 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:32:29 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:32:29 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:32:29 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:32:29 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:32:29 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:32:31 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:32:32 | ERROR    | Unexpected error moving file 03-technical-docs/technical-notes/MCP Inspector - Essential Development Tool Guide.md -> 03-technical-docs\technical-notes\MCP Inspector - Essential Development Tool Guide.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (55, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:33 | INFO     | Initializing app...
+2025-10-16 16:32:33 | INFO     | Running database migrations...
+2025-10-16 16:32:33 | INFO     | Migrations completed successfully
+2025-10-16 16:32:33 | INFO     | Initializing search index
+2025-10-16 16:32:33 | INFO     | Database initialization completed
+2025-10-16 16:32:33 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:32:33 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:32:33 | INFO     | Project synchronization complete
+2025-10-16 16:32:33 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:32:33 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:32:33 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:32:33 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:32:33 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:32:33 | INFO     | Switched project context: claude-depot-consolidated -> advanced-memory-mcp
+2025-10-16 16:32:33 | INFO     | Sync command started
+2025-10-16 16:32:33 | INFO     | Running one-time sync
+2025-10-16 16:32:33 | INFO     | Sync operation started for directory: C:\Users\sandr\Documents\claude-depot
+2025-10-16 16:32:33 | INFO     | Found 2110 db records
+2025-10-16 16:32:33 | INFO     | Scanning directory C:\Users\sandr\Documents\claude-depot. Found 2110 db paths
+2025-10-16 16:32:34 | INFO     | Completed scan for directory C:\Users\sandr\Documents\claude-depot, found 2028 changes.
+2025-10-16 16:32:34 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=2027
+2025-10-16 16:32:37 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/bugs/2025-04-28_vibe-coding-bender/README.md -> 06-archive\imported\docs\Windsurf generated flows\bugs\2025-04-28_vibe-coding-bender\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (58, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:39 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/ide/windsurf/global_services/README.md -> 06-archive\imported\docs\SW_Development\ide\windsurf\global_services\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (54, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:42 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/docsify-plugin-samples/katex-sample.md -> 06-archive\imported\docs\SW_Development\docsify-plugin-samples\katex-sample.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (60, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:45 | ERROR    | Unexpected error moving file 03-technical-docs/technical-notes/MCP Inspector - Essential Development Tool Guide.md -> 03-technical-docs\technical-notes\MCP Inspector - Essential Development Tool Guide.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (55, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:48 | ERROR    | Unexpected error moving file 06-archive/imported-existing/analysis/dockermcp-assessment-complete/Docker_MCP_Assessment_Complete_-_2025-08-31_21-47.md -> 06-archive\imported-existing\analysis\dockermcp-assessment-complete\Docker_MCP_Assessment_Complete_-_2025-08-31_21-47.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (61, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:50 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/bugs/2025-04-28_vibe-coding-bender/README.md -> 06-archive\imported\docs\Windsurf generated flows\bugs\2025-04-28_vibe-coding-bender\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (58, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:53 | ERROR    | Unexpected error moving file 06-archive/imported/docs/General_Software_Tools/text_tools/notion.md -> 06-archive\imported\docs\General_Software_Tools\text_tools\notion.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (62, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:56 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/docsify-plugin-samples/katex-sample.md -> 06-archive\imported\docs\SW_Development\docsify-plugin-samples\katex-sample.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (60, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:32:59 | ERROR    | Unexpected error moving file 05-sessions/sessions/JSON Table Format Issue Analysis - 2025-08-07-2140.md -> 05-sessions\sessions\JSON Table Format Issue Analysis - 2025-08-07-2140.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (63, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:01 | ERROR    | Unexpected error moving file 06-archive/imported-existing/analysis/dockermcp-assessment-complete/Docker_MCP_Assessment_Complete_-_2025-08-31_21-47.md -> 06-archive\imported-existing\analysis\dockermcp-assessment-complete\Docker_MCP_Assessment_Complete_-_2025-08-31_21-47.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (61, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:04 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Agentic AI Sandbox - Bah Humbug! The Great Security Theater.md -> 03-technical-docs\analysis\Agentic AI Sandbox - Bah Humbug! The Great Security Theater.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (64, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:07 | ERROR    | Unexpected error moving file 06-archive/imported/docs/General_Software_Tools/text_tools/notion.md -> 06-archive\imported\docs\General_Software_Tools\text_tools\notion.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (62, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:10 | ERROR    | Unexpected error moving file 04-development/dev-methodology/🏭 MCP Config Version Control - Production vs Development - Aug 10 2025 0000 CET.md -> 04-development\dev-methodology\🏭 MCP Config Version Control - Production vs Development - Aug 10 2025 0000 CET.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (65, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:12 | ERROR    | Unexpected error moving file 05-sessions/sessions/JSON Table Format Issue Analysis - 2025-08-07-2140.md -> 05-sessions\sessions\JSON Table Format Issue Analysis - 2025-08-07-2140.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (63, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:15 | ERROR    | Unexpected error moving file 06-archive/testing/Immich MCP Test Results - SUCCESSFUL.md -> 06-archive\testing\Immich MCP Test Results - SUCCESSFUL.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (66, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:17 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Agentic AI Sandbox - Bah Humbug! The Great Security Theater.md -> 03-technical-docs\analysis\Agentic AI Sandbox - Bah Humbug! The Great Security Theater.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (64, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:20 | ERROR    | Unexpected error moving file 06-archive/imported-existing/analysis/Anthropic Rate Limit Scandal August 2025/Anthropic_Rate_Limit_Scandal_-_August_2025.md -> 06-archive\imported-existing\analysis\Anthropic Rate Limit Scandal August 2025\Anthropic_Rate_Limit_Scandal_-_August_2025.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (67, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:23 | ERROR    | Unexpected error moving file 04-development/dev-methodology/🏭 MCP Config Version Control - Production vs Development - Aug 10 2025 0000 CET.md -> 04-development\dev-methodology\🏭 MCP Config Version Control - Production vs Development - Aug 10 2025 0000 CET.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (65, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:26 | ERROR    | Unexpected error moving file 03-technical-docs/standards/REPL Standards.md -> 03-technical-docs\standards\REPL Standards.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (68, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:28 | ERROR    | Unexpected error moving file 06-archive/testing/Immich MCP Test Results - SUCCESSFUL.md -> 06-archive\testing\Immich MCP Test Results - SUCCESSFUL.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (66, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:31 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Projects/VeoGen/Network/PUBLIC_IP_ACCESS_SETUP.md -> 06-archive\imported\docs\Projects\VeoGen\Network\PUBLIC_IP_ACCESS_SETUP.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (69, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:34 | ERROR    | Unexpected error moving file 06-archive/imported-existing/analysis/Anthropic Rate Limit Scandal August 2025/Anthropic_Rate_Limit_Scandal_-_August_2025.md -> 06-archive\imported-existing\analysis\Anthropic Rate Limit Scandal August 2025\Anthropic_Rate_Limit_Scandal_-_August_2025.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (67, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:37 | ERROR    | Unexpected error moving file 01-active-projects/projects/Firefox Bookmarks Database Analysis.md -> 01-active-projects\projects\Firefox Bookmarks Database Analysis.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (70, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:39 | ERROR    | Unexpected error moving file 03-technical-docs/standards/REPL Standards.md -> 03-technical-docs\standards\REPL Standards.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (68, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:42 | ERROR    | Unexpected error moving file 05-sessions/session-notes/Basic Memory to Obsidian Export - Corrected Analysis 2025-08-04 1535.md -> 05-sessions\session-notes\Basic Memory to Obsidian Export - Corrected Analysis 2025-08-04 1535.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (72, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:45 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Projects/VeoGen/Network/PUBLIC_IP_ACCESS_SETUP.md -> 06-archive\imported\docs\Projects\VeoGen\Network\PUBLIC_IP_ACCESS_SETUP.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (69, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:48 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/🚨 PyWinAuto-MCP Analysis - MAJOR ISSUES FOUND.md -> 03-technical-docs\analysis\🚨 PyWinAuto-MCP Analysis - MAJOR ISSUES FOUND.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (73, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:50 | ERROR    | Unexpected error moving file 01-active-projects/projects/Firefox Bookmarks Database Analysis.md -> 01-active-projects\projects\Firefox Bookmarks Database Analysis.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (70, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:53 | ERROR    | Unexpected error moving file 06-archive/imported-existing/daily/Calibre MCP Debug - Text Response Issue/Calibre_MCP_Debug_Session_-_2025-08-14_16-00.md -> 06-archive\imported-existing\daily\Calibre MCP Debug - Text Response Issue\Calibre_MCP_Debug_Session_-_2025-08-14_16-00.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (75, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:55 | ERROR    | Unexpected error moving file 05-sessions/session-notes/Basic Memory to Obsidian Export - Corrected Analysis 2025-08-04 1535.md -> 05-sessions\session-notes\Basic Memory to Obsidian Export - Corrected Analysis 2025-08-04 1535.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (72, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:33:58 | ERROR    | Unexpected error moving file 04-development/fixes/Claude Config Fix - Python Path Correction.md -> 04-development\fixes\Claude Config Fix - Python Path Correction.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (76, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:01 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/🚨 PyWinAuto-MCP Analysis - MAJOR ISSUES FOUND.md -> 03-technical-docs\analysis\🚨 PyWinAuto-MCP Analysis - MAJOR ISSUES FOUND.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (73, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:04 | ERROR    | Unexpected error moving file 01-active-projects/projects/mcp-studio/MCP Studio HomePage Fix Complete - 2025-09-05 0230.md -> 01-active-projects\projects\mcp-studio\MCP Studio HomePage Fix Complete - 2025-09-05 0230.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (77, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:06 | ERROR    | Unexpected error moving file 06-archive/imported-existing/daily/Calibre MCP Debug - Text Response Issue/Calibre_MCP_Debug_Session_-_2025-08-14_16-00.md -> 06-archive\imported-existing\daily\Calibre MCP Debug - Text Response Issue\Calibre_MCP_Debug_Session_-_2025-08-14_16-00.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (75, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:09 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/newthingy/2025-05-06_scrapebot/README.md -> 06-archive\imported\docs\Windsurf generated flows\newthingy\2025-05-06_scrapebot\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (78, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:12 | ERROR    | Unexpected error moving file 04-development/fixes/Claude Config Fix - Python Path Correction.md -> 04-development\fixes\Claude Config Fix - Python Path Correction.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (76, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:15 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_wienerlinien-api/README.md -> 06-archive\imported\docs\Windsurf generated flows\research\2025-05-04_wienerlinien-api\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (79, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:17 | ERROR    | Unexpected error moving file 01-active-projects/projects/mcp-studio/MCP Studio HomePage Fix Complete - 2025-09-05 0230.md -> 01-active-projects\projects\mcp-studio\MCP Studio HomePage Fix Complete - 2025-09-05 0230.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (77, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:20 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/frameworks/fastapi.md -> 06-archive\imported\docs\SW_Development\frameworks\fastapi.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (81, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:22 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/newthingy/2025-05-06_scrapebot/README.md -> 06-archive\imported\docs\Windsurf generated flows\newthingy\2025-05-06_scrapebot\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (78, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:26 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/decisions/README.md -> 06-archive\imported\docs\Windsurf generated flows\decisions\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (82, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:28 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_wienerlinien-api/README.md -> 06-archive\imported\docs\Windsurf generated flows\research\2025-05-04_wienerlinien-api\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (79, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:31 | ERROR    | Unexpected error moving file 04-development/dev-fixes/Calibre Content Server IPv4-IPv6 Issue & Solution - July 25 2025 0900.md -> 04-development\dev-fixes\Calibre Content Server IPv4-IPv6 Issue & Solution - July 25 2025 0900.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (84, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:33 | ERROR    | Unexpected error moving file 06-archive/imported/docs/SW_Development/frameworks/fastapi.md -> 06-archive\imported\docs\SW_Development\frameworks\fastapi.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (81, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:36 | ERROR    | Unexpected error moving file 04-development/fixes/Blender MCP Extension Path Fix - WORKAROUND - 2025-08-15-1851.md -> 04-development\fixes\Blender MCP Extension Path Fix - WORKAROUND - 2025-08-15-1851.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (85, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:39 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/decisions/README.md -> 06-archive\imported\docs\Windsurf generated flows\decisions\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (82, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:42 | ERROR    | Unexpected error moving file 06-archive/tests/Test Title With Timestamp - 2025-09-27 05 -> 06-archive\tests\Test Title With Timestamp - 2025-09-27 05: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (86, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:44 | ERROR    | Unexpected error moving file 04-development/dev-fixes/Calibre Content Server IPv4-IPv6 Issue & Solution - July 25 2025 0900.md -> 04-development\dev-fixes\Calibre Content Server IPv4-IPv6 Issue & Solution - July 25 2025 0900.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (84, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:47 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Artificial_Intelligence/image_and_video/stable_diffusion.md -> 06-archive\imported\docs\Artificial_Intelligence\image_and_video\stable_diffusion.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (87, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:50 | ERROR    | Unexpected error moving file 04-development/fixes/Blender MCP Extension Path Fix - WORKAROUND - 2025-08-15-1851.md -> 04-development\fixes\Blender MCP Extension Path Fix - WORKAROUND - 2025-08-15-1851.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (85, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:53 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Zed IDE Latest News & Public Reaction - 2025-08-17.md -> 03-technical-docs\analysis\Zed IDE Latest News & Public Reaction - 2025-08-17.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (88, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:55 | ERROR    | Unexpected error moving file 06-archive/tests/Test Title With Timestamp - 2025-09-27 05 -> 06-archive\tests\Test Title With Timestamp - 2025-09-27 05: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (86, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:34:58 | ERROR    | Unexpected error moving file 01-active-projects/projects/🏛️ ENIAC-MCP - HISTORICAL COMPUTER EMULATOR.md -> 01-active-projects\projects\🏛️ ENIAC-MCP - HISTORICAL COMPUTER EMULATOR.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (89, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:00 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Artificial_Intelligence/image_and_video/stable_diffusion.md -> 06-archive\imported\docs\Artificial_Intelligence\image_and_video\stable_diffusion.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (87, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:04 | ERROR    | Unexpected error moving file 04-development/fixes/FastMCP 2.12 Fix - dockermcp import errors.md -> 04-development\fixes\FastMCP 2.12 Fix - dockermcp import errors.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (90, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:04 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:35:06 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Zed IDE Latest News & Public Reaction - 2025-08-17.md -> 03-technical-docs\analysis\Zed IDE Latest News & Public Reaction - 2025-08-17.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (88, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:07 | INFO     | Initializing app...
+2025-10-16 16:35:07 | INFO     | Running database migrations...
+2025-10-16 16:35:07 | INFO     | Migrations completed successfully
+2025-10-16 16:35:07 | INFO     | Initializing search index
+2025-10-16 16:35:07 | INFO     | Database initialization completed
+2025-10-16 16:35:07 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:35:07 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:35:07 | INFO     | Project synchronization complete
+2025-10-16 16:35:07 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:35:07 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:35:07 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:35:07 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:35:07 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:35:07 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:35:09 | ERROR    | Unexpected error moving file 01-active-projects/projects/mcpv-studio/MCPV Studio BuilderBot Hyper-Luxury MCP Server Factory - 2025-08-08.md -> 01-active-projects\projects\mcpv-studio\MCPV Studio BuilderBot Hyper-Luxury MCP Server Factory - 2025-08-08.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (91, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:11 | ERROR    | Unexpected error moving file 01-active-projects/projects/🏛️ ENIAC-MCP - HISTORICAL COMPUTER EMULATOR.md -> 01-active-projects\projects\🏛️ ENIAC-MCP - HISTORICAL COMPUTER EMULATOR.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (89, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:12 | ERROR    | API unhandled exception
+Traceback (most recent call last):
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x000002249ED584A0>
+    │    └ <sqlalchemy.dialects.sqlite.aiosqlite.SQLiteDialect_aiosqlite object at 0x00000224A1F28D70>
+    └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │      └ <function AsyncAdapt_aiosqlite_cursor.execute at 0x000002249F6E76A0>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 177, in execute
+    self._adapt_connection._handle_exception(error)
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 337, in _handle_exception
+    raise error
+          └ OperationalError('database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 159, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    │    │      │       │       │          └ ()
+    │    │      │       │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │    │      │       └ <function Cursor.execute at 0x00000224A1F3C9A0>
+    │    │      └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+    │    └ <member 'await_' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object Cursor.execute at 0x00000224A1FF9A80>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x00000224A20037C0 (otid=0x000002249E4D30F0) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object Cursor.execute at 0x00000224A1FF9A80>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+          │    │        │    │       │        │    └ ()
+          │    │        │    │       │        └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+          │    │        │    │       └ <method 'execute' of 'sqlite3.Cursor' objects>
+          │    │        │    └ <sqlite3.Cursor object at 0x00000224A200F340>
+          │    │        └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+          │    └ <function Cursor._execute at 0x00000224A1F3C900>
+          └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+                 │    │     │        │    │       └ {}
+                 │    │     │        │    └ ('UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL', ())
+                 │    │     │        └ <built-in method execute of sqlite3.Cursor object at 0x00000224A200F340>
+                 │    │     └ <function Connection._execute at 0x00000224A1F3DC60>
+                 │    └ <Connection(Thread-1, started daemon 49780)>
+                 └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+                 └ <Future finished exception=OperationalError('database is locked')>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+             └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x00000224A1F5C400>)
+
+sqlite3.OperationalError: database is locked
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Scripts\advanced-memory.exe\__main__.py", line 6, in <module>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\main.py", line 324, in __call__
+    return get_command(self)(*args, **kwargs)
+           │           │      │       └ {}
+           │           │      └ ()
+           │           └ <typer.main.Typer object at 0x000002249E2DE7B0>
+           └ <function get_command at 0x000002249DB971A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+           │    │     │       └ {}
+           │    │     └ ()
+           │    └ <function TyperGroup.main at 0x000002249DB7B6A0>
+           └ <TyperGroup advanced-memory>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\core.py", line 757, in main
+    return _main(
+           └ <function _main at 0x000002249DB7A7A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\core.py", line 195, in _main
+    rv = self.invoke(ctx)
+         │    │      └ <click.core.Context object at 0x000002249E7BBB60>
+         │    └ <function Group.invoke at 0x000002249CE91120>
+         └ <TyperGroup advanced-memory>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+           │               │       │       │      └ <click.core.Context object at 0x00000224A1F37110>
+           │               │       │       └ <function Group.invoke at 0x000002249CE91120>
+           │               │       └ <TyperGroup project>
+           │               └ <click.core.Context object at 0x00000224A1F37110>
+           └ <function Group.invoke.<locals>._process_result at 0x00000224A1F174C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+           │               │       │       │      └ <click.core.Context object at 0x00000224A1F374D0>
+           │               │       │       └ <function Command.invoke at 0x000002249CE87EC0>
+           │               │       └ <TyperCommand default>
+           │               └ <click.core.Context object at 0x00000224A1F374D0>
+           └ <function Group.invoke.<locals>._process_result at 0x00000224A1F17560>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           │   │      │    │           │   └ {'name': 'advanced-memory-mcp'}
+           │   │      │    │           └ <click.core.Context object at 0x00000224A1F374D0>
+           │   │      │    └ <function set_default_project at 0x00000224A1F167A0>
+           │   │      └ <TyperCommand default>
+           │   └ <function Context.invoke at 0x000002249CE87100>
+           └ <click.core.Context object at 0x00000224A1F374D0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+           │         │       └ {'name': 'advanced-memory-mcp'}
+           │         └ ()
+           └ <function set_default_project at 0x00000224A1F167A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\main.py", line 699, in wrapper
+    return callback(**use_params)
+           │          └ {'name': 'advanced-memory-mcp'}
+           └ <function set_default_project at 0x00000224A1EE4540>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\cli\commands\project.py", line 118, in set_default_project
+    response = asyncio.run(call_put(client, f"/projects/{project_name}/default"))
+               │       │   │        │                    └ 'advanced-memory-mcp'
+               │       │   │        └ <httpx.AsyncClient object at 0x00000224A10563C0>
+               │       │   └ <function call_put at 0x00000224A19709A0>
+               │       └ <function run at 0x000002249DE21760>
+               └ <module 'asyncio' from 'C:\\Users\\sandr\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\asyncio\\__init__.py'>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object call_put at 0x000002249E7579A0>
+           │      └ <function Runner.run at 0x000002249DEA96C0>
+           └ <asyncio.runners.Runner object at 0x00000224A1F37890>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-4' coro=<call_put() running at D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\utils....
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000002249DEA3100>
+           │    └ <ProactorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x00000224A1F37890>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000002249DEA3060>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000002249DEA8EA0>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2042, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000002249DE227A0>
+    └ <Handle Task.task_wakeup()>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup()>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\utils.py", line 193, in call_put
+    response = await client.put(
+                     │      └ <function AsyncClient.put at 0x00000224A009FF60>
+                     └ <httpx.AsyncClient object at 0x00000224A10563C0>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1896, in put
+    return await self.request(
+                 │    └ <function AsyncClient.request at 0x00000224A009F880>
+                 └ <httpx.AsyncClient object at 0x00000224A10563C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+                 │    │    │             │                      └ <httpx._client.UseClientDefault object at 0x000002249FFB63C0>
+                 │    │    │             └ <httpx._client.UseClientDefault object at 0x000002249FFB63C0>
+                 │    │    └ <Request('PUT', 'http://test/projects/advanced-memory-mcp/default')>
+                 │    └ <function AsyncClient.send at 0x00000224A009FA60>
+                 └ <httpx.AsyncClient object at 0x00000224A10563C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+                     │    └ <function AsyncClient._send_handling_auth at 0x00000224A009FB00>
+                     └ <httpx.AsyncClient object at 0x00000224A10563C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+                     │    └ <function AsyncClient._send_handling_redirects at 0x00000224A009FBA0>
+                     └ <httpx.AsyncClient object at 0x00000224A10563C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+                     │    │                    └ <Request('PUT', 'http://test/projects/advanced-memory-mcp/default')>
+                     │    └ <function AsyncClient._send_single_request at 0x00000224A009FC40>
+                     └ <httpx.AsyncClient object at 0x00000224A10563C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+                     │         │                    └ <Request('PUT', 'http://test/projects/advanced-memory-mcp/default')>
+                     │         └ <function ASGITransport.handle_async_request at 0x00000224A008FB00>
+                     └ <httpx.ASGITransport object at 0x00000224A1054D70>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_transports\asgi.py", line 170, in handle_async_request
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x00000224A1F8BF60>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <fastapi.applications.FastAPI object at 0x00000224A1335A90>
+          └ <httpx.ASGITransport object at 0x00000224A1054D70>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1133, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x00000224A1F8BF60>
+                           │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+                           └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x00000224A1F8BF60>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x00000224A1F64830>
+          └ <fastapi.applications.FastAPI object at 0x00000224A1335A90>
+> File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x00000224A1F8AE80>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x00000224A1F646E0>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x00000224A1F64830>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x00000224A1F8AE80>
+          │                            │    │    │     │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │                            │    │    └ <starlette.requests.Request object at 0x00000224A1F2ACF0>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000224A1F2BB60>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x00000224A1F646E0>
+          └ <function wrap_app_handling_exceptions at 0x00000224A04FFC40>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000224A1F2BB60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <fastapi.routing.APIRouter object at 0x00000224A11B2C60>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x00000224A1F2BB60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x00000224A11B2C60>>
+          └ <fastapi.routing.APIRouter object at 0x00000224A11B2C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │     │      │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │     └ <function Route.handle at 0x00000224A0502520>
+          └ APIRoute(path='/projects/{name}/default', name='set_default_project', methods=['PUT'])
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <function request_response.<locals>.app at 0x00000224A190A3E0>
+          └ APIRoute(path='/projects/{name}/default', name='set_default_project', methods=['PUT'])
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F98CC0>
+          │                            │    │        │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │                            │    └ <starlette.requests.Request object at 0x00000224A1FB8050>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x00000224A1F98EA0>
+          └ <function wrap_app_handling_exceptions at 0x00000224A04FFC40>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x00000224A1F987C0>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x00000224A1F8AF20>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          └ <function request_response.<locals>.app.<locals>.app at 0x00000224A1F98EA0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x00000224A1FB8050>
+                     └ <function get_request_handler.<locals>.app at 0x00000224A190A200>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 387, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x00000224A0D85940>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'project_service': <advanced_memory.services.project_service.ProjectService object at 0x00000224A1F36990>, 'name': 'advanced...
+                 │         └ <function set_default_project at 0x00000224A0FB5DA0>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='name', mode='validation')], query_params=[], head...
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\api\routers\project_router.py", line 194, in set_default_project
+    await project_service.set_default_project(name)
+          │               │                   └ 'advanced-memory-mcp'
+          │               └ <function ProjectService.set_default_project at 0x00000224A0D9F380>
+          └ <advanced_memory.services.project_service.ProjectService object at 0x00000224A1F36990>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\services\project_service.py", line 173, in set_default_project
+    await self.repository.set_as_default(project.id)
+          │    │          │              │       └ <sqlalchemy.orm.attributes.InstrumentedAttribute object at 0x000002249F74C9A0>
+          │    │          │              └ Project(id=11, name='advanced-memory-mcp', permalink='advanced-memory-mcp', path='D:\Dev\repos\advanced-memory-mcp')
+          │    │          └ <function ProjectRepository.set_as_default at 0x000002249F74F100>
+          │    └ <advanced_memory.repository.project_repository.ProjectRepository object at 0x00000224A1F35310>
+          └ <advanced_memory.services.project_service.ProjectService object at 0x00000224A1F36990>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\repository\project_repository.py", line 77, in set_as_default
+    await session.execute(
+          │       └ <function AsyncSession.execute at 0x000002249F6A4360>
+          └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x00000224A1EC7680>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 463, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x000002249E5251C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x00000224A20037C0 (otid=0x000002249E4D30F0) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x000002249F5C9A80>
+           └ <sqlalchemy.orm.session.Session object at 0x00000224A1EC6CF0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2260, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x000002249ECA0B80>
+             └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x00000224A14B9750>>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x000002249ECA0EA0>
+           └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x000002249ECA1080>
+          └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x000002249ECA1120>
+           └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x000002249ECA13A0>
+    └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ OperationalError('database is locked')
+          │                    │              └ (<class 'sqlite3.OperationalError'>, OperationalError('database is locked'), <traceback object at 0x00000224A20147C0>)
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ OperationalError('(sqlite3.OperationalError) database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x000002249ED584A0>
+    │    └ <sqlalchemy.dialects.sqlite.aiosqlite.SQLiteDialect_aiosqlite object at 0x00000224A1F28D70>
+    └ <sqlalchemy.engine.base.Connection object at 0x00000224A1FBD9A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │      └ <function AsyncAdapt_aiosqlite_cursor.execute at 0x000002249F6E76A0>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 177, in execute
+    self._adapt_connection._handle_exception(error)
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 337, in _handle_exception
+    raise error
+          └ OperationalError('database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 159, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    │    │      │       │       │          └ ()
+    │    │      │       │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │    │      │       └ <function Cursor.execute at 0x00000224A1F3C9A0>
+    │    │      └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+    │    └ <member 'await_' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x00000224A1F77220>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object Cursor.execute at 0x00000224A1FF9A80>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x00000224A20037C0 (otid=0x000002249E4D30F0) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object Cursor.execute at 0x00000224A1FF9A80>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+          │    │        │    │       │        │    └ ()
+          │    │        │    │       │        └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+          │    │        │    │       └ <method 'execute' of 'sqlite3.Cursor' objects>
+          │    │        │    └ <sqlite3.Cursor object at 0x00000224A200F340>
+          │    │        └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+          │    └ <function Cursor._execute at 0x00000224A1F3C900>
+          └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+                 │    │     │        │    │       └ {}
+                 │    │     │        │    └ ('UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL', ())
+                 │    │     │        └ <built-in method execute of sqlite3.Cursor object at 0x00000224A200F340>
+                 │    │     └ <function Connection._execute at 0x00000224A1F3DC60>
+                 │    └ <Connection(Thread-1, started daemon 49780)>
+                 └ <aiosqlite.cursor.Cursor object at 0x00000224A1FD0710>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+                 └ <Future finished exception=OperationalError('database is locked')>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+             └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x00000224A1F5C400>)
+
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:14 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:35:14 | ERROR    | Unexpected error moving file 01-active-projects/projects/Database Operations MCP FIXED + JSON Tools Enhancement Plan.md -> 01-active-projects\projects\Database Operations MCP FIXED + JSON Tools Enhancement Plan.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (92, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:17 | ERROR    | Unexpected error moving file 04-development/fixes/FastMCP 2.12 Fix - dockermcp import errors.md -> 04-development\fixes\FastMCP 2.12 Fix - dockermcp import errors.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (90, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:20 | ERROR    | Unexpected error moving file 03-technical-docs/technical-notes/Windows Operations MCP Integration Status - 2025-08-10.md -> 03-technical-docs\technical-notes\Windows Operations MCP Integration Status - 2025-08-10.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (93, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:22 | ERROR    | Unexpected error moving file 01-active-projects/projects/mcpv-studio/MCPV Studio BuilderBot Hyper-Luxury MCP Server Factory - 2025-08-08.md -> 01-active-projects\projects\mcpv-studio\MCPV Studio BuilderBot Hyper-Luxury MCP Server Factory - 2025-08-08.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (91, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:25 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/README.md -> 06-archive\imported\docs\Windsurf generated flows\research\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (94, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:28 | ERROR    | Unexpected error moving file 01-active-projects/projects/Database Operations MCP FIXED + JSON Tools Enhancement Plan.md -> 01-active-projects\projects\Database Operations MCP FIXED + JSON Tools Enhancement Plan.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (92, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:31 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Microsoft Teams Communication MCP Servers - CORRECTED Analysis 2025-08-11-2116.md -> 03-technical-docs\analysis\Microsoft Teams Communication MCP Servers - CORRECTED Analysis 2025-08-11-2116.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (95, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:33 | ERROR    | Unexpected error moving file 03-technical-docs/technical-notes/Windows Operations MCP Integration Status - 2025-08-10.md -> 03-technical-docs\technical-notes\Windows Operations MCP Integration Status - 2025-08-10.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (93, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:36 | ERROR    | Unexpected error moving file 01-active-projects/projects/blender-mcp/🐌 BLENDER-MCP SPRINT - RATE LIMITING ISSUES.md -> 01-active-projects\projects\blender-mcp\🐌 BLENDER-MCP SPRINT - RATE LIMITING ISSUES.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (97, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:38 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/README.md -> 06-archive\imported\docs\Windsurf generated flows\research\README.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (94, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:42 | ERROR    | Unexpected error moving file 04-development/fixes/Claude Enhanced Helper AHK - FINAL Fix v2.1.md -> 04-development\fixes\Claude Enhanced Helper AHK - FINAL Fix v2.1.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (98, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:44 | ERROR    | Unexpected error moving file 03-technical-docs/analysis/Microsoft Teams Communication MCP Servers - CORRECTED Analysis 2025-08-11-2116.md -> 03-technical-docs\analysis\Microsoft Teams Communication MCP Servers - CORRECTED Analysis 2025-08-11-2116.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (95, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:47 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/2025-05-14_windows-pro-multiuser/chunk_04.md -> 06-archive\imported\docs\Windsurf generated flows\research\2025-05-14_windows-pro-multiuser\chunk_04.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (99, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:49 | ERROR    | Unexpected error moving file 01-active-projects/projects/blender-mcp/🐌 BLENDER-MCP SPRINT - RATE LIMITING ISSUES.md -> 01-active-projects\projects\blender-mcp\🐌 BLENDER-MCP SPRINT - RATE LIMITING ISSUES.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (97, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:52 | ERROR    | Unexpected error moving file 03-technical-docs/reference/Critical Information Retrieval and File Operation Standards.md -> 03-technical-docs\reference\Critical Information Retrieval and File Operation Standards.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (100, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:55 | ERROR    | Unexpected error moving file 04-development/fixes/Claude Enhanced Helper AHK - FINAL Fix v2.1.md -> 04-development\fixes\Claude Enhanced Helper AHK - FINAL Fix v2.1.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (98, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:35:58 | ERROR    | Unexpected error moving file 03-RESOURCES/Index.md -> 03-RESOURCES\Index.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (101, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:00 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Windsurf generated flows/research/2025-05-14_windows-pro-multiuser/chunk_04.md -> 06-archive\imported\docs\Windsurf generated flows\research\2025-05-14_windows-pro-multiuser\chunk_04.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (99, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:03 | ERROR    | Unexpected error moving file 02-mcp-servers/mcp-development/2025-10-08-1530_MCP_Versions_VERIFIED_No_2_13.md -> 02-mcp-servers\mcp-development\2025-10-08-1530_MCP_Versions_VERIFIED_No_2_13.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (102, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:06 | ERROR    | Unexpected error moving file 03-technical-docs/reference/Critical Information Retrieval and File Operation Standards.md -> 03-technical-docs\reference\Critical Information Retrieval and File Operation Standards.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (100, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:09 | ERROR    | Unexpected error moving file 02-mcp-servers/mcp-development/🎵 OSC-MCP Deep Dive Analysis - Major Identity Crisis - Aug 11 2025 0005 CET.md -> 02-mcp-servers\mcp-development\🎵 OSC-MCP Deep Dive Analysis - Major Identity Crisis - Aug 11 2025 0005 CET.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (103, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:11 | ERROR    | Unexpected error moving file 03-RESOURCES/Index.md -> 03-RESOURCES\Index.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (101, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:14 | ERROR    | Unexpected error moving file analysis/Claude MCP Scripts Extended Analysis - 2025-09-09 17 -> 06-archive\tests\Test Title With Timestamp - 2025-09-27 05: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE entity SET file_path=? WHERE entity.id = ?]
+[parameters: ('06-archive/tests/Test Title With Timestamp - 2025-09-27 05', 104)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:16 | ERROR    | Unexpected error moving file 02-mcp-servers/mcp-development/2025-10-08-1530_MCP_Versions_VERIFIED_No_2_13.md -> 02-mcp-servers\mcp-development\2025-10-08-1530_MCP_Versions_VERIFIED_No_2_13.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (102, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:20 | ERROR    | Unexpected error moving file 06-archive/imported/docs/Artificial_Intelligence/philosophy/essays/01_hard_problem.md -> 06-archive\imported\docs\Artificial_Intelligence\philosophy\essays\01_hard_problem.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (105, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:22 | ERROR    | Unexpected error moving file 02-mcp-servers/mcp-development/🎵 OSC-MCP Deep Dive Analysis - Major Identity Crisis - Aug 11 2025 0005 CET.md -> 02-mcp-servers\mcp-development\🎵 OSC-MCP Deep Dive Analysis - Major Identity Crisis - Aug 11 2025 0005 CET.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (103, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:25 | ERROR    | Unexpected error moving file 02-mcp-servers/mcp-troubleshooting/FastSearch MCP Dual Package Implementation Guide COMPLETE.md -> 02-mcp-servers\mcp-troubleshooting\FastSearch MCP Dual Package Implementation Guide COMPLETE.md: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM search_index WHERE entity_id = ? AND project_id = ?]
+[parameters: (106, 3)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:27 | ERROR    | Unexpected error moving file analysis/Claude MCP Scripts Extended Analysis - 2025-09-09 17 -> 06-archive\tests\Test Title With Timestamp - 2025-09-27 05: OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE entity SET file_path=? WHERE entity.id = ?]
+[parameters: ('06-archive/tests/Test Title With Timestamp - 2025-09-27 05', 104)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:36:34 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:36:37 | INFO     | Initializing app...
+2025-10-16 16:36:37 | INFO     | Running database migrations...
+2025-10-16 16:36:37 | INFO     | Migrations completed successfully
+2025-10-16 16:36:37 | INFO     | Initializing search index
+2025-10-16 16:36:37 | INFO     | Database initialization completed
+2025-10-16 16:36:37 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:36:37 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:36:37 | INFO     | Project synchronization complete
+2025-10-16 16:36:37 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-10-16 16:36:37 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-10-16 16:36:37 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:36:37 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:36:37 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:36:37 | INFO     | Switched project context: claude-depot-consolidated -> claude-depot-consolidated
+2025-10-16 16:36:37 | INFO     | Project 'advanced-memory-mcp' set as default in configuration and database
+2025-10-16 16:36:37 | INFO     | Initialized project session with default project: advanced-memory-mcp
+2025-10-16 16:36:37 | INFO     | Refreshed project session from config, new default: advanced-memory-mcp
+2025-10-16 16:36:39 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:37:16 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:37:19 | INFO     | Initializing app...
+2025-10-16 16:37:19 | INFO     | Running database migrations...
+2025-10-16 16:37:19 | INFO     | Migrations completed successfully
+2025-10-16 16:37:19 | INFO     | Initializing search index
+2025-10-16 16:37:19 | INFO     | Database initialization completed
+2025-10-16 16:37:19 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:37:19 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:37:19 | INFO     | Project synchronization complete
+2025-10-16 16:37:19 | INFO     | Initialized project session with default project: advanced-memory-mcp
+2025-10-16 16:37:19 | INFO     | Refreshed project session from config, new default: advanced-memory-mcp
+2025-10-16 16:37:19 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:37:19 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:37:19 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:37:19 | INFO     | Switched project context: advanced-memory-mcp -> advanced-memory-mcp
+2025-10-16 16:37:19 | INFO     | Sync command started
+2025-10-16 16:37:19 | INFO     | Running one-time sync
+2025-10-16 16:37:19 | INFO     | Sync operation started for directory: D:\Dev\repos\advanced-memory-mcp
+2025-10-16 16:37:19 | INFO     | Found 651 db records
+2025-10-16 16:37:19 | INFO     | Scanning directory D:\Dev\repos\advanced-memory-mcp. Found 651 db paths
+2025-10-16 16:37:19 | INFO     | Completed scan for directory D:\Dev\repos\advanced-memory-mcp, found 762 changes.
+2025-10-16 16:37:19 | INFO     | Sync changes detected: new_files=139, modified_files=0, deleted_files=0, moved_files=623
+2025-10-16 16:37:19 | WARNING  | File path conflict during move: src\advanced_memory\importers\utils.py already exists. Cannot move mcpb/src/advanced_memory/importers/utils.py to src\advanced_memory\importers\utils.py. Entity ID: 3839
+2025-10-16 16:37:21 | WARNING  | File path conflict during move: src\advanced_memory\schemas\__init__.py already exists. Cannot move mcpb/src/advanced_memory/schemas/__init__.py to src\advanced_memory\schemas\__init__.py. Entity ID: 3873
+2025-10-16 16:37:21 | WARNING  | File path conflict during move: src\advanced_memory\mcp\async_client.py already exists. Cannot move mcpb/src/advanced_memory/mcp/async_client.py to src\advanced_memory\mcp\async_client.py. Entity ID: 3893
+2025-10-16 16:37:22 | WARNING  | File path conflict during move: src\advanced_memory\alembic\versions\b3c3938bacdb_relation_to_name_unique_index.py already exists. Cannot move mcpb/src/advanced_memory/alembic/versions/b3c3938bacdb_relation_to_name_unique_index.py to src\advanced_memory\alembic\versions\b3c3938bacdb_relation_to_name_unique_index.py. Entity ID: 3902
+2025-10-16 16:38:01 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:38:04 | INFO     | Initializing app...
+2025-10-16 16:38:04 | INFO     | Running database migrations...
+2025-10-16 16:38:04 | INFO     | Migrations completed successfully
+2025-10-16 16:38:04 | INFO     | Initializing search index
+2025-10-16 16:38:04 | INFO     | Database initialization completed
+2025-10-16 16:38:04 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:38:04 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:38:04 | INFO     | Project synchronization complete
+2025-10-16 16:38:04 | INFO     | Initialized project session with default project: advanced-memory-mcp
+2025-10-16 16:38:04 | INFO     | Refreshed project session from config, new default: advanced-memory-mcp
+2025-10-16 16:38:04 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:38:04 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:38:04 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:38:04 | INFO     | Switched project context: advanced-memory-mcp -> advanced-memory-mcp
+2025-10-16 16:38:09 | ERROR    | API unhandled exception
+Traceback (most recent call last):
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x000001D26DF384A0>
+    │    └ <sqlalchemy.dialects.sqlite.aiosqlite.SQLiteDialect_aiosqlite object at 0x000001D2710D4830>
+    └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │      └ <function AsyncAdapt_aiosqlite_cursor.execute at 0x000001D26E8C76A0>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 177, in execute
+    self._adapt_connection._handle_exception(error)
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 337, in _handle_exception
+    raise error
+          └ OperationalError('database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 159, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    │    │      │       │       │          └ ()
+    │    │      │       │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │    │      │       └ <function Cursor.execute at 0x000001D2710D1120>
+    │    │      └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+    │    └ <member 'await_' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object Cursor.execute at 0x000001D2711897E0>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x000001D27118E2C0 (otid=0x000001D26D6B3210) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object Cursor.execute at 0x000001D2711897E0>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+          │    │        │    │       │        │    └ ()
+          │    │        │    │       │        └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+          │    │        │    │       └ <method 'execute' of 'sqlite3.Cursor' objects>
+          │    │        │    └ <sqlite3.Cursor object at 0x000001D27119C5C0>
+          │    │        └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+          │    └ <function Cursor._execute at 0x000001D2710D1080>
+          └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+                 │    │     │        │    │       └ {}
+                 │    │     │        │    └ ('UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL', ())
+                 │    │     │        └ <built-in method execute of sqlite3.Cursor object at 0x000001D27119C5C0>
+                 │    │     └ <function Connection._execute at 0x000001D2710D23E0>
+                 │    └ <Connection(Thread-1, started daemon 59172)>
+                 └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+                 └ <Future finished exception=OperationalError('database is locked')>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+             └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001D271101A80>)
+
+sqlite3.OperationalError: database is locked
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Scripts\advanced-memory.exe\__main__.py", line 6, in <module>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\main.py", line 324, in __call__
+    return get_command(self)(*args, **kwargs)
+           │           │      │       └ {}
+           │           │      └ ()
+           │           └ <typer.main.Typer object at 0x000001D26D4BE7B0>
+           └ <function get_command at 0x000001D26CD771A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1462, in __call__
+    return self.main(*args, **kwargs)
+           │    │     │       └ {}
+           │    │     └ ()
+           │    └ <function TyperGroup.main at 0x000001D26CD5B6A0>
+           └ <TyperGroup advanced-memory>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\core.py", line 757, in main
+    return _main(
+           └ <function _main at 0x000001D26CD5A7A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\core.py", line 195, in _main
+    rv = self.invoke(ctx)
+         │    │      └ <click.core.Context object at 0x000001D26D99B620>
+         │    └ <function Group.invoke at 0x000001D26C071120>
+         └ <TyperGroup advanced-memory>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+           │               │       │       │      └ <click.core.Context object at 0x000001D2710DA710>
+           │               │       │       └ <function Group.invoke at 0x000001D26C071120>
+           │               │       └ <TyperGroup project>
+           │               └ <click.core.Context object at 0x000001D2710DA710>
+           └ <function Group.invoke.<locals>._process_result at 0x000001D2710A3C40>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+           │               │       │       │      └ <click.core.Context object at 0x000001D2710DAAD0>
+           │               │       │       └ <function Command.invoke at 0x000001D26C067EC0>
+           │               │       └ <TyperCommand default>
+           │               └ <click.core.Context object at 0x000001D2710DAAD0>
+           └ <function Group.invoke.<locals>._process_result at 0x000001D2710E71A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           │   │      │    │           │   └ {'name': 'claude-depot-consolidated'}
+           │   │      │    │           └ <click.core.Context object at 0x000001D2710DAAD0>
+           │   │      │    └ <function set_default_project at 0x000001D2710A2F20>
+           │   │      └ <TyperCommand default>
+           │   └ <function Context.invoke at 0x000001D26C067100>
+           └ <click.core.Context object at 0x000001D2710DAAD0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\click\core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+           │         │       └ {'name': 'claude-depot-consolidated'}
+           │         └ ()
+           └ <function set_default_project at 0x000001D2710A2F20>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\typer\main.py", line 699, in wrapper
+    return callback(**use_params)
+           │          └ {'name': 'claude-depot-consolidated'}
+           └ <function set_default_project at 0x000001D2710A0400>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\cli\commands\project.py", line 118, in set_default_project
+    response = asyncio.run(call_put(client, f"/projects/{project_name}/default"))
+               │       │   │        │                    └ 'claude-depot-consolidated'
+               │       │   │        └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+               │       │   └ <function call_put at 0x000001D270B11300>
+               │       └ <function run at 0x000001D26D001760>
+               └ <module 'asyncio' from 'C:\\Users\\sandr\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\asyncio\\__init__.py'>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object call_put at 0x000001D270C239A0>
+           │      └ <function Runner.run at 0x000001D26D0896C0>
+           └ <asyncio.runners.Runner object at 0x000001D2710DAE90>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-4' coro=<call_put() running at D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\utils....
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000001D26D083100>
+           │    └ <ProactorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000001D2710DAE90>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 712, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000001D26D083060>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 683, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000001D26D088EA0>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2042, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000001D26D0027A0>
+    └ <Handle Task.task_wakeup()>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup()>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\utils.py", line 193, in call_put
+    response = await client.put(
+                     │      └ <function AsyncClient.put at 0x000001D26F27FF60>
+                     └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1896, in put
+    return await self.request(
+                 │    └ <function AsyncClient.request at 0x000001D26F27F880>
+                 └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+                 │    │    │             │                      └ <httpx._client.UseClientDefault object at 0x000001D26F1963C0>
+                 │    │    │             └ <httpx._client.UseClientDefault object at 0x000001D26F1963C0>
+                 │    │    └ <Request('PUT', 'http://test/projects/claude-depot-consolidated/default')>
+                 │    └ <function AsyncClient.send at 0x000001D26F27FA60>
+                 └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+                     │    └ <function AsyncClient._send_handling_auth at 0x000001D26F27FB00>
+                     └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+                     │    └ <function AsyncClient._send_handling_redirects at 0x000001D26F27FBA0>
+                     └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+                     │    │                    └ <Request('PUT', 'http://test/projects/claude-depot-consolidated/default')>
+                     │    └ <function AsyncClient._send_single_request at 0x000001D26F27FC40>
+                     └ <httpx.AsyncClient object at 0x000001D2706E1BE0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+                     │         │                    └ <Request('PUT', 'http://test/projects/claude-depot-consolidated/default')>
+                     │         └ <function ASGITransport.handle_async_request at 0x000001D26F26FB00>
+                     └ <httpx.ASGITransport object at 0x000001D2706E1010>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\httpx\_transports\asgi.py", line 170, in handle_async_request
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x000001D271126FC0>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <fastapi.applications.FastAPI object at 0x000001D2704F5940>
+          └ <httpx.ASGITransport object at 0x000001D2706E1010>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1133, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x000001D271126FC0>
+                           │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+                           └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x000001D271126FC0>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000001D2710D5E80>
+          └ <fastapi.applications.FastAPI object at 0x000001D2704F5940>
+> File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x000001D2711271A0>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001D2710D5940>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x000001D2710D5E80>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x000001D2711271A0>
+          │                            │    │    │     │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │                            │    │    └ <starlette.requests.Request object at 0x000001D2710D67B0>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001D2710D7620>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001D2710D5940>
+          └ <function wrap_app_handling_exceptions at 0x000001D26F6DFC40>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001D2710D7620>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <fastapi.routing.APIRouter object at 0x000001D2704C8320>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001D2710D7620>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x000001D2704C8320>>
+          └ <fastapi.routing.APIRouter object at 0x000001D2704C8320>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │     │      │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │     └ <function Route.handle at 0x000001D26F6E2520>
+          └ APIRoute(path='/projects/{name}/default', name='set_default_project', methods=['PUT'])
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │    └ <function request_response.<locals>.app at 0x000001D270AA6D40>
+          └ APIRoute(path='/projects/{name}/default', name='set_default_project', methods=['PUT'])
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271126520>
+          │                            │    │        │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          │                            │    └ <starlette.requests.Request object at 0x000001D2710DB610>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x000001D271125300>
+          └ <function wrap_app_handling_exceptions at 0x000001D26F6DFC40>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001D271125580>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x000001D271126F20>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'PUT', 'headers': [(b'host', b'test'), (b'conte...
+          └ <function request_response.<locals>.app.<locals>.app at 0x000001D271125300>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x000001D2710DB610>
+                     └ <function get_request_handler.<locals>.app at 0x000001D270AA6B60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 387, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x000001D26FF69620>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'project_service': <advanced_memory.services.project_service.ProjectService object at 0x000001D2710DA0D0>, 'name': 'claude-d...
+                 │         └ <function set_default_project at 0x000001D270195DA0>
+                 └ Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='name', mode='validation')], query_params=[], head...
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\api\routers\project_router.py", line 194, in set_default_project
+    await project_service.set_default_project(name)
+          │               │                   └ 'claude-depot-consolidated'
+          │               └ <function ProjectService.set_default_project at 0x000001D26FF7F060>
+          └ <advanced_memory.services.project_service.ProjectService object at 0x000001D2710DA0D0>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\services\project_service.py", line 173, in set_default_project
+    await self.repository.set_as_default(project.id)
+          │    │          │              │       └ <sqlalchemy.orm.attributes.InstrumentedAttribute object at 0x000001D26E9349A0>
+          │    │          │              └ Project(id=3, name='claude-depot-consolidated', permalink='claude-depot-consolidated', path='C:\Users\sandr\Documents\claude-...
+          │    │          └ <function ProjectRepository.set_as_default at 0x000001D26E937100>
+          │    └ <advanced_memory.repository.project_repository.ProjectRepository object at 0x000001D2710DBB10>
+          └ <advanced_memory.services.project_service.ProjectService object at 0x000001D2710DA0D0>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\repository\project_repository.py", line 77, in set_as_default
+    await session.execute(
+          │       └ <function AsyncSession.execute at 0x000001D26E884360>
+          └ <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x000001D2710C8160>
+
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 463, in execute
+    result = await greenlet_spawn(
+                   └ <function greenlet_spawn at 0x000001D26D7051C0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             │       │      │   └ <built-in function exc_info>
+             │       │      └ <module 'sys' (built-in)>
+             │       └ <method 'throw' of 'greenlet.greenlet' objects>
+             └ <_AsyncIoGreenlet object at 0x000001D27118E2C0 (otid=0x000001D26D6B3210) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           │    └ <function Session._execute_internal at 0x000001D26E7A5A80>
+           └ <sqlalchemy.orm.session.Session object at 0x000001D2710CB8A0>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2260, in _execute_internal
+    result = conn.execute(
+             │    └ <function Connection.execute at 0x000001D26DE84B80>
+             └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           └ <bound method ClauseElement._execute_on_connection of <sqlalchemy.sql.elements.TextClause object at 0x000001D270236350>>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           │          └ <function Connection._execute_clauseelement at 0x000001D26DE84EA0>
+           └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          │    └ <function Connection._execute_context at 0x000001D26DE85080>
+          └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           │    └ <function Connection._exec_single_context at 0x000001D26DE85120>
+           └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    │    └ <function Connection._handle_dbapi_exception at 0x000001D26DE853A0>
+    └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+          │                    │              │                 └ OperationalError('database is locked')
+          │                    │              └ (<class 'sqlite3.OperationalError'>, OperationalError('database is locked'), <traceback object at 0x000001D27118F4C0>)
+          │                    └ <method 'with_traceback' of 'BaseException' objects>
+          └ OperationalError('(sqlite3.OperationalError) database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    │    │       └ <function DefaultDialect.do_execute at 0x000001D26DF384A0>
+    │    └ <sqlalchemy.dialects.sqlite.aiosqlite.SQLiteDialect_aiosqlite object at 0x000001D2710D4830>
+    └ <sqlalchemy.engine.base.Connection object at 0x000001D271116C60>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+    │      │       │          └ ()
+    │      │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │      └ <function AsyncAdapt_aiosqlite_cursor.execute at 0x000001D26E8C76A0>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 177, in execute
+    self._adapt_connection._handle_exception(error)
+    │    └ <member '_adapt_connection' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 337, in _handle_exception
+    raise error
+          └ OperationalError('database is locked')
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 159, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    │    │      │       │       │          └ ()
+    │    │      │       │       └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+    │    │      │       └ <function Cursor.execute at 0x000001D2710D1120>
+    │    │      └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+    │    └ <member 'await_' of 'AsyncAdapt_aiosqlite_cursor' objects>
+    └ <sqlalchemy.dialects.sqlite.aiosqlite.AsyncAdapt_aiosqlite_cursor object at 0x000001D27111B820>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           │       │             └ <coroutine object Cursor.execute at 0x000001D2711897E0>
+           │       └ <attribute 'parent' of 'greenlet.greenlet' objects>
+           └ <_AsyncIoGreenlet object at 0x000001D27118E2C0 (otid=0x000001D26D6B3210) dead>
+  File "C:\Users\sandr\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+                  └ <coroutine object Cursor.execute at 0x000001D2711897E0>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+          │    │        │    │       │        │    └ ()
+          │    │        │    │       │        └ 'UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL'
+          │    │        │    │       └ <method 'execute' of 'sqlite3.Cursor' objects>
+          │    │        │    └ <sqlite3.Cursor object at 0x000001D27119C5C0>
+          │    │        └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+          │    └ <function Cursor._execute at 0x000001D2710D1080>
+          └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+                 │    │     │        │    │       └ {}
+                 │    │     │        │    └ ('UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL', ())
+                 │    │     │        └ <built-in method execute of sqlite3.Cursor object at 0x000001D27119C5C0>
+                 │    │     └ <function Connection._execute at 0x000001D2710D23E0>
+                 │    └ <Connection(Thread-1, started daemon 59172)>
+                 └ <aiosqlite.cursor.Cursor object at 0x000001D27111A570>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 122, in _execute
+    return await future
+                 └ <Future finished exception=OperationalError('database is locked')>
+  File "C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py", line 105, in run
+    result = function()
+             └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001D271101A80>)
+
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-16 16:42:05 | INFO     | Advanced Memory 1.0.0b2 (Project: claude-depot-consolidated)
+2025-10-16 16:42:07 | INFO     | Initializing app...
+2025-10-16 16:42:07 | INFO     | Running database migrations...
+2025-10-16 16:42:07 | INFO     | Migrations completed successfully
+2025-10-16 16:42:07 | INFO     | Initializing search index
+2025-10-16 16:42:07 | INFO     | Database initialization completed
+2025-10-16 16:42:07 | INFO     | Reconciling projects from config with database...
+2025-10-16 16:42:07 | INFO     | Synchronizing projects between database and configuration
+2025-10-16 16:42:07 | INFO     | Updating default project in config to 'advanced-memory-mcp'
+2025-10-16 16:42:07 | INFO     | Project synchronization complete
+2025-10-16 16:42:07 | INFO     | Initialized project session with default project: advanced-memory-mcp
+2025-10-16 16:42:07 | INFO     | Refreshed project session from config, new default: advanced-memory-mcp
+2025-10-16 16:42:07 | INFO     | Projects successfully reconciled between config and database
+2025-10-16 16:42:07 | INFO     | App initialization completed (migration running in background if needed)
+2025-10-16 16:42:07 | INFO     | Initialization completed successfully: result=None
+2025-10-16 16:42:07 | INFO     | Switched project context: advanced-memory-mcp -> claude-depot-consolidated
+2025-10-16 16:42:09 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:42:37 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:53:07 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:54:33 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-16 16:55:22 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)

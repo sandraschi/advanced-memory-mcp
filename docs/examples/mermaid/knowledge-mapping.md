@@ -1,7 +1,13 @@
 ---
-title: "Knowledge Mapping with Mermaid"
-tags: ["knowledge", "mapping", "research", "mermaid", "example"]
-created: "2024-01-15"
+title: Knowledge Mapping with Mermaid
+tags:
+- knowledge
+- mapping
+- research
+- mermaid
+- example
+created: '2024-01-15'
+permalink: docs/examples/mermaid/knowledge-mapping
 ---
 
 # Knowledge Domain Mapping
