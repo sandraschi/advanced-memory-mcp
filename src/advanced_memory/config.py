@@ -49,9 +49,7 @@ class AdvancedMemoryConfig(BaseSettings):
     env: Environment = Field(default="dev", description="Environment name")
 
     projects: dict[str, str] = Field(
-        default_factory=lambda: {
-            "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))
-        },
+        default_factory=lambda: {"main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))},
         description="Mapping of project names to their filesystem paths",
     )
     default_project: str = Field(

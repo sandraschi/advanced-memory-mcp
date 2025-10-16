@@ -16,4 +16,3 @@ __all__ = [
     "WRITER_TEMPLATES",
     "KNOWLEDGE_WORKER_TEMPLATES",
 ]
-

@@ -149,7 +149,9 @@ def onboard_wizard():
         console.print(
             f"\n[bold green]Selected {total_categories} categories with {total_sub_interests} focus areas[/bold green]"
         )
-        console.print("This will create approximately 50-60 excellent, interconnected starter notes.")
+        console.print(
+            "This will create approximately 50-60 excellent, interconnected starter notes."
+        )
 
         # Confirm
         proceed = Prompt.ask("Ready to create your starter Zettelkasten?", default="y")
@@ -171,11 +173,11 @@ def onboard_wizard():
 
         # Success message
         console.print("\n[bold green]🎉 Success![/bold green]")
-        console.print(f"Created [bold]{total_notes}[/bold] high-quality starter notes in your knowledge base!")
-        console.print("\n[bold]What's next?[/bold]")
         console.print(
-            '• Explore your new notes with: [cyan]advanced-memory search "Python"[/cyan]'
+            f"Created [bold]{total_notes}[/bold] high-quality starter notes in your knowledge base!"
         )
+        console.print("\n[bold]What's next?[/bold]")
+        console.print('• Explore your new notes with: [cyan]advanced-memory search "Python"[/cyan]')
         console.print("• Start connecting ideas by adding wikilinks [[Note Name]]")
         console.print("• Create your own notes to build on this foundation")
         console.print("• Use Claude with your MCP connection for seamless note creation")
@@ -224,7 +226,9 @@ def onboard_quick(
 
         total_notes = asyncio.run(run_generation())
 
-        console.print(f"\n[bold green]✅ Created {total_notes} excellent starter notes![/bold green]")
+        console.print(
+            f"\n[bold green]✅ Created {total_notes} excellent starter notes![/bold green]"
+        )
         console.print(
             "Run [cyan]advanced-memory onboard wizard[/cyan] for interactive setup anytime."
         )

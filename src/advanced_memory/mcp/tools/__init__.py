@@ -18,6 +18,7 @@ from advanced_memory.mcp.tools.adn_search import adn_search
 from advanced_memory.mcp.tools.build_context import build_context
 from advanced_memory.mcp.tools.canvas import canvas
 from advanced_memory.mcp.tools.content_manager import adn_content
+from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
 # Import legacy individual tools (for backward compatibility)
 from advanced_memory.mcp.tools.delete_note import delete_note
@@ -65,9 +66,10 @@ from advanced_memory.mcp.tools.write_note import write_note
 
 # Portmanteau tools (recommended for Cursor IDE - reduces tool count)
 __all__ = [
-    # Complete portmanteau tool suite (8 tools total)
+    # Complete portmanteau tool suite (9 tools total)
     "adn_content",  # Consolidates: write_note, read_note, view_note, edit_note, move_note, delete_note
     "adn_project",  # Consolidates: create, switch, delete, set_default, get_current, list, sync, status
+    "adn_zettelmaker",  # Consolidates: generate, customize, expand, suggest, connect, analyze
     "adn_export",  # Consolidates: export_pandoc, export_docsify, export_html_notes, export_joplin_notes, make_pdf_book, export_to_archive, export_evernote_compatible, export_notion_compatible
     "adn_import",  # Consolidates: load_obsidian_vault, load_joplin_vault, load_notion_export, load_evernote_export, import_from_archive, load_obsidian_canvas
     "adn_search",  # Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault

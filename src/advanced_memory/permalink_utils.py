@@ -129,7 +129,7 @@ def sanitize_filename(title: str) -> str:
     # Remove: @ # $ % ^ ( ) ! ~ ` , ; ' [ ] { } = +
     # But keep: alphanumeric, hyphens, underscores, and any non-ASCII (Unicode)
     # Note: & is handled above (replaced with _), not removed
-    ascii_special = r'[@#$%^()!~`,;\'\[\]{}=+]'
+    ascii_special = r"[@#$%^()!~`,;\'\[\]{}=+]"
     title = re.sub(ascii_special, "", title)
 
     # Replace spaces with underscores (do this after removing special chars)
