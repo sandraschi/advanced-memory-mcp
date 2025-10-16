@@ -5,7 +5,7 @@ DEVELOPER_TEMPLATES = {
         {
             "title": "Python Fundamentals",
             "folder": "development/python",
-            "content": """# Python Fundamentals
+            "content": r'''# Python Fundamentals
 
 Python is a high-level, interpreted, general-purpose programming language emphasizing code readability.
 
@@ -125,12 +125,12 @@ finally:
 - [[Python Async Programming]]
 
 *Master the fundamentals before diving into frameworks and libraries.*
-""",
+'''
         },
         {
             "title": "Python Type Hints",
             "folder": "development/python",
-            "content": """# Python Type Hints
+            "content": r'''# Python Type Hints
 
 Type hints provide optional static typing to Python, enabling better tooling and error detection.
 
@@ -358,12 +358,12 @@ config: Config = {"host": "localhost", "port": 8000, "debug": True}
 - [[Python Testing]]
 
 *Type hints are optional but invaluable - they're living documentation that never goes stale.*
-""",
+'''
         },
         {
             "title": "Python Virtual Environments",
             "folder": "development/python",
-            "content": """# Python Virtual Environments
+            "content": r'''# Python Virtual Environments
 
 Virtual environments isolate project dependencies, preventing conflicts between projects.
 
@@ -579,14 +579,14 @@ uv python pin 3.11
 - [[Reproducible Builds]]
 
 *Virtual environments are not optional - they're essential for professional Python development.*
-""",
+'''
         },
     ],
     "git-version-control": [
         {
             "title": "Git Fundamentals",
             "folder": "development/tools",
-            "content": """# Git Fundamentals
+            "content": r'''# Git Fundamentals
 
 Git is a distributed version control system for tracking changes in source code during software development.
 
@@ -784,12 +784,12 @@ config.local.py
 - [[Version Control Philosophy]]
 
 *Git is not just a tool - it's a time machine for your code.*
-""",
+'''
         },
         {
             "title": "Python Testing",
             "folder": "development/python",
-            "content": """# Python Testing
+            "content": r'''# Python Testing
 
 Automated testing ensures code quality, catches bugs early, and enables confident refactoring.
 
@@ -1079,14 +1079,14 @@ def test_public_behavior():
 - [[Python Best Practices]]
 
 *Tests are not overhead - they're the foundation of confident development.*
-""",
+'''
         },
     ],
     "web-apis": [
         {
             "title": "RESTful API Design",
             "folder": "development/web",
-            "content": """# RESTful API Design
+            "content": r'''# RESTful API Design
 
 REST (Representational State Transfer) is an architectural style for designing networked applications.
 
@@ -1342,14 +1342,14 @@ Authorization: Basic base64(username:password)
 - [[Microservices Architecture]]
 
 *Good API design is about making developers' lives easier - including future you.*
-""",
+'''
         },
     ],
     "oop-design": [
         {
             "title": "Object-Oriented Programming",
             "folder": "development/concepts",
-            "content": """# Object-Oriented Programming
+            "content": r'''# Object-Oriented Programming
 
 OOP is a programming paradigm based on the concept of "objects" containing data and code.
 
@@ -1606,14 +1606,14 @@ class Car(Vehicle):  # Car is-a Vehicle
 - [[Software Architecture]]
 
 *OOP is a tool for organizing code - use it when it makes code clearer, not because you must.*
-""",
+'''
         },
     ],
     "async-programming": [
         {
             "title": "Python Async Programming",
             "folder": "development/python",
-            "content": """# Python Async Programming
+            "content": r'''# Python Async Programming
 
 Asynchronous programming allows concurrent execution of tasks without blocking.
 
@@ -1879,14 +1879,14 @@ async def test_async_function():
 - [[Performance Optimization]]
 
 *Async is powerful for I/O-bound work, but adds complexity - use when benefits outweigh costs.*
-""",
+'''
         },
     ],
     "databases": [
         {
             "title": "Database Fundamentals",
             "folder": "development/databases",
-            "content": """# Database Fundamentals
+            "content": r'''# Database Fundamentals
 
 Databases store, organize, and retrieve data efficiently and reliably.
 
@@ -2176,14 +2176,14 @@ users = session.query(User).options(joinedload(User.posts)).all()
 - [[Data Modeling]]
 
 *Databases are the foundation of most applications - invest time in understanding them well.*
-""",
+'''
         },
     ],
     "docker-containers": [
         {
             "title": "Docker Fundamentals",
             "folder": "development/tools",
-            "content": """# Docker Fundamentals
+            "content": r'''# Docker Fundamentals
 
 Docker packages applications with their dependencies into containers for consistent deployment.
 
@@ -2488,14 +2488,14 @@ docker system prune -a
 - [[DevOps Practices]]
 
 *Docker makes "it works on my machine" a thing of the past.*
-""",
+'''
         },
     ],
     "clean-code": [
         {
             "title": "Clean Code Principles",
             "folder": "development/concepts",
-            "content": """# Clean Code Principles
+            "content": r'''# Clean Code Principles
 
 Clean code is code that is easy to read, understand, and maintain.
 
@@ -2748,18 +2748,16 @@ def render_page(user):
 
 # After
 def render_page(user):
-    return f"""
-    <html><body>
-        {render_header(user)}
-        {render_user_info(user)}
-    </body></html>
-    """
+    return (f"<html><body>"
+            f"{render_header(user)}"
+            f"{render_user_info(user)}"
+            f"</body></html>")
 
 def render_header(user):
-    return f"<h1>Welcome {user.name}</h1>"
+    return f"<h1>Welcome {{user.name}}</h1>"
 
 def render_user_info(user):
-    return f"<p>Email: {user.email}</p>"
+    return f"<p>Email: {{user.email}}</p>"
 ```
 
 ### Replace Conditional with Polymorphism
@@ -2804,14 +2802,14 @@ class ExpressShipping(ShippingMethod):
 - [[Technical Debt]]
 
 *Clean code is not about perfection - it's about clarity and maintainability.*
-""",
+'''
         },
     ],
     "ci-cd": [
         {
             "title": "CI/CD Fundamentals",
             "folder": "development/devops",
-            "content": """# CI/CD Fundamentals
+            "content": r'''# CI/CD Fundamentals
 
 Continuous Integration and Continuous Deployment automate software delivery.
 
@@ -3075,14 +3073,14 @@ kubectl rollout undo deployment/myapp
 - [[Monitoring and Observability]]
 
 *CI/CD is not about tools - it's about culture and practices that enable rapid, reliable delivery.*
-""",
+'''
         },
     ],
     "debugging-performance": [
         {
             "title": "Debugging Techniques",
             "folder": "development/skills",
-            "content": """# Debugging Techniques
+            "content": r'''# Debugging Techniques
 
 Systematic approaches to finding and fixing bugs in code.
 
@@ -3404,12 +3402,12 @@ Second pair of eyes catches issues.
 - [[Performance Optimization]]
 
 *Debugging is twice as hard as writing code - write simple code to make debugging easier.*
-""",
+'''
         },
         {
             "title": "Performance Optimization",
             "folder": "development/skills",
-            "content": """# Performance Optimization
+            "content": r'''# Performance Optimization
 
 Making code faster and more efficient through systematic improvements.
 
@@ -3821,12 +3819,12 @@ locust -f locustfile.py
 - [[System Performance]]
 
 *Measure first, optimize second - never guess where the bottleneck is.*
-""",
+'''
         },
         {
             "title": "Code Review Best Practices",
             "folder": "development/skills",
-            "content": """# Code Review Best Practices
+            "content": r'''# Code Review Best Practices
 
 Code review improves quality, shares knowledge, and catches issues before production.
 
@@ -4102,7 +4100,9 @@ Rubber-stamping without actually reading.
 - [[Software Quality]]
 
 *Good code review is collaborative, not adversarial - we're all trying to build better software.*
-""",
+'''
         },
     ],
 }
+
+

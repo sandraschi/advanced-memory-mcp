@@ -7,7 +7,7 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 from loguru import logger
-from sqlalchemy import text
+from sqlalchemy import event, text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -78,7 +78,24 @@ def _create_engine_and_session(
     """Internal helper to create engine and session maker."""
     db_url = DatabaseType.get_db_url(db_path, db_type)
     logger.debug(f"Creating engine for db_url: {db_url}")
-    engine = create_async_engine(db_url, connect_args={"check_same_thread": False})
+
+    # Configure SQLite with timeout and WAL mode for better concurrency
+    connect_args = {
+        "check_same_thread": False,
+        "timeout": 30.0,  # 30 second timeout prevents indefinite hanging
+    }
+
+    engine = create_async_engine(db_url, connect_args=connect_args)
+
+    # Configure SQLite for better concurrency (WAL mode allows concurrent reads/writes)
+    @event.listens_for(engine.sync_engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):  # type: ignore[misc]
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")  # Write-Ahead Logging for concurrency
+        cursor.execute("PRAGMA busy_timeout=30000")  # 30 second busy timeout in milliseconds
+        cursor.execute("PRAGMA synchronous=NORMAL")  # Balance between safety and performance
+        cursor.close()
+
     session_maker = async_sessionmaker(engine, expire_on_commit=False)
     return engine, session_maker
 
@@ -139,7 +156,22 @@ async def engine_session_factory(
     db_url = DatabaseType.get_db_url(db_path, db_type)
     logger.debug(f"Creating engine for db_url: {db_url}")
 
-    _engine = create_async_engine(db_url, connect_args={"check_same_thread": False})
+    # Configure SQLite with timeout and WAL mode for better concurrency
+    connect_args = {
+        "check_same_thread": False,
+        "timeout": 30.0,  # 30 second timeout prevents indefinite hanging
+    }
+
+    _engine = create_async_engine(db_url, connect_args=connect_args)
+
+    # Configure SQLite for better concurrency (WAL mode allows concurrent reads/writes)
+    @event.listens_for(_engine.sync_engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):  # type: ignore[misc]
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")  # Write-Ahead Logging for concurrency
+        cursor.execute("PRAGMA busy_timeout=30000")  # 30 second busy timeout in milliseconds
+        cursor.execute("PRAGMA synchronous=NORMAL")  # Balance between safety and performance
+        cursor.close()
     try:
         _session_maker = async_sessionmaker(_engine, expire_on_commit=False)
 
