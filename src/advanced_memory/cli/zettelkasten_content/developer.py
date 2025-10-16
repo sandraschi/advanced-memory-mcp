@@ -31,8 +31,8 @@ complex_num = 3 + 4j
 ```python
 single = 'Hello'
 double = "World"
-multiline = '''Multiple
-lines'''
+multiline = """\1
+\2"""
 f_string = f"Value: {42}"
 ```
 
