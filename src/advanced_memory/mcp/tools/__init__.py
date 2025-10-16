@@ -47,14 +47,6 @@ from advanced_memory.mcp.tools.project_management import (
     set_default_project,
     switch_project,
 )
-from advanced_memory.mcp.tools.adn_project import (
-    adn_project_create,
-    adn_project_delete,
-    adn_project_list,
-    adn_project_set_default,
-    adn_project_status,
-    adn_project_sync,
-)
 from advanced_memory.mcp.tools.project_manager import adn_project
 from advanced_memory.mcp.tools.read_content import read_content
 from advanced_memory.mcp.tools.read_note import read_note
@@ -75,20 +67,13 @@ from advanced_memory.mcp.tools.write_note import write_note
 __all__ = [
     # Complete portmanteau tool suite (8 tools total)
     "adn_content",  # Consolidates: write_note, read_note, view_note, edit_note, move_note, delete_note
-    "adn_project",  # Consolidates: create_memory_project, switch_project, get_current_project, set_default_project, delete_project, list_memory_projects
+    "adn_project",  # Consolidates: create, switch, delete, set_default, get_current, list, sync, status
     "adn_export",  # Consolidates: export_pandoc, export_docsify, export_html_notes, export_joplin_notes, make_pdf_book, export_to_archive, export_evernote_compatible, export_notion_compatible
     "adn_import",  # Consolidates: load_obsidian_vault, load_joplin_vault, load_notion_export, load_evernote_export, import_from_archive, load_obsidian_canvas
     "adn_search",  # Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault
     "adn_knowledge",  # Consolidates: knowledge_operations, research_orchestrator
     "adn_navigation",  # Consolidates: build_context, recent_activity, list_directory, status, sync_status
     "adn_editor",  # Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
-    # NEW: FastMCP 2.12 compliant project CRUD tools
-    "adn_project_create",
-    "adn_project_list",
-    "adn_project_sync",
-    "adn_project_set_default",
-    "adn_project_status",
-    "adn_project_delete",
     # Legacy individual tools (for backward compatibility)
     "build_context",
     "canvas",

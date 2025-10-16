@@ -42,6 +42,8 @@ async def adn_project(
     - set_default: Configure which project loads by default on startup
     - get_current: Display currently active project with comprehensive statistics
     - list: List all available projects with status indicators
+    - sync: Sync specific project without changing default (requires project_name)
+    - status: Get detailed statistics for a specific project (requires project_name)
 
     PROJECT CONTEXT IMPACT:
     - All file operations target the active project
@@ -94,8 +96,12 @@ async def adn_project(
         return await _get_current_operation(ctx)
     elif operation == "list":
         return await _list_operation(ctx)
+    elif operation == "sync":
+        return await _sync_operation(project_name, ctx)
+    elif operation == "status":
+        return await _status_operation(project_name, ctx)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, switch, delete, set_default, get_current, list"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, switch, delete, set_default, get_current, list, sync, status"
 
 
 async def _create_operation(
@@ -344,3 +350,66 @@ async def _list_operation(ctx: Context | None) -> str:
             result += f"[UNICODE] {project.name}\n"
 
     return add_project_metadata(result, current)
+
+
+async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
+    """Handle sync operation - sync a specific project without changing default."""
+    if not project_name:
+        return "# Error\n\nSync operation requires: project_name parameter"
+
+    if ctx:  # pragma: no cover
+        await ctx.info(f"Syncing project: {project_name}")
+
+    try:
+        # Call the new project-specific sync endpoint
+        response = await call_post(client, f"/projects/{project_name}/sync")
+        sync_response = response.json()
+
+        result = f"✅ Project '{project_name}' synced successfully\n\n"
+        result += f"Files processed: {sync_response.get('files_synced', 'N/A')}\n"
+
+        return add_project_metadata(result, session.get_current_project())
+
+    except Exception as e:
+        result = f"❌ Error syncing project '{project_name}': {str(e)}\n\n"
+        result += "Make sure the project exists. Use adn_project('list') to see all projects.\n"
+        return add_project_metadata(result, session.get_current_project())
+
+
+async def _status_operation(project_name: str | None, ctx: Context | None) -> str:
+    """Handle status operation - get detailed statistics for a specific project."""
+    if not project_name:
+        return "# Error\n\nStatus operation requires: project_name parameter"
+
+    if ctx:  # pragma: no cover
+        await ctx.info(f"Getting status for project: {project_name}")
+
+    try:
+        # Get project info
+        project_permalink = generate_permalink(project_name)
+        response = await call_get(
+            client,
+            f"/{project_permalink}/project/info",
+            params={"project_name": project_name},
+        )
+        project_info = ProjectInfoResponse.model_validate(response.json())
+
+        result = f"📊 Project: {project_info.name}\n\n"
+        result += f"📁 Path: {project_info.path}\n"
+        result += f"🔗 Permalink: {project_info.permalink}\n\n"
+
+        result += "Statistics:\n"
+        result += f"  📄 {project_info.statistics.total_entities} entities\n"
+        result += f"  🔍 {project_info.statistics.total_observations} observations\n"
+        result += f"  🔗 {project_info.statistics.total_relations} relations\n\n"
+
+        if project_info.is_default:
+            result += "⭐ This is the default project\n"
+
+        return add_project_metadata(result, session.get_current_project())
+
+    except Exception as e:
+        return add_project_metadata(
+            f"❌ Error getting status for project '{project_name}': {str(e)}",
+            session.get_current_project(),
+        )
