@@ -125,7 +125,7 @@ finally:
 - [[Python Async Programming]]
 
 *Master the fundamentals before diving into frameworks and libraries.*
-'''
+''',
         },
         {
             "title": "Python Type Hints",
@@ -358,7 +358,7 @@ config: Config = {"host": "localhost", "port": 8000, "debug": True}
 - [[Python Testing]]
 
 *Type hints are optional but invaluable - they're living documentation that never goes stale.*
-'''
+''',
         },
         {
             "title": "Python Virtual Environments",
@@ -579,7 +579,7 @@ uv python pin 3.11
 - [[Reproducible Builds]]
 
 *Virtual environments are not optional - they're essential for professional Python development.*
-'''
+''',
         },
     ],
     "git-version-control": [
@@ -784,7 +784,7 @@ config.local.py
 - [[Version Control Philosophy]]
 
 *Git is not just a tool - it's a time machine for your code.*
-'''
+''',
         },
         {
             "title": "Python Testing",
@@ -1079,7 +1079,7 @@ def test_public_behavior():
 - [[Python Best Practices]]
 
 *Tests are not overhead - they're the foundation of confident development.*
-'''
+''',
         },
     ],
     "web-apis": [
@@ -1342,7 +1342,7 @@ Authorization: Basic base64(username:password)
 - [[Microservices Architecture]]
 
 *Good API design is about making developers' lives easier - including future you.*
-'''
+''',
         },
     ],
     "oop-design": [
@@ -1606,7 +1606,7 @@ class Car(Vehicle):  # Car is-a Vehicle
 - [[Software Architecture]]
 
 *OOP is a tool for organizing code - use it when it makes code clearer, not because you must.*
-'''
+''',
         },
     ],
     "async-programming": [
@@ -1879,7 +1879,7 @@ async def test_async_function():
 - [[Performance Optimization]]
 
 *Async is powerful for I/O-bound work, but adds complexity - use when benefits outweigh costs.*
-'''
+''',
         },
     ],
     "databases": [
@@ -2176,7 +2176,7 @@ users = session.query(User).options(joinedload(User.posts)).all()
 - [[Data Modeling]]
 
 *Databases are the foundation of most applications - invest time in understanding them well.*
-'''
+''',
         },
     ],
     "docker-containers": [
@@ -2488,7 +2488,7 @@ docker system prune -a
 - [[DevOps Practices]]
 
 *Docker makes "it works on my machine" a thing of the past.*
-'''
+''',
         },
     ],
     "clean-code": [
@@ -2802,7 +2802,7 @@ class ExpressShipping(ShippingMethod):
 - [[Technical Debt]]
 
 *Clean code is not about perfection - it's about clarity and maintainability.*
-'''
+''',
         },
     ],
     "ci-cd": [
@@ -3073,7 +3073,7 @@ kubectl rollout undo deployment/myapp
 - [[Monitoring and Observability]]
 
 *CI/CD is not about tools - it's about culture and practices that enable rapid, reliable delivery.*
-'''
+''',
         },
     ],
     "debugging-performance": [
@@ -3402,7 +3402,7 @@ Second pair of eyes catches issues.
 - [[Performance Optimization]]
 
 *Debugging is twice as hard as writing code - write simple code to make debugging easier.*
-'''
+''',
         },
         {
             "title": "Performance Optimization",
@@ -3819,7 +3819,7 @@ locust -f locustfile.py
 - [[System Performance]]
 
 *Measure first, optimize second - never guess where the bottleneck is.*
-'''
+''',
         },
         {
             "title": "Code Review Best Practices",
@@ -4100,7 +4100,7 @@ Rubber-stamping without actually reading.
 - [[Software Quality]]
 
 *Good code review is collaborative, not adversarial - we're all trying to build better software.*
-'''
+''',
         },
     ],
 }
