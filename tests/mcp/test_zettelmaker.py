@@ -107,3 +107,40 @@ async def test_zettelmaker_operations_with_context():
     await adn_zettelmaker("analyze", category="developer", ctx=None)
     await adn_zettelmaker("customize", category="developer", topic="python-core", ctx=None)
     # Should not raise exceptions
+
+
+@pytest.mark.asyncio
+async def test_zettelmaker_ai_generate_no_api_key():
+    """Test AI generation without API key shows setup instructions."""
+    result = await adn_zettelmaker(
+        "generate", category="developer", topic="Rust Programming", ai_generate=True
+    )
+
+    assert "AI Generation Setup Required" in result or "API_KEY" in result
+    assert "ANTHROPIC" in result or "OPENAI" in result
+
+
+@pytest.mark.asyncio
+async def test_zettelmaker_quality_levels():
+    """Test that quality levels are accepted."""
+    # Test different quality levels (all should handle gracefully without API key)
+    for quality in ["quick", "standard", "comprehensive", "expert"]:
+        result = await adn_zettelmaker(
+            "generate",
+            category="developer",
+            topic="Custom Topic",
+            ai_generate=True,
+            quality=quality,
+        )
+
+        # Should get setup instructions since no API key
+        assert "API" in result or "Setup" in result
+
+
+@pytest.mark.asyncio
+async def test_zettelmaker_ai_suggest_with_existing_topic():
+    """Test that unknown topics suggest AI generation."""
+    result = await adn_zettelmaker("generate", category="developer", topic="Rust Programming")
+
+    # Should suggest using AI generation for unknown topic
+    assert "ai_generate=True" in result or "AI generation" in result

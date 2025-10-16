@@ -40,6 +40,8 @@ async def adn_zettelmaker(
     note_identifier: str | None = None,
     depth: int = 3,
     count: int = 5,
+    ai_generate: bool = False,
+    quality: str = "standard",
     ctx: Context | None = None,
 ) -> str:
     """Intelligent zettelkasten generation and management for knowledge scaffolding.
@@ -70,18 +72,24 @@ async def adn_zettelmaker(
     Args:
         operation: The operation to perform (generate, customize, expand, suggest, connect, analyze)
         category: Template category (developer, researcher, writer, knowledge-worker)
-        topic: Specific topic within category (python-core, git, etc.)
+        topic: Specific topic within category (python-core, git, etc.) or any custom topic with ai_generate=True
         note_identifier: Title/permalink of existing note (for expand operation)
         depth: Depth of analysis or generation (1-5, default: 3)
         count: Number of suggestions/connections to return (default: 5)
+        ai_generate: Use AI to generate templates for any topic (requires API key, default: False)
+        quality: Quality level for AI generation (quick, standard, comprehensive, expert, default: standard)
         ctx: Optional MCP context for progress reporting
 
     Returns:
         Operation-specific result with generated notes, suggestions, or analysis
 
     Examples:
-        # Generate Python templates
+        # Generate Python templates (pre-built)
         adn_zettelmaker("generate", category="developer", topic="python-core")
+
+        # Generate AI-powered templates for any topic
+        adn_zettelmaker("generate", category="developer", topic="Rust Programming",
+                        ai_generate=True, quality="comprehensive")
 
         # Get suggestions for next topics
         adn_zettelmaker("suggest", category="developer", count=5)
@@ -98,7 +106,7 @@ async def adn_zettelmaker(
 
     # Route to appropriate operation
     if operation == "generate":
-        return await _generate_operation(category, topic, ctx)
+        return await _generate_operation(category, topic, ai_generate, quality, ctx)
     elif operation == "customize":
         return await _customize_operation(category, topic, depth, ctx)
     elif operation == "expand":
@@ -129,8 +137,17 @@ async def adn_zettelmaker(
         ).strip()
 
 
-async def _generate_operation(category: str | None, topic: str | None, ctx: Context | None) -> str:
-    """Handle generate operation - create notes from templates."""
+async def _generate_operation(
+    category: str | None,
+    topic: str | None,
+    ai_generate: bool,
+    quality: str,
+    ctx: Context | None,
+) -> str:
+    """Handle generate operation - create notes from templates.
+
+    Supports both pre-built templates and AI-powered generation for any topic.
+    """
     if not category:
         return dedent(
             """
@@ -171,10 +188,24 @@ async def _generate_operation(category: str | None, topic: str | None, ctx: Cont
             {topics_list}
 
             Usage: adn_zettelmaker("generate", category="{category}", topic="<topic>")
+
+            **AI Generation Available:**
+            Generate templates for ANY topic:
+            ```
+            adn_zettelmaker("generate",
+                category="{category}",
+                topic="Your Custom Topic",
+                ai_generate=True,
+                quality="comprehensive")
+            ```
             """
         ).strip()
 
-    # Validate topic
+    # Check if using AI generation
+    if ai_generate:
+        return await _generate_with_ai(category, topic, quality, ctx)
+
+    # Validate topic exists in pre-built templates
     if topic not in CONTENT_TEMPLATES[category]:
         available_topics = list(CONTENT_TEMPLATES[category].keys())
         return dedent(
@@ -184,11 +215,20 @@ async def _generate_operation(category: str | None, topic: str | None, ctx: Cont
             Unknown topic '{topic}' in category '{category}'.
 
             Available topics: {", ".join(available_topics)}
+
+            **Or use AI generation for custom topics:**
+            ```
+            adn_zettelmaker("generate",
+                category="{category}",
+                topic="{topic}",
+                ai_generate=True,
+                quality="standard")
+            ```
             """
         ).strip()
 
     if ctx:  # pragma: no cover
-        await ctx.info(f"Generating templates for {category}/{topic}")
+        await ctx.info(f"Generating pre-built templates for {category}/{topic}")
 
     # Get templates for the topic
     templates = CONTENT_TEMPLATES[category][topic]
@@ -216,6 +256,7 @@ async def _generate_operation(category: str | None, topic: str | None, ctx: Cont
         **Category:** {category}
         **Topic:** {topic}
         **Notes Created:** {len(notes_created)}
+        **Source:** Pre-built templates
 
         ## Created Notes:
         {chr(10).join(f"- {title}" for title in notes_created)}
@@ -233,6 +274,213 @@ async def _generate_operation(category: str | None, topic: str | None, ctx: Cont
     ).strip()
 
     return add_project_metadata(result, session.get_current_project())
+
+
+async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Context | None) -> str:
+    """Generate templates using AI for any custom topic.
+
+    Args:
+        category: Template category
+        topic: Custom topic name
+        quality: Quality level (quick, standard, comprehensive, expert)
+        ctx: MCP context
+    """
+    from advanced_memory.services.ai_integration import AIIntegration
+    from advanced_memory.services.template_generator import TemplateGenerator
+
+    if ctx:  # pragma: no cover
+        await ctx.info(f"Generating AI-powered templates for {topic} ({quality} quality)")
+
+    try:
+        # Initialize services
+        generator = TemplateGenerator()
+        ai_service = AIIntegration()
+
+        # Check cache first
+        cached_templates = generator.get_cached_template(topic, category, quality)
+        if cached_templates:
+            if ctx:  # pragma: no cover
+                await ctx.info(f"Found {len(cached_templates)} cached templates for {topic}")
+
+            # Create notes from cached templates
+            notes_created = []
+            for template in cached_templates:
+                try:
+                    result = await mcp_write_note.fn(
+                        title=template["title"],
+                        content=template["content"],
+                        folder=template["folder"],
+                    )
+                    notes_created.append(template["title"])
+                except Exception as e:
+                    logger.error(f"Error creating note {template.get('title')}: {e}")
+
+            result = dedent(
+                f"""
+                # ✅ AI-Generated Zettelkasten (Cached)
+
+                **Category:** {category}
+                **Topic:** {topic}
+                **Quality Level:** {quality}
+                **Notes Created:** {len(notes_created)}
+                **Source:** Cached AI templates
+
+                ## Created Notes:
+                {chr(10).join(f"- {title}" for title in notes_created)}
+
+                ---
+                *Templates were retrieved from cache for instant generation! 🚀*
+                """
+            ).strip()
+
+            return add_project_metadata(result, session.get_current_project())
+
+        # Generate new templates with AI
+        if ctx:  # pragma: no cover
+            await ctx.info("Generating new templates with AI...")
+
+        prompt = generator.get_generation_prompt(topic, category, quality)
+        templates = await ai_service.generate_templates(prompt)
+
+        # Validate templates
+        is_valid, error_msg = generator.validate_generated_template(templates)
+        if not is_valid:
+            return dedent(
+                f"""
+                # ❌ Template Generation Failed
+
+                **Error:** {error_msg}
+
+                The AI-generated templates did not pass quality validation.
+                Please try again or use a different quality level.
+                """
+            ).strip()
+
+        # Cache templates for future use
+        generator.cache_template(topic, category, quality, templates)
+
+        # Create notes from generated templates
+        notes_created = []
+        for template in templates:
+            try:
+                if ctx:  # pragma: no cover
+                    await ctx.info(f"Creating AI-generated note: {template['title']}")
+
+                result = await mcp_write_note.fn(
+                    title=template["title"],
+                    content=template["content"],
+                    folder=template["folder"],
+                )
+                notes_created.append(template["title"])
+
+            except Exception as e:
+                logger.error(f"Error creating note {template.get('title')}: {e}")
+
+        quality_config = TemplateGenerator.QUALITY_LEVELS.get(quality, {})
+
+        result = dedent(
+            f"""
+            # ✅ AI-Generated Zettelkasten Created!
+
+            **Category:** {category}
+            **Topic:** {topic}
+            **Quality Level:** {quality} ({quality_config.get("description", "")})
+            **Notes Created:** {len(notes_created)}
+            **Source:** AI-generated (Claude/OpenAI)
+
+            ## Created Notes:
+            {chr(10).join(f"- {title}" for title in notes_created)}
+
+            ## Template Details
+            - Expected notes: {quality_config.get("note_count", "N/A")}
+            - Depth: {quality_config.get("depth", "N/A")}
+            - Examples: {"✅" if quality_config.get("examples") else "❌"}
+            - Exercises: {"✅" if quality_config.get("exercises") else "❌"}
+
+            ## Next Steps
+
+            1. Review the AI-generated notes
+            2. Refine and add your own insights
+            3. Connect to your existing knowledge
+            4. Generate related topics with AI
+
+            ---
+            *Templates cached for instant reuse! 🚀*
+            """
+        ).strip()
+
+        return add_project_metadata(result, session.get_current_project())
+
+    except NotImplementedError as e:
+        return dedent(
+            f"""
+            # 🤖 AI Generation Setup Required
+
+            {str(e)}
+
+            ## Setup Instructions
+
+            1. **Get API Key:**
+               - Anthropic: https://console.anthropic.com/
+               - OpenAI: https://platform.openai.com/
+
+            2. **Set Environment Variable:**
+               ```bash
+               # For Anthropic (recommended)
+               export ANTHROPIC_API_KEY=your-key-here
+
+               # Or for OpenAI
+               export OPENAI_API_KEY=your-key-here
+               ```
+
+            3. **Install Library:**
+               ```bash
+               pip install anthropic  # or openai
+               ```
+
+            4. **Restart Claude Desktop** to load new environment variable
+
+            5. **Try again:**
+               ```
+               adn_zettelmaker("generate",
+                   category="{category}",
+                   topic="{topic}",
+                   ai_generate=True,
+                   quality="{quality}")
+               ```
+
+            ## For Now
+
+            Use pre-built templates without AI:
+            ```
+            adn_zettelmaker("generate", category="{category}", topic="python-core")
+            ```
+            """
+        ).strip()
+
+    except Exception as e:
+        logger.error(f"Error in AI generation: {e}")
+        return dedent(
+            f"""
+            # ❌ AI Generation Error
+
+            **Error:** {str(e)}
+
+            ## Troubleshooting
+
+            1. Check API key is set correctly
+            2. Verify internet connection
+            3. Check API quota/limits
+            4. Try again with different quality level
+
+            ## Fallback
+
+            Use pre-built templates instead:
+            ```
+            adn_zettelmaker("generate", category="{category}", topic="python-core")
+            ```
+            """
+        ).strip()
 
 
 async def _customize_operation(
