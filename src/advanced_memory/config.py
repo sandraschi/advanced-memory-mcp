@@ -50,7 +50,7 @@ class AdvancedMemoryConfig(BaseSettings):
 
     projects: dict[str, str] = Field(
         default_factory=lambda: {
-            "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory")))
+            "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))
         },
         description="Mapping of project names to their filesystem paths",
     )
@@ -125,7 +125,7 @@ class AdvancedMemoryConfig(BaseSettings):
         across all projects.
         """
         # Use ADVANCED_MEMORY_HOME if set, otherwise use home directory
-        base_path = Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory"))
+        base_path = Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home()))
         database_path = base_path / DATA_DIR_NAME / APP_DATABASE_NAME
         if not database_path.exists():  # pragma: no cover
             database_path.parent.mkdir(parents=True, exist_ok=True)
