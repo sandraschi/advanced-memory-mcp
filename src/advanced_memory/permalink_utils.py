@@ -120,9 +120,12 @@ def sanitize_filename(title: str) -> str:
     # Replace dots with underscores (to prevent filename issues)
     title = title.replace(".", "_")
 
-    # Replace unsafe characters with underscores
-    # Keep alphanumeric and dashes, replace spaces and other unsafe chars
-    title = re.sub(r"[^\w\-]", "_", title)
+    # Replace unsafe characters and spaces with underscores
+    # Preserve Unicode characters including emojis, Chinese, etc.
+    # Replace: < > : " / \ | ? * and spaces, but keep Unicode chars
+    # Use negative character class to keep everything except unsafe ASCII chars
+    unsafe_chars = r'[<>:"/\\|?*\s]'  # Added \s for whitespace
+    title = re.sub(unsafe_chars, "_", title)
 
     # Replace multiple underscores with single ones
     title = re.sub(r"_+", "_", title)

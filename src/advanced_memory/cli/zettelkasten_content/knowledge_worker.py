@@ -418,7 +418,7 @@ One idea per note. Small, reusable, combinable.
 
 Key insight: Focus on systems, not goals.
 
-Small habits compound over time. 1% better daily = 
+Small habits compound over time. 1% better daily =
 37x better in one year.
 
 Links: [[Compound Effects]], [[System Design]]
@@ -430,7 +430,7 @@ Links: [[Compound Effects]], [[System Design]]
 
 Goals are outcome-focused. Systems are process-focused.
 
-Better: Instead of "lose 20 pounds" (goal), adopt 
+Better: Instead of "lose 20 pounds" (goal), adopt
 "exercise 30 min daily" (system).
 
 Why: Goals are temporary. Systems create lasting change.

@@ -184,7 +184,7 @@ async def test_write_note_unicode_content(mcp_server, app):
         response_text = result.content[0].text
 
         assert "# Created note" in response_text
-        assert "file_path: test/Unicode Test 🌟.md" in response_text
+        assert "file_path: test/Unicode_Test_🌟.md" in response_text
         # Permalink should be sanitized
         assert "permalink: test/unicode-test" in response_text
         assert "## Tags" in response_text

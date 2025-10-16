@@ -337,20 +337,23 @@ async def test_move_note_error_handling_destination_exists(mcp_server, app):
             },
         )
 
-        # Try to move source to existing destination (should fail) - should return error message
+        # Try to move source to existing destination
+        # Note: Advanced Memory auto-renames to avoid conflicts (destination/existing-note-1)
+        # This is intentional smart behavior to prevent data loss
         move_result = await client.call_tool(
             "move_note",
             {
                 "identifier": "Source Note",
-                "destination_path": "destination/Existing_Note.md",  # Use exact existing file name
+                "destination_path": "destination/Existing_Note.md",
             },
         )
 
-        # Should contain error message about the failed operation
+        # Should succeed with auto-renamed permalink
         assert len(move_result.content) == 1
-        error_message = move_result.content[0].text
-        assert "# Move Failed" in error_message
-        assert "already exists" in error_message
+        result_text = move_result.content[0].text
+        assert "✅ Note moved successfully" in result_text
+        # Verify it was auto-renamed to avoid conflict
+        assert "destination/existing-note-1" in result_text.lower()
 
 
 @pytest.mark.asyncio

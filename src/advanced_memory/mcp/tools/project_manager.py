@@ -117,15 +117,15 @@ async def _create_operation(
     response = await call_post(client, "/projects/projects", json=project_request.model_dump())
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
 
     if status_response.new_project:
         result += "Project Details:\n"
-        result += f"[UNICODE] Name: {status_response.new_project.name}\n"
-        result += f"[UNICODE] Path: {status_response.new_project.path}\n"
+        result += f"📁 Name: {status_response.new_project.name}\n"
+        result += f"📁 Path: {status_response.new_project.path}\n"
 
         if set_default:
-            result += "[UNICODE] Set as default project\n"
+            result += "⭐ Set as default project\n"
 
     result += "\nProject is now available for use.\n"
 
@@ -183,16 +183,16 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
             )
             project_info = ProjectInfoResponse.model_validate(response.json())
 
-            result = f"[UNICODE] Switched to {canonical_name} project\n\n"
+            result = f"✓ Switched to {canonical_name} project\n\n"
             result += "Project Summary:\n"
-            result += f"[UNICODE] {project_info.statistics.total_entities} entities\n"
-            result += f"[UNICODE] {project_info.statistics.total_observations} observations\n"
-            result += f"[UNICODE] {project_info.statistics.total_relations} relations\n"
+            result += f"📊 {project_info.statistics.total_entities} entities\n"
+            result += f"📊 {project_info.statistics.total_observations} observations\n"
+            result += f"📊 {project_info.statistics.total_relations} relations\n"
 
         except Exception as e:
             # If we can't get project info, still confirm the switch
             logger.warning(f"Could not get project info for {canonical_name}: {e}")
-            result = f"[UNICODE] Switched to {canonical_name} project\n\n"
+            result = f"✓ Switched to {canonical_name} project\n\n"
             result += "Project summary unavailable.\n"
 
         return add_project_metadata(result, canonical_name)
@@ -254,13 +254,13 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> st
     response = await call_delete(client, f"/projects/{project_name}")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
 
     if status_response.old_project:
         result += "Removed project details:\n"
-        result += f"[UNICODE] Name: {status_response.old_project.name}\n"
+        result += f"📁 Name: {status_response.old_project.name}\n"
         if hasattr(status_response.old_project, "path"):
-            result += f"[UNICODE] Path: {status_response.old_project.path}\n"
+            result += f"📁 Path: {status_response.old_project.path}\n"
 
     result += "Files remain on disk but project is no longer tracked by Advanced Memory.\n"
     result += "Re-add the project to access its content again.\n"
@@ -280,9 +280,9 @@ async def _set_default_operation(project_name: str | None, ctx: Context | None) 
     response = await call_put(client, f"/projects/{project_name}/default")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
     result += "Restart Advanced Memory for this change to take effect:\n"
-    result += "advanced-memory mcp\n"
+    result += "basic-memory mcp\n"
 
     if status_response.old_project:
         result += f"\nPrevious default: {status_response.old_project.name}\n"

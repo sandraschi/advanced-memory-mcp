@@ -240,7 +240,8 @@ def continue_conversation(
     try:
         # Prompt functions return formatted strings directly
         session = asyncio.run(mcp_continue_conversation.fn(topic=topic, timeframe=timeframe))  # type: ignore
-        rprint(session)
+        # Use plain print to avoid Rich wrapping of Markdown content
+        print(session)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             logger.exception("Error continuing conversation", e)

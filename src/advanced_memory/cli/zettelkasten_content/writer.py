@@ -24,7 +24,7 @@ Simple statement. Reader is told how to feel.
 
 ### Showing
 ```
-John's fists clenched. His jaw tightened. He stared at the wall, 
+John's fists clenched. His jaw tightened. He stared at the wall,
 breathing hard through his nose.
 ```
 
@@ -52,8 +52,8 @@ Showing respects reader intelligence. Allows personal interpretation.
 ### Examples
 ```
 ❌ Tell: "She was terrified of the dark basement."
-✅ Show: "Sarah's hand trembled on the light switch. The basement 
-stairs descended into blackness. She swallowed hard, her heart 
+✅ Show: "Sarah's hand trembled on the light switch. The basement
+stairs descended into blackness. She swallowed hard, her heart
 pounding in her ears."
 ```
 
@@ -82,8 +82,8 @@ Historical facts don't need sensory detail.
 Engage all five senses.
 
 ```
-The coffee shop smelled of cinnamon and burnt espresso. Steam 
-fogged the windows. Jazz played softly, nearly drowned by the 
+The coffee shop smelled of cinnamon and burnt espresso. Steam
+fogged the windows. Jazz played softly, nearly drowned by the
 hiss of the milk frother.
 ```
 
@@ -113,7 +113,7 @@ Character actions reveal personality.
 
 ```
 ❌ Tell: "Mark was generous."
-✅ Show: Mark always ordered extra coffee for the security guard 
+✅ Show: Mark always ordered extra coffee for the security guard
 working the night shift.
 ```
 
@@ -125,7 +125,7 @@ Let characters reveal themselves.
 
 vs.
 
-"I'm absolutely wonderful, can't you tell?" she snapped, throwing 
+"I'm absolutely wonderful, can't you tell?" she snapped, throwing
 her phone across the room.
 ```
 
@@ -138,10 +138,10 @@ her phone across the room.
 
 ### Example
 ```
-The argument had lasted three hours (telling - efficient transition). 
-Now they sat in silence. Sarah stared at the ring on her finger, 
-turning it slowly. Michael watched her, his coffee growing cold. 
-Neither spoke, but the weight of unspoken words filled the room 
+The argument had lasted three hours (telling - efficient transition).
+Now they sat in silence. Sarah stared at the ring on her finger,
+turning it slowly. Michael watched her, his coffee growing cold.
+Neither spoke, but the weight of unspoken words filled the room
 (showing - important emotional moment).
 ```
 
@@ -149,8 +149,8 @@ Neither spoke, but the weight of unspoken words filled the room
 
 ### Over-Showing
 ```
-❌ Sarah walked to the door. She reached for the handle. She grasped 
-it with her fingers. She turned the handle clockwise. She pulled 
+❌ Sarah walked to the door. She reached for the handle. She grasped
+it with her fingers. She turned the handle clockwise. She pulled
 the door toward her body. She stepped through the doorway.
 ```
 
@@ -160,8 +160,8 @@ the door toward her body. She stepped through the doorway.
 
 ### Purple Prose
 ```
-❌ The resplendent sun cascaded its golden tendrils across the 
-azure canvas of the heavens, each ray a symphony of luminous 
+❌ The resplendent sun cascaded its golden tendrils across the
+azure canvas of the heavens, each ray a symphony of luminous
 beauty dancing upon the emerald tapestry below.
 ```
 
@@ -347,7 +347,7 @@ Avoid all-good or all-bad.
 
 ```
 ❌ Flat: "Hero is brave, kind, honest, strong, and smart."
-✅ Rounded: "Hero is brave but reckless, kind but naive, 
+✅ Rounded: "Hero is brave but reckless, kind but naive,
 strong but prideful."
 ```
 
@@ -356,7 +356,7 @@ Flaws should create problems, not be cute quirks.
 
 ```
 ❌ Cute: "She's clumsy! How adorable!"
-✅ Meaningful: "Her inability to trust anyone keeps her isolated 
+✅ Meaningful: "Her inability to trust anyone keeps her isolated
 and prevents the relationships she desperately needs."
 ```
 
@@ -388,7 +388,7 @@ The decisions they make under pressure.
 ### Function
 Each should have a role:
 - **Ally**: Supports protagonist
-- **Antagonist**: Opposes protagonist  
+- **Antagonist**: Opposes protagonist
 - **Mentor**: Teaches protagonist
 - **Love interest**: Complicates protagonist
 - **Foil**: Highlights protagonist through contrast
@@ -398,7 +398,7 @@ Give even minor characters specificity.
 
 ```
 ❌ "The elderly shopkeeper"
-✅ "Mrs. Chen, who'd run the corner store for forty years and 
+✅ "Mrs. Chen, who'd run the corner store for forty years and
 knew every customer's coffee order"
 ```
 
@@ -408,7 +408,7 @@ knew every customer's coffee order"
 Character should act according to their established nature.
 
 ```
-If character is established as cautious, they shouldn't suddenly 
+If character is established as cautious, they shouldn't suddenly
 take reckless risks without good reason.
 ```
 
@@ -417,7 +417,7 @@ Characters can change, but change needs cause.
 
 ```
 ❌ Inconsistent: Shy character suddenly becomes confident (no reason)
-✅ Growth: Shy character gains confidence through series of small 
+✅ Growth: Shy character gains confidence through series of small
 victories and encouragement from mentor
 ```
 

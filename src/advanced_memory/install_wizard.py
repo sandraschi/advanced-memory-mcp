@@ -17,7 +17,7 @@ def clear_screen() -> None:
     """Clear the terminal screen."""
     # Use subprocess instead of os.system for safety
     import subprocess
-    
+
     if os.name == "nt":
         subprocess.run(["cmd", "/c", "cls"], check=False)
     else:

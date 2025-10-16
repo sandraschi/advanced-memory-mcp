@@ -491,11 +491,11 @@ move_note("{identifier}", "notes/{destination_path.split("/")[-1] if "/" in dest
 
         # Build success message
         result_lines = [
-            "[UNICODE] Note moved successfully",
+            "✅ Note moved successfully",
             "",
-            f"[FOLDER] **{identifier}** [UNICODE] **{result.file_path}**",
-            f"[LINK] Permalink: {result.permalink}",
-            "[CHART] Database and search index updated",
+            f"📁 **{identifier}** → **{result.file_path}**",
+            f"🔗 Permalink: {result.permalink}",
+            "📊 Database and search index updated",
             "",
             f"<!-- Project: {active_project.name} -->",
         ]

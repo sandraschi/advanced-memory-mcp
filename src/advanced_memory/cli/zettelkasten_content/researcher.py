@@ -732,7 +732,7 @@ Logical organization guides reader.
 ```
 Topic: The Zettelkasten method improves learning outcomes.
 
-Supporting: Studies show active note-taking enhances retention (Mueller & Oppenheimer, 2014). 
+Supporting: Studies show active note-taking enhances retention (Mueller & Oppenheimer, 2014).
 The method's emphasis on reformulation and linking strengthens understanding.
 
 Concluding: These benefits make Zettelkasten particularly effective for complex subjects.
@@ -758,7 +758,7 @@ Recent research shows... (Smith 45; Jones 78).
 
 **APA**:
 ```
-Smith, J. (2023). Title of article. Journal Name, 12(3), 45-67. 
+Smith, J. (2023). Title of article. Journal Name, 12(3), 45-67.
 https://doi.org/10.1234/example
 ```
 
@@ -1651,7 +1651,7 @@ summary(model)
 ### Text
 ```
 ✅ Good reporting:
-"Group A (M = 85.3, SD = 12.4) scored significantly higher than Group B 
+"Group A (M = 85.3, SD = 12.4) scored significantly higher than Group B
 (M = 78.1, SD = 14.2), t(98) = 2.45, p = 0.016, d = 0.53."
 
 Includes:

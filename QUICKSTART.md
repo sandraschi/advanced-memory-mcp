@@ -142,3 +142,5 @@ See [Cost Guide](docs/zettelkasten/cost-guide.md) for details.
 *Following in the footsteps of Luhmann, Schmidt, and Benjamin - but with AI assistance!*
 
 
+
+
