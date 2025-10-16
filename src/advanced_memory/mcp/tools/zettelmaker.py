@@ -614,82 +614,56 @@ async def _expand_operation(note_identifier: str | None, depth: int, ctx: Contex
 
 
 async def _suggest_operation(category: str | None, count: int, ctx: Context | None) -> str:
-    """Handle suggest operation - get AI-suggested topics."""
+    """Handle suggest operation - get AI-suggested topics based on existing knowledge."""
     if ctx:  # pragma: no cover
         await ctx.info(
-            f"Analyzing knowledge base for suggestions in {category or 'all categories'}"
+            f"Analyzing knowledge base for smart suggestions in {category or 'all categories'}"
         )
 
-    # Get current project stats via API
+    # Use knowledge analyzer for smart suggestions
     try:
-        response = await call_get(client, f"/{session.get_current_project()}/entities")
-        entities_data = response.json()
+        from advanced_memory.services.knowledge_analyzer import KnowledgeAnalyzer
 
-        total_notes = len(entities_data.get("entities", []))
+        analyzer = KnowledgeAnalyzer()
+        analysis = await analyzer.analyze_knowledge_base(session.get_current_project())
 
-        # Build suggestions based on what user has
+        total_notes = analysis["total_notes"]
+        detected_topics = analysis["topics"]
+        skill_level = analysis["skill_level"]
+        gaps = analysis["gaps"]
+
+        # Build smart suggestions based on knowledge analysis
         suggestions = []
 
-        # If they have developer notes, suggest related topics
-        if category == "developer" or not category:
-            suggestions.extend(
-                [
-                    {
-                        "topic": "python-core",
-                        "category": "developer",
-                        "reason": "Essential Python programming fundamentals",
-                        "estimated_notes": 15,
-                    },
-                    {
-                        "topic": "git",
-                        "category": "developer",
-                        "reason": "Version control for all developers",
-                        "estimated_notes": 12,
-                    },
-                    {
-                        "topic": "testing",
-                        "category": "developer",
-                        "reason": "Software quality and testing practices",
-                        "estimated_notes": 10,
-                    },
-                ]
+        # Priority 1: Fill knowledge gaps
+        for gap in gaps[:2]:
+            suggestions.append(
+                {
+                    "topic": gap["gap"],
+                    "category": _map_gap_to_category(gap["gap"]),
+                    "reason": f"🎯 Gap: {gap['reason']}",
+                    "estimated_notes": 8,
+                    "priority": "HIGH",
+                }
             )
 
-        if category == "researcher" or not category:
-            suggestions.extend(
-                [
-                    {
-                        "topic": "research-methods",
-                        "category": "researcher",
-                        "reason": "Systematic research approaches",
-                        "estimated_notes": 12,
-                    }
-                ]
+        # Priority 2: Expand detected topics
+        for topic_info in detected_topics[:3]:
+            topic_name = topic_info["topic"]
+            suggestions.append(
+                {
+                    "topic": f"{topic_name}-advanced",
+                    "category": _map_topic_to_category(topic_name),
+                    "reason": f"📈 Deepen your {topic_name} knowledge",
+                    "estimated_notes": 10,
+                    "priority": "MEDIUM",
+                }
             )
 
-        if category == "writer" or not category:
-            suggestions.extend(
-                [
-                    {
-                        "topic": "storytelling",
-                        "category": "writer",
-                        "reason": "Narrative craft and structure",
-                        "estimated_notes": 10,
-                    }
-                ]
-            )
-
-        if category == "knowledge-worker" or not category:
-            suggestions.extend(
-                [
-                    {
-                        "topic": "productivity",
-                        "category": "knowledge-worker",
-                        "reason": "Effective work practices",
-                        "estimated_notes": 14,
-                    }
-                ]
-            )
+        # Priority 3: Complementary topics
+        if not category or len(suggestions) < count:
+            complementary = _get_complementary_topics(detected_topics)
+            suggestions.extend(complementary[: count - len(suggestions)])
 
         # Limit to requested count
         suggestions = suggestions[:count]
@@ -702,18 +676,41 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
             for i, s in enumerate(suggestions)
         )
 
+        # Format detected topics
+        topics_summary = (
+            ", ".join(t["topic"] for t in detected_topics[:5]) if detected_topics else "None yet"
+        )
+
+        # Format knowledge gaps
+        gaps_summary = (
+            "\n".join(f"- {gap['gap']}: {gap['reason']}" for gap in gaps[:3])
+            if gaps
+            else "- No gaps detected"
+        )
+
         result = dedent(
             f"""
-            # 💡 Suggested Topics for Your Knowledge Base
+            # 🧠 Smart Recommendations (Personalized for You!)
 
             **Current Notes:** {total_notes}
+            **Detected Skill Level:** {skill_level.title()}
+            **Main Topics:** {topics_summary}
             **Category Filter:** {category or "All categories"}
 
-            ## Recommended Topics
+            ## Knowledge Gaps Identified
+            {gaps_summary}
+
+            ## Personalized Recommendations
 
             {suggestions_text}
 
-            ## How to Use
+            ## Your Knowledge Profile
+            - **Skill Level**: {skill_level.title()}
+            - **Active Topics**: {len(detected_topics)}
+            - **Knowledge Gaps**: {len(gaps)}
+            - **Learning Style**: {analysis.get("learning_style", "unknown").title()}
+
+            ## Quick Actions
 
             Pick a topic and generate it:
             ```
@@ -722,11 +719,8 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
                 topic="python-core")
             ```
 
-            **Coming in Phase 4 (Smart Onboarding):**
-            - Personalized suggestions based on your existing notes
-            - Knowledge gap detection
-            - Skill level adaptation
-            - Custom learning paths
+            ---
+            *Recommendations powered by AI knowledge analysis! 🤖*
             """
         ).strip()
 
@@ -890,3 +884,78 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
             ```
             """
         ).strip()
+
+
+def _map_gap_to_category(gap: str) -> str:
+    """Map knowledge gap to category."""
+    gap_mapping = {
+        "testing": "developer",
+        "git": "developer",
+        "ui-ux-design": "uiux-designer",
+        "devops": "devops",
+        "data-science": "data-scientist",
+        "product": "product-manager",
+        "business": "entrepreneur",
+    }
+    return gap_mapping.get(gap, "developer")
+
+
+def _map_topic_to_category(topic: str) -> str:
+    """Map detected topic to category."""
+    topic_mapping = {
+        "python": "developer",
+        "javascript": "developer",
+        "web": "developer",
+        "git": "developer",
+        "testing": "developer",
+        "devops": "devops",
+        "data-science": "data-scientist",
+        "design": "uiux-designer",
+        "product": "product-manager",
+        "business": "entrepreneur",
+    }
+    return topic_mapping.get(topic, "developer")
+
+
+def _get_complementary_topics(detected_topics: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Get complementary topics based on what user already has."""
+    detected_names = {t["topic"] for t in detected_topics}
+    complementary = []
+
+    # If they have dev topics, suggest related professional skills
+    if "python" in detected_names or "javascript" in detected_names:
+        if "devops" not in detected_names:
+            complementary.append(
+                {
+                    "topic": "containers",
+                    "category": "devops",
+                    "reason": "🔗 Complements development with deployment skills",
+                    "estimated_notes": 6,
+                    "priority": "MEDIUM",
+                }
+            )
+
+        if "testing" not in detected_names:
+            complementary.append(
+                {
+                    "topic": "testing",
+                    "category": "developer",
+                    "reason": "🔗 Essential for code quality",
+                    "estimated_notes": 10,
+                    "priority": "MEDIUM",
+                }
+            )
+
+    # Always suggest productivity if not present
+    if "knowledge-worker" not in [_map_topic_to_category(d["topic"]) for d in detected_topics]:
+        complementary.append(
+            {
+                "topic": "productivity",
+                "category": "knowledge-worker",
+                "reason": "⚡ Boost your learning effectiveness",
+                "estimated_notes": 14,
+                "priority": "LOW",
+            }
+        )
+
+    return complementary
