@@ -183,3 +183,49 @@ beta version:
 # List all available recipes
 default:
     @just --list
+
+# ═══════════════════════════════════════════════════════════════
+# CI/CD AUTOMATION - Never break GitHub Actions again!
+# ═══════════════════════════════════════════════════════════════
+
+# Pre-push validation (run before every push!)
+pre-push:
+    @echo "🔍 Running pre-push validation..."
+    @pwsh ./scripts/pre-push-check.ps1
+
+# Quick validation (faster, skips coverage)
+quick-check:
+    @echo "⚡ Quick validation..."
+    @pwsh ./scripts/pre-push-check.ps1 -Quick
+
+# Safe push with validation + monitoring
+safe-push message:
+    @echo "🚀 Safe push with validation..."
+    @pwsh ./scripts/safe-push.ps1 -Message "{{message}}"
+
+# Monitor CI after manual push
+monitor:
+    @echo "🔍 Monitoring CI workflows..."
+    @pwsh ./scripts/monitor-ci.ps1 -AutoFix -Continuous
+
+# Check CI success metrics
+ci-stats:
+    @echo "📊 CI success metrics..."
+    @pwsh ./scripts/ci-metrics.ps1
+
+# Detailed CI metrics with history
+ci-stats-detailed:
+    @echo "📊 Detailed CI metrics..."
+    @pwsh ./scripts/ci-metrics.ps1 -Detailed
+
+# Install pre-commit hooks (one-time setup)
+setup-hooks:
+    @echo "🔧 Installing pre-commit hooks..."
+    uv run pre-commit install
+    @echo "✅ Pre-commit hooks installed"
+    @echo "💡 Hooks will run automatically before every commit"
+
+# Run pre-commit on all files
+pre-commit-all:
+    @echo "🔍 Running pre-commit on all files..."
+    uv run pre-commit run --all-files
