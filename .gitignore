@@ -56,3 +56,14 @@ claude-output
 **/.claude/settings.local.json
 # Advanced Memory test artifacts
 .trash/
+
+# Temporary cloned repositories
+temp-*/
+
+# Zettelkasten inbox and converted (temporary files)
+zettelkasten/inbox/*
+!zettelkasten/inbox/README.md
+!zettelkasten/inbox/.gitkeep
+zettelkasten/converted/*
+!zettelkasten/converted/README.md
+!zettelkasten/converted/.gitkeep

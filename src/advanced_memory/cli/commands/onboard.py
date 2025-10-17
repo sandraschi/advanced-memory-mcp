@@ -10,17 +10,8 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Prompt
 
 from advanced_memory.cli.app import app
-from advanced_memory.cli.zettelkasten_content.creative import CREATIVE_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.data_scientist import DATA_SCIENTIST_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.developer import DEVELOPER_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.devops import DEVOPS_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.entrepreneur import ENTREPRENEUR_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.knowledge_worker import KNOWLEDGE_WORKER_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.product_manager import PRODUCT_MANAGER_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.researcher import RESEARCHER_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.uiux_designer import UIUX_DESIGNER_TEMPLATES
-from advanced_memory.cli.zettelkasten_content.writer import WRITER_TEMPLATES
 from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.services.template_loader import get_content_templates
 
 # Create onboard subcommand
 onboard_app = typer.Typer(help="Create personalized starter Zettelkasten")
@@ -28,19 +19,8 @@ app.add_typer(onboard_app, name="onboard")
 
 console = Console()
 
-# Aggregate all content templates from comprehensive modules
-CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
-    "developer": DEVELOPER_TEMPLATES,
-    "researcher": RESEARCHER_TEMPLATES,
-    "writer": WRITER_TEMPLATES,
-    "knowledge-worker": KNOWLEDGE_WORKER_TEMPLATES,
-    "devops": DEVOPS_TEMPLATES,
-    "data-scientist": DATA_SCIENTIST_TEMPLATES,
-    "uiux-designer": UIUX_DESIGNER_TEMPLATES,
-    "product-manager": PRODUCT_MANAGER_TEMPLATES,
-    "entrepreneur": ENTREPRENEUR_TEMPLATES,
-    "creative": CREATIVE_TEMPLATES,
-}
+# Load all content templates from new zettelkasten/templates/ directory
+CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 
 async def create_note_from_template(template: dict[str, Any]) -> None:

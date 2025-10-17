@@ -11,37 +11,16 @@ from typing import Any
 from fastmcp import Context
 from loguru import logger
 
-from advanced_memory.cli.zettelkasten_content import (
-    CREATIVE_TEMPLATES,
-    DATA_SCIENTIST_TEMPLATES,
-    DEVELOPER_TEMPLATES,
-    DEVOPS_TEMPLATES,
-    ENTREPRENEUR_TEMPLATES,
-    KNOWLEDGE_WORKER_TEMPLATES,
-    PRODUCT_MANAGER_TEMPLATES,
-    RESEARCHER_TEMPLATES,
-    UIUX_DESIGNER_TEMPLATES,
-    WRITER_TEMPLATES,
-)
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import add_project_metadata, session
 from advanced_memory.mcp.tools import write_note as mcp_write_note
 from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.services.template_loader import get_content_templates
 
-# Aggregate all content templates
-CONTENT_TEMPLATES: dict[str, dict[str, Any]] = {
-    "developer": DEVELOPER_TEMPLATES,
-    "researcher": RESEARCHER_TEMPLATES,
-    "writer": WRITER_TEMPLATES,
-    "knowledge-worker": KNOWLEDGE_WORKER_TEMPLATES,
-    "devops": DEVOPS_TEMPLATES,
-    "data-scientist": DATA_SCIENTIST_TEMPLATES,
-    "uiux-designer": UIUX_DESIGNER_TEMPLATES,
-    "product-manager": PRODUCT_MANAGER_TEMPLATES,
-    "entrepreneur": ENTREPRENEUR_TEMPLATES,
-    "creative": CREATIVE_TEMPLATES,
-}
+# Load all content templates from new zettelkasten/templates/ directory
+# This supports both old Python-based templates and new markdown-based templates
+CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 
 @mcp.tool

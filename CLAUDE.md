@@ -174,6 +174,102 @@ This integration enables Claude to participate as a full team member in the deve
 generation tool. Claude's GitHub account ([bm-claudeai](https://github.com/bm-claudeai)) is a member of the Basic
 Machines organization with direct contributor access to the codebase.
 
+### 💡 GitHub CLI vs MCP (Important!)
+
+**Discovery**: GitHub CLI (`gh`) is significantly more efficient than GitHub MCP for AI workflows.
+
+**Why**:
+- ✅ **50-70% token reduction** - Less overhead, more efficient
+- ✅ **Self-documenting** - `gh --help` explains everything upfront
+- ✅ **Smooth sailing after learning** - First attempt may error, then `gh <command> --help` → confident usage
+- ✅ **Full feature access** - All GitHub capabilities available
+- ✅ **Composable** - Unix pipes, chaining with other tools
+
+**Pattern**:
+1. First use: `gh <command> --help` (learn once)
+2. All subsequent uses: Direct execution (no trial-and-error)
+3. Result: Efficient, confident GitHub automation
+
+**Example**:
+```bash
+# Get help once
+gh pr --help
+
+# Then smooth sailing
+gh pr create --title "Fix bug" --body "Details" --base main --label bug --reviewer username
+```
+
+**See**: [docs/github/GITHUB_CLI_VS_MCP.md](docs/github/GITHUB_CLI_VS_MCP.md) for comprehensive comparison.
+
+**Recommendation**: Use `gh` CLI for AI-driven GitHub workflows. Use MCP only for simple Claude Desktop UI interactions.
+
+**The same pattern applies to Advanced Memory itself**:
+- CLI (`advanced-memory` commands) = faster, batchable, 3-15x speedup for bulk operations
+- MCP tools (`adn_*`) = better for interactive conversations, structured responses
+- **Hybrid approach**: CLI for data gathering, MCP for intelligent processing
+
+**The Killer Use Case**: **Complex workflows impossible via MCP become trivial via CLI**
+
+**Example 1**: "Get Win 11 ISO, spin up VirtualBox VM, install dev + AI stack, make snapshot"
+- MCP: 100+ tool calls = Claude timeout (impossible!)
+- CLI: `virtualization setup-windows-dev-vm --os win11 --dev-stack python,nodejs --snapshot dev-env` = works perfectly
+
+**Example 2**: Converting 10 PDFs
+- MCP: 10 sequential calls, 30-50 seconds
+- CLI: Parallel execution, 5-10 seconds
+
+**Why CLI wins**: Long workflows (>10 steps) timeout in MCP, but CLI scripts run unattended
+
+**See**: [docs/development/CLI_VS_MCP_TOOLS_EFFICIENCY.md](docs/development/CLI_VS_MCP_TOOLS_EFFICIENCY.md)
+
+### 🌟 Claude Skills: The Next Frontier
+
+**Announcement**: Anthropic introduced Claude Skills (October 2024+) - a capability potentially **bigger than MCP**.
+
+**Why it matters**:
+- **MCP** = Tool access (temporary actions, stateless)
+- **Skills** = Accumulated expertise (persistent knowledge, stateful)
+- **Portability**: Skills use YAML + Markdown = **any AI can read them**
+
+**The insight**:
+```
+Claude creates skill (e.g. "optimal React TypeScript patterns") →
+Exports as YAML + Markdown →
+GPT-4, Cursor, local LLMs all read it →
+Expertise propagates across AI ecosystem
+```
+
+**Advanced Memory's opportunity**: Become the **universal hub for AI skills**
+- We already excel at YAML frontmatter + Markdown
+- Knowledge graph for skill relationships
+- Version control (Git) for skill evolution
+- MCP integration for any AI to read skills
+- GitHub for community sharing
+
+**Documentation**:
+- **Actual Format**: [docs/architecture/CLAUDE_SKILLS_ACTUAL_FORMAT.md](docs/architecture/CLAUDE_SKILLS_ACTUAL_FORMAT.md) ⭐ **Official spec from Anthropic repo!**
+- Vision: [docs/architecture/CLAUDE_SKILLS_AND_THE_TOWER_OF_COGNITION.md](docs/architecture/CLAUDE_SKILLS_AND_THE_TOWER_OF_COGNITION.md) (philosophical)
+- Reality Check: [docs/architecture/CLAUDE_SKILLS_REALITY_CHECK.md](docs/architecture/CLAUDE_SKILLS_REALITY_CHECK.md) (practical)
+- Zettelkasten Parallel: [docs/architecture/ZETTELKASTEN_AS_SKILLS.md](docs/architecture/ZETTELKASTEN_AS_SKILLS.md) (the uncanny similarity)
+
+**Status**: ✅ **Official format released October 16, 2025** - https://github.com/anthropics/skills
+
+**Format**: 
+- Folder with `SKILL.md` file
+- YAML frontmatter: just `name` + `description` required
+- Markdown body: free-form instructions
+- Optional: `scripts/`, `references/`, `assets/` folders
+
+**The potential**: Skills as portable knowledge = "npm for AI expertise". Advanced Memory is 80% there already.
+
+**The uncanny parallel**: **Zettelkasten = Skills repository** (when content is actionable)
+- Cooking zettelkasten = cooking skills
+- Programming zettelkasten = programming skills  
+- Both use YAML + Markdown, both link/compose, both evolve
+- We already have the infrastructure!
+
+**See also**: [docs/architecture/ZETTELKASTEN_AS_SKILLS.md](docs/architecture/ZETTELKASTEN_AS_SKILLS.md) for deep exploration
+
 ### Collaborative Development Process
 
 With GitHub integration, the development workflow includes:

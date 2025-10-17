@@ -4,6 +4,7 @@ from advanced_memory.cli.app import app  # pragma: no cover
 
 # Register commands
 from advanced_memory.cli.commands import (  # noqa: F401  # pragma: no cover
+    convert,
     db,
     import_chatgpt,
     import_claude_conversations,

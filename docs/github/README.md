@@ -2,19 +2,73 @@
 
 > **Purpose**: Comprehensive GitHub configuration guide to avoid hours of trial-and-error setup.
 > 
-> **Copy this to new MCP repos** to get everything right the first time!
+> **⚠️ Repository-Specific**: These workflows are optimized for **Advanced Memory MCP**, a complex MCP server with database, CLI, and extensive testing (1,190 tests). See [Project Type Considerations](#project-type-considerations) for adaptation guidance.
+
+---
+
+## ⚠️ Important: Project Type Considerations
+
+**These workflows are for Advanced Memory MCP**, a complex MCP server with:
+- ✅ SQLite database + Alembic migrations
+- ✅ CLI tool (Typer-based)
+- ✅ FastAPI backend
+- ✅ MCP server layer
+- ✅ 1,190 comprehensive tests
+- ✅ MCPB packaging
+
+**Your project might be simpler!** 
+
+### Quick Project Type Check
+
+| Your Project Has... | Project Type | Use This Repo's Workflows |
+|---------------------|--------------|---------------------------|
+| No database, <50 tests | Simple MCP | 20% (basic lint+test only) |
+| Database, CLI, 500-1,500 tests | Complex MCP (like us!) | 100% (use as-is) |
+| Backend + Frontend | Full-Stack MCP | 100% + frontend jobs |
+| Windows-specific code | Windows Service | Adapt: change to `windows-latest` |
+| Multi-platform support | Cross-Platform | Adapt: add OS matrix |
+| MCPB-only, minimal code | MCPB Server | 10% (MCPB build only) |
+
+**See** [THE_GITHUB_SAGA.md - Project Type Taxonomy](./THE_GITHUB_SAGA.md#project-type-taxonomy) for detailed adaptation guidance.
 
 ---
 
 ## 📋 Table of Contents
 
 1. [Quick Setup Checklist](#quick-setup-checklist)
-2. [GitHub Actions Workflows](#github-actions-workflows)
-3. [Security Scanning](#security-scanning)
-4. [Dependency Management](#dependency-management)
-5. [Release Process](#release-process)
-6. [Common Pitfalls & Solutions](#common-pitfalls--solutions)
-7. [Complete Workflow Files](#complete-workflow-files)
+2. [GitHub CLI vs MCP](#github-cli-vs-mcp) ⭐ **New: Token-efficient AI workflows**
+3. [GitHub Actions Workflows](#github-actions-workflows)
+4. [Security Scanning](#security-scanning)
+5. [Dependency Management](#dependency-management)
+6. [Release Process](#release-process)
+7. [Common Pitfalls & Solutions](#common-pitfalls--solutions)
+8. [Complete Workflow Files](#complete-workflow-files)
+
+---
+
+## 💡 GitHub CLI vs MCP
+
+**TL;DR**: Use `gh` CLI instead of GitHub MCP for AI workflows. 50-70% token reduction.
+
+**Why**:
+- ✅ Self-documenting (`gh --help` explains everything)
+- ✅ First attempt may produce errors, then `gh <command> --help` → smooth sailing
+- ✅ Less token waste (no MCP overhead)
+- ✅ Full GitHub feature access
+- ✅ Composable (Unix pipes, chaining)
+
+**Example**:
+```bash
+# Get help once
+gh pr --help
+
+# Then confident usage
+gh pr create --title "Fix bug" --body "Details" --base main
+```
+
+**Read the full guide**: [GITHUB_CLI_VS_MCP.md](./GITHUB_CLI_VS_MCP.md)
+
+**Key insight**: MCP requires trial-and-error (wastes tokens). CLI's `--help` provides all info upfront, then it's smooth sailing.
 
 ---
 
@@ -54,15 +108,19 @@ Copy this checklist for each new MCP repo:
 
 ### 1. CI/CD Pipeline (`ci.yml`)
 
+**⚠️ Repository-Specific: Complex MCP Server Configuration**
+
 **Purpose**: Run on every push and PR to validate code quality
 
-**Jobs**:
-1. **Lint** - Code quality checks
-2. **Test** - Run test suite
-3. **Security** - Security scanning
-4. **Build** - Package building
-5. **MCPB Build** - MCP bundle creation
-6. **Quality Gate** - Final validation
+**Jobs (Advanced Memory MCP)**:
+1. **Lint** - Code quality checks *(Universal)*
+2. **Test** - Run test suite *(Universal)*
+3. **Security** - Security scanning *(Recommended for production)*
+4. **Build** - Package building *(Universal)*
+5. **MCPB Build** - MCP bundle creation *(Optional: only if packaging for Claude Desktop)*
+6. **Quality Gate** - Final validation *(Recommended for production)*
+
+**For Simple MCP Servers**: Use jobs 1, 2, 4 only (lint, test, build). Skip security, MCPB, quality gate.
 
 **Key Configuration**:
 ```yaml
@@ -130,6 +188,8 @@ jobs:
 
 ## 🔐 Security Scanning
 
+**⚠️ Complexity Level**: Recommended for production MCP servers, optional for simple projects
+
 ### Required Security Tools
 
 All should be in `dev-dependencies`:
@@ -145,7 +205,9 @@ dev-dependencies = [
 
 ### Common Security Issues & Fixes
 
-#### 1. **XML Parsing Vulnerabilities**
+**⚠️ Repository-Specific**: These examples are from Advanced Memory MCP. Your project may have different security issues.
+
+#### 1. **XML Parsing Vulnerabilities** *(Advanced Memory Specific)*
 
 **Problem**:
 ```python
@@ -506,25 +568,73 @@ All GitHub-related documentation in `docs/github/`:
 
 ---
 
-## 🎯 How to Use This in Other Repos
+## 🎯 How to Adapt This for Other Projects
 
-### For a New MCP Project:
+**⚠️ IMPORTANT**: Do NOT blindly copy these workflows!
 
-1. **Copy entire `docs/github/` directory**
-2. **Copy `.github/workflows/` directory**
-3. **Update `pyproject.toml`** with dev-dependencies
-4. **Run initial setup**:
+### Adaptation Strategy by Project Type:
+
+#### Simple MCP Server (No Database, <50 Tests)
+1. **Copy**: `ci.yml` (basic version)
+2. **Remove**: Database steps, CLI tests, extensive security, MCPB build
+3. **Time to setup**: ~15 minutes
+4. **Workflow jobs**: 3 (lint, test, build)
+
+#### Complex MCP Server (Like Advanced Memory)
+1. **Copy**: Everything as-is
+2. **Update**: Project-specific paths and names
+3. **Time to setup**: ~30 minutes
+4. **Workflow jobs**: 6 (lint, test, security, build, MCPB, quality gate)
+
+#### Full-Stack MCP (Backend + Frontend)
+1. **Copy**: All backend workflows
+2. **Add**: Frontend testing jobs, E2E tests
+3. **Time to setup**: ~45 minutes
+4. **Workflow jobs**: 8-10 (backend + frontend + E2E)
+
+#### Windows Service / Native App
+1. **Copy**: Basic workflows
+2. **Modify**: Change runner to `windows-latest`
+3. **Add**: Windows-specific dependencies
+4. **Time to setup**: ~25 minutes
+5. **Cost**: 2x more expensive (Windows runners)
+
+#### Cross-Platform CLI
+1. **Copy**: Basic workflows
+2. **Add**: OS matrix (ubuntu, windows, macos)
+3. **Time to setup**: ~35 minutes
+4. **Cost**: Up to 10x more expensive (macOS runners)
+
+#### MCPB-Only Server
+1. **Copy**: MCPB build job only
+2. **Skip**: Most other jobs
+3. **Time to setup**: ~10 minutes
+4. **Workflow jobs**: 1-2 (validate, build MCPB)
+
+### Universal Steps (All Project Types)
+
+1. **Update project-specific values** in copied files:
+   - Replace `advanced-memory` → `your-project`
+   - Replace `sandraschi/advanced-memory-mcp` → `your-org/your-repo`
+   - Update Python versions
+   - Update test paths
+
+2. **Run initial quality checks**:
    ```bash
    uv sync --dev
    uv run ruff format .
    uv run ruff check . --fix
-   uv run pyright
+   uv run pyright  # Optional for simple projects
    ```
-5. **Fix any issues** using the guides
-6. **Commit and push**
-7. **Create first release tag**
 
-**Time to working CI/CD**: ~30 minutes instead of 6+ hours!
+3. **Test locally before pushing**:
+   ```bash
+   uv run pytest  # Should pass before CI
+   ```
+
+4. **Push and monitor first CI run**
+
+**Time saved**: 3-6 hours per project (vs. building from scratch)
 
 ---
 

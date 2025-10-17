@@ -328,31 +328,11 @@ class TemplateGenerator:
         Returns:
             Dictionary of category -> topic list
         """
-        from advanced_memory.cli.zettelkasten_content import (
-            CREATIVE_TEMPLATES,
-            DATA_SCIENTIST_TEMPLATES,
-            DEVELOPER_TEMPLATES,
-            DEVOPS_TEMPLATES,
-            ENTREPRENEUR_TEMPLATES,
-            KNOWLEDGE_WORKER_TEMPLATES,
-            PRODUCT_MANAGER_TEMPLATES,
-            RESEARCHER_TEMPLATES,
-            UIUX_DESIGNER_TEMPLATES,
-            WRITER_TEMPLATES,
-        )
+        # Use new TemplateLoader to get available topics from markdown files
+        from advanced_memory.services.template_loader import get_template_loader
 
-        all_templates = {
-            "developer": list(DEVELOPER_TEMPLATES.keys()),
-            "researcher": list(RESEARCHER_TEMPLATES.keys()),
-            "writer": list(WRITER_TEMPLATES.keys()),
-            "knowledge-worker": list(KNOWLEDGE_WORKER_TEMPLATES.keys()),
-            "devops": list(DEVOPS_TEMPLATES.keys()),
-            "data-scientist": list(DATA_SCIENTIST_TEMPLATES.keys()),
-            "uiux-designer": list(UIUX_DESIGNER_TEMPLATES.keys()),
-            "product-manager": list(PRODUCT_MANAGER_TEMPLATES.keys()),
-            "entrepreneur": list(ENTREPRENEUR_TEMPLATES.keys()),
-            "creative": list(CREATIVE_TEMPLATES.keys()),
-        }
+        loader = get_template_loader()
+        all_templates = loader.list_available()
 
         if category:
             return {category: all_templates.get(category, [])}

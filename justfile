@@ -229,3 +229,27 @@ setup-hooks:
 pre-commit-all:
     @echo "🔍 Running pre-commit on all files..."
     uv run pre-commit run --all-files
+
+# ═══════════════════════════════════════════════════════════════
+# REPOSITORY BACKUP - Automated backups excluding caches & venvs
+# ═══════════════════════════════════════════════════════════════
+
+# Create repository backup (excludes .venv, caches, ~30-40 MB)
+backup:
+    @echo "📦 Creating repository backup..."
+    @pwsh ./scripts/backup-repo.ps1
+
+# Create backup including dist/ folder
+backup-with-dist:
+    @echo "📦 Creating repository backup (with dist/)..."
+    @pwsh ./scripts/backup-repo.ps1 -IncludeDist
+
+# Create backup to specific location
+backup-to path:
+    @echo "📦 Creating repository backup to {{path}}..."
+    @pwsh ./scripts/backup-repo.ps1 -OutputPath "{{path}}"
+
+# Create backup with WinRAR instead of 7-Zip
+backup-winrar:
+    @echo "📦 Creating repository backup (WinRAR)..."
+    @pwsh ./scripts/backup-repo.ps1 -UseWinRAR

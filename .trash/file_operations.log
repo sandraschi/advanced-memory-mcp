@@ -21387,3 +21387,66 @@ sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
 2025-10-17 04:34:41 | INFO     | Initializing search index
 2025-10-17 04:34:41 | INFO     | Initialized project session with default project: test-project
 2025-10-17 05:27:27 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 06:20:44 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 06:25:31 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 06:26:19 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 06:27:08 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 06:27:27 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 12:23:29 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 12:23:55 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 12:23:56 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-17 12:23:56 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-17 12:23:56 | INFO     | Loaded 2 templates for category 'data-scientist'
+2025-10-17 12:23:56 | INFO     | Loaded 16 templates for category 'developer'
+2025-10-17 12:23:56 | INFO     | Loaded 6 templates for category 'devops'
+2025-10-17 12:23:56 | INFO     | Loaded 1 templates for category 'entrepreneur'
+2025-10-17 12:23:56 | INFO     | Loaded 2 templates for category 'knowledge-worker'
+2025-10-17 12:23:56 | INFO     | Loaded 1 templates for category 'product-manager'
+2025-10-17 12:23:56 | INFO     | Loaded 7 templates for category 'researcher'
+2025-10-17 12:23:56 | INFO     | Loaded 3 templates for category 'uiux-designer'
+2025-10-17 12:23:56 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-17 12:23:56 | INFO     | Loaded all templates: 10 categories, 30 topics, 43 total templates
+2025-10-17 15:35:27 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 15:35:28 | INFO     | Using in-memory SQLite database
+2025-10-17 15:35:28 | INFO     | Initializing search index
+2025-10-17 15:35:28 | INFO     | Initializing search index
+2025-10-17 15:35:28 | INFO     | Initialized project session with default project: test-project
+2025-10-17 15:35:28 | INFO     | Switched project context: test-project -> test-project
+2025-10-17 15:35:28 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-17 15:35:28 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-17 15:35:28 | INFO     | Loaded 2 templates for category 'data-scientist'
+2025-10-17 15:35:28 | INFO     | Loaded 16 templates for category 'developer'
+2025-10-17 15:35:28 | INFO     | Loaded 6 templates for category 'devops'
+2025-10-17 15:35:28 | INFO     | Loaded 1 templates for category 'entrepreneur'
+2025-10-17 15:35:28 | INFO     | Loaded 2 templates for category 'knowledge-worker'
+2025-10-17 15:35:28 | INFO     | Loaded 1 templates for category 'product-manager'
+2025-10-17 15:35:28 | INFO     | Loaded 7 templates for category 'researcher'
+2025-10-17 15:35:28 | INFO     | Loaded 3 templates for category 'uiux-designer'
+2025-10-17 15:35:28 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-17 15:35:28 | INFO     | Loaded all templates: 10 categories, 30 topics, 43 total templates
+2025-10-17 16:03:49 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 16:04:36 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 16:05:55 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
+2025-10-17 16:05:57 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'data-scientist'
+2025-10-17 16:05:57 | INFO     | Loaded 16 templates for category 'developer'
+2025-10-17 16:05:57 | INFO     | Loaded 6 templates for category 'devops'
+2025-10-17 16:05:57 | INFO     | Loaded 1 templates for category 'entrepreneur'
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'knowledge-worker'
+2025-10-17 16:05:57 | INFO     | Loaded 1 templates for category 'product-manager'
+2025-10-17 16:05:57 | INFO     | Loaded 7 templates for category 'researcher'
+2025-10-17 16:05:57 | INFO     | Loaded 3 templates for category 'uiux-designer'
+2025-10-17 16:05:57 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-17 16:05:57 | INFO     | Loaded all templates: 10 categories, 30 topics, 43 total templates
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'data-scientist'
+2025-10-17 16:05:57 | INFO     | Loaded 16 templates for category 'developer'
+2025-10-17 16:05:57 | INFO     | Loaded 6 templates for category 'devops'
+2025-10-17 16:05:57 | INFO     | Loaded 1 templates for category 'entrepreneur'
+2025-10-17 16:05:57 | INFO     | Loaded 2 templates for category 'knowledge-worker'
+2025-10-17 16:05:57 | INFO     | Loaded 1 templates for category 'product-manager'
+2025-10-17 16:05:57 | INFO     | Loaded 7 templates for category 'researcher'
+2025-10-17 16:05:57 | INFO     | Loaded 3 templates for category 'uiux-designer'
+2025-10-17 16:05:57 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-17 16:05:57 | INFO     | Loaded all templates: 10 categories, 30 topics, 43 total templates
