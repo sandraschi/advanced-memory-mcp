@@ -54,3 +54,5 @@ ENV/
 # claude action
 claude-output
 **/.claude/settings.local.json
+# Advanced Memory test artifacts
+.trash/
