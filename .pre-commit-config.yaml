@@ -28,6 +28,11 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
       - id: mixed-line-ending
+      # Additional file quality checks
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: fix-byte-order-marker
 
   # Security - Check for secrets
   - repo: https://github.com/Yelp/detect-secrets
@@ -36,6 +41,13 @@ repos:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
         exclude: ^(uv\.lock|\.secrets\.baseline)$
+
+  # Conventional Commits - Enforce commit message format
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
 
 # Configuration
 default_stages: [commit]
