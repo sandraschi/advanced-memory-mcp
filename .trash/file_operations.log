@@ -21371,3 +21371,19 @@ sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
 2025-10-16 16:54:33 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
 2025-10-16 16:55:22 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
 2025-10-16 17:54:15 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:30:36 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:31:51 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:32:02 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:33:45 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:33:47 | INFO     | Initializing search index
+2025-10-17 04:33:47 | INFO     | Initializing search index
+2025-10-17 04:33:47 | INFO     | Initialized project session with default project: test-project
+2025-10-17 04:34:12 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:34:15 | INFO     | Initializing search index
+2025-10-17 04:34:15 | INFO     | Initializing search index
+2025-10-17 04:34:15 | INFO     | Initialized project session with default project: test-project
+2025-10-17 04:34:39 | INFO     | Advanced Memory 1.0.0b2 (Project: advanced-memory-mcp)
+2025-10-17 04:34:41 | INFO     | Initializing search index
+2025-10-17 04:34:41 | INFO     | Initializing search index
+2025-10-17 04:34:41 | INFO     | Initialized project session with default project: test-project
+2025-10-17 05:27:27 | INFO     | Advanced Memory 1.0.0b3 (Project: advanced-memory-mcp)
