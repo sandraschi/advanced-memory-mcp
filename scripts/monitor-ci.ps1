@@ -7,8 +7,9 @@ param(
     [int]$WaitSeconds = 120,     # Wait 2 minutes before checking
     [switch]$AutoFix,            # Automatically fix and repush
     [switch]$Continuous,         # Keep monitoring until success
-    [int]$MaxAttempts = 3,       # Max auto-fix attempts
-    [string]$Branch = "master"   # Branch to monitor
+    [int]$MaxAttempts = 2,       # Max auto-fix attempts (REDUCED for safety!)
+    [string]$Branch = "master",  # Branch to monitor
+    [int]$MinWaitBetweenPushes = 300  # Minimum 5 minutes between auto-pushes (RATE LIMITING!)
 )
 
 function Get-LatestWorkflowRun {
@@ -131,23 +132,51 @@ Write-Host "Repository: sandraschi/advanced-memory-mcp" -ForegroundColor White
 Write-Host "Branch: $Branch" -ForegroundColor White
 Write-Host "Auto-fix: $(if ($AutoFix) { 'ENABLED ✅' } else { 'DISABLED ❌' })" -ForegroundColor White
 Write-Host "Continuous: $(if ($Continuous) { 'ENABLED ✅' } else { 'DISABLED ❌' })" -ForegroundColor White
+Write-Host "Max attempts: $MaxAttempts" -ForegroundColor White
 Write-Host "Wait time: $WaitSeconds seconds`n" -ForegroundColor White
+
+# SAFETY WARNING
+if ($AutoFix) {
+    Write-Host "⚠️  SAFETY LIMITS ENABLED (preventing GitHub rate limiting):" -ForegroundColor Yellow
+    Write-Host "   • Maximum $MaxAttempts auto-fix attempts" -ForegroundColor Gray
+    Write-Host "   • Minimum $MinWaitBetweenPushes seconds between pushes" -ForegroundColor Gray
+    Write-Host "   • This prevents spamming GitHub (no goon squad! 😄)`n" -ForegroundColor Gray
+}
 
 Write-Host "⏳ Waiting $WaitSeconds seconds for workflows to start...`n" -ForegroundColor Cyan
 Start-Sleep -Seconds $WaitSeconds
 
 $attempt = 0
 $success = $false
+$apiCallCount = 0
+$lastPushTime = $null
+
+# SAFETY CHECK: Prevent runaway loops
+if ($MaxAttempts -gt 5) {
+    Write-Host "⚠️  WARNING: MaxAttempts=$MaxAttempts is too high!" -ForegroundColor Yellow
+    Write-Host "   Setting to maximum safe value: 5" -ForegroundColor Yellow
+    Write-Host "   (Prevents GitHub rate limiting abuse)`n" -ForegroundColor Gray
+    $MaxAttempts = 5
+}
 
 do {
     $attempt++
     
+    # SAFETY: Hard limit on iterations (failsafe)
+    if ($attempt -gt 10) {
+        Write-Host "`n🚨 SAFETY LIMIT REACHED: 10 attempts!" -ForegroundColor Red
+        Write-Host "   Stopping to prevent GitHub rate limiting" -ForegroundColor Yellow
+        Write-Host "   This is to protect you from the GitHub goon squad! 😄`n" -ForegroundColor Yellow
+        break
+    }
+    
     Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
-    Write-Host "🔄 Check Attempt $attempt of $MaxAttempts`n" -ForegroundColor Yellow
+    Write-Host "🔄 Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
     
     # Get latest workflow run
     Write-Host "Fetching latest workflow status..." -ForegroundColor Cyan
     $workflow = Get-LatestWorkflowRun
+    $apiCallCount++
     
     if (-not $workflow) {
         Write-Host "❌ Could not fetch workflow status`n" -ForegroundColor Red
@@ -188,6 +217,7 @@ do {
         # Get job details
         Write-Host "Fetching failure details..." -ForegroundColor Cyan
         $jobs = Get-WorkflowDetails -RunId $workflow.id
+        $apiCallCount++
         
         if ($jobs) {
             Write-Host "`nFailed jobs:" -ForegroundColor Yellow
@@ -207,6 +237,13 @@ do {
                 
                 if ($fixed) {
                     Write-Host "`n✅ Auto-fixes applied!`n" -ForegroundColor Green
+                    
+                    # RATE LIMITING: Warn if approaching max attempts
+                    if ($attempt -ge $MaxAttempts - 1) {
+                        Write-Host "⚠️  WARNING: This is attempt $($attempt + 1) of $MaxAttempts!" -ForegroundColor Yellow
+                        Write-Host "   After this, manual intervention required to avoid rate limiting.`n" -ForegroundColor Yellow
+                    }
+                    
                     Write-Host "Committing fixes..." -ForegroundColor Cyan
                     git add -A
                     git commit -m "fix: auto-fix CI failures (format/lint)
@@ -219,8 +256,10 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
                     Write-Host "Pushing fixes..." -ForegroundColor Cyan
                     git push origin $Branch
                     
-                    Write-Host "`n⏳ Waiting 120 seconds for new workflow...`n" -ForegroundColor Yellow
-                    Start-Sleep -Seconds 120
+                    # RATE LIMITING: Enforce minimum wait between pushes
+                    Write-Host "`n⏳ RATE LIMIT PROTECTION: Waiting $MinWaitBetweenPushes seconds before next check..." -ForegroundColor Yellow
+                    Write-Host "   (This prevents GitHub API rate limiting)`n" -ForegroundColor Gray
+                    Start-Sleep -Seconds $MinWaitBetweenPushes
                 } else {
                     Write-Host "`n❌ Could not auto-fix failures`n" -ForegroundColor Red
                     Write-Host "Manual intervention required!" -ForegroundColor Yellow
