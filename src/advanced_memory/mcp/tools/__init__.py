@@ -18,7 +18,6 @@ from advanced_memory.mcp.tools.adn_search import adn_search
 from advanced_memory.mcp.tools.build_context import build_context
 from advanced_memory.mcp.tools.canvas import canvas
 from advanced_memory.mcp.tools.content_manager import adn_content
-from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
 # Import legacy individual tools (for backward compatibility)
 from advanced_memory.mcp.tools.delete_note import delete_note
@@ -63,6 +62,7 @@ from advanced_memory.mcp.tools.sync_status import sync_status
 from advanced_memory.mcp.tools.typora_control import typora_control
 from advanced_memory.mcp.tools.view_note import view_note
 from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
 # Portmanteau tools (recommended for Cursor IDE - reduces tool count)
 __all__ = [
