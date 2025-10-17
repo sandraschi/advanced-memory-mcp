@@ -738,7 +738,9 @@ async def test_case_insensitive_project_operations(mcp_server, app):
             },
         )
         assert len(write_result.content) == 1
-        assert "Case Test Note" in write_result.content[0].text
+        write_text = write_result.content[0].text
+        # write_note response includes file path with underscores, not spaces in title
+        assert ("Case Test Note" in write_text or "Case_Test_Note" in write_text)
 
         # 2. Verify get_current_project shows stats correctly
         current_result = await client.call_tool("get_current_project", {})
