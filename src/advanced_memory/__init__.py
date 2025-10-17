@@ -1,7 +1,7 @@
 """advanced-memory - Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"""
 
 # Package version - updated by release automation
-__version__ = "1.0.0b2"
+__version__ = "1.0.0b3"
 
 # API version for FastAPI - independent of package version
 __api_version__ = "v0"
