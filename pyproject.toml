@@ -63,6 +63,12 @@ pythonpath = ["src", "tests"]
 addopts = "-v -s"
 testpaths = ["tests"]
 asyncio_mode = "strict"
+filterwarnings = [
+    "ignore::DeprecationWarning:.*datetime.datetime.utcnow",
+    "ignore::DeprecationWarning:.*datetime adapter",
+    "ignore::PytestReturnNotNoneWarning",
+    "ignore::RuntimeWarning:.*coroutine.*was never awaited",
+]
 
 [tool.ruff]
 line-length = 100

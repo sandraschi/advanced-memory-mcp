@@ -98,7 +98,15 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          uv run pytest --cov=src/advanced_memory --cov-report=xml --cov-report=term-missing -v --maxfail=10 --tb=short --cov-fail-under=50
+          uv run pytest \
+            --cov=src/advanced_memory \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            --tb=short \
+            --maxfail=10 \
+            --cov-fail-under=50 \
+            --disable-warnings \
+            -q
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.12'
