@@ -126,14 +126,19 @@ if (-not $Quick) {
 # Check 7: Test Suite
 Write-StepHeader "CHECK 7: Test Suite"
 if ($Quick) {
-    Write-Host "Running: pytest --maxfail=3 (quick mode)`n" -ForegroundColor Gray
+    Write-Host "Quick mode: Running fast subset (~30 seconds)`n" -ForegroundColor Gray
     $testCmd = "uv run pytest --maxfail=3 -x --tb=line -q"
 } elseif ($NoCoverage) {
-    Write-Host "Running: pytest -v (no coverage)`n" -ForegroundColor Gray
-    $testCmd = "uv run pytest -v --maxfail=10 --tb=short"
+    Write-Host "Running: ALL tests in parallel (faster!)`n" -ForegroundColor Gray
+    Write-Host "Expected time: ~1.5-2 minutes`n" -ForegroundColor Cyan
+    $testCmd = "uv run pytest -n auto -v --maxfail=10 --tb=short"
 } else {
-    Write-Host "Running: pytest with coverage (full CI simulation)`n" -ForegroundColor Gray
-    $testCmd = "uv run pytest --cov=src/advanced_memory --cov-report=term-missing -v --maxfail=10 --tb=short --cov-fail-under=50"
+    Write-Host "Running: FULL test suite with coverage (CI simulation)`n" -ForegroundColor Gray
+    Write-Host "Expected time: ~4 minutes" -ForegroundColor Yellow
+    Write-Host "⏰ PLEASE BE PATIENT - Tests will run to completion!`n" -ForegroundColor Red
+    Write-Host "💡 This matches EXACTLY what CI will run" -ForegroundColor Cyan
+    Write-Host "💡 Parallelized for speed (using -n auto)`n" -ForegroundColor Cyan
+    $testCmd = "uv run pytest -n auto --cov=src/advanced_memory --cov-report=term-missing --tb=short --cov-fail-under=50"
 }
 
 $testOutput = Invoke-Expression $testCmd 2>&1
