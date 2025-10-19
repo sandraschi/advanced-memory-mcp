@@ -24,7 +24,11 @@ Environment = Literal["test", "dev", "user"]
 
 @dataclass
 class ProjectConfig:
-    """Configuration for a specific Advanced Memory project - independent knowledge management system."""
+    """Configuration for a specific Advanced Memory project.
+    
+    Projects are logical groupings of content that share a file system root.
+    All project data is stored in the global database with project_id scoping.
+    """
 
     name: str
     home: Path
@@ -44,9 +48,7 @@ class AdvancedMemoryConfig(BaseSettings):
     env: Environment = Field(default="dev", description="Environment name")
 
     projects: dict[str, str] = Field(
-        default_factory=lambda: {
-            "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory")))
-        },
+        default_factory=lambda: {"main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))},
         description="Mapping of project names to their filesystem paths",
     )
     default_project: str = Field(
@@ -79,6 +81,13 @@ class AdvancedMemoryConfig(BaseSettings):
         default=True,
         description="Whether to sync changes in real time. default (True)",
     )
+    
+    # File type filtering configuration
+    index_all_files: bool = Field(
+        default=True,
+        description="Whether to index all file types or only markdown (.md) files. "
+                    "Set to False to only index markdown files. default (True)",
+    )
 
     # API connection configuration
     api_url: str | None = Field(
@@ -108,7 +117,7 @@ class AdvancedMemoryConfig(BaseSettings):
         # Ensure main project exists
         if "main" not in self.projects:  # pragma: no cover
             self.projects["main"] = str(
-                Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory"))
+                Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home()))
             )
 
         # Ensure default project is valid
@@ -123,7 +132,7 @@ class AdvancedMemoryConfig(BaseSettings):
         across all projects.
         """
         # Use ADVANCED_MEMORY_HOME if set, otherwise use home directory
-        base_path = Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home() / "advanced-memory"))
+        base_path = Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home()))
         database_path = base_path / DATA_DIR_NAME / APP_DATABASE_NAME
         if not database_path.exists():  # pragma: no cover
             database_path.parent.mkdir(parents=True, exist_ok=True)

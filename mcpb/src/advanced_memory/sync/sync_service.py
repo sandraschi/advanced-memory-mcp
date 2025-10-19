@@ -51,6 +51,16 @@ IGNORE_PATTERNS = {
     ".DS_Store", "Thumbs.db"
 }
 
+# Patterns for archived/obsolete content that should be preserved but not indexed
+ARCHIVE_PATTERNS = {
+    # Backup folders (timestamped)
+    "-backup-", ".backup", "_backup",
+    # Obsolete markers
+    ".obsolete", "-obsolete", "_obsolete",
+    # Archive folders
+    ".archived", "-archived", "_archived",
+}
+
 
 @dataclass
 class SyncReport:
@@ -710,14 +720,36 @@ class SyncService:
 
         logger.debug(f"Scanning directory {directory}")
         result = ScanResult()
+        
+        skipped_folders = set()
 
         for root, dirnames, filenames in os.walk(str(directory)):
-            # Skip dot directories and common ignore patterns in-place
-            dirnames[:] = [d for d in dirnames if not d.startswith(".") and d not in IGNORE_PATTERNS]
+            # Track which directories are being skipped
+            original_dirnames = dirnames.copy()
+            
+            # Skip dot directories, ignore patterns, and archive patterns in-place
+            dirnames[:] = [
+                d for d in dirnames 
+                if not d.startswith(".") 
+                and d not in IGNORE_PATTERNS
+                and not any(pattern in d.lower() for pattern in ARCHIVE_PATTERNS)
+            ]
+            
+            # Log skipped directories for debugging
+            for d in original_dirnames:
+                if d not in dirnames:
+                    skipped_folders.add(d)
+                    logger.debug(f"Skipping ignored directory: {d}")
 
             for filename in filenames:
                 # Skip dot files and files in ignore patterns
                 if filename.startswith(".") or filename in IGNORE_PATTERNS:
+                    logger.trace(f"Skipping ignored file: {filename}")
+                    continue
+                
+                # If index_all_files is False, only index markdown files
+                if not self.app_config.index_all_files and not filename.endswith(".md"):
+                    logger.trace(f"Skipping non-markdown file (index_all_files=False): {filename}")
                     continue
 
                 path = Path(root) / filename
@@ -729,6 +761,14 @@ class SyncService:
                 logger.trace(f"Found file, path={rel_path}, checksum={checksum}")
 
         duration_ms = int((time.time() - start_time) * 1000)
+        
+        if len(result.files) == 0:
+            logger.warning(
+                f"No files found in {directory}. "
+                f"Skipped {len(skipped_folders)} folders. "
+                f"Ensure files are not in ignored folders: {IGNORE_PATTERNS}"
+            )
+        
         logger.debug(
             f"{directory} scan completed "
             f"directory={str(directory)} "

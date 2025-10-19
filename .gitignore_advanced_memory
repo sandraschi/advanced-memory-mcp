@@ -1,0 +1,17 @@
+# Advanced Memory - Global Ignore File
+# Copy this to your global .gitignore or include in project .gitignore
+
+# Advanced Memory database and cache
+# (Legacy - per-project databases may exist from old versions)
+.advanced-memory/
+
+# Advanced Memory configuration
+# (User-specific, not portable)
+.advanced-memory-config.json
+
+# Advanced Memory temp files
+.advanced-memory-*.tmp
+
+# Advanced Memory logs
+advanced-memory-*.log
+

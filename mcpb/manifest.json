@@ -45,27 +45,58 @@
   "user_config": {
     "project_path": {
       "type": "string",
-      "title": "Project Path",
-      "description": "Path to your Advanced Memory project directory",
+      "title": "Main Project Path",
+      "description": "Absolute path to your main Advanced Memory project directory (e.g., C:/Users/yourname/Documents/claude-depot). Use forward slashes.",
+      "required": true,
+      "sensitive": false,
+      "default": "~/Documents/claude-depot",
+      "env_var": "ADVANCED_MEMORY_HOME"
+    },
+    "index_all_files": {
+      "type": "boolean",
+      "title": "Index All File Types",
+      "description": "Index all files (code, configs, markdown) or only .md files. Recommended: true for code repos, false for pure notes.",
       "required": false,
       "sensitive": false,
-      "default": "~/Documents/advanced-memory"
+      "default": true,
+      "env_var": "ADVANCED_MEMORY_INDEX_ALL_FILES"
+    },
+    "log_level": {
+      "type": "string",
+      "title": "Log Level",
+      "description": "Logging verbosity: DEBUG, INFO, WARNING, ERROR",
+      "required": false,
+      "sensitive": false,
+      "default": "INFO",
+      "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+      "env_var": "ADVANCED_MEMORY_LOG_LEVEL"
+    },
+    "sync_changes": {
+      "type": "boolean",
+      "title": "Auto-Sync Files",
+      "description": "Automatically sync file changes in real-time. Disable for manual sync only.",
+      "required": false,
+      "sensitive": false,
+      "default": true,
+      "env_var": "ADVANCED_MEMORY_SYNC_CHANGES"
     },
     "enable_portmanteau_tools": {
       "type": "boolean",
       "title": "Enable Portmanteau Tools",
-      "description": "Use the new portmanteau tools (adn_*) for Cursor IDE compatibility",
+      "description": "Use consolidated adn_* tools (recommended for Cursor IDE). Disable to use individual tools.",
       "required": false,
       "sensitive": false,
       "default": true
     },
     "max_tools": {
       "type": "number",
-      "title": "Maximum Tools",
-      "description": "Maximum number of tools to expose (for IDE compatibility)",
+      "title": "Maximum Tools to Expose",
+      "description": "Limit number of tools for IDE compatibility. Default 50 works for most IDEs.",
       "required": false,
       "sensitive": false,
-      "default": 50
+      "default": 50,
+      "min": 10,
+      "max": 100
     }
   },
   "compatibility": {

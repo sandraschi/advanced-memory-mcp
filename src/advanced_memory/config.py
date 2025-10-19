@@ -24,7 +24,11 @@ Environment = Literal["test", "dev", "user"]
 
 @dataclass
 class ProjectConfig:
-    """Configuration for a specific Advanced Memory project - independent knowledge management system."""
+    """Configuration for a specific Advanced Memory project.
+    
+    Projects are logical groupings of content that share a file system root.
+    All project data is stored in the global database with project_id scoping.
+    """
 
     name: str
     home: Path
@@ -36,11 +40,6 @@ class ProjectConfig:
     @property
     def project_url(self) -> str:  # pragma: no cover
         return f"/{generate_permalink(self.name)}"
-
-    @property
-    def database_path(self) -> Path:
-        """Get SQLite database path for this project."""
-        return self.home / DATA_DIR_NAME / DATABASE_NAME
 
 
 class AdvancedMemoryConfig(BaseSettings):
@@ -81,6 +80,13 @@ class AdvancedMemoryConfig(BaseSettings):
     sync_changes: bool = Field(
         default=True,
         description="Whether to sync changes in real time. default (True)",
+    )
+    
+    # File type filtering configuration
+    index_all_files: bool = Field(
+        default=True,
+        description="Whether to index all file types or only markdown (.md) files. "
+                    "Set to False to only index markdown files. default (True)",
     )
 
     # API connection configuration
