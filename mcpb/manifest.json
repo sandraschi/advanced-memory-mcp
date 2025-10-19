@@ -65,24 +65,6 @@
       "required": false,
       "sensitive": false,
       "default": true
-    },
-    "enable_portmanteau_tools": {
-      "type": "boolean",
-      "title": "Enable Portmanteau Tools",
-      "description": "Use consolidated adn_* tools (recommended for Cursor IDE). Disable to use individual tools.",
-      "required": false,
-      "sensitive": false,
-      "default": true
-    },
-    "max_tools": {
-      "type": "number",
-      "title": "Maximum Tools to Expose",
-      "description": "Limit number of tools for IDE compatibility. Default 50 works for most IDEs.",
-      "required": false,
-      "sensitive": false,
-      "default": 50,
-      "min": 10,
-      "max": 100
     }
   },
   "compatibility": {
