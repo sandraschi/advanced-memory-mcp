@@ -154,8 +154,8 @@ async def test_sync_status_pending():
         result = await sync_status.fn()
 
     assert "Advanced Memory Sync Status" in result
-    assert "Sync operations pending" in result
-    assert "usually resolves automatically" in result
+    # New format shows system initialization/processing state
+    assert ("System is starting up" in result or "Processing" in result)
 
 
 @pytest.mark.asyncio

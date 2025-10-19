@@ -44,8 +44,8 @@ def test_onboard_command_imports():
     try:
         from advanced_memory.cli.commands.onboard import CONTENT_TEMPLATES
 
-        # Should have all 10 categories
-        assert len(CONTENT_TEMPLATES) == 10
+        # Should have all 12 categories (ai and philosophy added recently)
+        assert len(CONTENT_TEMPLATES) == 12
         assert "developer" in CONTENT_TEMPLATES
         assert "devops" in CONTENT_TEMPLATES
         assert "data-scientist" in CONTENT_TEMPLATES
@@ -53,6 +53,11 @@ def test_onboard_command_imports():
         assert "product-manager" in CONTENT_TEMPLATES
         assert "entrepreneur" in CONTENT_TEMPLATES
         assert "creative" in CONTENT_TEMPLATES
+        assert "ai" in CONTENT_TEMPLATES
+        assert "philosophy" in CONTENT_TEMPLATES
+        assert "researcher" in CONTENT_TEMPLATES
+        assert "writer" in CONTENT_TEMPLATES
+        assert "knowledge-worker" in CONTENT_TEMPLATES
 
     except ImportError as e:
         pytest.fail(f"Failed to import onboard command: {e}")
