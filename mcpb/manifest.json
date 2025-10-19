@@ -37,20 +37,11 @@
       "env": {
         "PYTHONPATH": "${__dirname}/src",
         "PYTHONUNBUFFERED": "1",
-        "EXTENSION_ROOT": "${__dirname}",
-        "ADVANCED_MEMORY_HOME": "${__dirname}/data"
+        "EXTENSION_ROOT": "${__dirname}"
       }
     }
   },
   "user_config": {
-    "project_path": {
-      "type": "string",
-      "title": "Main Project Path",
-      "description": "Absolute path to your main Advanced Memory project directory (e.g., C:/Users/yourname/Documents/claude-depot). Use forward slashes. Maps to ADVANCED_MEMORY_HOME environment variable.",
-      "required": true,
-      "sensitive": false,
-      "default": "~/Documents/claude-depot"
-    },
     "index_all_files": {
       "type": "boolean",
       "title": "Index All File Types",
