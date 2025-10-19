@@ -4,6 +4,8 @@ This tool consolidates all export operations: pandoc, docsify, html, joplin, pdf
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+from pathlib import Path
+
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -37,6 +39,7 @@ async def adn_export(
     - archive: Export complete Advanced Memory archive for migration/backup
     - evernote: Export to Evernote-compatible format
     - notion: Export to Notion-compatible format
+    - claude_skills: Export zettelkasten to Claude Skills format (Anthropic agent skills)
 
     EXPORT FEATURES:
     - Multiple format support (PDF, HTML, DOCX, EPUB, etc.)
@@ -99,8 +102,10 @@ async def adn_export(
         return await _evernote_export(export_path, source_folder, include_subfolders, project)
     elif operation == "notion":
         return await _notion_export(export_path, source_folder, include_subfolders, project)
+    elif operation == "claude_skills":
+        return await _claude_skills_export(export_path, source_folder, include_subfolders, project)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
 
 
 async def _pandoc_export(
@@ -215,3 +220,181 @@ async def _notion_export(
 ) -> str:
     """Handle Notion export operation."""
     return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
+
+
+async def _claude_skills_export(
+    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+) -> str:
+    """Export zettelkasten templates to Claude Skills format.
+
+    Args:
+        export_path: Directory to export skills to
+        source_folder: Source folder in Advanced Memory
+        include_subfolders: Recursively include subfolders
+        project: Optional project name
+
+    Returns:
+        Export summary with skill counts and usage instructions
+    """
+    from advanced_memory.mcp.project_session import get_current_project_config
+    from advanced_memory.repository import get_repository
+    from advanced_memory.services.skills_converter import SkillsConverter
+
+    logger.info(f"Starting Claude Skills export: {source_folder} → {export_path}")
+
+    # Get project configuration
+    if project:
+        # TODO: Support non-current projects
+        project_config = get_current_project_config()
+    else:
+        project_config = get_current_project_config()
+
+    # Get repository
+    repo = await get_repository()
+    current_project = await repo.get_project_by_name(project_config.name)
+
+    if not current_project:
+        return "# Error\n\nCurrent project not found in database."
+
+    # Create export directory
+    export_dir = Path(export_path).expanduser()
+    export_dir.mkdir(parents=True, exist_ok=True)
+
+    # Get all entities from source folder
+    entities = await repo.search_entities(
+        project_id=current_project.id,
+        folder_path=source_folder,
+        include_subfolders=include_subfolders,
+    )
+
+    if not entities:
+        return f"# No Content Found\n\nNo notes found in {source_folder}"
+
+    skills_created = 0
+    errors = []
+
+    # Export each entity as a skill
+    for entity in entities:
+        try:
+            # Parse frontmatter from entity metadata
+            frontmatter = entity.entity_metadata or {}
+            frontmatter["title"] = entity.title
+            frontmatter["type"] = entity.entity_type
+
+            # Get entity content
+            content = ""
+            if entity.file_path:
+                file_path = project_config.home / entity.file_path
+                if file_path.exists():
+                    content = file_path.read_text(encoding="utf-8")
+                    # Remove frontmatter from content
+                    from advanced_memory.file_utils import remove_frontmatter
+
+                    content = remove_frontmatter(content)
+
+            # Infer category from file path
+            category = None
+            if entity.file_path:
+                parts = Path(entity.file_path).parts
+                if len(parts) > 0:
+                    category = parts[0]  # First folder = category
+
+            # Convert to Skills format
+            skills_fm = SkillsConverter.zettel_to_skill(frontmatter, content, category)
+
+            # Validate skill name
+            is_valid, error_msg = SkillsConverter.validate_skill_name(skills_fm.name)
+            if not is_valid:
+                errors.append(f"{entity.title}: {error_msg}")
+                continue
+
+            # Create skill directory structure
+            if category:
+                skill_dir = export_dir / category / skills_fm.name
+            else:
+                skill_dir = export_dir / skills_fm.name
+
+            skill_dir.mkdir(parents=True, exist_ok=True)
+
+            # Format and write SKILL.md
+            skill_content = SkillsConverter.format_skill_markdown(skills_fm, content)
+            (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
+
+            # Add MIT license file
+            _write_mit_license(skill_dir)
+
+            skills_created += 1
+            logger.debug(f"Created skill: {skills_fm.name}")
+
+        except Exception as e:
+            logger.error(f"Failed to export {entity.title}: {e}")
+            errors.append(f"{entity.title}: {e}")
+
+    # Generate summary
+    summary_lines = [
+        "# 🎯 Claude Skills Export Complete",
+        "",
+        f"**Created**: {skills_created} skills",
+        f"**Location**: {export_path}",
+        "",
+    ]
+
+    if errors:
+        summary_lines.append(f"⚠️ **Errors**: {len(errors)}")
+        summary_lines.append("")
+        for error in errors[:10]:  # Show first 10
+            summary_lines.append(f"  - {error}")
+        summary_lines.append("")
+
+    summary_lines.extend(
+        [
+            "## 📖 How to Use",
+            "",
+            "**Option 1: Claude Desktop Discovery**",
+            "1. Open Claude Desktop Settings",
+            f"2. Add skills directory: `{export_path}`",
+            "3. Claude will discover these skills automatically",
+            "",
+            "**Option 2: Manual Skill Loading**",
+            "1. Open skill folder in file explorer",
+            "2. Drag SKILL.md into Claude Desktop",
+            "3. Claude loads the skill for current conversation",
+            "",
+            "## 🔧 What's Next",
+            "",
+            "- Skills appear in Claude's skill picker UI",
+            "- Claude can use them to guide responses",
+            "- Update skills by re-exporting from Advanced Memory",
+            "",
+            f"**Total Skills Available**: {skills_created}",
+        ]
+    )
+
+    return "\n".join(summary_lines)
+
+
+def _write_mit_license(skill_dir: Path) -> None:
+    """Write MIT license file to skill directory."""
+    license_text = """MIT License
+
+Copyright (c) 2025 Advanced Memory Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+    (skill_dir / "LICENSE.txt").write_text(license_text, encoding="utf-8")
