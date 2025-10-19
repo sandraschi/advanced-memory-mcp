@@ -115,12 +115,12 @@ async def load_evernote_export(
 
     # Find all .enex files
     if export_path_obj.is_file():
-        if export_path_obj.suffix.lower() == '.enex':
+        if export_path_obj.suffix.lower() == ".enex":
             enex_files = [export_path_obj]
         else:
             return f"Error: File '{export_path}' is not a .enex file"
     else:
-        enex_files = list(export_path_obj.rglob('*.enex'))
+        enex_files = list(export_path_obj.rglob("*.enex"))
 
     if not enex_files:
         return f"No .enex files found in '{export_path}'"
@@ -141,13 +141,17 @@ async def load_evernote_export(
         try:
             logger.info(f"Processing ENEX file: {enex_file}")
             result = await _process_enex_file(
-                enex_file, project_url, folder, preserve_notebooks,
-                include_attachments, attachments_dir
+                enex_file,
+                project_url,
+                folder,
+                preserve_notebooks,
+                include_attachments,
+                attachments_dir,
             )
 
-            if result['success']:
-                created_entities.extend(result['entities'])
-                total_notes += result['note_count']
+            if result["success"]:
+                created_entities.extend(result["entities"])
+                total_notes += result["note_count"]
                 processed_files += 1
             else:
                 errors.append(f"{enex_file.name}: {result['error']}")
@@ -184,7 +188,7 @@ async def _process_enex_file(
     base_folder: str,
     preserve_notebooks: bool,
     include_attachments: bool,
-    attachments_dir: Path | None
+    attachments_dir: Path | None,
 ) -> dict[str, Any]:
     """Process a single ENEX file."""
 
@@ -194,10 +198,10 @@ async def _process_enex_file(
         root = tree.getroot()
 
         # ENEX files have a <note> element for each note
-        notes = root.findall('.//note')
+        notes = root.findall(".//note")
 
         if not notes:
-            return {'success': False, 'error': 'No notes found in ENEX file', 'note_count': 0}
+            return {"success": False, "error": "No notes found in ENEX file", "note_count": 0}
 
         created_entities = []
         processed_notes = 0
@@ -205,40 +209,43 @@ async def _process_enex_file(
         for note_elem in notes:
             try:
                 entity_data = _parse_enex_note(
-                    note_elem, base_folder, preserve_notebooks,
-                    include_attachments, attachments_dir
+                    note_elem, base_folder, preserve_notebooks, include_attachments, attachments_dir
                 )
 
                 if entity_data:
                     # Create the note in Advanced Memory
-                    response = await call_get(project_url + "/api/memory", method='POST', json=entity_data)
+                    response = await call_get(
+                        project_url + "/api/memory", method="POST", json=entity_data
+                    )
 
                     if response.status_code == 200:
                         result_data = response.json()
-                        created_entities.append({
-                            'title': entity_data['title'],
-                            'permalink': result_data.get('permalink', ''),
-                            'notebook': entity_data.get('folder', '').replace(base_folder + '/', ''),
-                            'tags': entity_data.get('tags', [])
-                        })
+                        created_entities.append(
+                            {
+                                "title": entity_data["title"],
+                                "permalink": result_data.get("permalink", ""),
+                                "notebook": entity_data.get("folder", "").replace(
+                                    base_folder + "/", ""
+                                ),
+                                "tags": entity_data.get("tags", []),
+                            }
+                        )
                         processed_notes += 1
                     else:
-                        logger.warning(f"Failed to create note '{entity_data['title']}': {response.text}")
+                        logger.warning(
+                            f"Failed to create note '{entity_data['title']}': {response.text}"
+                        )
 
             except Exception as e:
                 logger.warning(f"Error processing note in {enex_file}: {e}")
                 continue
 
-        return {
-            'success': True,
-            'entities': created_entities,
-            'note_count': processed_notes
-        }
+        return {"success": True, "entities": created_entities, "note_count": processed_notes}
 
     except ET.ParseError as e:
-        return {'success': False, 'error': f'XML parsing error: {e}', 'note_count': 0}
+        return {"success": False, "error": f"XML parsing error: {e}", "note_count": 0}
     except Exception as e:
-        return {'success': False, 'error': str(e), 'note_count': 0}
+        return {"success": False, "error": str(e), "note_count": 0}
 
 
 def _parse_enex_note(
@@ -246,24 +253,24 @@ def _parse_enex_note(
     base_folder: str,
     preserve_notebooks: bool,
     include_attachments: bool,
-    attachments_dir: Path | None
+    attachments_dir: Path | None,
 ) -> dict[str, Any] | None:
     """Parse a single note from ENEX XML."""
 
     # Extract basic metadata
-    title_elem = note_elem.find('title')
+    title_elem = note_elem.find("title")
     if title_elem is None or not title_elem.text:
         return None
 
     title = title_elem.text.strip()
 
     # Extract content (ENEX content is HTML wrapped in CDATA)
-    content_elem = note_elem.find('content')
+    content_elem = note_elem.find("content")
     content_html = ""
     if content_elem is not None and content_elem.text:
         # Remove CDATA wrapper
         content_text = content_elem.text.strip()
-        if content_text.startswith('<![CDATA[') and content_text.endswith(']]>'):
+        if content_text.startswith("<![CDATA[") and content_text.endswith("]]>"):
             content_html = content_text[9:-3]
         else:
             content_html = content_text
@@ -272,26 +279,26 @@ def _parse_enex_note(
     content_md = _evernote_html_to_markdown(content_html)
 
     # Extract creation date
-    created_elem = note_elem.find('created')
+    created_elem = note_elem.find("created")
     created_date = None
     if created_elem is not None and created_elem.text:
         try:
             # ENEX dates are in format: 20231201T123456Z
             date_str = created_elem.text.strip()
-            created_date = datetime.strptime(date_str, '%Y%m%dT%H%M%SZ')
+            created_date = datetime.strptime(date_str, "%Y%m%dT%H%M%SZ")
         except ValueError:
             pass
 
     # Extract tags
     tags = []
-    tag_elems = note_elem.findall('tag')
+    tag_elems = note_elem.findall("tag")
     for tag_elem in tag_elems:
         if tag_elem.text:
             tags.append(tag_elem.text.strip())
 
     # Extract notebook (if available)
     notebook = None
-    notebook_elem = note_elem.find('notebook')
+    notebook_elem = note_elem.find("notebook")
     if notebook_elem is not None and notebook_elem.text:
         notebook = notebook_elem.text.strip()
 
@@ -303,9 +310,7 @@ def _parse_enex_note(
 
     # Handle attachments
     if include_attachments and attachments_dir:
-        content_md, attachment_refs = _process_enex_attachments(
-            note_elem, attachments_dir, title
-        )
+        content_md, attachment_refs = _process_enex_attachments(note_elem, attachments_dir, title)
         if attachment_refs:
             # Add attachment references to content
             content_md += "\n\n## Attachments\n"
@@ -314,15 +319,15 @@ def _parse_enex_note(
 
     # Build entity data
     entity_data = {
-        'title': title,
-        'content': content_md,
-        'folder': folder_path,
-        'content_type': 'markdown'
+        "title": title,
+        "content": content_md,
+        "folder": folder_path,
+        "content_type": "markdown",
     }
 
     # Add tags if any
     if tags:
-        entity_data['tags'] = tags
+        entity_data["tags"] = tags
 
     # Add creation date as frontmatter if available
     if created_date:
@@ -330,7 +335,7 @@ def _parse_enex_note(
         if notebook:
             frontmatter += f"evernote_notebook: {notebook}\n"
         frontmatter += "---\n\n"
-        entity_data['content'] = frontmatter + content_md
+        entity_data["content"] = frontmatter + content_md
 
     return entity_data
 
@@ -345,31 +350,47 @@ def _evernote_html_to_markdown(html_content: str) -> str:
     markdown = html_content
 
     # Headers
-    markdown = re.sub(r'<h1[^>]*>(.*?)</h1>', r'# \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h2[^>]*>(.*?)</h2>', r'## \1', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<h3[^>]*>(.*?)</h3>', r'### \1', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h1[^>]*>(.*?)</h1>", r"# \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h2[^>]*>(.*?)</h2>", r"## \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h3[^>]*>(.*?)</h3>", r"### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Lists
-    markdown = re.sub(r'<ul[^>]*>(.*?)</ul>', _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<ol[^>]*>(.*?)</ol>', _convert_ordered_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(
+        r"<ol[^>]*>(.*?)</ol>",
+        _convert_ordered_list_items,
+        markdown,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
 
     # Links
-    markdown = re.sub(r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', r'[\2](\1)', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>',
+        r"[\2](\1)",
+        markdown,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
 
     # Formatting
-    markdown = re.sub(r'<strong[^>]*>(.*?)</strong>', r'**\1**', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<b[^>]*>(.*?)</b>', r'**\1**', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<em[^>]*>(.*?)</em>', r'*\1*', markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(r'<i[^>]*>(.*?)</i>', r'*\1*', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
+    markdown = re.sub(r"<b[^>]*>(.*?)</b>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<em[^>]*>(.*?)</em>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<i[^>]*>(.*?)</i>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Code
-    markdown = re.sub(r'<code[^>]*>(.*?)</code>', r'`\1`', markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(
+        r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL
+    )
 
     # Remove remaining HTML tags
-    markdown = re.sub(r'<[^>]+>', '', markdown)
+    markdown = re.sub(r"<[^>]+>", "", markdown)
 
     # Clean up whitespace
-    markdown = re.sub(r'\n{3,}', '\n\n', markdown)
+    markdown = re.sub(r"\n{3,}", "\n\n", markdown)
     markdown = markdown.strip()
 
     return markdown
@@ -378,40 +399,38 @@ def _evernote_html_to_markdown(html_content: str) -> str:
 def _convert_list_items(match):
     """Convert HTML list items to markdown."""
     ul_content = match.group(1)
-    items = re.findall(r'<li[^>]*>(.*?)</li>', ul_content, re.IGNORECASE | re.DOTALL)
-    return '\n'.join(f'- {item.strip()}' for item in items)
+    items = re.findall(r"<li[^>]*>(.*?)</li>", ul_content, re.IGNORECASE | re.DOTALL)
+    return "\n".join(f"- {item.strip()}" for item in items)
 
 
 def _convert_ordered_list_items(match):
     """Convert HTML ordered list items to markdown."""
     ol_content = match.group(1)
-    items = re.findall(r'<li[^>]*>(.*?)</li>', ol_content, re.IGNORECASE | re.DOTALL)
-    return '\n'.join(f'{i+1}. {item.strip()}' for i, item in enumerate(items))
+    items = re.findall(r"<li[^>]*>(.*?)</li>", ol_content, re.IGNORECASE | re.DOTALL)
+    return "\n".join(f"{i + 1}. {item.strip()}" for i, item in enumerate(items))
 
 
 def _process_enex_attachments(
-    note_elem: ET.Element,
-    attachments_dir: Path,
-    note_title: str
+    note_elem: ET.Element, attachments_dir: Path, note_title: str
 ) -> tuple[str, list[dict[str, str]]]:
     """Process attachments in ENEX note."""
 
     content = ""
     attachment_refs = []
 
-    resource_elems = note_elem.findall('resource')
+    resource_elems = note_elem.findall("resource")
     for resource_elem in resource_elems:
         try:
             # Extract attachment data
-            data_elem = resource_elem.find('data')
+            data_elem = resource_elem.find("data")
             if data_elem is None or not data_elem.text:
                 continue
 
             # Get filename
             filename = "attachment"
-            resource_attrs = resource_elem.find('resource-attributes')
+            resource_attrs = resource_elem.find("resource-attributes")
             if resource_attrs is not None:
-                file_name_elem = resource_attrs.find('file-name')
+                file_name_elem = resource_attrs.find("file-name")
                 if file_name_elem is not None and file_name_elem.text:
                     filename = file_name_elem.text.strip()
 
@@ -422,18 +441,15 @@ def _process_enex_attachments(
                 continue
 
             # Create safe filename
-            safe_title = re.sub(r'[^\w\-_\.]', '_', note_title)[:50]
+            safe_title = re.sub(r"[^\w\-_\.]", "_", note_title)[:50]
             safe_filename = f"{safe_title}_{filename}"
             attachment_path = attachments_dir / safe_filename
 
             # Save attachment
-            with open(attachment_path, 'wb') as f:
+            with open(attachment_path, "wb") as f:
                 f.write(attachment_data)
 
-            attachment_refs.append({
-                'filename': filename,
-                'path': str(attachment_path)
-            })
+            attachment_refs.append({"filename": filename, "path": str(attachment_path)})
 
         except Exception as e:
             logger.warning(f"Error processing attachment: {e}")

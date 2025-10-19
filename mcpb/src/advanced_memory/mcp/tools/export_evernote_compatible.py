@@ -144,9 +144,10 @@ async def export_evernote_compatible(
         )
 
         from advanced_memory.schemas.search import SearchResponse
+
         search_response = SearchResponse.model_validate(search_response_raw.json())
 
-        if not search_response or not hasattr(search_response, 'results'):
+        if not search_response or not hasattr(search_response, "results"):
             return f"No notes found matching query: {query}"
 
         entities = search_response.results
@@ -162,20 +163,22 @@ async def export_evernote_compatible(
             return f"Failed to retrieve entities: {response.status_code} - {response.text}"
 
         entities_data = response.json()
-        entities = entities_data.get('results', [])
+        entities = entities_data.get("results", [])
 
     if not entities:
         return "No entities found to export"
 
     # Generate ENEX file
-    enex_content = _generate_enex_xml(entities, notebook_name, include_observations, include_relations)
+    enex_content = _generate_enex_xml(
+        entities, notebook_name, include_observations, include_relations
+    )
 
     # Save file
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"advanced_memory_export_{timestamp}.enex"
     file_path = output_dir / filename
 
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(enex_content)
 
     # Generate summary
@@ -195,7 +198,9 @@ async def export_evernote_compatible(
 
     summary += "\n### Import Instructions:\n"
     summary += "1. Open Evernote desktop or web application\n"
-    summary += "2. Go to **File** [UNICODE] **Import** [UNICODE] **Evernote Export Files (.enex)**\n"
+    summary += (
+        "2. Go to **File** [UNICODE] **Import** [UNICODE] **Evernote Export Files (.enex)**\n"
+    )
     summary += f"3. Select the exported `{filename}` file\n"
     summary += f"4. Choose to import into notebook: **{notebook_name}**\n"
     summary += "5. Evernote will create notes with preserved formatting and metadata\n"
@@ -207,7 +212,7 @@ def _generate_enex_xml(
     entities: list[dict[str, Any]],
     notebook_name: str,
     include_observations: bool,
-    include_relations: bool
+    include_relations: bool,
 ) -> str:
     """Generate ENEX XML content from Advanced Memory entities."""
 
@@ -224,16 +229,13 @@ def _generate_enex_xml(
         en_export.append(note_elem)
 
     # Convert to formatted XML
-    rough_string = tostring(en_export, encoding='unicode')
+    rough_string = tostring(en_export, encoding="unicode")
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="  ")
 
 
 def _create_enex_note_element(
-    entity: dict[str, Any],
-    notebook_name: str,
-    include_observations: bool,
-    include_relations: bool
+    entity: dict[str, Any], notebook_name: str, include_observations: bool, include_relations: bool
 ) -> Element:
     """Create a single note element in ENEX format."""
 
@@ -241,7 +243,7 @@ def _create_enex_note_element(
 
     # Title
     title = SubElement(note, "title")
-    title.text = entity.get('title', 'Untitled')
+    title.text = entity.get("title", "Untitled")
 
     # Content (HTML wrapped in CDATA)
     content = SubElement(note, "content")
@@ -263,23 +265,21 @@ def _create_enex_note_element(
 
     # Tags (from relations if enabled)
     if include_relations:
-        relations = entity.get('relations', [])
+        relations = entity.get("relations", [])
         for relation in relations:
             tag = SubElement(note, "tag")
-            tag.text = relation.get('type', 'relation')
+            tag.text = relation.get("type", "relation")
 
     return note
 
 
 def _generate_note_html_content(
-    entity: dict[str, Any],
-    include_observations: bool,
-    include_relations: bool
+    entity: dict[str, Any], include_observations: bool, include_relations: bool
 ) -> str:
     """Generate HTML content for an ENEX note."""
 
-    title = entity.get('title', 'Untitled')
-    content = entity.get('content', '')
+    title = entity.get("title", "Untitled")
+    content = entity.get("content", "")
 
     html = f"""<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
@@ -295,23 +295,23 @@ def _generate_note_html_content(
 
     # Add observations if requested
     if include_observations:
-        observations = entity.get('observations', [])
+        observations = entity.get("observations", [])
         if observations:
             html += "<h2>Observations</h2>\n<ul>\n"
             for obs in observations:
-                category = obs.get('category', 'note')
-                content_obs = obs.get('content', '')
+                category = obs.get("category", "note")
+                content_obs = obs.get("content", "")
                 html += f"<li><strong>{_escape_html(category)}:</strong> {_escape_html(content_obs)}</li>\n"
             html += "</ul>\n"
 
     # Add relations if requested
     if include_relations:
-        relations = entity.get('relations', [])
+        relations = entity.get("relations", [])
         if relations:
             html += "<h2>Relations</h2>\n<ul>\n"
             for relation in relations:
-                rel_type = relation.get('type', 'relates_to')
-                target_title = relation.get('target_title', 'Unknown')
+                rel_type = relation.get("type", "relates_to")
+                target_title = relation.get("target_title", "Unknown")
                 html += f"<li><strong>{_escape_html(rel_type)}:</strong> {_escape_html(target_title)}</li>\n"
             html += "</ul>\n"
 
@@ -329,29 +329,29 @@ def _markdown_to_evernote_html(markdown: str) -> str:
     html = markdown
 
     # Headers
-    html = re.sub(r'^### (.*)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
-    html = re.sub(r'^## (.*)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-    html = re.sub(r'^# (.*)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
+    html = re.sub(r"^### (.*)$", r"<h3>\1</h3>", html, flags=re.MULTILINE)
+    html = re.sub(r"^## (.*)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
+    html = re.sub(r"^# (.*)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
 
     # Bold/Italic
-    html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', html)
-    html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', html)
+    html = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", html)
+    html = re.sub(r"\*(.*?)\*", r"<em>\1</em>", html)
 
     # Code
-    html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
+    html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
 
     # Links
-    html = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', html)
+    html = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', html)
 
     # Lists
-    html = re.sub(r'^- (.*)$', r'<li>\1</li>', html, flags=re.MULTILINE)
-    html = re.sub(r'^(\d+)\. (.*)$', r'<li>\2</li>', html, flags=re.MULTILINE)
+    html = re.sub(r"^- (.*)$", r"<li>\1</li>", html, flags=re.MULTILINE)
+    html = re.sub(r"^(\d+)\. (.*)$", r"<li>\2</li>", html, flags=re.MULTILINE)
 
     # Wrap consecutive list items
-    html = re.sub(r'((?:<li>.*?</li>\s*)+)', r'<ul>\1</ul>', html, flags=re.DOTALL)
+    html = re.sub(r"((?:<li>.*?</li>\s*)+)", r"<ul>\1</ul>", html, flags=re.DOTALL)
 
     # Paragraphs
-    lines = html.split('\n')
+    lines = html.split("\n")
     in_list = False
     result = []
 
@@ -359,23 +359,23 @@ def _markdown_to_evernote_html(markdown: str) -> str:
         line = line.strip()
         if not line:
             continue
-        elif line.startswith('<h') or line.startswith('<ul') or line.startswith('<ol'):
+        elif line.startswith("<h") or line.startswith("<ul") or line.startswith("<ol"):
             result.append(line)
-        elif line.startswith('<li>'):
+        elif line.startswith("<li>"):
             if not in_list:
-                result.append('<ul>')
+                result.append("<ul>")
                 in_list = True
             result.append(line)
         else:
             if in_list:
-                result.append('</ul>')
+                result.append("</ul>")
                 in_list = False
-            result.append(f'<p>{line}</p>')
+            result.append(f"<p>{line}</p>")
 
     if in_list:
-        result.append('</ul>')
+        result.append("</ul>")
 
-    return '\n'.join(result)
+    return "\n".join(result)
 
 
 def _escape_html(text: str) -> str:
@@ -383,9 +383,10 @@ def _escape_html(text: str) -> str:
     if not text:
         return ""
 
-    return (text
-            .replace('&', '&amp;')
-            .replace('<', '&lt;')
-            .replace('>', '&gt;')
-            .replace('"', '&quot;')
-            .replace("'", '&#39;'))
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )

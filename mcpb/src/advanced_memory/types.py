@@ -8,9 +8,9 @@ from typing import TypeVar, Union
 
 # Define PathLike and FilePath types
 PathLike = Union[str, Path]
-FilePath = TypeVar('FilePath', str, Path)
+FilePath = TypeVar("FilePath", str, Path)
 
 __all__ = [
-    'PathLike',
-    'FilePath',
+    "PathLike",
+    "FilePath",
 ]

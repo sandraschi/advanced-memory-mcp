@@ -234,9 +234,7 @@ def search_notes(
 @tool_app.command(name="continue-conversation")
 def continue_conversation(
     topic: Annotated[str | None, typer.Option(help="Topic or keyword to search for")] = None,
-    timeframe: Annotated[
-        str | None, typer.Option(help="How far back to look for activity")
-    ] = None,
+    timeframe: Annotated[str | None, typer.Option(help="How far back to look for activity")] = None,
 ):
     """Prompt to continue a previous conversation or work session."""
     try:

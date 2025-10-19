@@ -19,17 +19,17 @@ from advanced_memory.mcp.tools.read_note import read_note
 def _sanitize_filename(filename: str) -> str:
     """Sanitize filename for Windows compatibility."""
     # Remove Windows-illegal characters: < > : " | ? * \
-    sanitized = re.sub(r'[<>:"|?*\\]', '-', filename)
+    sanitized = re.sub(r'[<>:"|?*\\]', "-", filename)
 
     # Replace multiple hyphens with single hyphen
-    sanitized = re.sub(r'-+', '-', sanitized)
+    sanitized = re.sub(r"-+", "-", sanitized)
 
     # Remove leading/trailing hyphens and spaces
-    sanitized = sanitized.strip('- ')
+    sanitized = sanitized.strip("- ")
 
     # Ensure .md extension
-    if not sanitized.endswith('.md'):
-        sanitized += '.md'
+    if not sanitized.endswith(".md"):
+        sanitized += ".md"
 
     return sanitized
 
@@ -136,33 +136,38 @@ async def export_docsify_enhanced(
         notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
 
         if not notes_data:
-            return f"# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in folder: `{source_folder}`\n\n[UNICODE][UNICODE] **Suggestions**:\n[UNICODE] Check the folder path exists in your knowledge base\n[UNICODE] Try exporting from root folder: `source_folder=\"/\"`\n[UNICODE] Verify project context if using specific project"
+            return f'# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in folder: `{source_folder}`\n\n[UNICODE][UNICODE] **Suggestions**:\n[UNICODE] Check the folder path exists in your knowledge base\n[UNICODE] Try exporting from root folder: `source_folder="/"`\n[UNICODE] Verify project context if using specific project'
 
         # Analyze notes for enhanced features
         notes_analysis = _analyze_notes_for_enhancement(notes_data)
 
         # Create enhanced HTML configuration
         enhanced_html = _create_enhanced_docsify_html(
-            site_title, site_description,
-            enable_pagination, enable_toc, enable_theme_toggle,
-            enable_progress_bar, enable_code_copy, enable_emoji
+            site_title,
+            site_description,
+            enable_pagination,
+            enable_toc,
+            enable_theme_toggle,
+            enable_progress_bar,
+            enable_code_copy,
+            enable_emoji,
         )
 
         # Write enhanced index.html
-        index_path = export_path_obj / 'index.html'
-        with open(index_path, 'w', encoding='utf-8') as f:
+        index_path = export_path_obj / "index.html"
+        with open(index_path, "w", encoding="utf-8") as f:
             f.write(enhanced_html)
 
         # Create enhanced sidebar with icons and metadata
         enhanced_sidebar = _create_enhanced_sidebar(notes_data, export_path_obj)
-        sidebar_path = export_path_obj / '_sidebar.md'
-        with open(sidebar_path, 'w', encoding='utf-8') as f:
+        sidebar_path = export_path_obj / "_sidebar.md"
+        with open(sidebar_path, "w", encoding="utf-8") as f:
             f.write(enhanced_sidebar)
 
         # Create enhanced README with feature overview
         enhanced_readme = _create_enhanced_readme(site_title, site_description, notes_analysis)
-        readme_path = export_path_obj / 'README.md'
-        with open(readme_path, 'w', encoding='utf-8') as f:
+        readme_path = export_path_obj / "README.md"
+        with open(readme_path, "w", encoding="utf-8") as f:
             f.write(enhanced_readme)
 
         # Export all notes as enhanced markdown files
@@ -173,18 +178,20 @@ async def export_docsify_enhanced(
                 enhanced_content = _enhance_note_content(note_info)
 
                 # Create safe filename
-                safe_filename = _sanitize_filename(note_info['title'])
+                safe_filename = _sanitize_filename(note_info["title"])
                 md_path = export_path_obj / safe_filename
 
                 # Write enhanced markdown file
-                with open(md_path, 'w', encoding='utf-8') as f:
+                with open(md_path, "w", encoding="utf-8") as f:
                     f.write(enhanced_content)
 
-                exported_files.append({
-                    'path': str(md_path),
-                    'title': note_info['title'],
-                    'folder': note_info.get('folder', 'root')
-                })
+                exported_files.append(
+                    {
+                        "path": str(md_path),
+                        "title": note_info["title"],
+                        "folder": note_info.get("folder", "root"),
+                    }
+                )
 
                 logger.info(f"Exported enhanced note: {note_info['title']} -> {md_path}")
 
@@ -192,13 +199,13 @@ async def export_docsify_enhanced(
                 logger.error(f"Failed to export note {note_info['title']}: {str(e)}")
 
         # Create .nojekyll for GitHub Pages
-        nojekyll_path = export_path_obj / '.nojekyll'
+        nojekyll_path = export_path_obj / ".nojekyll"
         nojekyll_path.touch()
 
         # Create custom CSS for enhanced styling
         custom_css = _create_enhanced_css()
-        css_path = export_path_obj / 'custom.css'
-        with open(css_path, 'w', encoding='utf-8') as f:
+        css_path = export_path_obj / "custom.css"
+        with open(css_path, "w", encoding="utf-8") as f:
             f.write(custom_css)
 
         # Update HTML to include custom CSS
@@ -206,9 +213,14 @@ async def export_docsify_enhanced(
 
         # Generate final summary with feature status
         feature_summary = _generate_feature_summary(
-            enable_pagination, enable_toc, enable_theme_toggle,
-            enable_progress_bar, enable_code_copy, enable_emoji,
-            len(notes_data), len(exported_files)
+            enable_pagination,
+            enable_toc,
+            enable_theme_toggle,
+            enable_progress_bar,
+            enable_code_copy,
+            enable_emoji,
+            len(notes_data),
+            len(exported_files),
         )
 
         return feature_summary
@@ -263,8 +275,7 @@ async def export_docsify(
 
     # Call the legacy implementation
     return await _legacy_export_docsify(
-        export_path, source_folder, include_subfolders,
-        site_title, site_description, project
+        export_path, source_folder, include_subfolders, site_title, site_description, project
     )
 
 
@@ -274,7 +285,7 @@ async def _legacy_export_docsify(
     include_subfolders: bool,
     site_title: str,
     site_description: str,
-    project: str | None
+    project: str | None,
 ) -> str:
     """Legacy implementation of export_docsify for backward compatibility."""
 
@@ -294,11 +305,7 @@ async def _legacy_export_docsify(
 
         # Process the export using legacy method
         result = await _process_docsify_export(
-            notes_data,
-            export_path_obj,
-            site_title,
-            site_description,
-            project
+            notes_data, export_path_obj, site_title, site_description, project
         )
 
         return result
@@ -311,38 +318,38 @@ async def _legacy_export_docsify(
 def _analyze_notes_for_enhancement(notes_data: list[dict[str, Any]]) -> dict[str, Any]:
     """Analyze notes to determine enhancement features."""
     analysis = {
-        'total_notes': len(notes_data),
-        'folders': set(),
-        'has_mermaid': False,
-        'has_code_blocks': False,
-        'has_tables': False,
-        'has_links': False,
-        'avg_word_count': 0,
-        'max_word_count': 0,
-        'total_word_count': 0
+        "total_notes": len(notes_data),
+        "folders": set(),
+        "has_mermaid": False,
+        "has_code_blocks": False,
+        "has_tables": False,
+        "has_links": False,
+        "avg_word_count": 0,
+        "max_word_count": 0,
+        "total_word_count": 0,
     }
 
     for note in notes_data:
-        content = note.get('content', '')
-        analysis['folders'].add(note.get('folder', 'root'))
+        content = note.get("content", "")
+        analysis["folders"].add(note.get("folder", "root"))
 
         # Check for features
-        if '```mermaid' in content or '``` mermaid' in content:
-            analysis['has_mermaid'] = True
-        if '```' in content:
-            analysis['has_code_blocks'] = True
-        if '|' in content and '\n|' in content:
-            analysis['has_tables'] = True
-        if '[' in content and '](' in content:
-            analysis['has_links'] = True
+        if "```mermaid" in content or "``` mermaid" in content:
+            analysis["has_mermaid"] = True
+        if "```" in content:
+            analysis["has_code_blocks"] = True
+        if "|" in content and "\n|" in content:
+            analysis["has_tables"] = True
+        if "[" in content and "](" in content:
+            analysis["has_links"] = True
 
         # Word count analysis
         word_count = len(content.split())
-        analysis['total_word_count'] += word_count
-        analysis['max_word_count'] = max(analysis['max_word_count'], word_count)
+        analysis["total_word_count"] += word_count
+        analysis["max_word_count"] = max(analysis["max_word_count"], word_count)
 
-    analysis['avg_word_count'] = analysis['total_word_count'] // max(1, len(notes_data))
-    analysis['folders'] = list(analysis['folders'])
+    analysis["avg_word_count"] = analysis["total_word_count"] // max(1, len(notes_data))
+    analysis["folders"] = list(analysis["folders"])
 
     return analysis
 
@@ -355,7 +362,7 @@ def _create_enhanced_docsify_html(
     enable_theme_toggle: bool,
     enable_progress_bar: bool,
     enable_code_copy: bool,
-    enable_emoji: bool
+    enable_emoji: bool,
 ) -> str:
     """Create enhanced HTML with all plugins and modern features."""
 
@@ -626,7 +633,7 @@ def _create_enhanced_docsify_html(
         }}"""
 
     # Remove trailing comma from plugins
-    plugins_js = plugins_js.rstrip(',')
+    plugins_js = plugins_js.rstrip(",")
 
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -675,16 +682,16 @@ def _create_enhanced_docsify_html(
             }},'''
 
     if enable_pagination:
-        html += '''
+        html += """
             // Pagination (book-like navigation)
             pagination: {
                 previousText: '[UNICODE][UNICODE] Previous',
                 nextText: 'Next [UNICODE][UNICODE]',
                 crossChapter: true,
                 crossChapterText: true
-            },'''
+            },"""
 
-    html += '''
+    html += """
             // Theme configuration
             themeable: {
                 readyTransition: true,
@@ -712,12 +719,12 @@ def _create_enhanced_docsify_html(
             },
 
             // Plugin configuration
-            plugins: ['''
+            plugins: ["""
 
     if plugins_js.strip():
         html += plugins_js
 
-    html += '''
+    html += """
             ]
         };
     </script>
@@ -727,18 +734,18 @@ def _create_enhanced_docsify_html(
 
     <!-- Official Plugins -->
     <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>'''
+    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>"""
 
     if enable_emoji:
-        html += '''
-    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/emoji.min.js"></script>'''
+        html += """
+    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/emoji.min.js"></script>"""
 
     if enable_pagination:
-        html += '''
+        html += """
     <!-- Pagination Plugin -->
-    <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>'''
+    <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>"""
 
-    html += '''
+    html += """
     <!-- Mermaid Support -->
     <script src="//cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
@@ -774,7 +781,7 @@ def _create_enhanced_docsify_html(
         });
     </script>
 </body>
-</html>'''
+</html>"""
 
     return html
 
@@ -785,7 +792,7 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
     # Group notes by folders
     folder_structure = {}
     for note in notes_data:
-        folder = note.get('folder', 'root')
+        folder = note.get("folder", "root")
         if folder not in folder_structure:
             folder_structure[folder] = []
         folder_structure[folder].append(note)
@@ -800,29 +807,29 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
     for folder in sorted(folder_structure.keys()):
         notes = folder_structure[folder]
 
-        if folder != 'root':
+        if folder != "root":
             folder_icon = _get_folder_icon(folder)
-            folder_name = folder.replace('_', ' ').title()
+            folder_name = folder.replace("_", " ").title()
             sidebar.append(f"- {folder_icon} **{folder_name}**")
         else:
             sidebar.append("- [DOC] **Documents**")
 
         # Sort notes by title
-        for note in sorted(notes, key=lambda x: x['title']):
-            safe_link = note['md_path'].replace(' ', '%20')
-            title = note['title']
+        for note in sorted(notes, key=lambda x: x["title"]):
+            safe_link = note["md_path"].replace(" ", "%20")
+            title = note["title"]
 
             # Add feature badges
             badges = []
-            content = note.get('content', '')
+            content = note.get("content", "")
 
-            if '```mermaid' in content or '``` mermaid' in content:
+            if "```mermaid" in content or "``` mermaid" in content:
                 badges.append("[CHART]")
-            if '```' in content:
+            if "```" in content:
                 badges.append("[UNICODE][UNICODE]")
-            if '|' in content and '\n|' in content:
+            if "|" in content and "\n|" in content:
                 badges.append("[LIST]")
-            if '[' in content and '](' in content:
+            if "[" in content and "](" in content:
                 badges.append("[LINK]")
 
             # Add word count indicator for long documents
@@ -836,7 +843,7 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
             if badge_str:
                 title += f" {badge_str}"
 
-            indent = "  " if folder != 'root' else ""
+            indent = "  " if folder != "root" else ""
             sidebar.append(f"{indent}- [{title}]({safe_link})")
 
         sidebar.append("")
@@ -853,37 +860,43 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
 def _get_folder_icon(folder: str) -> str:
     """Get appropriate icon for folder type."""
     icon_map = {
-        'research': '[UNICODE][UNICODE]',
-        'projects': '[FOLDER]',
-        'meeting': '[UNICODE][UNICODE]',
-        'notes': '[NOTE]',
-        'docs': '[BOOKS]',
-        'code': '[UNICODE][UNICODE]',
-        'personal': '[UNICODE][UNICODE]',
-        'work': '[UNICODE][UNICODE]',
-        'learning': '[UNICODE][UNICODE]',
-        'ideas': '[UNICODE][UNICODE]',
-        'archive': '[UNICODE][UNICODE]',
-        'templates': '[LIST]',
-        'drafts': '[NOTE]',
-        'published': '[BOOK]'
+        "research": "[UNICODE][UNICODE]",
+        "projects": "[FOLDER]",
+        "meeting": "[UNICODE][UNICODE]",
+        "notes": "[NOTE]",
+        "docs": "[BOOKS]",
+        "code": "[UNICODE][UNICODE]",
+        "personal": "[UNICODE][UNICODE]",
+        "work": "[UNICODE][UNICODE]",
+        "learning": "[UNICODE][UNICODE]",
+        "ideas": "[UNICODE][UNICODE]",
+        "archive": "[UNICODE][UNICODE]",
+        "templates": "[LIST]",
+        "drafts": "[NOTE]",
+        "published": "[BOOK]",
     }
 
     folder_lower = folder.lower()
     for key, icon in icon_map.items():
         if key in folder_lower:
             return icon
-    return '[FOLDER]'  # default folder icon
+    return "[FOLDER]"  # default folder icon
 
 
-def _create_enhanced_readme(site_title: str, site_description: str, analysis: dict[str, Any]) -> str:
+def _create_enhanced_readme(
+    site_title: str, site_description: str, analysis: dict[str, Any]
+) -> str:
     """Create enhanced README with feature overview and statistics."""
 
     features = []
     features.append("## [UNICODE] Enhanced Features\n")
-    features.append("This documentation site includes advanced features for better navigation and user experience:\n")
+    features.append(
+        "This documentation site includes advanced features for better navigation and user experience:\n"
+    )
     features.append("- [SEARCH] **Enhanced Search** - Fast, full-text search across all documents")
-    features.append("- [BOOK] **Auto TOC** - Automatically generated table of contents for each page")
+    features.append(
+        "- [BOOK] **Auto TOC** - Automatically generated table of contents for each page"
+    )
     features.append("- [UNICODE][UNICODE] **Theme Toggle** - Switch between light and dark themes")
     features.append("- [CHART] **Reading Progress** - Visual progress bar")
     features.append("- [LIST] **Copy Code** - One-click code block copying")
@@ -900,13 +913,13 @@ def _create_enhanced_readme(site_title: str, site_description: str, analysis: di
     features.append(f"- **Average Length**: {analysis['avg_word_count']} words per document")
     features.append(f"- **Longest Document**: {analysis['max_word_count']} words")
 
-    if analysis['has_mermaid']:
+    if analysis["has_mermaid"]:
         features.append("- [CHART] **Includes Diagrams** (Mermaid support)")
-    if analysis['has_code_blocks']:
+    if analysis["has_code_blocks"]:
         features.append("- [UNICODE][UNICODE] **Contains Code** (syntax highlighting)")
-    if analysis['has_tables']:
+    if analysis["has_tables"]:
         features.append("- [LIST] **Has Tables** (responsive formatting)")
-    if analysis['has_links']:
+    if analysis["has_links"]:
         features.append("- [LINK] **Contains Links** (enhanced navigation)")
     features.append("")
 
@@ -983,22 +996,22 @@ If you encounter any issues or have suggestions for improvement, please check:
 def _enhance_note_content(note_info: dict[str, Any]) -> str:
     """Enhance note content with metadata and improved formatting."""
 
-    content = note_info.get('content', '')
-    title = note_info.get('title', 'Untitled')
+    content = note_info.get("content", "")
+    title = note_info.get("title", "Untitled")
 
     # Add frontmatter metadata
     frontmatter = f"""---
 title: "{title}"
-created: "{note_info.get('created_at', 'Unknown')}"
-updated: "{note_info.get('updated_at', 'Unknown')}"
-folder: "{note_info.get('folder', 'root')}"
+created: "{note_info.get("created_at", "Unknown")}"
+updated: "{note_info.get("updated_at", "Unknown")}"
+folder: "{note_info.get("folder", "root")}"
 word_count: {len(content.split())}
 ---
 
 """
 
     # Add title if not present
-    if not content.startswith('# '):
+    if not content.startswith("# "):
         enhanced_content = f"# {title}\n\n{content}"
     else:
         enhanced_content = content
@@ -1012,10 +1025,10 @@ word_count: {len(content.split())}
 ---
 
 **Document Information**
-- **Created**: {note_info.get('created_at', 'Unknown')}
-- **Last Updated**: {note_info.get('updated_at', 'Unknown')}
+- **Created**: {note_info.get("created_at", "Unknown")}
+- **Last Updated**: {note_info.get("updated_at", "Unknown")}
 - **Word Count**: {len(content.split())}
-- **Folder**: {note_info.get('folder', 'root')}
+- **Folder**: {note_info.get("folder", "root")}
 """
     enhanced_content += footer
 
@@ -1308,14 +1321,14 @@ def _inject_custom_css_into_html(index_path: Path, css_path: Path):
     """Inject custom CSS link into HTML file."""
 
     try:
-        with open(index_path, encoding='utf-8') as f:
+        with open(index_path, encoding="utf-8") as f:
             content = f.read()
 
         # Add CSS link after existing stylesheets
         css_link = f'    <link rel="stylesheet" href="{css_path.name}">\n'
         content = content.replace('    <link rel="stylesheet" href="custom.css">\n', css_link)
 
-        with open(index_path, 'w', encoding='utf-8') as f:
+        with open(index_path, "w", encoding="utf-8") as f:
             f.write(content)
 
     except Exception as e:
@@ -1330,7 +1343,7 @@ def _generate_feature_summary(
     enable_code_copy: bool,
     enable_emoji: bool,
     total_notes: int,
-    exported_files: int
+    exported_files: int,
 ) -> str:
     """Generate comprehensive feature summary."""
 
@@ -1343,7 +1356,7 @@ def _generate_feature_summary(
         ("[UNICODE][UNICODE] Theme Toggle", enable_theme_toggle, "Light/dark mode switcher"),
         ("[CHART] Progress Bar", enable_progress_bar, "Reading progress indicator"),
         ("[LIST] Copy Code", enable_code_copy, "One-click code copying"),
-        ("[SMILE] Emoji Support", enable_emoji, "Rich emoji rendering")
+        ("[SMILE] Emoji Support", enable_emoji, "Rich emoji rendering"),
     ]
 
     for name, enabled, desc in features:
@@ -1444,9 +1457,7 @@ These features can be enabled by setting parameters to `true`:
 
 
 async def _get_notes_from_folder(
-    source_folder: str,
-    include_subfolders: bool,
-    project: str | None
+    source_folder: str, include_subfolders: bool, project: str | None
 ) -> list[dict[str, Any]]:
     """Get all notes from the specified folder with full content."""
     try:
@@ -1470,6 +1481,7 @@ async def _get_notes_from_folder(
         )
 
         from advanced_memory.schemas.search import SearchResponse
+
         search_result = SearchResponse.model_validate(search_response.json())
 
         notes_data = []
@@ -1482,63 +1494,68 @@ async def _get_notes_from_folder(
             # Check if note is in the requested folder
             if include_subfolders:
                 # Include notes in subfolders
-                folder_matches = note_path.startswith(source_folder.lstrip('/'))
+                folder_matches = note_path.startswith(source_folder.lstrip("/"))
             else:
                 # Only notes directly in the folder
-                note_folder = '/'.join(note_path.split('/')[:-1])  # Remove filename
-                folder_matches = note_folder == source_folder.lstrip('/')
+                note_folder = "/".join(note_path.split("/")[:-1])  # Remove filename
+                folder_matches = note_folder == source_folder.lstrip("/")
 
-            if folder_matches and note_path.endswith('.md'):
+            if folder_matches and note_path.endswith(".md"):
                 # Read the actual note content
                 try:
-                    note_content = await read_note.fn(
-                        identifier=note_title,
-                        project=project
-                    )
+                    note_content = await read_note.fn(identifier=note_title, project=project)
 
                     # Extract just the markdown content (remove any artifact formatting)
                     content = note_content
-                    if content.startswith('# '):
+                    if content.startswith("# "):
                         # Remove any auto-generated headers from view_note
-                        lines = content.split('\n')
+                        lines = content.split("\n")
                         # Skip lines that look like auto-generated metadata
                         filtered_lines = []
                         skip_until_content = False
                         for line in lines:
-                            if line.startswith('*Original path:*') or line.startswith('*Exported:*'):
+                            if line.startswith("*Original path:*") or line.startswith(
+                                "*Exported:*"
+                            ):
                                 continue
-                            if line.strip() == '---' and not skip_until_content:
+                            if line.strip() == "---" and not skip_until_content:
                                 continue
-                            if line.startswith('## Content') or line.startswith('This note has been exported'):
+                            if line.startswith("## Content") or line.startswith(
+                                "This note has been exported"
+                            ):
                                 skip_until_content = True
                                 continue
-                            if skip_until_content or not line.startswith('*Generated by'):
+                            if skip_until_content or not line.startswith("*Generated by"):
                                 filtered_lines.append(line)
 
-                        content = '\n'.join(filtered_lines).strip()
+                        content = "\n".join(filtered_lines).strip()
 
                     # Create safe filename
                     safe_filename = _sanitize_filename(note_title)
 
-                    notes_data.append({
-                        'title': note_title,
-                        'filename': safe_filename,
-                        'path': note_path,
-                        'folder': source_folder,
-                        'content': content
-                    })
+                    notes_data.append(
+                        {
+                            "title": note_title,
+                            "filename": safe_filename,
+                            "path": note_path,
+                            "folder": source_folder,
+                            "content": content,
+                        }
+                    )
 
                 except Exception as e:
                     logger.warning(f"Could not read content for note {note_title}: {e}")
                     # Still include the note but with empty content
                     safe_filename = _sanitize_filename(note_title)
-                    notes_data.append({
-                        'title': note_title,
-                        'filename': safe_filename,
-                        'path': note_path,
-                        'folder': source_folder,
-                        'content': f"# {note_title}\n\n*Content could not be read*"
-                    })
+                    notes_data.append(
+                        {
+                            "title": note_title,
+                            "filename": safe_filename,
+                            "path": note_path,
+                            "folder": source_folder,
+                            "content": f"# {note_title}\n\n*Content could not be read*",
+                        }
+                    )
 
     except Exception as e:
         logger.error(f"Error getting notes from folder {source_folder}: {e}")
@@ -1552,16 +1569,16 @@ async def _process_docsify_export(
     export_path: Path,
     site_title: str,
     site_description: str,
-    project: str | None
+    project: str | None,
 ) -> str:
     """Process the export of notes to Docsify format."""
 
     # Track export statistics
     stats = {
-        'total_notes': len(notes_data),
-        'exported_notes': 0,
-        'created_folders': 0,
-        'failed_exports': 0
+        "total_notes": len(notes_data),
+        "exported_notes": 0,
+        "created_folders": 0,
+        "failed_exports": 0,
     }
 
     # Group notes by folder for sidebar generation
@@ -1571,7 +1588,7 @@ async def _process_docsify_export(
     for note_info in notes_data:
         try:
             # Create simple filename for Docsify compatibility
-            note_id = note_info.get('id', '01')[:8]  # Use note ID for uniqueness
+            note_id = note_info.get("id", "01")[:8]  # Use note ID for uniqueness
             safe_filename = f"note_{note_id}.md"
             md_path = export_path / safe_filename
 
@@ -1579,21 +1596,19 @@ async def _process_docsify_export(
             md_content = _create_markdown_content(note_info, project)
 
             # Write the actual markdown file
-            with open(md_path, 'w', encoding='utf-8') as f:
+            with open(md_path, "w", encoding="utf-8") as f:
                 f.write(md_content)
 
             # Track for sidebar (simplified structure)
-            notes_by_folder.setdefault('root', []).append({
-                'title': note_info['title'],
-                'filename': safe_filename,
-                'md_path': safe_filename
-            })
+            notes_by_folder.setdefault("root", []).append(
+                {"title": note_info["title"], "filename": safe_filename, "md_path": safe_filename}
+            )
 
-            stats['exported_notes'] += 1
+            stats["exported_notes"] += 1
 
         except Exception as e:
             logger.error(f"Failed to export note {note_info['title']}: {e}")
-            stats['failed_exports'] += 1
+            stats["failed_exports"] += 1
 
     # Create Docsify files
     await _create_docsify_files(export_path, notes_by_folder, site_title, site_description)
@@ -1606,7 +1621,9 @@ def _create_markdown_content(note_info: dict[str, Any], project: str | None) -> 
     """Create markdown content for a note using the pre-loaded content."""
     try:
         # Use the content that was already loaded in _get_notes_from_folder
-        content = note_info.get('content', f"# {note_info['title']}\n\n*Content could not be loaded*")
+        content = note_info.get(
+            "content", f"# {note_info['title']}\n\n*Content could not be loaded*"
+        )
 
         # Ensure it has proper formatting
         if not content.strip():
@@ -1620,32 +1637,37 @@ def _create_markdown_content(note_info: dict[str, Any], project: str | None) -> 
 
     except Exception as e:
         logger.error(f"Failed to create markdown content for {note_info['title']}: {e}")
-        return f"""# {note_info['title']}
+        return f"""# {note_info["title"]}
 
 Error creating content: {e}
 
 ---
 
-*Original path: {note_info.get('path', 'Unknown')}*
-*Exported: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*"""
+*Original path: {note_info.get("path", "Unknown")}*
+*Exported: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*"""
 
 
 async def _create_docsify_files(
     export_path: Path,
     notes_by_folder: dict[str, list[dict[str, Any]]],
     site_title: str,
-    site_description: str
+    site_description: str,
 ) -> None:
     """Create the necessary Docsify files."""
 
     # Create index.html
-    index_html = """<!DOCTYPE html>
+    index_html = (
+        """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>""" + site_title + """</title>
+    <title>"""
+        + site_title
+        + """</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="description" content=\"""" + site_description + """\">
+    <meta name="description" content=\""""
+        + site_description
+        + """\">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css" title="dark" disabled>
@@ -1654,7 +1676,9 @@ async def _create_docsify_files(
     <div id="app"></div>
     <script>
         window.$docsify = {{
-            name: '""" + site_title + """',
+            name: '"""
+        + site_title
+        + """',
             loadSidebar: true,
             loadNavbar: true,
             routerMode: 'history',
@@ -1672,10 +1696,11 @@ async def _create_docsify_files(
     <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
 </body>
 </html>"""
+    )
 
     # Write index.html
-    index_path = export_path / 'index.html'
-    with open(index_path, 'w', encoding='utf-8') as f:
+    index_path = export_path / "index.html"
+    with open(index_path, "w", encoding="utf-8") as f:
         f.write(index_html)
 
     # Create _sidebar.md with hierarchical tree structure
@@ -1686,7 +1711,7 @@ async def _create_docsify_files(
 
     # Sort folders and add to sidebar hierarchically
     for folder in sorted(notes_by_folder.keys()):
-        folder_name = folder.replace('_', ' ').title() if folder else 'Home'
+        folder_name = folder.replace("_", " ").title() if folder else "Home"
 
         if folder:
             sidebar_content += f"\n* **{folder_name}**\n"
@@ -1694,14 +1719,14 @@ async def _create_docsify_files(
             sidebar_content += "\n"
 
         # Add notes in this folder with proper indentation
-        for note in sorted(notes_by_folder[folder], key=lambda x: x['title']):
+        for note in sorted(notes_by_folder[folder], key=lambda x: x["title"]):
             indent = "  " if folder else ""
-            link_path = note['md_path']
+            link_path = note["md_path"]
             sidebar_content += f"{indent}* [{note['title']}]({link_path})\n"
 
     # Write _sidebar.md
-    sidebar_path = export_path / '_sidebar.md'
-    with open(sidebar_path, 'w', encoding='utf-8') as f:
+    sidebar_path = export_path / "_sidebar.md"
+    with open(sidebar_path, "w", encoding="utf-8") as f:
         f.write(sidebar_content)
 
     # Create README.md (home page)
@@ -1729,7 +1754,7 @@ Use the sidebar to navigate through the documentation, or use the search box to 
 
 - **Total Documents:** {sum(len(notes) for notes in notes_by_folder.values())}
 - **Categories:** {len(notes_by_folder)}
-- **Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ---
 
@@ -1737,12 +1762,12 @@ Use the sidebar to navigate through the documentation, or use the search box to 
 """
 
     # Write README.md
-    readme_path = export_path / 'README.md'
-    with open(readme_path, 'w', encoding='utf-8') as f:
+    readme_path = export_path / "README.md"
+    with open(readme_path, "w", encoding="utf-8") as f:
         f.write(readme_content)
 
     # Create .nojekyll file (for GitHub Pages)
-    nojekyll_path = export_path / '.nojekyll'
+    nojekyll_path = export_path / ".nojekyll"
     nojekyll_path.touch()
 
     # Create docsify configuration file (optional)
@@ -1753,90 +1778,94 @@ Use the sidebar to navigate through the documentation, or use the search box to 
         "exported_by": "Advanced Memory",
         "exported_at": datetime.now().isoformat(),
         "note_count": sum(len(notes) for notes in notes_by_folder.values()),
-        "folder_count": len(notes_by_folder)
+        "folder_count": len(notes_by_folder),
     }
 
-    config_path = export_path / 'docsify-config.json'
-    with open(config_path, 'w', encoding='utf-8') as f:
+    config_path = export_path / "docsify-config.json"
+    with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
 
 
-def _generate_export_report(
-    stats: dict[str, Any],
-    export_path: Path,
-    site_title: str
-) -> str:
+def _generate_export_report(stats: dict[str, Any], export_path: Path, site_title: str) -> str:
     """Generate a comprehensive export report."""
     lines = [
         "# Docsify Export Complete",
         f"**Export location:** {export_path}",
         f"**Site title:** {site_title}",
         f"**Export completed:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-        ""
+        "",
     ]
 
     # Statistics
-    lines.extend([
-        "## Export Statistics",
-        f"- **Total notes processed:** {stats['total_notes']}",
-        f"- **Successfully exported:** {stats['exported_notes']}",
-        f"- **Failed exports:** {stats['failed_exports']}",
-        f"- **Folders created:** {stats['created_folders']}",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Export Statistics",
+            f"- **Total notes processed:** {stats['total_notes']}",
+            f"- **Successfully exported:** {stats['exported_notes']}",
+            f"- **Failed exports:** {stats['failed_exports']}",
+            f"- **Folders created:** {stats['created_folders']}",
+            "",
+        ]
+    )
 
     # Success rate
-    if stats['total_notes'] > 0:
-        success_rate = stats['exported_notes'] / stats['total_notes'] * 100
+    if stats["total_notes"] > 0:
+        success_rate = stats["exported_notes"] / stats["total_notes"] * 100
         lines.append(f"**Success rate:** {success_rate:.1f}%")
         lines.append("")
 
     # Docsify features
-    lines.extend([
-        "## Docsify Features Created",
-        "- **index.html:** Main entry point with Docsify configuration",
-        "- **README.md:** Home page with site overview",
-        "- **_sidebar.md:** Navigation sidebar with all documents",
-        "- **.nojekyll:** GitHub Pages compatibility file",
-        "- **docsify-config.json:** Export metadata and configuration",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Docsify Features Created",
+            "- **index.html:** Main entry point with Docsify configuration",
+            "- **README.md:** Home page with site overview",
+            "- **_sidebar.md:** Navigation sidebar with all documents",
+            "- **.nojekyll:** GitHub Pages compatibility file",
+            "- **docsify-config.json:** Export metadata and configuration",
+            "",
+        ]
+    )
 
     # Files created
-    lines.extend([
-        "## Files Generated",
-        f"- **Markdown files:** {stats['exported_notes']} documents",
-        "- **HTML framework:** 1 index page",
-        "- **Navigation:** 1 sidebar file",
-        "- **Configuration:** 2 config files",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Files Generated",
+            f"- **Markdown files:** {stats['exported_notes']} documents",
+            "- **HTML framework:** 1 index page",
+            "- **Navigation:** 1 sidebar file",
+            "- **Configuration:** 2 config files",
+            "",
+        ]
+    )
 
     # How to use
-    lines.extend([
-        "## How to Use Your Docsify Site",
-        "",
-        "### Local Development:",
-        f"1. **Navigate to the export folder:** `cd {export_path}`",
-        "2. **Start a local server:** `python -m http.server 3000`",
-        "3. **Open in browser:** `http://localhost:3000`",
-        "",
-        "### GitHub Pages Deployment:",
-        f"1. **Upload the `{export_path}` folder to GitHub**",
-        "2. **Enable GitHub Pages** in repository settings",
-        "3. **Access your site** at `https://username.github.io/repository/`",
-        "",
-        "### Other Hosting:",
-        "Upload the entire folder to any web server or static hosting service.",
-        "",
-        "## Docsify Features Available",
-        "- **Full-text search** across all documents",
-        "- **Responsive design** for mobile and desktop",
-        "- **Table of contents** for each page",
-        "- **Emoji support** in markdown",
-        "- **Image zoom** on click",
-        "- **Pagination** between pages",
-        ""
-    ])
+    lines.extend(
+        [
+            "## How to Use Your Docsify Site",
+            "",
+            "### Local Development:",
+            f"1. **Navigate to the export folder:** `cd {export_path}`",
+            "2. **Start a local server:** `python -m http.server 3000`",
+            "3. **Open in browser:** `http://localhost:3000`",
+            "",
+            "### GitHub Pages Deployment:",
+            f"1. **Upload the `{export_path}` folder to GitHub**",
+            "2. **Enable GitHub Pages** in repository settings",
+            "3. **Access your site** at `https://username.github.io/repository/`",
+            "",
+            "### Other Hosting:",
+            "Upload the entire folder to any web server or static hosting service.",
+            "",
+            "## Docsify Features Available",
+            "- **Full-text search** across all documents",
+            "- **Responsive design** for mobile and desktop",
+            "- **Table of contents** for each page",
+            "- **Emoji support** in markdown",
+            "- **Image zoom** on click",
+            "- **Pagination** between pages",
+            "",
+        ]
+    )
 
     return "\n".join(lines)

@@ -1,6 +1,5 @@
 """Sync status tool for Advanced Memory MCP server."""
 
-
 from loguru import logger
 
 from advanced_memory.config import ConfigManager

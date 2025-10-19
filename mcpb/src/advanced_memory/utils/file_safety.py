@@ -19,27 +19,30 @@ from loguru import logger
 # Type aliases
 FilePath = Union[str, Path]
 
+
 class FileSafetyError(Exception):
     """Base exception for file safety operations."""
+
     pass
+
 
 class FileSafety:
     """Safe file operations with trash and logging."""
 
     # Directories that should never be deleted
     PROTECTED_DIRS = {
-        '.git',
-        '.hg',
-        '.svn',
-        '.trash',  # Don't delete the trash!
+        ".git",
+        ".hg",
+        ".svn",
+        ".trash",  # Don't delete the trash!
     }
 
     # File patterns that should never be deleted
     PROTECTED_PATTERNS = {
-        '.gitignore',
-        '.gitmodules',
-        'README.md',
-        'LICENSE*',
+        ".gitignore",
+        ".gitmodules",
+        "README.md",
+        "LICENSE*",
     }
 
     # Maximum file size to move to trash (in bytes)
@@ -55,7 +58,7 @@ class FileSafety:
         self.base_path = Path(base_path).resolve()
 
         # Set up trash directory
-        self.trash_dir = Path(trash_dir) if trash_dir else self.base_path / '.trash'
+        self.trash_dir = Path(trash_dir) if trash_dir else self.base_path / ".trash"
         self._ensure_trash_dir()
 
         # Set up logging
@@ -63,7 +66,7 @@ class FileSafety:
 
     def setup_logging(self) -> None:
         """Set up file operation logging."""
-        self.log_file = self.base_path / '.trash' / 'file_operations.log'
+        self.log_file = self.base_path / ".trash" / "file_operations.log"
 
         # Configure loguru logger for this module
         logger.add(
@@ -80,20 +83,21 @@ class FileSafety:
         try:
             self.trash_dir.mkdir(parents=True, exist_ok=True)
             # Make trash dir hidden on Windows
-            if os.name == 'nt':
+            if os.name == "nt":
                 import ctypes
+
                 ctypes.windll.kernel32.SetFileAttributesW(str(self.trash_dir), 0x02)
         except Exception as e:
             raise FileSafetyError(f"Failed to create trash directory: {e}")
 
     def _log_operation(self, operation: str, path: FilePath, **kwargs) -> None:
         """Log a file operation."""
-        path_str = str(Path(path).relative_to(self.base_path) if Path(path).is_relative_to(self.base_path) else path)
-        log_msg = {
-            "operation": operation,
-            "path": path_str,
-            **kwargs
-        }
+        path_str = str(
+            Path(path).relative_to(self.base_path)
+            if Path(path).is_relative_to(self.base_path)
+            else path
+        )
+        log_msg = {"operation": operation, "path": path_str, **kwargs}
         logger.info(str(log_msg))
 
     def _is_safe_path(self, path: FilePath) -> bool:
@@ -147,10 +151,9 @@ class FileSafety:
         try:
             shutil.move(str(path), str(trash_path))
             # Save original path in metadata
-            (trash_path.with_suffix(trash_path.suffix + '.meta')).write_text(
-                f"original_path={str(path.absolute())}\n"
-                f"deleted_at={datetime.now().isoformat()}\n",
-                encoding='utf-8'
+            (trash_path.with_suffix(trash_path.suffix + ".meta")).write_text(
+                f"original_path={str(path.absolute())}\ndeleted_at={datetime.now().isoformat()}\n",
+                encoding="utf-8",
             )
             return trash_path
         except Exception as e:
@@ -171,7 +174,7 @@ class FileSafety:
 
             if path.is_dir():
                 # For directories, move contents to trash first
-                for item in path.glob('*'):
+                for item in path.glob("*"):
                     self.safe_delete(item)
                 path.rmdir()  # Remove empty directory
             else:
@@ -211,29 +214,31 @@ class FileSafety:
         """List all files in trash with metadata."""
         trash_items = []
 
-        for item in self.trash_dir.glob('*'):
-            if item.suffix == '.meta' or item.name == 'file_operations.log':
+        for item in self.trash_dir.glob("*"):
+            if item.suffix == ".meta" or item.name == "file_operations.log":
                 continue
 
-            meta_file = item.with_suffix(item.suffix + '.meta')
+            meta_file = item.with_suffix(item.suffix + ".meta")
             meta = {}
 
             if meta_file.exists():
                 try:
                     meta = {
-                        line.split('=', 1)[0]: line.split('=', 1)[1].strip()
-                        for line in meta_file.read_text(encoding='utf-8').splitlines()
-                        if '=' in line
+                        line.split("=", 1)[0]: line.split("=", 1)[1].strip()
+                        for line in meta_file.read_text(encoding="utf-8").splitlines()
+                        if "=" in line
                     }
                 except Exception as e:
                     logger.warning(f"Failed to read metadata for {item}: {e}")
 
-            trash_items.append({
-                'path': str(item.relative_to(self.trash_dir)),
-                'size': item.stat().st_size if item.is_file() else 0,
-                'deleted_at': meta.get('deleted_at', 'unknown'),
-                'original_path': meta.get('original_path', 'unknown'),
-            })
+            trash_items.append(
+                {
+                    "path": str(item.relative_to(self.trash_dir)),
+                    "size": item.stat().st_size if item.is_file() else 0,
+                    "deleted_at": meta.get("deleted_at", "unknown"),
+                    "original_path": meta.get("original_path", "unknown"),
+                }
+            )
 
         return trash_items
 
@@ -242,8 +247,8 @@ class FileSafety:
         count = 0
         cutoff = datetime.now().timestamp() - (older_than_days * 86400)
 
-        for item in self.trash_dir.glob('*'):
-            if item.name == 'file_operations.log':
+        for item in self.trash_dir.glob("*"):
+            if item.name == "file_operations.log":
                 continue
 
             try:
@@ -252,10 +257,10 @@ class FileSafety:
                         shutil.rmtree(item)
                     else:
                         # Also remove any .meta file
-                        if item.suffix == '.meta':
+                        if item.suffix == ".meta":
                             item.unlink()
                         else:
-                            meta_file = item.with_suffix(item.suffix + '.meta')
+                            meta_file = item.with_suffix(item.suffix + ".meta")
                             if meta_file.exists():
                                 meta_file.unlink()
                             item.unlink()
@@ -264,6 +269,7 @@ class FileSafety:
                 logger.error(f"Failed to delete {item} from trash: {e}")
 
         return count
+
 
 # Global instance for convenience
 file_safety = FileSafety(Path.cwd())

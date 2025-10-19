@@ -25,7 +25,7 @@ Environment = Literal["test", "dev", "user"]
 @dataclass
 class ProjectConfig:
     """Configuration for a specific Advanced Memory project.
-    
+
     Projects are logical groupings of content that share a file system root.
     All project data is stored in the global database with project_id scoping.
     """
@@ -81,12 +81,12 @@ class AdvancedMemoryConfig(BaseSettings):
         default=True,
         description="Whether to sync changes in real time. default (True)",
     )
-    
+
     # File type filtering configuration
     index_all_files: bool = Field(
         default=True,
         description="Whether to index all file types or only markdown (.md) files. "
-                    "Set to False to only index markdown files. default (True)",
+        "Set to False to only index markdown files. default (True)",
     )
 
     # API connection configuration
@@ -116,9 +116,7 @@ class AdvancedMemoryConfig(BaseSettings):
         """Ensure configuration is valid after initialization."""
         # Ensure main project exists
         if "main" not in self.projects:  # pragma: no cover
-            self.projects["main"] = str(
-                Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home()))
-            )
+            self.projects["main"] = str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))
 
         # Ensure default project is valid
         if self.default_project not in self.projects:  # pragma: no cover

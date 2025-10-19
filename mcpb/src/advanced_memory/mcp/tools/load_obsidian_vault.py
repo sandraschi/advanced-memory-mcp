@@ -129,7 +129,9 @@ async def load_obsidian_vault(
         logger.info(f"Starting Obsidian vault import: {vault_path} -> {destination_folder}")
 
         # Find all relevant files
-        markdown_files, attachment_files = await _scan_vault_files(vault_path_obj, include_attachments)
+        markdown_files, attachment_files = await _scan_vault_files(
+            vault_path_obj, include_attachments
+        )
 
         if not markdown_files:
             return f"# Vault Import Complete\n\nNo markdown files found in vault: {vault_path}"
@@ -144,7 +146,7 @@ async def load_obsidian_vault(
             convert_links,
             include_attachments,
             skip_existing,
-            project
+            project,
         )
 
         return result
@@ -154,13 +156,26 @@ async def load_obsidian_vault(
         return f"# Vault Import Failed\n\nUnexpected error: {e}"
 
 
-async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tuple[list[Path], list[Path]]:
+async def _scan_vault_files(
+    vault_path: Path, include_attachments: bool
+) -> tuple[list[Path], list[Path]]:
     """Scan vault for markdown and attachment files."""
     markdown_files = []
     attachment_files = []
 
     # Common attachment extensions
-    attachment_exts = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.pdf', '.doc', '.docx', '.xls', '.xlsx'}
+    attachment_exts = {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".webp",
+        ".pdf",
+        ".doc",
+        ".docx",
+        ".xls",
+        ".xlsx",
+    }
 
     try:
         # Use MCP filesystem if available, otherwise direct access
@@ -174,20 +189,22 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
                 try:
                     dir_contents = await list_directory(current_path)
 
-                    lines = dir_contents.split('\n')
+                    lines = dir_contents.split("\n")
                     for line in lines:
-                        if '[DOC]' in line:
+                        if "[DOC]" in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
                                 file_path = os.path.join(current_path, filename)
 
-                                if filename.endswith('.md'):
+                                if filename.endswith(".md"):
                                     md_files.append(file_path)
-                                elif include_attachments and any(filename.lower().endswith(ext) for ext in attachment_exts):
+                                elif include_attachments and any(
+                                    filename.lower().endswith(ext) for ext in attachment_exts
+                                ):
                                     att_files.append(file_path)
 
-                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
+                        elif "[FOLDER]" in line and not line.strip().endswith("."):
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
@@ -211,7 +228,7 @@ async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tupl
 
             for file_path in vault_path.rglob("*"):
                 if file_path.is_file():
-                    if file_path.suffix.lower() == '.md':
+                    if file_path.suffix.lower() == ".md":
                         markdown_files.append(file_path)
                     elif include_attachments and file_path.suffix.lower() in attachment_exts:
                         attachment_files.append(file_path)
@@ -231,23 +248,25 @@ async def _process_vault_import(
     convert_links: bool,
     include_attachments: bool,
     skip_existing: bool,
-    project: str | None
+    project: str | None,
 ) -> str:
     """Process the vault import with all files."""
 
     # Track import statistics
     stats = {
-        'total_files': len(markdown_files),
-        'imported_files': 0,
-        'skipped_files': 0,
-        'failed_files': 0,
-        'converted_links': 0,
-        'attachments_copied': 0,
-        'folders_created': set()
+        "total_files": len(markdown_files),
+        "imported_files": 0,
+        "skipped_files": 0,
+        "failed_files": 0,
+        "converted_links": 0,
+        "attachments_copied": 0,
+        "folders_created": set(),
     }
 
     # Build file mapping for link conversion
-    file_mapping = await _build_file_mapping(vault_path, markdown_files, destination_folder, preserve_structure)
+    file_mapping = await _build_file_mapping(
+        vault_path, markdown_files, destination_folder, preserve_structure
+    )
 
     # Process markdown files
     processed_files = []
@@ -263,27 +282,27 @@ async def _process_vault_import(
             if skip_existing:
                 try:
                     existing = await search_notes.fn(
-                        query=dest_path,
-                        search_type="permalink",
-                        project=project
+                        query=dest_path, search_type="permalink", project=project
                     )
                     if existing.results:
                         logger.info(f"Skipping existing file: {dest_path}")
-                        stats['skipped_files'] += 1
+                        stats["skipped_files"] += 1
                         continue
                 except Exception:
                     pass  # Continue with import if search fails
 
             # Read and process file content
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
 
             # Extract and process frontmatter
             frontmatter, body = _parse_frontmatter(content)
 
             # Convert wikilinks if requested
             if convert_links:
-                body, link_conversions = _convert_wikilinks(body, file_mapping, vault_path, file_path)
-                stats['converted_links'] += link_conversions
+                body, link_conversions = _convert_wikilinks(
+                    body, file_mapping, vault_path, file_path
+                )
+                stats["converted_links"] += link_conversions
 
             # Create the note
             title = _extract_title_from_content(body, file_path)
@@ -294,40 +313,38 @@ async def _process_vault_import(
             full_content = body + import_metadata
 
             await write_note.fn(
-                title=title,
-                content=full_content,
-                folder=dest_path,
-                project=project
+                title=title, content=full_content, folder=dest_path, project=project
             )
 
-            stats['imported_files'] += 1
-            processed_files.append({
-                'original_path': str(file_path.relative_to(vault_path)),
-                'destination_path': dest_path,
-                'title': title,
-                'links_converted': link_conversions if convert_links else 0
-            })
+            stats["imported_files"] += 1
+            processed_files.append(
+                {
+                    "original_path": str(file_path.relative_to(vault_path)),
+                    "destination_path": dest_path,
+                    "title": title,
+                    "links_converted": link_conversions if convert_links else 0,
+                }
+            )
 
             # Track folder creation
             folder_path = dest_path
-            while '/' in folder_path:
-                folder_path = folder_path.rsplit('/', 1)[0]
-                stats['folders_created'].add(folder_path)
+            while "/" in folder_path:
+                folder_path = folder_path.rsplit("/", 1)[0]
+                stats["folders_created"].add(folder_path)
 
         except Exception as e:
             logger.error(f"Failed to import {file_path}: {e}")
-            stats['failed_files'] += 1
-            processed_files.append({
-                'original_path': str(file_path.relative_to(vault_path)),
-                'error': str(e)
-            })
+            stats["failed_files"] += 1
+            processed_files.append(
+                {"original_path": str(file_path.relative_to(vault_path)), "error": str(e)}
+            )
 
     # Process attachments if requested
     if include_attachments and attachment_files:
         for att_path in attachment_files:
             try:
                 # For now, just count them - actual copying would require file upload capabilities
-                stats['attachments_copied'] += 1
+                stats["attachments_copied"] += 1
                 logger.info(f"Would copy attachment: {att_path}")
             except Exception as e:
                 logger.error(f"Failed to copy attachment {att_path}: {e}")
@@ -338,25 +355,25 @@ async def _process_vault_import(
 
 def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """Parse YAML frontmatter from markdown content."""
-    if not content.startswith('---'):
+    if not content.startswith("---"):
         return {}, content
 
-    lines = content.split('\n')
+    lines = content.split("\n")
     if len(lines) < 3:
         return {}, content
 
     # Find end of frontmatter
     end_idx = -1
     for i, line in enumerate(lines[1:], 1):
-        if line.strip() == '---':
+        if line.strip() == "---":
             end_idx = i
             break
 
     if end_idx == -1:
         return {}, content
 
-    frontmatter_text = '\n'.join(lines[1:end_idx])
-    body = '\n'.join(lines[end_idx + 1:])
+    frontmatter_text = "\n".join(lines[1:end_idx])
+    body = "\n".join(lines[end_idx + 1 :])
 
     try:
         frontmatter = yaml.safe_load(frontmatter_text) or {}
@@ -368,11 +385,11 @@ def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:
 
 def _extract_title_from_content(content: str, file_path: Path) -> str:
     """Extract title from content or filename."""
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Look for first heading
     for line in lines:
-        if line.startswith('# '):
+        if line.startswith("# "):
             return line[2:].strip()
 
     # Fallback to filename
@@ -380,17 +397,14 @@ def _extract_title_from_content(content: str, file_path: Path) -> str:
 
 
 async def _build_file_mapping(
-    vault_path: Path,
-    markdown_files: list[Path],
-    destination_folder: str,
-    preserve_structure: bool
+    vault_path: Path, markdown_files: list[Path], destination_folder: str, preserve_structure: bool
 ) -> dict[str, str]:
     """Build mapping from original filenames to new paths for link conversion."""
     mapping = {}
 
     for file_path in markdown_files:
         rel_path = file_path.relative_to(vault_path)
-        original_name = str(rel_path.with_suffix(''))  # Remove .md extension
+        original_name = str(rel_path.with_suffix(""))  # Remove .md extension
 
         dest_path = _calculate_destination_path(
             file_path, vault_path, destination_folder, preserve_structure
@@ -405,10 +419,7 @@ async def _build_file_mapping(
 
 
 def _calculate_destination_path(
-    file_path: Path,
-    vault_path: Path,
-    destination_folder: str,
-    preserve_structure: bool
+    file_path: Path, vault_path: Path, destination_folder: str, preserve_structure: bool
 ) -> str:
     """Calculate the destination path for a file."""
     if not preserve_structure:
@@ -418,13 +429,15 @@ def _calculate_destination_path(
     rel_path = file_path.relative_to(vault_path)
     rel_dir = str(rel_path.parent)
 
-    if rel_dir == '.':
+    if rel_dir == ".":
         return f"{destination_folder}/{file_path.stem}"
     else:
         return f"{destination_folder}/{rel_dir}/{file_path.stem}"
 
 
-def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: Path, current_file: Path) -> tuple[str, int]:
+def _convert_wikilinks(
+    content: str, file_mapping: dict[str, str], vault_path: Path, current_file: Path
+) -> tuple[str, int]:
     """Convert Obsidian wikilinks to Advanced Memory format."""
     conversions = 0
 
@@ -433,8 +446,8 @@ def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: P
         link_text = match.group(1)
 
         # Handle [[link|alias]] format
-        if '|' in link_text:
-            link_target, display_text = link_text.split('|', 1)
+        if "|" in link_text:
+            link_target, display_text = link_text.split("|", 1)
             link_target = link_target.strip()
             display_text = display_text.strip()
         else:
@@ -453,7 +466,7 @@ def _convert_wikilinks(content: str, file_mapping: dict[str, str], vault_path: P
             return match.group(0)
 
     # Convert [[link]] and [[link|alias]] patterns
-    pattern = r'\[\[([^\]]+)\]\]'
+    pattern = r"\[\[([^\]]+)\]\]"
     converted_content = re.sub(pattern, replace_link, content)
 
     return converted_content, conversions
@@ -463,7 +476,7 @@ def _generate_import_report(
     stats: dict[str, Any],
     processed_files: list[dict[str, Any]],
     vault_path: str,
-    destination_folder: str
+    destination_folder: str,
 ) -> str:
     """Generate a comprehensive import report."""
     lines = [
@@ -471,26 +484,28 @@ def _generate_import_report(
         f"**Source vault:** {vault_path}",
         f"**Destination folder:** {destination_folder}",
         f"**Import completed:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-        ""
+        "",
     ]
 
     # Statistics
-    lines.extend([
-        "## Import Statistics",
-        f"- **Total markdown files:** {stats['total_files']}",
-        f"- **Successfully imported:** {stats['imported_files']}",
-        f"- **Skipped (existing):** {stats['skipped_files']}",
-        f"- **Failed to import:** {stats['failed_files']}",
-        f"- **Links converted:** {stats['converted_links']}",
-        f"- **Attachments processed:** {stats['attachments_copied']}",
-        f"- **Folders created:** {len(stats['folders_created'])}",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Import Statistics",
+            f"- **Total markdown files:** {stats['total_files']}",
+            f"- **Successfully imported:** {stats['imported_files']}",
+            f"- **Skipped (existing):** {stats['skipped_files']}",
+            f"- **Failed to import:** {stats['failed_files']}",
+            f"- **Links converted:** {stats['converted_links']}",
+            f"- **Attachments processed:** {stats['attachments_copied']}",
+            f"- **Folders created:** {len(stats['folders_created'])}",
+            "",
+        ]
+    )
 
     # Success rate
-    total_processed = stats['imported_files'] + stats['skipped_files'] + stats['failed_files']
+    total_processed = stats["imported_files"] + stats["skipped_files"] + stats["failed_files"]
     if total_processed > 0:
-        success_rate = (stats['imported_files'] + stats['skipped_files']) / total_processed * 100
+        success_rate = (stats["imported_files"] + stats["skipped_files"]) / total_processed * 100
         lines.append(f"**Success rate:** {success_rate:.1f}%")
         lines.append("")
 
@@ -498,24 +513,34 @@ def _generate_import_report(
     if processed_files:
         lines.append("## Processed Files")
         for file_info in processed_files[:20]:  # Limit to first 20
-            if 'error' in file_info:
-                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
+            if "error" in file_info:
+                lines.append(
+                    f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}"
+                )
             else:
-                links_text = f" ({file_info['links_converted']} links converted)" if file_info.get('links_converted', 0) > 0 else ""
-                lines.append(f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}")
+                links_text = (
+                    f" ({file_info['links_converted']} links converted)"
+                    if file_info.get("links_converted", 0) > 0
+                    else ""
+                )
+                lines.append(
+                    f"- [UNICODE] **{file_info['original_path']}** [UNICODE] {file_info['destination_path']}{links_text}"
+                )
 
         if len(processed_files) > 20:
             lines.append(f"- ... and {len(processed_files) - 20} more files")
         lines.append("")
 
     # Recommendations
-    lines.extend([
-        "## Next Steps",
-        "1. **Review imported content** - Check that links and formatting converted correctly",
-        "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
-        "3. **Update links** - Any remaining wikilinks may need manual conversion",
-        "4. **Verify attachments** - If attachments were included, check they're accessible",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Next Steps",
+            "1. **Review imported content** - Check that links and formatting converted correctly",
+            "2. **Run sync** - Execute 'advanced-memory sync' to index the new content",
+            "3. **Update links** - Any remaining wikilinks may need manual conversion",
+            "4. **Verify attachments** - If attachments were included, check they're accessible",
+            "",
+        ]
+    )
 
     return "\n".join(lines)

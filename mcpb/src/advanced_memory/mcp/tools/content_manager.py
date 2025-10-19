@@ -117,7 +117,13 @@ async def adn_content(
         return await _view_operation(active_project, identifier, page, page_size)
     elif operation == "edit":
         return await _edit_operation(
-            active_project, identifier, edit_operation, content, find_text, expected_replacements, section
+            active_project,
+            identifier,
+            edit_operation,
+            content,
+            find_text,
+            expected_replacements,
+            section,
         )
     elif operation == "move":
         return await _move_operation(active_project, identifier, destination_path)
@@ -213,6 +219,7 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
         return "# Error\n\nRead operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.read_note import read_note
+
     return await read_note.fn(identifier, page, page_size, active_project.name)
 
 
@@ -222,16 +229,24 @@ async def _view_operation(active_project, identifier: str, page: int, page_size:
         return "# Error\n\nView operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.view_note import view_note
+
     return await view_note.fn(identifier, page, page_size, active_project.name)
 
 
 async def _edit_operation(
-    active_project, identifier: str, edit_operation: str, content: str,
-    find_text: str | None, expected_replacements: int, section: str | None
+    active_project,
+    identifier: str,
+    edit_operation: str,
+    content: str,
+    find_text: str | None,
+    expected_replacements: int,
+    section: str | None,
 ) -> str:
     """Handle edit operation."""
     if not identifier or not edit_operation or not content:
-        return "# Error\n\nEdit operation requires: identifier, edit_operation, and content parameters"
+        return (
+            "# Error\n\nEdit operation requires: identifier, edit_operation, and content parameters"
+        )
 
     # Validate edit operation
     valid_operations = ["append", "prepend", "find_replace", "replace_section"]
@@ -333,6 +348,7 @@ async def _move_operation(active_project, identifier: str, destination_path: str
         return "# Error\n\nMove operation requires: identifier and destination_path parameters"
 
     from advanced_memory.mcp.tools.move_note import move_note
+
     return await move_note.fn(identifier, destination_path, active_project.name)
 
 
@@ -342,4 +358,5 @@ async def _delete_operation(active_project, identifier: str) -> str:
         return "# Error\n\nDelete operation requires: identifier parameter"
 
     from advanced_memory.mcp.tools.delete_note import delete_note
+
     return await delete_note.fn(identifier, active_project.name)

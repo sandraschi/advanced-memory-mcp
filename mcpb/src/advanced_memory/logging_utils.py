@@ -27,9 +27,7 @@ def setup_logging(
     logger.setLevel(log_level)
 
     # Create formatter
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # Add file handler if log file is specified and not in test environment
     if log_file and env != "test":
@@ -46,6 +44,7 @@ def setup_logging(
 
     # Configure third-party loggers
     configure_third_party_loggers(log_level)
+
 
 def configure_third_party_loggers(log_level: str = "WARNING") -> None:
     """Configure logging levels for third-party libraries."""

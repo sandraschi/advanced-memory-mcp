@@ -4,7 +4,6 @@ This tool consolidates all import operations: obsidian, joplin, notion, evernote
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -71,13 +70,30 @@ async def adn_import(
 
     # Route to appropriate operation
     if operation == "obsidian":
-        return await _obsidian_import(source_path, destination_folder, preserve_structure, convert_links, include_attachments, skip_existing, project)
+        return await _obsidian_import(
+            source_path,
+            destination_folder,
+            preserve_structure,
+            convert_links,
+            include_attachments,
+            skip_existing,
+            project,
+        )
     elif operation == "joplin":
-        return await _joplin_import(source_path, destination_folder, preserve_structure, convert_links, skip_existing, project)
+        return await _joplin_import(
+            source_path,
+            destination_folder,
+            preserve_structure,
+            convert_links,
+            skip_existing,
+            project,
+        )
     elif operation == "notion":
         return await _notion_import(source_path, destination_folder, preserve_structure, project)
     elif operation == "evernote":
-        return await _evernote_import(source_path, destination_folder, preserve_structure, include_attachments, project)
+        return await _evernote_import(
+            source_path, destination_folder, preserve_structure, include_attachments, project
+        )
     elif operation == "archive":
         return await _archive_import(source_path, restore_mode, backup_existing, project)
     elif operation == "canvas":
@@ -86,37 +102,84 @@ async def adn_import(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: obsidian, joplin, notion, evernote, archive, canvas"
 
 
-async def _obsidian_import(source_path: str, destination_folder: str, preserve_structure: bool, convert_links: bool, include_attachments: bool, skip_existing: bool, project: str | None) -> str:
+async def _obsidian_import(
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    convert_links: bool,
+    include_attachments: bool,
+    skip_existing: bool,
+    project: str | None,
+) -> str:
     """Handle Obsidian import operation."""
     from advanced_memory.mcp.tools.load_obsidian_vault import load_obsidian_vault
-    return await load_obsidian_vault(source_path, destination_folder, preserve_structure, convert_links, include_attachments, skip_existing, project)
+
+    return await load_obsidian_vault(
+        source_path,
+        destination_folder,
+        preserve_structure,
+        convert_links,
+        include_attachments,
+        skip_existing,
+        project,
+    )
 
 
-async def _joplin_import(source_path: str, destination_folder: str, preserve_structure: bool, convert_links: bool, skip_existing: bool, project: str | None) -> str:
+async def _joplin_import(
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    convert_links: bool,
+    skip_existing: bool,
+    project: str | None,
+) -> str:
     """Handle Joplin import operation."""
     from advanced_memory.mcp.tools.load_joplin_vault import load_joplin_vault
-    return await load_joplin_vault(source_path, destination_folder, preserve_structure, convert_links, skip_existing, project)
+
+    return await load_joplin_vault(
+        source_path, destination_folder, preserve_structure, convert_links, skip_existing, project
+    )
 
 
-async def _notion_import(source_path: str, destination_folder: str, preserve_structure: bool, project: str | None) -> str:
+async def _notion_import(
+    source_path: str, destination_folder: str, preserve_structure: bool, project: str | None
+) -> str:
     """Handle Notion import operation."""
     from advanced_memory.mcp.tools.load_notion_export import load_notion_export
+
     return await load_notion_export(source_path, destination_folder, preserve_structure, project)
 
 
-async def _evernote_import(source_path: str, destination_folder: str, preserve_structure: bool, include_attachments: bool, project: str | None) -> str:
+async def _evernote_import(
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    include_attachments: bool,
+    project: str | None,
+) -> str:
     """Handle Evernote import operation."""
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
-    return await load_evernote_export(source_path, destination_folder, preserve_structure, include_attachments, project)
+
+    return await load_evernote_export(
+        source_path, destination_folder, preserve_structure, include_attachments, project
+    )
 
 
-async def _archive_import(source_path: str, restore_mode: str, backup_existing: bool, project: str | None) -> str:
+async def _archive_import(
+    source_path: str, restore_mode: str, backup_existing: bool, project: str | None
+) -> str:
     """Handle archive import operation."""
     from advanced_memory.mcp.tools.import_from_archive import import_from_archive
+
     return await import_from_archive(source_path, restore_mode, backup_existing, False, project)
 
 
-async def _canvas_import(source_path: str, destination_folder: str, create_missing_files: bool, project: str | None) -> str:
+async def _canvas_import(
+    source_path: str, destination_folder: str, create_missing_files: bool, project: str | None
+) -> str:
     """Handle Canvas import operation."""
     from advanced_memory.mcp.tools.load_obsidian_canvas import load_obsidian_canvas
-    return await load_obsidian_canvas(source_path, destination_folder, create_missing_files, project)
+
+    return await load_obsidian_canvas(
+        source_path, destination_folder, create_missing_files, project
+    )

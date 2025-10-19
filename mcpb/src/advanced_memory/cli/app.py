@@ -1,4 +1,3 @@
-
 import typer
 
 from advanced_memory.config import ConfigManager, get_project_config
@@ -8,7 +7,6 @@ from advanced_memory.mcp.project_session import session
 def version_callback(value: bool) -> None:
     """Show version and exit."""
     if value:  # pragma: no cover
-
         config = get_project_config()
         typer.echo(f"Basic Memory version: {basic_memory.__version__}")
         typer.echo(f"Current project: {config.project}")

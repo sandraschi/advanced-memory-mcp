@@ -123,11 +123,11 @@ async def search_evernote_vault(
     # Find all relevant files
     files_to_search = []
 
-    if file_type in ('enex', None):
-        files_to_search.extend(vault_dir.rglob('*.enex'))
+    if file_type in ("enex", None):
+        files_to_search.extend(vault_dir.rglob("*.enex"))
 
-    if file_type in ('html', None):
-        files_to_search.extend(vault_dir.rglob('*.html'))
+    if file_type in ("html", None):
+        files_to_search.extend(vault_dir.rglob("*.html"))
 
     if not files_to_search:
         type_desc = f" {file_type}" if file_type else " ENEX or HTML"
@@ -144,8 +144,10 @@ async def search_evernote_vault(
 
     for file_path in files_to_search:
         try:
-            if file_path.suffix.lower() == '.enex':
-                matches = await _search_enex_file(file_path, query_pattern, vault_dir, notebook_filter, tag_filter)
+            if file_path.suffix.lower() == ".enex":
+                matches = await _search_enex_file(
+                    file_path, query_pattern, vault_dir, notebook_filter, tag_filter
+                )
             else:  # HTML files
                 matches = await _search_html_file(file_path, query_pattern, vault_dir)
 
@@ -155,7 +157,7 @@ async def search_evernote_vault(
             continue
 
     # Sort by relevance (number of matches, then by file path)
-    results.sort(key=lambda x: (-x['match_count'], x['file_path']))
+    results.sort(key=lambda x: (-x["match_count"], x["file_path"]))
 
     # Limit results
     results = results[:max_results]
@@ -169,7 +171,7 @@ async def _search_enex_file(
     query_pattern: re.Pattern,
     vault_dir: Path,
     notebook_filter: str | None,
-    tag_filter: str | None
+    tag_filter: str | None,
 ) -> list[dict[str, Any]]:
     """Search a single ENEX file."""
 
@@ -181,15 +183,15 @@ async def _search_enex_file(
         results = []
 
         # Process each note
-        for note_elem in root.findall('.//note'):
+        for note_elem in root.findall(".//note"):
             try:
                 note_data = _extract_enex_note_data(note_elem)
 
                 # Apply filters
-                if notebook_filter and note_data['notebook'] != notebook_filter:
+                if notebook_filter and note_data["notebook"] != notebook_filter:
                     continue
 
-                if tag_filter and tag_filter not in note_data['tags']:
+                if tag_filter and tag_filter not in note_data["tags"]:
                     continue
 
                 # Search in title and content
@@ -204,28 +206,27 @@ async def _search_enex_file(
                     context = search_text[start:end]
 
                     # Highlight the match in context
-                    highlighted_context = query_pattern.sub(
-                        lambda m: f"**{m.group()}**",
-                        context
-                    )
+                    highlighted_context = query_pattern.sub(lambda m: f"**{m.group()}**", context)
 
                     # Clean up context for display
-                    highlighted_context = highlighted_context.replace('\n', ' ').replace('\r', ' ')
-                    highlighted_context = re.sub(r'\s+', ' ', highlighted_context)
+                    highlighted_context = highlighted_context.replace("\n", " ").replace("\r", " ")
+                    highlighted_context = re.sub(r"\s+", " ", highlighted_context)
 
                     relative_path = file_path.relative_to(vault_dir)
 
-                    results.append({
-                        'file_path': str(relative_path),
-                        'title': note_data['title'],
-                        'file_type': 'enex',
-                        'match_count': len(matches),
-                        'context': highlighted_context,
-                        'notebook': note_data['notebook'],
-                        'tags': note_data['tags'],
-                        'created': note_data['created'],
-                        'line_number': 1  # ENEX doesn't have line numbers
-                    })
+                    results.append(
+                        {
+                            "file_path": str(relative_path),
+                            "title": note_data["title"],
+                            "file_type": "enex",
+                            "match_count": len(matches),
+                            "context": highlighted_context,
+                            "notebook": note_data["notebook"],
+                            "tags": note_data["tags"],
+                            "created": note_data["created"],
+                            "line_number": 1,  # ENEX doesn't have line numbers
+                        }
+                    )
 
             except Exception as e:
                 logger.warning(f"Error processing note in {file_path}: {e}")
@@ -242,19 +243,17 @@ async def _search_enex_file(
 
 
 async def _search_html_file(
-    file_path: Path,
-    query_pattern: re.Pattern,
-    vault_dir: Path
+    file_path: Path, query_pattern: re.Pattern, vault_dir: Path
 ) -> list[dict[str, Any]]:
     """Search a single HTML file."""
 
     try:
         # Read file
         try:
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except UnicodeDecodeError:
-            with open(file_path, encoding='latin-1') as f:
+            with open(file_path, encoding="latin-1") as f:
                 content = f.read()
 
         # Find all matches
@@ -264,11 +263,11 @@ async def _search_html_file(
             return []
 
         # Extract title
-        title_match = re.search(r'<title[^>]*>(.*?)</title>', content, re.IGNORECASE)
+        title_match = re.search(r"<title[^>]*>(.*?)</title>", content, re.IGNORECASE)
         title = title_match.group(1).strip() if title_match else file_path.stem
 
         # Clean up Evernote-specific title prefixes
-        title = re.sub(r'^Evernote\s*[-[UNICODE]]\s*', '', title)
+        title = re.sub(r"^Evernote\s*[-[UNICODE]]\s*", "", title)
 
         # Get context around first match
         first_match = matches[0]
@@ -277,31 +276,30 @@ async def _search_html_file(
         context = content[start:end]
 
         # Remove HTML tags from context for readability
-        context = re.sub(r'<[^>]+>', '', context)
+        context = re.sub(r"<[^>]+>", "", context)
 
         # Highlight the match in context
-        highlighted_context = query_pattern.sub(
-            lambda m: f"**{m.group()}**",
-            context
-        )
+        highlighted_context = query_pattern.sub(lambda m: f"**{m.group()}**", context)
 
         # Clean up context for display
-        highlighted_context = highlighted_context.replace('\n', ' ').replace('\r', ' ')
-        highlighted_context = re.sub(r'\s+', ' ', highlighted_context)
+        highlighted_context = highlighted_context.replace("\n", " ").replace("\r", " ")
+        highlighted_context = re.sub(r"\s+", " ", highlighted_context)
 
         relative_path = file_path.relative_to(vault_dir)
 
-        return [{
-            'file_path': str(relative_path),
-            'title': title,
-            'file_type': 'html',
-            'match_count': len(matches),
-            'context': highlighted_context,
-            'notebook': 'Unknown',
-            'tags': [],
-            'created': 'Unknown',
-            'line_number': content[:first_match.start()].count('\n') + 1
-        }]
+        return [
+            {
+                "file_path": str(relative_path),
+                "title": title,
+                "file_type": "html",
+                "match_count": len(matches),
+                "context": highlighted_context,
+                "notebook": "Unknown",
+                "tags": [],
+                "created": "Unknown",
+                "line_number": content[: first_match.start()].count("\n") + 1,
+            }
+        ]
 
     except Exception as e:
         logger.warning(f"Error searching HTML file {file_path}: {e}")
@@ -312,47 +310,55 @@ def _extract_enex_note_data(note_elem: ET.Element) -> dict[str, Any]:
     """Extract metadata from an ENEX note element."""
 
     # Title
-    title_elem = note_elem.find('title')
-    title = title_elem.text.strip() if title_elem is not None and title_elem.text else 'Untitled'
+    title_elem = note_elem.find("title")
+    title = title_elem.text.strip() if title_elem is not None and title_elem.text else "Untitled"
 
     # Content
-    content_elem = note_elem.find('content')
+    content_elem = note_elem.find("content")
     content = ""
     if content_elem is not None and content_elem.text:
         # Remove CDATA wrapper and basic HTML tags
         content_text = content_elem.text.strip()
-        if content_text.startswith('<![CDATA[') and content_text.endswith(']]>'):
+        if content_text.startswith("<![CDATA[") and content_text.endswith("]]>"):
             content = content_text[9:-3]
         else:
             content = content_text
         # Remove HTML tags for search
-        content = re.sub(r'<[^>]+>', '', content)
+        content = re.sub(r"<[^>]+>", "", content)
 
     # Created date
-    created_elem = note_elem.find('created')
-    created = created_elem.text.strip() if created_elem is not None and created_elem.text else 'Unknown'
+    created_elem = note_elem.find("created")
+    created = (
+        created_elem.text.strip() if created_elem is not None and created_elem.text else "Unknown"
+    )
 
     # Notebook
-    notebook_elem = note_elem.find('notebook')
-    notebook = notebook_elem.text.strip() if notebook_elem is not None and notebook_elem.text else 'Default'
+    notebook_elem = note_elem.find("notebook")
+    notebook = (
+        notebook_elem.text.strip()
+        if notebook_elem is not None and notebook_elem.text
+        else "Default"
+    )
 
     # Tags
     tags = []
-    tag_elems = note_elem.findall('tag')
+    tag_elems = note_elem.findall("tag")
     for tag_elem in tag_elems:
         if tag_elem.text:
             tags.append(tag_elem.text.strip())
 
     return {
-        'title': title,
-        'content': content,
-        'created': created,
-        'notebook': notebook,
-        'tags': tags
+        "title": title,
+        "content": content,
+        "created": created,
+        "notebook": notebook,
+        "tags": tags,
     }
 
 
-def _format_evernote_search_results(query: str, results: list[dict[str, Any]], total_files: int) -> str:
+def _format_evernote_search_results(
+    query: str, results: list[dict[str, Any]], total_files: int
+) -> str:
     """Format search results for display."""
 
     if not results:
@@ -368,14 +374,16 @@ def _format_evernote_search_results(query: str, results: list[dict[str, Any]], t
         summary += f"**{i}. {result['title']}**\n"
         summary += f"- **File**: {result['file_path']} ({result['file_type'].upper()})\n"
         summary += f"- **Notebook**: {result['notebook']}\n"
-        if result['tags']:
+        if result["tags"]:
             summary += f"- **Tags**: {', '.join(result['tags'])}\n"
-        if result['created'] != 'Unknown':
+        if result["created"] != "Unknown":
             summary += f"- **Created**: {result['created']}\n"
         summary += f"- **Matches**: {result['match_count']}\n"
         summary += f"- **Context**: ...{result['context']}...\n\n"
 
     if len(results) >= 20:
-        summary += "*Showing first 20 results. Use more specific search terms for better results.*\n"
+        summary += (
+            "*Showing first 20 results. Use more specific search terms for better results.*\n"
+        )
 
     return summary

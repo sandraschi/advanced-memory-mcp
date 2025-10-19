@@ -140,10 +140,14 @@ class FileService:
             # Check if file exists and handle accordingly
             if full_path.exists():
                 if not overwrite:
-                    raise FileOperationError(f"File already exists and overwrite=False: {full_path}")
+                    raise FileOperationError(
+                        f"File already exists and overwrite=False: {full_path}"
+                    )
 
                 # Create backup before overwriting
-                backup_path = full_path.with_suffix(f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.bak")
+                backup_path = full_path.with_suffix(
+                    f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.bak"
+                )
             # Ensure the parent directory exists
             parent_dir = full_path.parent
             await file_utils.ensure_directory(parent_dir)
@@ -206,7 +210,7 @@ class FileService:
             MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
             if file_size > MAX_FILE_SIZE:
                 raise FileOperationError(
-                    f"File too large ({file_size/1024/1024:.1f}MB > {MAX_FILE_SIZE/1024/1024}MB): {full_path}"
+                    f"File too large ({file_size / 1024 / 1024:.1f}MB > {MAX_FILE_SIZE / 1024 / 1024}MB): {full_path}"
                 )
 
             logger.debug(f"Reading file: {full_path.relative_to(self.base_path)}")
@@ -220,7 +224,9 @@ class FileService:
                     content = full_path.read_text(encoding="latin-1")
                     logger.warning(f"Read file with latin-1 encoding: {full_path}")
                 except Exception as e:
-                    raise FileOperationError(f"Failed to decode file {full_path}: {str(e)}") from ude
+                    raise FileOperationError(
+                        f"Failed to decode file {full_path}: {str(e)}"
+                    ) from ude
 
             # Compute checksum of the file content
             checksum = await file_utils.compute_checksum(content)
@@ -268,7 +274,7 @@ class FileService:
             file_size = full_path.stat().st_size if full_path.is_file() else 0
             logger.info(
                 f"Deleting {'directory' if full_path.is_dir() else 'file'}: "
-                f"{full_path.relative_to(self.base_path)} (size: {file_size/1024:.1f} KB)"
+                f"{full_path.relative_to(self.base_path)} (size: {file_size / 1024:.1f} KB)"
             )
 
             # Use the file_safety module to handle the deletion

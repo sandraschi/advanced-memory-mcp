@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-from advanced_memory import db
 from loguru import logger
 from sqlalchemy import Executable, Result, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from advanced_memory import db
 from advanced_memory.models.search import CREATE_SEARCH_INDEX
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import sanitize_filename

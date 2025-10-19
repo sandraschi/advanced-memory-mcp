@@ -25,7 +25,7 @@ Environment = Literal["test", "dev", "user"]
 @dataclass
 class ProjectConfig:
     """Configuration for a specific Advanced Memory project.
-    
+
     Projects are logical groupings of content that share a file system root.
     All project data is stored in the global database with project_id scoping.
     """
@@ -81,12 +81,12 @@ class AdvancedMemoryConfig(BaseSettings):
         default=True,
         description="Whether to sync changes in real time. default (True)",
     )
-    
+
     # File type filtering configuration
     index_all_files: bool = Field(
         default=True,
         description="Whether to index all file types or only markdown (.md) files. "
-                    "Set to False to only index markdown files. default (True)",
+        "Set to False to only index markdown files. default (True)",
     )
 
     # API connection configuration

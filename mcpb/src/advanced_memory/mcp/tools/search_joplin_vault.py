@@ -122,7 +122,9 @@ async def search_joplin_vault(
         if not vault_path_obj.is_dir():
             return f"# Joplin Search Failed\n\nPath is not a directory: {vault_path}"
 
-        logger.info(f"Searching Joplin vault: {vault_path} for query: '{query}' (type: {search_type})")
+        logger.info(
+            f"Searching Joplin vault: {vault_path} for query: '{query}' (type: {search_type})"
+        )
 
         # Find all Joplin note files (markdown files with corresponding JSON metadata)
         joplin_files = await _find_joplin_files(vault_path_obj)
@@ -171,25 +173,25 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
 
                     # Group files by base name (without extension)
                     file_groups = {}
-                    for line in dir_contents.split('\n'):
-                        if '[DOC]' in line:
+                    for line in dir_contents.split("\n"):
+                        if "[DOC]" in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
                                 file_path = os.path.join(current_path, filename)
 
-                                if filename.endswith('.md'):
+                                if filename.endswith(".md"):
                                     base_name = filename[:-3]  # Remove .md
                                     if base_name not in file_groups:
                                         file_groups[base_name] = {}
-                                    file_groups[base_name]['md'] = file_path
-                                elif filename.endswith('.json'):
+                                    file_groups[base_name]["md"] = file_path
+                                elif filename.endswith(".json"):
                                     base_name = filename[:-5]  # Remove .json
                                     if base_name not in file_groups:
                                         file_groups[base_name] = {}
-                                    file_groups[base_name]['json'] = file_path
+                                    file_groups[base_name]["json"] = file_path
 
-                        elif '[FOLDER]' in line and not line.strip().endswith('.'):
+                        elif "[FOLDER]" in line and not line.strip().endswith("."):
                             # Directory - recurse
                             parts = line.split()
                             if len(parts) >= 2:
@@ -200,12 +202,14 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
 
                     # Only include complete pairs (both .md and .json)
                     for base_name, file_dict in file_groups.items():
-                        if 'md' in file_dict and 'json' in file_dict:
-                            files.append({
-                                'md': file_dict['md'],
-                                'json': file_dict['json'],
-                                'base_name': base_name
-                            })
+                        if "md" in file_dict and "json" in file_dict:
+                            files.append(
+                                {
+                                    "md": file_dict["md"],
+                                    "json": file_dict["json"],
+                                    "base_name": base_name,
+                                }
+                            )
 
                 except Exception as e:
                     logger.warning(f"Error scanning directory {current_path}: {e}")
@@ -214,7 +218,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
 
             joplin_files_raw = await scan_recursive(str(vault_path))
             joplin_files = [
-                {'md': Path(f['md']), 'json': Path(f['json']), 'base_name': f['base_name']}
+                {"md": Path(f["md"]), "json": Path(f["json"]), "base_name": f["base_name"]}
                 for f in joplin_files_raw
             ]
 
@@ -225,25 +229,23 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
             file_groups = {}
             for file_path in vault_path.rglob("*"):
                 if file_path.is_file():
-                    if file_path.suffix.lower() == '.md':
+                    if file_path.suffix.lower() == ".md":
                         base_name = file_path.stem
                         if base_name not in file_groups:
                             file_groups[base_name] = {}
-                        file_groups[base_name]['md'] = file_path
-                    elif file_path.suffix.lower() == '.json':
+                        file_groups[base_name]["md"] = file_path
+                    elif file_path.suffix.lower() == ".json":
                         base_name = file_path.stem
                         if base_name not in file_groups:
                             file_groups[base_name] = {}
-                        file_groups[base_name]['json'] = file_path
+                        file_groups[base_name]["json"] = file_path
 
             # Only include complete pairs
             for base_name, file_dict in file_groups.items():
-                if 'md' in file_dict and 'json' in file_dict:
-                    joplin_files.append({
-                        'md': file_dict['md'],
-                        'json': file_dict['json'],
-                        'base_name': base_name
-                    })
+                if "md" in file_dict and "json" in file_dict:
+                    joplin_files.append(
+                        {"md": file_dict["md"], "json": file_dict["json"], "base_name": base_name}
+                    )
 
     except Exception as e:
         logger.error(f"Error finding Joplin files: {e}")
@@ -259,13 +261,13 @@ async def _search_text(joplin_files: list[dict[str, Path]], query: str) -> list[
     for file_info in joplin_files:
         try:
             # Read metadata
-            metadata = _read_joplin_metadata(file_info['json'])
+            metadata = _read_joplin_metadata(file_info["json"])
 
             # Read content
-            content = file_info['md'].read_text(encoding='utf-8')
+            content = file_info["md"].read_text(encoding="utf-8")
 
             # Extract title from metadata or content
-            title = metadata.get('title', _extract_title_from_content(content))
+            title = metadata.get("title", _extract_title_from_content(content))
 
             # Check if all search terms are present
             matches = []
@@ -284,27 +286,29 @@ async def _search_text(joplin_files: list[dict[str, Path]], query: str) -> list[
 
             if len(matches) == len(search_terms):  # All terms found
                 # Find line numbers with matches
-                lines = content.split('\n')
+                lines = content.split("\n")
                 match_lines = []
                 for i, line in enumerate(lines):
                     line_lower = line.lower()
                     if all(term.strip('"').lower() in line_lower for term in search_terms):
                         match_lines.append((i + 1, line.strip()))
 
-                results.append({
-                    'file_info': file_info,
-                    'title': title,
-                    'metadata': metadata,
-                    'matches': match_lines[:5],  # Limit to first 5 matches
-                    'total_matches': len(match_lines)
-                })
+                results.append(
+                    {
+                        "file_info": file_info,
+                        "title": title,
+                        "metadata": metadata,
+                        "matches": match_lines[:5],  # Limit to first 5 matches
+                        "total_matches": len(match_lines),
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading Joplin file {file_info['md']}: {e}")
             continue
 
     # Sort by number of matches (most relevant first)
-    results.sort(key=lambda x: x['total_matches'], reverse=True)
+    results.sort(key=lambda x: x["total_matches"], reverse=True)
     return results
 
 
@@ -314,15 +318,15 @@ async def _search_tags(joplin_files: list[dict[str, Path]], query: str) -> list[
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
-            content = file_info['md'].read_text(encoding='utf-8')
-            title = metadata.get('title', _extract_title_from_content(content))
+            metadata = _read_joplin_metadata(file_info["json"])
+            content = file_info["md"].read_text(encoding="utf-8")
+            title = metadata.get("title", _extract_title_from_content(content))
 
             # Get tags from metadata
-            tags = metadata.get('tags', [])
+            tags = metadata.get("tags", [])
 
             # Also check for tags in content (Joplin sometimes stores them in content)
-            content_tags = re.findall(r'#(\w+)', content)
+            content_tags = re.findall(r"#(\w+)", content)
             all_tags = list(set(tags + content_tags))
 
             # Check if query matches any tag
@@ -330,14 +334,16 @@ async def _search_tags(joplin_files: list[dict[str, Path]], query: str) -> list[
             matching_tags = [tag for tag in all_tags if query_lower in tag.lower()]
 
             if matching_tags:
-                results.append({
-                    'file_info': file_info,
-                    'title': title,
-                    'metadata': metadata,
-                    'tags': all_tags,
-                    'tag_matches': matching_tags,
-                    'total_matches': len(matching_tags)
-                })
+                results.append(
+                    {
+                        "file_info": file_info,
+                        "title": title,
+                        "metadata": metadata,
+                        "tags": all_tags,
+                        "tag_matches": matching_tags,
+                        "total_matches": len(matching_tags),
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading Joplin file {file_info['md']}: {e}")
@@ -346,29 +352,33 @@ async def _search_tags(joplin_files: list[dict[str, Path]], query: str) -> list[
     return results
 
 
-async def _search_notebooks(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
+async def _search_notebooks(
+    joplin_files: list[dict[str, Path]], query: str
+) -> list[dict[str, Any]]:
     """Search for notes in specific notebooks/folders."""
     results = []
     query_lower = query.lower()
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
-            content = file_info['md'].read_text(encoding='utf-8')
-            title = metadata.get('title', _extract_title_from_content(content))
+            metadata = _read_joplin_metadata(file_info["json"])
+            content = file_info["md"].read_text(encoding="utf-8")
+            title = metadata.get("title", _extract_title_from_content(content))
 
             # Get notebook/folder path
-            notebook_path = _get_notebook_path(file_info['md'], metadata)
+            notebook_path = _get_notebook_path(file_info["md"], metadata)
 
             # Check if query matches notebook name or path
             if query_lower in notebook_path.lower():
-                results.append({
-                    'file_info': file_info,
-                    'title': title,
-                    'metadata': metadata,
-                    'notebook_path': notebook_path,
-                    'total_matches': 1
-                })
+                results.append(
+                    {
+                        "file_info": file_info,
+                        "title": title,
+                        "metadata": metadata,
+                        "notebook_path": notebook_path,
+                        "total_matches": 1,
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading Joplin file {file_info['md']}: {e}")
@@ -384,20 +394,22 @@ async def _search_titles(joplin_files: list[dict[str, Path]], query: str) -> lis
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
-            content = file_info['md'].read_text(encoding='utf-8')
+            metadata = _read_joplin_metadata(file_info["json"])
+            content = file_info["md"].read_text(encoding="utf-8")
 
             # Get title from metadata or content
-            title = metadata.get('title', _extract_title_from_content(content))
+            title = metadata.get("title", _extract_title_from_content(content))
 
             if query_lower in title.lower():
-                results.append({
-                    'file_info': file_info,
-                    'title': title,
-                    'metadata': metadata,
-                    'title_match': True,
-                    'total_matches': 1
-                })
+                results.append(
+                    {
+                        "file_info": file_info,
+                        "title": title,
+                        "metadata": metadata,
+                        "title_match": True,
+                        "total_matches": 1,
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading Joplin file {file_info['md']}: {e}")
@@ -412,21 +424,23 @@ async def _search_ids(joplin_files: list[dict[str, Path]], query: str) -> list[d
 
     for file_info in joplin_files:
         try:
-            metadata = _read_joplin_metadata(file_info['json'])
+            metadata = _read_joplin_metadata(file_info["json"])
 
             # Check if ID matches
-            note_id = metadata.get('id', '')
+            note_id = metadata.get("id", "")
             if query == note_id:
-                content = file_info['md'].read_text(encoding='utf-8')
-                title = metadata.get('title', _extract_title_from_content(content))
+                content = file_info["md"].read_text(encoding="utf-8")
+                title = metadata.get("title", _extract_title_from_content(content))
 
-                results.append({
-                    'file_info': file_info,
-                    'title': title,
-                    'metadata': metadata,
-                    'id_match': True,
-                    'total_matches': 1
-                })
+                results.append(
+                    {
+                        "file_info": file_info,
+                        "title": title,
+                        "metadata": metadata,
+                        "id_match": True,
+                        "total_matches": 1,
+                    }
+                )
                 break  # IDs should be unique, so we can stop after finding a match
 
         except Exception as e:
@@ -439,7 +453,7 @@ async def _search_ids(joplin_files: list[dict[str, Path]], query: str) -> list[d
 def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
     """Read and parse Joplin JSON metadata."""
     try:
-        with open(json_path, encoding='utf-8') as f:
+        with open(json_path, encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
         logger.warning(f"Error reading Joplin metadata {json_path}: {e}")
@@ -448,11 +462,11 @@ def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:
 
 def _extract_title_from_content(content: str) -> str:
     """Extract title from markdown content."""
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Look for first heading
     for line in lines:
-        if line.startswith('# '):
+        if line.startswith("# "):
             return line[2:].strip()
 
     # Fallback to first line or filename-like title
@@ -484,7 +498,7 @@ def _parse_search_query(query: str) -> list[str]:
             if current_term:
                 terms.append(f'"{current_term}"')
                 current_term = ""
-        elif char == ' ' and not in_quotes:
+        elif char == " " and not in_quotes:
             if current_term:
                 terms.append(current_term.strip())
                 current_term = ""
@@ -500,7 +514,13 @@ def _parse_search_query(query: str) -> list[str]:
     return [term for term in terms if term]
 
 
-def _format_search_results(results: list[dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
+def _format_search_results(
+    results: list[dict[str, Any]],
+    vault_path: str,
+    query: str,
+    search_type: str,
+    include_content: bool,
+) -> str:
     """Format search results into readable output."""
     if not results:
         return f"# Joplin Search Complete\n\nNo results found for '{query}' in vault: {vault_path}"
@@ -510,64 +530,64 @@ def _format_search_results(results: list[dict[str, Any]], vault_path: str, query
         f"Query: '{query}' (type: {search_type})",
         f"Export: {vault_path}",
         f"Found {len(results)} matching notes",
-        ""
+        "",
     ]
 
     for i, result in enumerate(results, 1):
-        file_info = result['file_info']
-        title = result['title']
-        metadata = result['metadata']
+        file_info = result["file_info"]
+        title = result["title"]
+        metadata = result["metadata"]
 
         # Calculate relative path from vault
         try:
-            rel_path = file_info['md'].relative_to(vault_path)
+            rel_path = file_info["md"].relative_to(vault_path)
         except ValueError:
-            rel_path = file_info['md']
+            rel_path = file_info["md"]
 
         output_lines.append(f"## {i}. {title}")
         output_lines.append(f"**File:** {rel_path}")
         output_lines.append(f"**ID:** {metadata.get('id', 'unknown')}")
 
         # Add creation/update dates if available
-        if 'created_time' in metadata:
+        if "created_time" in metadata:
             try:
-                created_dt = datetime.fromtimestamp(metadata['created_time'] / 1000)
+                created_dt = datetime.fromtimestamp(metadata["created_time"] / 1000)
                 output_lines.append(f"**Created:** {created_dt.strftime('%Y-%m-%d %H:%M')}")
             except:
                 pass
 
-        if 'updated_time' in metadata:
+        if "updated_time" in metadata:
             try:
-                updated_dt = datetime.fromtimestamp(metadata['updated_time'] / 1000)
+                updated_dt = datetime.fromtimestamp(metadata["updated_time"] / 1000)
                 output_lines.append(f"**Updated:** {updated_dt.strftime('%Y-%m-%d %H:%M')}")
             except:
                 pass
 
         # Add notebook info
-        notebook_path = _get_notebook_path(file_info['md'], metadata)
+        notebook_path = _get_notebook_path(file_info["md"], metadata)
         if notebook_path and notebook_path != str(vault_path):
             output_lines.append(f"**Notebook:** {notebook_path}")
 
         # Add specific match information
-        if 'matches' in result and result['matches']:
+        if "matches" in result and result["matches"]:
             output_lines.append(f"**Matches:** {result['total_matches']} total")
             if include_content:
-                for line_num, line_content in result['matches'][:3]:  # Show first 3 matches
+                for line_num, line_content in result["matches"][:3]:  # Show first 3 matches
                     # Truncate long lines
                     if len(line_content) > 100:
                         line_content = line_content[:97] + "..."
                     output_lines.append(f"  - Line {line_num}: {line_content}")
 
-        elif 'tags' in result:
+        elif "tags" in result:
             output_lines.append(f"**Tags:** {', '.join(result['tags'])}")
 
-        elif 'notebook_path' in result:
+        elif "notebook_path" in result:
             output_lines.append(f"**Path:** {result['notebook_path']}")
 
-        elif 'title_match' in result:
+        elif "title_match" in result:
             output_lines.append("**Match:** Title")
 
-        elif 'id_match' in result:
+        elif "id_match" in result:
             output_lines.append("**Match:** ID")
 
         output_lines.append("")

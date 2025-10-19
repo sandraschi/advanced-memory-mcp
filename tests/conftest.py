@@ -2,9 +2,15 @@
 
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from textwrap import dedent
+
+# Python 3.10 compatibility - UTC was added in 3.11
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = timezone.utc
 
 import pytest
 import pytest_asyncio

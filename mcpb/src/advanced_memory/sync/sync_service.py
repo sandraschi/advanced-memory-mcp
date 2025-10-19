@@ -26,39 +26,60 @@ def normalize_file_path(path: str) -> str:
     This helps prevent duplicate path issues due to different path formats.
     """
     # Convert backslashes to forward slashes for consistency
-    normalized = path.replace('\\', '/')
+    normalized = path.replace("\\", "/")
     # Remove any duplicate slashes
-    while '//' in normalized:
-        normalized = normalized.replace('//', '/')
+    while "//" in normalized:
+        normalized = normalized.replace("//", "/")
     # Ensure it doesn't start with /
-    if normalized.startswith('/'):
+    if normalized.startswith("/"):
         normalized = normalized[1:]
     return normalized
+
 
 # Common directories to ignore during file scanning and sync
 IGNORE_PATTERNS = {
     # Node.js
     "node_modules",
     # Build outputs
-    "dist", "build", "target", "out", ".next", ".nuxt",
+    "dist",
+    "build",
+    "target",
+    "out",
+    ".next",
+    ".nuxt",
     # Python
-    "__pycache__", ".pytest_cache", ".tox", "venv", ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".tox",
+    "venv",
+    ".venv",
     # Other package managers / build tools
-    "vendor", ".gradle", ".cargo", "coverage",
+    "vendor",
+    ".gradle",
+    ".cargo",
+    "coverage",
     # IDE and editor files
-    ".vscode", ".idea",
+    ".vscode",
+    ".idea",
     # OS files
-    ".DS_Store", "Thumbs.db"
+    ".DS_Store",
+    "Thumbs.db",
 }
 
 # Patterns for archived/obsolete content that should be preserved but not indexed
 ARCHIVE_PATTERNS = {
     # Backup folders (timestamped)
-    "-backup-", ".backup", "_backup",
+    "-backup-",
+    ".backup",
+    "_backup",
     # Obsolete markers
-    ".obsolete", "-obsolete", "_obsolete",
+    ".obsolete",
+    "-obsolete",
+    "_obsolete",
     # Archive folders
-    ".archived", "-archived", "_archived",
+    ".archived",
+    "-archived",
+    "_archived",
 }
 
 
@@ -283,9 +304,7 @@ class SyncService:
         logger.info(f"Found {len(db_records)} db records")
         return {r.file_path: r.checksum or "" for r in db_records}
 
-    async def sync_file(
-        self, path: str, new: bool = True
-    ) -> tuple[Entity | None, str | None]:
+    async def sync_file(self, path: str, new: bool = True) -> tuple[Entity | None, str | None]:
         """Sync a single file.
 
         Args:
@@ -320,15 +339,23 @@ class SyncService:
             # Provide more specific error messages for common issues
             if "mapping values are not allowed" in error_msg:
                 logger.warning(f"Malformed YAML frontmatter in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to invalid YAML frontmatter. Fix the YAML syntax to include this file in sync.")
+                logger.info(
+                    f"File {path} will be skipped due to invalid YAML frontmatter. Fix the YAML syntax to include this file in sync."
+                )
             elif "scanning an alias" in error_msg or "alias" in error_msg.lower():
                 logger.warning(f"Invalid YAML alias in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax.")
+                logger.info(
+                    f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax."
+                )
             elif "yaml" in error_msg.lower() or "yamlload" in error_type.lower():
                 logger.warning(f"YAML parsing error in {path}: {error_msg}")
-                logger.info(f"File {path} will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter.")
+                logger.info(
+                    f"File {path} will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter."
+                )
             else:
-                logger.error(f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}")
+                logger.error(
+                    f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}"
+                )
 
             # Return None to indicate sync failure, but don't crash the entire process
             return None, None
@@ -388,7 +415,7 @@ class SyncService:
                 dirs[:] = [d for d in dirs if d not in IGNORE_PATTERNS]
 
                 for file in files:
-                    if file.endswith('.md'):
+                    if file.endswith(".md"):
                         rel_path = os.path.relpath(os.path.join(root, file), project_path)
                         rel_path = normalize_file_path(rel_path)
                         all_files.append(rel_path)
@@ -720,21 +747,22 @@ class SyncService:
 
         logger.debug(f"Scanning directory {directory}")
         result = ScanResult()
-        
+
         skipped_folders = set()
 
         for root, dirnames, filenames in os.walk(str(directory)):
             # Track which directories are being skipped
             original_dirnames = dirnames.copy()
-            
+
             # Skip dot directories, ignore patterns, and archive patterns in-place
             dirnames[:] = [
-                d for d in dirnames 
-                if not d.startswith(".") 
+                d
+                for d in dirnames
+                if not d.startswith(".")
                 and d not in IGNORE_PATTERNS
                 and not any(pattern in d.lower() for pattern in ARCHIVE_PATTERNS)
             ]
-            
+
             # Log skipped directories for debugging
             for d in original_dirnames:
                 if d not in dirnames:
@@ -746,7 +774,7 @@ class SyncService:
                 if filename.startswith(".") or filename in IGNORE_PATTERNS:
                     logger.trace(f"Skipping ignored file: {filename}")
                     continue
-                
+
                 # If index_all_files is False, only index markdown files
                 if not self.app_config.index_all_files and not filename.endswith(".md"):
                     logger.trace(f"Skipping non-markdown file (index_all_files=False): {filename}")
@@ -761,14 +789,14 @@ class SyncService:
                 logger.trace(f"Found file, path={rel_path}, checksum={checksum}")
 
         duration_ms = int((time.time() - start_time) * 1000)
-        
+
         if len(result.files) == 0:
             logger.warning(
                 f"No files found in {directory}. "
                 f"Skipped {len(skipped_folders)} folders. "
                 f"Ensure files are not in ignored folders: {IGNORE_PATTERNS}"
             )
-        
+
         logger.debug(
             f"{directory} scan completed "
             f"directory={str(directory)} "

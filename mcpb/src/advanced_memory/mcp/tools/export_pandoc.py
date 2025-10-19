@@ -29,7 +29,7 @@ async def export_pandoc(
     highlight_style: str = "tango",
     standalone: bool = True,
     self_contained: bool = False,
-    project: str | None = None
+    project: str | None = None,
 ) -> str:
     """
     Export Advanced Memory notes to various formats using Pandoc.
@@ -77,9 +77,7 @@ async def export_pandoc(
         export_dir.mkdir(parents=True, exist_ok=True)
 
         # Find all notes in the specified folder
-        notes_data = await _get_notes_from_folder(
-            source_folder, include_subfolders, project
-        )
+        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
 
         if not notes_data:
             return f"No notes found in folder '{source_folder}' for export."
@@ -100,7 +98,7 @@ async def export_pandoc(
                     toc,
                     highlight_style,
                     standalone,
-                    self_contained
+                    self_contained,
                 )
                 if output_file:
                     exported_files.append(output_file)
@@ -110,9 +108,7 @@ async def export_pandoc(
                 errors.append(f"Error exporting {note_info['title']}: {str(e)}")
 
         # Generate summary
-        summary = _generate_export_summary(
-            exported_files, errors, format_type, export_path
-        )
+        summary = _generate_export_summary(exported_files, errors, format_type, export_path)
 
         return summary
 
@@ -121,9 +117,7 @@ async def export_pandoc(
 
 
 async def _get_notes_from_folder(
-    source_folder: str,
-    include_subfolders: bool,
-    project: str | None = None
+    source_folder: str, include_subfolders: bool, project: str | None = None
 ) -> list[dict[str, Any]]:
     """
     Retrieve all notes from the specified folder using the search API.
@@ -134,7 +128,7 @@ async def _get_notes_from_folder(
             query="",  # Empty query to get all notes
             types=["note"],  # Only notes, not entities
             page=1,
-            page_size=1000  # Large limit for batch export
+            page_size=1000,  # Large limit for batch export
         )
 
         # Add project filter if specified
@@ -143,29 +137,27 @@ async def _get_notes_from_folder(
             # May need adjustment based on actual API
             pass
 
-        response = await call_post(
-            "/api/search",
-            query.model_dump(),
-            SearchResponse
-        )
+        response = await call_post("/api/search", query.model_dump(), SearchResponse)
 
-        if not response or not hasattr(response, 'results'):
+        if not response or not hasattr(response, "results"):
             return []
 
         notes_data = []
         for note in response.results:
             # Filter by folder path
-            note_path = getattr(note, 'file_path', '')
+            note_path = getattr(note, "file_path", "")
             if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
                 # Get full note content
                 content = await _get_note_content(note)
                 if content:
-                    notes_data.append({
-                        'id': getattr(note, 'id', ''),
-                        'title': getattr(note, 'title', ''),
-                        'file_path': note_path,
-                        'content': content
-                    })
+                    notes_data.append(
+                        {
+                            "id": getattr(note, "id", ""),
+                            "title": getattr(note, "title", ""),
+                            "file_path": note_path,
+                            "content": content,
+                        }
+                    )
 
         return notes_data
 
@@ -183,7 +175,7 @@ async def _get_note_content(note) -> str | None:
         from advanced_memory.mcp.tools.read_note import read_note
 
         # Get the identifier (prefer permalink, fallback to title)
-        identifier = getattr(note, 'permalink', None) or getattr(note, 'title', '')
+        identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
 
         if not identifier:
             return None
@@ -206,21 +198,21 @@ async def _export_single_note(
     toc: bool,
     highlight_style: str,
     standalone: bool,
-    self_contained: bool
+    self_contained: bool,
 ) -> str | None:
     """
     Export a single note using Pandoc.
     """
     try:
         # Create safe filename
-        safe_title = _sanitize_filename(note_info['title'])
+        safe_title = _sanitize_filename(note_info["title"])
         output_filename = f"{safe_title}.{format_type}"
         output_path = export_dir / output_filename
 
         # Create temporary markdown file
         temp_md_path = export_dir / f"{safe_title}_temp.md"
-        with open(temp_md_path, 'w', encoding='utf-8') as f:
-            f.write(note_info['content'])
+        with open(temp_md_path, "w", encoding="utf-8") as f:
+            f.write(note_info["content"])
 
         # Build Pandoc command
         cmd = _build_pandoc_command(
@@ -233,7 +225,7 @@ async def _export_single_note(
             toc,
             highlight_style,
             standalone,
-            self_contained
+            self_contained,
         )
 
         # Execute Pandoc
@@ -241,7 +233,7 @@ async def _export_single_note(
             *cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
-            cwd=str(export_dir)
+            cwd=str(export_dir),
         )
 
         stdout, stderr = await result.communicate()
@@ -252,7 +244,7 @@ async def _export_single_note(
         if result.returncode == 0:
             return str(output_path)
         else:
-            error_msg = stderr.decode('utf-8', errors='ignore')
+            error_msg = stderr.decode("utf-8", errors="ignore")
             print(f"Pandoc error for {note_info['title']}: {error_msg}")
             return None
 
@@ -271,7 +263,7 @@ def _build_pandoc_command(
     toc: bool,
     highlight_style: str,
     standalone: bool,
-    self_contained: bool
+    self_contained: bool,
 ) -> list[str]:
     """
     Build the Pandoc command with all specified options.
@@ -320,23 +312,23 @@ def _sanitize_filename(title: str) -> str:
     import unicodedata
 
     # Normalize unicode characters
-    title = unicodedata.normalize('NFKD', title)
+    title = unicodedata.normalize("NFKD", title)
 
     # Replace problematic characters
-    title = title.replace(':', '-').replace('.', '_').replace('/', '-')
+    title = title.replace(":", "-").replace(".", "_").replace("/", "-")
 
     # Remove or replace other unsafe characters
-    title = re.sub(r'[<>:"|?*\\]', '_', title)
+    title = re.sub(r'[<>:"|?*\\]', "_", title)
 
     # Collapse multiple underscores/spaces
-    title = re.sub(r'[_ ]+', '_', title)
+    title = re.sub(r"[_ ]+", "_", title)
 
     # Trim underscores and spaces
-    title = title.strip('_ ')
+    title = title.strip("_ ")
 
     # Limit length
     if len(title) > 100:
-        title = title[:100].rstrip('_ ')
+        title = title[:100].rstrip("_ ")
 
     # Ensure not empty
     if not title:
@@ -346,10 +338,7 @@ def _sanitize_filename(title: str) -> str:
 
 
 def _generate_export_summary(
-    exported_files: list[str],
-    errors: list[str],
-    format_type: str,
-    export_path: str
+    exported_files: list[str], errors: list[str], format_type: str, export_path: str
 ) -> str:
     """
     Generate a summary of the export operation.
@@ -361,7 +350,7 @@ def _generate_export_summary(
         f"**Output Directory:** {export_path}",
         f"**Files Exported:** {len(exported_files)}",
         f"**Errors:** {len(errors)}",
-        ""
+        "",
     ]
 
     if exported_files:
@@ -376,14 +365,16 @@ def _generate_export_summary(
             lines.append(f"- {error}")
         lines.append("")
 
-    lines.extend([
-        "## Next Steps:",
-        f"- Check the `{export_path}` directory for exported files",
-        f"- Open {format_type.upper()} files with appropriate applications",
-        "- For PDF: Requires PDF viewer (Adobe Reader, etc.)",
-        "- For DOCX: Requires Word or compatible viewer",
-        "- For HTML: Open in any web browser",
-        ""
-    ])
+    lines.extend(
+        [
+            "## Next Steps:",
+            f"- Check the `{export_path}` directory for exported files",
+            f"- Open {format_type.upper()} files with appropriate applications",
+            "- For PDF: Requires PDF viewer (Adobe Reader, etc.)",
+            "- For DOCX: Requires Word or compatible viewer",
+            "- For HTML: Open in any web browser",
+            "",
+        ]
+    )
 
     return "\n".join(lines)

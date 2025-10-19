@@ -54,7 +54,7 @@ async def import_from_archive(
     restore_mode: str = "overwrite",
     backup_existing: bool = True,
     dry_run: bool = False,
-    project: str | None = None
+    project: str | None = None,
 ) -> str:
     """
     Import complete Advanced Memory system from archive.
@@ -84,10 +84,10 @@ async def import_from_archive(
             extract_path.mkdir()
 
             logger.info(f"Extracting archive: {archive_path}")
-            if archive_path.suffix.lower() == '.zip':
-                shutil.unpack_archive(archive_path, extract_path, 'zip')
+            if archive_path.suffix.lower() == ".zip":
+                shutil.unpack_archive(archive_path, extract_path, "zip")
             else:
-                shutil.unpack_archive(archive_path, extract_path, 'tar')
+                shutil.unpack_archive(archive_path, extract_path, "tar")
 
             # Validate archive structure
             archive_root = extract_path / "advanced-memory-backup"
@@ -126,9 +126,9 @@ async def import_from_archive(
 
 **Archive Details:**
 - [FOLDER] Source: {archive_path}
-- [CHART] Version: {metadata.get('version', 'unknown')}
-- [DOC] Files: {metadata.get('total_files', 'unknown')}
-- [UNICODE][UNICODE][UNICODE] Projects: {len(metadata.get('projects_exported', []))}
+- [CHART] Version: {metadata.get("version", "unknown")}
+- [DOC] Files: {metadata.get("total_files", "unknown")}
+- [UNICODE][UNICODE][UNICODE] Projects: {len(metadata.get("projects_exported", []))}
 
 **Restoration Results:**
 {"\n".join(results)}
@@ -144,7 +144,7 @@ async def import_from_archive(
 3. Check that all knowledge is properly restored
 
 **To rollback:**
-If issues occur, restore from backup: `{backup_path if backup_existing else 'No backup created'}`
+If issues occur, restore from backup: `{backup_path if backup_existing else "No backup created"}`
 """
 
     except Exception as e:
@@ -159,7 +159,9 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
     # Check database
     db_path = archive_root / "database" / DATABASE_NAME
     if db_path.exists():
-        preview_lines.append(f"[CHART] Database: {_format_size(db_path.stat().st_size)} (would replace existing)")
+        preview_lines.append(
+            f"[CHART] Database: {_format_size(db_path.stat().st_size)} (would replace existing)"
+        )
     else:
         preview_lines.append("[UNICODE] Database: Not found in archive")
 
@@ -176,10 +178,12 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
         project_dirs = [d for d in projects_dir.iterdir() if d.is_dir()]
         preview_lines.append(f"[UNICODE][UNICODE][UNICODE] Projects ({len(project_dirs)}):")
         for project_dir in project_dirs:
-            files = list(project_dir.rglob('*'))
+            files = list(project_dir.rglob("*"))
             file_count = len([f for f in files if f.is_file()])
             size = sum(f.stat().st_size for f in files if f.is_file())
-            preview_lines.append(f"  - {project_dir.name}: {file_count} files, {_format_size(size)}")
+            preview_lines.append(
+                f"  - {project_dir.name}: {file_count} files, {_format_size(size)}"
+            )
     else:
         preview_lines.append("[UNICODE] Projects: No projects directory found")
 
@@ -204,7 +208,9 @@ async def _create_backup(config_manager: ConfigManager) -> str:
     return str(backup_path)
 
 
-async def _restore_components(archive_root: Path, config_manager: ConfigManager, restore_mode: str) -> list[str]:
+async def _restore_components(
+    archive_root: Path, config_manager: ConfigManager, restore_mode: str
+) -> list[str]:
     """Restore database, config, and projects."""
     results = []
 
@@ -243,7 +249,7 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
         for project_dir in project_dirs:
             # For now, we'll just note the projects - the actual restoration
             # would need more complex logic to handle project registration
-            files = list(project_dir.rglob('*'))
+            files = list(project_dir.rglob("*"))
             file_count = len([f for f in files if f.is_file()])
             results.append(f"[FOLDER] Project '{project_dir.name}': {file_count} files detected")
             logger.info(f"Project '{project_dir.name}' ready for restoration")
@@ -265,7 +271,7 @@ async def _update_project_registry(archive_root: Path, config_manager: ConfigMan
 
 def _format_size(bytes_size: int) -> str:
     """Format bytes to human readable size."""
-    for _unit in ['B', 'KB', 'MB', 'GB']:
+    for _unit in ["B", "KB", "MB", "GB"]:
         if bytes_size < 1024.0:
             return ".1f"
         bytes_size /= 1024.0

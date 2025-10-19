@@ -4,7 +4,6 @@ This tool consolidates all export operations: pandoc, docsify, html, joplin, pdf
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -79,15 +78,21 @@ async def adn_export(
 
     # Route to appropriate operation
     if operation == "pandoc":
-        return await _pandoc_export(export_path, format_type, source_folder, include_subfolders, pdf_engine, project)
+        return await _pandoc_export(
+            export_path, format_type, source_folder, include_subfolders, pdf_engine, project
+        )
     elif operation == "docsify":
-        return await _docsify_export(export_path, source_folder, include_subfolders, site_title, site_description, project)
+        return await _docsify_export(
+            export_path, source_folder, include_subfolders, site_title, site_description, project
+        )
     elif operation == "html":
         return await _html_export(export_path, source_folder, include_subfolders, project)
     elif operation == "joplin":
         return await _joplin_export(export_path, source_folder, include_subfolders, project)
     elif operation == "pdf_book":
-        return await _pdf_book_export(export_path, source_folder, include_subfolders, book_title, tag_filter, project)
+        return await _pdf_book_export(
+            export_path, source_folder, include_subfolders, book_title, tag_filter, project
+        )
     elif operation == "archive":
         return await _archive_export(export_path, project)
     elif operation == "evernote":
@@ -98,52 +103,119 @@ async def adn_export(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion"
 
 
-async def _pandoc_export(export_path: str, format_type: str, source_folder: str, include_subfolders: bool, pdf_engine: str, project: str | None) -> str:
+async def _pandoc_export(
+    export_path: str,
+    format_type: str,
+    source_folder: str,
+    include_subfolders: bool,
+    pdf_engine: str,
+    project: str | None,
+) -> str:
     """Handle Pandoc export operation."""
     from advanced_memory.mcp.tools.export_pandoc import export_pandoc
-    return await export_pandoc(export_path, format_type, source_folder, include_subfolders, pdf_engine, None, None, False, "tango", True, False, project)
+
+    return await export_pandoc(
+        export_path,
+        format_type,
+        source_folder,
+        include_subfolders,
+        pdf_engine,
+        None,
+        None,
+        False,
+        "tango",
+        True,
+        False,
+        project,
+    )
 
 
-async def _docsify_export(export_path: str, source_folder: str, include_subfolders: bool, site_title: str | None, site_description: str | None, project: str | None) -> str:
+async def _docsify_export(
+    export_path: str,
+    source_folder: str,
+    include_subfolders: bool,
+    site_title: str | None,
+    site_description: str | None,
+    project: str | None,
+) -> str:
     """Handle Docsify export operation."""
     from advanced_memory.mcp.tools.export_docsify import export_docsify
-    return await export_docsify(export_path, source_folder, include_subfolders, site_title or "Knowledge Base", site_description or "Documentation generated from Advanced Memory", project)
+
+    return await export_docsify(
+        export_path,
+        source_folder,
+        include_subfolders,
+        site_title or "Knowledge Base",
+        site_description or "Documentation generated from Advanced Memory",
+        project,
+    )
 
 
-async def _html_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
+async def _html_export(
+    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+) -> str:
     """Handle HTML export operation."""
     from advanced_memory.mcp.tools.export_html_notes import export_html_notes
+
     return await export_html_notes(export_path, source_folder, include_subfolders, True, project)
 
 
-async def _joplin_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
+async def _joplin_export(
+    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+) -> str:
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
+
     return await export_joplin_notes(export_path, source_folder, include_subfolders, True, project)
 
 
-async def _pdf_book_export(export_path: str, source_folder: str, include_subfolders: bool, book_title: str | None, tag_filter: str | None, project: str | None) -> str:
+async def _pdf_book_export(
+    export_path: str,
+    source_folder: str,
+    include_subfolders: bool,
+    book_title: str | None,
+    tag_filter: str | None,
+    project: str | None,
+) -> str:
     """Handle PDF book export operation."""
     if not book_title:
         return "# Error\n\nPDF book export requires: book_title parameter"
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
-    return await make_pdf_book(book_title, source_folder, tag_filter, export_path, "Advanced Memory", include_subfolders, 2, "a4", project)
+
+    return await make_pdf_book(
+        book_title,
+        source_folder,
+        tag_filter,
+        export_path,
+        "Advanced Memory",
+        include_subfolders,
+        2,
+        "a4",
+        project,
+    )
 
 
 async def _archive_export(export_path: str, project: str | None) -> str:
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
+
     return await export_to_archive(export_path, None, None, None, None, True, project)
 
 
-async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
+async def _evernote_export(
+    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+) -> str:
     """Handle Evernote export operation."""
     from advanced_memory.mcp.tools.export_evernote_compatible import export_evernote_compatible
+
     return await export_evernote_compatible(export_path, source_folder, include_subfolders, project)
 
 
-async def _notion_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
+async def _notion_export(
+    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+) -> str:
     """Handle Notion export operation."""
     from advanced_memory.mcp.tools.export_notion_compatible import export_notion_compatible
+
     return await export_notion_compatible(export_path, source_folder, include_subfolders, project)

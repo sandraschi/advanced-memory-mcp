@@ -118,7 +118,9 @@ async def search_obsidian_vault(
         if not vault_path_obj.is_dir():
             return f"# Vault Search Failed\n\nPath is not a directory: {vault_path}"
 
-        logger.info(f"Searching Obsidian vault: {vault_path} for query: '{query}' (type: {search_type})")
+        logger.info(
+            f"Searching Obsidian vault: {vault_path} for query: '{query}' (type: {search_type})"
+        )
 
         # Find all markdown files in the vault
         markdown_files = await _find_markdown_files(vault_path_obj)
@@ -167,16 +169,16 @@ async def _find_markdown_files(vault_path: Path) -> list[Path]:
                 dir_contents = await list_directory(current_path)
 
                 # Parse the directory listing (it's returned as formatted text)
-                lines = dir_contents.split('\n')
+                lines = dir_contents.split("\n")
                 for line in lines:
-                    if '[DOC]' in line and '.md' in line:
+                    if "[DOC]" in line and ".md" in line:
                         # Extract filename from the formatted line
                         parts = line.split()
                         if len(parts) >= 2:
                             filename = parts[1].strip()
-                            if filename.endswith('.md'):
+                            if filename.endswith(".md"):
                                 files.append(os.path.join(current_path, filename))
-                    elif '[FOLDER]' in line and not line.strip().endswith('.'):
+                    elif "[FOLDER]" in line and not line.strip().endswith("."):
                         # Directory - recurse
                         parts = line.split()
                         if len(parts) >= 2:
@@ -210,7 +212,7 @@ async def _search_text(markdown_files: list[Path], query: str) -> list[dict[str,
     for file_path in markdown_files:
         try:
             # Read file content
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
 
             # Extract title from first heading or filename
             title = _extract_title(content, file_path)
@@ -232,26 +234,28 @@ async def _search_text(markdown_files: list[Path], query: str) -> list[dict[str,
 
             if len(matches) == len(search_terms):  # All terms found
                 # Find line numbers with matches
-                lines = content.split('\n')
+                lines = content.split("\n")
                 match_lines = []
                 for i, line in enumerate(lines):
                     line_lower = line.lower()
                     if all(term.strip('"').lower() in line_lower for term in search_terms):
                         match_lines.append((i + 1, line.strip()))
 
-                results.append({
-                    'file_path': file_path,
-                    'title': title,
-                    'matches': match_lines[:5],  # Limit to first 5 matches
-                    'total_matches': len(match_lines)
-                })
+                results.append(
+                    {
+                        "file_path": file_path,
+                        "title": title,
+                        "matches": match_lines[:5],  # Limit to first 5 matches
+                        "total_matches": len(match_lines),
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading file {file_path}: {e}")
             continue
 
     # Sort by number of matches (most relevant first)
-    results.sort(key=lambda x: x['total_matches'], reverse=True)
+    results.sort(key=lambda x: x["total_matches"], reverse=True)
     return results
 
 
@@ -260,27 +264,29 @@ async def _search_tags(markdown_files: list[Path], query: str) -> list[dict[str,
     results = []
 
     # Clean query to extract tag
-    tag = query.strip().lstrip('#')
+    tag = query.strip().lstrip("#")
 
     for file_path in markdown_files:
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             title = _extract_title(content, file_path)
 
             # Find all tags in the file
-            tags_in_file = re.findall(r'#(\w+)', content)
+            tags_in_file = re.findall(r"#(\w+)", content)
 
             if tag.lower() in [t.lower() for t in tags_in_file]:
                 # Count occurrences
                 count = sum(1 for t in tags_in_file if t.lower() == tag.lower())
 
-                results.append({
-                    'file_path': file_path,
-                    'title': title,
-                    'tags': tags_in_file,
-                    'tag_matches': [tag],
-                    'total_matches': count
-                })
+                results.append(
+                    {
+                        "file_path": file_path,
+                        "title": title,
+                        "tags": tags_in_file,
+                        "tag_matches": [tag],
+                        "total_matches": count,
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading file {file_path}: {e}")
@@ -299,25 +305,29 @@ async def _search_files(markdown_files: list[Path], query: str) -> list[dict[str
 
         if query_lower in filename:
             try:
-                content = file_path.read_text(encoding='utf-8')
+                content = file_path.read_text(encoding="utf-8")
                 title = _extract_title(content, file_path)
 
-                results.append({
-                    'file_path': file_path,
-                    'title': title,
-                    'filename_match': True,
-                    'total_matches': 1
-                })
+                results.append(
+                    {
+                        "file_path": file_path,
+                        "title": title,
+                        "filename_match": True,
+                        "total_matches": 1,
+                    }
+                )
 
             except Exception as e:
                 logger.warning(f"Error reading file {file_path}: {e}")
                 # Still include files we can't read
-                results.append({
-                    'file_path': file_path,
-                    'title': file_path.stem,
-                    'filename_match': True,
-                    'total_matches': 1
-                })
+                results.append(
+                    {
+                        "file_path": file_path,
+                        "title": file_path.stem,
+                        "filename_match": True,
+                        "total_matches": 1,
+                    }
+                )
 
     return results
 
@@ -327,7 +337,7 @@ async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str
     results = []
 
     # Extract link target from [[link]]
-    link_match = re.search(r'\[\[([^\]]+)\]\]', query)
+    link_match = re.search(r"\[\[([^\]]+)\]\]", query)
     if not link_match:
         return results
 
@@ -335,22 +345,24 @@ async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str
 
     for file_path in markdown_files:
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             title = _extract_title(content, file_path)
 
             # Find all wikilinks in the file
-            links_in_file = re.findall(r'\[\[([^\]]+)\]\]', content)
+            links_in_file = re.findall(r"\[\[([^\]]+)\]\]", content)
 
             if target_link.lower() in [link.lower() for link in links_in_file]:
                 count = sum(1 for link in links_in_file if link.lower() == target_link.lower())
 
-                results.append({
-                    'file_path': file_path,
-                    'title': title,
-                    'links': links_in_file,
-                    'link_matches': [target_link],
-                    'total_matches': count
-                })
+                results.append(
+                    {
+                        "file_path": file_path,
+                        "title": title,
+                        "links": links_in_file,
+                        "link_matches": [target_link],
+                        "total_matches": count,
+                    }
+                )
 
         except Exception as e:
             logger.warning(f"Error reading file {file_path}: {e}")
@@ -364,16 +376,16 @@ async def _search_frontmatter(markdown_files: list[Path], query: str) -> list[di
     results = []
 
     # Parse query like "field: value"
-    if ':' not in query:
+    if ":" not in query:
         return results
 
-    field, value = query.split(':', 1)
+    field, value = query.split(":", 1)
     field = field.strip()
     value = value.strip()
 
     for file_path in markdown_files:
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
             title = _extract_title(content, file_path)
 
             # Extract frontmatter
@@ -384,13 +396,15 @@ async def _search_frontmatter(markdown_files: list[Path], query: str) -> list[di
                 search_value = value.lower()
 
                 if search_value in field_value:
-                    results.append({
-                        'file_path': file_path,
-                        'title': title,
-                        'frontmatter': frontmatter,
-                        'field_matches': {field: frontmatter[field]},
-                        'total_matches': 1
-                    })
+                    results.append(
+                        {
+                            "file_path": file_path,
+                            "title": title,
+                            "frontmatter": frontmatter,
+                            "field_matches": {field: frontmatter[field]},
+                            "total_matches": 1,
+                        }
+                    )
 
         except Exception as e:
             logger.warning(f"Error reading file {file_path}: {e}")
@@ -417,7 +431,7 @@ def _parse_search_query(query: str) -> list[str]:
             if current_term:
                 terms.append(f'"{current_term}"')
                 current_term = ""
-        elif char == ' ' and not in_quotes:
+        elif char == " " and not in_quotes:
             if current_term:
                 terms.append(current_term.strip())
                 current_term = ""
@@ -435,11 +449,11 @@ def _parse_search_query(query: str) -> list[str]:
 
 def _extract_title(content: str, file_path: Path) -> str:
     """Extract title from markdown content or filename."""
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     # Look for first heading
     for line in lines:
-        if line.startswith('# '):
+        if line.startswith("# "):
             return line[2:].strip()
 
     # Fallback to filename
@@ -448,17 +462,17 @@ def _extract_title(content: str, file_path: Path) -> str:
 
 def _extract_frontmatter(content: str) -> dict[str, Any]:
     """Extract YAML frontmatter from markdown content."""
-    if not content.startswith('---'):
+    if not content.startswith("---"):
         return {}
 
-    lines = content.split('\n')
+    lines = content.split("\n")
     if len(lines) < 3:
         return {}
 
     # Find end of frontmatter
     end_idx = -1
     for i, line in enumerate(lines[1:], 1):
-        if line.strip() == '---':
+        if line.strip() == "---":
             end_idx = i
             break
 
@@ -470,23 +484,29 @@ def _extract_frontmatter(content: str) -> dict[str, Any]:
     # Simple YAML parsing (basic key-value pairs)
     frontmatter = {}
     for line in frontmatter_lines:
-        if ':' in line:
-            key, value = line.split(':', 1)
+        if ":" in line:
+            key, value = line.split(":", 1)
             key = key.strip()
             value = value.strip()
 
             # Try to parse as number or boolean
             if value.isdigit():
                 frontmatter[key] = int(value)
-            elif value.lower() in ('true', 'false'):
-                frontmatter[key] = value.lower() == 'true'
+            elif value.lower() in ("true", "false"):
+                frontmatter[key] = value.lower() == "true"
             else:
                 frontmatter[key] = value
 
     return frontmatter
 
 
-def _format_search_results(results: list[dict[str, Any]], vault_path: str, query: str, search_type: str, include_content: bool) -> str:
+def _format_search_results(
+    results: list[dict[str, Any]],
+    vault_path: str,
+    query: str,
+    search_type: str,
+    include_content: bool,
+) -> str:
     """Format search results into readable output."""
     if not results:
         return f"# Vault Search Complete\n\nNo results found for '{query}' in vault: {vault_path}"
@@ -496,12 +516,12 @@ def _format_search_results(results: list[dict[str, Any]], vault_path: str, query
         f"Query: '{query}' (type: {search_type})",
         f"Vault: {vault_path}",
         f"Found {len(results)} matching files",
-        ""
+        "",
     ]
 
     for i, result in enumerate(results, 1):
-        file_path = result['file_path']
-        title = result['title']
+        file_path = result["file_path"]
+        title = result["title"]
 
         # Calculate relative path from vault
         try:
@@ -514,28 +534,28 @@ def _format_search_results(results: list[dict[str, Any]], vault_path: str, query
         output_lines.append(f"**Path:** {file_path}")
 
         # Add specific match information
-        if 'matches' in result and result['matches']:
+        if "matches" in result and result["matches"]:
             output_lines.append(f"**Matches:** {result['total_matches']} total")
             if include_content:
-                for line_num, line_content in result['matches'][:3]:  # Show first 3 matches
+                for line_num, line_content in result["matches"][:3]:  # Show first 3 matches
                     # Truncate long lines
                     if len(line_content) > 100:
                         line_content = line_content[:97] + "..."
                     output_lines.append(f"  - Line {line_num}: {line_content}")
 
-        elif 'tags' in result:
+        elif "tags" in result:
             output_lines.append(f"**Tags:** {', '.join(result['tags'])}")
 
-        elif 'links' in result:
+        elif "links" in result:
             output_lines.append(f"**Links:** {', '.join(result['links'])}")
 
-        elif 'frontmatter' in result:
+        elif "frontmatter" in result:
             fm_lines = []
-            for k, v in result['frontmatter'].items():
+            for k, v in result["frontmatter"].items():
                 fm_lines.append(f"{k}: {v}")
             output_lines.append(f"**Frontmatter:** {', '.join(fm_lines)}")
 
-        elif 'filename_match' in result:
+        elif "filename_match" in result:
             output_lines.append("**Match:** Filename")
 
         output_lines.append("")

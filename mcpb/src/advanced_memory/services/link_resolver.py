@@ -1,6 +1,5 @@
 """Service for resolving markdown links to permalinks."""
 
-
 from loguru import logger
 
 from advanced_memory.models import Entity
@@ -66,6 +65,7 @@ class LinkResolver:
             file_path_with_md = f"{clean_text}.md"
             # Only normalize path separators for cross-platform compatibility
             import os
+
             file_path_with_md = os.path.normpath(file_path_with_md)
             logger.debug(f"Trying to find entity with normalized path: {file_path_with_md}")
             found_path_md = await self.entity_repository.get_by_file_path(file_path_with_md)
@@ -79,7 +79,9 @@ class LinkResolver:
                 all_entities = await self.entity_repository.find_all()
                 for entity in all_entities:
                     if entity.file_path and entity.file_path.lower() == file_path_with_md.lower():
-                        logger.debug(f"Found entity with case-insensitive path match: {entity.file_path}")
+                        logger.debug(
+                            f"Found entity with case-insensitive path match: {entity.file_path}"
+                        )
                         return entity
 
         # In strict mode, don't try fuzzy search - return None if no exact match found

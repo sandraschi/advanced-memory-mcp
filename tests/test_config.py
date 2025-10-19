@@ -13,9 +13,9 @@ class TestAdvancedMemoryConfig:
 
         config = AdvancedMemoryConfig()
 
-        # Should use the default path (home/advanced-memory)
+        # Should use the home directory directly (Path.home())
         # Note: config_home fixture sets HOME to tmp_path, so Path.home() returns tmp_path
-        expected_path = str(config_home / "advanced-memory")
+        expected_path = str(config_home)
         assert config.projects["main"] == expected_path
 
     def test_respects_advanced_memory_home_environment_variable(self, config_home, monkeypatch):

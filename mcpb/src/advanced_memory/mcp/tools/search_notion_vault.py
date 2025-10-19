@@ -114,12 +114,12 @@ async def search_notion_vault(
     # Find all relevant files
     files_to_search = []
 
-    if file_type == 'html' or file_type is None:
-        files_to_search.extend(vault_dir.rglob('*.html'))
+    if file_type == "html" or file_type is None:
+        files_to_search.extend(vault_dir.rglob("*.html"))
 
-    if file_type == 'markdown' or file_type is None:
-        files_to_search.extend(vault_dir.rglob('*.md'))
-        files_to_search.extend(vault_dir.rglob('*.markdown'))
+    if file_type == "markdown" or file_type is None:
+        files_to_search.extend(vault_dir.rglob("*.md"))
+        files_to_search.extend(vault_dir.rglob("*.markdown"))
 
     if not files_to_search:
         return f"No {file_type or 'HTML/Markdown'} files found in '{vault_path}'"
@@ -143,7 +143,7 @@ async def search_notion_vault(
             continue
 
     # Sort by relevance (number of matches, then by file path)
-    results.sort(key=lambda x: (-x['match_count'], x['file_path']))
+    results.sort(key=lambda x: (-x["match_count"], x["file_path"]))
 
     # Limit results
     results = results[:max_results]
@@ -153,19 +153,17 @@ async def search_notion_vault(
 
 
 async def _search_file(
-    file_path: Path,
-    query_pattern: re.Pattern,
-    vault_dir: Path
+    file_path: Path, query_pattern: re.Pattern, vault_dir: Path
 ) -> list[dict[str, Any]]:
     """Search a single file for the query pattern."""
 
     try:
         # Try UTF-8 first, then fallback to latin-1
         try:
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except UnicodeDecodeError:
-            with open(file_path, encoding='latin-1') as f:
+            with open(file_path, encoding="latin-1") as f:
                 content = f.read()
     except Exception as e:
         logger.warning(f"Could not read file {file_path}: {e}")
@@ -179,7 +177,7 @@ async def _search_file(
 
     # Extract file info
     relative_path = file_path.relative_to(vault_dir)
-    file_type = 'html' if file_path.suffix.lower() == '.html' else 'markdown'
+    file_type = "html" if file_path.suffix.lower() == ".html" else "markdown"
 
     # Extract title from content
     title = _extract_title_from_content(content, file_path, file_type)
@@ -191,23 +189,22 @@ async def _search_file(
     context = content[start:end]
 
     # Highlight the match in context
-    highlighted_context = query_pattern.sub(
-        lambda m: f"**{m.group()}**",
-        context
-    )
+    highlighted_context = query_pattern.sub(lambda m: f"**{m.group()}**", context)
 
     # Clean up context for display
-    highlighted_context = highlighted_context.replace('\n', ' ').replace('\r', ' ')
-    highlighted_context = re.sub(r'\s+', ' ', highlighted_context)
+    highlighted_context = highlighted_context.replace("\n", " ").replace("\r", " ")
+    highlighted_context = re.sub(r"\s+", " ", highlighted_context)
 
-    return [{
-        'file_path': str(relative_path),
-        'title': title,
-        'file_type': file_type,
-        'match_count': len(matches),
-        'context': highlighted_context,
-        'line_number': content[:first_match.start()].count('\n') + 1
-    }]
+    return [
+        {
+            "file_path": str(relative_path),
+            "title": title,
+            "file_type": file_type,
+            "match_count": len(matches),
+            "context": highlighted_context,
+            "line_number": content[: first_match.start()].count("\n") + 1,
+        }
+    ]
 
 
 def _extract_title_from_content(content: str, file_path: Path, file_type: str) -> str:
@@ -215,28 +212,28 @@ def _extract_title_from_content(content: str, file_path: Path, file_type: str) -
 
     # Try different title extraction methods based on file type
 
-    if file_type == 'html':
+    if file_type == "html":
         # Look for title tag
-        title_match = re.search(r'<title[^>]*>(.*?)</title>', content, re.IGNORECASE)
+        title_match = re.search(r"<title[^>]*>(.*?)</title>", content, re.IGNORECASE)
         if title_match:
             title = title_match.group(1).strip()
             # Clean up Notion-specific prefixes
-            title = re.sub(r'^Notion\s*[-[UNICODE]]\s*', '', title)
+            title = re.sub(r"^Notion\s*[-[UNICODE]]\s*", "", title)
             return title
 
         # Look for h1 in content
-        h1_match = re.search(r'<h1[^>]*>(.*?)</h1>', content, re.IGNORECASE)
+        h1_match = re.search(r"<h1[^>]*>(.*?)</h1>", content, re.IGNORECASE)
         if h1_match:
             return h1_match.group(1).strip()
 
     else:  # markdown
-        lines = content.split('\n')
+        lines = content.split("\n")
         for line in lines[:10]:  # Check first 10 lines
             line = line.strip()
-            if line.startswith('# '):
+            if line.startswith("# "):
                 title = line[2:].strip()
                 # Clean up Notion-specific prefixes
-                title = re.sub(r'^Notion\s*[-[UNICODE]]\s*', '', title)
+                title = re.sub(r"^Notion\s*[-[UNICODE]]\s*", "", title)
                 return title
 
     # Fallback to filename
@@ -264,6 +261,8 @@ def _format_search_results(query: str, results: list[dict[str, Any]], total_file
         summary += f"- **Context**: ...{result['context']}...\n\n"
 
     if len(results) >= 20:
-        summary += "*Showing first 20 results. Use more specific search terms for better results.*\n"
+        summary += (
+            "*Showing first 20 results. Use more specific search terms for better results.*\n"
+        )
 
     return summary

@@ -1,6 +1,5 @@
 """Schemas for import services."""
 
-
 from pydantic import BaseModel
 
 

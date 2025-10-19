@@ -246,9 +246,7 @@ DIFFERENCE FROM LIST_PROJECTS:
 NOTE: This tool shows the active project context that affects all operations.
 Use list_memory_projects() to see all available projects.""",
 )
-async def get_current_project(
-    ctx: Context | None = None, _compatibility: str | None = None
-) -> str:
+async def get_current_project(ctx: Context | None = None, _compatibility: str | None = None) -> str:
     """Show the currently active project and basic stats.
 
     Displays which project is currently active and provides basic information

@@ -18,6 +18,7 @@ class AppContext:
     watch_task: asyncio.Task | None
     migration_manager: Any | None = None
 
+
 @asynccontextmanager
 async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma: no cover
     """Application lifespan manager."""
@@ -38,6 +39,7 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
     finally:
         # Cleanup on shutdown - migration tasks will be cancelled automatically
         pass
+
 
 # Create a shared MCP instance that tools can import
 mcp = FastMCP(

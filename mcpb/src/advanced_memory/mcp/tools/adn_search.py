@@ -4,7 +4,6 @@ This tool consolidates all search operations: notes, obsidian, joplin, notion, e
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -97,48 +96,87 @@ async def adn_search(
     elif operation == "notion":
         return await _notion_search(query, source_path, case_sensitive, file_type, max_results)
     elif operation == "evernote":
-        return await _evernote_search(query, source_path, case_sensitive, file_type, notebook_filter, tag_filter, max_results)
+        return await _evernote_search(
+            query, source_path, case_sensitive, file_type, notebook_filter, tag_filter, max_results
+        )
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: notes, obsidian, joplin, notion, evernote"
 
 
-async def _notes_search(query: str, page: int, page_size: int, types: list[str] | None, entity_types: list[str] | None, after_date: str | None, project: str | None) -> str:
+async def _notes_search(
+    query: str,
+    page: int,
+    page_size: int,
+    types: list[str] | None,
+    entity_types: list[str] | None,
+    after_date: str | None,
+    project: str | None,
+) -> str:
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search_notes import search_notes
-    return await search_notes(query, page, page_size, "text", types, entity_types, after_date, project)
+
+    return await search_notes(
+        query, page, page_size, "text", types, entity_types, after_date, project
+    )
 
 
-async def _obsidian_search(query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool) -> str:
+async def _obsidian_search(
+    query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool
+) -> str:
     """Handle Obsidian vault search operation."""
     if not source_path:
         return "# Error\n\nObsidian search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
-    return await search_obsidian_vault(source_path, query, search_type, max_results, include_content)
+
+    return await search_obsidian_vault(
+        source_path, query, search_type, max_results, include_content
+    )
 
 
-async def _joplin_search(query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool) -> str:
+async def _joplin_search(
+    query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool
+) -> str:
     """Handle Joplin export search operation."""
     if not source_path:
         return "# Error\n\nJoplin search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
+
     return await search_joplin_vault(source_path, query, search_type, max_results, include_content)
 
 
-async def _notion_search(query: str, source_path: str | None, case_sensitive: bool, file_type: str | None, max_results: int) -> str:
+async def _notion_search(
+    query: str,
+    source_path: str | None,
+    case_sensitive: bool,
+    file_type: str | None,
+    max_results: int,
+) -> str:
     """Handle Notion export search operation."""
     if not source_path:
         return "# Error\n\nNotion search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
+
     return await search_notion_vault(source_path, query, case_sensitive, file_type, max_results)
 
 
-async def _evernote_search(query: str, source_path: str | None, case_sensitive: bool, file_type: str | None, notebook_filter: str | None, tag_filter: str | None, max_results: int) -> str:
+async def _evernote_search(
+    query: str,
+    source_path: str | None,
+    case_sensitive: bool,
+    file_type: str | None,
+    notebook_filter: str | None,
+    tag_filter: str | None,
+    max_results: int,
+) -> str:
     """Handle Evernote export search operation."""
     if not source_path:
         return "# Error\n\nEvernote search requires: source_path parameter"
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
-    return await search_evernote_vault(source_path, query, case_sensitive, file_type, notebook_filter, tag_filter, max_results)
+
+    return await search_evernote_vault(
+        source_path, query, case_sensitive, file_type, notebook_filter, tag_filter, max_results
+    )

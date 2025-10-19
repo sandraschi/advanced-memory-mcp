@@ -114,9 +114,20 @@ async def adn_editor(
         return await _notepadpp_import_operation(note_identifier, workspace_path, keep_workspace)
     elif operation == "typora_control":
         return await _typora_control_operation(
-            typora_operation, typora_format, typora_output_path, typora_text, typora_file_path,
-            typora_content, typora_position, typora_find_text, typora_replace_text, typora_files,
-            typora_theme, typora_visible, typora_template_name, typora_options
+            typora_operation,
+            typora_format,
+            typora_output_path,
+            typora_text,
+            typora_file_path,
+            typora_content,
+            typora_position,
+            typora_find_text,
+            typora_replace_text,
+            typora_files,
+            typora_theme,
+            typora_visible,
+            typora_template_name,
+            typora_options,
         )
     elif operation == "canvas_create":
         return await _canvas_create_operation(nodes, edges, canvas_title, canvas_folder, project)
@@ -126,49 +137,83 @@ async def adn_editor(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: notepadpp_edit, notepadpp_import, typora_control, canvas_create, read_content"
 
 
-async def _notepadpp_edit_operation(note_identifier: str | None, workspace_path: str | None, create_backup: bool) -> str:
+async def _notepadpp_edit_operation(
+    note_identifier: str | None, workspace_path: str | None, create_backup: bool
+) -> str:
     """Handle Notepad++ edit operation."""
     if not note_identifier:
         return "# Error\n\nNotepad++ edit requires: note_identifier parameter"
 
     from advanced_memory.mcp.tools.edit_in_notepadpp import edit_in_notepadpp
+
     return await edit_in_notepadpp(note_identifier, workspace_path, create_backup)
 
 
-async def _notepadpp_import_operation(note_identifier: str | None, workspace_path: str | None, keep_workspace: bool) -> str:
+async def _notepadpp_import_operation(
+    note_identifier: str | None, workspace_path: str | None, keep_workspace: bool
+) -> str:
     """Handle Notepad++ import operation."""
     if not note_identifier:
         return "# Error\n\nNotepad++ import requires: note_identifier parameter"
 
     from advanced_memory.mcp.tools.import_from_notepadpp import import_from_notepadpp
+
     return await import_from_notepadpp(note_identifier, workspace_path, keep_workspace)
 
 
 async def _typora_control_operation(
-    typora_operation: str | None, typora_format: str | None, typora_output_path: str | None,
-    typora_text: str | None, typora_file_path: str | None, typora_content: str | None,
-    typora_position: str | None, typora_find_text: str | None, typora_replace_text: str | None,
-    typora_files: list[str] | None, typora_theme: str | None, typora_visible: bool | None,
-    typora_template_name: str | None, typora_options: dict[str, Any] | None
+    typora_operation: str | None,
+    typora_format: str | None,
+    typora_output_path: str | None,
+    typora_text: str | None,
+    typora_file_path: str | None,
+    typora_content: str | None,
+    typora_position: str | None,
+    typora_find_text: str | None,
+    typora_replace_text: str | None,
+    typora_files: list[str] | None,
+    typora_theme: str | None,
+    typora_visible: bool | None,
+    typora_template_name: str | None,
+    typora_options: dict[str, Any] | None,
 ) -> str:
     """Handle Typora control operation."""
     if not typora_operation:
         return "# Error\n\nTypora control requires: typora_operation parameter"
 
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(
-        typora_operation, typora_format, typora_output_path, typora_text, typora_file_path,
-        typora_content, typora_position, typora_find_text, typora_replace_text, typora_files,
-        typora_theme, typora_visible, typora_template_name, typora_options
+        typora_operation,
+        typora_format,
+        typora_output_path,
+        typora_text,
+        typora_file_path,
+        typora_content,
+        typora_position,
+        typora_find_text,
+        typora_replace_text,
+        typora_files,
+        typora_theme,
+        typora_visible,
+        typora_template_name,
+        typora_options,
     )
 
 
-async def _canvas_create_operation(nodes: list[dict[str, Any]] | None, edges: list[dict[str, Any]] | None, canvas_title: str | None, canvas_folder: str | None, project: str | None) -> str:
+async def _canvas_create_operation(
+    nodes: list[dict[str, Any]] | None,
+    edges: list[dict[str, Any]] | None,
+    canvas_title: str | None,
+    canvas_folder: str | None,
+    project: str | None,
+) -> str:
     """Handle canvas create operation."""
     if not nodes or not edges or not canvas_title or not canvas_folder:
         return "# Error\n\nCanvas create requires: nodes, edges, canvas_title, canvas_folder parameters"
 
     from advanced_memory.mcp.tools.canvas import canvas
+
     return await canvas(nodes, edges, canvas_title, canvas_folder, project)
 
 
@@ -178,4 +223,5 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
         return "# Error\n\nRead content requires: path parameter"
 
     from advanced_memory.mcp.tools.read_content import read_content
+
     return await read_content(path, project)
