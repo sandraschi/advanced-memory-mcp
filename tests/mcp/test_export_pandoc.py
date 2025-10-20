@@ -46,9 +46,7 @@ async def test_export_pandoc_docx(tmp_path, mock_notes_data):
                 mock_process.returncode = 0
                 mock_exec.return_value = mock_process
 
-                with patch(
-                    "advanced_memory.utils.file_opener.open_file_or_folder"
-                ) as mock_open:
+                with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
                     mock_open.return_value = (True, "Opened")
 
                     result = await export_pandoc.fn(
@@ -135,9 +133,7 @@ async def test_export_pandoc_show_after_export(tmp_path, mock_notes_data):
                 mock_process.returncode = 0
                 mock_exec.return_value = mock_process
 
-                with patch(
-                    "advanced_memory.utils.file_opener.open_file_or_folder"
-                ) as mock_open:
+                with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
                     mock_open.return_value = (True, "Opened file")
 
                     result = await export_pandoc.fn(
@@ -171,9 +167,7 @@ async def test_export_pandoc_no_show(tmp_path, mock_notes_data):
                 mock_process.returncode = 0
                 mock_exec.return_value = mock_process
 
-                with patch(
-                    "advanced_memory.utils.file_opener.open_file_or_folder"
-                ) as mock_open:
+                with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
                     result = await export_pandoc.fn(
                         export_path=str(export_path),
                         format_type="docx",

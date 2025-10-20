@@ -8,7 +8,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.search import search_notes
-from advanced_memory.mcp.tools.utils import call_get, sanitize_unicode_content
+from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.memory import memory_url_path
 from advanced_memory.utils import sanitize_filename, validate_project_path
 
@@ -135,7 +135,7 @@ async def read_note(
         response = await call_get(client, path, params={"page": page, "page_size": page_size})
         if response.status_code == 200:
             logger.info("Returning read_note result from resource: {path}", path=entity_path)
-            return sanitize_unicode_content(response.text)
+            return response.text
     except Exception as e:  # pragma: no cover
         logger.info(f"Direct lookup failed for '{path}': {e}")
         # Continue to try sanitized version
@@ -157,7 +157,7 @@ async def read_note(
                 )
                 if response.status_code == 200:
                     logger.info(f"Found note using sanitized path: {sanitized_full_path}")
-                    return sanitize_unicode_content(response.text)
+                    return response.text
             except Exception as e:  # pragma: no cover
                 logger.info(f"Sanitized path lookup also failed for '{sanitized_full_path}': {e}")
                 # Continue to fallback methods
@@ -178,7 +178,7 @@ async def read_note(
 
                 if response.status_code == 200:
                     logger.info(f"Found note by title search: {result.permalink}")
-                    return sanitize_unicode_content(response.text)
+                    return response.text
             except Exception as e:  # pragma: no cover
                 logger.info(
                     f"Failed to fetch content for found title match {result.permalink}: {e}"
