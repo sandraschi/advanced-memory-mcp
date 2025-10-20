@@ -90,8 +90,7 @@ async def test_parse_complete_file(project_config, entity_parser, valid_entity_c
     )
     # Wikilink [[target|display]] should extract just the target
     assert (
-        Relation(type="links to", target="Random Link with Title", context=None)
-        in entity.relations
+        Relation(type="links to", target="Random Link with Title", context=None) in entity.relations
     ), "missing [[Random Link with Title|Titled Link]]"
 
 

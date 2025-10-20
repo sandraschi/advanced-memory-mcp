@@ -1320,7 +1320,7 @@ async def test_scan_directory_finds_all_file_types(
     sync_service: SyncService, project_config: ProjectConfig
 ):
     """Test that scan_directory picks up all file types, not just .md files.
-    
+
     This supports using advanced-memory for code repositories and mixed content.
     """
     project_dir = project_config.home
@@ -1328,7 +1328,7 @@ async def test_scan_directory_finds_all_file_types(
     # Create various file types
     await create_test_file(project_dir / "test.md", "# Test Markdown")
     await create_test_file(project_dir / "folder" / "note.md", "# Note in Folder")
-    
+
     # Create non-markdown files that should also be indexed
     await create_test_file(project_dir / "readme.txt", "plain text file")
     await create_test_file(project_dir / "config.json", '{"key": "value"}')
@@ -1339,12 +1339,14 @@ async def test_scan_directory_finds_all_file_types(
     scan_result = await sync_service.scan_directory(project_dir)
 
     # Should find all non-hidden, non-ignored files
-    assert len(scan_result.files) >= 6, f"Expected at least 6 files, found {len(scan_result.files)}: {list(scan_result.files.keys())}"
-    
+    assert len(scan_result.files) >= 6, (
+        f"Expected at least 6 files, found {len(scan_result.files)}: {list(scan_result.files.keys())}"
+    )
+
     # Verify markdown files are found
     file_paths = set(scan_result.files.keys())
     assert "test.md" in file_paths
-    
+
     # Verify non-markdown files are also found (supporting repo-based usage)
     assert "readme.txt" in file_paths
     assert "config.json" in file_paths

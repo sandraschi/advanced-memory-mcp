@@ -17,10 +17,13 @@ from advanced_memory.mcp.tools.adn_navigation import adn_navigation
 from advanced_memory.mcp.tools.adn_search import adn_search
 from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.mcp.tools.project_manager import adn_project
+from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
-# MCPB exports ONLY portmanteau tools (10 total)
+# MCPB exports ONLY portmanteau tools + bonus rendering tool (11 total)
 __all__ = [
+    # Bonus: Rendered Mermaid viewing
+    "view_note_rendered",  # View notes with rendered Mermaid diagrams (HTML artifact)
     "adn_content",      # Content management (write, read, edit, move, delete, view)
     "adn_project",      # Project management (create, switch, list, status, etc.)
     "adn_zettelmaker",  # Zettelkasten generation and management

@@ -81,6 +81,7 @@ async def export_html_notes(
     source_folder: str = "/",
     include_subfolders: bool = True,
     include_index: bool = True,
+    show_after_export: bool = True,
     project: str | None = None,
 ) -> str:
     """Export Advanced Memory notes to clean HTML format.
@@ -131,6 +132,21 @@ async def export_html_notes(
 
         # Process the export
         result = await _process_html_export(notes_data, export_path_obj, include_index)
+        
+        # Open the index.html file if requested
+        if show_after_export and include_index:
+            from advanced_memory.utils.file_opener import open_file_or_folder, format_open_result
+            
+            index_file = export_path_obj / "index.html"
+            if index_file.exists():
+                success, msg = open_file_or_folder(index_file)
+                result += "\n\n" + format_open_result(success, msg, index_file)
+        elif show_after_export:
+            from advanced_memory.utils.file_opener import open_file_or_folder
+            
+            # No index, just open the folder
+            success, msg = open_file_or_folder(export_path_obj)
+            result += f"\n\n## 🚀 Opened Folder\n\n✅ Opened HTML files in file explorer: {export_path_obj}"
 
         return result
 

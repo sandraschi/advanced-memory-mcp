@@ -44,6 +44,7 @@ async def adn_content(
     - write: Create new notes or update existing ones with semantic processing
     - read: Retrieve complete note content with intelligent lookup strategies
     - view: Display notes as formatted artifacts for better readability
+    - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
     - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
     - move: Relocate notes while preserving relationships and updating references
     - delete: Remove notes from knowledge base with relationship cleanup
@@ -56,7 +57,7 @@ async def adn_content(
     - Markdown rendering and syntax validation
 
     Args:
-        operation: Operation type (write, read, view, edit, move, delete)
+        operation: Operation type (write, read, view, view_rendered, edit, move, delete)
         identifier: Note title, permalink, or memory:// URL
         content: Full markdown content for write/edit operations
         folder: Target folder path for write/move operations
@@ -89,6 +90,9 @@ async def adn_content(
 
         # Delete a note
         adn_content("delete", identifier="Project Plan")
+
+        # View note with rendered Mermaid diagrams
+        adn_content("view_rendered", identifier="System Architecture")
     """
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
 
@@ -119,6 +123,10 @@ async def adn_content(
         if identifier is None:
             return "# Error\n\nView operation requires: identifier"
         return await _view_operation(active_project, identifier, page, page_size)
+    elif operation == "view_rendered":
+        if identifier is None:
+            return "# Error\n\nView_rendered operation requires: identifier"
+        return await _view_rendered_operation(active_project, identifier, page, page_size)
     elif operation == "edit":
         if identifier is None or edit_operation is None or content is None:
             return "# Error\n\nEdit operation requires: identifier, edit_operation, content"
@@ -242,6 +250,18 @@ async def _view_operation(active_project, identifier: str, page: int, page_size:
     from advanced_memory.mcp.tools.view_note import view_note
 
     return await view_note.fn(identifier, page, page_size, active_project.name)
+
+
+async def _view_rendered_operation(
+    active_project, identifier: str, page: int, page_size: int
+) -> str:
+    """Handle view_rendered operation (HTML artifact with rendered Mermaid diagrams)."""
+    if not identifier:
+        return "# Error\n\nView_rendered operation requires: identifier parameter"
+
+    from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
+
+    return await view_note_rendered.fn(identifier, "default", page, page_size, active_project.name)
 
 
 async def _edit_operation(

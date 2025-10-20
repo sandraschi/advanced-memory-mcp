@@ -211,6 +211,7 @@ async def export_to_archive(
     since_date: str | None = None,
     compress: bool = True,
     project: str | None = None,
+    show_after_export: bool = True,
 ) -> str:
     """
     Export complete Advanced Memory system to archive for migration/backup.
@@ -432,7 +433,7 @@ async def export_to_archive(
                 filter_info += """
 *Note: Filtered archives may have broken semantic links. Run rescan after import to rebuild.*"""
 
-            return f"""[UNICODE][UNICODE] **Advanced Memory Archive Created Successfully!**
+            summary = f"""[UNICODE][UNICODE] **Advanced Memory Archive Created Successfully!**
 
 **Archive Details:**
 - [FOLDER] Location: {archive_path}
@@ -454,6 +455,19 @@ Use the `import_from_archive` tool with this archive file.
 import_from_archive("{archive_path}")
 ```
 """
+
+            # Open the archive folder or file if requested
+            if show_after_export:
+                from advanced_memory.utils.file_opener import (
+                    open_file_or_folder,
+                )
+
+                # Open the parent folder containing the archive
+                archive_parent = Path(archive_path).parent
+                success, msg = open_file_or_folder(archive_parent)
+                summary += f"\n\n## 🚀 Opened Archive Location\n\n✅ Opened folder in file explorer: {archive_parent}"
+
+            return summary
 
     except Exception as e:
         logger.error(f"Error creating archive: {e}")

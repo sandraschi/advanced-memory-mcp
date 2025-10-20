@@ -5,15 +5,21 @@ This tool replaces Typora export functionality with reliable, automated
 Pandoc-based document conversion supporting multiple output formats.
 
 Supports: PDF, HTML, DOCX, ODT, RTF, LaTeX, EPUB, and more.
+
+Pandoc is auto-installed on first use via pypandoc.
 """
 
 import asyncio
 from pathlib import Path
 from typing import Any
 
+from loguru import logger
+
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import SearchQuery
+from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
 @mcp.tool()
@@ -30,6 +36,7 @@ async def export_pandoc(
     standalone: bool = True,
     self_contained: bool = False,
     project: str | None = None,
+    show_after_export: bool = True,
 ) -> str:
     """
     Export Advanced Memory notes to various formats using Pandoc.
@@ -109,6 +116,20 @@ async def export_pandoc(
 
         # Generate summary
         summary = _generate_export_summary(exported_files, errors, format_type, export_path)
+        
+        # Open exported files if requested
+        if show_after_export and exported_files:
+            from advanced_memory.utils.file_opener import open_file_or_folder, format_open_result
+            
+            export_dir = Path(export_path)
+            # Open the first file (or the folder if multiple)
+            if len(exported_files) == 1:
+                success, msg = open_file_or_folder(exported_files[0])
+                summary += "\n\n" + format_open_result(success, msg, exported_files[0])
+            else:
+                # Multiple files - open the folder
+                success, msg = open_file_or_folder(export_dir)
+                summary += f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
 
         return summary
 
@@ -125,10 +146,8 @@ async def _get_notes_from_folder(
     try:
         # Use search API to find notes (exclude entities for now)
         query = SearchQuery(
-            query="",  # Empty query to get all notes
+            text="",  # Empty query to get all notes
             types=["note"],  # Only notes, not entities
-            page=1,
-            page_size=1000,  # Large limit for batch export
         )
 
         # Add project filter if specified
@@ -137,13 +156,19 @@ async def _get_notes_from_folder(
             # May need adjustment based on actual API
             pass
 
-        response = await call_post("/api/search", query.model_dump(), SearchResponse)
+        response = await call_post(
+            client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump()
+        )
 
-        if not response or not hasattr(response, "results"):
+        if not response:
+            return []
+
+        response_data = response.json()
+        if not hasattr(response_data, "results") or not response_data.results:
             return []
 
         notes_data = []
-        for note in response.results:
+        for note in response_data.results:
             # Filter by folder path
             note_path = getattr(note, "file_path", "")
             if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
@@ -162,7 +187,7 @@ async def _get_notes_from_folder(
         return notes_data
 
     except Exception as e:
-        print(f"Error retrieving notes: {e}")
+        logger.error(f"Error retrieving notes: {e}")
         return []
 
 
@@ -172,7 +197,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools.read_note import read_note
+        from advanced_memory.mcp.tools import read_note as mcp_read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
@@ -180,11 +205,11 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await read_note(identifier)
+        content = await mcp_read_note.fn(identifier)
         return content if content else None
 
     except Exception as e:
-        print(f"Error reading note content: {e}")
+        logger.error(f"Error reading note content: {e}")
         return None
 
 
@@ -245,11 +270,11 @@ async def _export_single_note(
             return str(output_path)
         else:
             error_msg = stderr.decode("utf-8", errors="ignore")
-            print(f"Pandoc error for {note_info['title']}: {error_msg}")
+            logger.error(f"Pandoc error for {note_info['title']}: {error_msg}")
             return None
 
     except Exception as e:
-        print(f"Error exporting note {note_info['title']}: {e}")
+        logger.error(f"Error exporting note {note_info['title']}: {e}")
         return None
 
 
@@ -267,8 +292,19 @@ def _build_pandoc_command(
 ) -> list[str]:
     """
     Build the Pandoc command with all specified options.
+    
+    Pandoc is auto-installed on first use if not found.
     """
-    cmd = ["C:\\Program Files\\Pandoc\\pandoc.exe", input_path, "-o", output_path]
+    # Get pandoc executable (auto-installs if needed)
+    try:
+        cmd = get_pandoc_command()
+        cmd.extend([input_path, "-o", output_path])
+    except Exception as e:
+        logger.error(f"Failed to get Pandoc: {e}")
+        raise RuntimeError(
+            f"Pandoc is required for export but could not be installed: {e}\n\n"
+            "Please install manually from: https://pandoc.org/installing.html"
+        )
 
     # Format specification
     if format_type == "pdf":

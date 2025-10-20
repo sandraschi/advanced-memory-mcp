@@ -2,7 +2,7 @@
 
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from textwrap import dedent
 
@@ -10,7 +10,7 @@ from textwrap import dedent
 try:
     from datetime import UTC
 except ImportError:
-    UTC = timezone.utc
+    UTC = UTC
 
 import pytest
 import pytest_asyncio

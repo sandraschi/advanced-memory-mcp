@@ -10,7 +10,7 @@ A Model Context Protocol server that integrates personal knowledge management wi
 
 **New in v1.0.0b3**: Experimental Claude Skills export and unified database architecture.
 
-[Quick Start](#quick-start) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md) | [Claude Skills](docs/user-guide/claude-skills.md)
+[Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
 
 ---
 
@@ -40,13 +40,15 @@ Bidirectional format conversion between zettelkasten notes and Anthropic's Claud
 
 **Note**: These are comprehensive reference documents (1000-5000 words), not classic atomic zettelkasten notes. See [Zettelkasten Philosophy](docs/zettelkasten/ZETTELKASTEN_PHILOSOPHY.md) for the distinction. Classic zettelkasten support (atomic notes) planned for v1.1.
 
-### 3. Cursor IDE Compatible
+### 3. Cursor IDE Compatible - Tool Mode Selection
 
 **Problem**: Most MCPs have 40+ tools → breaks Cursor's 50-tool limit  
-**Solution**: 10 portmanteau tools with full functionality
+**Solution**: Choose between 11 portmanteau tools or full 50+ tools
+
+#### Portmanteau Mode (11 tools - Cursor compatible)
 
 ```
-adn_content    → write, read, edit, move, delete, view
+adn_content    → write, read, view, view_rendered, edit, move, delete
 adn_project    → create, switch, list, status, sync
 adn_export     → pandoc, docsify, html, pdf, skills!
 adn_import     → obsidian, notion, joplin, skills!
@@ -56,9 +58,26 @@ adn_navigation → explore, recent, context
 adn_editor     → notepad++, typora integration
 adn_zettelmaker→ generate, expand, suggest
 adn_inbox      → file drop processing
+help           → documentation
 ```
 
-**10 tools total** = fully compatible with Cursor IDE
+**Enable portmanteau-only mode** (for Cursor IDE):
+```json
+{
+  "mcpServers": {
+    "advanced-memory": {
+      "env": {
+        "ADVANCED_MEMORY_PORTMANTEAU_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+**11 tools total** = fully compatible with Cursor IDE  
+**Zero functionality loss** - all features available through portmanteau tools
+
+See [Tool Mode Selection](docs/user-guide/tool-mode-selection.md) for details.
 
 ### 4. Unified Database Architecture
 
@@ -161,21 +180,22 @@ adn_import("claude_skills", source_path="~/anthropic-skills/",
 
 ### Multi-Format Export
 
-**Note**: Some formats require external tools (see prerequisites below).
+**All exports work out of the box!** ✨ No paths needed!
 
 ```python
-adn_export("pandoc", export_path="book.pdf", format_type="pdf")  # Requires: Pandoc + LaTeX
-adn_export("docsify", export_path="docs/")                        # No prerequisites
-adn_export("claude_skills", export_path="skills/")                # No prerequisites
-adn_export("html", export_path="website/")                        # No prerequisites
-adn_export("pdf_book", export_path="book.pdf", book_title="...")  # Requires: Pandoc + LaTeX
+adn_export("pdf")                    # → Desktop/advanced-memory-exports/pdf/
+adn_export("pandoc", format_type="docx")  # → Desktop/advanced-memory-exports/pandoc/
+adn_export("docsify")                # → Desktop/advanced-memory-exports/docsify/
+adn_export("claude_skills")          # → Desktop/advanced-memory-exports/claude_skills/
+adn_export("html")                   # → Desktop/advanced-memory-exports/html/
 ```
 
-**Prerequisites for PDF**:
-- [Pandoc](https://pandoc.org/installing.html) - Universal document converter
-- LaTeX distribution ([MiKTeX](https://miktex.org/) for Windows, [TinyTeX](https://yihui.org/tinytex/) for minimal install)
+**Smart defaults**: Exports go to your Desktop (or specify custom path)  
+**Zero setup**: Everything auto-installs on first use  
+**PDF**: Pure Python (weasyprint) - no LaTeX needed! ⚡  
+**DOCX/EPUB**: Pandoc auto-downloads (~100MB, one-time)
 
-**Documentation**: [Export Guide](docs/user-guide/export.md)
+**Documentation**: [Export Guide](docs/user-guide/import-export.md)
 
 ### Import from Anywhere
 
@@ -490,14 +510,18 @@ advanced-memory mcp
 
 **Pending Real-World Verification** ⏳:
 - Import/export features (Obsidian, Notion, Joplin, Evernote)
-- Pandoc exports (PDF, DOCX, etc.)
 - Reference template quality and coverage
 - Editor integrations (Notepad++, Typora)
 
-**Prerequisites Required** 🔧:
-- PDF export: [Pandoc](https://pandoc.org/) + LaTeX
-- Obsidian import: [Obsidian](https://obsidian.md/) vault
-- Notion import: [Notion](https://notion.so/) export
+**Auto-Installed** ✅:
+- **Pandoc**: Downloads automatically on first export (~100MB, one-time)
+- **Mermaid.js**: Loaded from CDN for diagram rendering
+- **weasyprint**: Pure-Python PDF generation (no LaTeX needed!)
+
+**External Tools** (optional for specific imports) 🔧:
+- **Obsidian/Notion/Joplin/Evernote**: Only needed if importing FROM those platforms (we just read their export files)
+
+**Everything else**: ✅ Works immediately after `pip install`!
 - See [Testing Checklist](docs/testing/REAL_WORLD_TESTING_CHECKLIST.md) for details
 
 We're actively testing and will update status as features are verified. [Help us test!](CONTRIBUTING.md)

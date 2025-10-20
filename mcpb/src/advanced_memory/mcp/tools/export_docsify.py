@@ -4,8 +4,14 @@ This tool exports Advanced Memory notes to Docsify format, creating a
 complete documentation website from your knowledge base.
 """
 
+import asyncio
+import http.server
 import json
+import os
 import re
+import socketserver
+import threading
+import webbrowser
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -69,6 +75,9 @@ PARAMETERS:
 - enable_progress_bar (bool, default=True): Enable reading progress indicator
 - enable_code_copy (bool, default=True): Enable code block copy buttons
 - enable_emoji (bool, default=True): Enable emoji rendering
+- serve (bool, default=True): Start local HTTP server to view the site immediately
+- port (int, default=3211): Port for local HTTP server
+- export_all (bool, default=True): Export all folders matching source_folder name. Set False to error on ambiguous folder names
 - project (str, optional): Specific project to export from
 
 OUTPUT:
@@ -113,6 +122,9 @@ async def export_docsify_enhanced(
     enable_progress_bar: bool = True,
     enable_code_copy: bool = True,
     enable_emoji: bool = True,
+    serve: bool = True,
+    port: int = 3211,
+    export_all: bool = True,
     project: str | None = None,
 ) -> str:
     """[LAUNCH] Enhanced Docsify Export with Advanced Plugins
@@ -133,10 +145,38 @@ async def export_docsify_enhanced(
         logger.info(f"Starting Enhanced Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
+        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
 
         if not notes_data:
-            return f'# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in folder: `{source_folder}`\n\n[UNICODE][UNICODE] **Suggestions**:\n[UNICODE] Check the folder path exists in your knowledge base\n[UNICODE] Try exporting from root folder: `source_folder="/"`\n[UNICODE] Verify project context if using specific project'
+            # Try to provide helpful folder suggestions
+            all_notes = await _get_notes_from_folder("/", True, project, True)
+            if all_notes:
+                # Get unique folder names from existing notes
+                folders = set()
+                for note_info in all_notes[:20]:  # Check first 20 notes
+                    path_parts = note_info.get("path", "").split("/")
+                    if len(path_parts) > 1:
+                        folders.add(path_parts[-2])  # Get parent folder name
+                
+                folder_examples = ", ".join(sorted(list(folders)[:5]))
+                return f'''# [LAUNCH] Enhanced Docsify Export - No Notes Found
+
+[UNICODE] **No notes found** in folder: `{source_folder}`
+
+[UNICODE][UNICODE] **Suggestions**:
+- Try exporting from root folder: `source_folder="/"`
+- Check these available folders: {folder_examples}
+- Verify the folder name matches exactly (case-sensitive)
+- Check project context if using a specific project
+
+**Example**: If you have notes in "standards", try:
+```python
+adn_export("docsify", source_folder="standards")
+# or for nested paths:
+adn_export("docsify", source_folder="zettelkasten/standards")
+```'''
+            else:
+                return f'# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in the entire knowledge base.\n\n[UNICODE][UNICODE] Create some notes first before exporting.'
 
         # Analyze notes for enhanced features
         notes_analysis = _analyze_notes_for_enhancement(notes_data)
@@ -223,6 +263,11 @@ async def export_docsify_enhanced(
             len(exported_files),
         )
 
+        # Start local HTTP server if requested
+        if serve:
+            server_info = await _start_local_server(export_path_obj, port)
+            feature_summary += f"\n\n{server_info}"
+
         return feature_summary
 
     except Exception as e:
@@ -265,6 +310,9 @@ async def export_docsify(
     site_title: str = "Knowledge Base",
     site_description: str = "Documentation generated from Advanced Memory",
     project: str | None = None,
+    serve: bool = True,
+    port: int = 3211,
+    export_all: bool = True,
 ) -> str:
     """DEPRECATED: Use export_docsify_enhanced instead.
 
@@ -275,7 +323,7 @@ async def export_docsify(
 
     # Call the legacy implementation
     return await _legacy_export_docsify(
-        export_path, source_folder, include_subfolders, site_title, site_description, project
+        export_path, source_folder, include_subfolders, site_title, site_description, project, serve, port, export_all
     )
 
 
@@ -286,6 +334,9 @@ async def _legacy_export_docsify(
     site_title: str,
     site_description: str,
     project: str | None,
+    serve: bool = True,
+    port: int = 3211,
+    export_all: bool = True,
 ) -> str:
     """Legacy implementation of export_docsify for backward compatibility."""
 
@@ -298,14 +349,14 @@ async def _legacy_export_docsify(
         logger.info(f"Starting legacy Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
+        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
 
         if not notes_data:
             return f"# Docsify Export Complete\n\nNo notes found in folder: {source_folder}"
 
         # Process the export using legacy method
         result = await _process_docsify_export(
-            notes_data, export_path_obj, site_title, site_description, project
+            notes_data, export_path_obj, site_title, site_description, project, serve, port
         )
 
         return result
@@ -1457,7 +1508,7 @@ These features can be enabled by setting parameters to `true`:
 
 
 async def _get_notes_from_folder(
-    source_folder: str, include_subfolders: bool, project: str | None
+    source_folder: str, include_subfolders: bool, project: str | None, export_all: bool = True
 ) -> list[dict[str, Any]]:
     """Get all notes from the specified folder with full content."""
     try:
@@ -1485,6 +1536,11 @@ async def _get_notes_from_folder(
         search_result = SearchResponse.model_validate(search_response.json())
 
         notes_data = []
+        total_notes_found = len(search_result.results)
+        logger.info(f"Found {total_notes_found} total notes in search, filtering for folder: {source_folder}")
+
+        # Track matching folders for ambiguity detection
+        matching_folders: set[str] = set()
 
         # Filter notes by folder and get their content
         for note in search_result.results:
@@ -1492,15 +1548,36 @@ async def _get_notes_from_folder(
             note_title = note.title
 
             # Check if note is in the requested folder
-            if include_subfolders:
-                # Include notes in subfolders
-                folder_matches = note_path.startswith(source_folder.lstrip("/"))
+            # Support both exact paths and folder name matching
+            source_folder_clean = source_folder.strip("/")
+            
+            # If source_folder is "/" or empty, match all notes
+            if not source_folder_clean or source_folder_clean == "/":
+                folder_matches = True
+            elif include_subfolders:
+                # Check if the folder appears anywhere in the path (more flexible)
+                # Also check if path starts with the folder (exact match)
+                folder_matches = (
+                    source_folder_clean in note_path or 
+                    note_path.startswith(source_folder_clean + "/") or
+                    note_path.startswith("/" + source_folder_clean + "/") or
+                    ("/" + source_folder_clean + "/") in note_path
+                )
             else:
                 # Only notes directly in the folder
                 note_folder = "/".join(note_path.split("/")[:-1])  # Remove filename
-                folder_matches = note_folder == source_folder.lstrip("/")
+                folder_matches = (
+                    note_folder == source_folder_clean or
+                    note_folder.endswith("/" + source_folder_clean) or
+                    ("/" + source_folder_clean) in note_folder
+                )
 
             if folder_matches and note_path.endswith(".md"):
+                # Track which folder this note is in
+                note_folder = "/".join(note_path.split("/")[:-1])
+                if note_folder:
+                    matching_folders.add(note_folder)
+                
                 # Read the actual note content
                 try:
                     note_content = await read_note.fn(identifier=note_title, project=project)
@@ -1542,6 +1619,7 @@ async def _get_notes_from_folder(
                             "content": content,
                         }
                     )
+                    logger.debug(f"Matched note: {note_title} (path: {note_path})")
 
                 except Exception as e:
                     logger.warning(f"Could not read content for note {note_title}: {e}")
@@ -1557,6 +1635,27 @@ async def _get_notes_from_folder(
                         }
                     )
 
+        logger.info(f"Found {len(notes_data)} notes matching folder '{source_folder}' out of {total_notes_found} total notes")
+        
+        # Check for ambiguous folder matches when export_all=False
+        if not export_all and len(matching_folders) > 1 and source_folder.strip("/"):
+            folder_list = "\n".join(f"  - {folder}/" for folder in sorted(matching_folders))
+            raise ValueError(
+                f"Ambiguous folder name '{source_folder}' matches multiple locations:\n{folder_list}\n\n"
+                f"Please specify the full path or set export_all=True to export all matches."
+            )
+        
+        # Log info about multiple matches even when export_all=True
+        if len(matching_folders) > 1 and source_folder.strip("/"):
+            folder_list = ", ".join(sorted(matching_folders))
+            logger.info(f"Folder '{source_folder}' matched multiple locations: {folder_list}. Exporting from all.")
+        
+        # If no notes found, log helpful debug info
+        if len(notes_data) == 0 and total_notes_found > 0:
+            # Show some example paths to help user debug
+            example_paths = [note.file_path for note in list(search_result.results)[:5]]
+            logger.warning(f"No notes matched folder '{source_folder}'. Example paths in system: {example_paths}")
+
     except Exception as e:
         logger.error(f"Error getting notes from folder {source_folder}: {e}")
         return []
@@ -1570,6 +1669,8 @@ async def _process_docsify_export(
     site_title: str,
     site_description: str,
     project: str | None,
+    serve: bool = True,
+    port: int = 3211,
 ) -> str:
     """Process the export of notes to Docsify format."""
 
@@ -1614,7 +1715,14 @@ async def _process_docsify_export(
     await _create_docsify_files(export_path, notes_by_folder, site_title, site_description)
 
     # Generate summary report
-    return _generate_export_report(stats, export_path, site_title)
+    summary = _generate_export_report(stats, export_path, site_title)
+    
+    # Start local HTTP server if requested
+    if serve:
+        server_info = await _start_local_server(export_path, port)
+        summary += f"\n\n{server_info}"
+    
+    return summary
 
 
 def _create_markdown_content(note_info: dict[str, Any], project: str | None) -> str:
@@ -1784,6 +1892,93 @@ Use the sidebar to navigate through the documentation, or use the search box to 
     config_path = export_path / "docsify-config.json"
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
+
+
+async def _start_local_server(export_path: Path, port: int) -> str:
+    """Start a local HTTP server to serve the Docsify site."""
+    try:
+        # Convert to absolute path
+        abs_path = export_path.resolve()
+        
+        # Define a custom handler that serves from the export directory
+        class DocsifyHandler(http.server.SimpleHTTPRequestHandler):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, directory=str(abs_path), **kwargs)
+            
+            def log_message(self, format, *args):
+                # Suppress server logs to keep output clean
+                pass
+        
+        # Check if port is available
+        try:
+            with socketserver.TCPServer(("", port), DocsifyHandler) as test_server:
+                pass
+        except OSError:
+            return f"""## 🌐 Local Server (Port Busy)
+
+⚠️ Port {port} is already in use. Either:
+1. Stop the other service using port {port}
+2. Access your site at: http://localhost:{port} (if it's already serving this directory)
+3. Re-run with a different port: `serve=True, port=3212`
+
+**Export location**: `{abs_path}`"""
+        
+        # Start server in background thread
+        def start_server():
+            with socketserver.TCPServer(("", port), DocsifyHandler) as httpd:
+                httpd.serve_forever()
+        
+        server_thread = threading.Thread(target=start_server, daemon=True)
+        server_thread.start()
+        
+        # Give server time to start
+        await asyncio.sleep(0.5)
+        
+        # Open browser
+        url = f"http://localhost:{port}"
+        try:
+            webbrowser.open(url)
+            browser_opened = True
+        except Exception as e:
+            logger.warning(f"Could not auto-open browser: {e}")
+            browser_opened = False
+        
+        browser_msg = "✅ Browser opened automatically" if browser_opened else "⚠️ Please open browser manually"
+        
+        return f"""## 🌐 Local Server Started
+
+✅ **Server running at:** {url}
+{browser_msg}
+
+**Export location**: `{abs_path}`
+
+### How to use:
+1. The server is running in the background
+2. Visit {url} in your browser to view your docs
+3. The server will stay running as long as this session is active
+4. Changes to files will be reflected when you refresh the browser
+
+### To stop the server:
+The server runs as a daemon thread and will automatically stop when:
+- This MCP server session ends
+- You restart Claude Desktop
+- The process terminates
+
+**Note**: The server is running locally and only accessible from your machine."""
+        
+    except Exception as e:
+        logger.error(f"Failed to start server: {e}")
+        return f"""## ⚠️ Server Start Failed
+
+Could not start local server: {e}
+
+**Manual alternative:**
+```bash
+cd {export_path.resolve()}
+python -m http.server {port}
+```
+
+Then visit: http://localhost:{port}"""
 
 
 def _generate_export_report(stats: dict[str, Any], export_path: Path, site_title: str) -> str:

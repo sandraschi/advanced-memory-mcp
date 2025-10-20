@@ -4,8 +4,6 @@ This tool consolidates all content operations: write, read, view, edit, move, an
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-from typing import Union
-
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -17,7 +15,7 @@ from advanced_memory.schemas.base import Entity
 from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[list[str], str, None]
+TagType = list[str] | str | None
 
 
 @mcp.tool
@@ -46,6 +44,7 @@ async def adn_content(
     - write: Create new notes or update existing ones with semantic processing
     - read: Retrieve complete note content with intelligent lookup strategies
     - view: Display notes as formatted artifacts for better readability
+    - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
     - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
     - move: Relocate notes while preserving relationships and updating references
     - delete: Remove notes from knowledge base with relationship cleanup
@@ -58,7 +57,7 @@ async def adn_content(
     - Markdown rendering and syntax validation
 
     Args:
-        operation: Operation type (write, read, view, edit, move, delete)
+        operation: Operation type (write, read, view, view_rendered, edit, move, delete)
         identifier: Note title, permalink, or memory:// URL
         content: Full markdown content for write/edit operations
         folder: Target folder path for write/move operations
@@ -91,6 +90,9 @@ async def adn_content(
 
         # Delete a note
         adn_content("delete", identifier="Project Plan")
+        
+        # View note with rendered Mermaid diagrams
+        adn_content("view_rendered", identifier="System Architecture")
     """
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
 
@@ -108,14 +110,26 @@ async def adn_content(
 
     # Route to appropriate operation
     if operation == "write":
+        if identifier is None or content is None or folder is None:
+            return "# Error\n\nWrite operation requires: identifier, content, folder"
         return await _write_operation(
             active_project, identifier, content, folder, tags, entity_type
         )
     elif operation == "read":
+        if identifier is None:
+            return "# Error\n\nRead operation requires: identifier"
         return await _read_operation(active_project, identifier, page, page_size)
     elif operation == "view":
+        if identifier is None:
+            return "# Error\n\nView operation requires: identifier"
         return await _view_operation(active_project, identifier, page, page_size)
+    elif operation == "view_rendered":
+        if identifier is None:
+            return "# Error\n\nView_rendered operation requires: identifier"
+        return await _view_rendered_operation(active_project, identifier, page, page_size)
     elif operation == "edit":
+        if identifier is None or edit_operation is None or content is None:
+            return "# Error\n\nEdit operation requires: identifier, edit_operation, content"
         return await _edit_operation(
             active_project,
             identifier,
@@ -126,8 +140,12 @@ async def adn_content(
             section,
         )
     elif operation == "move":
+        if identifier is None or destination_path is None:
+            return "# Error\n\nMove operation requires: identifier, destination_path"
         return await _move_operation(active_project, identifier, destination_path)
     elif operation == "delete":
+        if identifier is None:
+            return "# Error\n\nDelete operation requires: identifier"
         return await _delete_operation(active_project, identifier)
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, edit, move, delete"
@@ -179,10 +197,11 @@ async def _write_operation(
     ]
 
     # Count observations by category
-    categories = {}
+    categories: dict[str, int] = {}
     if result.observations:
         for obs in result.observations:
-            categories[obs.category] = categories.get(obs.category, 0) + 1
+            if obs.category:  # Only count observations with categories
+                categories[obs.category] = categories.get(obs.category, 0) + 1
 
         summary.append("\n## Observations")
         for category, count in sorted(categories.items()):
@@ -231,6 +250,16 @@ async def _view_operation(active_project, identifier: str, page: int, page_size:
     from advanced_memory.mcp.tools.view_note import view_note
 
     return await view_note.fn(identifier, page, page_size, active_project.name)
+
+
+async def _view_rendered_operation(active_project, identifier: str, page: int, page_size: int) -> str:
+    """Handle view_rendered operation (HTML artifact with rendered Mermaid diagrams)."""
+    if not identifier:
+        return "# Error\n\nView_rendered operation requires: identifier parameter"
+
+    from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
+
+    return await view_note_rendered.fn(identifier, "default", page, page_size, active_project.name)
 
 
 async def _edit_operation(

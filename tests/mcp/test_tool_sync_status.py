@@ -155,7 +155,7 @@ async def test_sync_status_pending():
 
     assert "Advanced Memory Sync Status" in result
     # New format shows system initialization/processing state
-    assert ("System is starting up" in result or "Processing" in result)
+    assert "System is starting up" in result or "Processing" in result
 
 
 @pytest.mark.asyncio

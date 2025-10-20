@@ -227,7 +227,7 @@ FILTERING OPTIONS:
 PARAMETERS:
 - query (str, REQUIRED): Search terms with boolean operators and phrases
 - page (int, default=1): Result page for pagination
-- page_size (int, default=10): Results per page (max 100)
+- results_per_page (int, default=10): Results per page (max 100)
 - search_type (str, default="text"): Search mode (text/title/permalink/entity)
 - types (List[str], optional): Content type filters
 - entity_types (List[str], optional): Entity category filters
@@ -247,7 +247,7 @@ Phrase search: search_notes("\"project planning\" meeting")
 Filtered search: search_notes("urgent", entity_types=["task"])
 Date filter: search_notes("meeting", after_date="2024-01-01")
 Project scope: search_notes("design", project="work-project")
-Pagination: search_notes("important", page=2, page_size=50)
+Pagination: search_notes("important", page=2, results_per_page=50)
 
 RETURNS:
 SearchResponse object with results, metadata, and pagination info.
@@ -265,7 +265,7 @@ Large knowledge bases may require pagination for best performance.""",
 async def search_notes(
     query: str,
     page: int = 1,
-    page_size: int = 10,
+    results_per_page: int = 10,
     search_type: str = "text",
     types: list[str] | None = None,
     entity_types: list[str] | None = None,
@@ -317,7 +317,7 @@ async def search_notes(
     Args:
         query: The search query string (supports boolean operators, phrases, patterns)
         page: The page number of results to return (default 1)
-        page_size: The number of results to return per page (default 10)
+        results_per_page: The number of results to return per page (default 10)
         search_type: Type of search to perform, one of: "text", "title", "permalink" (default: "text")
         types: Optional list of note types to search (e.g., ["note", "person"])
         entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
@@ -413,7 +413,7 @@ async def search_notes(
             client,
             f"{project_url}/search/",
             json=search_query.model_dump(),
-            params={"page": page, "page_size": page_size},
+            params={"page": page, "page_size": results_per_page},
         )
         result = SearchResponse.model_validate(response.json())
 

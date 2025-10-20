@@ -1,6 +1,5 @@
 """Tests for template loader service"""
 
-
 from advanced_memory.services.template_loader import (
     get_content_templates,
     get_template_loader,

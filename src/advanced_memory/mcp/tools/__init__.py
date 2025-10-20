@@ -6,7 +6,20 @@ all tools with the MCP server.
 
 The tools are organized into portmanteau tools for better Cursor IDE compatibility,
 reducing the total number of tools while maintaining full functionality.
+
+Tool Exposure Modes:
+- PORTMANTEAU MODE (default): Only 12 essential portmanteau tools
+- FULL MODE (opt-in): All ~50+ tools (set ADVANCED_MEMORY_FULL_TOOLS_MODE=true)
 """
+
+import os
+
+# Check for full tools mode (opt-in)
+_FULL_TOOLS_MODE = os.getenv("ADVANCED_MEMORY_FULL_TOOLS_MODE", "false").lower() in (
+    "true",
+    "1",
+    "yes",
+)
 
 # Import portmanteau tools (consolidated for Cursor IDE compatibility)
 from advanced_memory.mcp.tools.adn_editor import adn_editor
@@ -62,63 +75,85 @@ from advanced_memory.mcp.tools.status import status
 from advanced_memory.mcp.tools.sync_status import sync_status
 from advanced_memory.mcp.tools.typora_control import typora_control
 from advanced_memory.mcp.tools.view_note import view_note
+from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 from advanced_memory.mcp.tools.write_note import write_note
 from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
-# Portmanteau tools (recommended for Cursor IDE - reduces tool count)
-__all__ = [
-    # Complete portmanteau tool suite (10 tools total)
-    "adn_content",  # Consolidates: write_note, read_note, view_note, edit_note, move_note, delete_note
-    "adn_project",  # Consolidates: create, switch, delete, set_default, get_current, list, sync, status
-    "adn_zettelmaker",  # Consolidates: generate, customize, expand, suggest, connect, analyze
-    "adn_inbox",  # Consolidates: inbox status, process, info, watch (file drop processing)
-    "adn_export",  # Consolidates: export_pandoc, export_docsify, export_html_notes, export_joplin_notes, make_pdf_book, export_to_archive, export_evernote_compatible, export_notion_compatible
-    "adn_import",  # Consolidates: load_obsidian_vault, load_joplin_vault, load_notion_export, load_evernote_export, import_from_archive, load_obsidian_canvas
-    "adn_search",  # Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault
-    "adn_knowledge",  # Consolidates: knowledge_operations, research_orchestrator
-    "adn_navigation",  # Consolidates: build_context, recent_activity, list_directory, status, sync_status
-    "adn_editor",  # Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
-    # Legacy individual tools (for backward compatibility)
-    "build_context",
-    "canvas",
-    "create_memory_project",
-    "edit_in_notepadpp",
-    "export_docsify",
-    "export_html_notes",
-    "export_joplin_notes",
-    "export_pandoc",
-    "export_to_archive",
-    "import_from_archive",
-    "import_from_notepadpp",
-    "knowledge_operations",
-    "make_pdf_book",
-    "research_orchestrator",
-    "load_evernote_export",
-    "load_joplin_vault",
-    "load_notion_export",
-    "load_obsidian_canvas",
-    "load_obsidian_vault",
-    "search_evernote_vault",
-    "search_joplin_vault",
-    "search_notion_vault",
-    "search_obsidian_vault",
-    "delete_note",
-    "delete_project",
-    "edit_note",
-    "get_current_project",
-    "help",
-    "list_directory",
-    "list_memory_projects",
-    "move_note",
-    "read_content",
-    "read_note",
-    "recent_activity",
-    "search_notes",
-    "set_default_project",
-    "status",
-    "switch_project",
-    "sync_status",
-    "typora_control",
-    "view_note",
-    "write_note",
-]
+# Determine which tools to expose based on environment variable
+if _FULL_TOOLS_MODE:
+    # FULL MODE (opt-in): All ~50+ tools (portmanteau + individual legacy tools)
+    __all__ = [
+        # Complete portmanteau tool suite (11 tools total)
+        "adn_content",  # Consolidates: write_note, read_note, view_note, view_note_rendered, edit_note, move_note, delete_note
+        "adn_project",  # Consolidates: create, switch, delete, set_default, get_current, list, sync, status
+        "adn_zettelmaker",  # Consolidates: generate, customize, expand, suggest, connect, analyze
+        "adn_inbox",  # Consolidates: inbox status, process, info, watch (file drop processing)
+        "adn_export",  # Consolidates: export_pandoc, export_docsify, export_html_notes, export_joplin_notes, make_pdf_book, export_to_archive, export_evernote_compatible, export_notion_compatible
+        "adn_import",  # Consolidates: load_obsidian_vault, load_joplin_vault, load_notion_export, load_evernote_export, import_from_archive, load_obsidian_canvas
+        "adn_search",  # Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault
+        "adn_knowledge",  # Consolidates: knowledge_operations, research_orchestrator
+        "adn_navigation",  # Consolidates: build_context, recent_activity, list_directory, status, sync_status
+        "adn_editor",  # Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
+        # Bonus standalone tools
+        "view_note_rendered",  # Rendered Mermaid diagrams (also accessible via adn_content)
+        # Legacy individual tools (for backward compatibility)
+        "build_context",
+        "canvas",
+        "create_memory_project",
+        "edit_in_notepadpp",
+        "export_docsify",
+        "export_html_notes",
+        "export_joplin_notes",
+        "export_pandoc",
+        "export_to_archive",
+        "import_from_archive",
+        "import_from_notepadpp",
+        "knowledge_operations",
+        "make_pdf_book",
+        "research_orchestrator",
+        "load_evernote_export",
+        "load_joplin_vault",
+        "load_notion_export",
+        "load_obsidian_canvas",
+        "load_obsidian_vault",
+        "search_evernote_vault",
+        "search_joplin_vault",
+        "search_notion_vault",
+        "search_obsidian_vault",
+        "delete_note",
+        "delete_project",
+        "edit_note",
+        "get_current_project",
+        "help",
+        "list_directory",
+        "list_memory_projects",
+        "move_note",
+        "read_content",
+        "read_note",
+        "recent_activity",
+        "search_notes",
+        "set_default_project",
+        "status",
+        "switch_project",
+        "sync_status",
+        "typora_control",
+        "view_note",
+        "view_note_rendered",
+        "write_note",
+    ]
+else:
+    # PORTMANTEAU MODE (default): Only 12 essential portmanteau tools
+    __all__ = [
+        "help",  # Meta tool (always included)
+        "view_note_rendered",  # Bonus: Rendered Mermaid viewing
+        "adn_content",  # Content management (write, read, view, view_rendered, edit, move, delete)
+        "adn_project",  # Project management (create, switch, delete, set_default, get_current, list, sync, status)
+        "adn_zettelmaker",  # Zettelkasten generation and management
+        "adn_inbox",  # Inbox file drop processing
+        "adn_export",  # Export operations (pandoc, docsify, html, pdf, archive, etc.)
+        "adn_import",  # Import operations (Obsidian, Joplin, Notion, Evernote, etc.)
+        "adn_search",  # Search across knowledge base and external systems
+        "adn_knowledge",  # Knowledge operations and research orchestration
+        "adn_navigation",  # Navigate and explore knowledge base
+        "adn_editor",  # Editor integration (Notepad++, Typora, canvas, etc.)
+    ]

@@ -15,6 +15,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery
+from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
 @mcp.tool(
@@ -342,24 +343,26 @@ async def _generate_pdf_book(
     Generate PDF book using Pandoc.
     """
     try:
-        # Build Pandoc command for book creation
-        cmd = [
-            "C:\\Program Files\\Pandoc\\pandoc.exe",
-            str(book_md_path),
-            "-o",
-            str(pdf_path),
-            "--pdf-engine=pdflatex",  # Use pdflatex for PDF generation
-            f"--toc-depth={toc_depth}",
-            "--toc",
-            f"--variable=geometry:{paper_size}paper",
-            "--variable=documentclass=book",
-            "--variable=fontsize=11pt",
-            "--variable=linestretch=1.2",
-            "--variable=colorlinks=true",
-            "--variable=linkcolor=blue",
-            "--variable=urlcolor=blue",
-            "--variable=citecolor=green",
-        ]
+        # Build Pandoc command for book creation (auto-installs if needed)
+        cmd = get_pandoc_command()
+        cmd.extend(
+            [
+                str(book_md_path),
+                "-o",
+                str(pdf_path),
+                "--pdf-engine=pdflatex",  # Use pdflatex for PDF generation
+                f"--toc-depth={toc_depth}",
+                "--toc",
+                f"--variable=geometry:{paper_size}paper",
+                "--variable=documentclass=book",
+                "--variable=fontsize=11pt",
+                "--variable=linestretch=1.2",
+                "--variable=colorlinks=true",
+                "--variable=linkcolor=blue",
+                "--variable=urlcolor=blue",
+                "--variable=citecolor=green",
+            ]
+        )
 
         # Execute Pandoc
         result = await asyncio.create_subprocess_exec(

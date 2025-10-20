@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 # Fix Windows console encoding issues
-if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8')
-    sys.stderr.reconfigure(encoding='utf-8')
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 # Ignored patterns (copied from sync_service.py)
 IGNORE_PATTERNS = {
@@ -45,60 +45,67 @@ IGNORE_PATTERNS = {
 # Archive patterns (copied from sync_service.py)
 ARCHIVE_PATTERNS = {
     # Backup folders (timestamped)
-    "-backup-", ".backup", "_backup",
+    "-backup-",
+    ".backup",
+    "_backup",
     # Obsolete markers
-    ".obsolete", "-obsolete", "_obsolete",
+    ".obsolete",
+    "-obsolete",
+    "_obsolete",
     # Archive folders
-    ".archived", "-archived", "_archived",
+    ".archived",
+    "-archived",
+    "_archived",
 }
 
 
 def diagnose_directory(directory_path: str) -> None:
     """Diagnose a directory to see what files would be picked up during sync."""
     directory = Path(directory_path)
-    
+
     if not directory.exists():
         print(f"ERROR: Directory does not exist: {directory}")
         return
-    
+
     if not directory.is_dir():
         print(f"ERROR: Path is not a directory: {directory}")
         return
-    
+
     print(f"Diagnosing directory: {directory}")
     print(f"Absolute path: {directory.absolute()}")
     print()
-    
+
     markdown_files = []
     skipped_folders = set()
     skipped_non_md_files = []
-    
+
     for root, dirnames, filenames in os.walk(str(directory)):
         # Track original directories
         original_dirnames = dirnames.copy()
-        
+
         # Filter directories (same logic as sync_service.py)
         dirnames[:] = [
-            d for d in dirnames 
-            if not d.startswith(".") 
+            d
+            for d in dirnames
+            if not d.startswith(".")
             and d not in IGNORE_PATTERNS
             and not any(pattern in d.lower() for pattern in ARCHIVE_PATTERNS)
         ]
-        
+
         # Track skipped directories
         for d in original_dirnames:
             if d not in dirnames:
                 skipped_folders.add(d)
                 rel_path = os.path.relpath(os.path.join(root, d), directory)
                 print(f"  SKIPPED FOLDER: {rel_path} (reason: {_get_skip_reason(d)})")
-        
+
         # Check files
         for filename in filenames:
             # Skip dot files and ignored patterns
             if filename.startswith(".") or filename in IGNORE_PATTERNS:
                 print(f"  SKIPPED FILE: {filename} (hidden or in ignore list)")
                 continue
-            
+
             # Check if markdown
             if filename.endswith(".md"):
                 file_path = Path(root) / filename
@@ -107,7 +114,7 @@ def diagnose_directory(directory_path: str) -> None:
                 print(f"  FOUND MARKDOWN: {rel_path}")
             else:
                 skipped_non_md_files.append(filename)
-    
+
     print()
     print("=" * 60)
     print("SUMMARY")
@@ -116,7 +123,7 @@ def diagnose_directory(directory_path: str) -> None:
     print(f"Folders skipped: {len(skipped_folders)}")
     print(f"Non-.md files skipped: {len(skipped_non_md_files)}")
     print()
-    
+
     if len(markdown_files) == 0:
         print("WARNING: No markdown files found!")
         print()
@@ -125,10 +132,10 @@ def diagnose_directory(directory_path: str) -> None:
         print("2. All .md files are in ignored folders")
         print("3. Directory is empty")
         print()
-        
+
         if skipped_folders:
             print(f"Skipped folders: {', '.join(sorted(skipped_folders))}")
-        
+
         if skipped_non_md_files:
             print(f"\nNon-.md files found: {len(skipped_non_md_files)}")
             print("Sample non-.md files:")
@@ -145,7 +152,7 @@ def _get_skip_reason(folder_name: str) -> str:
     if folder_name.startswith("."):
         return "starts with dot"
     if folder_name in IGNORE_PATTERNS:
-        return f"in ignore list"
+        return "in ignore list"
     if any(pattern in folder_name.lower() for pattern in ARCHIVE_PATTERNS):
         return "archive/obsolete pattern"
     return "unknown"
@@ -158,7 +165,6 @@ if __name__ == "__main__":
         print("Example:")
         print('  python diagnose_sync.py "C:\\Users\\sandr\\Documents\\chitchat"')
         sys.exit(1)
-    
+
     directory_path = sys.argv[1]
     diagnose_directory(directory_path)
-

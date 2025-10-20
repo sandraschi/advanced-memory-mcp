@@ -9,12 +9,13 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.utils.export_paths import format_export_path
 
 
 @mcp.tool
 async def adn_export(
     operation: str,
-    export_path: str,
+    export_path: str | None = None,
     format_type: str = "pdf",
     source_folder: str = "/",
     include_subfolders: bool = True,
@@ -23,6 +24,10 @@ async def adn_export(
     book_title: str | None = None,
     tag_filter: str | None = None,
     pdf_engine: str = "pdflatex",
+    serve: bool = True,
+    port: int = 3211,
+    export_all: bool = True,
+    show_after_export: bool = True,
     project: str | None = None,
 ) -> str:
     """Comprehensive export management tool for Advanced Memory knowledge base.
@@ -31,6 +36,7 @@ async def adn_export(
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
 
     SUPPORTED OPERATIONS:
+    - pdf: Export to PDF using pure Python (NO LaTeX! Works immediately!)
     - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc
     - docsify: Export to Docsify documentation website with navigation
     - html: Export to standalone HTML website with Mermaid diagram rendering
@@ -51,6 +57,12 @@ async def adn_export(
     Args:
         operation: The export operation to perform
         export_path: Path where exported files will be saved
+                    **IMPORTANT: Leave this None/omit parameter to use smart default!**
+                    Default behavior (when omitted):
+                    - Windows: C:\\Users\\{user}\\Desktop\\advanced-memory-exports\\{operation}\\
+                    - macOS: ~/Desktop/advanced-memory-exports/{operation}/
+                    - Linux: ~/Desktop/advanced-memory-exports/{operation}/
+                    **Only provide export_path when user explicitly specifies a custom location!**
         format_type: Output format for pandoc operations
         source_folder: Source folder to export from
         include_subfolders: Include subfolders recursively
@@ -65,45 +77,91 @@ async def adn_export(
         Operation-specific result with export details and file counts
 
     Examples:
-        # Export to PDF using Pandoc
-        adn_export("pandoc", export_path="output.pdf", format_type="pdf", source_folder="/notes")
+        # Export to PDF - OMIT export_path to use Desktop (RECOMMENDED!)
+        adn_export("pdf")  # → Desktop/advanced-memory-exports/pdf/
+        adn_export("pdf", export_path="C:/my-custom-path/")  # Only if user specifies!
 
-        # Export to Docsify website
-        adn_export("docsify", export_path="website/", site_title="My Knowledge Base")
+        # Export to DOCX - automatically goes to Desktop
+        adn_export("pandoc", format_type="docx")  # → Desktop/advanced-memory-exports/pandoc/
+
+        # Export to Docsify website - automatically goes to Desktop
+        adn_export("docsify")  # → Desktop/advanced-memory-exports/docsify/
+        adn_export("docsify", export_path="C:/website/")  # Only when user says "export to C:/website"
 
         # Create PDF book
-        adn_export("pdf_book", export_path="book.pdf", book_title="Research Papers", tag_filter="research")
+        adn_export("pdf_book", book_title="Research Papers")  # Default path
+
+        # Export Claude Skills
+        adn_export("claude_skills")  # Default: Desktop/advanced-memory-exports/claude_skills/
 
         # Export complete archive
-        adn_export("archive", export_path="backup.zip")
+        adn_export("archive")  # Default path
     """
     logger.info(f"MCP tool call tool=adn_export operation={operation} export_path={export_path}")
 
+    # Format export path (use smart default if not provided)
+    resolved_export_path = format_export_path(export_path, operation)
+
     # Route to appropriate operation
-    if operation == "pandoc":
+    if operation == "pdf":
+        # Pure-Python PDF (NO LaTeX needed!)
+        from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
+
+        return await export_pdf_native(
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            show_after_export,
+            project=project,
+        )
+    elif operation == "pandoc":
         return await _pandoc_export(
-            export_path, format_type, source_folder, include_subfolders, pdf_engine, project
+            resolved_export_path,
+            format_type,
+            source_folder,
+            include_subfolders,
+            pdf_engine,
+            show_after_export,
+            project,
         )
     elif operation == "docsify":
         return await _docsify_export(
-            export_path, source_folder, include_subfolders, site_title, site_description, project
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            site_title,
+            site_description,
+            serve,
+            port,
+            export_all,
+            project,
         )
     elif operation == "html":
-        return await _html_export(export_path, source_folder, include_subfolders, project)
+        return await _html_export(
+            resolved_export_path, source_folder, include_subfolders, show_after_export, project
+        )
     elif operation == "joplin":
-        return await _joplin_export(export_path, source_folder, include_subfolders, project)
+        return await _joplin_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "pdf_book":
         return await _pdf_book_export(
-            export_path, source_folder, include_subfolders, book_title, tag_filter, project
+            resolved_export_path, source_folder, include_subfolders, book_title, tag_filter, project
         )
     elif operation == "archive":
-        return await _archive_export(export_path, project)
+        return await _archive_export(resolved_export_path, show_after_export, project)
     elif operation == "evernote":
-        return await _evernote_export(export_path, source_folder, include_subfolders, project)
+        return await _evernote_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "notion":
-        return await _notion_export(export_path, source_folder, include_subfolders, project)
+        return await _notion_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "claude_skills":
-        return await _claude_skills_export(export_path, source_folder, include_subfolders, project)
+        return await _claude_skills_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
 
@@ -114,6 +172,7 @@ async def _pandoc_export(
     source_folder: str,
     include_subfolders: bool,
     pdf_engine: str,
+    show_after_export: bool,
     project: str | None,
 ) -> str:
     """Handle Pandoc export operation."""
@@ -132,6 +191,7 @@ async def _pandoc_export(
         True,
         False,
         project,
+        show_after_export,
     )  # type: ignore[operator,no-any-return]
 
 
@@ -141,6 +201,9 @@ async def _docsify_export(
     include_subfolders: bool,
     site_title: str | None,
     site_description: str | None,
+    serve: bool,
+    port: int,
+    export_all: bool,
     project: str | None,
 ) -> str:
     """Handle Docsify export operation."""
@@ -153,6 +216,9 @@ async def _docsify_export(
         site_title or "Knowledge Base",
         site_description or "Documentation generated from Advanced Memory",
         project,
+        serve,
+        port,
+        export_all,
     )  # type: ignore[operator,no-any-return]
 
 
@@ -201,11 +267,13 @@ async def _pdf_book_export(
     )  # type: ignore[operator,no-any-return]
 
 
-async def _archive_export(export_path: str, project: str | None) -> str:
+async def _archive_export(export_path: str, show_after_export: bool, project: str | None) -> str:
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
-    return await export_to_archive(export_path, None, None, None, None, True, project)  # type: ignore[operator,no-any-return]
+    return await export_to_archive(
+        export_path, None, None, None, None, True, project, show_after_export
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_export(

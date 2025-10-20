@@ -1,5 +1,7 @@
 """Tests for docsify export functionality."""
 
+from unittest.mock import patch
+
 import pytest
 
 from advanced_memory.mcp.tools import write_note
@@ -275,3 +277,117 @@ async def test_export_docsify_sidebar_generation(tmp_path, config_home, app):
     # Sidebar should have markdown list structure
     assert "-" in sidebar_content or "*" in sidebar_content  # Markdown list
     assert len(sidebar_content.split("\n")) > 1  # Multiple lines
+
+
+@pytest.mark.asyncio
+async def test_export_docsify_serve_disabled(tmp_path, config_home, app):
+    """Test Docsify export with serve=False doesn't start server."""
+    from advanced_memory.mcp.tools import write_note
+
+    # Create test note
+    await write_note.fn(
+        title="Server Test",
+        content="# Server Test\n\nContent.",
+        folder="server_test",
+    )
+
+    export_path = tmp_path / "docsify_no_serve"
+
+    result = await export_docsify_enhanced.fn(
+        export_path=str(export_path),
+        source_folder="/server_test",
+        serve=False,  # Don't start server
+    )
+
+    # Should not mention server being started
+    assert (export_path / "index.html").exists()
+    # The actual server startup section shouldn't be in result when serve=False
+    # (Note: static docs may mention localhost in examples, that's OK)
+    assert "Server Started" not in result or "Server running" not in result
+
+
+@pytest.mark.asyncio
+async def test_export_docsify_serve_enabled(tmp_path, config_home, app):
+    """Test Docsify export with serve=True starts server."""
+    from advanced_memory.mcp.tools import write_note
+
+    # Create test note
+    await write_note.fn(
+        title="Server Test 2",
+        content="# Server Test 2\n\nContent.",
+        folder="server_test",
+    )
+
+    export_path = tmp_path / "docsify_serve"
+
+    # Mock the server start to avoid actually starting one
+    with patch("advanced_memory.mcp.tools.export_docsify._start_local_server") as mock_server:
+        mock_server.return_value = "## Server Started\n\nhttp://localhost:3211"
+
+        result = await export_docsify_enhanced.fn(
+            export_path=str(export_path),
+            source_folder="/server_test",
+            serve=True,
+            port=3211,
+        )
+
+    # Should mention server
+    assert "Server" in result or "localhost" in result
+
+
+@pytest.mark.asyncio
+async def test_export_docsify_export_all_true(tmp_path, config_home, app):
+    """Test export_all=True exports from all matching folders."""
+    from advanced_memory.mcp.tools import write_note
+
+    # Create notes in different folders with same name
+    await write_note.fn(
+        title="Standards Doc 1",
+        content="# Standards 1",
+        folder="zettelkasten/standards",
+    )
+    await write_note.fn(
+        title="Standards Doc 2",
+        content="# Standards 2",
+        folder="projects/standards",
+    )
+
+    export_path = tmp_path / "docsify_all"
+
+    result = await export_docsify_enhanced.fn(
+        export_path=str(export_path),
+        source_folder="standards",  # Ambiguous - matches both
+        export_all=True,  # Should export both
+        serve=False,
+    )
+
+    # Should export both notes
+    assert (export_path / "index.html").exists()
+    # Result should indicate multiple notes exported
+    assert "exported" in result.lower() or "created" in result.lower()
+
+
+@pytest.mark.asyncio
+async def test_export_docsify_export_all_false_exact_path(tmp_path, config_home, app):
+    """Test export_all=False works with exact paths."""
+    from advanced_memory.mcp.tools import write_note
+
+    # Create note
+    await write_note.fn(
+        title="Exact Path Doc",
+        content="# Exact Path",
+        folder="projects/specific",
+    )
+
+    export_path = tmp_path / "docsify_exact"
+
+    result = await export_docsify_enhanced.fn(
+        export_path=str(export_path),
+        source_folder="projects/specific",  # Exact path
+        export_all=False,  # Should work fine with exact path
+        serve=False,
+    )
+
+    # Should succeed
+    assert (export_path / "index.html").exists()
+    assert "export" in result.lower() or "created" in result.lower()

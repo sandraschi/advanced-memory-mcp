@@ -9,9 +9,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from loguru import logger
+
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import SearchQuery
+from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
 @mcp.tool(
@@ -163,7 +167,7 @@ async def _get_book_notes(
         return notes_data
 
     except Exception as e:
-        print(f"Error getting book notes: {e}")
+        logger.error(f"Error getting book notes: {e}")
         return []
 
 
@@ -180,25 +184,27 @@ async def _get_notes_from_folder(
             query = SearchQuery(
                 text=f"tag:{tag_filter}",  # Search for notes tagged with the specified tag
                 types=["note"],  # Only notes, not entities
-                page=1,
-                page_size=1000,  # Large limit for book creation
             )
         else:
             # Search all notes (will be filtered by folder below)
             query = SearchQuery(
-                query="",  # Empty query to get all notes
+                text="",  # Empty query to get all notes
                 types=["note"],  # Only notes, not entities
-                page=1,
-                page_size=1000,  # Large limit for book creation
             )
 
-        response = await call_post("/api/search", query.model_dump(), SearchResponse)
+        response = await call_post(
+            client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump()
+        )
 
-        if not response or not hasattr(response, "results"):
+        if not response:
+            return []
+
+        response_data = response.json()
+        if not hasattr(response_data, "results") or not response_data.results:
             return []
 
         notes_data = []
-        for note in response.results:
+        for note in response_data.results:
             # Filter by folder path
             note_path = getattr(note, "file_path", "")
             if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
@@ -217,7 +223,7 @@ async def _get_notes_from_folder(
         return notes_data
 
     except Exception as e:
-        print(f"Error retrieving notes: {e}")
+        logger.error(f"Error retrieving notes: {e}")
         return []
 
 
@@ -227,7 +233,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools.read_note import read_note
+        from advanced_memory.mcp.tools import read_note as mcp_read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
@@ -235,11 +241,11 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await read_note(identifier)
+        content = await mcp_read_note.fn(identifier)
         return content if content else None
 
     except Exception as e:
-        print(f"Error reading note content: {e}")
+        logger.error(f"Error reading note content: {e}")
         return None
 
 
@@ -337,9 +343,9 @@ async def _generate_pdf_book(
     Generate PDF book using Pandoc.
     """
     try:
-        # Build Pandoc command for book creation
-        cmd = [
-            "C:\\Program Files\\Pandoc\\pandoc.exe",
+        # Build Pandoc command for book creation (auto-installs if needed)
+        cmd = get_pandoc_command()
+        cmd.extend([
             str(book_md_path),
             "-o",
             str(pdf_path),
@@ -367,11 +373,11 @@ async def _generate_pdf_book(
             return True
         else:
             error_msg = stderr.decode("utf-8", errors="ignore")
-            print(f"Pandoc PDF book error: {error_msg}")
+            logger.error(f"Pandoc PDF book error: {error_msg}")
             return False
 
     except Exception as e:
-        print(f"Error generating PDF book: {e}")
+        logger.error(f"Error generating PDF book: {e}")
         return False
 
 

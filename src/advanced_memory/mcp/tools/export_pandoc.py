@@ -5,6 +5,8 @@ This tool replaces Typora export functionality with reliable, automated
 Pandoc-based document conversion supporting multiple output formats.
 
 Supports: PDF, HTML, DOCX, ODT, RTF, LaTeX, EPUB, and more.
+
+Pandoc is auto-installed on first use via pypandoc.
 """
 
 import asyncio
@@ -17,6 +19,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery
+from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
 @mcp.tool()
@@ -33,6 +36,7 @@ async def export_pandoc(
     standalone: bool = True,
     self_contained: bool = False,
     project: str | None = None,
+    show_after_export: bool = True,
 ) -> str:
     """
     Export Advanced Memory notes to various formats using Pandoc.
@@ -112,6 +116,20 @@ async def export_pandoc(
 
         # Generate summary
         summary = _generate_export_summary(exported_files, errors, format_type, export_path)
+
+        # Open exported files if requested
+        if show_after_export and exported_files:
+            from advanced_memory.utils.file_opener import format_open_result, open_file_or_folder
+
+            export_dir = Path(export_path)
+            # Open the first file (or the folder if multiple)
+            if len(exported_files) == 1:
+                success, msg = open_file_or_folder(exported_files[0])
+                summary += "\n\n" + format_open_result(success, msg, exported_files[0])
+            else:
+                # Multiple files - open the folder
+                success, msg = open_file_or_folder(export_dir)
+                summary += f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
 
         return summary
 
@@ -274,8 +292,19 @@ def _build_pandoc_command(
 ) -> list[str]:
     """
     Build the Pandoc command with all specified options.
+
+    Pandoc is auto-installed on first use if not found.
     """
-    cmd = ["C:\\Program Files\\Pandoc\\pandoc.exe", input_path, "-o", output_path]
+    # Get pandoc executable (auto-installs if needed)
+    try:
+        cmd = get_pandoc_command()
+        cmd.extend([input_path, "-o", output_path])
+    except Exception as e:
+        logger.error(f"Failed to get Pandoc: {e}")
+        raise RuntimeError(
+            f"Pandoc is required for export but could not be installed: {e}\n\n"
+            "Please install manually from: https://pandoc.org/installing.html"
+        )
 
     # Format specification
     if format_type == "pdf":

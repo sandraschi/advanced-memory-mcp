@@ -1,4 +1,5 @@
 """Test what database path is actually being used."""
+
 import os
 import sys
 from pathlib import Path
@@ -28,7 +29,3 @@ print()
 print("Files exist:")
 print(f"  {config.database_path}: {config.database_path.exists()}")
 print(f"  {config.app_database_path}: {config.app_database_path.exists()}")
-
-
-
-

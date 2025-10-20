@@ -22149,3 +22149,1234 @@ sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
 2025-10-19 10:56:08 | INFO     | Loaded 4 templates for category 'uiux-designer'
 2025-10-19 10:56:08 | INFO     | Loaded 3 templates for category 'writer'
 2025-10-19 10:56:08 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 12:08:15 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 12:11:31 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 13:29:07 | INFO     | Using export path: C:\Users\sandr\Desktop\advanced-memory-exports\docsify
+2025-10-20 14:09:46 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:09:58 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:09:58 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:58 | INFO     | Initializing search index
+2025-10-20 14:09:58 | INFO     | Initializing search index
+2025-10-20 14:09:58 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:58 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:58 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | ERROR    | Failed to open URL http://test.com: Browser not available
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:09:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initializing search index
+2025-10-20 14:09:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:09:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:12 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:10:14 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:10:14 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:10:14 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:10:14 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:10:15 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:10:15 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:10:15 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:10:15 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:10:15 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:10:15 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:10:15 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:10:15 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:10:15 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:10:15 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:10:15 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:15 | INFO     | Initializing search index
+2025-10-20 14:10:15 | INFO     | Initializing search index
+2025-10-20 14:10:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:15 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test, tags=None
+2025-10-20 14:10:15 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test', data.entity_type='note', data.title='Server Test'
+2025-10-20 14:10:15 | INFO     | Writing file: server_test\Server_Test.md, is_markdown=True
+2025-10-20 14:10:15 | INFO     | Resolving forward references
+2025-10-20 14:10:15 | INFO     | API response: result.title='Server Test', result.permalink='server-test/server-test', created=True, status_code=201
+2025-10-20 14:10:15 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:10:15 | INFO     | Starting Enhanced Docsify export: /server_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-1\test_export_docsify_serve_disa0\docsify_no_serve
+2025-10-20 14:10:15 | INFO     | Found 1 total notes in search, filtering for folder: /server_test
+2025-10-20 14:10:15 | INFO     | Attempting to read note from URL: /test-project/resource/Server Test
+2025-10-20 14:10:15 | INFO     | Returning read_note result from resource: Server Test
+2025-10-20 14:10:15 | INFO     | Found 1 notes matching folder '/server_test' out of 1 total notes
+2025-10-20 14:10:15 | INFO     | Exported enhanced note: Server Test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-1\test_export_docsify_serve_disa0\docsify_no_serve\Server Test.md
+2025-10-20 14:10:30 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:10:32 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:10:32 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:10:32 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:10:32 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:10:32 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:10:32 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:10:32 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:10:32 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:10:32 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:10:32 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:10:32 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:10:32 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:10:32 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:10:32 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:10:32 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:32 | INFO     | Initializing search index
+2025-10-20 14:10:32 | INFO     | Initializing search index
+2025-10-20 14:10:32 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:32 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:32 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test, tags=None
+2025-10-20 14:10:32 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test', data.entity_type='note', data.title='Server Test'
+2025-10-20 14:10:32 | INFO     | Writing file: server_test\Server_Test.md, is_markdown=True
+2025-10-20 14:10:32 | INFO     | Resolving forward references
+2025-10-20 14:10:32 | INFO     | API response: result.title='Server Test', result.permalink='server-test/server-test', created=True, status_code=201
+2025-10-20 14:10:32 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:10:32 | INFO     | Starting Enhanced Docsify export: /server_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-2\test_export_docsify_serve_disa0\docsify_no_serve
+2025-10-20 14:10:32 | INFO     | Found 1 total notes in search, filtering for folder: /server_test
+2025-10-20 14:10:32 | INFO     | Attempting to read note from URL: /test-project/resource/Server Test
+2025-10-20 14:10:33 | INFO     | Returning read_note result from resource: Server Test
+2025-10-20 14:10:33 | INFO     | Found 1 notes matching folder '/server_test' out of 1 total notes
+2025-10-20 14:10:33 | INFO     | Exported enhanced note: Server Test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-2\test_export_docsify_serve_disa0\docsify_no_serve\Server Test.md
+2025-10-20 14:10:43 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:10:45 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:10:45 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:10:45 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:10:45 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:10:45 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:10:45 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:10:45 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:10:45 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:10:45 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:10:45 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:10:45 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:10:45 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:10:45 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:10:45 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:10:45 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:45 | INFO     | Initializing search index
+2025-10-20 14:10:45 | INFO     | Initializing search index
+2025-10-20 14:10:45 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:45 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:45 | INFO     | MCP tool call tool=write_note folder=zettelkasten/standards, title=Standards Doc 1, tags=None
+2025-10-20 14:10:45 | INFO     | API request: create_or_update_entity for project='test-project', permalink='zettelkasten/standards/standards-doc-1', data.entity_type='note', data.title='Standards Doc 1'
+2025-10-20 14:10:46 | INFO     | Writing file: zettelkasten\standards\Standards_Doc_1.md, is_markdown=True
+2025-10-20 14:10:46 | INFO     | Resolving forward references
+2025-10-20 14:10:46 | INFO     | API response: result.title='Standards Doc 1', result.permalink='zettelkasten/standards/standards-doc-1', created=True, status_code=201
+2025-10-20 14:10:46 | INFO     | MCP tool response: tool=write_note action=Created permalink=zettelkasten/standards/standards-doc-1 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:10:46 | INFO     | MCP tool call tool=write_note folder=projects/standards, title=Standards Doc 2, tags=None
+2025-10-20 14:10:46 | INFO     | API request: create_or_update_entity for project='test-project', permalink='projects/standards/standards-doc-2', data.entity_type='note', data.title='Standards Doc 2'
+2025-10-20 14:10:46 | INFO     | Writing file: projects\standards\Standards_Doc_2.md, is_markdown=True
+2025-10-20 14:10:46 | INFO     | Resolving forward references
+2025-10-20 14:10:46 | INFO     | API response: result.title='Standards Doc 2', result.permalink='projects/standards/standards-doc-2', created=True, status_code=201
+2025-10-20 14:10:46 | INFO     | MCP tool response: tool=write_note action=Created permalink=projects/standards/standards-doc-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:10:46 | INFO     | Starting Enhanced Docsify export: standards -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-3\test_export_docsify_export_all0\docsify_all
+2025-10-20 14:10:46 | INFO     | Found 2 total notes in search, filtering for folder: standards
+2025-10-20 14:10:46 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 1
+2025-10-20 14:10:46 | INFO     | Returning read_note result from resource: Standards Doc 1
+2025-10-20 14:10:46 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 2
+2025-10-20 14:10:46 | INFO     | Returning read_note result from resource: Standards Doc 2
+2025-10-20 14:10:46 | INFO     | Found 2 notes matching folder 'standards' out of 2 total notes
+2025-10-20 14:10:46 | INFO     | Folder 'standards' matched multiple locations: projects/standards, zettelkasten/standards. Exporting from all.
+2025-10-20 14:10:46 | INFO     | Exported enhanced note: Standards Doc 1 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-3\test_export_docsify_export_all0\docsify_all\Standards Doc 1.md
+2025-10-20 14:10:46 | INFO     | Exported enhanced note: Standards Doc 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-3\test_export_docsify_export_all0\docsify_all\Standards Doc 2.md
+2025-10-20 14:10:46 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:46 | INFO     | Initializing search index
+2025-10-20 14:10:46 | INFO     | Initializing search index
+2025-10-20 14:10:46 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:46 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:46 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test 2, tags=None
+2025-10-20 14:10:46 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test-2', data.entity_type='note', data.title='Server Test 2'
+2025-10-20 14:10:46 | INFO     | Writing file: server_test\Server_Test_2.md, is_markdown=True
+2025-10-20 14:10:46 | INFO     | Resolving forward references
+2025-10-20 14:10:46 | INFO     | API response: result.title='Server Test 2', result.permalink='server-test/server-test-2', created=True, status_code=201
+2025-10-20 14:10:46 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:10:46 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:46 | INFO     | Initializing search index
+2025-10-20 14:10:46 | INFO     | Initializing search index
+2025-10-20 14:10:46 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:46 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:46 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | ERROR    | Failed to open URL http://test.com: Browser not available
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:10:47 | INFO     | Using in-memory SQLite database
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initializing search index
+2025-10-20 14:10:47 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:10:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:11:02 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:11:04 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:11:04 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:11:04 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:11:04 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:11:04 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:11:04 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:11:04 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:11:04 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:11:04 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:11:04 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:11:04 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:11:04 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:11:04 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:11:04 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:11:05 | INFO     | Using in-memory SQLite database
+2025-10-20 14:11:05 | INFO     | Initializing search index
+2025-10-20 14:11:05 | INFO     | Initializing search index
+2025-10-20 14:11:05 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:11:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:11:05 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test 2, tags=None
+2025-10-20 14:11:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test-2', data.entity_type='note', data.title='Server Test 2'
+2025-10-20 14:11:05 | INFO     | Writing file: server_test\Server_Test_2.md, is_markdown=True
+2025-10-20 14:11:05 | INFO     | Resolving forward references
+2025-10-20 14:11:05 | INFO     | API response: result.title='Server Test 2', result.permalink='server-test/server-test-2', created=True, status_code=201
+2025-10-20 14:11:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:11:05 | INFO     | Starting Enhanced Docsify export: /server_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-4\test_export_docsify_serve_enab0\docsify_serve
+2025-10-20 14:11:05 | INFO     | Found 1 total notes in search, filtering for folder: /server_test
+2025-10-20 14:11:05 | INFO     | Attempting to read note from URL: /test-project/resource/Server Test 2
+2025-10-20 14:11:05 | INFO     | Returning read_note result from resource: Server Test 2
+2025-10-20 14:11:05 | INFO     | Found 1 notes matching folder '/server_test' out of 1 total notes
+2025-10-20 14:11:05 | INFO     | Exported enhanced note: Server Test 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-4\test_export_docsify_serve_enab0\docsify_serve\Server Test 2.md
+2025-10-20 14:11:05 | INFO     | Using in-memory SQLite database
+2025-10-20 14:11:05 | INFO     | Initializing search index
+2025-10-20 14:11:05 | INFO     | Initializing search index
+2025-10-20 14:11:05 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:11:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:11:05 | INFO     | MCP tool call tool=write_note folder=zettelkasten/standards, title=Standards Doc 1, tags=None
+2025-10-20 14:11:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='zettelkasten/standards/standards-doc-1', data.entity_type='note', data.title='Standards Doc 1'
+2025-10-20 14:11:05 | INFO     | Writing file: zettelkasten\standards\Standards_Doc_1.md, is_markdown=True
+2025-10-20 14:11:05 | INFO     | Resolving forward references
+2025-10-20 14:11:05 | INFO     | API response: result.title='Standards Doc 1', result.permalink='zettelkasten/standards/standards-doc-1', created=True, status_code=201
+2025-10-20 14:11:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=zettelkasten/standards/standards-doc-1 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:11:05 | INFO     | MCP tool call tool=write_note folder=projects/standards, title=Standards Doc 2, tags=None
+2025-10-20 14:11:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='projects/standards/standards-doc-2', data.entity_type='note', data.title='Standards Doc 2'
+2025-10-20 14:11:05 | INFO     | Writing file: projects\standards\Standards_Doc_2.md, is_markdown=True
+2025-10-20 14:11:05 | INFO     | Resolving forward references
+2025-10-20 14:11:05 | INFO     | API response: result.title='Standards Doc 2', result.permalink='projects/standards/standards-doc-2', created=True, status_code=201
+2025-10-20 14:11:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=projects/standards/standards-doc-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:11:05 | INFO     | Starting Enhanced Docsify export: standards -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-4\test_export_docsify_export_all0\docsify_all
+2025-10-20 14:11:05 | INFO     | Found 2 total notes in search, filtering for folder: standards
+2025-10-20 14:11:05 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 1
+2025-10-20 14:11:05 | INFO     | Returning read_note result from resource: Standards Doc 1
+2025-10-20 14:11:05 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 2
+2025-10-20 14:11:05 | INFO     | Returning read_note result from resource: Standards Doc 2
+2025-10-20 14:11:05 | INFO     | Found 2 notes matching folder 'standards' out of 2 total notes
+2025-10-20 14:11:05 | INFO     | Folder 'standards' matched multiple locations: projects/standards, zettelkasten/standards. Exporting from all.
+2025-10-20 14:11:05 | INFO     | Exported enhanced note: Standards Doc 1 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-4\test_export_docsify_export_all0\docsify_all\Standards Doc 1.md
+2025-10-20 14:11:05 | INFO     | Exported enhanced note: Standards Doc 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-4\test_export_docsify_export_all0\docsify_all\Standards Doc 2.md
+2025-10-20 14:11:57 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:11:59 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:11:59 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:11:59 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:11:59 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:11:59 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:11:59 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:11:59 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:11:59 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:11:59 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:11:59 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:11:59 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:11:59 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:11:59 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:11:59 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:11:59 | INFO     | Using in-memory SQLite database
+2025-10-20 14:11:59 | INFO     | Initializing search index
+2025-10-20 14:11:59 | INFO     | Initializing search index
+2025-10-20 14:11:59 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:11:59 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:11:59 | INFO     | MCP tool call tool=write_note folder=docsify_test, title=Test Note, tags=None
+2025-10-20 14:11:59 | INFO     | API request: create_or_update_entity for project='test-project', permalink='docsify-test/test-note', data.entity_type='note', data.title='Test Note'
+2025-10-20 14:11:59 | INFO     | Writing file: docsify_test\Test_Note.md, is_markdown=True
+2025-10-20 14:11:59 | INFO     | Resolving forward references
+2025-10-20 14:11:59 | INFO     | API response: result.title='Test Note', result.permalink='docsify-test/test-note', created=True, status_code=201
+2025-10-20 14:11:59 | INFO     | MCP tool response: tool=write_note action=Created permalink=docsify-test/test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:11:59 | INFO     | MCP tool call tool=write_note folder=docsify_test/subfolder, title=Nested Note, tags=None
+2025-10-20 14:11:59 | INFO     | API request: create_or_update_entity for project='test-project', permalink='docsify-test/subfolder/nested-note', data.entity_type='note', data.title='Nested Note'
+2025-10-20 14:11:59 | INFO     | Writing file: docsify_test\subfolder\Nested_Note.md, is_markdown=True
+2025-10-20 14:11:59 | INFO     | Resolving forward references
+2025-10-20 14:11:59 | INFO     | API response: result.title='Nested Note', result.permalink='docsify-test/subfolder/nested-note', created=True, status_code=201
+2025-10-20 14:11:59 | INFO     | MCP tool response: tool=write_note action=Created permalink=docsify-test/subfolder/nested-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:11:59 | INFO     | Starting Enhanced Docsify export: /docsify_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_b0\docsify_export
+2025-10-20 14:11:59 | INFO     | Found 2 total notes in search, filtering for folder: /docsify_test
+2025-10-20 14:11:59 | INFO     | Attempting to read note from URL: /test-project/resource/Test Note
+2025-10-20 14:11:59 | INFO     | Returning read_note result from resource: Test Note
+2025-10-20 14:11:59 | INFO     | Attempting to read note from URL: /test-project/resource/Nested Note
+2025-10-20 14:11:59 | INFO     | Returning read_note result from resource: Nested Note
+2025-10-20 14:11:59 | INFO     | Found 2 notes matching folder '/docsify_test' out of 2 total notes
+2025-10-20 14:11:59 | INFO     | Folder '/docsify_test' matched multiple locations: docsify_test, docsify_test/subfolder. Exporting from all.
+2025-10-20 14:11:59 | INFO     | Exported enhanced note: Test Note -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_b0\docsify_export\Test Note.md
+2025-10-20 14:11:59 | INFO     | Exported enhanced note: Nested Note -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_b0\docsify_export\Nested Note.md
+2025-10-20 14:12:00 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:00 | INFO     | Initializing search index
+2025-10-20 14:12:00 | INFO     | Initializing search index
+2025-10-20 14:12:00 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:00 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:00 | INFO     | MCP tool call tool=write_note folder=plugin_test, title=Simple Note, tags=None
+2025-10-20 14:12:00 | INFO     | API request: create_or_update_entity for project='test-project', permalink='plugin-test/simple-note', data.entity_type='note', data.title='Simple Note'
+2025-10-20 14:12:01 | INFO     | Writing file: plugin_test\Simple_Note.md, is_markdown=True
+2025-10-20 14:12:01 | INFO     | Resolving forward references
+2025-10-20 14:12:01 | INFO     | API response: result.title='Simple Note', result.permalink='plugin-test/simple-note', created=True, status_code=201
+2025-10-20 14:12:01 | INFO     | MCP tool response: tool=write_note action=Created permalink=plugin-test/simple-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:01 | INFO     | Starting Enhanced Docsify export: /plugin_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_p0\docsify_plugins
+2025-10-20 14:12:01 | INFO     | Found 1 total notes in search, filtering for folder: /plugin_test
+2025-10-20 14:12:01 | INFO     | Attempting to read note from URL: /test-project/resource/Simple Note
+2025-10-20 14:12:01 | INFO     | Returning read_note result from resource: Simple Note
+2025-10-20 14:12:01 | INFO     | Found 1 notes matching folder '/plugin_test' out of 1 total notes
+2025-10-20 14:12:01 | INFO     | Exported enhanced note: Simple Note -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_p0\docsify_plugins\Simple Note.md
+2025-10-20 14:12:01 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:01 | INFO     | Initializing search index
+2025-10-20 14:12:01 | INFO     | Initializing search index
+2025-10-20 14:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:01 | INFO     | Starting Enhanced Docsify export: /empty -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_e0\docsify_empty
+2025-10-20 14:12:01 | INFO     | Found 0 total notes in search, filtering for folder: /empty
+2025-10-20 14:12:01 | INFO     | Found 0 notes matching folder '/empty' out of 0 total notes
+2025-10-20 14:12:01 | INFO     | Found 0 total notes in search, filtering for folder: /
+2025-10-20 14:12:01 | INFO     | Found 0 notes matching folder '/' out of 0 total notes
+2025-10-20 14:12:01 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:01 | INFO     | Initializing search index
+2025-10-20 14:12:01 | INFO     | Initializing search index
+2025-10-20 14:12:01 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:01 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:01 | INFO     | MCP tool call tool=write_note folder=special_chars, title=Test: Note with "Special" Characters!, tags=None
+2025-10-20 14:12:01 | INFO     | API request: create_or_update_entity for project='test-project', permalink='special-chars/test-note-with-special-characters', data.entity_type='note', data.title='Test: Note with "Special" Characters!'
+2025-10-20 14:12:01 | INFO     | Writing file: special_chars\Test-_Note_with_Special_Characters.md, is_markdown=True
+2025-10-20 14:12:01 | INFO     | Resolving forward references
+2025-10-20 14:12:01 | INFO     | API response: result.title='Test: Note with "Special" Characters!', result.permalink='special-chars/test-note-with-special-characters', created=True, status_code=201
+2025-10-20 14:12:01 | INFO     | MCP tool response: tool=write_note action=Created permalink=special-chars/test-note-with-special-characters observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:01 | INFO     | Starting Enhanced Docsify export: /special_chars -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_s0\docsify_special
+2025-10-20 14:12:01 | INFO     | Found 1 total notes in search, filtering for folder: /special_chars
+2025-10-20 14:12:01 | INFO     | Attempting to read note from URL: /test-project/resource/Test: Note with "Special" Characters!
+2025-10-20 14:12:02 | INFO     | Returning read_note result from resource: Test: Note with "Special" Characters!
+2025-10-20 14:12:02 | INFO     | Found 1 notes matching folder '/special_chars' out of 1 total notes
+2025-10-20 14:12:02 | INFO     | Exported enhanced note: Test: Note with "Special" Characters! -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_s0\docsify_special\Test- Note with -Special- Characters!.md
+2025-10-20 14:12:02 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:02 | INFO     | Initializing search index
+2025-10-20 14:12:02 | INFO     | Initializing search index
+2025-10-20 14:12:02 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:02 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:02 | INFO     | MCP tool call tool=write_note folder=nested_test/folder1/folder2, title=Deep Note, tags=None
+2025-10-20 14:12:02 | INFO     | API request: create_or_update_entity for project='test-project', permalink='nested-test/folder1/folder2/deep-note', data.entity_type='note', data.title='Deep Note'
+2025-10-20 14:12:02 | INFO     | Writing file: nested_test\folder1\folder2\Deep_Note.md, is_markdown=True
+2025-10-20 14:12:02 | INFO     | Resolving forward references
+2025-10-20 14:12:02 | INFO     | API response: result.title='Deep Note', result.permalink='nested-test/folder1/folder2/deep-note', created=True, status_code=201
+2025-10-20 14:12:02 | INFO     | MCP tool response: tool=write_note action=Created permalink=nested-test/folder1/folder2/deep-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:02 | INFO     | Starting Enhanced Docsify export: /nested_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_n0\docsify_nested
+2025-10-20 14:12:02 | INFO     | Found 1 total notes in search, filtering for folder: /nested_test
+2025-10-20 14:12:02 | INFO     | Attempting to read note from URL: /test-project/resource/Deep Note
+2025-10-20 14:12:02 | INFO     | Returning read_note result from resource: Deep Note
+2025-10-20 14:12:02 | INFO     | Found 1 notes matching folder '/nested_test' out of 1 total notes
+2025-10-20 14:12:02 | INFO     | Exported enhanced note: Deep Note -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_n0\docsify_nested\Deep Note.md
+2025-10-20 14:12:02 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:02 | INFO     | Initializing search index
+2025-10-20 14:12:02 | INFO     | Initializing search index
+2025-10-20 14:12:02 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:02 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:02 | INFO     | MCP tool call tool=write_note folder=no_sub_test, title=Root, tags=None
+2025-10-20 14:12:02 | INFO     | API request: create_or_update_entity for project='test-project', permalink='no-sub-test/root', data.entity_type='note', data.title='Root'
+2025-10-20 14:12:02 | INFO     | Writing file: no_sub_test\Root.md, is_markdown=True
+2025-10-20 14:12:02 | INFO     | Resolving forward references
+2025-10-20 14:12:02 | INFO     | API response: result.title='Root', result.permalink='no-sub-test/root', created=True, status_code=201
+2025-10-20 14:12:02 | INFO     | MCP tool response: tool=write_note action=Created permalink=no-sub-test/root observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:02 | INFO     | MCP tool call tool=write_note folder=no_sub_test/subfolder, title=Sub, tags=None
+2025-10-20 14:12:02 | INFO     | API request: create_or_update_entity for project='test-project', permalink='no-sub-test/subfolder/sub', data.entity_type='note', data.title='Sub'
+2025-10-20 14:12:02 | INFO     | Writing file: no_sub_test\subfolder\Sub.md, is_markdown=True
+2025-10-20 14:12:03 | INFO     | Resolving forward references
+2025-10-20 14:12:03 | INFO     | API response: result.title='Sub', result.permalink='no-sub-test/subfolder/sub', created=True, status_code=201
+2025-10-20 14:12:03 | INFO     | MCP tool response: tool=write_note action=Created permalink=no-sub-test/subfolder/sub observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:03 | INFO     | Starting Enhanced Docsify export: /no_sub_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_n1\docsify_no_sub
+2025-10-20 14:12:03 | INFO     | Found 2 total notes in search, filtering for folder: /no_sub_test
+2025-10-20 14:12:03 | INFO     | Attempting to read note from URL: /test-project/resource/Root
+2025-10-20 14:12:03 | INFO     | Returning read_note result from resource: Root
+2025-10-20 14:12:03 | INFO     | Found 1 notes matching folder '/no_sub_test' out of 2 total notes
+2025-10-20 14:12:03 | INFO     | Exported enhanced note: Root -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_n1\docsify_no_sub\Root.md
+2025-10-20 14:12:03 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:03 | INFO     | Initializing search index
+2025-10-20 14:12:03 | INFO     | Initializing search index
+2025-10-20 14:12:03 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:03 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:03 | INFO     | MCP tool call tool=write_note folder=custom_test, title=Note, tags=None
+2025-10-20 14:12:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='custom-test/note', data.entity_type='note', data.title='Note'
+2025-10-20 14:12:03 | INFO     | Writing file: custom_test\Note.md, is_markdown=True
+2025-10-20 14:12:03 | INFO     | Resolving forward references
+2025-10-20 14:12:03 | INFO     | API response: result.title='Note', result.permalink='custom-test/note', created=True, status_code=201
+2025-10-20 14:12:03 | INFO     | MCP tool response: tool=write_note action=Created permalink=custom-test/note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:03 | INFO     | Starting Enhanced Docsify export: /custom_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_c0\docsify_custom
+2025-10-20 14:12:03 | INFO     | Found 1 total notes in search, filtering for folder: /custom_test
+2025-10-20 14:12:03 | INFO     | Attempting to read note from URL: /test-project/resource/Note
+2025-10-20 14:12:03 | INFO     | Returning read_note result from resource: Note
+2025-10-20 14:12:03 | INFO     | Found 1 notes matching folder '/custom_test' out of 1 total notes
+2025-10-20 14:12:03 | INFO     | Exported enhanced note: Note -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_enhanced_c0\docsify_custom\Note.md
+2025-10-20 14:12:03 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:03 | INFO     | Initializing search index
+2025-10-20 14:12:03 | INFO     | Initializing search index
+2025-10-20 14:12:03 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:03 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:03 | INFO     | MCP tool call tool=write_note folder=structure_test, title=Test, tags=None
+2025-10-20 14:12:03 | INFO     | API request: create_or_update_entity for project='test-project', permalink='structure-test/test', data.entity_type='note', data.title='Test'
+2025-10-20 14:12:04 | INFO     | Writing file: structure_test\Test.md, is_markdown=True
+2025-10-20 14:12:04 | INFO     | Resolving forward references
+2025-10-20 14:12:04 | INFO     | API response: result.title='Test', result.permalink='structure-test/test', created=True, status_code=201
+2025-10-20 14:12:04 | INFO     | MCP tool response: tool=write_note action=Created permalink=structure-test/test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:04 | INFO     | Starting Enhanced Docsify export: /structure_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_file_struc0\docsify_structure
+2025-10-20 14:12:04 | INFO     | Found 1 total notes in search, filtering for folder: /structure_test
+2025-10-20 14:12:04 | INFO     | Attempting to read note from URL: /test-project/resource/Test
+2025-10-20 14:12:04 | INFO     | Returning read_note result from resource: Test
+2025-10-20 14:12:04 | INFO     | Found 1 notes matching folder '/structure_test' out of 1 total notes
+2025-10-20 14:12:04 | INFO     | Exported enhanced note: Test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_file_struc0\docsify_structure\Test.md
+2025-10-20 14:12:04 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:04 | INFO     | Initializing search index
+2025-10-20 14:12:04 | INFO     | Initializing search index
+2025-10-20 14:12:04 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:04 | INFO     | MCP tool call tool=write_note folder=html_test, title=Test, tags=None
+2025-10-20 14:12:04 | INFO     | API request: create_or_update_entity for project='test-project', permalink='html-test/test', data.entity_type='note', data.title='Test'
+2025-10-20 14:12:04 | INFO     | Writing file: html_test\Test.md, is_markdown=True
+2025-10-20 14:12:04 | INFO     | Resolving forward references
+2025-10-20 14:12:04 | INFO     | API response: result.title='Test', result.permalink='html-test/test', created=True, status_code=201
+2025-10-20 14:12:04 | INFO     | MCP tool response: tool=write_note action=Created permalink=html-test/test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:04 | INFO     | Starting Enhanced Docsify export: /html_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_index_html0\docsify_html
+2025-10-20 14:12:04 | INFO     | Found 1 total notes in search, filtering for folder: /html_test
+2025-10-20 14:12:04 | INFO     | Attempting to read note from URL: /test-project/resource/Test
+2025-10-20 14:12:04 | INFO     | Returning read_note result from resource: Test
+2025-10-20 14:12:04 | INFO     | Found 1 notes matching folder '/html_test' out of 1 total notes
+2025-10-20 14:12:04 | INFO     | Exported enhanced note: Test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_index_html0\docsify_html\Test.md
+2025-10-20 14:12:04 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:04 | INFO     | Initializing search index
+2025-10-20 14:12:04 | INFO     | Initializing search index
+2025-10-20 14:12:04 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:04 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:04 | INFO     | MCP tool call tool=write_note folder=sidebar_test, title=Note 1, tags=None
+2025-10-20 14:12:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='sidebar-test/note-1', data.entity_type='note', data.title='Note 1'
+2025-10-20 14:12:05 | INFO     | Writing file: sidebar_test\Note_1.md, is_markdown=True
+2025-10-20 14:12:05 | INFO     | Resolving forward references
+2025-10-20 14:12:05 | INFO     | API response: result.title='Note 1', result.permalink='sidebar-test/note-1', created=True, status_code=201
+2025-10-20 14:12:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=sidebar-test/note-1 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:05 | INFO     | MCP tool call tool=write_note folder=sidebar_test, title=Note 2, tags=None
+2025-10-20 14:12:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='sidebar-test/note-2', data.entity_type='note', data.title='Note 2'
+2025-10-20 14:12:05 | INFO     | Writing file: sidebar_test\Note_2.md, is_markdown=True
+2025-10-20 14:12:05 | INFO     | Resolving forward references
+2025-10-20 14:12:05 | INFO     | API response: result.title='Note 2', result.permalink='sidebar-test/note-2', created=True, status_code=201
+2025-10-20 14:12:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=sidebar-test/note-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:05 | INFO     | Starting Enhanced Docsify export: /sidebar_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_sidebar_ge0\docsify_sidebar
+2025-10-20 14:12:05 | INFO     | Found 2 total notes in search, filtering for folder: /sidebar_test
+2025-10-20 14:12:05 | INFO     | Attempting to read note from URL: /test-project/resource/Note 1
+2025-10-20 14:12:05 | INFO     | Returning read_note result from resource: Note 1
+2025-10-20 14:12:05 | INFO     | Attempting to read note from URL: /test-project/resource/Note 2
+2025-10-20 14:12:05 | INFO     | Returning read_note result from resource: Note 2
+2025-10-20 14:12:05 | INFO     | Found 2 notes matching folder '/sidebar_test' out of 2 total notes
+2025-10-20 14:12:05 | INFO     | Exported enhanced note: Note 1 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_sidebar_ge0\docsify_sidebar\Note 1.md
+2025-10-20 14:12:05 | INFO     | Exported enhanced note: Note 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_sidebar_ge0\docsify_sidebar\Note 2.md
+2025-10-20 14:12:05 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:05 | INFO     | Initializing search index
+2025-10-20 14:12:05 | INFO     | Initializing search index
+2025-10-20 14:12:05 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:05 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:05 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test, tags=None
+2025-10-20 14:12:05 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test', data.entity_type='note', data.title='Server Test'
+2025-10-20 14:12:05 | INFO     | Writing file: server_test\Server_Test.md, is_markdown=True
+2025-10-20 14:12:05 | INFO     | Resolving forward references
+2025-10-20 14:12:05 | INFO     | API response: result.title='Server Test', result.permalink='server-test/server-test', created=True, status_code=201
+2025-10-20 14:12:05 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:05 | INFO     | Starting Enhanced Docsify export: /server_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_serve_disa0\docsify_no_serve
+2025-10-20 14:12:05 | INFO     | Found 1 total notes in search, filtering for folder: /server_test
+2025-10-20 14:12:05 | INFO     | Attempting to read note from URL: /test-project/resource/Server Test
+2025-10-20 14:12:05 | INFO     | Returning read_note result from resource: Server Test
+2025-10-20 14:12:05 | INFO     | Found 1 notes matching folder '/server_test' out of 1 total notes
+2025-10-20 14:12:05 | INFO     | Exported enhanced note: Server Test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_serve_disa0\docsify_no_serve\Server Test.md
+2025-10-20 14:12:05 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:06 | INFO     | Initializing search index
+2025-10-20 14:12:06 | INFO     | Initializing search index
+2025-10-20 14:12:06 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:06 | INFO     | MCP tool call tool=write_note folder=server_test, title=Server Test 2, tags=None
+2025-10-20 14:12:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='server-test/server-test-2', data.entity_type='note', data.title='Server Test 2'
+2025-10-20 14:12:06 | INFO     | Writing file: server_test\Server_Test_2.md, is_markdown=True
+2025-10-20 14:12:06 | INFO     | Resolving forward references
+2025-10-20 14:12:06 | INFO     | API response: result.title='Server Test 2', result.permalink='server-test/server-test-2', created=True, status_code=201
+2025-10-20 14:12:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=server-test/server-test-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:06 | INFO     | Starting Enhanced Docsify export: /server_test -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_serve_enab0\docsify_serve
+2025-10-20 14:12:06 | INFO     | Found 1 total notes in search, filtering for folder: /server_test
+2025-10-20 14:12:06 | INFO     | Attempting to read note from URL: /test-project/resource/Server Test 2
+2025-10-20 14:12:06 | INFO     | Returning read_note result from resource: Server Test 2
+2025-10-20 14:12:06 | INFO     | Found 1 notes matching folder '/server_test' out of 1 total notes
+2025-10-20 14:12:06 | INFO     | Exported enhanced note: Server Test 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_serve_enab0\docsify_serve\Server Test 2.md
+2025-10-20 14:12:06 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:06 | INFO     | Initializing search index
+2025-10-20 14:12:06 | INFO     | Initializing search index
+2025-10-20 14:12:06 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:06 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:06 | INFO     | MCP tool call tool=write_note folder=zettelkasten/standards, title=Standards Doc 1, tags=None
+2025-10-20 14:12:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='zettelkasten/standards/standards-doc-1', data.entity_type='note', data.title='Standards Doc 1'
+2025-10-20 14:12:06 | INFO     | Writing file: zettelkasten\standards\Standards_Doc_1.md, is_markdown=True
+2025-10-20 14:12:06 | INFO     | Resolving forward references
+2025-10-20 14:12:06 | INFO     | API response: result.title='Standards Doc 1', result.permalink='zettelkasten/standards/standards-doc-1', created=True, status_code=201
+2025-10-20 14:12:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=zettelkasten/standards/standards-doc-1 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:06 | INFO     | MCP tool call tool=write_note folder=projects/standards, title=Standards Doc 2, tags=None
+2025-10-20 14:12:06 | INFO     | API request: create_or_update_entity for project='test-project', permalink='projects/standards/standards-doc-2', data.entity_type='note', data.title='Standards Doc 2'
+2025-10-20 14:12:06 | INFO     | Writing file: projects\standards\Standards_Doc_2.md, is_markdown=True
+2025-10-20 14:12:06 | INFO     | Resolving forward references
+2025-10-20 14:12:06 | INFO     | API response: result.title='Standards Doc 2', result.permalink='projects/standards/standards-doc-2', created=True, status_code=201
+2025-10-20 14:12:06 | INFO     | MCP tool response: tool=write_note action=Created permalink=projects/standards/standards-doc-2 observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:06 | INFO     | Starting Enhanced Docsify export: standards -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_export_all0\docsify_all
+2025-10-20 14:12:07 | INFO     | Found 2 total notes in search, filtering for folder: standards
+2025-10-20 14:12:07 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 1
+2025-10-20 14:12:07 | INFO     | Returning read_note result from resource: Standards Doc 1
+2025-10-20 14:12:07 | INFO     | Attempting to read note from URL: /test-project/resource/Standards Doc 2
+2025-10-20 14:12:07 | INFO     | Returning read_note result from resource: Standards Doc 2
+2025-10-20 14:12:07 | INFO     | Found 2 notes matching folder 'standards' out of 2 total notes
+2025-10-20 14:12:07 | INFO     | Folder 'standards' matched multiple locations: projects/standards, zettelkasten/standards. Exporting from all.
+2025-10-20 14:12:07 | INFO     | Exported enhanced note: Standards Doc 1 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_export_all0\docsify_all\Standards Doc 1.md
+2025-10-20 14:12:07 | INFO     | Exported enhanced note: Standards Doc 2 -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_export_all0\docsify_all\Standards Doc 2.md
+2025-10-20 14:12:07 | INFO     | Using in-memory SQLite database
+2025-10-20 14:12:07 | INFO     | Initializing search index
+2025-10-20 14:12:07 | INFO     | Initializing search index
+2025-10-20 14:12:07 | INFO     | Initialized project session with default project: test-project
+2025-10-20 14:12:07 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 14:12:07 | INFO     | MCP tool call tool=write_note folder=projects/specific, title=Exact Path Doc, tags=None
+2025-10-20 14:12:07 | INFO     | API request: create_or_update_entity for project='test-project', permalink='projects/specific/exact-path-doc', data.entity_type='note', data.title='Exact Path Doc'
+2025-10-20 14:12:07 | INFO     | Writing file: projects\specific\Exact_Path_Doc.md, is_markdown=True
+2025-10-20 14:12:07 | INFO     | Resolving forward references
+2025-10-20 14:12:07 | INFO     | API response: result.title='Exact Path Doc', result.permalink='projects/specific/exact-path-doc', created=True, status_code=201
+2025-10-20 14:12:07 | INFO     | MCP tool response: tool=write_note action=Created permalink=projects/specific/exact-path-doc observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-20 14:12:07 | INFO     | Starting Enhanced Docsify export: projects/specific -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_export_all1\docsify_exact
+2025-10-20 14:12:07 | INFO     | Found 1 total notes in search, filtering for folder: projects/specific
+2025-10-20 14:12:07 | INFO     | Attempting to read note from URL: /test-project/resource/Exact Path Doc
+2025-10-20 14:12:07 | INFO     | Returning read_note result from resource: Exact Path Doc
+2025-10-20 14:12:07 | INFO     | Found 1 notes matching folder 'projects/specific' out of 1 total notes
+2025-10-20 14:12:07 | INFO     | Exported enhanced note: Exact Path Doc -> C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-5\test_export_docsify_export_all1\docsify_exact\Exact Path Doc.md
+2025-10-20 14:31:14 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:32:51 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:32:54 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:32:54 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:32:54 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:32:54 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:32:54 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:32:54 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:32:54 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:32:54 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:32:54 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:32:54 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:32:54 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:32:54 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:32:54 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:32:54 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:32:54 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:33:18 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 14:33:21 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 14:33:21 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:33:21 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:33:21 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:33:21 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:33:21 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:33:21 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:33:21 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:33:21 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:33:21 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:33:21 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:33:21 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:33:21 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:33:21 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 14:33:22 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 14:33:22 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 14:33:22 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 14:33:22 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 14:33:22 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 14:33:22 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 14:33:22 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 14:33:22 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 14:33:22 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 14:33:22 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 14:33:22 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 14:33:22 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 14:33:22 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 19:09:52 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:09:57 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 19:09:57 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 19:09:57 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 19:09:57 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 19:09:57 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 19:09:57 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 19:09:57 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 19:09:57 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 19:09:57 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 19:09:57 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 19:09:57 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 19:09:57 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 19:09:57 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 19:09:57 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 19:10:06 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:10:09 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 19:10:09 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 19:10:09 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 19:10:09 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 19:10:09 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 19:10:09 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 19:10:09 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 19:10:09 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 19:10:09 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 19:10:09 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 19:10:09 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 19:10:09 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 19:10:09 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 19:10:09 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 19:10:45 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:10:48 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 19:10:48 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 19:10:48 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 19:10:48 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 19:10:48 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 19:10:48 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 19:10:48 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 19:10:48 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 19:10:48 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 19:10:48 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 19:10:48 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 19:10:48 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 19:10:48 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 19:10:48 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 19:10:59 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:11:02 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 19:11:02 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 19:11:02 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 19:11:02 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 19:11:02 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 19:11:02 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 19:11:02 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 19:11:02 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 19:11:02 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 19:11:02 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 19:11:02 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 19:11:02 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 19:11:02 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 19:11:02 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-20 19:11:14 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | ERROR    | Failed to compute checksum: object supporting the buffer API required
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | ERROR    | Failed to write file
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | ERROR    | Failed to update frontmatter
+2025-10-20 19:11:15 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initializing search index
+2025-10-20 19:11:15 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:15 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:15 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_permalink_formatting_asyn0
+2025-10-20 19:11:15 | INFO     | Found 0 db records
+2025-10-20 19:11:15 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_permalink_formatting_asyn0. Found 0 db paths
+2025-10-20 19:11:15 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_permalink_formatting_asyn0, found 5 changes.
+2025-10-20 19:11:15 | INFO     | Sync changes detected: new_files=5, modified_files=0, deleted_files=0, moved_files=0
+2025-10-20 19:11:16 | INFO     | Updating permalink for path: my_awesome_feature.md, old_permalink: None, new_permalink: my-awesome-feature
+2025-10-20 19:11:16 | INFO     | Updating permalink for path: MIXED_CASE_NAME.md, old_permalink: None, new_permalink: mixed-case-name
+2025-10-20 19:11:16 | INFO     | Updating permalink for path: test\multiple_word_directory\feature_name.md, old_permalink: None, new_permalink: test/multiple-word-directory/feature-name
+2025-10-20 19:11:16 | INFO     | Updating permalink for path: spaces and_underscores.md, old_permalink: None, new_permalink: spaces-and-underscores
+2025-10-20 19:11:16 | INFO     | Updating permalink for path: design\model_refactor.md, old_permalink: None, new_permalink: design/model-refactor
+2025-10-20 19:11:16 | INFO     | Resolving forward references
+2025-10-20 19:11:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_permalink_formatting_asyn0, total_changes=5, duration_ms=456
+2025-10-20 19:11:16 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:16 | INFO     | Writing file: utf8_service_test.md, is_markdown=True
+2025-10-20 19:11:16 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:16 | INFO     | Sync operation started for directory: C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_utf8_in_entity_sync_async0
+2025-10-20 19:11:16 | INFO     | Found 0 db records
+2025-10-20 19:11:16 | INFO     | Scanning directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_utf8_in_entity_sync_async0. Found 0 db paths
+2025-10-20 19:11:16 | INFO     | Completed scan for directory C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_utf8_in_entity_sync_async0, found 1 changes.
+2025-10-20 19:11:16 | INFO     | Sync changes detected: new_files=1, modified_files=0, deleted_files=0, moved_files=0
+2025-10-20 19:11:16 | INFO     | Resolving forward references
+2025-10-20 19:11:16 | INFO     | Sync operation completed: directory=C:\Users\sandr\AppData\Local\Temp\pytest-of-sandr\pytest-19\test_utf8_in_entity_sync_async0, total_changes=1, duration_ms=321
+2025-10-20 19:11:16 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:16 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:16 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initializing search index
+2025-10-20 19:11:16 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:16 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | WARNING  | YAML parse error in content: Invalid YAML in frontmatter: while parsing a flow node
+expected the node content, but found ':'
+  in "<unicode string>", line 2, column 2:
+    [: invalid yaml syntax :]
+     ^
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:17 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initializing search index
+2025-10-20 19:11:17 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:17 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initializing search index
+2025-10-20 19:11:18 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:18 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:18 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | ERROR    | Failed to open URL http://test.com: Browser not available
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:19 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initializing search index
+2025-10-20 19:11:19 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:20 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initializing search index
+2025-10-20 19:11:20 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:20 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:21 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:21 | INFO     | Initializing search index
+2025-10-20 19:11:21 | INFO     | Initializing search index
+2025-10-20 19:11:21 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:21 | INFO     | Using in-memory SQLite database
+2025-10-20 19:11:21 | INFO     | Initializing search index
+2025-10-20 19:11:21 | INFO     | Initializing search index
+2025-10-20 19:11:21 | INFO     | Initialized project session with default project: test-project
+2025-10-20 19:11:21 | INFO     | Switched project context: test-project -> test-project
+2025-10-20 19:11:31 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-20 19:11:33 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-20 19:11:33 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-20 19:11:33 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-20 19:11:33 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-20 19:11:33 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-20 19:11:33 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-20 19:11:33 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-20 19:11:33 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-20 19:11:33 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-20 19:11:33 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-20 19:11:33 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-20 19:11:33 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-20 19:11:33 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-20 19:11:33 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
