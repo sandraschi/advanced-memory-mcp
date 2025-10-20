@@ -28,9 +28,9 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")
 
 Bidirectional format conversion between zettelkasten notes and Anthropic's Claude Skills format. Conversion tools are functional. Deployment to Claude interfaces varies (claude.ai/API verified, Claude Desktop pending verification). Part of the emerging Claude Skills ecosystem with growing community repositories.
 
-### 2. Zettelkasten Templates (Experimental)
+### 2. Reference Library (Experimental)
 
-87+ curated templates across 12 categories:
+87+ curated reference templates across 12 categories for systematic learning:
 - **Developer**: Python, Git, Docker, CI/CD, Clean Code (30+ templates)
 - **DevOps**: Kubernetes, Infrastructure as Code, Observability (15+ templates)
 - **Data Scientist**: ML, MLOps, Python for Data Science (10+ templates)
@@ -38,7 +38,7 @@ Bidirectional format conversion between zettelkasten notes and Anthropic's Claud
 - **Product Manager**: Strategy, Analytics, Metrics (8+ templates)
 - **Plus**: Entrepreneur, Creative, Writer, UX Designer, Knowledge Worker, AI, Philosophy
 
-The zettelkasten system is experimental. Template quality and coverage vary by domain.
+**Note**: These are comprehensive reference documents (1000-5000 words), not classic atomic zettelkasten notes. See [Zettelkasten Philosophy](docs/zettelkasten/ZETTELKASTEN_PHILOSOPHY.md) for the distinction. Classic zettelkasten support (atomic notes) planned for v1.1.
 
 ### 3. Cursor IDE Compatible
 
@@ -208,7 +208,7 @@ adn_import("claude_skills", source_path="~/skills/")     # Requires: Skills repo
 
 ### Core Features
 - [Claude Skills Format Conversion](docs/user-guide/claude-skills.md) - Bidirectional conversion (experimental, [ecosystem overview](docs/integrations/CLAUDE_SKILLS_ECOSYSTEM.md))
-- [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates (experimental, quality varies)
+- [Reference Library](docs/zettelkasten/) - 87+ learning templates (experimental, [philosophy](docs/zettelkasten/ZETTELKASTEN_PHILOSOPHY.md))
 - [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility (10 tools)
 - [Database Architecture](docs/architecture/DATABASE_ARCHITECTURE.md) - Unified global database
 
@@ -472,7 +472,7 @@ advanced-memory mcp
 ## 📊 Project Stats
 
 - **1113 tests** passing (100% pass rate)
-- **87+ zettelkasten templates** (12 categories, experimental)
+- **87+ reference templates** (12 categories, experimental - comprehensive guides, not atomic zettelkasten)
 - **10 portmanteau tools** (Cursor IDE compatible)
 - **54% test coverage** (growing)
 - **Python 3.11-3.13** supported (3.10 compatible)
@@ -491,7 +491,7 @@ advanced-memory mcp
 **Pending Real-World Verification** ⏳:
 - Import/export features (Obsidian, Notion, Joplin, Evernote)
 - Pandoc exports (PDF, DOCX, etc.)
-- Zettelkasten template quality
+- Reference template quality and coverage
 - Editor integrations (Notepad++, Typora)
 
 **Prerequisites Required** 🔧:
@@ -597,7 +597,8 @@ adn_export("docsify", export_path="docs/")
 
 **Experimental features**:
 - Claude Skills export/import
-- Zettelkasten template generation
+- Reference template library (comprehensive learning guides)
+- Classic zettelkasten (atomic notes) planned for v1.1
 
 ---
 
