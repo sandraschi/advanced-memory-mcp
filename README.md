@@ -10,7 +10,7 @@ A Model Context Protocol server that integrates personal knowledge management wi
 
 **New in v1.0.0b3**: Experimental Claude Skills export and unified database architecture.
 
-[Quick Start](#quick-start) | [Documentation](docs/) | [Claude Skills Integration](docs/user-guide/claude-skills.md)
+[Quick Start](#quick-start) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md) | [Claude Skills](docs/user-guide/claude-skills.md)
 
 ---
 
@@ -212,10 +212,11 @@ adn_import("claude_skills", source_path="~/skills/")     # Requires: Skills repo
 - [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility (10 tools)
 - [Database Architecture](docs/architecture/DATABASE_ARCHITECTURE.md) - Unified global database
 
-### Advanced
-- [MCP Integration](docs/integrations/claude.md) - Deep dive into MCP
+### Technical & Development
+- [Technical Documentation](TECHNICAL.md) - Architecture, dependencies, build system, CI/CD
 - [Developer Guide](docs/DEVELOPER_GUIDE.md) - Extend and customize
-- [Architecture](docs/ARCHITECTURE_DEEP_DIVE.md) - System design
+- [Architecture Deep Dive](docs/ARCHITECTURE_DEEP_DIVE.md) - System design
+- [Testing Checklist](docs/testing/REAL_WORLD_TESTING_CHECKLIST.md) - Feature verification status
 
 [Complete Documentation →](docs/)
 
