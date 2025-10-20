@@ -325,3 +325,5 @@ class SkillsConverter:
         except Exception as e:
             logger.error(f"Failed to parse Skills frontmatter: {e}")
             raise ValueError(f"Invalid SKILL.md format: {e}") from e
+
+

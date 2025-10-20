@@ -69,3 +69,6 @@ if ($failed -gt 0) {
     Write-Host "CLOSE CLAUDE DESKTOP and run this script again." -ForegroundColor Red
 }
 
+
+
+

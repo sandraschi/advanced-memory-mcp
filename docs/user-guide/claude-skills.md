@@ -1,8 +1,8 @@
-# Claude Skills Integration Guide
+# Claude Skills Integration Guide (Experimental)
 
-**Advanced Memory + Claude Skills = Supercharged AI Assistant**
+**Status**: Conversion tools functional. Full integration pending verification of deployment mechanisms.
 
-This guide explains how Advanced Memory integrates with Anthropic's Claude Skills (released October 15, 2025), enabling your zettelkasten notes to become Skills that Claude can discover and use.
+This guide explains Advanced Memory's bidirectional conversion between zettelkasten notes and Anthropic's Claude Skills format (released October 15, 2024).
 
 ## What Are Claude Skills?
 
@@ -11,42 +11,38 @@ This guide explains how Advanced Memory integrates with Anthropic's Claude Skill
 - **YAML Frontmatter**: Name, description, license, allowed tools, metadata
 - **Markdown Instructions**: Guidance for Claude on how to use the skill
 
-## Why This Integration Matters
+## What This Integration Provides
 
-### The Synergy
+### Verified Functionality
 
-**Advanced Memory MCP** provides:
-- ✅ Knowledge storage and retrieval
-- ✅ Semantic knowledge graphs
-- ✅ Full-text search
-- ✅ Entity relationships
+**Export**: ✅ Converts zettelkasten notes → proper Claude Skills format (SKILL.md)
+**Import**: ✅ Converts Claude Skills → Advanced Memory notes with metadata preservation
+**Format**: ✅ Bidirectional conversion maintains both frontmatter formats
 
-**Claude Skills** provide:
-- ✅ Procedural knowledge (how-to guides)
-- ✅ Task-specific instructions
-- ✅ Tool pre-approval
-- ✅ Discoverable expertise
+### Where Skills Work (Verified from Anthropic)
 
-**Combined** = Claude has:
-- 🧠 **Access to your knowledge** (via MCP)
-- 📚 **Procedural guides** (via Skills)
-- 🎯 **Context-aware assistance** (both working together)
+- **Claude.ai (web)**: Paid plans can upload and use custom skills
+- **Claude Code**: Via plugin marketplace
+- **Claude API**: Via Skills API
 
-### Real-World Example
+### Deployment Methods (Current Understanding)
 
-**Without Skills**:
-```
-You: "Help me set up CI/CD for my Python project"
-Claude: "Here's a general guide..." [generic advice]
-```
+**Known**:
+- Skills are folder structures with `SKILL.md` files
+- Multiple skills repositories emerging (Anthropic's official + community)
+- Skills can be uploaded to claude.ai
 
-**With Skills from Your Zettelkasten**:
-```
-You: "Help me set up CI/CD for my Python project"
-Claude: [loads CI/CD Fundamentals skill from your zettelkasten]
-Claude: "Based on your CI/CD Fundamentals skill, here's your specific setup..."
-[Uses your documented best practices!]
-```
+**Pending Verification**:
+- Claude Desktop local skills discovery mechanism (if any)
+- Automatic skills directory monitoring
+- Skills management UI in various Claude interfaces
+
+### Value Proposition
+
+Convert your knowledge base between formats for:
+- Sharing zettelkasten as Skills packages
+- Importing community skills into your knowledge base
+- Maintaining single source of truth across both systems
 
 ## Export Your Zettelkasten as Skills
 
@@ -101,20 +97,26 @@ adn_export(
 )
 ```
 
-### Configure Claude Desktop
+### Deploy Skills
 
-**Option 1: Global Skills Directory** (Recommended)
+**For Claude.ai (Verified)**:
+1. Export skills: `adn_export("claude_skills", export_path="~/my-skills/")`
+2. Log into claude.ai (paid plan required)
+3. Upload `SKILL.md` files via the web interface (check claude.ai documentation for current upload mechanism)
 
-1. Open **Claude Desktop Settings**
-2. Go to **Skills** section
-3. Add skills directory: `~/Documents/claude-skills/`
-4. Claude discovers all skills automatically
+**For Claude API (Verified)**:
+- Use the Skills API endpoint to upload skills programmatically
+- See [Skills API Quickstart](https://docs.claude.com/en/api/skills-guide)
 
-**Option 2: Per-Conversation Loading**
+**For Claude Desktop (Unverified)**:
+- Skills discovery mechanism not yet confirmed
+- May support drag-and-drop of `SKILL.md` into conversations
+- Configuration method pending verification
+- We're actively researching this and will update docs once confirmed
 
-1. Find the skill folder (e.g., `claude-skills/developer/python-fundamentals/`)
-2. Drag `SKILL.md` into Claude Desktop conversation
-3. Claude loads the skill for that conversation only
+**For Claude Code (Verified)**:
+- Use plugin marketplace system
+- Can create `.claude-plugin/marketplace.json` for skill packages
 
 ## Import Anthropic's Official Skills
 
@@ -403,41 +405,81 @@ adn_export("claude_skills", export_path="~/curated-skills/")
 # 4. Share with team!
 ```
 
-## Future Roadmap
+## Emerging Skills Ecosystem
 
-### Planned Features
+### Official Anthropic Skills
+- [anthropics/skills](https://github.com/anthropics/anthropic-skills) - Official examples and reference implementations
+- Includes: document-skills, mcp-builder, skill-creator, and more
 
-**v1.0.0b5**:
-- ✅ Skills import from Claude Skills format
-- ✅ Bidirectional sync (detect changes on both sides)
-- ✅ Skills validation and linting
+### Community Skills (Growing)
+The Claude Skills ecosystem is rapidly expanding with community-created skills:
+- Search GitHub for "claude skills" to find emerging repositories
+- Skills for specific domains, tools, and workflows
+- Both individual skills and curated collections
 
-**v1.0.1+**:
-- Skills marketplace (browse, install, share)
-- Skills analytics (usage tracking, effectiveness)
-- Skills recommendations (based on your knowledge graph)
-- Auto-generate Skills from existing notes
+### Import Community Skills
+```python
+# Import any Skills repository into Advanced Memory
+adn_import("claude_skills", 
+           source_path="~/downloaded-skills-repo/",
+           destination_folder="community/skill-name")
+
+# Makes them searchable, linkable, and editable in your knowledge base
+```
+
+## Integration Roadmap
+
+### Current Status (v1.0.0b3)
+- ✅ Export: zettelkasten → Claude Skills format
+- ✅ Import: Claude Skills → Advanced Memory notes
+- ✅ Bidirectional metadata preservation
+- ✅ Format validation and conversion
+
+### Pending Verification
+- ⏳ Claude Desktop skills discovery mechanism
+- ⏳ Skills management UI across Claude interfaces
+- ⏳ Best practices for skills deployment
+
+### Future Features (Post-Verification)
+- Skills validation and linting tools
+- Automatic skills packaging for distribution
+- Skills analytics (usage, effectiveness)
+- Bidirectional sync (detect changes on both sides)
+- Skills recommendations based on knowledge graph
+
+**We're actively researching deployment mechanisms. Documentation will be updated as we verify functionality.**
 
 ## References
 
-- [Claude Skills Spec](https://github.com/anthropics/anthropic-skills/blob/main/agent_skills_spec.md)
-- [Anthropic Skills Repository](https://github.com/anthropics/anthropic-skills)
-- [Advanced Memory Zettelkasten Templates](../../zettelkasten/templates/)
-- [Integration Plan](../integrations/CLAUDE_SKILLS_INTEGRATION.md)
+- [Claude Skills Spec](https://github.com/anthropics/anthropic-skills/blob/main/agent_skills_spec.md) - Official format specification
+- [Anthropic Skills Repository](https://github.com/anthropics/anthropic-skills) - Example skills
+- [Claude Skills Documentation](https://support.claude.com/en/articles/12512176-what-are-skills) - Official support docs
+- [Advanced Memory Zettelkasten Templates](../../zettelkasten/templates/) - 87+ templates ready for conversion
+- [Integration Implementation](../integrations/CLAUDE_SKILLS_INTEGRATION.md) - Technical details
 
 ---
 
 **Quick Start**:
 
 ```python
-# Export your zettel as Skills
+# 1. Export your zettel as Skills format
 adn_export("claude_skills", export_path="~/Documents/claude-skills/")
 
-# Configure Claude Desktop to discover them
-# Settings → Skills → Add Directory → ~/Documents/claude-skills/
+# 2. Deploy to your preferred Claude interface:
+# - Claude.ai: Upload SKILL.md files via web interface
+# - Claude API: Use Skills API endpoint
+# - Claude Desktop: Deployment mechanism pending verification
 
-# Done! Claude can now use your knowledge as skills!
+# 3. Import community skills into your knowledge base
+adn_import("claude_skills", 
+           source_path="~/anthropic-skills/",
+           destination_folder="imported/anthropic")
 ```
 
-**Questions?** See [Troubleshooting Guide](../TROUBLESHOOTING_GUIDE.md) or [file an issue](https://github.com/advanced-memory-mcp/issues).
+**Status**: Conversion tools are fully functional. Deployment mechanisms vary by Claude interface. We're actively verifying Claude Desktop integration.
+
+**Questions?** See [Troubleshooting Guide](../TROUBLESHOOTING_GUIDE.md) or [file an issue](https://github.com/sandraschi/advanced-memory-mcp/issues).
+
+
+
 

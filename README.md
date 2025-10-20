@@ -16,16 +16,17 @@ A Model Context Protocol server that integrates personal knowledge management wi
 
 ## Features
 
-### 1. Claude Skills Integration (Experimental)
+### 1. Claude Skills Format Conversion (Experimental)
 
 ```python
-# Export your knowledge as Claude Skills
+# Export zettelkasten → Claude Skills format
 adn_export("claude_skills", export_path="~/claude-skills/")
 
-# Claude Desktop can discover your notes as agent skills
+# Import Claude Skills → Advanced Memory notes
+adn_import("claude_skills", source_path="~/anthropic-skills/")
 ```
 
-Bidirectional conversion between zettelkasten notes and Anthropic's Claude Skills format. This feature is experimental and under active development.
+Bidirectional format conversion between zettelkasten notes and Anthropic's Claude Skills format. Conversion tools are functional. Deployment to Claude interfaces varies (claude.ai/API verified, Claude Desktop pending verification). Part of the emerging Claude Skills ecosystem with growing community repositories.
 
 ### 2. Zettelkasten Templates (Experimental)
 
@@ -118,20 +119,22 @@ Claude: Exported 30 skills to ~/claude-skills/
 
 ## Core Capabilities
 
-### Claude Skills Export/Import (Experimental)
+### Claude Skills Format Conversion (Experimental)
 
-**Export your zettelkasten**:
+**Export to Skills format**:
 ```python
 adn_export("claude_skills", export_path="~/claude-skills/")
+# Creates proper SKILL.md files for claude.ai, API, or community sharing
 ```
 
-**Import Anthropic's official skills**:
+**Import from Skills format**:
 ```python
 adn_import("claude_skills", source_path="~/anthropic-skills/", 
            destination_folder="skills/anthropic")
+# Imports community skills into your knowledge base
 ```
 
-This feature is experimental. See the [Claude Skills Guide](docs/user-guide/claude-skills.md) for details.
+**Status**: Format conversion fully functional. Deploy to claude.ai (paid), Claude API, or share via GitHub. Claude Desktop integration pending verification. See [Claude Skills Guide](docs/user-guide/claude-skills.md).
 
 ### Intelligent File Sync
 
@@ -179,9 +182,9 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")  # NEW!
 - [Troubleshooting](docs/TROUBLESHOOTING_GUIDE.md) - Common issues
 
 ### Core Features
-- [Claude Skills Integration](docs/user-guide/claude-skills.md) - Export zettel as agent skills (experimental)
-- [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates (experimental)
-- [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility
+- [Claude Skills Format Conversion](docs/user-guide/claude-skills.md) - Bidirectional conversion (experimental, pending full deployment verification)
+- [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates (experimental, quality varies)
+- [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility (10 tools)
 - [Database Architecture](docs/architecture/DATABASE_ARCHITECTURE.md) - Unified global database
 
 ### Advanced
@@ -259,12 +262,13 @@ Provides context-aware AI assistance with your knowledge base.
 
 ## What's New in v1.0.0b3
 
-### Claude Skills Integration (Experimental)
+### Claude Skills Format Conversion (Experimental)
 
-- Export zettelkasten to Claude Skills format
-- Import Anthropic skills to Advanced Memory
-- Bidirectional conversion preserves metadata
-- 87+ templates available for export
+- Export: zettelkasten → Claude Skills format (SKILL.md)
+- Import: Claude Skills → Advanced Memory notes
+- Bidirectional metadata preservation
+- Compatible with claude.ai, Claude API, emerging community ecosystem
+- Claude Desktop deployment pending verification
 
 ### Database Architecture Fixes
 

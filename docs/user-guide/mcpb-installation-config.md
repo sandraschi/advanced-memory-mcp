@@ -306,3 +306,6 @@ This means **data is stored in the extension directory** by default, which is:
 - [File Type Filtering](file-type-filtering.md)
 - [Archive Patterns](archive-folder-patterns.md)
 
+
+
+

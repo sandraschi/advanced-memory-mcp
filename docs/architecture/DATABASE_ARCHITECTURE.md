@@ -321,3 +321,6 @@ Potential improvements:
 - ✅ **No cross-project linking** by design
 - ✅ **Fast rebuilds** (~1 minute for 2000 notes)
 
+
+
+

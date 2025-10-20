@@ -115,3 +115,6 @@ Write-Host ""
 Write-Host "Your markdown files and content are safe!" -ForegroundColor Green
 Write-Host "Databases can be rebuilt anytime with sync." -ForegroundColor Cyan
 
+
+
+

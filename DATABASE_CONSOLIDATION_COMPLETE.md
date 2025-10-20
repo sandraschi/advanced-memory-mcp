@@ -260,3 +260,6 @@ See the complete documentation:
 
 **Rebuild time**: ~1-2 minutes for 2,000 notes (faster than your 10-minute estimate!)
 
+
+
+

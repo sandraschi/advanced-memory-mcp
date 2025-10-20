@@ -258,3 +258,6 @@ Currently patterns are hardcoded in `sync_service.py`. To add custom patterns, m
 - [Project Setup Guide](project-setup-quick-guide.md)
 - [Database Architecture](../architecture/DATABASE_ARCHITECTURE.md)
 
+
+
+
