@@ -6,33 +6,30 @@
 
 # Advanced Memory MCP
 
-> **The ONLY knowledge management system with native Claude Skills integration**
+A Model Context Protocol server that integrates personal knowledge management with Claude Desktop. Features include knowledge graphs, zettelkasten note-taking, and experimental Claude Skills integration.
 
-Transform your knowledge into AI skills. Advanced Memory combines powerful knowledge graphs with Anthropic's Claude Skills, making your zettelkasten notes discoverable and usable by Claude Desktop.
+**New in v1.0.0b3**: Experimental Claude Skills export and unified database architecture.
 
-**NEW in v1.0.0b3**: 🎯 Export your 87+ zettelkasten templates as Claude Skills!
-
-[Quick Start](#-quick-start) | [Documentation](docs/) | [Claude Skills Integration](docs/user-guide/claude-skills.md)
+[Quick Start](#quick-start) | [Documentation](docs/) | [Claude Skills Integration](docs/user-guide/claude-skills.md)
 
 ---
 
-## 🌟 What Makes This Special
+## Features
 
-### 1. 🎯 **Claude Skills Integration** (First of its Kind!)
+### 1. Claude Skills Integration (Experimental)
 
 ```python
 # Export your knowledge as Claude Skills
 adn_export("claude_skills", export_path="~/claude-skills/")
 
-# Claude Desktop discovers your notes as agent skills
-# Your team's best practices → Claude's guidance!
+# Claude Desktop can discover your notes as agent skills
 ```
 
-**Why this matters**: Claude can now access your knowledge as **procedural skills**, not just passive storage. Your documented workflows become Claude's operational guides.
+Bidirectional conversion between zettelkasten notes and Anthropic's Claude Skills format. This feature is experimental and under active development.
 
-### 2. 📚 **87+ Curated Zettelkasten Templates**
+### 2. Zettelkasten Templates (Experimental)
 
-Get a production-ready knowledge base from day one:
+87+ curated templates across 12 categories:
 - **Developer**: Python, Git, Docker, CI/CD, Clean Code (30+ templates)
 - **DevOps**: Kubernetes, Infrastructure as Code, Observability (15+ templates)
 - **Data Scientist**: ML, MLOps, Python for Data Science (10+ templates)
@@ -40,7 +37,9 @@ Get a production-ready knowledge base from day one:
 - **Product Manager**: Strategy, Analytics, Metrics (8+ templates)
 - **Plus**: Entrepreneur, Creative, Writer, UX Designer, Knowledge Worker, AI, Philosophy
 
-### 3. 🎯 **Cursor IDE Compatible**
+The zettelkasten system is experimental. Template quality and coverage vary by domain.
+
+### 3. Cursor IDE Compatible
 
 **Problem**: Most MCPs have 40+ tools → breaks Cursor's 50-tool limit  
 **Solution**: 10 portmanteau tools with full functionality
@@ -60,16 +59,16 @@ adn_inbox      → file drop processing
 
 **10 tools total** = fully compatible with Cursor IDE
 
-### 4. 🔧 **Unified Database Architecture**
+### 4. Unified Database Architecture
 
-- ✅ Single global database (`~/.advanced-memory/memory.db`)
-- ✅ Project isolation via `project_id`
-- ✅ Fast sync (2000+ notes in seconds)
-- ✅ Configurable file indexing (all files or .md only)
+- Single global database (`~/.advanced-memory/memory.db`)
+- Project isolation via `project_id`
+- Fast sync (2000+ notes in seconds)
+- Configurable file indexing (all files or .md only)
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -104,23 +103,22 @@ pip install advanced-memory-mcp
 
 ```
 You: "Create a new project for my research notes"
-Claude: ✓ Created project "research-notes"
+Claude: Created project "research-notes"
 
-You: "Generate starter zettelkasten for developer topics"
-Claude: ✓ Created 30+ interconnected notes on Python, Git, Docker, etc.
+You: "Generate starter zettelkasten for developer topics" (experimental)
+Claude: Created 30+ interconnected notes on Python, Git, Docker, etc.
 
-You: "Export my notes as Claude Skills"
-Claude: ✓ Exported 30 skills to ~/claude-skills/
-       → Configure Claude Desktop to discover them!
+You: "Export my notes as Claude Skills" (experimental)
+Claude: Exported 30 skills to ~/claude-skills/
 ```
 
-[Full Quick Start Guide →](QUICKSTART.md)
+[Full Quick Start Guide](QUICKSTART.md)
 
 ---
 
-## 💎 Killer Features
+## Core Capabilities
 
-### Claude Skills Export/Import
+### Claude Skills Export/Import (Experimental)
 
 **Export your zettelkasten**:
 ```python
@@ -133,9 +131,7 @@ adn_import("claude_skills", source_path="~/anthropic-skills/",
            destination_folder="skills/anthropic")
 ```
 
-**Result**: Bidirectional integration - your knowledge IS agent skills!
-
-[Claude Skills Guide →](docs/user-guide/claude-skills.md)
+This feature is experimental. See the [Claude Skills Guide](docs/user-guide/claude-skills.md) for details.
 
 ### Intelligent File Sync
 
@@ -183,8 +179,8 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")  # NEW!
 - [Troubleshooting](docs/TROUBLESHOOTING_GUIDE.md) - Common issues
 
 ### Core Features
-- [Claude Skills Integration](docs/user-guide/claude-skills.md) - **NEW!** Export zettel as agent skills
-- [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates
+- [Claude Skills Integration](docs/user-guide/claude-skills.md) - Export zettel as agent skills (experimental)
+- [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates (experimental)
 - [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility
 - [Database Architecture](docs/architecture/DATABASE_ARCHITECTURE.md) - Unified global database
 
@@ -197,41 +193,37 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")  # NEW!
 
 ---
 
-## 🎯 Use Cases
+## Use Cases
 
 ### For Development Teams
 
-**Problem**: Team knowledge scattered across wikis, Slack, docs  
-**Solution**: Centralized knowledge graph + Claude Skills
+Centralize team knowledge in a structured format:
 
 ```python
-# 1. Document your team's standards in Advanced Memory
-# 2. Export as Claude Skills
+# Document team standards in Advanced Memory
+# Export as Claude Skills (experimental)
 adn_export("claude_skills", export_path="~/team-skills/", source_folder="team/standards")
-
-# 3. Team members' Claude uses YOUR standards automatically!
 ```
 
 ### For Researchers
 
-**87+ research templates ready to use**:
+Research-focused templates include:
 - Research Methods Overview
 - Systematic Literature Review
 - Critical Thinking
 - Data Analysis Fundamentals
 - Academic Writing
 
-**Plus**: Export your findings as Skills → Claude guides your future research!
+Templates are experimental and coverage varies by domain.
 
 ### For Solo Developers
 
-**Cursor IDE + Advanced Memory + Skills**:
+Integration options for Cursor IDE:
 1. Index your codebase (all files)
-2. Generate developer zettelkasten (30+ templates)
-3. Export as Skills for Claude
-4. Claude has YOUR code + YOUR knowledge + YOUR procedures
+2. Generate developer zettelkasten templates (experimental)
+3. Export as Skills for Claude (experimental)
 
-**Result**: Context-aware AI coding assistant with your entire knowledge base!
+Provides context-aware AI assistance with your knowledge base.
 
 ---
 
@@ -265,48 +257,49 @@ adn_export("claude_skills", export_path="~/team-skills/", source_folder="team/st
 
 ---
 
-## 🔥 What's New in v1.0.0b3
+## What's New in v1.0.0b3
 
-### 🎯 Claude Skills Integration (KILLER FEATURE!)
+### Claude Skills Integration (Experimental)
 
-- ✅ Export zettelkasten → Claude Skills format
-- ✅ Import Anthropic skills → Advanced Memory
-- ✅ Bidirectional conversion preserves metadata
-- ✅ 87+ templates ready as agent skills
-- ✅ First knowledge management system with Skills integration!
+- Export zettelkasten to Claude Skills format
+- Import Anthropic skills to Advanced Memory
+- Bidirectional conversion preserves metadata
+- 87+ templates available for export
 
-### 🔧 Database Architecture Fixes
+### Database Architecture Fixes
 
-- ✅ Fixed `ADVANCED_MEMORY_HOME` defaulting to `~/.advanced-memory/`
-- ✅ Removed per-project databases (unified global database)
-- ✅ Fixed MCPB config pointing to wrong location
-- ✅ Project isolation via `project_id`
+- Fixed `ADVANCED_MEMORY_HOME` defaulting to `~/.advanced-memory/`
+- Unified global database (removed per-project databases)
+- Fixed MCPB config path issues
+- Project isolation via `project_id`
 
-### 📁 File Sync Improvements
+### File Sync Improvements
 
-- ✅ `index_all_files` config (index all files or .md only)
-- ✅ `ARCHIVE_PATTERNS` (skip backup/obsolete folders)
-- ✅ Enhanced diagnostic logging
+- `index_all_files` config option (index all files or .md only)
+- `ARCHIVE_PATTERNS` (skip backup/obsolete folders)
+- Enhanced diagnostic logging
 
-### ✅ MCPB Portmanteau-Only
+### MCPB Portmanteau-Only
 
-- ✅ MCPB exposes ONLY 10 tools (not 50+)
-- ✅ Achieves Cursor IDE compatibility
-- ✅ Full functionality via portmanteau tools
+- MCPB exposes 10 portmanteau tools (not 50+ individual tools)
+- Cursor IDE compatibility
+- Full functionality via consolidated tools
 
-### 🐍 Python Compatibility
+### Python Compatibility
 
-- ✅ Python 3.11, 3.12, 3.13 tested
-- ✅ Python 3.10 compatible
-- ✅ All 1113 tests passing
+- Python 3.11, 3.12, 3.13 tested
+- Python 3.10 compatible
+- All 1113 tests passing
 
-[Full Changelog →](CHANGELOG.md)
+[Full Changelog](CHANGELOG.md)
 
 ---
 
-## 🎓 Learning Resources
+## Learning Resources
 
-### Zettelkasten Templates (87+)
+### Zettelkasten Templates (Experimental)
+
+87+ templates across 12 categories:
 
 **Developer** (30+ templates):
 - Python: Fundamentals, Type Hints, Async, Testing
@@ -327,9 +320,11 @@ adn_export("claude_skills", export_path="~/team-skills/", source_folder="team/st
 - Critical Thinking
 - Academic Writing
 
-**Plus**: DevOps, Product Manager, Entrepreneur, Creative, Writer, UX Designer, Knowledge Worker, AI, Philosophy
+**Additional categories**: DevOps, Product Manager, Entrepreneur, Creative, Writer, UX Designer, Knowledge Worker, AI, Philosophy
 
-[Browse All Templates →](zettelkasten/templates/)
+Template quality and coverage vary. Consider them starting points for customization.
+
+[Browse All Templates](zettelkasten/templates/)
 
 ### Documentation
 
@@ -369,55 +364,46 @@ adn_export("claude_skills", export_path="~/team-skills/", source_folder="team/st
 
 ---
 
-## 💡 Example Workflows
+## Example Workflows
 
-### Workflow 1: Team Knowledge → Claude Skills
+### Workflow 1: Team Knowledge to Claude Skills (Experimental)
 
 ```python
 # 1. Document team standards in Advanced Memory
 adn_content("write", identifier="Python Standards", 
             content="# Our Python Standards\n\n...", folder="team/standards")
 
-# 2. Export as Claude Skills
+# 2. Export as Claude Skills (experimental)
 adn_export("claude_skills", export_path="~/team-skills/", source_folder="team")
 
-# 3. Team members configure Claude Desktop
-# Settings → Skills → Add Directory → ~/team-skills/
-
-# Result: Everyone's Claude follows the SAME team standards!
+# 3. Configure Claude Desktop: Settings → Skills → Add Directory → ~/team-skills/
 ```
 
-### Workflow 2: Learn from Anthropic + Enhance
+### Workflow 2: Import and Enhance Skills (Experimental)
 
 ```python
-# 1. Import Anthropic's official MCP Builder skill
+# 1. Import Anthropic's official skills
 adn_import("claude_skills", source_path="~/anthropic-skills/mcp-builder/",
            destination_folder="skills/mcp")
 
-# 2. Enhance with your team's patterns
-# ... edit in Advanced Memory, add links, observations ...
+# 2. Enhance with your own notes and links
 
 # 3. Export enhanced version
 adn_export("claude_skills", export_path="~/enhanced-mcp-skills/",
            source_folder="skills/mcp")
-
-# 4. Share with community!
 ```
 
-### Workflow 3: Zettelkasten for Learning
+### Workflow 3: Zettelkasten Generation (Experimental)
 
 ```python
-# 1. Generate starter zettelkasten
+# 1. Generate starter templates
 adn_zettelmaker("generate", category="data-scientist", topic="machine-learning")
 
-# 2. Study and enhance notes
-# ... add your own examples, insights ...
+# 2. Customize and enhance notes
 
-# 3. Export as Skills
+# 3. Export as Skills (experimental)
 adn_export("claude_skills", export_path="~/ml-skills/",
            source_folder="data-scientist")
-
-# 4. Claude teaches ML using YOUR notes!
 ```
 
 ---
@@ -514,7 +500,7 @@ Built with inspiration from:
 
 ---
 
-## ⚡ Quick Command Reference
+## Quick Command Reference
 
 ```python
 # Content Management
@@ -527,11 +513,11 @@ adn_project("create", project_name="research", project_path="~/Documents/researc
 adn_project("switch", project_name="research")
 adn_project("list")
 
-# Claude Skills (NEW!)
+# Claude Skills (Experimental)
 adn_export("claude_skills", export_path="~/claude-skills/")
 adn_import("claude_skills", source_path="~/anthropic-skills/")
 
-# Zettelkasten Generation
+# Zettelkasten Generation (Experimental)
 adn_zettelmaker("generate", category="developer", topic="python-core")
 
 # Search
@@ -542,33 +528,27 @@ adn_export("pandoc", export_path="output.pdf", format_type="pdf")
 adn_export("docsify", export_path="docs/")
 ```
 
-[Complete Tool Reference →](docs/PORTMANTEAU_TOOLS_REFERENCE.md)
+[Complete Tool Reference](docs/PORTMANTEAU_TOOLS_REFERENCE.md)
 
 ---
 
-## 🌟 Why Advanced Memory?
+## Why Advanced Memory?
 
-**Most knowledge management tools**:
-- ❌ Proprietary (vendor lock-in)
-- ❌ Cloud-only (privacy concerns)
-- ❌ No AI integration (manual workflow)
-- ❌ Markdown silos (can't interact with AI)
+**Key characteristics**:
+- **Open source** (AGPL-3.0)
+- **Local-first** (files on your computer, works offline)
+- **MCP integration** (designed for Claude Desktop)
+- **Cursor IDE compatible** (via portmanteau tools)
+- **Extensible** (import/export from multiple sources)
 
-**Advanced Memory**:
-- ✅ **Open source** (AGPL-3.0, your data is yours)
-- ✅ **Local-first** (files on your computer, works offline)
-- ✅ **AI-native** (designed for Claude Desktop)
-- ✅ **Claude Skills** (your knowledge becomes agent skills!)
-- ✅ **Cursor IDE** (compatible via portmanteau tools)
-- ✅ **Extensible** (import/export everywhere)
-
-**The future**: Your knowledge graph IS your AI's skill library.
+**Experimental features**:
+- Claude Skills export/import
+- Zettelkasten template generation
 
 ---
 
 <p align="center">
-  <strong>Built for knowledge workers who refuse to compromise.</strong><br>
-  <sub>Local-first. Open source. AI-native.</sub>
+  <sub>Local-first knowledge management with MCP integration</sub>
 </p>
 
 <p align="center">
