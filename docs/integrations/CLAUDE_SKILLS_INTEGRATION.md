@@ -1,8 +1,8 @@
 # Claude Skills Integration - Implementation Plan
 
 **Created**: October 19, 2025  
-**Status**: In Development  
-**Target Release**: v1.0.0b4
+**Status**: Format conversion completed in v1.0.0b3. Deployment verification ongoing.  
+**Note**: For ecosystem overview, see [CLAUDE_SKILLS_ECOSYSTEM.md](CLAUDE_SKILLS_ECOSYSTEM.md)
 
 ## Executive Summary
 
@@ -284,10 +284,10 @@ async def _export_claude_skills(
         for error in errors[:10]:  # Show first 10
             summary += f"  - {error}\n"
     
-    summary += "\n📖 Usage:\n"
-    summary += f"  1. Point Claude Desktop to: {export_path}\n"
-    summary += "  2. Claude will discover these skills automatically\n"
-    summary += "  3. Skills appear in Claude's skill picker\n"
+    summary += "\n📖 Next Steps:\n"
+    summary += f"  1. Skills exported to: {export_path}\n"
+    summary += "  2. Deploy to claude.ai (paid), Claude API, or share on GitHub\n"
+    summary += "  3. Claude Desktop deployment: mechanism pending verification\n"
     
     return summary
 ```

@@ -12,7 +12,9 @@ tags:
 ---
 
 # Claude Skills: The Game-Changer for AI Agents
-**Released October 16, 2025 | Anthropic**
+**Released October 15, 2024 | Anthropic**
+
+**Note**: This is an overview document. For verified ecosystem information, see [CLAUDE_SKILLS_ECOSYSTEM.md](integrations/CLAUDE_SKILLS_ECOSYSTEM.md).
 
 ## What Are Skills?
 

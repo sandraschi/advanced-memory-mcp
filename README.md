@@ -134,7 +134,14 @@ adn_import("claude_skills", source_path="~/anthropic-skills/",
 # Imports community skills into your knowledge base
 ```
 
-**Status**: Format conversion fully functional. Deploy to claude.ai (paid), Claude API, or share via GitHub. Claude Desktop integration pending verification. See [Claude Skills Guide](docs/user-guide/claude-skills.md).
+**Status**: Format conversion fully functional. Deploy to claude.ai (paid), Claude API, or share via GitHub. Claude Desktop integration pending verification.
+
+**Resources**:
+- [User Guide](docs/user-guide/claude-skills.md) - How to use
+- [Ecosystem Overview](docs/integrations/CLAUDE_SKILLS_ECOSYSTEM.md) - Complete ecosystem tracking
+- [Anthropic Skills Repo](https://github.com/anthropics/anthropic-skills) - Official examples
+- [Skills Spec](https://github.com/anthropics/anthropic-skills/blob/main/agent_skills_spec.md) - Format specification
+- [Claude Skills Docs](https://support.claude.com/en/sections/12512173-skills) - Official support
 
 ### Intelligent File Sync
 
@@ -182,7 +189,7 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")  # NEW!
 - [Troubleshooting](docs/TROUBLESHOOTING_GUIDE.md) - Common issues
 
 ### Core Features
-- [Claude Skills Format Conversion](docs/user-guide/claude-skills.md) - Bidirectional conversion (experimental, pending full deployment verification)
+- [Claude Skills Format Conversion](docs/user-guide/claude-skills.md) - Bidirectional conversion (experimental, [ecosystem overview](docs/integrations/CLAUDE_SKILLS_ECOSYSTEM.md))
 - [Zettelkasten Templates](docs/zettelkasten/) - 87+ curated templates (experimental, quality varies)
 - [Portmanteau Tools](docs/PORTMANTEAU_TOOLS_REFERENCE.md) - Cursor IDE compatibility (10 tools)
 - [Database Architecture](docs/architecture/DATABASE_ARCHITECTURE.md) - Unified global database
