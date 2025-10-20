@@ -35,7 +35,7 @@ async def test_export_pandoc_docx(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"  # Mock Pandoc available
+            mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
@@ -47,7 +47,7 @@ async def test_export_pandoc_docx(tmp_path, mock_notes_data):
                 mock_exec.return_value = mock_process
 
                 with patch(
-                    "advanced_memory.mcp.tools.export_pandoc.open_file_or_folder"
+                    "advanced_memory.utils.file_opener.open_file_or_folder"
                 ) as mock_open:
                     mock_open.return_value = (True, "Opened")
 
@@ -69,7 +69,7 @@ async def test_export_pandoc_epub(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"
+            mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
@@ -97,7 +97,7 @@ async def test_export_pandoc_html(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"
+            mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
@@ -125,7 +125,7 @@ async def test_export_pandoc_show_after_export(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data[:1]  # Single note
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"
+            mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
@@ -136,7 +136,7 @@ async def test_export_pandoc_show_after_export(tmp_path, mock_notes_data):
                 mock_exec.return_value = mock_process
 
                 with patch(
-                    "advanced_memory.mcp.tools.export_pandoc.open_file_or_folder"
+                    "advanced_memory.utils.file_opener.open_file_or_folder"
                 ) as mock_open:
                     mock_open.return_value = (True, "Opened file")
 
@@ -161,7 +161,7 @@ async def test_export_pandoc_no_show(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"
+            mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
@@ -172,7 +172,7 @@ async def test_export_pandoc_no_show(tmp_path, mock_notes_data):
                 mock_exec.return_value = mock_process
 
                 with patch(
-                    "advanced_memory.mcp.tools.export_pandoc.open_file_or_folder"
+                    "advanced_memory.utils.file_opener.open_file_or_folder"
                 ) as mock_open:
                     result = await export_pandoc.fn(
                         export_path=str(export_path),

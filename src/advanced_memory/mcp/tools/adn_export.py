@@ -36,8 +36,7 @@ async def adn_export(
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
 
     SUPPORTED OPERATIONS:
-    - pdf: Export to PDF using pure Python (NO LaTeX! Works immediately!)
-    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc
+    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc (auto-installs!)
     - docsify: Export to Docsify documentation website with navigation
     - html: Export to standalone HTML website with Mermaid diagram rendering
     - joplin: Export to Joplin-compatible format for cross-platform access
@@ -77,9 +76,8 @@ async def adn_export(
         Operation-specific result with export details and file counts
 
     Examples:
-        # Export to PDF - OMIT export_path to use Desktop (RECOMMENDED!)
-        adn_export("pdf")  # → Desktop/advanced-memory-exports/pdf/
-        adn_export("pdf", export_path="C:/my-custom-path/")  # Only if user specifies!
+        # Export to PDF with Pandoc - OMIT export_path to use Desktop (RECOMMENDED!)
+        adn_export("pandoc", format_type="pdf")  # → Desktop/advanced-memory-exports/pandoc/
 
         # Export to DOCX - automatically goes to Desktop
         adn_export("pandoc", format_type="docx")  # → Desktop/advanced-memory-exports/pandoc/
@@ -103,18 +101,7 @@ async def adn_export(
     resolved_export_path = format_export_path(export_path, operation)
 
     # Route to appropriate operation
-    if operation == "pdf":
-        # Pure-Python PDF (NO LaTeX needed!)
-        from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
-
-        return await export_pdf_native(
-            resolved_export_path,
-            source_folder,
-            include_subfolders,
-            show_after_export,
-            project=project,
-        )
-    elif operation == "pandoc":
+    if operation == "pandoc":
         return await _pandoc_export(
             resolved_export_path,
             format_type,

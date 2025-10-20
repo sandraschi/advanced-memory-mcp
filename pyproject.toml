@@ -42,7 +42,6 @@ dependencies = [
     "starlette>=0.47.2",
     "regex>=2025.2.10",
     "pypandoc>=1.13",
-    "weasyprint>=62.3",
 ]
 
 
