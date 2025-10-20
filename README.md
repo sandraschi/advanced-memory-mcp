@@ -161,23 +161,41 @@ adn_import("claude_skills", source_path="~/anthropic-skills/",
 
 ### Multi-Format Export
 
+**Note**: Some formats require external tools (see prerequisites below).
+
 ```python
-adn_export("pandoc", export_path="book.pdf", format_type="pdf")  # PDF
-adn_export("docsify", export_path="docs/")  # Website
-adn_export("claude_skills", export_path="skills/")  # Agent Skills!
-adn_export("html", export_path="website/")  # Standalone HTML
-adn_export("pdf_book", export_path="book.pdf", book_title="My Research")
+adn_export("pandoc", export_path="book.pdf", format_type="pdf")  # Requires: Pandoc + LaTeX
+adn_export("docsify", export_path="docs/")                        # No prerequisites
+adn_export("claude_skills", export_path="skills/")                # No prerequisites
+adn_export("html", export_path="website/")                        # No prerequisites
+adn_export("pdf_book", export_path="book.pdf", book_title="...")  # Requires: Pandoc + LaTeX
 ```
+
+**Prerequisites for PDF**:
+- [Pandoc](https://pandoc.org/installing.html) - Universal document converter
+- LaTeX distribution ([MiKTeX](https://miktex.org/) for Windows, [TinyTeX](https://yihui.org/tinytex/) for minimal install)
+
+**Documentation**: [Export Guide](docs/user-guide/export.md)
 
 ### Import from Anywhere
 
+**Prerequisites**: Requires existing exports/vaults from respective applications.
+
 ```python
-adn_import("obsidian", source_path="~/obsidian-vault/")
-adn_import("notion", source_path="notion-export.zip")
-adn_import("joplin", source_path="~/joplin-export/")
-adn_import("evernote", source_path="export.enex")
-adn_import("claude_skills", source_path="~/anthropic-skills/")  # NEW!
+adn_import("obsidian", source_path="~/obsidian-vault/")  # Requires: Obsidian vault
+adn_import("notion", source_path="notion-export.zip")    # Requires: Notion export
+adn_import("joplin", source_path="~/joplin-export/")     # Requires: Joplin export
+adn_import("evernote", source_path="export.enex")        # Requires: Evernote ENEX file
+adn_import("claude_skills", source_path="~/skills/")     # Requires: Skills repository
 ```
+
+**External Tools**:
+- [Obsidian](https://obsidian.md/) - Local-first note-taking
+- [Notion](https://notion.so/) - Collaborative workspace
+- [Joplin](https://joplinapp.org/) - Open-source notes
+- [Evernote](https://evernote.com/) - Note organization
+
+**Documentation**: [Import/Export Guide](docs/user-guide/import-export.md)
 
 ---
 
@@ -453,11 +471,35 @@ advanced-memory mcp
 ## 📊 Project Stats
 
 - **1113 tests** passing (100% pass rate)
-- **87+ zettelkasten templates** (12 categories)
+- **87+ zettelkasten templates** (12 categories, experimental)
 - **10 portmanteau tools** (Cursor IDE compatible)
 - **54% test coverage** (growing)
 - **Python 3.11-3.13** supported (3.10 compatible)
 - **Zero ruff errors** (strict linting)
+
+## ⚠️ Testing Status
+
+**Public Repo Notice**: We're committed to transparency about feature verification.
+
+**Verified** ✅:
+- Core content management (write, read, edit, delete)
+- Project management (create, switch, list)
+- Claude Skills export/import (format conversion)
+- Database architecture (global db with project isolation)
+
+**Pending Real-World Verification** ⏳:
+- Import/export features (Obsidian, Notion, Joplin, Evernote)
+- Pandoc exports (PDF, DOCX, etc.)
+- Zettelkasten template quality
+- Editor integrations (Notepad++, Typora)
+
+**Prerequisites Required** 🔧:
+- PDF export: [Pandoc](https://pandoc.org/) + LaTeX
+- Obsidian import: [Obsidian](https://obsidian.md/) vault
+- Notion import: [Notion](https://notion.so/) export
+- See [Testing Checklist](docs/testing/REAL_WORLD_TESTING_CHECKLIST.md) for details
+
+We're actively testing and will update status as features are verified. [Help us test!](CONTRIBUTING.md)
 
 ---
 
