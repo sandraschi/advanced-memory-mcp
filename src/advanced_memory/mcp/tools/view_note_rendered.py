@@ -15,7 +15,7 @@ async def view_note_rendered(
     page_size: int = 10,
     project: str | None = None,
 ) -> str:
-    '''Display notes as interactive HTML artifacts with rendered Mermaid diagrams.
+    """Display notes as interactive HTML artifacts with rendered Mermaid diagrams.
 
     This specialized viewing tool creates an HTML artifact that renders Mermaid diagrams live
     using Mermaid.js, providing a visual viewing experience directly in Claude.
@@ -63,7 +63,7 @@ async def view_note_rendered(
     - Interactive viewing experience
 
     NOTE: Requires internet connection for Mermaid.js CDN loading.
-    '''
+    """
 
     logger.info(f"Rendering note with Mermaid: {identifier}")
 

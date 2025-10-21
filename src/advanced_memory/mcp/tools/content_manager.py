@@ -48,6 +48,8 @@ async def adn_content(
     - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
     - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
     - edit_tags: Edit tags (add, remove, replace, clear) without full note edits
+    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title)
+    - daily: Create or append to today's daily journal note
     - move: Relocate notes while preserving relationships and updating references
     - delete: Remove notes from knowledge base with relationship cleanup
 
@@ -59,9 +61,9 @@ async def adn_content(
     - Markdown rendering and syntax validation
 
     Args:
-        operation: Operation type (write, read, view, view_rendered, edit, edit_tags, move, delete)
+        operation: Operation type (write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete)
         identifier: Note title, permalink, or memory:// URL
-        content: Full markdown content for write/edit operations
+        content: Full markdown content for write/edit/quick/daily operations
         folder: Target folder path for write/move operations
         tags: Tags for categorization (string, list, or None)
         entity_type: Content type (default: "note")
@@ -97,6 +99,12 @@ async def adn_content(
         # Edit tags (replace all)
         adn_content("edit_tags", identifier="Project Plan", tag_operation="replace", tags="final, approved")
 
+        # Quick capture (ultra-fast note creation)
+        adn_content("quick", content="Great insight: use AI for code reviews")
+
+        # Daily journal entry
+        adn_content("daily", content="## Meeting Notes\\n\\nDiscussed Q4 roadmap with team")
+
         # Move a note
         adn_content("move", identifier="Project Plan", destination_path="archive/completed/project-plan.md")
 
@@ -117,7 +125,9 @@ async def adn_content(
     if operation == "write":
         if not identifier or not content or not folder:
             return "# Error\n\nWrite operation requires: identifier, content, and folder parameters"
-        return await _write_operation(active_project, identifier, content, folder, tags, entity_type)
+        return await _write_operation(
+            active_project, identifier, content, folder, tags, entity_type
+        )
 
     elif operation == "read":
         if identifier is None:
@@ -152,6 +162,16 @@ async def adn_content(
             return "# Error\n\nEdit tags operation requires: identifier"
         return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
+    elif operation == "quick":
+        if not content:
+            return "# Error\n\nQuick capture requires: content parameter"
+        return await _quick_capture_operation(active_project, content, tags)
+
+    elif operation == "daily":
+        if not content:
+            return "# Error\n\nDaily note operation requires: content parameter"
+        return await _daily_note_operation(active_project, content, tags)
+
     elif operation == "move":
         if identifier is None or destination_path is None:
             return "# Error\n\nMove operation requires: identifier, destination_path"
@@ -161,7 +181,7 @@ async def adn_content(
             return "# Error\n\nDelete operation requires: identifier"
         return await _delete_operation(active_project, identifier)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, view_rendered, edit, edit_tags, move, delete"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete"
 
 
 async def _write_operation(
@@ -253,7 +273,9 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(identifier=identifier, page=page, page_size=page_size, project=active_project.name)
+    return await read_note.fn(
+        identifier=identifier, page=page, page_size=page_size, project=active_project.name
+    )
 
 
 async def _view_operation(active_project, identifier: str) -> str:
@@ -312,7 +334,9 @@ async def _edit_tags_operation(
         return f"# Error\n\nNote not found: {identifier}\n\nPlease provide exact note title or permalink."
 
     current_entity = EntityResponse.model_validate(response.json())
-    current_tags = current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
+    current_tags = (
+        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
+    )
 
     # Parse input tags (unless clear operation)
     if tag_operation != "clear":
@@ -329,13 +353,21 @@ async def _edit_tags_operation(
         # Add tags (preserve existing, no duplicates)
         updated_tags = list(set(current_tags + new_tags))
         added_tags = [tag for tag in new_tags if tag not in current_tags]
-        operation_summary = f"Added {len(added_tags)} tag(s): {', '.join(added_tags)}" if added_tags else "No new tags added (all tags already exist)"
+        operation_summary = (
+            f"Added {len(added_tags)} tag(s): {', '.join(added_tags)}"
+            if added_tags
+            else "No new tags added (all tags already exist)"
+        )
 
     elif tag_operation == "remove":
         # Remove specific tags
         updated_tags = [tag for tag in current_tags if tag not in new_tags]
         removed_tags = [tag for tag in new_tags if tag in current_tags]
-        operation_summary = f"Removed {len(removed_tags)} tag(s): {', '.join(removed_tags)}" if removed_tags else "No tags removed (specified tags not found)"
+        operation_summary = (
+            f"Removed {len(removed_tags)} tag(s): {', '.join(removed_tags)}"
+            if removed_tags
+            else "No tags removed (specified tags not found)"
+        )
 
     elif tag_operation == "replace":
         # Replace all tags
@@ -397,6 +429,101 @@ async def _move_operation(active_project, identifier: str, destination_path: str
     return await move_note.fn(
         identifier=identifier, destination_path=destination_path, project=active_project.name
     )
+
+
+async def _quick_capture_operation(active_project, content: str, tags: TagType) -> str:
+    """Handle quick capture operation - ultra-fast note creation with smart defaults."""
+    from datetime import datetime
+
+    # Generate smart title from content (first line or timestamp)
+    content_lines = content.strip().split("\n")
+    first_line = content_lines[0].strip()
+
+    # If first line is a heading, use it as title
+    if first_line.startswith("#"):
+        title = first_line.lstrip("#").strip()
+        # Remove the heading from content since we're using it as title
+        content = "\n".join(content_lines[1:]).strip()
+    else:
+        # Use first few words as title
+        words = first_line.split()[:6]
+        title = " ".join(words)
+        if len(first_line.split()) > 6:
+            title += "..."
+
+    # Auto-select folder (inbox or quick-notes)
+    folder = "inbox"
+
+    # Auto-add capture tag
+    tag_list = parse_tags(tags) if tags else []
+    tag_list.append("quick-capture")
+    tag_list.append(datetime.now().strftime("%Y-%m-%d"))
+
+    # Add timestamp to content
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n{content}"
+
+    # Create the note
+    return await _write_operation(
+        active_project, title, formatted_content, folder, tag_list, "note"
+    )
+
+
+async def _daily_note_operation(active_project, content: str, tags: TagType) -> str:
+    """Handle daily note operation - create or append to today's journal."""
+    from datetime import datetime
+
+    from advanced_memory.mcp.tools.edit_note import edit_note
+
+    # Generate today's date-based title and folder
+    today = datetime.now()
+    title = today.strftime("%Y-%m-%d")
+    folder = "journal"
+
+    # Auto-add daily tag
+    tag_list = parse_tags(tags) if tags else []
+    tag_list.extend(["daily", "journal", today.strftime("%Y"), today.strftime("%Y-%m")])
+
+    # Try to read existing daily note
+    from advanced_memory.mcp.tools.read_note import read_note
+
+    existing_note = await read_note.fn(
+        identifier=f"{folder}/{title}", page=1, page_size=1000, project=active_project.name
+    )
+
+    # Check if note exists (not an error message)
+    if "# Note Not Found:" in existing_note:
+        # Create new daily note
+        timestamp = today.strftime("%H:%M")
+        formatted_content = f"""# Daily Note: {title}
+
+## {timestamp}
+
+{content}
+
+---
+
+"""
+        return await _write_operation(
+            active_project, title, formatted_content, folder, tag_list, "note"
+        )
+    else:
+        # Append to existing daily note
+        timestamp = today.strftime("%H:%M")
+        append_content = f"""
+
+## {timestamp}
+
+{content}
+
+---
+"""
+        return await edit_note.fn(
+            identifier=f"{folder}/{title}",
+            operation="append",
+            content=append_content,
+            project=active_project.name,
+        )
 
 
 async def _delete_operation(active_project, identifier: str) -> str:

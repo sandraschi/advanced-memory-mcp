@@ -5,7 +5,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 @mcp.tool
 async def help(level: str = "basic", topic: str | None = None) -> str:
-    '''Comprehensive help system for Advanced Memory with multiple knowledge levels.
+    """Comprehensive help system for Advanced Memory with multiple knowledge levels.
 
     This tool provides contextual assistance and documentation for Advanced Memory features,
     organized by knowledge levels from basic usage to advanced technical details.
@@ -48,7 +48,7 @@ async def help(level: str = "basic", topic: str | None = None) -> str:
     - Level 2 (intermediate): Detailed tool descriptions and workflows
     - Level 3 (advanced): Technical details and architecture
     - Level 4 (expert): Development and troubleshooting
-    '''
+    """
 
     if topic:
         return _get_topic_help(topic, level)
