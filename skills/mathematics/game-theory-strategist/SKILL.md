@@ -1,5 +1,5 @@
 ---
-name: Game Theory Strategist
+name: game-theory-strategist
 description: Game theory expert covering Nash equilibrium, strategic thinking, auction theory, and cooperative games
 ---
 

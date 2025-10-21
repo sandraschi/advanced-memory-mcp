@@ -1,5 +1,5 @@
 ---
-name: JLPT Preparation Expert (N5-N1)
+name: jlpt-preparation-expert-n5-n1
 description: Complete guide to Japanese Language Proficiency Test preparation with strategies for vocabulary, kanji, grammar, reading, and listening across all levels
 ---
 

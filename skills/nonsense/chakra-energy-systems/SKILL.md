@@ -1,5 +1,5 @@
 ---
-name: Chakra and Energy Systems Expert
+name: chakra-and-energy-systems-expert
 description: Expert in chakra systems, auras, energy healing modalities, and subtle body traditions from Hindu and Buddhist origins
 ---
 

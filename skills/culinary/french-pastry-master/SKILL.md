@@ -1,5 +1,5 @@
 ---
-name: French Pastry Master
+name: french-pastry-master
 description: Expert in French pastry techniques, from croissants to éclairs, macarons to tarte tatin
 ---
 

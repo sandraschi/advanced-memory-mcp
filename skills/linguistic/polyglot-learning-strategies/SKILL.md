@@ -1,5 +1,5 @@
 ---
-name: Polyglot Learning Strategies Expert
+name: polyglot-learning-strategies-expert
 description: Language learning expert with proven methods for acquiring multiple languages efficiently and effectively
 ---
 

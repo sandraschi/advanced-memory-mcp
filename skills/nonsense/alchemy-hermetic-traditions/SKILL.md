@@ -1,5 +1,5 @@
 ---
-name: Alchemy and Hermetic Traditions Expert
+name: alchemy-and-hermetic-traditions-expert
 description: Expert in historical alchemy, Hermetic philosophy, and symbolic transformation from medieval to modern esoteric traditions
 ---
 

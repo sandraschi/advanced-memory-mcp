@@ -1,5 +1,5 @@
 ---
-name: Testing Strategy Guide
+name: testing-strategy-guide
 description: Test automation expert covering unit tests, integration tests, TDD, and testing best practices
 ---
 

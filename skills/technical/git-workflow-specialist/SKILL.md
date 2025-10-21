@@ -1,5 +1,5 @@
 ---
-name: Git Workflow Specialist
+name: git-workflow-specialist
 description: Git expert covering branching strategies, collaboration, conflict resolution, and best practices
 ---
 

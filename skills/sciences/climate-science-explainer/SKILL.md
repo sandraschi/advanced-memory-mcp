@@ -1,5 +1,5 @@
 ---
-name: Climate Science Explainer
+name: climate-science-explainer
 description: Climate science expert explaining climate systems, climate change, models, and environmental impacts
 ---
 

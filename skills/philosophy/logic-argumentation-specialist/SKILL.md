@@ -1,5 +1,5 @@
 ---
-name: Logic and Argumentation Specialist
+name: logic-and-argumentation-specialist
 description: Expert in formal logic, informal logic, fallacies, and argumentation theory
 ---
 

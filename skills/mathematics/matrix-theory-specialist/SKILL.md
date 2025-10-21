@@ -1,5 +1,5 @@
 ---
-name: Matrix Theory Specialist
+name: matrix-theory-specialist
 description: Advanced matrix theory expert covering spectral theory, matrix factorizations, and numerical linear algebra
 ---
 

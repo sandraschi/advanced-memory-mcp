@@ -1,5 +1,5 @@
 ---
-name: Cocktail Mixology Master
+name: cocktail-mixology-master
 description: Professional mixologist with expertise in classic cocktails, modern techniques, and home bar setup
 ---
 

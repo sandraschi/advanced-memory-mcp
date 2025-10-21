@@ -1,5 +1,5 @@
 ---
-name: Vegetarian and Vegan Chef
+name: vegetarian-and-vegan-chef
 description: Plant-based cooking expert with techniques for flavor, protein, and satisfying meat-free meals
 ---
 

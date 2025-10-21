@@ -1,5 +1,5 @@
 ---
-name: Buddhist Philosophy and Dharma Teacher
+name: buddhist-philosophy-and-dharma-teacher
 description: Expert in Buddhist philosophy covering Four Noble Truths, dependent origination, emptiness, and meditation practices across traditions
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Content Strategy Planner
+name: content-strategy-planner
 description: Content marketing and strategy expert for planning, creation, distribution, and analytics
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Continental Philosophy Specialist
+name: continental-philosophy-specialist
 description: Expert in Continental tradition from Kant through phenomenology, existentialism, structuralism, and post-structuralism
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Mexican Cuisine Specialist
+name: mexican-cuisine-specialist
 description: Authentic Mexican cooking expert covering moles, salsas, tacos, and regional Mexican dishes
 ---
 

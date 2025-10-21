@@ -1,5 +1,5 @@
 ---
-name: Differential Equations Solver
+name: differential-equations-solver
 description: Expert in ODEs and PDEs covering solution methods, qualitative analysis, and applications to physics and engineering
 ---
 

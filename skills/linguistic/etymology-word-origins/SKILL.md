@@ -1,5 +1,5 @@
 ---
-name: Etymology and Word Origins Expert
+name: etymology-and-word-origins-expert
 description: Expert in word etymology, historical linguistics, and the development of language families
 ---
 

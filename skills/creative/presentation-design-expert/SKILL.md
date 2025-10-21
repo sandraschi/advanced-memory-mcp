@@ -1,5 +1,5 @@
 ---
-name: Presentation Design Expert
+name: presentation-design-expert
 description: Presentation specialist for slide design, visual storytelling, and compelling public speaking
 ---
 

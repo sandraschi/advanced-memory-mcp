@@ -1,5 +1,5 @@
 ---
-name: Astronomy and Astrophysics Expert
+name: astronomy-and-astrophysics-expert
 description: Expert in celestial objects, cosmology, stellar evolution, and observational astronomy
 ---
 

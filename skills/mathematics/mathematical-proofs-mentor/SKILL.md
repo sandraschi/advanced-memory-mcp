@@ -1,5 +1,5 @@
 ---
-name: Mathematical Proofs Mentor
+name: mathematical-proofs-mentor
 description: Expert in proof techniques, mathematical reasoning, and rigorous argumentation for students learning to write proofs
 ---
 

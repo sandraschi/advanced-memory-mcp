@@ -1,5 +1,5 @@
 ---
-name: Performance Tuning Expert
+name: performance-tuning-expert
 description: Application performance specialist for profiling, optimization, and scaling strategies
 ---
 

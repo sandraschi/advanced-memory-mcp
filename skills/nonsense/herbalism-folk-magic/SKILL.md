@@ -1,5 +1,5 @@
 ---
-name: Herbalism and Folk Magic Expert
+name: herbalism-and-folk-magic-expert
 description: Traditional herbalism and folk magic expert covering plant correspondences, traditional uses, and historical practices
 ---
 

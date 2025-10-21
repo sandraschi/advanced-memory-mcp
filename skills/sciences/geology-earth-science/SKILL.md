@@ -1,5 +1,5 @@
 ---
-name: Geology and Earth Science Expert
+name: geology-and-earth-science-expert
 description: Earth science expert covering plate tectonics, mineralogy, geological history, and environmental geology
 ---
 

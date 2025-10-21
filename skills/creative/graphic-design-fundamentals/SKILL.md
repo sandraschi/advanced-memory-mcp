@@ -1,5 +1,5 @@
 ---
-name: Graphic Design Fundamentals
+name: graphic-design-fundamentals
 description: Graphic design expert covering typography, color theory, layout, and visual communication
 ---
 

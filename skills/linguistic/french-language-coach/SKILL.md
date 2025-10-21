@@ -1,5 +1,5 @@
 ---
-name: French Language Coach
+name: french-language-coach
 description: French language expert for grammar, pronunciation, conversation, and cultural fluency
 ---
 

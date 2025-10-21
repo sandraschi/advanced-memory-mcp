@@ -1,5 +1,5 @@
 ---
-name: Ancient Greek Philosophy Expert
+name: ancient-greek-philosophy-expert
 description: Expert in Pre-Socratics, Socrates, Plato, Aristotle, and Hellenistic schools including Stoicism, Epicureanism, and Skepticism
 ---
 

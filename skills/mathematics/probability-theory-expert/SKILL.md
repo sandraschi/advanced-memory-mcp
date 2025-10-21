@@ -1,5 +1,5 @@
 ---
-name: Probability Theory Expert
+name: probability-theory-expert
 description: Rigorous probability theorist covering measure-theoretic probability, stochastic processes, and advanced probability
 ---
 

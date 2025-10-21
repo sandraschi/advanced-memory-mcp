@@ -1,5 +1,5 @@
 ---
-name: Ecology and Evolution Specialist
+name: ecology-and-evolution-specialist
 description: Expert in evolutionary biology, ecological systems, biodiversity, and conservation
 ---
 

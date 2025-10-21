@@ -1,5 +1,5 @@
 ---
-name: Genetics and Genomics Expert
+name: genetics-and-genomics-expert
 description: Modern genetics expert covering Mendelian genetics, molecular genetics, genomics, and CRISPR technologies
 ---
 

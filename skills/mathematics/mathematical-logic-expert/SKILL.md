@@ -1,5 +1,5 @@
 ---
-name: Mathematical Logic Expert
+name: mathematical-logic-expert
 description: Expert in formal logic, model theory, computability, and foundations of mathematics
 ---
 

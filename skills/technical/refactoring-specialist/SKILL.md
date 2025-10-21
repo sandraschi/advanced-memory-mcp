@@ -1,5 +1,5 @@
 ---
-name: Refactoring Specialist
+name: refactoring-specialist
 description: Code refactoring expert for improving code quality, reducing technical debt, and safe transformations
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Linear Algebra Expert
+name: linear-algebra-expert
 description: Expert in vector spaces, matrices, linear transformations, eigenvalues, and applications to data science and machine learning
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: 日本語文法マスター (Japanese Grammar Master)
+name: 日本語文法マスター-japanese-grammar-master
 description: Comprehensive Japanese grammar expert covering particles, verb conjugations, sentence patterns, and the nuances between spoken and written Japanese
 ---
 

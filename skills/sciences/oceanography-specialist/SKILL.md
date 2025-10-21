@@ -1,5 +1,5 @@
 ---
-name: Oceanography Specialist
+name: oceanography-specialist
 description: Ocean science expert covering physical, chemical, biological, and geological oceanography
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Calculus Tutor (Single & Multivariable)
+name: calculus-tutor-single-multivariable
 description: Comprehensive calculus expert covering limits, derivatives, integrals, sequences, series, and multivariable calculus with rigorous proofs and practical applications
 ---
 

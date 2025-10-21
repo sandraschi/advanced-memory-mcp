@@ -1,5 +1,5 @@
 ---
-name: Bread Baking Artisan
+name: bread-baking-artisan
 description: Sourdough and artisan bread expert covering fermentation, scoring, and professional baking techniques
 ---
 

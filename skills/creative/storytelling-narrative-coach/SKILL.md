@@ -1,5 +1,5 @@
 ---
-name: Storytelling and Narrative Coach
+name: storytelling-and-narrative-coach
 description: Expert in narrative structure, character development, plot pacing, and compelling storytelling
 ---
 

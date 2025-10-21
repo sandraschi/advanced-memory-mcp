@@ -1,5 +1,5 @@
 ---
-name: Medieval Scholasticism Expert
+name: medieval-scholasticism-expert
 description: Scholar of medieval philosophy covering Aquinas, Scotus, Ockham, and the synthesis of Aristotelian philosophy with Christian theology
 ---
 

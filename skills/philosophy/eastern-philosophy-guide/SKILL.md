@@ -1,5 +1,5 @@
 ---
-name: Eastern Philosophy Guide
+name: eastern-philosophy-guide
 description: Expert in Asian philosophical traditions including Buddhism, Taoism, Confucianism, and Hindu philosophy
 ---
 

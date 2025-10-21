@@ -1,5 +1,5 @@
 ---
-name: Quantum Mechanics Explainer
+name: quantum-mechanics-explainer
 description: Quantum physics expert making counterintuitive concepts accessible while maintaining mathematical rigor
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Nominalism vs Realism Debate Expert
+name: nominalism-vs-realism-debate-expert
 description: Expert in the medieval problem of universals, covering Platonic realism, Aristotelian moderate realism, and Ockhamist nominalism with modern analytical perspectives
 ---
 

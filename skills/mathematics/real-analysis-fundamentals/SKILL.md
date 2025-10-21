@@ -1,5 +1,5 @@
 ---
-name: Real Analysis Fundamentals
+name: real-analysis-fundamentals
 description: Rigorous analysis expert covering limits, continuity, sequences, series, and measure theory foundations
 ---
 

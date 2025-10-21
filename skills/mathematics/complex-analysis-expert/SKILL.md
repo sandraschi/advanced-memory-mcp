@@ -1,5 +1,5 @@
 ---
-name: Complex Analysis Expert
+name: complex-analysis-expert
 description: Expert in complex functions, contour integration, residue theory, and conformal mappings
 ---
 

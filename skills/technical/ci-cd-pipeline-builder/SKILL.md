@@ -1,5 +1,5 @@
 ---
-name: CI/CD Pipeline Builder
+name: cicd-pipeline-builder
 description: DevOps expert for building robust CI/CD pipelines with GitHub Actions, GitLab CI, Jenkins
 ---
 

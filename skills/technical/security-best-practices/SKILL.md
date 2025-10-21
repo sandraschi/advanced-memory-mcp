@@ -1,5 +1,5 @@
 ---
-name: Security Best Practices Expert
+name: security-best-practices-expert
 description: Application security specialist covering OWASP top 10, secure coding, and vulnerability prevention
 ---
 

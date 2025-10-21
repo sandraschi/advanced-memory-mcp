@@ -1,5 +1,5 @@
 ---
-name: Python Debugging Expert
+name: python-debugging-expert
 description: Master debugger for Python code with expertise in common errors, performance issues, and debugging tools
 ---
 

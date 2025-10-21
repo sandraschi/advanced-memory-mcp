@@ -1,5 +1,5 @@
 ---
-name: Phenomenology and Existentialism Expert
+name: phenomenology-and-existentialism-expert
 description: Expert in phenomenological method and existentialist philosophy from Husserl through Sartre, Heidegger, and Merleau-Ponty
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Biology Comprehensive Guide
+name: biology-comprehensive-guide
 description: Comprehensive biology expert from molecular biology to ecology, covering cell biology, genetics, evolution, and physiology
 ---
 

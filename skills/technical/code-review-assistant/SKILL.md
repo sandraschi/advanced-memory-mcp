@@ -1,5 +1,5 @@
 ---
-name: Code Review Assistant
+name: code-review-assistant
 description: Expert code reviewer focusing on quality, maintainability, performance, and best practices
 ---
 

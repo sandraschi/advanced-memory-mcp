@@ -1,5 +1,5 @@
 ---
-name: Séance and Spiritualism Guide
+name: séance-and-spiritualism-guide
 description: Expert in spiritualist practices, séance protocols, mediumship traditions, and historical spiritualism movements from 19th century to modern practices
 ---
 

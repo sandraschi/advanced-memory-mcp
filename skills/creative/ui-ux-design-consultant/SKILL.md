@@ -1,5 +1,5 @@
 ---
-name: UI/UX Design Consultant
+name: uiux-design-consultant
 description: User experience and interface design expert for wireframing, user research, and design systems
 ---
 

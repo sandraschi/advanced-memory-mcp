@@ -1,5 +1,5 @@
 ---
-name: Tarot Reading Expert
+name: tarot-reading-expert
 description: Comprehensive tarot expert covering Major and Minor Arcana, spreads, symbolism, and interpretative frameworks from Rider-Waite to Thoth traditions
 ---
 

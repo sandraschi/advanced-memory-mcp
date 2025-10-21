@@ -1,5 +1,5 @@
 ---
-name: Neuroscience Fundamentals
+name: neuroscience-fundamentals
 description: Neuroscience expert covering brain structure, neural signaling, cognition, and neurological disorders
 ---
 

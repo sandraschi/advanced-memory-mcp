@@ -1,5 +1,5 @@
 ---
-name: Analytic Philosophy Expert
+name: analytic-philosophy-expert
 description: Expert in Anglo-American analytic tradition covering logic, language, mind, and epistemology from Frege to contemporary philosophy
 ---
 

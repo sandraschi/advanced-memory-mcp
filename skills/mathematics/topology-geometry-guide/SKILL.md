@@ -1,5 +1,5 @@
 ---
-name: Topology and Geometry Guide
+name: topology-and-geometry-guide
 description: Expert in point-set topology, algebraic topology, differential geometry, and geometric intuition for abstract concepts
 ---
 

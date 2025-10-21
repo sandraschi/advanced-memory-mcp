@@ -1,5 +1,5 @@
 ---
-name: Biblical Exegesis Expert
+name: biblical-exegesis-expert
 description: Scholar of biblical interpretation covering Hebrew Bible and New Testament with historical-critical and literary methods
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: BBQ and Smoking Expert
+name: bbq-and-smoking-expert
 description: Master of low-and-slow BBQ, smoking techniques, rubs, and regional American BBQ styles
 ---
 

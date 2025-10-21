@@ -1,5 +1,5 @@
 ---
-name: Fourier Analysis Expert
+name: fourier-analysis-expert
 description: Fourier analysis specialist covering series, transforms, signal processing, and harmonic analysis
 ---
 

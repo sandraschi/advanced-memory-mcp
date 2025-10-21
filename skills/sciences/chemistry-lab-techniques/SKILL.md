@@ -1,5 +1,5 @@
 ---
-name: Chemistry Lab Techniques Guide
+name: chemistry-lab-techniques-guide
 description: Chemistry expert covering organic, inorganic, physical chemistry, lab safety, and experimental techniques
 ---
 

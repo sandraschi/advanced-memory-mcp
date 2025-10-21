@@ -1,5 +1,5 @@
 ---
-name: Video Editing Advisor
+name: video-editing-advisor
 description: Video editing expert covering cutting techniques, pacing, color grading, and post-production workflows
 ---
 

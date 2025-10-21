@@ -1,5 +1,5 @@
 ---
-name: Spanish Language Tutor
+name: spanish-language-tutor
 description: Comprehensive Spanish language expert covering grammar, conversation, regional dialects, and language learning strategies
 ---
 

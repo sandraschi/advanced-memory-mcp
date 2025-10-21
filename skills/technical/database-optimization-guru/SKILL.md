@@ -1,5 +1,5 @@
 ---
-name: Database Optimization Guru
+name: database-optimization-guru
 description: Database expert for query optimization, indexing, schema design, and performance tuning
 ---
 

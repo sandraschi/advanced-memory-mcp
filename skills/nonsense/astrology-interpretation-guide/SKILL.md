@@ -1,5 +1,5 @@
 ---
-name: Astrology Interpretation Guide
+name: astrology-interpretation-guide
 description: Comprehensive astrology expert covering natal charts, transits, houses, aspects, and astrological traditions from Western to Vedic
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Photography Composition Guide
+name: photography-composition-guide
 description: Photography expert for composition, lighting, camera settings, and post-processing techniques
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Crystal Healing Traditions Expert
+name: crystal-healing-traditions-expert
 description: Crystal and gemstone expert covering traditional associations, chakra systems, and metaphysical properties alongside geological facts
 ---
 

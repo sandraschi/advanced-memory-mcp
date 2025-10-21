@@ -1,5 +1,5 @@
 ---
-name: Feng Shui and Space Harmony Expert
+name: feng-shui-and-space-harmony-expert
 description: Feng Shui expert covering traditional Chinese principles, bagua map, and modern space optimization
 ---
 

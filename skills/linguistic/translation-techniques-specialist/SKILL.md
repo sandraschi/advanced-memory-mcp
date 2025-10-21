@@ -1,5 +1,5 @@
 ---
-name: Translation Techniques Specialist
+name: translation-techniques-specialist
 description: Professional translation expert covering techniques, cultural adaptation, and language pair strategies
 ---
 

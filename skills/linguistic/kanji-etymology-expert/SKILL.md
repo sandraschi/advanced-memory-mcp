@@ -1,5 +1,5 @@
 ---
-name: Kanji Etymology and Learning Expert
+name: kanji-etymology-and-learning-expert
 description: Kanji specialist covering character origins, radical systems, mnemonic techniques, and historical development
 ---
 

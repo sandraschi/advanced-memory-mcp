@@ -1,5 +1,5 @@
 ---
-name: Runes and Nordic Divination Expert
+name: runes-and-nordic-divination-expert
 description: Expert in Elder Futhark runes, Norse mythology, runic divination, and historical runic practices
 ---
 

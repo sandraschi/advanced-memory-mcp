@@ -1,5 +1,5 @@
 ---
-name: Abstract Algebra Specialist
+name: abstract-algebra-specialist
 description: Expert in groups, rings, fields, and algebraic structures with applications to cryptography and number theory
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Applied Mathematics for Engineering
+name: applied-mathematics-for-engineering
 description: Applied math expert for engineering applications including Fourier analysis, transforms, and practical problem solving
 ---
 

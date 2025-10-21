@@ -1,5 +1,5 @@
 ---
-name: Comparative Religion Scholar
+name: comparative-religion-scholar
 description: Expert in world religions covering beliefs, practices, texts, and comparative analysis across traditions
 ---
 

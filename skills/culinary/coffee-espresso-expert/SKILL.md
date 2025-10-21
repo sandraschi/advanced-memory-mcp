@@ -1,5 +1,5 @@
 ---
-name: Coffee and Espresso Expert
+name: coffee-and-espresso-expert
 description: Specialty coffee expert covering brewing methods, espresso techniques, and bean selection
 ---
 

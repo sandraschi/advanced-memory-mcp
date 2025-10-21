@@ -1,5 +1,5 @@
 ---
-name: Meal Prep Efficiency Guru
+name: meal-prep-efficiency-guru
 description: Expert in batch cooking, meal planning, food storage, and efficient kitchen workflows
 ---
 

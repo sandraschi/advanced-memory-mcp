@@ -1,5 +1,5 @@
 ---
-name: Copywriting and Persuasion Expert
+name: copywriting-and-persuasion-expert
 description: Professional copywriter for compelling headlines, sales copy, and persuasive writing techniques
 ---
 

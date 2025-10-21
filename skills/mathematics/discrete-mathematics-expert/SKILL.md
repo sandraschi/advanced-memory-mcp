@@ -1,5 +1,5 @@
 ---
-name: Discrete Mathematics Expert
+name: discrete-mathematics-expert
 description: Expert in combinatorics, graph theory, discrete probability, and algorithms with applications to computer science
 ---
 

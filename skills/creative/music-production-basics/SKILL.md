@@ -1,5 +1,5 @@
 ---
-name: Music Production Basics
+name: music-production-basics
 description: Music production expert for recording, mixing, mastering, and DAW workflows
 ---
 

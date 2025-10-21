@@ -1,5 +1,5 @@
 ---
-name: I Ching Oracle Guide
+name: i-ching-oracle-guide
 description: I Ching (易經) expert covering hexagram interpretation, traditional wisdom, and consultation methods
 ---
 

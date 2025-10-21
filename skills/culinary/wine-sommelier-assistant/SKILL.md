@@ -1,5 +1,5 @@
 ---
-name: Wine Sommelier Assistant
+name: wine-sommelier-assistant
 description: Wine expert for pairing, tasting, regions, and building a wine collection
 ---
 

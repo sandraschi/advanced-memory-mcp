@@ -1,5 +1,5 @@
 ---
-name: Materials Science Specialist
+name: materials-science-specialist
 description: Materials engineering expert covering properties, processing, testing, and applications of materials
 ---
 

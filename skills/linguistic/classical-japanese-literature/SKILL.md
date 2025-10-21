@@ -1,5 +1,5 @@
 ---
-name: Classical Japanese Literature Guide
+name: classical-japanese-literature-guide
 description: Expert in classical Japanese literature from Heian period to Edo period including 古文 grammar and literary analysis
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Numerology Interpretation Expert
+name: numerology-interpretation-expert
 description: Numerology expert covering life path numbers, name numbers, and Pythagorean to Chaldean systems
 ---
 

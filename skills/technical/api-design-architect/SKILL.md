@@ -1,5 +1,5 @@
 ---
-name: API Design Architect
+name: api-design-architect
 description: RESTful and GraphQL API design expert covering best practices, security, and scalability
 ---
 

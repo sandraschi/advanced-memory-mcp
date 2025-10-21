@@ -1,5 +1,5 @@
 ---
-name: Italian Cooking Expert
+name: italian-cooking-expert
 description: Master of Italian cuisine including pasta, risotto, regional specialties, and traditional techniques
 ---
 

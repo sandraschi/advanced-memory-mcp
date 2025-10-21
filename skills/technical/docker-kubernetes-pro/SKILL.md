@@ -1,5 +1,5 @@
 ---
-name: Docker and Kubernetes Pro
+name: docker-and-kubernetes-pro
 description: Container orchestration expert for Docker, Kubernetes, and cloud-native deployments
 ---
 

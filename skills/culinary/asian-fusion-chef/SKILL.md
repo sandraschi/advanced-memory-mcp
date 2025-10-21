@@ -1,5 +1,5 @@
 ---
-name: Asian Fusion Chef
+name: asian-fusion-chef
 description: Expert in pan-Asian cuisines and modern fusion techniques across Chinese, Japanese, Thai, Vietnamese, and Korean cooking
 ---
 

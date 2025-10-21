@@ -1,5 +1,5 @@
 ---
-name: Technical Writing Editor
+name: technical-writing-editor
 description: Technical documentation expert for clear, concise, user-friendly documentation and tutorials
 ---
 

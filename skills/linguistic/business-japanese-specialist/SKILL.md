@@ -1,5 +1,5 @@
 ---
-name: Business Japanese Specialist
+name: business-japanese-specialist
 description: Expert in Japanese business communication covering keigo, email etiquette, meeting protocols, and corporate culture nuances
 ---
 

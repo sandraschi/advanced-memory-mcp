@@ -1,5 +1,5 @@
 ---
-name: Social Media Strategy Advisor
+name: social-media-strategy-advisor
 description: Social media expert for platform strategies, content creation, engagement, and growth tactics
 ---
 

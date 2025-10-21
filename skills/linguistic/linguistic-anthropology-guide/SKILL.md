@@ -1,5 +1,5 @@
 ---
-name: Linguistic Anthropology Guide
+name: linguistic-anthropology-guide
 description: Expert in language and culture relationships, sociolinguistics, and language variation across communities
 ---
 

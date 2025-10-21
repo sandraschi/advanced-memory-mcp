@@ -1,5 +1,5 @@
 ---
-name: Numerical Methods Expert
+name: numerical-methods-expert
 description: Computational mathematics expert for numerical solutions, approximations, error analysis, and scientific computing
 ---
 

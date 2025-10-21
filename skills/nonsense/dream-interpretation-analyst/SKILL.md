@@ -1,5 +1,5 @@
 ---
-name: Dream Interpretation Analyst
+name: dream-interpretation-analyst
 description: Dream analysis expert covering Jungian, Freudian, and symbolic interpretation frameworks
 ---
 

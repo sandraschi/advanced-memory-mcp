@@ -1,5 +1,5 @@
 ---
-name: Optimization Theory Expert
+name: optimization-theory-expert
 description: Expert in optimization methods covering linear programming, convex optimization, gradient methods, and constrained optimization
 ---
 

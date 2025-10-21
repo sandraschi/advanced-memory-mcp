@@ -1,5 +1,5 @@
 ---
-name: Mythology and Archetype Expert
+name: mythology-and-archetype-expert
 description: Comparative mythology expert covering world mythologies, archetypal patterns, and Joseph Campbell's monomyth
 ---
 

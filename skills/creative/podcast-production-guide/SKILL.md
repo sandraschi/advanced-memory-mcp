@@ -1,5 +1,5 @@
 ---
-name: Podcast Production Guide
+name: podcast-production-guide
 description: Podcast expert covering recording, editing, hosting, promotion, and monetization strategies
 ---
 

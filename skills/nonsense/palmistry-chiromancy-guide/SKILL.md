@@ -1,5 +1,5 @@
 ---
-name: Palmistry and Chiromancy Guide
+name: palmistry-and-chiromancy-guide
 description: Palm reading expert covering line interpretations, hand shapes, mounts, and traditional chiromancy practices
 ---
 

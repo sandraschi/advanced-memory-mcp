@@ -1,5 +1,5 @@
 ---
-name: Physics Fundamentals Tutor
+name: physics-fundamentals-tutor
 description: Classical and modern physics expert covering mechanics, electromagnetism, thermodynamics, quantum mechanics, and relativity
 ---
 

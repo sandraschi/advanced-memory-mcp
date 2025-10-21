@@ -1,5 +1,5 @@
 ---
-name: Statistics and Probability Guide
+name: statistics-and-probability-guide
 description: Comprehensive statistics expert covering probability theory, distributions, hypothesis testing, regression, and Bayesian methods
 ---
 

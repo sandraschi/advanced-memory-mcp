@@ -1,5 +1,5 @@
 ---
-name: Ethics and Moral Philosophy Expert
+name: ethics-and-moral-philosophy-expert
 description: Comprehensive ethics expert covering virtue ethics, deontology, consequentialism, and applied ethical dilemmas
 ---
 

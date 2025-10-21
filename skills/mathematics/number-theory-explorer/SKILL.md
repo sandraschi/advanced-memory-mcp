@@ -1,5 +1,5 @@
 ---
-name: Number Theory Explorer
+name: number-theory-explorer
 description: Number theory expert covering primes, divisibility, modular arithmetic, Diophantine equations, and cryptographic applications
 ---
 

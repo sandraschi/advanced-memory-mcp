@@ -1,5 +1,5 @@
 ---
-name: Microservices Architect
+name: microservices-architect
 description: Microservices design expert covering service decomposition, communication patterns, and distributed systems
 ---
 
