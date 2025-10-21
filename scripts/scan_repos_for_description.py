@@ -53,8 +53,15 @@ def main():
     print("🔍 Scanning all MCP repositories for description= parameter...")
     print("=" * 80)
     
-    # Get all MCP repos
-    mcp_repos = sorted([d for d in repos_dir.iterdir() if d.is_dir() and "mcp" in d.name.lower()])
+    # Get all MCP repos (exclude copies and backups)
+    mcp_repos = sorted([
+        d for d in repos_dir.iterdir() 
+        if d.is_dir() 
+        and "mcp" in d.name.lower()
+        and "copy" not in d.name.lower()
+        and "backup" not in d.name.lower()
+        and "old" not in d.name.lower()
+    ])
     
     print(f"Found {len(mcp_repos)} MCP repositories\n")
     
