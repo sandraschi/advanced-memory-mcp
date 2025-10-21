@@ -208,6 +208,7 @@ async def search_notes(
     entity_types: list[str] | None = None,
     after_date: str | None = None,
     project: str | None = None,
+    search_all_projects: bool = False,
 ) -> SearchResponse | str:
     """Search across all content in the knowledge base with comprehensive syntax support.
 
@@ -260,6 +261,7 @@ async def search_notes(
         entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
         after_date: Optional date filter for recent content (e.g., "1 week", "2d", "2024-01-01")
         project: Optional project name to search in. If not provided, uses current active project.
+        search_all_projects: If True, searches across ALL projects and merges results (default: False)
 
     Returns:
         SearchResponse with results and pagination info, or helpful error guidance if search fails
@@ -310,6 +312,9 @@ async def search_notes(
         # Search in specific project
         results = await search_notes("meeting notes", project="work-project")
 
+        # Search across ALL projects
+        results = await search_notes("shinjuku", search_all_projects=True)
+
         # Complex search with multiple filters
         results = await search_notes(
             query="(bug OR issue) AND NOT resolved",
@@ -339,6 +344,54 @@ async def search_notes(
         search_query.types = types
     if after_date:
         search_query.after_date = after_date
+
+    # Handle search across all projects
+    if search_all_projects:
+        if project:
+            # Can't specify both
+            return "Error: Cannot use both 'project' and 'search_all_projects=True'. Please use one or the other."
+        
+        logger.info(f"Searching across ALL projects for: {search_query}")
+        
+        # Get list of all projects
+        from advanced_memory.schemas.project_info import ProjectList
+        
+        projects_response = await call_post(client, "/projects/projects", json={})
+        project_list = ProjectList.model_validate(projects_response.json())
+        
+        # Search each project and merge results
+        all_results = []
+        total_count = 0
+        
+        for proj in project_list.projects:
+            try:
+                proj_obj = get_active_project(proj.name)
+                response = await call_post(
+                    client,
+                    f"{proj_obj.project_url}/search/",
+                    json=search_query.model_dump(),
+                    params={"page": page, "page_size": results_per_page},
+                )
+                proj_result = SearchResponse.model_validate(response.json())
+                
+                # Add project name to each result for context
+                for item in proj_result.results:
+                    if hasattr(item, 'title'):
+                        item.title = f"[{proj.name}] {item.title}"
+                
+                all_results.extend(proj_result.results)
+                total_count += proj_result.total_count
+            except Exception as e:
+                logger.warning(f"Failed to search project {proj.name}: {e}")
+                continue
+        
+        # Return merged results
+        return SearchResponse(
+            results=all_results[:results_per_page],  # Respect page size
+            total_count=total_count,
+            page=page,
+            page_size=results_per_page,
+        )
 
     active_project = get_active_project(project)
     project_url = active_project.project_url
