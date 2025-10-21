@@ -25,7 +25,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("name", sa.String(), nullable=False, unique=True),
         sa.Column("description", sa.Text(), nullable=False),
-        sa.Column("entity_id", sa.Integer(), sa.ForeignKey("entities.id"), nullable=True),
+        sa.Column("entity_id", sa.Integer(), sa.ForeignKey("entity.id"), nullable=True),
         sa.Column("version", sa.String(), nullable=False, server_default="1.0.0"),
         sa.Column("category", sa.String(), nullable=True),
         sa.Column("difficulty", sa.String(), nullable=True),

@@ -361,7 +361,6 @@ async def search_notes(
         
         # Search each project and merge results
         all_results = []
-        total_count = 0
         
         for proj in project_list.projects:
             try:
@@ -380,16 +379,14 @@ async def search_notes(
                         item.title = f"[{proj.name}] {item.title}"
                 
                 all_results.extend(proj_result.results)
-                total_count += proj_result.total_count
             except Exception as e:
                 logger.warning(f"Failed to search project {proj.name}: {e}")
                 continue
         
-        # Return merged results
+        # Return merged results (note: SearchResponse doesn't have total_count field)
         return SearchResponse(
             results=all_results[:results_per_page],  # Respect page size
-            total_count=total_count,
-            page=page,
+            current_page=page,
             page_size=results_per_page,
         )
 

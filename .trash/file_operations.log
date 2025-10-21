@@ -24179,3 +24179,223 @@ Please install manually from: https://pandoc.org/installing.html
 2025-10-21 17:24:30 | INFO     | Loaded 4 templates for category 'uiux-designer'
 2025-10-21 17:24:30 | INFO     | Loaded 3 templates for category 'writer'
 2025-10-21 17:24:30 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:42:18 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:42:25 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:42:25 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:42:25 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:42:25 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:42:25 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:42:25 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:42:25 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:42:25 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:42:25 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:42:25 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:42:25 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:42:25 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:42:25 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:42:25 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:42:25 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:26 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:26 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:26 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:26 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:27 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:27 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:27 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:27 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:28 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:28 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:28 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:28 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:29 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:29 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:29 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:29 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:30 | INFO     | Using in-memory SQLite database
+2025-10-21 19:42:30 | INFO     | Using in-memory SQLite database
+2025-10-21 19:44:38 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:44:41 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:44:41 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:44:41 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:44:41 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:44:41 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:44:41 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:44:41 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:44:41 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:44:41 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:44:41 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:44:41 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:44:41 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:44:41 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:44:41 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:44:41 | INFO     | Using in-memory SQLite database
+2025-10-21 19:44:41 | INFO     | Initializing search index
+2025-10-21 19:44:41 | INFO     | Initializing search index
+2025-10-21 19:44:41 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:44:41 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:44:41 | INFO     | MCP tool call tool=write_note folder=test, title=Multi-Project Test Note, tags=['test', 'multi-project']
+2025-10-21 19:44:41 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/multi-project-test-note', data.entity_type='note', data.title='Multi-Project Test Note'
+2025-10-21 19:44:41 | INFO     | Writing file: test\Multi-Project_Test_Note.md, is_markdown=True
+2025-10-21 19:44:41 | INFO     | Resolving forward references
+2025-10-21 19:44:41 | INFO     | API response: result.title='Multi-Project Test Note', result.permalink='test/multi-project-test-note', created=True, status_code=201
+2025-10-21 19:44:41 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/multi-project-test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-21 19:45:07 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:45:09 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:45:09 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:45:09 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:45:09 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:45:09 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:45:09 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:45:09 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:45:09 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:45:09 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:45:09 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:45:09 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:45:09 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:45:09 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:45:09 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:45:10 | INFO     | Using in-memory SQLite database
+2025-10-21 19:45:10 | INFO     | Initializing search index
+2025-10-21 19:45:10 | INFO     | Initializing search index
+2025-10-21 19:45:10 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:45:10 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:45:10 | INFO     | MCP tool call tool=write_note folder=test, title=Multi-Project Test Note, tags=['test', 'multi-project']
+2025-10-21 19:45:10 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/multi-project-test-note', data.entity_type='note', data.title='Multi-Project Test Note'
+2025-10-21 19:45:10 | INFO     | Writing file: test\Multi-Project_Test_Note.md, is_markdown=True
+2025-10-21 19:45:10 | INFO     | Resolving forward references
+2025-10-21 19:45:10 | INFO     | API response: result.title='Multi-Project Test Note', result.permalink='test/multi-project-test-note', created=True, status_code=201
+2025-10-21 19:45:10 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/multi-project-test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-21 19:45:32 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:45:34 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:45:34 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:45:34 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:45:34 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:45:34 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:45:34 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:45:34 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:45:34 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:45:34 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:45:34 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:45:34 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:45:34 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:45:34 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:45:34 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:45:34 | INFO     | Using in-memory SQLite database
+2025-10-21 19:45:34 | INFO     | Initializing search index
+2025-10-21 19:45:34 | INFO     | Initializing search index
+2025-10-21 19:45:34 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:45:34 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:45:34 | INFO     | MCP tool call tool=write_note folder=test, title=Multi-Project Test Note, tags=['test', 'multi-project']
+2025-10-21 19:45:34 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/multi-project-test-note', data.entity_type='note', data.title='Multi-Project Test Note'
+2025-10-21 19:45:34 | INFO     | Writing file: test\Multi-Project_Test_Note.md, is_markdown=True
+2025-10-21 19:45:35 | INFO     | Resolving forward references
+2025-10-21 19:45:35 | INFO     | API response: result.title='Multi-Project Test Note', result.permalink='test/multi-project-test-note', created=True, status_code=201
+2025-10-21 19:45:35 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/multi-project-test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-21 19:45:35 | INFO     | Searching across ALL projects for: permalink=None permalink_match=None text='multi-project' title=None types=None entity_types=None after_date=None
+2025-10-21 19:45:35 | WARNING  | Failed to search project project1: 2 validation errors for SearchResponse
+results.0
+  Input should be a valid dictionary or instance of SearchResult [type=model_type, input_value=<MagicMock id='2588575446224'>, input_type=MagicMock]
+    For further information visit https://errors.pydantic.dev/2.11/v/model_type
+current_page
+  Field required [type=missing, input_value={'results': [<MagicMock i...ge': 1, 'page_size': 10}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-10-21 19:45:35 | WARNING  | Failed to search project project2: 2 validation errors for SearchResponse
+results.0
+  Input should be a valid dictionary or instance of SearchResult [type=model_type, input_value=<MagicMock id='2588577226560'>, input_type=MagicMock]
+    For further information visit https://errors.pydantic.dev/2.11/v/model_type
+current_page
+  Field required [type=missing, input_value={'results': [<MagicMock i...ge': 1, 'page_size': 10}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+2025-10-21 19:46:19 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:47:16 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:47:19 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:47:19 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:47:19 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:47:19 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:47:19 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:47:19 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:47:19 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:47:19 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:47:19 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:47:19 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:47:19 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:47:19 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:47:19 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:47:19 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:47:19 | INFO     | Using in-memory SQLite database
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:47:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:47:19 | INFO     | MCP tool call tool=write_note folder=test, title=Multi-Project Test Note, tags=['test', 'multi-project']
+2025-10-21 19:47:19 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/multi-project-test-note', data.entity_type='note', data.title='Multi-Project Test Note'
+2025-10-21 19:47:19 | INFO     | Writing file: test\Multi-Project_Test_Note.md, is_markdown=True
+2025-10-21 19:47:19 | INFO     | Resolving forward references
+2025-10-21 19:47:19 | INFO     | API response: result.title='Multi-Project Test Note', result.permalink='test/multi-project-test-note', created=True, status_code=201
+2025-10-21 19:47:19 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/multi-project-test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-21 19:47:19 | INFO     | Searching across ALL projects for: permalink=None permalink_match=None text='multi-project' title=None types=None entity_types=None after_date=None
+2025-10-21 19:47:19 | WARNING  | Failed to search project project1: 1 validation error for SearchResponse
+results.0
+  Input should be a valid dictionary or instance of SearchResult [type=model_type, input_value=<MagicMock id='2749499104464'>, input_type=MagicMock]
+    For further information visit https://errors.pydantic.dev/2.11/v/model_type
+2025-10-21 19:47:19 | WARNING  | Failed to search project project2: 1 validation error for SearchResponse
+results.0
+  Input should be a valid dictionary or instance of SearchResult [type=model_type, input_value=<MagicMock id='2749497450448'>, input_type=MagicMock]
+    For further information visit https://errors.pydantic.dev/2.11/v/model_type
+2025-10-21 19:47:19 | INFO     | Using in-memory SQLite database
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:47:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:47:19 | INFO     | Using in-memory SQLite database
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initializing search index
+2025-10-21 19:47:19 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:47:19 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:47:19 | INFO     | Searching across ALL projects for: permalink=None permalink_match=None text='test' title=None types=None entity_types=None after_date=None
+2025-10-21 19:47:19 | WARNING  | Failed to search project working-project: 1 validation error for SearchResponse
+results.0
+  Input should be a valid dictionary or instance of SearchResult [type=model_type, input_value=<MagicMock id='2749497149200'>, input_type=MagicMock]
+    For further information visit https://errors.pydantic.dev/2.11/v/model_type
+2025-10-21 19:47:19 | WARNING  | Failed to search project failing-project: Project access denied
+2025-10-21 19:47:59 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:48:09 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-21 19:48:12 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-21 19:48:12 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-21 19:48:12 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-21 19:48:12 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-21 19:48:12 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-21 19:48:12 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-21 19:48:12 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-21 19:48:12 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-21 19:48:12 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-21 19:48:12 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-21 19:48:12 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-21 19:48:12 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-21 19:48:12 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-21 19:48:12 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-21 19:48:12 | INFO     | Using in-memory SQLite database
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:48:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:48:12 | INFO     | MCP tool call tool=write_note folder=test, title=Multi-Project Test Note, tags=['test', 'multi-project']
+2025-10-21 19:48:12 | INFO     | API request: create_or_update_entity for project='test-project', permalink='test/multi-project-test-note', data.entity_type='note', data.title='Multi-Project Test Note'
+2025-10-21 19:48:12 | INFO     | Writing file: test\Multi-Project_Test_Note.md, is_markdown=True
+2025-10-21 19:48:12 | INFO     | Resolving forward references
+2025-10-21 19:48:12 | INFO     | API response: result.title='Multi-Project Test Note', result.permalink='test/multi-project-test-note', created=True, status_code=201
+2025-10-21 19:48:12 | INFO     | MCP tool response: tool=write_note action=Created permalink=test/multi-project-test-note observations_count=0 relations_count=0 resolved_relations=0 unresolved_relations=0 status_code=201
+2025-10-21 19:48:12 | INFO     | Searching across ALL projects for: permalink=None permalink_match=None text='multi-project' title=None types=None entity_types=None after_date=None
+2025-10-21 19:48:12 | INFO     | Using in-memory SQLite database
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:48:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:48:12 | INFO     | Using in-memory SQLite database
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initializing search index
+2025-10-21 19:48:12 | INFO     | Initialized project session with default project: test-project
+2025-10-21 19:48:12 | INFO     | Switched project context: test-project -> test-project
+2025-10-21 19:48:12 | INFO     | Searching across ALL projects for: permalink=None permalink_match=None text='test' title=None types=None entity_types=None after_date=None
+2025-10-21 19:48:12 | WARNING  | Failed to search project failing-project: Project access denied
+2025-10-21 19:48:21 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)

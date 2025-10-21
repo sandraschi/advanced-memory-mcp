@@ -271,12 +271,13 @@ async def test_search_all_projects(client):
     # Mock the projects list and search responses
     from unittest.mock import AsyncMock, MagicMock
     
-    from advanced_memory.schemas.project_info import ProjectInfo, ProjectList
+    from advanced_memory.schemas.project_info import ProjectItem, ProjectList
+    from advanced_memory.schemas.search import SearchItemType, SearchResult
     
     mock_projects = ProjectList(
         projects=[
-            ProjectInfo(name="project1", home_dir="/tmp/p1", is_default=False),
-            ProjectInfo(name="project2", home_dir="/tmp/p2", is_default=False),
+            ProjectItem(name="project1", path="/tmp/p1", is_default=False),
+            ProjectItem(name="project2", path="/tmp/p2", is_default=False),
         ],
         current_project="project1",
         default_project="project1",
@@ -288,15 +289,25 @@ async def test_search_all_projects(client):
         mock_call_post.side_effect = [
             MagicMock(json=lambda: mock_projects.model_dump()),  # Project list
             MagicMock(json=lambda: SearchResponse(
-                results=[MagicMock(title="Result from project1", permalink="test/note1")],
-                total_count=1,
-                page=1,
+                results=[SearchResult(
+                    title="Result from project1",
+                    type=SearchItemType.ENTITY,
+                    score=1.0,
+                    permalink="test/note1",
+                    file_path="test/note1.md",
+                )],
+                current_page=1,
                 page_size=10,
             ).model_dump()),  # Project1 search
             MagicMock(json=lambda: SearchResponse(
-                results=[MagicMock(title="Result from project2", permalink="test/note2")],
-                total_count=1,
-                page=1,
+                results=[SearchResult(
+                    title="Result from project2",
+                    type=SearchItemType.ENTITY,
+                    score=1.0,
+                    permalink="test/note2",
+                    file_path="test/note2.md",
+                )],
+                current_page=1,
                 page_size=10,
             ).model_dump()),  # Project2 search
         ]
@@ -310,7 +321,6 @@ async def test_search_all_projects(client):
             
             # Verify response
             assert isinstance(response, SearchResponse)
-            assert response.total_count == 2
             assert len(response.results) == 2
             # Results should have project prefix
             assert any("[project1]" in str(r.title) for r in response.results)
@@ -337,12 +347,13 @@ async def test_search_all_projects_handles_project_errors(client):
     """Test that search_all_projects gracefully handles errors in individual projects."""
     from unittest.mock import AsyncMock, MagicMock
     
-    from advanced_memory.schemas.project_info import ProjectInfo, ProjectList
+    from advanced_memory.schemas.project_info import ProjectItem, ProjectList
+    from advanced_memory.schemas.search import SearchItemType, SearchResult
     
     mock_projects = ProjectList(
         projects=[
-            ProjectInfo(name="working-project", home_dir="/tmp/p1", is_default=False),
-            ProjectInfo(name="failing-project", home_dir="/tmp/p2", is_default=False),
+            ProjectItem(name="working-project", path="/tmp/p1", is_default=False),
+            ProjectItem(name="failing-project", path="/tmp/p2", is_default=False),
         ],
         current_project="working-project",
         default_project="working-project",
@@ -355,9 +366,14 @@ async def test_search_all_projects_handles_project_errors(client):
         mock_call_post.side_effect = [
             MagicMock(json=lambda: mock_projects.model_dump()),
             MagicMock(json=lambda: SearchResponse(
-                results=[MagicMock(title="Working result", permalink="test/note1")],
-                total_count=1,
-                page=1,
+                results=[SearchResult(
+                    title="Working result",
+                    type=SearchItemType.ENTITY,
+                    score=1.0,
+                    permalink="test/note1",
+                    file_path="test/note1.md",
+                )],
+                current_page=1,
                 page_size=10,
             ).model_dump()),
             Exception("Project access denied"),  # Failing project
@@ -373,7 +389,6 @@ async def test_search_all_projects_handles_project_errors(client):
             # Should still succeed with results from working project
             assert isinstance(response, SearchResponse)
             assert len(response.results) == 1
-            assert response.total_count == 1
 
 
 class TestSearchToolErrorHandling:
