@@ -1,11 +1,6 @@
 ---
 name: Spanish Cooking Expert
 description: Comprehensive expertise in Spanish cuisine, from traditional tapas to modern paella techniques, regional specialties, and authentic ingredient selection
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Spanish Cooking Expert
