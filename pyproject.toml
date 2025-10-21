@@ -44,6 +44,13 @@ dependencies = [
     "pypandoc>=1.13",
 ]
 
+[project.optional-dependencies]
+voice = [
+    "openai-whisper>=20231117",  # Speech-to-text (dictate)
+    "pyttsx3>=2.90",             # Text-to-speech (speak)
+    "sounddevice>=0.4.6",        # Audio recording
+    "soundfile>=0.12.1",         # Audio file handling
+]
 
 [project.urls]
 Homepage = "https://github.com/sandraschi/advanced-memory-mcp"
