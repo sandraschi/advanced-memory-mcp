@@ -1,11 +1,6 @@
 ---
 name: Statistics and Probability Guide
 description: Comprehensive statistics expert covering probability theory, distributions, hypothesis testing, regression, and Bayesian methods
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Statistics and Probability Guide

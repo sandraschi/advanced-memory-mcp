@@ -1,11 +1,6 @@
 ---
 name: I Ching Oracle Guide
 description: I Ching (易經) expert covering hexagram interpretation, traditional wisdom, and consultation methods
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # I Ching Oracle Guide

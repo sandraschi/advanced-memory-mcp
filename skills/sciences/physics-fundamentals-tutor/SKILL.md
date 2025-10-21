@@ -1,11 +1,6 @@
 ---
 name: Physics Fundamentals Tutor
 description: Classical and modern physics expert covering mechanics, electromagnetism, thermodynamics, quantum mechanics, and relativity
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Physics Fundamentals Tutor

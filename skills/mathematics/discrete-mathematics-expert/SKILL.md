@@ -1,11 +1,6 @@
 ---
 name: Discrete Mathematics Expert
 description: Expert in combinatorics, graph theory, discrete probability, and algorithms with applications to computer science
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Discrete Mathematics Expert

@@ -1,11 +1,6 @@
 ---
 name: Runes and Nordic Divination Expert
 description: Expert in Elder Futhark runes, Norse mythology, runic divination, and historical runic practices
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Runes and Nordic Divination Expert

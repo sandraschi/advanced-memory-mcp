@@ -1,11 +1,6 @@
 ---
 name: Astronomy and Astrophysics Expert
 description: Expert in celestial objects, cosmology, stellar evolution, and observational astronomy
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Astronomy and Astrophysics Expert

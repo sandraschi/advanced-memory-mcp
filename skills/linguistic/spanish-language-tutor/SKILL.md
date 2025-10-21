@@ -1,11 +1,6 @@
 ---
 name: Spanish Language Tutor
 description: Comprehensive Spanish language expert covering grammar, conversation, regional dialects, and language learning strategies
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Spanish Language Tutor

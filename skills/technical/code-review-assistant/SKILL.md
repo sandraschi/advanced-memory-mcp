@@ -1,11 +1,6 @@
 ---
 name: Code Review Assistant
 description: Expert code reviewer focusing on quality, maintainability, performance, and best practices
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Code Review Assistant

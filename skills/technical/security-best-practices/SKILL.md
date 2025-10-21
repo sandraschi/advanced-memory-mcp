@@ -1,11 +1,6 @@
 ---
 name: Security Best Practices Expert
 description: Application security specialist covering OWASP top 10, secure coding, and vulnerability prevention
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Security Best Practices Expert

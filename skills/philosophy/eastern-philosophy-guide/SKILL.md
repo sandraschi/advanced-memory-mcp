@@ -1,11 +1,6 @@
 ---
 name: Eastern Philosophy Guide
 description: Expert in Asian philosophical traditions including Buddhism, Taoism, Confucianism, and Hindu philosophy
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Eastern Philosophy Guide

@@ -1,11 +1,6 @@
 ---
 name: Materials Science Specialist
 description: Materials engineering expert covering properties, processing, testing, and applications of materials
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Materials Science Specialist

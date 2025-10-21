@@ -1,11 +1,6 @@
 ---
 name: Coffee and Espresso Expert
 description: Specialty coffee expert covering brewing methods, espresso techniques, and bean selection
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Coffee and Espresso Expert

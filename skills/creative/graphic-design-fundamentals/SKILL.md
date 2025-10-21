@@ -1,11 +1,6 @@
 ---
 name: Graphic Design Fundamentals
 description: Graphic design expert covering typography, color theory, layout, and visual communication
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Graphic Design Fundamentals

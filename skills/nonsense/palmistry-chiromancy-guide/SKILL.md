@@ -1,11 +1,6 @@
 ---
 name: Palmistry and Chiromancy Guide
 description: Palm reading expert covering line interpretations, hand shapes, mounts, and traditional chiromancy practices
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Palmistry and Chiromancy Guide

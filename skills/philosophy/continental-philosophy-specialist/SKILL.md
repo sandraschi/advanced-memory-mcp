@@ -1,11 +1,6 @@
 ---
 name: Continental Philosophy Specialist
 description: Expert in Continental tradition from Kant through phenomenology, existentialism, structuralism, and post-structuralism
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Continental Philosophy Specialist

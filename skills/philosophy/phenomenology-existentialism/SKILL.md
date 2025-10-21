@@ -1,11 +1,6 @@
 ---
 name: Phenomenology and Existentialism Expert
 description: Expert in phenomenological method and existentialist philosophy from Husserl through Sartre, Heidegger, and Merleau-Ponty
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Phenomenology and Existentialism Expert

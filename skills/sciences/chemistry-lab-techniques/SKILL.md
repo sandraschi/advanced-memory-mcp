@@ -1,11 +1,6 @@
 ---
 name: Chemistry Lab Techniques Guide
 description: Chemistry expert covering organic, inorganic, physical chemistry, lab safety, and experimental techniques
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Chemistry Lab Techniques Guide

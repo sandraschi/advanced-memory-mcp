@@ -1,11 +1,6 @@
 ---
 name: Git Workflow Specialist
 description: Git expert covering branching strategies, collaboration, conflict resolution, and best practices
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Git Workflow Specialist

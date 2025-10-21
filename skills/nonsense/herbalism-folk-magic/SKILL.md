@@ -1,11 +1,6 @@
 ---
 name: Herbalism and Folk Magic Expert
 description: Traditional herbalism and folk magic expert covering plant correspondences, traditional uses, and historical practices
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Herbalism and Folk Magic Expert

@@ -1,11 +1,6 @@
 ---
 name: Bread Baking Artisan
 description: Sourdough and artisan bread expert covering fermentation, scoring, and professional baking techniques
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Bread Baking Artisan

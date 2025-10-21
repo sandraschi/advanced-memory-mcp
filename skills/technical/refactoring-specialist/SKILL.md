@@ -1,11 +1,6 @@
 ---
 name: Refactoring Specialist
 description: Code refactoring expert for improving code quality, reducing technical debt, and safe transformations
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Refactoring Specialist

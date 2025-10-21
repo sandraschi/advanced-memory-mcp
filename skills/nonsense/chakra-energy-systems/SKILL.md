@@ -1,11 +1,6 @@
 ---
 name: Chakra and Energy Systems Expert
 description: Expert in chakra systems, auras, energy healing modalities, and subtle body traditions from Hindu and Buddhist origins
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Chakra and Energy Systems Expert

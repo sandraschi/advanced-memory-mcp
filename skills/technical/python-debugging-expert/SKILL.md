@@ -1,11 +1,6 @@
 ---
 name: Python Debugging Expert
 description: Master debugger for Python code with expertise in common errors, performance issues, and debugging tools
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Python Debugging Expert

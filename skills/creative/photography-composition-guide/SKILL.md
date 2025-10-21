@@ -1,11 +1,6 @@
 ---
 name: Photography Composition Guide
 description: Photography expert for composition, lighting, camera settings, and post-processing techniques
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Photography Composition Guide

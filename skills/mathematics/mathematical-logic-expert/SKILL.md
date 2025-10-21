@@ -1,11 +1,6 @@
 ---
 name: Mathematical Logic Expert
 description: Expert in formal logic, model theory, computability, and foundations of mathematics
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Mathematical Logic Expert

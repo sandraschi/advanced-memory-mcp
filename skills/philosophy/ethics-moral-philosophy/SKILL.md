@@ -1,11 +1,6 @@
 ---
 name: Ethics and Moral Philosophy Expert
 description: Comprehensive ethics expert covering virtue ethics, deontology, consequentialism, and applied ethical dilemmas
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Ethics and Moral Philosophy Expert

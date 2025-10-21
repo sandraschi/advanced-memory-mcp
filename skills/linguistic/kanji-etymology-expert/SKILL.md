@@ -1,11 +1,6 @@
 ---
 name: Kanji Etymology and Learning Expert
 description: Kanji specialist covering character origins, radical systems, mnemonic techniques, and historical development
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Kanji Etymology and Learning Expert

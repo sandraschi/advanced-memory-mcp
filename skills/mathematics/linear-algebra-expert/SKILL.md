@@ -1,11 +1,6 @@
 ---
 name: Linear Algebra Expert
 description: Expert in vector spaces, matrices, linear transformations, eigenvalues, and applications to data science and machine learning
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Linear Algebra Expert

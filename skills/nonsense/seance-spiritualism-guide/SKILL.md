@@ -1,11 +1,6 @@
 ---
 name: Séance and Spiritualism Guide
 description: Expert in spiritualist practices, séance protocols, mediumship traditions, and historical spiritualism movements from 19th century to modern practices
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Séance and Spiritualism Guide

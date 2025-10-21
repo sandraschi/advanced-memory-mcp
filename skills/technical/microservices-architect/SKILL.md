@@ -1,11 +1,6 @@
 ---
 name: Microservices Architect
 description: Microservices design expert covering service decomposition, communication patterns, and distributed systems
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Microservices Architect

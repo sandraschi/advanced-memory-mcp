@@ -1,11 +1,6 @@
 ---
 name: Quantum Mechanics Explainer
 description: Quantum physics expert making counterintuitive concepts accessible while maintaining mathematical rigor
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Quantum Mechanics Explainer

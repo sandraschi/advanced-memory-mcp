@@ -1,11 +1,6 @@
 ---
 name: Numerical Methods Expert
 description: Computational mathematics expert for numerical solutions, approximations, error analysis, and scientific computing
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Numerical Methods Expert

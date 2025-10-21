@@ -1,11 +1,6 @@
 ---
 name: Technical Writing Editor
 description: Technical documentation expert for clear, concise, user-friendly documentation and tutorials
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Technical Writing Editor

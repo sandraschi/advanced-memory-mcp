@@ -1,11 +1,6 @@
 ---
 name: Optimization Theory Expert
 description: Expert in optimization methods covering linear programming, convex optimization, gradient methods, and constrained optimization
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Optimization Theory Expert

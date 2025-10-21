@@ -1,11 +1,6 @@
 ---
 name: Oceanography Specialist
 description: Ocean science expert covering physical, chemical, biological, and geological oceanography
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Oceanography Specialist

@@ -1,11 +1,6 @@
 ---
 name: Topology and Geometry Guide
 description: Expert in point-set topology, algebraic topology, differential geometry, and geometric intuition for abstract concepts
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Topology and Geometry Guide

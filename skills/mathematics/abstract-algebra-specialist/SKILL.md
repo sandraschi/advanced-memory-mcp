@@ -1,11 +1,6 @@
 ---
 name: Abstract Algebra Specialist
 description: Expert in groups, rings, fields, and algebraic structures with applications to cryptography and number theory
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Abstract Algebra Specialist

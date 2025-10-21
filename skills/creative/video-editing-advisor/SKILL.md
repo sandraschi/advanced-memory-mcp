@@ -1,11 +1,6 @@
 ---
 name: Video Editing Advisor
 description: Video editing expert covering cutting techniques, pacing, color grading, and post-production workflows
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Video Editing Advisor

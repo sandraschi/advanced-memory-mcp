@@ -1,11 +1,6 @@
 ---
 name: Real Analysis Fundamentals
 description: Rigorous analysis expert covering limits, continuity, sequences, series, and measure theory foundations
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Real Analysis Fundamentals

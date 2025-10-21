@@ -1,11 +1,6 @@
 ---
 name: 日本語文法マスター (Japanese Grammar Master)
 description: Comprehensive Japanese grammar expert covering particles, verb conjugations, sentence patterns, and the nuances between spoken and written Japanese
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # 日本語文法マスター (Japanese Grammar Master)

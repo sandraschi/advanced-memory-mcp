@@ -1,11 +1,6 @@
 ---
 name: Polyglot Learning Strategies Expert
 description: Language learning expert with proven methods for acquiring multiple languages efficiently and effectively
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Polyglot Learning Strategies Expert

@@ -1,11 +1,6 @@
 ---
 name: Classical Japanese Literature Guide
 description: Expert in classical Japanese literature from Heian period to Edo period including 古文 grammar and literary analysis
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Classical Japanese Literature Guide

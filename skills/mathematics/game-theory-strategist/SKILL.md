@@ -1,11 +1,6 @@
 ---
 name: Game Theory Strategist
 description: Game theory expert covering Nash equilibrium, strategic thinking, auction theory, and cooperative games
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Game Theory Strategist

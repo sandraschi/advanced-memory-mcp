@@ -1,11 +1,6 @@
 ---
 name: Cocktail Mixology Master
 description: Professional mixologist with expertise in classic cocktails, modern techniques, and home bar setup
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Cocktail Mixology Master

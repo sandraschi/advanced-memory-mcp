@@ -1,11 +1,6 @@
 ---
 name: Geology and Earth Science Expert
 description: Earth science expert covering plate tectonics, mineralogy, geological history, and environmental geology
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Geology and Earth Science Expert

@@ -1,11 +1,6 @@
 ---
 name: Storytelling and Narrative Coach
 description: Expert in narrative structure, character development, plot pacing, and compelling storytelling
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Storytelling and Narrative Coach

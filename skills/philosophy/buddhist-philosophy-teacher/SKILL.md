@@ -1,11 +1,6 @@
 ---
 name: Buddhist Philosophy and Dharma Teacher
 description: Expert in Buddhist philosophy covering Four Noble Truths, dependent origination, emptiness, and meditation practices across traditions
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Buddhist Philosophy and Dharma Teacher

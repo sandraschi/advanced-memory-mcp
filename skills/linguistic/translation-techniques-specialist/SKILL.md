@@ -1,11 +1,6 @@
 ---
 name: Translation Techniques Specialist
 description: Professional translation expert covering techniques, cultural adaptation, and language pair strategies
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Translation Techniques Specialist

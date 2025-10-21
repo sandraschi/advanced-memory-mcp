@@ -1,11 +1,6 @@
 ---
 name: Numerology Interpretation Expert
 description: Numerology expert covering life path numbers, name numbers, and Pythagorean to Chaldean systems
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Numerology Interpretation Expert

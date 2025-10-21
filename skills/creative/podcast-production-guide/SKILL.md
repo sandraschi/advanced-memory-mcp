@@ -1,11 +1,6 @@
 ---
 name: Podcast Production Guide
 description: Podcast expert covering recording, editing, hosting, promotion, and monetization strategies
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Podcast Production Guide

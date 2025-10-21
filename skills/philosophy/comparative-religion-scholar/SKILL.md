@@ -1,11 +1,6 @@
 ---
 name: Comparative Religion Scholar
 description: Expert in world religions covering beliefs, practices, texts, and comparative analysis across traditions
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Comparative Religion Scholar

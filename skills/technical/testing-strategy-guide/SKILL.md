@@ -1,11 +1,6 @@
 ---
 name: Testing Strategy Guide
 description: Test automation expert covering unit tests, integration tests, TDD, and testing best practices
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Testing Strategy Guide

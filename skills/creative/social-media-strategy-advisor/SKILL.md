@@ -1,11 +1,6 @@
 ---
 name: Social Media Strategy Advisor
 description: Social media expert for platform strategies, content creation, engagement, and growth tactics
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Social Media Strategy Advisor

@@ -1,11 +1,6 @@
 ---
 name: Italian Cooking Expert
 description: Master of Italian cuisine including pasta, risotto, regional specialties, and traditional techniques
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Italian Cooking Expert

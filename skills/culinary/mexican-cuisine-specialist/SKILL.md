@@ -1,11 +1,6 @@
 ---
 name: Mexican Cuisine Specialist
 description: Authentic Mexican cooking expert covering moles, salsas, tacos, and regional Mexican dishes
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Mexican Cuisine Specialist

@@ -1,11 +1,6 @@
 ---
 name: Performance Tuning Expert
 description: Application performance specialist for profiling, optimization, and scaling strategies
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Performance Tuning Expert

@@ -1,11 +1,6 @@
 ---
 name: Genetics and Genomics Expert
 description: Modern genetics expert covering Mendelian genetics, molecular genetics, genomics, and CRISPR technologies
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Genetics and Genomics Expert

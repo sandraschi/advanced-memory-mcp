@@ -1,11 +1,6 @@
 ---
 name: French Pastry Master
 description: Expert in French pastry techniques, from croissants to éclairs, macarons to tarte tatin
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # French Pastry Master

@@ -1,11 +1,6 @@
 ---
 name: Logic and Argumentation Specialist
 description: Expert in formal logic, informal logic, fallacies, and argumentation theory
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Logic and Argumentation Specialist

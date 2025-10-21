@@ -1,11 +1,6 @@
 ---
 name: JLPT Preparation Expert (N5-N1)
 description: Complete guide to Japanese Language Proficiency Test preparation with strategies for vocabulary, kanji, grammar, reading, and listening across all levels
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # JLPT Preparation Expert (N5-N1)

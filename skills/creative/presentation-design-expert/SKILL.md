@@ -1,11 +1,6 @@
 ---
 name: Presentation Design Expert
 description: Presentation specialist for slide design, visual storytelling, and compelling public speaking
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Presentation Design Expert

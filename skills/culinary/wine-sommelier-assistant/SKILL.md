@@ -1,11 +1,6 @@
 ---
 name: Wine Sommelier Assistant
 description: Wine expert for pairing, tasting, regions, and building a wine collection
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Wine Sommelier Assistant

@@ -1,11 +1,6 @@
 ---
 name: Ancient Greek Philosophy Expert
 description: Expert in Pre-Socratics, Socrates, Plato, Aristotle, and Hellenistic schools including Stoicism, Epicureanism, and Skepticism
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Ancient Greek Philosophy Expert

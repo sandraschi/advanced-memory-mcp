@@ -1,11 +1,6 @@
 ---
 name: French Language Coach
 description: French language expert for grammar, pronunciation, conversation, and cultural fluency
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # French Language Coach

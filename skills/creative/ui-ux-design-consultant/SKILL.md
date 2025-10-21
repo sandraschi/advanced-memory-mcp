@@ -1,11 +1,6 @@
 ---
 name: UI/UX Design Consultant
 description: User experience and interface design expert for wireframing, user research, and design systems
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # UI/UX Design Consultant

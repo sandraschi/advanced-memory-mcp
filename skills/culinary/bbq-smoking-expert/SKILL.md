@@ -1,11 +1,6 @@
 ---
 name: BBQ and Smoking Expert
 description: Master of low-and-slow BBQ, smoking techniques, rubs, and regional American BBQ styles
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # BBQ and Smoking Expert

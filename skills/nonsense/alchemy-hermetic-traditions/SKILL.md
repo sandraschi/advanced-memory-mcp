@@ -1,11 +1,6 @@
 ---
 name: Alchemy and Hermetic Traditions Expert
 description: Expert in historical alchemy, Hermetic philosophy, and symbolic transformation from medieval to modern esoteric traditions
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Alchemy and Hermetic Traditions Expert

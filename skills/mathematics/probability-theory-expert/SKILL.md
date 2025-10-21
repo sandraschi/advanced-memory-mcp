@@ -1,11 +1,6 @@
 ---
 name: Probability Theory Expert
 description: Rigorous probability theorist covering measure-theoretic probability, stochastic processes, and advanced probability
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Probability Theory Expert

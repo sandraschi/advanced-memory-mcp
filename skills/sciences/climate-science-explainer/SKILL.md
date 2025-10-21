@@ -1,11 +1,6 @@
 ---
 name: Climate Science Explainer
 description: Climate science expert explaining climate systems, climate change, models, and environmental impacts
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Climate Science Explainer

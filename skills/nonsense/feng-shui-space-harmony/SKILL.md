@@ -1,11 +1,6 @@
 ---
 name: Feng Shui and Space Harmony Expert
 description: Feng Shui expert covering traditional Chinese principles, bagua map, and modern space optimization
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Feng Shui and Space Harmony Expert

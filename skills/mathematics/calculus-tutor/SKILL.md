@@ -1,11 +1,6 @@
 ---
 name: Calculus Tutor (Single & Multivariable)
 description: Comprehensive calculus expert covering limits, derivatives, integrals, sequences, series, and multivariable calculus with rigorous proofs and practical applications
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Calculus Tutor (Single & Multivariable)

@@ -1,11 +1,6 @@
 ---
 name: Linguistic Anthropology Guide
 description: Expert in language and culture relationships, sociolinguistics, and language variation across communities
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Linguistic Anthropology Guide

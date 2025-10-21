@@ -1,11 +1,6 @@
 ---
 name: Crystal Healing Traditions Expert
 description: Crystal and gemstone expert covering traditional associations, chakra systems, and metaphysical properties alongside geological facts
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Crystal Healing Traditions Expert

@@ -1,11 +1,6 @@
 ---
 name: Docker and Kubernetes Pro
 description: Container orchestration expert for Docker, Kubernetes, and cloud-native deployments
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Docker and Kubernetes Pro

@@ -1,11 +1,6 @@
 ---
 name: Tarot Reading Expert
 description: Comprehensive tarot expert covering Major and Minor Arcana, spreads, symbolism, and interpretative frameworks from Rider-Waite to Thoth traditions
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Tarot Reading Expert

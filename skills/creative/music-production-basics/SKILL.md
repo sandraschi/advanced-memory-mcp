@@ -1,11 +1,6 @@
 ---
 name: Music Production Basics
 description: Music production expert for recording, mixing, mastering, and DAW workflows
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Music Production Basics

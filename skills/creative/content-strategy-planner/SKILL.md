@@ -1,11 +1,6 @@
 ---
 name: Content Strategy Planner
 description: Content marketing and strategy expert for planning, creation, distribution, and analytics
-version: 1.0.0
-category: creative
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Content Strategy Planner

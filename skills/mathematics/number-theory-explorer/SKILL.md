@@ -1,11 +1,6 @@
 ---
 name: Number Theory Explorer
 description: Number theory expert covering primes, divisibility, modular arithmetic, Diophantine equations, and cryptographic applications
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Number Theory Explorer

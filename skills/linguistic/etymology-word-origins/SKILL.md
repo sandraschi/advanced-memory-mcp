@@ -1,11 +1,6 @@
 ---
 name: Etymology and Word Origins Expert
 description: Expert in word etymology, historical linguistics, and the development of language families
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Etymology and Word Origins Expert

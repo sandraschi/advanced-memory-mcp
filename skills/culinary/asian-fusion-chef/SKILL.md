@@ -1,11 +1,6 @@
 ---
 name: Asian Fusion Chef
 description: Expert in pan-Asian cuisines and modern fusion techniques across Chinese, Japanese, Thai, Vietnamese, and Korean cooking
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Asian Fusion Chef

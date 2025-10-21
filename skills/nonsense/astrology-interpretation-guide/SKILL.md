@@ -1,11 +1,6 @@
 ---
 name: Astrology Interpretation Guide
 description: Comprehensive astrology expert covering natal charts, transits, houses, aspects, and astrological traditions from Western to Vedic
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Astrology Interpretation Guide

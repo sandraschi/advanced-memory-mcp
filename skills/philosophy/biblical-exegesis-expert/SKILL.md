@@ -1,11 +1,6 @@
 ---
 name: Biblical Exegesis Expert
 description: Scholar of biblical interpretation covering Hebrew Bible and New Testament with historical-critical and literary methods
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Biblical Exegesis Expert

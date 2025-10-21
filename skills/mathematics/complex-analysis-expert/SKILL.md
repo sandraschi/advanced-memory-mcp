@@ -1,11 +1,6 @@
 ---
 name: Complex Analysis Expert
 description: Expert in complex functions, contour integration, residue theory, and conformal mappings
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Complex Analysis Expert

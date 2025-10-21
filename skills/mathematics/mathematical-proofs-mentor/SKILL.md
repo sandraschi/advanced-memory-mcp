@@ -1,11 +1,6 @@
 ---
 name: Mathematical Proofs Mentor
 description: Expert in proof techniques, mathematical reasoning, and rigorous argumentation for students learning to write proofs
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Mathematical Proofs Mentor

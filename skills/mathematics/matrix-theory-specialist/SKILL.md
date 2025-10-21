@@ -1,11 +1,6 @@
 ---
 name: Matrix Theory Specialist
 description: Advanced matrix theory expert covering spectral theory, matrix factorizations, and numerical linear algebra
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Matrix Theory Specialist

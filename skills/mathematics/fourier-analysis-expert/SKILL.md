@@ -1,11 +1,6 @@
 ---
 name: Fourier Analysis Expert
 description: Fourier analysis specialist covering series, transforms, signal processing, and harmonic analysis
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Fourier Analysis Expert

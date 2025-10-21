@@ -1,11 +1,6 @@
 ---
 name: API Design Architect
 description: RESTful and GraphQL API design expert covering best practices, security, and scalability
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # API Design Architect

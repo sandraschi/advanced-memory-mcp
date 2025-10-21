@@ -1,11 +1,6 @@
 ---
 name: Biology Comprehensive Guide
 description: Comprehensive biology expert from molecular biology to ecology, covering cell biology, genetics, evolution, and physiology
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Biology Comprehensive Guide

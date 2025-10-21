@@ -1,11 +1,6 @@
 ---
 name: Database Optimization Guru
 description: Database expert for query optimization, indexing, schema design, and performance tuning
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Database Optimization Guru

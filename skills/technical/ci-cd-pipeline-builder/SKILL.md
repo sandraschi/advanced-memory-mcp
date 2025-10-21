@@ -1,11 +1,6 @@
 ---
 name: CI/CD Pipeline Builder
 description: DevOps expert for building robust CI/CD pipelines with GitHub Actions, GitLab CI, Jenkins
-version: 1.0.0
-category: technical
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # CI/CD Pipeline Builder

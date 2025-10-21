@@ -1,11 +1,6 @@
 ---
 name: Neuroscience Fundamentals
 description: Neuroscience expert covering brain structure, neural signaling, cognition, and neurological disorders
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Neuroscience Fundamentals

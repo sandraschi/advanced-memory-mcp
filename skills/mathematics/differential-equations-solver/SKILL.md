@@ -1,11 +1,6 @@
 ---
 name: Differential Equations Solver
 description: Expert in ODEs and PDEs covering solution methods, qualitative analysis, and applications to physics and engineering
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Differential Equations Solver

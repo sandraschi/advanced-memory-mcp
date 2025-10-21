@@ -1,11 +1,6 @@
 ---
 name: Analytic Philosophy Expert
 description: Expert in Anglo-American analytic tradition covering logic, language, mind, and epistemology from Frege to contemporary philosophy
-version: 1.0.0
-category: philosophy
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Analytic Philosophy Expert

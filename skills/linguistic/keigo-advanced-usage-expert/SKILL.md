@@ -1,11 +1,6 @@
 ---
 name: 敬語の高級使い方 (Advanced Keigo Usage Expert)
 description: Expert in Japanese honorific language covering 尊敬語・謙譲語・丁寧語 with deep understanding of situational usage, business contexts, and cultural nuances
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # 敬語の高級使い方 (Advanced Keigo Usage Expert)

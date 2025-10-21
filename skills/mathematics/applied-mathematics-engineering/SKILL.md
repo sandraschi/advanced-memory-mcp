@@ -1,11 +1,6 @@
 ---
 name: Applied Mathematics for Engineering
 description: Applied math expert for engineering applications including Fourier analysis, transforms, and practical problem solving
-version: 1.0.0
-category: mathematics
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Applied Mathematics for Engineering

@@ -1,11 +1,6 @@
 ---
 name: Ecology and Evolution Specialist
 description: Expert in evolutionary biology, ecological systems, biodiversity, and conservation
-version: 1.0.0
-category: sciences
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Ecology and Evolution Specialist

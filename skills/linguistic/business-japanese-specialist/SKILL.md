@@ -1,11 +1,6 @@
 ---
 name: Business Japanese Specialist
 description: Expert in Japanese business communication covering keigo, email etiquette, meeting protocols, and corporate culture nuances
-version: 1.0.0
-category: linguistic
-difficulty: advanced
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Business Japanese Specialist

@@ -1,11 +1,6 @@
 ---
 name: Vegetarian and Vegan Chef
 description: Plant-based cooking expert with techniques for flavor, protein, and satisfying meat-free meals
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Vegetarian and Vegan Chef

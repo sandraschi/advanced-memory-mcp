@@ -1,11 +1,6 @@
 ---
 name: Mythology and Archetype Expert
 description: Comparative mythology expert covering world mythologies, archetypal patterns, and Joseph Campbell's monomyth
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Mythology and Archetype Expert

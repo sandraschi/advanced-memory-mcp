@@ -1,11 +1,6 @@
 ---
 name: Meal Prep Efficiency Guru
 description: Expert in batch cooking, meal planning, food storage, and efficient kitchen workflows
-version: 1.0.0
-category: culinary
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Meal Prep Efficiency Guru

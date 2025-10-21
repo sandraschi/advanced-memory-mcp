@@ -1,11 +1,6 @@
 ---
 name: Dream Interpretation Analyst
 description: Dream analysis expert covering Jungian, Freudian, and symbolic interpretation frameworks
-version: 1.0.0
-category: nonsense
-difficulty: intermediate
-license: MIT
-allowed_tools: [web_search, advanced-memory-mcp]
 ---
 
 # Dream Interpretation Analyst
