@@ -123,7 +123,7 @@ async def test_search_pagination(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="searchable", page=1, page_size=1)
+    response = await search_notes.fn(query="searchable", page=1, results_per_page=1)
 
     # Verify results - handle both success and error cases
     if isinstance(response, SearchResponse):
