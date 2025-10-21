@@ -37,7 +37,6 @@ from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.mcp.tools.delete_note import delete_note
 from advanced_memory.mcp.tools.edit_in_notepadpp import edit_in_notepadpp, import_from_notepadpp
 from advanced_memory.mcp.tools.edit_note import edit_note
-from advanced_memory.mcp.tools.edit_tags import edit_tags
 from advanced_memory.mcp.tools.export_docsify import export_docsify
 from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
@@ -124,7 +123,6 @@ if _FULL_TOOLS_MODE:
         "delete_note",
         "delete_project",
         "edit_note",
-        "edit_tags",
         "get_current_project",
         "help",
         "list_directory",
@@ -144,12 +142,11 @@ if _FULL_TOOLS_MODE:
         "write_note",
     ]
 else:
-    # PORTMANTEAU MODE (default): Only 13 essential tools
+    # PORTMANTEAU MODE (default): Only 12 essential tools
     __all__ = [
         "help",  # Meta tool (always included)
         "view_note_rendered",  # Bonus: Rendered Mermaid viewing
-        "edit_tags",  # Standalone: Quick tag editing without full note edits
-        "adn_content",  # Content management (write, read, view, view_rendered, edit, move, delete)
+        "adn_content",  # Content management (write, read, view, view_rendered, edit, edit_tags, move, delete)
         "adn_project",  # Project management (create, switch, delete, set_default, get_current, list, sync, status)
         "adn_zettelmaker",  # Zettelkasten generation and management
         "adn_inbox",  # Inbox file drop processing
