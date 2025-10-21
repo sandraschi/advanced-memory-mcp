@@ -206,7 +206,7 @@ async def test_export_pandoc_error_handling(tmp_path, mock_notes_data):
         mock_get_notes.return_value = mock_notes_data
 
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
-            mock_pandoc.return_value = "pandoc"
+            mock_pandoc.return_value = ["pandoc"]
 
             with patch(
                 "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
