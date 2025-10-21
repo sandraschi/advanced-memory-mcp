@@ -257,6 +257,125 @@ class TestSearchErrorFormatting:
         assert "## Troubleshooting steps:" in result
 
 
+@pytest.mark.asyncio
+async def test_search_all_projects(client):
+    """Test search across all projects."""
+    # Create test notes in current project
+    await write_note.fn(
+        title="Multi-Project Test Note",
+        folder="test",
+        content="# Test\nThis should be found across projects",
+        tags=["test", "multi-project"],
+    )
+
+    # Mock the projects list and search responses
+    from unittest.mock import AsyncMock, MagicMock
+    
+    from advanced_memory.schemas.project_info import ProjectInfo, ProjectList
+    
+    mock_projects = ProjectList(
+        projects=[
+            ProjectInfo(name="project1", home_dir="/tmp/p1", is_default=False),
+            ProjectInfo(name="project2", home_dir="/tmp/p2", is_default=False),
+        ],
+        current_project="project1",
+        default_project="project1",
+    )
+    
+    with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
+        # First call returns project list
+        # Subsequent calls return search results for each project
+        mock_call_post.side_effect = [
+            MagicMock(json=lambda: mock_projects.model_dump()),  # Project list
+            MagicMock(json=lambda: SearchResponse(
+                results=[MagicMock(title="Result from project1", permalink="test/note1")],
+                total_count=1,
+                page=1,
+                page_size=10,
+            ).model_dump()),  # Project1 search
+            MagicMock(json=lambda: SearchResponse(
+                results=[MagicMock(title="Result from project2", permalink="test/note2")],
+                total_count=1,
+                page=1,
+                page_size=10,
+            ).model_dump()),  # Project2 search
+        ]
+        
+        with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
+            mock_project = MagicMock()
+            mock_project.project_url = "http://test"
+            mock_get_project.return_value = mock_project
+            
+            response = await search_notes.fn(query="multi-project", search_all_projects=True)
+            
+            # Verify response
+            assert isinstance(response, SearchResponse)
+            assert response.total_count == 2
+            assert len(response.results) == 2
+            # Results should have project prefix
+            assert any("[project1]" in str(r.title) for r in response.results)
+            assert any("[project2]" in str(r.title) for r in response.results)
+
+
+@pytest.mark.asyncio
+async def test_search_all_projects_conflict_with_project_param(client):
+    """Test that search_all_projects conflicts with project parameter."""
+    result = await search_notes.fn(
+        query="test",
+        project="specific-project",
+        search_all_projects=True,
+    )
+    
+    # Should return error message
+    assert isinstance(result, str)
+    assert "Error" in result
+    assert "Cannot use both" in result
+
+
+@pytest.mark.asyncio
+async def test_search_all_projects_handles_project_errors(client):
+    """Test that search_all_projects gracefully handles errors in individual projects."""
+    from unittest.mock import AsyncMock, MagicMock
+    
+    from advanced_memory.schemas.project_info import ProjectInfo, ProjectList
+    
+    mock_projects = ProjectList(
+        projects=[
+            ProjectInfo(name="working-project", home_dir="/tmp/p1", is_default=False),
+            ProjectInfo(name="failing-project", home_dir="/tmp/p2", is_default=False),
+        ],
+        current_project="working-project",
+        default_project="working-project",
+    )
+    
+    with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
+        # First call returns project list
+        # Second call succeeds (working project)
+        # Third call fails (failing project)
+        mock_call_post.side_effect = [
+            MagicMock(json=lambda: mock_projects.model_dump()),
+            MagicMock(json=lambda: SearchResponse(
+                results=[MagicMock(title="Working result", permalink="test/note1")],
+                total_count=1,
+                page=1,
+                page_size=10,
+            ).model_dump()),
+            Exception("Project access denied"),  # Failing project
+        ]
+        
+        with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
+            mock_project = MagicMock()
+            mock_project.project_url = "http://test"
+            mock_get_project.return_value = mock_project
+            
+            response = await search_notes.fn(query="test", search_all_projects=True)
+            
+            # Should still succeed with results from working project
+            assert isinstance(response, SearchResponse)
+            assert len(response.results) == 1
+            assert response.total_count == 1
+
+
 class TestSearchToolErrorHandling:
     """Test search tool exception handling."""
 
