@@ -149,58 +149,7 @@ delete_note("correct-identifier-from-search")
 If the note should be deleted but the operation keeps failing, send a message to support@basicmachines.co."""
 
 
-@mcp.tool(
-    description="""Remove notes from the Advanced Memory knowledge base with relationship cleanup and safety checks.
-
-This tool permanently deletes notes while handling semantic relationship cleanup and providing
-comprehensive error reporting to guide successful operations.
-
-DELETION PROCESS:
-1. Locate note by exact identifier (title or permalink)
-2. Verify note exists and is accessible
-3. Remove note file from filesystem
-4. Clean up semantic relationships and references
-5. Update knowledge graph connections
-6. Remove from search indexes
-
-SAFETY FEATURES:
-- Exact identifier matching (no fuzzy deletion)
-- Existence verification before deletion
-- Detailed error reporting with recovery suggestions
-- Project boundary validation
-- Relationship impact assessment
-
-PARAMETERS:
-- identifier (str, REQUIRED): Exact note title or permalink for deletion
-- project (str, optional): Specific project to delete from (defaults to active project)
-
-IDENTIFIER FORMATS:
-- Title: "Meeting Notes: Project Planning"
-- Permalink: "notes/project-planning"
-- Memory URL: "memory://notes/project-planning"
-
-RELATIONSHIP HANDLING:
-- Bidirectional link cleanup ([[Note References]])
-- Knowledge graph relationship removal
-- Entity connection updates
-- Reference integrity maintenance
-
-USAGE EXAMPLES:
-By title: delete_note("Meeting Notes: Project Planning")
-By permalink: delete_note("notes/project-planning")
-Specific project: delete_note("important-note", project="work-project")
-
-RETURNS:
-Boolean True if deletion successful, or detailed error message with recovery guidance.
-
-ERROR RECOVERY:
-- Not found: Suggestions for correct identifier format
-- Permission issues: Access and project validation guidance
-- Relationship conflicts: Impact assessment and alternatives
-
-NOTE: Deletion is permanent. Consider using search_notes() first to verify exact identifiers.
-Deleted content cannot be recovered - ensure correct note is targeted.""",
-)
+@mcp.tool
 async def delete_note(identifier: str, project: str | None = None) -> bool | str:
     """Delete a note from the knowledge base.
 

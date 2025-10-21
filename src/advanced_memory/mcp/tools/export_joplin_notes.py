@@ -16,58 +16,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool(
-    description="""Export Advanced Memory notes to Joplin-compatible format for cross-platform access.
-
-This tool converts Advanced Memory knowledge base content into Joplin's native format,
-creating markdown files paired with JSON metadata that can be directly imported into Joplin.
-
-EXPORT FEATURES:
-- Generates Joplin-compatible markdown files with full formatting
-- Creates corresponding JSON metadata files with complete note information
-- Preserves folder structure as Joplin notebooks
-- Maintains tags, timestamps, and note relationships
-- Handles rich content including tables, lists, and links
-- Supports selective export by folder or project
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where Joplin export will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- create_notebooks (bool, default=True): Create notebook structure from folders
-- project (str, optional): Specific Advanced Memory project to export from
-
-OUTPUT STRUCTURE:
-Creates a Joplin-compatible export with:
-- .md files: Note content in markdown format with Joplin extensions
-- .json files: Metadata including title, tags, notebook, timestamps, and IDs
-- Organized folder structure representing Joplin notebooks
-
-CONTENT CONVERSION:
-- Advanced Memory markdown [UNICODE] Joplin-compatible markdown
-- Entity links [UNICODE] Standard markdown links (relationships may be lost)
-- Tags [UNICODE] Preserved in JSON metadata
-- Folder hierarchy [UNICODE] Joplin notebook structure
-- Rich formatting [UNICODE] Standard markdown formatting
-
-USAGE EXAMPLES:
-Basic export: export_joplin_notes("joplin-export/")
-Folder export: export_joplin_notes("export/", source_folder="projects/alpha")
-Flat export: export_joplin_notes("export/", create_notebooks=False)
-Project export: export_joplin_notes("export/", project="work-project")
-
-JOPLIN IMPORT PROCESS:
-1. Open Joplin application
-2. Go to File [UNICODE] Import [UNICODE] Joplin Export Directory
-3. Select the exported directory
-4. Choose import options and complete import
-
-RETURNS:
-Detailed export summary with file counts, notebook mappings, tag conversions, and import instructions.
-
-NOTE: Joplin's end-to-end encryption should be disabled before import. Some advanced
-Advanced Memory features like entity relationships may not translate perfectly to Joplin.""",
-)
+@mcp.tool
 async def export_joplin_notes(
     export_path: str,
     source_folder: str = "/",

@@ -78,44 +78,7 @@ class TyporaRPCClient:
 typora_client = TyporaRPCClient()
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE][UNICODE] Swiss Army Knife for Typora Control via json_rpc Plugin
-
-REQUIRES: obgnail/typora_plugin with json_rpc enabled (default port 8888)
-
-FULL TYPORA API CONTROL - No more GUI automation brittleness!
-
-CORE OPERATIONS:
-[UNICODE] export - Export current document (pdf, html, docx, etc.)
-[UNICODE] get_content - Get current document content
-[UNICODE] set_content - Replace entire document content
-[UNICODE] insert_text - Insert text at cursor position
-[UNICODE] get_cursor - Get cursor position and selection
-[UNICODE] open_file - Open a file in Typora
-[UNICODE] save_file - Save current file
-[UNICODE] new_file - Create new document
-[UNICODE] get_metadata - Get document metadata
-[UNICODE] set_metadata - Set document metadata
-[UNICODE] search_replace - Find and replace text
-[UNICODE] get_themes - List available themes
-[UNICODE] set_theme - Change theme
-[UNICODE] toggle_sidebar - Show/hide sidebar
-[UNICODE] toggle_toolbar - Show/hide toolbar
-
-ADVANCED OPERATIONS:
-[UNICODE] batch_export - Export multiple files
-[UNICODE] content_analysis - Analyze document structure
-[UNICODE] link_validation - Check and fix links
-[UNICODE] template_apply - Apply Advanced Memory templates
-[UNICODE] sync_to_advanced_memory - Sync content to Advanced Memory
-
-EXAMPLES:
-typora_control("export", format="pdf", output_path="/exports/doc.pdf")
-typora_control("get_content")
-typora_control("insert_text", text="## New Section\\n\\nContent here")
-typora_control("batch_export", files=["/docs/1.md", "/docs/2.md"], format="html")
-"""
-)
+@mcp.tool
 async def typora_control(
     operation: str,
     # Common parameters

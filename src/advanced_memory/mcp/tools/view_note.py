@@ -8,62 +8,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool(
-    description="""Display notes as formatted markdown artifacts optimized for Claude Desktop viewing experience.
-
-This specialized viewing tool provides enhanced readability through formatted markdown artifacts,
-combining note content retrieval with presentation optimization for AI assistant interfaces.
-
-ARTIFACT FORMATTING:
-- Clean markdown rendering with proper structure
-- Unicode content sanitization and normalization
-- Optimized line breaks and spacing
-- Metadata inclusion with timestamps and relationships
-- Link formatting for cross-references
-
-VIEWING FEATURES:
-- Same lookup logic as read_note() for consistency
-- Enhanced formatting for artifact display
-- Content pagination support
-- Relationship context inclusion
-- Metadata display with creation/modification info
-
-PARAMETERS:
-- identifier (str, REQUIRED): Note title, permalink, or memory:// URL
-- page (int, default=1): Pagination page for long content
-- page_size (int, default=10): Items per page
-- project (str, optional): Target project (defaults to active project)
-
-CONTENT ENHANCEMENT:
-- Unicode normalization and sanitization
-- Consistent markdown formatting
-- Relationship link formatting
-- Metadata header inclusion
-- Reading-friendly structure
-
-USAGE EXAMPLES:
-Basic view: view_note("Meeting Notes")
-By permalink: view_note("notes/meeting-notes")
-Memory URL: view_note("memory://notes/meeting-notes")
-Paginated: view_note("long-document", page=2, page_size=20)
-Specific project: view_note("report", project="work-project")
-
-RETURNS:
-Formatted markdown content optimized for artifact display, including:
-- Note title and metadata header
-- Sanitized and formatted content
-- Relationship references
-- Pagination indicators (if applicable)
-
-DIFFERENCE FROM READ_NOTE:
-- Optimized for Claude Desktop artifact viewing
-- Enhanced formatting and structure
-- Unicode sanitization applied
-- Metadata headers included
-
-NOTE: Use this tool when you want to display note content as a formatted artifact.
-For programmatic content access, use read_note() instead.""",
-)
+@mcp.tool
 async def view_note(
     identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
 ) -> str:

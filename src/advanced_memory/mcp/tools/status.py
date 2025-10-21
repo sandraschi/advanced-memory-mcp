@@ -9,46 +9,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
 
-@mcp.tool(
-    description="""Comprehensive system status and diagnostic monitoring for Advanced Memory.
-
-This tool provides detailed insights into system health, performance, and operational status
-across multiple diagnostic levels, helping users understand and troubleshoot their knowledge base.
-
-LEVELS:
-- basic: Core system status and sync information
-- intermediate: Tool availability and configuration details
-- advanced: Performance metrics and system resource usage
-- diagnostic: Detailed troubleshooting information and error analysis
-
-FOCUS AREAS:
-- sync: Synchronization status and background processing
-- tools: Tool availability and functional status
-- system: System resources and performance metrics
-- projects: Project configuration and path validation
-
-PARAMETERS:
-- level (str, default="basic"): Status detail level (basic/intermediate/advanced/diagnostic)
-- focus (str, optional): Specific area to focus on (sync/tools/system/projects)
-
-USAGE EXAMPLES:
-Quick status: status()
-Sync details: status("basic", "sync")
-Performance: status("advanced", "system")
-Troubleshooting: status("diagnostic")
-Tool inventory: status("intermediate", "tools")
-
-RETURNS:
-Formatted status report with system metrics, configuration details, and actionable insights.
-
-MONITORS:
-- File synchronization progress and errors
-- Database size and performance metrics
-- Project configuration and path validation
-- Tool availability and function counts
-- Memory usage and resource consumption
-- Background process status and health""",
-)
+@mcp.tool
 async def status(level: str = "basic", focus: str | None = None) -> str:
     """Get comprehensive status information about Advanced Memory system.
 

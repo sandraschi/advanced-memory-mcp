@@ -11,44 +11,7 @@ from advanced_memory.config import CONFIG_FILE_NAME, DATABASE_NAME, ConfigManage
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE] Import Complete Advanced Memory Archive from Migration/Backup
-
-Restores a complete Advanced Memory system from an archive created with export_to_archive.
-Includes database, all projects, and configuration for full system restoration.
-
-ARCHIVE CONTENTS EXPECTED:
-- SQLite database with all knowledge, entities, and relationships
-- All project directories with markdown files
-- Global configuration files
-- Project-specific settings
-
-RESTORATION PROCESS:
-1. Extract archive to temporary location
-2. Validate archive contents and metadata
-3. Backup existing data (optional)
-4. Restore database, projects, and configuration
-5. Update project registry
-
-SAFETY FEATURES:
-- Validates archive integrity before restoration
-- Optional backup of existing data
-- Conflict detection and resolution options
-- Dry-run mode for previewing changes
-
-PARAMETERS:
-- archive_path (str, REQUIRED): Path to archive file created by export_to_archive
-- restore_mode (str, optional): "overwrite" (default), "merge", or "skip_existing"
-- backup_existing (bool, optional): Backup current data before restore (default: True)
-- dry_run (bool, optional): Preview changes without applying them (default: False)
-- project (str, optional): Active project context (default: current)
-
-RETURNS:
-Detailed restoration report with success/failure status
-
-NOTE: Can restore archives created with export_to_archive tool
-"""
-)
+@mcp.tool
 async def import_from_archive(
     archive_path: str | Path,
     restore_mode: str = "overwrite",

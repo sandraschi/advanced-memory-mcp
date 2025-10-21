@@ -11,18 +11,7 @@ from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
 
 
-@mcp.tool(
-    description="""Get recent activity from across the knowledge base.
-
-    Timeframe supports natural language formats like:
-    - "2 days ago"
-    - "last week"
-    - "yesterday"
-    - "today"
-    - "3 weeks ago"
-    Or standard formats like "7d"
-    """,
-)
+@mcp.tool
 async def recent_activity(
     type: str | list[str] = "",
     depth: int = 1,

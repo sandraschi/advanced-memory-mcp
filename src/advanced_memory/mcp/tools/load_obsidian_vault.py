@@ -17,48 +17,7 @@ from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
 
-@mcp.tool(
-    description="""Import complete Obsidian vaults into Advanced Memory with full feature preservation.
-
-This tool migrates entire Obsidian knowledge bases into Advanced Memory, converting
-Obsidian-specific features into Advanced Memory equivalents while preserving content integrity.
-
-FEATURES:
-- Imports all markdown files from vault structure
-- Converts [[WikiLinks]] to Advanced Memory entity references
-- Preserves frontmatter metadata and YAML properties
-- Handles folder hierarchies and nested structures
-- Supports selective import with filtering options
-- Processes attachments and media files (optional)
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Filesystem path to Obsidian vault root directory
-- destination_folder (str, default="imported/obsidian"): Advanced Memory folder for imported content
-- preserve_structure (bool, default=True): Maintain original folder hierarchy
-- convert_links (bool, default=True): Convert [[WikiLinks]] to entity references
-- include_attachments (bool, default=False): Import images and media files
-- skip_existing (bool, default=True): Skip notes that already exist
-- project (str, optional): Target Advanced Memory project
-
-SUPPORTED OBSIDIAN FEATURES:
-- Standard markdown with extensions
-- Wikilink syntax: [[Note Title]] and [[Note Title|Display Text]]
-- Frontmatter YAML metadata
-- Folder-based organization
-- Image and attachment references
-- Internal linking structures
-
-USAGE EXAMPLES:
-Basic import: load_obsidian_vault("/path/to/vault")
-Custom folder: load_obsidian_vault("/vault", destination_folder="research/notes")
-Link conversion: load_obsidian_vault("/vault", convert_links=False)
-With attachments: load_obsidian_vault("/vault", include_attachments=True)
-
-RETURNS:
-Detailed import report with success/failure counts, converted links, and next steps.
-
-NOTE: Large vaults may take time to process. Use skip_existing=True for incremental imports.""",
-)
+@mcp.tool
 async def load_obsidian_vault(
     vault_path: str,
     destination_folder: str = "imported/obsidian",

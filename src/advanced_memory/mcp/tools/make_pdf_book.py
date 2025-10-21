@@ -18,48 +18,7 @@ from advanced_memory.schemas.search import SearchQuery
 from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
-@mcp.tool(
-    description="""[BOOK] Create Professional PDF Books from Advanced Memory Notes
-
-Generates a complete PDF book with title page, table of contents, and chapters
-from your Advanced Memory notes. Perfect for creating documentation, research papers,
-or knowledge base books.
-
-BOOK FEATURES:
-- Title page with book metadata (title, author, date)
-- Automatic table of contents
-- Chapter organization from notes
-- Professional book formatting
-- Custom styling and templates
-
-WORKFLOW:
-1. Select notes by folder, tags, or search criteria
-2. Generate book structure with chapters
-3. Create PDF with Pandoc (requires LaTeX)
-4. Professional book-quality output
-
-PARAMETERS:
-- book_title (str, REQUIRED): Title for the PDF book
-- source_folder (str, optional): Folder to get notes from (default: "/")
-- tag_filter (str, optional): Filter notes by tag (e.g., "standards", "research")
-- output_path (str, optional): Where to save the PDF (default: "pdf-books/")
-- author (str, optional): Book author (default: "Advanced Memory")
-- include_subfolders (bool, optional): Include notes from subfolders (default: True)
-- toc_depth (int, optional): TOC depth (1-3, default: 2)
-- paper_size (str, optional): Paper size (a4, letter, default: a4)
-- project (str, optional): Specific project to export from
-
-RETURNS:
-Success message with PDF location and book statistics.
-
-EXAMPLES:
-- Book from folder: make_pdf_book("My Notes", source_folder="/research")
-- Book from tags: make_pdf_book("Standards Guide", tag_filter="standards")
-- Combined: make_pdf_book("Research Standards", source_folder="/research", tag_filter="standards")
-
-NOTE: Requires Pandoc and LaTeX (MiKTeX/TinyTeX) for PDF generation.
-"""
-)
+@mcp.tool
 async def make_pdf_book(
     book_title: str,
     source_folder: str = "/",

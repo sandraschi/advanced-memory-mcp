@@ -33,37 +33,7 @@ class ResearchStep:
     parameters: dict[str, Any]
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE] Research Orchestrator - AI-Guided Research & Note Creation
-
-Creates structured research plans and guides Claude/Sonnet through comprehensive
-knowledge building. While the MCP server can't directly control the AI client,
-this tool provides detailed research methodologies and workflows.
-
-WORKFLOWS:
-[UNICODE] research_plan: Create detailed research roadmap with questions, sources, methodology
-[UNICODE] research_methodology: Get proven research approaches for different topics
-[UNICODE] research_questions: Generate focused research questions and sub-questions
-[UNICODE] note_blueprint: Design optimal note structure for research findings
-[UNICODE] research_workflow: Step-by-step research execution guide
-
-METHODOLOGIES:
-[UNICODE] Exploratory Research: Broad topic investigation
-[UNICODE] Deep Dive Analysis: Focused expert-level research
-[UNICODE] Comparative Studies: Multiple approach analysis
-[UNICODE] Problem-Solution Research: Issue-focused investigation
-[UNICODE] Trend Analysis: Temporal pattern research
-
-USAGE PATTERNS:
-1. Plan research: research_orchestrator("research_plan", topic="quantum computing")
-2. Get methodology: research_orchestrator("research_methodology", topic_type="technical")
-3. Design notes: research_orchestrator("note_blueprint", research_type="analysis")
-4. Execute workflow: research_orchestrator("research_workflow", step=1, topic="AI ethics")
-
-The tool returns structured guidance that Claude can follow to create comprehensive,
-well-linked research notes in your knowledge base.
-"""
-)
+@mcp.tool
 async def research_orchestrator(
     operation: str,
     topic: str | None = None,

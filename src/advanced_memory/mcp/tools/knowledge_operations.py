@@ -13,43 +13,7 @@ from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE][UNICODE] Knowledge Operations - Swiss Army Knife for Bulk Operations
-
-Comprehensive tool for bulk content management, tag operations, and knowledge base maintenance.
-Handles multiple operations in one tool to reduce complexity and improve efficiency.
-
-OPERATIONS:
-[UNICODE] bulk_update: Batch update multiple notes (tags, content, metadata)
-[UNICODE] bulk_move: Move multiple notes between folders
-[UNICODE] bulk_delete: Delete multiple notes with confirmation
-[UNICODE] tag_analytics: Analyze tag usage and statistics
-[UNICODE] consolidate_tags: Merge similar tags (including semantic similarity)
-[UNICODE] tag_maintenance: Clean up tags (remove duplicates, standardize case)
-[UNICODE] validate_content: Check note quality and fix issues
-[UNICODE] project_stats: Analyze project content and activity
-[UNICODE] find_duplicates: Identify duplicate or similar content
-
-FILTERING:
-[UNICODE] folder: Limit to specific folder
-[UNICODE] tags: Filter by existing tags
-[UNICODE] created_after/before: Date range filtering
-[UNICODE] content_match: Text search in content
-[UNICODE] limit: Maximum items to process
-
-EXAMPLES:
-# Bulk tag management
-knowledge_operations("tag_analytics", action="analyze_usage")
-knowledge_operations("consolidate_tags", semantic_groups=[["mcp", "mcp-server"]])
-
-# Bulk content operations
-knowledge_operations("bulk_update", filters={"tags": ["draft"]}, action={"add_tags": ["reviewed"]})
-knowledge_operations("validate_content", checks=["broken_links", "formatting"])
-
-# Project analysis
-knowledge_operations("project_stats", project="work")
-"""
-)
+@mcp.tool
 async def knowledge_operations(
     operation: str,
     filters: dict[str, Any] | None = None,

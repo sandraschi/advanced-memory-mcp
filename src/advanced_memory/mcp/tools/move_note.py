@@ -344,62 +344,7 @@ delete_note("{identifier}")
 ```"""
 
 
-@mcp.tool(
-    description="""Relocate notes within the knowledge base while preserving relationships and updating all references.
-
-This organization tool moves notes between folders while maintaining semantic integrity,
-automatically updating links, relationships, and database references throughout the knowledge base.
-
-RELOCATION PROCESS:
-1. Locate note by exact identifier (no fuzzy matching)
-2. Verify destination path validity and permissions
-3. Move file to new filesystem location
-4. Update all internal references and links
-5. Refresh semantic relationships and connections
-6. Update search indexes and metadata
-
-RELATIONSHIP PRESERVATION:
-- Internal links ([[Note References]]) automatically updated
-- Semantic relationships maintained across move
-- Permalink updates propagated throughout knowledge base
-- Cross-reference integrity preserved
-- Search index synchronization
-
-PARAMETERS:
-- identifier (str, REQUIRED): Exact note identifier (title, permalink, or memory:// URL)
-- destination_path (str, REQUIRED): New relative path (e.g., "work/meetings/note.md")
-- project (str, optional): Target project (defaults to active project, no cross-project moves)
-
-PATH FORMATS:
-- Relative paths: "work/meetings/2024/project-review.md"
-- Folder reorganization: "archive/old-meetings/meeting-notes.md"
-- File renaming: "current-projects/active-project.md"
-
-VALIDATION CHECKS:
-- Exact identifier matching (safety requirement)
-- Path validity and permissions
-- Destination folder existence
-- Project boundary enforcement
-- Link integrity verification
-
-USAGE EXAMPLES:
-Basic move: move_note("Meeting Notes", "archive/meetings/meeting-notes.md")
-Reorganize: move_note("Project Plan", "completed-projects/project-plan.md")
-Rename file: move_note("notes/draft", "notes/final-draft.md")
-Specific project: move_note("important-note", "archive/important-note.md", project="work")
-
-RETURNS:
-Move confirmation with updated paths, affected references, and any warnings.
-
-ERROR HANDLING:
-- Identifier not found: Suggestions for correct format
-- Path invalid: Guidance on proper path syntax
-- Permission denied: Access troubleshooting
-- Cross-project attempt: Explanation and alternatives
-
-NOTE: Moves are within the same project only. Use export/import tools for cross-project relocation.
-Requires exact identifiers - use search_notes() or read_note() first if unsure.""",
-)
+@mcp.tool
 async def move_note(
     identifier: str,
     destination_path: str,

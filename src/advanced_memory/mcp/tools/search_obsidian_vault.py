@@ -13,53 +13,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Obsidian vaults without importing them into Advanced Memory.
-
-This tool allows you to query Obsidian vaults directly from the filesystem, providing
-search capabilities across markdown files, canvas files, and other Obsidian content types.
-
-SEARCH CAPABILITIES:
-- Full-text search across all vault markdown files
-- File type filtering (markdown, canvas, all files)
-- Case-sensitive or case-insensitive matching
-- Content preview with surrounding context
-- File path and metadata information
-- Support for large vaults with result limiting
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Filesystem path to Obsidian vault root directory
-- query (str, REQUIRED): Search term or phrase to find
-- search_type (str, default="text"): Search scope (text, file, path, content)
-- max_results (int, default=20): Maximum number of results to return
-- include_content (bool, default=False): Include file content previews in results
-
-SEARCH TYPES:
-- "text": Search within file contents (default)
-- "file": Search in filenames only
-- "path": Search in file paths
-- "content": Full content search with context
-
-RESULT FORMAT:
-Returns structured results showing:
-- File paths and names
-- Match locations within files
-- Content snippets (if enabled)
-- File modification dates
-- Match counts and statistics
-
-USAGE EXAMPLES:
-Basic search: search_obsidian_vault("/vault/path", "machine learning")
-File names: search_obsidian_vault("/vault", "meeting notes", search_type="file")
-With content: search_obsidian_vault("/obsidian-vault", "project plan", include_content=True)
-Limited results: search_obsidian_vault("/vault", "project", max_results=50)
-
-RETURNS:
-Formatted search results with file paths, match counts, and optional content previews.
-
-NOTE: This searches external vaults without importing them. For permanent access,
-use load_obsidian_vault() to import the content into Advanced Memory.""",
-)
+@mcp.tool
 async def search_obsidian_vault(
     vault_path: str,
     query: str,

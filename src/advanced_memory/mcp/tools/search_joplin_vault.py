@@ -15,56 +15,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Joplin exports without importing them into Advanced Memory.
-
-This tool enables querying Joplin export directories directly from the filesystem,
-providing search capabilities across markdown notes, JSON metadata, and notebook structures.
-
-SEARCH CAPABILITIES:
-- Full-text search across markdown note content
-- Metadata search in JSON files (titles, tags, notebooks)
-- Combined content and metadata queries
-- File type filtering (markdown, JSON, all files)
-- Case-sensitive or case-insensitive matching
-- Structured results with notebook organization
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Path to Joplin export directory (containing .md and .json files)
-- query (str, REQUIRED): Search term or phrase to find
-- search_type (str, default="text"): Search scope (text, metadata, combined)
-- max_results (int, default=20): Maximum number of results to return
-- include_content (bool, default=False): Include note content previews in results
-
-SEARCH TYPES:
-- "text": Search within markdown note content only
-- "metadata": Search in JSON metadata (titles, tags, notebooks)
-- "combined": Search both content and metadata
-
-JOPLIN EXPORT STRUCTURE:
-- .md files: Note content in markdown format
-- .json files: Metadata including title, tags, notebook, timestamps
-- Organized by notebook hierarchy
-
-RESULT FORMAT:
-Returns structured results showing:
-- Note titles and content snippets
-- Notebook and tag information
-- File paths and modification dates
-- Match counts and relevance scores
-
-USAGE EXAMPLES:
-Content search: search_joplin_vault("/export/path", "meeting notes")
-Metadata search: search_joplin_vault("/export", "important", search_type="metadata")
-Combined: search_joplin_vault("/export", "project", search_type="combined")
-With previews: search_joplin_vault("/joplin-export", "meeting notes", include_content=True)
-
-RETURNS:
-Formatted search results with note details, notebook organization, and optional content previews.
-
-NOTE: This searches external Joplin exports without importing them. For permanent access
-and enhanced search capabilities, use load_joplin_vault() to import into Advanced Memory.""",
-)
+@mcp.tool
 async def search_joplin_vault(
     vault_path: str,
     query: str,

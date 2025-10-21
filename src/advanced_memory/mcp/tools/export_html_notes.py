@@ -15,67 +15,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool(
-    description="""Export Advanced Memory notes to standalone HTML website with live Mermaid diagram rendering.
-
-This tool transforms Advanced Memory knowledge base into a beautiful, self-contained HTML website
-with automatic Mermaid diagram rendering, perfect for sharing and offline viewing.
-
-EXPORT FEATURES:
-- Generates standalone HTML files with no external dependencies (except Mermaid.js CDN)
-- Automatically renders Mermaid diagrams live in the browser
-- Creates clean, responsive design with professional styling
-- Builds comprehensive index page with navigation and search
-- Preserves folder structure as organized web pages
-- Supports rich content including tables, code blocks, and images
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where HTML website will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- include_index (bool, default=True): Generate main index page with navigation
-- project (str, optional): Specific Advanced Memory project to export from
-
-OUTPUT STRUCTURE:
-Creates a complete website with:
-- index.html: Main navigation page with folder structure and search
-- Individual HTML pages for each note with clean, readable formatting
-- Automatic Mermaid.js integration for live diagram rendering
-- Responsive CSS styling that works on all devices
-- Proper HTML structure with semantic markup
-
-MERMAID DIAGRAM SUPPORT:
-- Flowcharts, sequence diagrams, Gantt charts, mind maps, ER diagrams
-- Automatic CDN loading and initialization
-- Live rendering in browser without preprocessing
-- Preserved syntax highlighting and formatting
-
-CONTENT CONVERSION:
-- Markdown [UNICODE] Clean HTML with proper semantic structure
-- Mermaid code blocks [UNICODE] Interactive rendered diagrams
-- Tables [UNICODE] Properly formatted HTML tables
-- Code blocks [UNICODE] Syntax-highlighted HTML
-- Links [UNICODE] Functional HTML hyperlinks
-
-USAGE EXAMPLES:
-Basic website: export_html_notes("website/")
-Project docs: export_html_notes("docs/", source_folder="projects/alpha")
-Single folder: export_html_notes("export/", include_subfolders=False)
-No index: export_html_notes("pages/", include_index=False)
-
-WEBSITE FEATURES:
-- Self-contained (works offline after initial load)
-- Responsive design for mobile and desktop
-- Fast loading with minimal dependencies
-- Professional appearance suitable for sharing
-- Full-text search capability in index page
-
-RETURNS:
-Detailed export summary with file counts, website structure, and viewing instructions.
-
-NOTE: Requires internet connection for initial Mermaid.js loading, but works offline afterward.
-For completely offline use, download Mermaid files locally and modify the HTML templates.""",
-)
+@mcp.tool
 async def export_html_notes(
     export_path: str,
     source_folder: str = "/",

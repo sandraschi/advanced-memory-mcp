@@ -11,63 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Evernote ENEX and HTML exports without importing them.
-
-This tool enables querying Evernote export files directly from the filesystem,
-providing search capabilities across ENEX XML files, HTML exports, and extracted content.
-
-SEARCH CAPABILITIES:
-- Full-text search across ENEX XML content and HTML exports
-- Case-sensitive or case-insensitive matching
-- File type filtering (ENEX, HTML, or all files)
-- Notebook-based filtering and organization
-- Tag-based filtering and categorization
-- Content extraction from complex XML/HTML structures
-- Support for large export collections with result limiting
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Path to ENEX file or directory containing Evernote exports
-- query (str, REQUIRED): Search term or phrase to find
-- case_sensitive (bool, default=False): Whether search should be case-sensitive
-- file_type (str, optional): Filter by file type ("enex", "html", or None for all)
-- notebook_filter (str, optional): Filter results to specific notebook name
-- tag_filter (str, optional): Filter results by tag name
-- max_results (int, default=20): Maximum number of results to return
-
-EVERNOTE EXPORT FORMATS:
-- ENEX files: XML format with rich content and metadata
-- HTML exports: Web-viewable notes with Evernote styling
-- Directory structures: Organized exports from Evernote
-
-CONTENT PROCESSING:
-- ENEX parsing: Extracts content from XML structure with metadata
-- HTML parsing: Strips Evernote styling to get clean text content
-- Notebook extraction: Preserves organizational hierarchy
-- Tag processing: Maintains categorization information
-- Date handling: Creation and modification timestamps
-
-RESULT FORMAT:
-Returns structured results showing:
-- Note titles and content snippets
-- Notebook and tag information
-- File types and creation dates
-- Match locations and context
-- Export file paths and metadata
-
-USAGE EXAMPLES:
-Basic search: search_evernote_vault("/exports", "meeting notes")
-ENEX only: search_evernote_vault("/exports", "project", file_type="enex")
-Notebook filter: search_evernote_vault("/exports", "urgent", notebook_filter="Work")
-Tag filter: search_evernote_vault("/exports", "review", tag_filter="Important")
-Case sensitive: search_evernote_vault("/exports", "API", case_sensitive=True)
-
-RETURNS:
-Formatted search results with note details, organizational context, and match statistics.
-
-NOTE: This searches external Evernote exports without importing them. For enhanced search,
-relationship discovery, and AI-powered analysis, use load_evernote_export() to import into Advanced Memory.""",
-)
+@mcp.tool
 async def search_evernote_vault(
     vault_path: str,
     query: str,

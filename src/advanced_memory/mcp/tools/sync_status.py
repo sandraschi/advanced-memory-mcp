@@ -61,60 +61,7 @@ def _get_all_projects_status() -> list[str]:
     return status_lines
 
 
-@mcp.tool(
-    description="""Monitor file synchronization status and background processing operations across all projects.
-
-This diagnostic tool provides comprehensive visibility into Advanced Memory's file synchronization,
-background processing, and indexing operations to ensure knowledge base integrity and performance.
-
-MONITORING CAPABILITIES:
-- Real-time sync status across all configured projects
-- File indexing progress and completion status
-- Background knowledge graph processing updates
-- Error detection and detailed failure reporting
-- Legacy migration status and progress tracking
-- Project initialization and setup verification
-
-STATUS INDICATORS:
-- **[WATCHING]**: Active file monitoring (steady state)
-- **[SYNCING]**: File changes being processed
-- **[COMPLETED]**: Sync operation finished successfully
-- **[ERROR]**: Sync failures with detailed error information
-- **[SETUP]**: Initial project configuration in progress
-
-PARAMETERS:
-- project (str, optional): Specific project to check (shows all projects if not specified)
-
-MONITORED PROCESSES:
-- **File Indexing**: Initial content discovery and database population
-- **Change Detection**: Real-time filesystem monitoring for updates
-- **Knowledge Graph**: Background semantic relationship processing
-- **Migration**: Legacy data format updates and compatibility
-- **Error Recovery**: Automatic retry and failure handling
-
-USAGE EXAMPLES:
-All projects: sync_status()
-Specific project: sync_status(project="work-project")
-Troubleshooting: sync_status()  # Check for errors across all projects
-
-RETURNS:
-Detailed status report with project-by-project breakdown, including:
-- Current operation status and progress
-- File counts and processing statistics
-- Error messages and resolution guidance
-- Performance metrics and timing information
-- Recommendations for optimization
-
-DIAGNOSTIC INFORMATION:
-- Sync operation timestamps and duration
-- Files processed vs. total file counts
-- Memory usage and performance metrics
-- Error logs with actionable troubleshooting steps
-- Project configuration validation status
-
-NOTE: This tool provides system-level diagnostics. Use status() for general system health,
-and help() for usage guidance. Regular monitoring helps maintain optimal knowledge base performance.""",
-)
+@mcp.tool
 async def sync_status(project: str | None = None) -> str:
     """Get current sync status and system readiness information.
 

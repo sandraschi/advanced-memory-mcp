@@ -11,52 +11,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
 
 
-@mcp.tool(
-    description="""Import Notion workspaces and pages into Advanced Memory with intelligent content conversion.
-
-This tool processes Notion HTML/Markdown exports, converting Notion's complex block-based
-structure into clean, searchable Advanced Memory notes while preserving relationships and hierarchy.
-
-NOTION FEATURES SUPPORTED:
-- HTML export format (most comprehensive - preserves all formatting)
-- Markdown export format (simpler, faster processing)
-- Page hierarchy and nested structures
-- Block types: text, headings, lists, tables, code blocks, quotes
-- Database views and structured content
-- Internal page links and cross-references
-- Image and attachment extraction from ZIP exports
-
-PARAMETERS:
-- export_path (str, REQUIRED): Path to Notion export (ZIP file or directory)
-- folder (str, default="notion-import"): Advanced Memory folder for imported content
-- preserve_hierarchy (bool, default=True): Maintain page/subpage structure
-- project (str, optional): Target Advanced Memory project
-
-NOTION EXPORT FORMATS:
-- ZIP files: Complete exports with assets (recommended)
-- HTML directories: Individual page exports
-- Markdown files: Simplified exports (limited formatting)
-
-CONTENT CONVERSION:
-- Page titles [UNICODE] Note titles with proper sanitization
-- Rich text blocks [UNICODE] Clean markdown formatting
-- Tables [UNICODE] Markdown table syntax
-- Code blocks [UNICODE] Syntax-highlighted markdown code
-- Links [UNICODE] Advanced Memory entity references
-- Images [UNICODE] Extracted and referenced properly
-
-USAGE EXAMPLES:
-ZIP import: load_notion_export("Notion-Export.zip")
-Directory: load_notion_export("/path/to/html-export")
-Custom folder: load_notion_export("export.zip", folder="workspace/docs")
-Flat structure: load_notion_export("export.zip", preserve_hierarchy=False)
-
-RETURNS:
-Import summary with page counts, conversion details, hierarchy preservation status, and any processing issues.
-
-NOTE: HTML exports provide the most accurate conversion. ZIP files preserve images and attachments.
-Large workspaces may take time to process. Use preserve_hierarchy=False for simpler organization.""",
-)
+@mcp.tool
 async def load_notion_export(
     export_path: str,
     folder: str = "notion-import",

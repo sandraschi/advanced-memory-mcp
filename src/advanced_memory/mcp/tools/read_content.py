@@ -145,65 +145,7 @@ def optimize_image(img, content_length, max_output_bytes=350000):
             return buf.getvalue()
 
 
-@mcp.tool(
-    description="""Access raw file content from the knowledge base with automatic format handling and optimization.
-
-This direct file access tool provides unprocessed content retrieval with intelligent format detection,
-automatic optimization for different file types, and safety mechanisms for large or binary files.
-
-CONTENT TYPES SUPPORTED:
-- **Text Files**: Markdown, code, configuration files (returned as plain text)
-- **Images**: Automatic resizing and optimization for display (PNG, JPG, GIF, WebP)
-- **Binary Files**: Base64 encoding for small files, size warnings for large files
-- **Documents**: Direct access to PDFs, office documents, etc.
-
-SMART PROCESSING:
-- Automatic content type detection
-- Image optimization with configurable quality/size limits
-- Binary file size validation and warnings
-- Text encoding detection and normalization
-- Path traversal attack prevention
-
-PARAMETERS:
-- path (str, REQUIRED): File path, permalink, or memory:// URL
-- project (str, optional): Target project (defaults to active project)
-
-PATH FORMATS:
-- Regular path: "docs/example.md"
-- Memory URL: "memory://docs/example"
-- Permalink: "docs/example"
-- Relative path: "images/diagram.png"
-
-CONTENT OPTIMIZATION:
-- Images automatically resized for efficient display
-- Quality adjustment based on file size limits
-- Binary files checked against size thresholds
-- Text content normalized to UTF-8
-
-USAGE EXAMPLES:
-Markdown file: read_content("notes/meeting.md")
-Image file: read_content("images/diagram.png")
-Memory URL: read_content("memory://docs/manual")
-Specific project: read_content("report.pdf", project="work-project")
-
-RETURNS:
-Dictionary containing:
-- content: File content (text or base64 for binary)
-- content_type: MIME type of the file
-- size: File size in bytes
-- encoding: Text encoding used
-- optimization: Details about any processing applied
-
-SAFETY FEATURES:
-- Path validation and traversal protection
-- File size limits with warnings
-- Binary file handling with user consent requirements
-- Project boundary enforcement
-- Error handling with detailed diagnostics
-
-NOTE: For processed/rendered content, use read_note() instead. This tool provides raw file access
-for direct content manipulation or external processing needs.""",
-)
+@mcp.tool
 async def read_content(path: str, project: str | None = None) -> dict:
     """Read a file's raw content by path or permalink.
 

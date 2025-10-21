@@ -169,40 +169,7 @@ def _filter_database(
         dest_conn.close()
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE] Export Complete Advanced Memory Archive for Migration
-
-Creates a compressed archive containing the complete Advanced Memory system for installation
-on a new PC or backup purposes. Includes database, all projects, and configuration.
-
-ARCHIVE CONTENTS:
-- SQLite database with all knowledge, entities, and relationships
-- All project directories with markdown files
-- Global configuration files
-- Project-specific settings
-
-USE CASES:
-- Migrate Advanced Memory to a new computer
-- Create backup of entire knowledge base
-- Transfer installation between machines
-- Archive complete system state
-
-PARAMETERS:
-- archive_path (str, REQUIRED): Path where archive will be created (e.g., "advanced-memory-backup.zip")
-- include_projects (List[str], optional): Specific projects to include (default: all)
-- exclude_projects (List[str], optional): Projects to exclude (overrides include_projects)
-- exclude_tags (List[str], optional): Tags to exclude (e.g., ["obsolete", "test", "draft"])
-- since_date (str, optional): Only include data since date (ISO format: "2024-01-01" or relative: "30d", "1y")
-- compress (bool, optional): Create compressed ZIP archive (default: True)
-- project (str, optional): Active project context (default: current)
-
-RETURNS:
-Archive creation summary with file sizes and contents
-
-NOTE: Creates a self-contained archive that can be restored with import_from_archive
-NOTE: Filtering may break some semantic links, but rescan rebuilds them quickly
-"""
-)
+@mcp.tool
 async def export_to_archive(
     archive_path: str | Path,
     include_projects: list[str] | None = None,

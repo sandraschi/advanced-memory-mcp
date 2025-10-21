@@ -39,76 +39,7 @@ def _sanitize_filename(filename: str) -> str:
     return sanitized
 
 
-@mcp.tool(
-    description="""[LAUNCH] Enhanced Docsify Export with Advanced Plugins & Professional Features
-
-Transforms your knowledge base into a MODERN, feature-rich documentation platform using Docsify's extensive plugin ecosystem.
-
-[TARGET] ENHANCED FEATURES (vs basic export):
-[UNICODE] [DOC] Pagination - Navigate documents sequentially like a book
-[UNICODE] [BOOK] Auto TOC - Table of contents generated for each page
-[UNICODE] [UNICODE][UNICODE] Theme Toggle - Professional light/dark mode switcher
-[UNICODE] [CHART] Reading Progress - Visual progress bar
-[UNICODE] [LIST] Copy Code Blocks - One-click code copying with success feedback
-[UNICODE] [SMILE] Emoji Support - Rich emoji rendering (:smile: [UNICODE] [UNICODE][UNICODE])
-[UNICODE] [SEARCH] Enhanced Search - Better search with namespace filtering
-[UNICODE] [MOBILE] Mobile Optimization - Responsive design for all devices
-[UNICODE] [ART] Modern UI - Smooth animations and professional typography
-[UNICODE] [FAST] Performance - Optimized loading and CDN assets
-
-[FIX] TECHNICAL ADVANTAGES:
-[UNICODE] Zero build process (maintains Docsify's speed)
-[UNICODE] Plugin-based extensibility (add features without rebuilding)
-[UNICODE] CDN-powered (fast global loading)
-[UNICODE] Client-side only (no server requirements)
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where enhanced Docsify site will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- site_title (str, default="Enhanced Knowledge Base"): Title for the documentation site
-- site_description (str, default="Professional documentation generated from Advanced Memory"): Site description
-- enable_pagination (bool, default=True): Enable document pagination
-- enable_toc (bool, default=True): Enable auto-generated table of contents
-- enable_theme_toggle (bool, default=True): Enable light/dark theme switcher
-- enable_progress_bar (bool, default=True): Enable reading progress indicator
-- enable_code_copy (bool, default=True): Enable code block copy buttons
-- enable_emoji (bool, default=True): Enable emoji rendering
-- serve (bool, default=True): Start local HTTP server to view the site immediately
-- port (int, default=3211): Port for local HTTP server
-- export_all (bool, default=True): Export all folders matching source_folder name. Set False to error on ambiguous folder names
-- project (str, optional): Specific project to export from
-
-OUTPUT:
-Creates a professional Docsify site with:
-- index.html (enhanced with 10+ plugins and modern UI)
-- _sidebar.md (hierarchical navigation with icons and metadata)
-- README.md (professional homepage with feature overview)
-- Individual markdown files (enhanced with metadata and formatting)
-- .nojekyll (GitHub Pages compatibility)
-- Custom CSS (modern styling and animations)
-
-USAGE EXAMPLES:
-Basic enhanced export: export_docsify_enhanced("enhanced-docs/")
-Full-featured export: export_docsify_enhanced("pro-docs/", enable_pagination=True, enable_toc=True, enable_theme_toggle=True)
-Minimal export: export_docsify_enhanced("simple-docs/", enable_pagination=False, enable_theme_toggle=False)
-
-RETURNS:
-Comprehensive summary with feature status, file counts, and professional usage instructions.
-
-[ART] MODERN FEATURES INCLUDE:
-[UNICODE] Responsive grid layouts and mobile-first design
-[UNICODE] Smooth CSS transitions and micro-animations
-[UNICODE] Professional color schemes and typography
-[UNICODE] Accessibility-compliant UI elements
-[UNICODE] Fast loading with lazy asset loading
-
-[CHART] SUCCESS METRICS TARGETS:
-[UNICODE] Page load time: < 2 seconds
-[UNICODE] Search response: < 500ms
-[UNICODE] Mobile compatibility: 95%+
-[UNICODE] User satisfaction: 4.5/5 rating""",
-)
+@mcp.tool
 async def export_docsify_enhanced(
     export_path: str,
     source_folder: str = "/",
@@ -278,33 +209,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
 
 
 # Legacy wrapper for backward compatibility
-@mcp.tool(
-    description="""Export Advanced Memory notes to a complete, searchable Docsify documentation website.
-
-[UNICODE][UNICODE]  DEPRECATED: Use export_docsify_enhanced for modern features!
-
-This tool transforms your knowledge base into a professional documentation site powered by Docsify.
-Docsify creates beautiful, fast-loading documentation from markdown files without requiring a build process.
-
-FEATURES:
-- Generates complete Docsify site structure with navigation
-- Creates actual markdown files with real note content (not placeholders)
-- Includes responsive design and built-in search functionality
-- Supports Mermaid diagram rendering in exported HTML
-- Handles Windows filename sanitization automatically
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where Docsify site will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- site_title (str, default="Knowledge Base"): Title for the documentation site
-- site_description (str, default="Documentation generated from Advanced Memory"): Site description
-- project (str, optional): Specific project to export from (defaults to current active project)
-
-[UNICODE][UNICODE]  DEPRECATED: This basic version lacks modern features like pagination, themes, and enhanced UI.
-Use export_docsify_enhanced instead for the full experience!
-""",
-)
+@mcp.tool
 async def export_docsify(
     export_path: str,
     source_folder: str = "/",
