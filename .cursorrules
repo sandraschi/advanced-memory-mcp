@@ -25,6 +25,13 @@
 - **Type Hints**: Required for all functions
 - **Async**: MCP tools must be async
 
+### FastMCP 2.12 Requirements
+- **NO description= parameter** in `@mcp.tool()` decorators
+- **Comprehensive docstrings** (200+ lines for complex tools)
+- **Single quotes `'''`** for docstrings (avoid nesting issues)
+- **All operations documented**: parameters, returns, examples
+- **Docstring IS documentation** (FastMCP reads it directly)
+
 ### Commands
 ```bash
 # Lint
