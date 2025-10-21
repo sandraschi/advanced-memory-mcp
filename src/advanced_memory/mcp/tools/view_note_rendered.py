@@ -7,56 +7,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool(
-    description="""Display notes as interactive HTML artifacts with rendered Mermaid diagrams.
-
-This specialized viewing tool creates an HTML artifact that renders Mermaid diagrams live
-using Mermaid.js, providing a visual viewing experience directly in Claude.
-
-RENDERING FEATURES:
-- Live Mermaid diagram rendering via CDN
-- Full markdown to HTML conversion
-- Syntax highlighting for code blocks
-- Styled presentation with proper formatting
-- Interactive diagrams (where supported by Mermaid)
-
-MERMAID SUPPORT:
-- Flowcharts (graph TD, graph LR)
-- Sequence diagrams
-- Gantt charts
-- Mind maps
-- ER diagrams
-- Class diagrams
-- State diagrams
-- All standard Mermaid types
-
-PARAMETERS:
-- identifier (str, REQUIRED): Note title, permalink, or memory:// URL
-- theme (str, default="default"): Mermaid theme (default, dark, forest, neutral)
-- page (int, default=1): Pagination page for long content
-- page_size (int, default=10): Items per page
-- project (str, optional): Target project (defaults to active project)
-
-USAGE EXAMPLES:
-Basic rendered view: view_note_rendered("System Architecture")
-Dark theme: view_note_rendered("Database Schema", theme="dark")
-By permalink: view_note_rendered("docs/mermaid-guide")
-
-RETURNS:
-Interactive HTML artifact with:
-- Rendered Mermaid diagrams
-- Formatted markdown content
-- Syntax-highlighted code blocks
-- Professional styling
-
-DIFFERENCE FROM VIEW_NOTE:
-- Renders Mermaid diagrams (not just code)
-- Returns HTML artifact (not markdown)
-- Loads Mermaid.js from CDN
-- Interactive viewing experience
-
-NOTE: Requires internet connection for Mermaid.js CDN loading.""",
-)
+@mcp.tool
 async def view_note_rendered(
     identifier: str,
     theme: str = "default",
@@ -64,21 +15,55 @@ async def view_note_rendered(
     page_size: int = 10,
     project: str | None = None,
 ) -> str:
-    """View a note with rendered Mermaid diagrams as HTML artifact.
+    '''Display notes as interactive HTML artifacts with rendered Mermaid diagrams.
 
-    This tool reads a note and displays it as an interactive HTML artifact with
-    live Mermaid diagram rendering, providing a visual experience in Claude.
+    This specialized viewing tool creates an HTML artifact that renders Mermaid diagrams live
+    using Mermaid.js, providing a visual viewing experience directly in Claude.
+
+    RENDERING FEATURES:
+    - Live Mermaid diagram rendering via CDN
+    - Full markdown to HTML conversion
+    - Syntax highlighting for code blocks
+    - Styled presentation with proper formatting
+    - Interactive diagrams (where supported by Mermaid)
+
+    MERMAID SUPPORT:
+    - Flowcharts (graph TD, graph LR)
+    - Sequence diagrams
+    - Gantt charts
+    - Mind maps
+    - ER diagrams
+    - Class diagrams
+    - State diagrams
+    - All standard Mermaid types
 
     Args:
-        identifier: The title or permalink of the note to view
-        theme: Mermaid theme (default, dark, forest, neutral)
-        page: Page number for paginated results (default: 1)
-        page_size: Number of items per page (default: 10)
-        project: Optional project name. If not provided, uses current active project.
+        identifier (str, REQUIRED): Note title, permalink, or memory:// URL
+        theme (str, default="default"): Mermaid theme (default, dark, forest, neutral)
+        page (int, default=1): Pagination page for long content
+        page_size (int, default=10): Items per page
+        project (str, optional): Target project (defaults to active project)
 
     Returns:
-        HTML artifact with rendered diagrams and formatted content.
-    """
+        Interactive HTML artifact with:
+        - Rendered Mermaid diagrams
+        - Formatted markdown content
+        - Syntax-highlighted code blocks
+        - Professional styling
+
+    Examples:
+        Basic rendered view: view_note_rendered("System Architecture")
+        Dark theme: view_note_rendered("Database Schema", theme="dark")
+        By permalink: view_note_rendered("docs/mermaid-guide")
+
+    DIFFERENCE FROM VIEW_NOTE:
+    - Renders Mermaid diagrams (not just code)
+    - Returns HTML artifact (not markdown)
+    - Loads Mermaid.js from CDN
+    - Interactive viewing experience
+
+    NOTE: Requires internet connection for Mermaid.js CDN loading.
+    '''
 
     logger.info(f"Rendering note with Mermaid: {identifier}")
 
