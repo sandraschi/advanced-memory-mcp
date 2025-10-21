@@ -1,6 +1,6 @@
 [project]
 name = "advanced-memory"
-version = "1.0.0b4"
+version = "1.0.0b5"
 description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -30,7 +30,7 @@ dependencies = [
     "alembic>=1.14.1",
     "pillow>=11.1.0",
     "pybars3>=0.9.7",
-    "fastmcp>=2.10.1",
+    "fastmcp>=2.12.0",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",

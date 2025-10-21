@@ -67,3 +67,6 @@ zettelkasten/inbox/*
 zettelkasten/converted/*
 !zettelkasten/converted/README.md
 !zettelkasten/converted/.gitkeep
+
+# Private documentation (internal dev notes, not for public)
+docs-private/
