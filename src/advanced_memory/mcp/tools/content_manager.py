@@ -691,7 +691,9 @@ Then restart and try again!"""
             continue
         if not in_frontmatter:
             # Skip metadata lines like "title:", "permalink:", etc.
-            if not line.startswith(("title:", "permalink:", "created:", "updated:", "**", "file_path:")):
+            if not line.startswith(
+                ("title:", "permalink:", "created:", "updated:", "**", "file_path:")
+            ):
                 clean_lines.append(line)
 
     text_to_speak = "\n".join(clean_lines).strip()

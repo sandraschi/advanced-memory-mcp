@@ -29,6 +29,7 @@ from advanced_memory.mcp.tools.adn_inbox import adn_inbox
 from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge
 from advanced_memory.mcp.tools.adn_navigation import adn_navigation
 from advanced_memory.mcp.tools.adn_search import adn_search
+from advanced_memory.mcp.tools.adn_skills import adn_skills
 from advanced_memory.mcp.tools.build_context import build_context
 from advanced_memory.mcp.tools.canvas import canvas
 from advanced_memory.mcp.tools.content_manager import adn_content
@@ -142,11 +143,11 @@ if _FULL_TOOLS_MODE:
         "write_note",
     ]
 else:
-    # PORTMANTEAU MODE (default): Only 12 essential tools
+    # PORTMANTEAU MODE (default): Only 13 essential tools
     __all__ = [
         "help",  # Meta tool (always included)
         "view_note_rendered",  # Bonus: Rendered Mermaid viewing
-        "adn_content",  # Content management (write, read, view, view_rendered, edit, edit_tags, move, delete)
+        "adn_content",  # Content management (write, read, view, view_rendered, edit, edit_tags, quick, daily, dictate, speak, move, delete)
         "adn_project",  # Project management (create, switch, delete, set_default, get_current, list, sync, status)
         "adn_zettelmaker",  # Zettelkasten generation and management
         "adn_inbox",  # Inbox file drop processing
@@ -154,6 +155,7 @@ else:
         "adn_import",  # Import operations (Obsidian, Joplin, Notion, Evernote, etc.)
         "adn_search",  # Search across knowledge base and external systems
         "adn_knowledge",  # Knowledge operations and research orchestration
-        "adn_navigation",  # Navigate and explore knowledge base
+        "adn_navigation",  # Navigate and explore knowledge base (+ backlinks!)
         "adn_editor",  # Editor integration (Notepad++, Typora, canvas, etc.)
+        "adn_skills",  # Claude Skills CRUD and bidirectional exchange
     ]
