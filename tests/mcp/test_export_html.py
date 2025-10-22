@@ -196,3 +196,6 @@ async def test_export_html_mermaid_diagrams(tmp_path):
             )
 
     assert "export" in result.lower()
+
+
+
