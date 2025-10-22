@@ -269,11 +269,11 @@ async def test_search_all_projects(client):
     )
 
     # Mock the projects list and search responses
-    from unittest.mock import AsyncMock, MagicMock
-    
+    from unittest.mock import MagicMock
+
     from advanced_memory.schemas.project_info import ProjectItem, ProjectList
     from advanced_memory.schemas.search import SearchItemType, SearchResult
-    
+
     mock_projects = ProjectList(
         projects=[
             ProjectItem(name="project1", path="/tmp/p1", is_default=False),
@@ -282,7 +282,7 @@ async def test_search_all_projects(client):
         current_project="project1",
         default_project="project1",
     )
-    
+
     with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
         # First call returns project list
         # Subsequent calls return search results for each project
@@ -311,14 +311,14 @@ async def test_search_all_projects(client):
                 page_size=10,
             ).model_dump()),  # Project2 search
         ]
-        
+
         with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
             mock_project = MagicMock()
             mock_project.project_url = "http://test"
             mock_get_project.return_value = mock_project
-            
+
             response = await search_notes.fn(query="multi-project", search_all_projects=True)
-            
+
             # Verify response
             assert isinstance(response, SearchResponse)
             assert len(response.results) == 2
@@ -335,7 +335,7 @@ async def test_search_all_projects_conflict_with_project_param(client):
         project="specific-project",
         search_all_projects=True,
     )
-    
+
     # Should return error message
     assert isinstance(result, str)
     assert "Error" in result
@@ -345,11 +345,11 @@ async def test_search_all_projects_conflict_with_project_param(client):
 @pytest.mark.asyncio
 async def test_search_all_projects_handles_project_errors(client):
     """Test that search_all_projects gracefully handles errors in individual projects."""
-    from unittest.mock import AsyncMock, MagicMock
-    
+    from unittest.mock import MagicMock
+
     from advanced_memory.schemas.project_info import ProjectItem, ProjectList
     from advanced_memory.schemas.search import SearchItemType, SearchResult
-    
+
     mock_projects = ProjectList(
         projects=[
             ProjectItem(name="working-project", path="/tmp/p1", is_default=False),
@@ -358,7 +358,7 @@ async def test_search_all_projects_handles_project_errors(client):
         current_project="working-project",
         default_project="working-project",
     )
-    
+
     with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
         # First call returns project list
         # Second call succeeds (working project)
@@ -378,14 +378,14 @@ async def test_search_all_projects_handles_project_errors(client):
             ).model_dump()),
             Exception("Project access denied"),  # Failing project
         ]
-        
+
         with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
             mock_project = MagicMock()
             mock_project.project_url = "http://test"
             mock_get_project.return_value = mock_project
-            
+
             response = await search_notes.fn(query="test", search_all_projects=True)
-            
+
             # Should still succeed with results from working project
             assert isinstance(response, SearchResponse)
             assert len(response.results) == 1

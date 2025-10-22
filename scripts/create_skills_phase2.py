@@ -7,9 +7,9 @@ from pathlib import Path
 def generate_skill_md(name, title, description, category, topics, instructions=""):
     """Generate SKILL.md content."""
     topics_list = "\n    - ".join(topics)
-    
+
     custom_inst = f"\n\n{instructions}" if instructions else ""
-    
+
     return f"""---
 name: {title}
 description: {description}
@@ -53,9 +53,9 @@ This skill provides expert guidance based on scholarly research, proven methodol
 
 ---
 
-**Category:** {category}  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
+**Category:** {category}
+**Difficulty:** Advanced
+**Version:** 1.0.0
 **Created:** 2025-10-21
 """
 
@@ -478,35 +478,35 @@ def main():
     """Create Phase 2 skills."""
     base_path = Path("skills")
     claude_path = Path(r"C:\Users\sandr\.config\claude\skills")
-    
+
     categories = {
         "linguistic": LINGUISTIC_SKILLS,
         "philosophy": PHILOSOPHY_SKILLS,
     }
-    
+
     total = sum(len(skills) for skills in categories.values())
     count = 0
-    
+
     print(f"\n🚀 Phase 2: Creating {total} skills...\n")
-    
+
     for category, skills in categories.items():
         print(f"📁 Category: {category}")
-        
+
         # Create category dirs
         (base_path / category).mkdir(parents=True, exist_ok=True)
         (claude_path / category).mkdir(parents=True, exist_ok=True)
-        
+
         for skill in skills:
             count += 1
             skill_name = skill["name"]
-            
+
             # Create skill dirs
             skill_dir = base_path / category / skill_name
             skill_dir.mkdir(parents=True, exist_ok=True)
-            
+
             claude_skill_dir = claude_path / category / skill_name
             claude_skill_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Generate SKILL.md
             skill_content = generate_skill_md(
                 skill_name,
@@ -516,11 +516,11 @@ def main():
                 skill["topics"],
                 skill.get("instructions", "")
             )
-            
+
             # Write to both locations
             (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
             (claude_skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
-            
+
             # Create README
             readme = f"""# {skill["title"]}
 
@@ -533,15 +533,15 @@ def main():
 
 This skill activates in Claude Desktop when you ask questions about these topics.
 
-**Category:** {category}  
-**Difficulty:** Advanced  
+**Category:** {category}
+**Difficulty:** Advanced
 **Version:** 1.0.0
 """
             (skill_dir / "README.md").write_text(readme, encoding="utf-8")
             (claude_skill_dir / "README.md").write_text(readme, encoding="utf-8")
-            
+
             print(f"  ✅ {count}/{total}: {skill_name}")
-    
+
     print(f"\n🎉 Phase 2 complete: {total} skills created!")
     print(f"📁 Local: {base_path.absolute()}")
     print(f"📁 Claude: {claude_path}")

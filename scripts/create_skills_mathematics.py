@@ -7,7 +7,7 @@ from pathlib import Path
 def generate_skill_md(name, title, description, topics, formulas):
     """Generate SKILL.md with LaTeX math."""
     topics_list = "\n    - ".join(topics)
-    
+
     return f"""---
 name: {title}
 description: {description}
@@ -59,9 +59,9 @@ Activate when the user asks about:
 
 ---
 
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
+**Category:** mathematics
+**Difficulty:** Advanced
+**Version:** 1.0.0
 **Created:** 2025-10-21
 """
 
@@ -709,7 +709,7 @@ $$
 ### Logical Connectives
 
 - Conjunction: $P \\land Q$
-- Disjunction: $P \\lor Q$  
+- Disjunction: $P \\lor Q$
 - Implication: $P \\Rightarrow Q \\equiv \\neg P \\lor Q$
 - Biconditional: $P \\Leftrightarrow Q \\equiv (P \\Rightarrow Q) \\land (Q \\Rightarrow P)$
 
@@ -863,7 +863,7 @@ $$
 
 Triple $(\\Omega, \\mathcal{F}, P)$ where:
 - $\\Omega$ is sample space
-- $\\mathcal{F}$ is σ-algebra of events  
+- $\\mathcal{F}$ is σ-algebra of events
 - $P: \\mathcal{F} \\to [0,1]$ is probability measure
 
 ### Conditional Probability
@@ -1064,31 +1064,31 @@ def main():
     """Create Mathematics skills."""
     base_path = Path("skills")
     claude_path = Path(r"C:\Users\sandr\.config\claude\skills")
-    
+
     category = "mathematics"
     skills = MATH_SKILLS
-    
+
     total = len(skills)
     count = 0
-    
+
     print(f"\n🚀 Creating {total} Mathematics skills...\n")
     print(f"📁 Category: {category}")
-    
+
     # Create category dirs
     (base_path / category).mkdir(parents=True, exist_ok=True)
     (claude_path / category).mkdir(parents=True, exist_ok=True)
-    
+
     for skill in skills:
         count += 1
         skill_name = skill["name"]
-        
+
         # Create skill dirs
         skill_dir = base_path / category / skill_name
         skill_dir.mkdir(parents=True, exist_ok=True)
-        
+
         claude_skill_dir = claude_path / category / skill_name
         claude_skill_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Generate SKILL.md
         skill_content = generate_skill_md(
             skill_name,
@@ -1097,11 +1097,11 @@ def main():
             skill["topics"],
             skill["formulas"]
         )
-        
+
         # Write to both locations
         (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
         (claude_skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
-        
+
         # Create README
         readme = f"""# {skill["title"]}
 
@@ -1123,15 +1123,15 @@ Ask mathematical questions and this skill will provide:
 - Intuitive explanations
 - Practice problems
 
-**Category:** mathematics  
-**Difficulty:** Advanced  
+**Category:** mathematics
+**Difficulty:** Advanced
 **Version:** 1.0.0
 """
         (skill_dir / "README.md").write_text(readme, encoding="utf-8")
         (claude_skill_dir / "README.md").write_text(readme, encoding="utf-8")
-        
+
         print(f"  ✅ {count}/{total}: {skill_name}")
-    
+
     print(f"\n🎉 Mathematics category complete: {total} skills created!")
     print(f"📁 Local: {base_path.absolute()}/{category}")
     print(f"📁 Claude: {claude_path}/{category}")

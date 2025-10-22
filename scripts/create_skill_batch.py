@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """Batch skill creation script for Claude Desktop."""
 
-import json
 from pathlib import Path
 
 
 def generate_skill_markdown(skill_data, category):
     """Generate SKILL.md content."""
     topics_str = "\n    - ".join(skill_data["topics"])
-    
+
     return f"""---
 name: {skill_data["title"]}
 description: {skill_data["description"]}
@@ -52,9 +51,9 @@ Activate when the user asks about:
 
 ---
 
-**Category:** {category}  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** {category}
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP
 """
 
@@ -284,39 +283,39 @@ def main():
     """Create all skills."""
     base_path = Path("skills")
     claude_path = Path(r"C:\Users\sandr\.config\claude\skills")
-    
+
     total = sum(len(skills) for skills in SKILLS.values())
     count = 0
-    
+
     print(f"\n🚀 Creating {total} skills...\n")
-    
+
     for category, skills in SKILLS.items():
         print(f"📁 Category: {category}")
-        
+
         # Create category dir in both locations
         (base_path / category).mkdir(parents=True, exist_ok=True)
         (claude_path / category).mkdir(parents=True, exist_ok=True)
-        
+
         for skill in skills:
             count += 1
             skill_name = skill["name"]
-            
+
             # Create skill directory
             skill_dir = base_path / category / skill_name
             skill_dir.mkdir(parents=True, exist_ok=True)
-            
+
             claude_skill_dir = claude_path / category / skill_name
             claude_skill_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Generate SKILL.md
             skill_content = generate_skill_markdown(skill, category)
             skill_file = skill_dir / "SKILL.md"
             skill_file.write_text(skill_content, encoding="utf-8")
-            
+
             # Copy to Claude Desktop
             claude_skill_file = claude_skill_dir / "SKILL.md"
             claude_skill_file.write_text(skill_content, encoding="utf-8")
-            
+
             # Create README
             readme_content = f"""# {skill["title"]}
 
@@ -329,17 +328,17 @@ def main():
 
 This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
 
-**Category:** {category}  
+**Category:** {category}
 **Version:** 1.0.0
 """
             readme_file = skill_dir / "README.md"
             readme_file.write_text(readme_content, encoding="utf-8")
-            
+
             claude_readme = claude_skill_dir / "README.md"
             claude_readme.write_text(readme_content, encoding="utf-8")
-            
+
             print(f"  ✅ {count}/{total}: {skill_name}")
-    
+
     print(f"\n🎉 Created {total} skills!")
     print(f"📁 Local: {base_path.absolute()}")
     print(f"📁 Claude: {claude_path}")
