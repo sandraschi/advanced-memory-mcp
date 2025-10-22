@@ -162,26 +162,29 @@ def test_tool_signatures():
 
 
 def test_tool_count():
-    """Test that we have exactly 8 portmanteau tools."""
+    """Test that we have exactly 11 portmanteau tools (v1.1.0)."""
     try:
         from advanced_memory.mcp.tools import __all__
 
-        # Count portmanteau tools (should be first 8 in __all__)
+        # Count portmanteau tools (adn_* prefix)
         portmanteau_tools = [tool for tool in __all__ if tool.startswith("adn_")]
 
-        assert len(portmanteau_tools) == 8, (
-            f"Expected 8 portmanteau tools, found {len(portmanteau_tools)}"
+        assert len(portmanteau_tools) == 11, (
+            f"Expected 11 portmanteau tools, found {len(portmanteau_tools)}"
         )
 
         expected_tools = [
-            "adn_content",
-            "adn_project",
-            "adn_export",
-            "adn_import",
-            "adn_search",
-            "adn_knowledge",
-            "adn_navigation",
-            "adn_editor",
+            "adn_content",      # Core CRUD
+            "adn_audio",        # Voice operations (NEW in v1.1.0)
+            "adn_project",      # Project management
+            "adn_export",       # Export operations
+            "adn_import",       # Import operations
+            "adn_search",       # Search operations
+            "adn_knowledge",    # Knowledge operations
+            "adn_zettelmaker",  # Template generation
+            "adn_skills",       # Claude Skills
+            "adn_navigation",   # Navigation
+            "adn_inbox",        # Inbox processing
         ]
 
         for tool in expected_tools:
@@ -214,7 +217,7 @@ def main():
 
     if passed == total:
         print("[SUCCESS] All portmanteau tools working correctly!")
-        print("Ready for Cursor IDE with 8 consolidated tools!")
+        print("Ready for Cursor IDE with 11 portmanteau tools + 3 utilities = 14 total!")
         return True
     else:
         print("[FAILURE] Some tests failed")
