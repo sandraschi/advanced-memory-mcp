@@ -350,18 +350,18 @@ async def search_notes(
         if project:
             # Can't specify both
             return "Error: Cannot use both 'project' and 'search_all_projects=True'. Please use one or the other."
-        
+
         logger.info(f"Searching across ALL projects for: {search_query}")
-        
+
         # Get list of all projects
         from advanced_memory.schemas.project_info import ProjectList
-        
+
         projects_response = await call_post(client, "/projects/projects", json={})
         project_list = ProjectList.model_validate(projects_response.json())
-        
+
         # Search each project and merge results
         all_results = []
-        
+
         for proj in project_list.projects:
             try:
                 proj_obj = get_active_project(proj.name)
@@ -372,17 +372,17 @@ async def search_notes(
                     params={"page": page, "page_size": results_per_page},
                 )
                 proj_result = SearchResponse.model_validate(response.json())
-                
+
                 # Add project name to each result for context
                 for item in proj_result.results:
                     if hasattr(item, 'title'):
                         item.title = f"[{proj.name}] {item.title}"
-                
+
                 all_results.extend(proj_result.results)
             except Exception as e:
                 logger.warning(f"Failed to search project {proj.name}: {e}")
                 continue
-        
+
         # Return merged results (note: SearchResponse doesn't have total_count field)
         return SearchResponse(
             results=all_results[:results_per_page],  # Respect page size

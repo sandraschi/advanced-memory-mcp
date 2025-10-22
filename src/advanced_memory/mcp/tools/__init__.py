@@ -5,11 +5,19 @@ Advanced Memory through the MCP protocol. Importing this module registers
 all tools with the MCP server.
 
 The tools are organized into portmanteau tools for better Cursor IDE compatibility,
-reducing the total number of tools while maintaining full functionality.
+reducing the total number of tools while maintaining full functionality and clear
+conceptual boundaries.
 
 Tool Exposure Modes:
-- PORTMANTEAU MODE (default): Only 12 essential portmanteau tools
+- PORTMANTEAU MODE (default): 14 well-organized portmanteau tools
 - FULL MODE (opt-in): All ~50+ tools (set ADVANCED_MEMORY_FULL_TOOLS_MODE=true)
+
+Recent Changes (v1.1.0):
+- Audio operations (dictate, speak) extracted to adn_audio tool
+- Typora editor exposed as standalone typora_control (for skill editing)
+- Canvas creation exposed as standalone canvas tool
+- Notepad++ integration removed (use notepadpp-mcp server)
+- adn_editor portmanteau deprecated (empty after extractions)
 """
 
 import os
@@ -22,6 +30,7 @@ _FULL_TOOLS_MODE = os.getenv("ADVANCED_MEMORY_FULL_TOOLS_MODE", "false").lower()
 )
 
 # Import portmanteau tools (consolidated for Cursor IDE compatibility)
+from advanced_memory.mcp.tools.adn_audio import adn_audio
 from advanced_memory.mcp.tools.adn_editor import adn_editor
 from advanced_memory.mcp.tools.adn_export import adn_export
 from advanced_memory.mcp.tools.adn_import import adn_import
@@ -84,8 +93,9 @@ from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 if _FULL_TOOLS_MODE:
     # FULL MODE (opt-in): All ~50+ tools (portmanteau + individual legacy tools)
     __all__ = [
-        # Complete portmanteau tool suite (11 tools total)
+        # Complete portmanteau tool suite (12 tools total)
         "adn_content",  # Consolidates: write_note, read_note, view_note, view_note_rendered, edit_note, move_note, delete_note
+        "adn_audio",  # Voice operations: dictate, speak (extracted from adn_content)
         "adn_project",  # Consolidates: create, switch, delete, set_default, get_current, list, sync, status
         "adn_zettelmaker",  # Consolidates: generate, customize, expand, suggest, connect, analyze
         "adn_inbox",  # Consolidates: inbox status, process, info, watch (file drop processing)
@@ -94,8 +104,10 @@ if _FULL_TOOLS_MODE:
         "adn_search",  # Consolidates: search_notes, search_obsidian_vault, search_joplin_vault, search_notion_vault, search_evernote_vault
         "adn_knowledge",  # Consolidates: knowledge_operations, research_orchestrator
         "adn_navigation",  # Consolidates: build_context, recent_activity, list_directory, status, sync_status
-        "adn_editor",  # Consolidates: edit_in_notepadpp, import_from_notepadpp, typora_control, canvas, read_content
+        "adn_editor",  # DEPRECATED: Kept for internal use only (not exposed in default mode)
         # Bonus standalone tools
+        "canvas",  # Obsidian Canvas creation (extracted from adn_editor)
+        "typora_control",  # Typora editor control (extracted from adn_editor)
         "view_note_rendered",  # Rendered Mermaid diagrams (also accessible via adn_content)
         # Legacy individual tools (for backward compatibility)
         "build_context",
@@ -143,19 +155,34 @@ if _FULL_TOOLS_MODE:
         "write_note",
     ]
 else:
-    # PORTMANTEAU MODE (default): Only 13 essential tools
+    # PORTMANTEAU MODE (default): 14 well-organized tools
     __all__ = [
+        # Meta & Utilities
         "help",  # Meta tool (always included)
-        "view_note_rendered",  # Bonus: Rendered Mermaid viewing
-        "adn_content",  # Content management (write, read, view, view_rendered, edit, edit_tags, quick, daily, dictate, speak, move, delete)
-        "adn_project",  # Project management (create, switch, delete, set_default, get_current, list, sync, status)
-        "adn_zettelmaker",  # Zettelkasten generation and management
-        "adn_inbox",  # Inbox file drop processing
+        "canvas",  # Obsidian Canvas creation
+        "typora_control",  # Typora editor (for manual skill editing)
+        "view_note_rendered",  # Rendered Mermaid viewing
+
+        # Core Operations
+        "adn_content",  # Content CRUD (write, read, view, edit, move, delete, quick, daily)
+        "adn_search",  # Search across knowledge base and external systems
         "adn_export",  # Export operations (pandoc, docsify, html, pdf, archive, etc.)
         "adn_import",  # Import operations (Obsidian, Joplin, Notion, Evernote, etc.)
-        "adn_search",  # Search across knowledge base and external systems
+
+        # Rich Features
+        "adn_audio",  # Voice operations (dictate, speak) - optional deps
+
+        # Knowledge Management
         "adn_knowledge",  # Knowledge operations and research orchestration
-        "adn_navigation",  # Navigate and explore knowledge base (+ backlinks!)
-        "adn_editor",  # Editor integration (Notepad++, Typora, canvas, etc.)
+        "adn_zettelmaker",  # Zettelkasten generation and management
         "adn_skills",  # Claude Skills CRUD and bidirectional exchange
+
+        # Navigation & System
+        "adn_navigation",  # Navigate and explore knowledge base (+ backlinks!)
+        "adn_project",  # Project management (create, switch, delete, set_default, etc.)
+        "adn_inbox",  # Inbox file drop processing
     ]
+    # Note: adn_editor removed (empty after Notepad++ removal and tool extractions)
+    # - Notepad++ → Use notepadpp-mcp server instead
+    # - Typora → Exposed as standalone typora_control
+    # - Canvas → Exposed as standalone canvas

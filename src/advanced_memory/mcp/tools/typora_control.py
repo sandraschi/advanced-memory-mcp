@@ -3,9 +3,13 @@ Typora Control via json_rpc Plugin
 
 Swiss Army Knife tool for full Typora automation using the obgnail/typora_plugin json_rpc plugin.
 
+PRIMARY USE CASE: Manual editing of long skill markdown files in a rich editor.
+
 REQUIRES: obgnail/typora_plugin with json_rpc enabled on port 8888
 
 Provides direct API control of Typora without GUI automation brittleness.
+
+NOTE: For quick note editing, use adn_content. For Notepad++ workflows, use notepadpp-mcp server.
 """
 
 import asyncio
