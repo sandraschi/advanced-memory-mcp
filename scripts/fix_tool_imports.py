@@ -1,4 +1,12 @@
-"""MCP tools for Advanced Memory.
+#!/usr/bin/env python3
+"""Fix tool imports to use conditional loading based on mode.
+
+This script rewrites src/advanced_memory/mcp/tools/__init__.py to only import
+portmanteau tools in default mode, preventing tool explosion in Claude Desktop.
+"""
+
+# The corrected file content
+FIXED_CONTENT = '''"""MCP tools for Advanced Memory.
 
 This package provides the complete set of tools for interacting with
 Advanced Memory through the MCP protocol. Importing this module registers
@@ -92,21 +100,21 @@ if _FULL_TOOLS_MODE:
     from .zettelmaker import adn_zettelmaker
 else:
     # PORTMANTEAU MODE (default): Import ONLY 15 portmanteau tools
-    from .adn_audio import adn_audio
-    from .adn_export import adn_export
-    from .adn_import import adn_import
-    from .adn_inbox import adn_inbox
-    from .adn_knowledge import adn_knowledge
-    from .adn_navigation import adn_navigation
-    from .adn_search import adn_search
-    from .adn_skills import adn_skills
-    from .canvas import canvas
-    from .content_manager import adn_content
     from .help import help
-    from .project_manager import adn_project
+    from .canvas import canvas
     from .typora_control import typora_control
     from .view_note_rendered import view_note_rendered
+    from .content_manager import adn_content
+    from .adn_search import adn_search
+    from .adn_export import adn_export
+    from .adn_import import adn_import
+    from .adn_audio import adn_audio
+    from .adn_knowledge import adn_knowledge
     from .zettelmaker import adn_zettelmaker
+    from .adn_skills import adn_skills
+    from .adn_navigation import adn_navigation
+    from .project_manager import adn_project
+    from .adn_inbox import adn_inbox
 
 # Simple __all__ export
 __all__ = [
@@ -126,3 +134,27 @@ __all__ = [
     "adn_project",
     "adn_inbox",
 ]
+'''
+
+if __name__ == "__main__":
+    import os
+    import sys
+
+    # Find the file
+    file_path = "src/advanced_memory/mcp/tools/__init__.py"
+
+    if not os.path.exists(file_path):
+        print(f"Error: {file_path} not found")
+        sys.exit(1)
+
+    # Write the fixed content
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(FIXED_CONTENT)
+
+    print(f"✅ Fixed {file_path}")
+    print("   - Moved imports inside conditional blocks")
+    print("   - Portmanteau mode (default): 15 tools")
+    print("   - Full mode (opt-in): 56 tools")
+    print(
+        '\nTest with: python -c "from src.advanced_memory.mcp.tools import __all__; print(len(__all__))"'
+    )

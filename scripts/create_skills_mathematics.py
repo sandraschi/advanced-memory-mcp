@@ -79,7 +79,7 @@ MATH_SKILLS = [
             "Sequences and series convergence",
             "Taylor and Maclaurin series",
             "Multivariable calculus and partial derivatives",
-            "Vector calculus (gradient, divergence, curl)"
+            "Vector calculus (gradient, divergence, curl)",
         ],
         "formulas": """## Core Concepts
 
@@ -121,7 +121,7 @@ $$
 ### Multivariable
 
 Gradient: $\\nabla f = \\left(\\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z}\\right)$
-"""
+""",
     },
     {
         "name": "linear-algebra-expert",
@@ -135,7 +135,7 @@ Gradient: $\\nabla f = \\left(\\frac{\\partial f}{\\partial x}, \\frac{\\partial
             "Inner products and orthogonality",
             "Determinants and inverses",
             "Applications to machine learning",
-            "Numerical linear algebra"
+            "Numerical linear algebra",
         ],
         "formulas": """## Core Concepts
 
@@ -177,7 +177,7 @@ $$
 - $\\det(AB) = \\det(A)\\det(B)$
 - $\\det(A^T) = \\det(A)$
 - $\\det(A^{-1}) = \\frac{1}{\\det(A)}$
-"""
+""",
     },
     {
         "name": "statistics-probability-guide",
@@ -191,7 +191,7 @@ $$
             "Hypothesis testing and p-values",
             "Confidence intervals",
             "Regression analysis",
-            "Bayesian statistics"
+            "Bayesian statistics",
         ],
         "formulas": """## Core Concepts
 
@@ -236,7 +236,7 @@ $$
 $$
 
 Where: $\\beta_1 = \\frac{\\text{Cov}(X,Y)}{\\text{Var}(X)}$
-"""
+""",
     },
     {
         "name": "abstract-algebra-specialist",
@@ -250,7 +250,7 @@ Where: $\\beta_1 = \\frac{\\text{Cov}(X,Y)}{\\text{Var}(X)}$
             "Quotient structures",
             "Galois theory",
             "Applications to cryptography",
-            "Representation theory"
+            "Representation theory",
         ],
         "formulas": """## Core Definitions
 
@@ -285,7 +285,7 @@ $$
 $$
 
 Kernel: $\\ker(\\phi) = \\{g \\in G : \\phi(g) = e\\}$
-"""
+""",
     },
     {
         "name": "number-theory-explorer",
@@ -299,7 +299,7 @@ Kernel: $\\ker(\\phi) = \\{g \\in G : \\phi(g) = e\\}$
             "Fermat's Little Theorem",
             "Euler's totient function",
             "Quadratic reciprocity",
-            "Cryptographic applications (RSA)"
+            "Cryptographic applications (RSA)",
         ],
         "formulas": """## Fundamental Theorems
 
@@ -337,7 +337,7 @@ $$
 ### Chinese Remainder Theorem
 
 System $x \\equiv a_i \\pmod{n_i}$ has unique solution modulo $N = \\prod n_i$ when $\\gcd(n_i, n_j) = 1$.
-"""
+""",
     },
     {
         "name": "topology-geometry-guide",
@@ -351,7 +351,7 @@ System $x \\equiv a_i \\pmod{n_i}$ has unique solution modulo $N = \\prod n_i$ w
             "Manifolds and differential geometry",
             "Euler characteristic",
             "Knot theory basics",
-            "Geometric visualization"
+            "Geometric visualization",
         ],
         "formulas": """## Fundamental Concepts
 
@@ -391,7 +391,7 @@ d: \\Omega^k(M) \\to \\Omega^{k+1}(M)
 $$
 
 Satisfies $d^2 = 0$.
-"""
+""",
     },
     {
         "name": "mathematical-proofs-mentor",
@@ -405,7 +405,7 @@ Satisfies $d^2 = 0$.
             "Existence and uniqueness proofs",
             "Proof writing style and clarity",
             "Common proof patterns",
-            "Verification and error checking"
+            "Verification and error checking",
         ],
         "formulas": """## Proof Techniques
 
@@ -437,7 +437,7 @@ Contradiction: $\\frac{p}{q}$ not in lowest terms! $\\Box$
 To prove $P \\Rightarrow Q$, prove $\\neg Q \\Rightarrow \\neg P$.
 
 Logically equivalent: $(P \\Rightarrow Q) \\equiv (\\neg Q \\Rightarrow \\neg P)$
-"""
+""",
     },
     {
         "name": "differential-equations-solver",
@@ -451,7 +451,7 @@ Logically equivalent: $(P \\Rightarrow Q) \\equiv (\\neg Q \\Rightarrow \\neg P)
             "Partial differential equations",
             "Boundary value problems",
             "Stability analysis",
-            "Numerical methods (Euler, Runge-Kutta)"
+            "Numerical methods (Euler, Runge-Kutta)",
         ],
         "formulas": """## Ordinary Differential Equations
 
@@ -487,7 +487,7 @@ $$
 $$
 \\frac{\\partial u}{\\partial t} = k\\frac{\\partial^2 u}{\\partial x^2}
 $$
-"""
+""",
     },
     {
         "name": "discrete-mathematics-expert",
@@ -501,7 +501,7 @@ $$
             "Discrete probability",
             "Boolean algebra and logic circuits",
             "Algorithm analysis and complexity",
-            "Number theory applications"
+            "Number theory applications",
         ],
         "formulas": """## Combinatorial Formulas
 
@@ -538,7 +538,7 @@ For sequence $\\{a_n\\}$:
 $$
 G(x) = \\sum_{n=0}^{\\infty} a_n x^n
 $$
-"""
+""",
     },
     {
         "name": "real-analysis-fundamentals",
@@ -552,7 +552,7 @@ $$
             "Uniform convergence",
             "Riemann integration",
             "Measure theory basics",
-            "Metric space topology"
+            "Metric space topology",
         ],
         "formulas": """## Rigorous Foundations
 
@@ -585,7 +585,7 @@ $$
 $$
 \\forall \\varepsilon > 0, \\exists N: n > N, x \\in D \\Rightarrow |f_n(x) - f(x)| < \\varepsilon
 $$
-"""
+""",
     },
     {
         "name": "complex-analysis-expert",
@@ -599,7 +599,7 @@ $$
             "Residue theorem and applications",
             "Laurent series",
             "Conformal mappings",
-            "Applications to physics and engineering"
+            "Applications to physics and engineering",
         ],
         "formulas": """## Complex Analysis
 
@@ -630,7 +630,7 @@ f(z) = \\sum_{n=-\\infty}^{\\infty} a_n(z-z_0)^n
 $$
 
 Residue is $a_{-1}$ coefficient.
-"""
+""",
     },
     {
         "name": "numerical-methods-expert",
@@ -644,7 +644,7 @@ Residue is $a_{-1}$ coefficient.
             "Interpolation and approximation",
             "ODE solvers (Euler, Runge-Kutta)",
             "Error analysis and stability",
-            "Optimization algorithms"
+            "Optimization algorithms",
         ],
         "formulas": """## Numerical Algorithms
 
@@ -688,7 +688,7 @@ $$
 $$
 |f(x) - P_n(x)| \\leq \\frac{M|x-a|^{n+1}}{(n+1)!}
 $$
-"""
+""",
     },
     {
         "name": "mathematical-logic-expert",
@@ -702,7 +702,7 @@ $$
             "Computability and decidability",
             "Set theory (ZFC axioms)",
             "Axiom of Choice implications",
-            "Foundations of mathematics"
+            "Foundations of mathematics",
         ],
         "formulas": """## Logical Foundations
 
@@ -740,7 +740,7 @@ $$
 $$
 
 "True but unprovable statements exist"
-"""
+""",
     },
     {
         "name": "optimization-theory-expert",
@@ -754,7 +754,7 @@ $$
             "KKT conditions",
             "Integer programming",
             "Dynamic programming",
-            "Metaheuristic optimization"
+            "Metaheuristic optimization",
         ],
         "formulas": """## Optimization Methods
 
@@ -791,7 +791,7 @@ $$
 & x \\geq 0
 \\end{align}
 $$
-"""
+""",
     },
     {
         "name": "applied-mathematics-engineering",
@@ -805,7 +805,7 @@ $$
             "Variational calculus",
             "Green's functions",
             "Boundary value problems",
-            "Engineering mathematics applications"
+            "Engineering mathematics applications",
         ],
         "formulas": """## Applied Mathematics
 
@@ -841,7 +841,7 @@ $$
 $$
 \\int_V (\\nabla \\cdot \\mathbf{F})\\,dV = \\oint_S \\mathbf{F} \\cdot d\\mathbf{S}
 $$
-"""
+""",
     },
     {
         "name": "probability-theory-expert",
@@ -855,7 +855,7 @@ $$
             "Central Limit Theorem proofs",
             "Martingales",
             "Stochastic processes",
-            "Markov chains"
+            "Markov chains",
         ],
         "formulas": """## Probability Theory
 
@@ -895,7 +895,7 @@ $$
 $$
 M_X(t) = E[e^{tX}] = \\int_{-\\infty}^{\\infty} e^{tx}f(x)\\,dx
 $$
-"""
+""",
     },
     {
         "name": "game-theory-strategist",
@@ -909,7 +909,7 @@ $$
             "Sequential games and backward induction",
             "Repeated games",
             "Cooperative game theory",
-            "Auction theory and mechanism design"
+            "Auction theory and mechanism design",
         ],
         "formulas": """## Game Theory
 
@@ -951,7 +951,7 @@ C & (3,3) & (0,5) \\\\
 D & (5,0) & (1,1)
 \\end{array}
 $$
-"""
+""",
     },
     {
         "name": "matrix-theory-specialist",
@@ -965,7 +965,7 @@ $$
             "Matrix calculus",
             "Kronecker products",
             "Numerical stability",
-            "Applications to data science"
+            "Applications to data science",
         ],
         "formulas": """## Advanced Matrix Theory
 
@@ -1006,7 +1006,7 @@ $$
 $$
 
 Large $\\kappa$ indicates ill-conditioning.
-"""
+""",
     },
     {
         "name": "fourier-analysis-expert",
@@ -1020,7 +1020,7 @@ Large $\\kappa$ indicates ill-conditioning.
             "Parseval's identity",
             "Signal processing applications",
             "Harmonic analysis",
-            "Wavelets and time-frequency analysis"
+            "Wavelets and time-frequency analysis",
         ],
         "formulas": """## Fourier Analysis
 
@@ -1055,7 +1055,7 @@ X_k = \\sum_{n=0}^{N-1} x_n e^{-2\\pi i kn/N}
 $$
 
 FFT computes this in $O(N\\log N)$ instead of $O(N^2)$.
-"""
+""",
     },
 ]
 
@@ -1091,11 +1091,7 @@ def main():
 
         # Generate SKILL.md
         skill_content = generate_skill_md(
-            skill_name,
-            skill["title"],
-            skill["description"],
-            skill["topics"],
-            skill["formulas"]
+            skill_name, skill["title"], skill["description"], skill["topics"], skill["formulas"]
         )
 
         # Write to both locations
@@ -1141,4 +1137,3 @@ Ask mathematical questions and this skill will provide:
 
 if __name__ == "__main__":
     main()
-

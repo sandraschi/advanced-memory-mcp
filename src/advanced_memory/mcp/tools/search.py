@@ -375,7 +375,7 @@ async def search_notes(
 
                 # Add project name to each result for context
                 for item in proj_result.results:
-                    if hasattr(item, 'title'):
+                    if hasattr(item, "title"):
                         item.title = f"[{proj.name}] {item.title}"
 
                 all_results.extend(proj_result.results)

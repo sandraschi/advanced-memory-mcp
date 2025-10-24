@@ -1,6 +1,22 @@
 # advanced-memory-mcp Cursor Rules
 
-## Triple Initiatives (Active)
+## 📚 RULE #1: Check Central Documentation First
+
+**BEFORE making any changes, ALWAYS check:**
+
+- **Central Docs Location:** `D:\Dev\repos\mcp-central-docs\`
+- **Standards:** `mcp-central-docs/STANDARDS.md` - Documentation standards
+- **FastMCP Guide:** `mcp-central-docs/FASTMCP_2.12_MIGRATION.md` - Framework standards  
+- **MCPB Packaging:** `mcp-central-docs/MCPB_PACKAGING_STANDARDS.md` - Package standards
+- **Patterns:** `mcp-central-docs/patterns/` - Design patterns (portmanteau, etc.)
+- **Templates:** `mcp-central-docs/templates/` - Documentation templates
+- **This Repo Status:** `mcp-central-docs/repos/advanced-memory-mcp/STATUS.md` - Improvement tracking
+
+**Why central docs?** Single source of truth for all MCP projects. Prevents duplication and ensures consistency.
+
+---
+
+## 🎯 Triple Initiatives (Active)
 
 **This repo is part of three parallel improvement initiatives:**
 
@@ -8,11 +24,8 @@
 2. **GitHub Dash** - CI/CD Modernization (Target: 8.0+/10)  
 3. **Release Flash** - Successful Releases (Target: Zero errors)
 
-**Priority**: CRITICAL (FastMCP 2.12 upgrade needed)
-
-📋 **Improvement Plan**: `docs-private/TRIPLE_INITIATIVES_GUIDE.md`  
-📚 **Central Docs**: `D:\Dev\repos\mcp-central-docs\`  
-🔗 **Standards**: `mcp-central-docs/STANDARDS.md`
+📋 **This Repo's Plan:** `docs-private/TRIPLE_INITIATIVES_GUIDE.md`  
+📊 **Priority:** CRITICAL (FastMCP 2.12 upgrade needed)
 
 ---
 

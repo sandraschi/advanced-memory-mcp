@@ -68,7 +68,7 @@ SCIENCE_SKILLS = [
             "Quantum mechanics fundamentals",
             "Special and general relativity",
             "Particle physics basics",
-            "Astrophysics and cosmology"
+            "Astrophysics and cosmology",
         ],
         "special_content": """## Core Physics Laws
 
@@ -94,7 +94,7 @@ $$
 $$
 E = mc^2
 $$
-"""
+""",
     },
     {
         "name": "chemistry-lab-techniques",
@@ -108,8 +108,8 @@ $$
             "Lab safety and equipment",
             "Spectroscopy (NMR, IR, MS)",
             "Synthesis and purification methods",
-            "Green chemistry principles"
-        ]
+            "Green chemistry principles",
+        ],
     },
     {
         "name": "biology-comprehensive-guide",
@@ -123,8 +123,8 @@ $$
             "Ecology and ecosystems",
             "Human physiology",
             "Microbiology and virology",
-            "Biotechnology applications"
-        ]
+            "Biotechnology applications",
+        ],
     },
     {
         "name": "astronomy-astrophysics-expert",
@@ -138,8 +138,8 @@ $$
             "Black holes and relativity",
             "Exoplanets and astrobiology",
             "Observational astronomy",
-            "Space missions and exploration"
-        ]
+            "Space missions and exploration",
+        ],
     },
     {
         "name": "quantum-mechanics-explainer",
@@ -153,7 +153,7 @@ $$
             "Quantum operators and observables",
             "Quantum tunneling",
             "Interpretations of quantum mechanics",
-            "Applications to quantum computing"
+            "Applications to quantum computing",
         ],
         "special_content": """## Quantum Foundations
 
@@ -176,7 +176,7 @@ $$
 $$
 \\langle A \\rangle = \\int \\psi^* \\hat{A} \\psi\\,dx
 $$
-"""
+""",
     },
     {
         "name": "genetics-genomics-expert",
@@ -190,8 +190,8 @@ $$
             "Genomics and sequencing technologies",
             "CRISPR and gene editing",
             "Genetic diseases",
-            "Evolutionary genetics"
-        ]
+            "Evolutionary genetics",
+        ],
     },
     {
         "name": "neuroscience-fundamentals",
@@ -205,8 +205,8 @@ $$
             "Sensory systems",
             "Cognitive neuroscience",
             "Neuroplasticity",
-            "Neurological and psychiatric disorders"
-        ]
+            "Neurological and psychiatric disorders",
+        ],
     },
     {
         "name": "ecology-evolution-specialist",
@@ -220,8 +220,8 @@ $$
             "Biodiversity and conservation",
             "Evolutionary development (evo-devo)",
             "Speciation and phylogenetics",
-            "Climate change and ecology"
-        ]
+            "Climate change and ecology",
+        ],
     },
     {
         "name": "geology-earth-science",
@@ -235,8 +235,8 @@ $$
             "Fossils and paleontology",
             "Volcanology and seismology",
             "Hydrogeology and water resources",
-            "Environmental geology"
-        ]
+            "Environmental geology",
+        ],
     },
     {
         "name": "climate-science-explainer",
@@ -250,8 +250,8 @@ $$
             "Climate change impacts",
             "Mitigation and adaptation strategies",
             "Climate policy and economics",
-            "Paleoclimatology"
-        ]
+            "Paleoclimatology",
+        ],
     },
     {
         "name": "materials-science-specialist",
@@ -265,8 +265,8 @@ $$
             "Composites",
             "Nanomaterials",
             "Materials testing and characterization",
-            "Failure analysis"
-        ]
+            "Failure analysis",
+        ],
     },
     {
         "name": "oceanography-specialist",
@@ -280,8 +280,8 @@ $$
             "Waves, tides, and coastal processes",
             "Ocean and climate interactions",
             "Marine biodiversity",
-            "Ocean exploration and technology"
-        ]
+            "Ocean exploration and technology",
+        ],
     },
 ]
 
@@ -298,7 +298,7 @@ NONSENSE_SKILLS = [
             "Rider-Waite, Thoth, and Marseille traditions",
             "Reversed card interpretations",
             "Intuitive vs traditional reading approaches",
-            "Tarot journaling and study methods"
+            "Tarot journaling and study methods",
         ],
         "special_content": """## Tarot Framework
 
@@ -327,7 +327,7 @@ NONSENSE_SKILLS = [
 6. **Reflection** - Personal insights and guidance
 
 **Important:** Present tarot as self-reflection tool, not fortune-telling. Focus on psychological insights and personal growth.
-"""
+""",
     },
     {
         "name": "seance-spiritualism-guide",
@@ -342,7 +342,7 @@ NONSENSE_SKILLS = [
             "Automatic writing practices",
             "Victorian spiritualism",
             "Modern spiritualist practices",
-            "Critical perspective and skepticism"
+            "Critical perspective and skepticism",
         ],
         "special_content": """## Séance Traditions
 
@@ -391,7 +391,7 @@ NONSENSE_SKILLS = [
 - Exploit grieving individuals
 - Present as scientifically validated
 - Encourage dependency on readings
-"""
+""",
     },
     {
         "name": "astrology-interpretation-guide",
@@ -405,7 +405,7 @@ NONSENSE_SKILLS = [
             "Transits and progressions",
             "Western vs Vedic (Jyotish) astrology",
             "Moon phases and lunar astrology",
-            "Astrological compatibility"
+            "Astrological compatibility",
         ],
         "special_content": """## Astrological Framework
 
@@ -438,7 +438,7 @@ NONSENSE_SKILLS = [
 - **Opposition** (180°) - Balance, awareness, projection
 
 **Critical framing:** Present as psychological archetype system and self-reflection tool, not deterministic prediction.
-"""
+""",
     },
     {
         "name": "crystal-healing-traditions",
@@ -452,7 +452,7 @@ NONSENSE_SKILLS = [
             "Cleansing and charging practices",
             "Gemstone identification",
             "Historical crystal lore",
-            "Scientific vs metaphysical perspectives"
+            "Scientific vs metaphysical perspectives",
         ],
         "special_content": """## Crystal Knowledge
 
@@ -487,7 +487,7 @@ NONSENSE_SKILLS = [
 - Note lack of scientific evidence for healing claims
 - Respect personal beliefs while encouraging critical thinking
 - Focus on aesthetic appreciation and mindfulness aspects
-"""
+""",
     },
     {
         "name": "numerology-interpretation",
@@ -501,7 +501,7 @@ NONSENSE_SKILLS = [
             "Master numbers (11, 22, 33)",
             "Number meanings and symbolism",
             "Name analysis",
-            "Personal year and cycles"
+            "Personal year and cycles",
         ],
         "special_content": """## Numerology Systems
 
@@ -533,7 +533,7 @@ Example: 10/21/1985
 - **33** - Master teacher, compassionate service
 
 **Framework:** Present as symbolic interpretation tool for self-reflection, not predictive science.
-"""
+""",
     },
     {
         "name": "palmistry-chiromancy-guide",
@@ -547,8 +547,8 @@ Example: 10/21/1985
             "Finger lengths and proportions",
             "Traditional vs modern palmistry",
             "Cross-cultural palm reading traditions",
-            "Psychological vs predictive approaches"
-        ]
+            "Psychological vs predictive approaches",
+        ],
     },
     {
         "name": "dream-interpretation-analyst",
@@ -562,8 +562,8 @@ Example: 10/21/1985
             "Dream journaling methods",
             "Nightmares and recurring dreams",
             "Cultural dream symbolism",
-            "Modern neuroscience of dreaming"
-        ]
+            "Modern neuroscience of dreaming",
+        ],
     },
     {
         "name": "mythology-archetype-expert",
@@ -577,8 +577,8 @@ Example: 10/21/1985
             "Celtic and Arthurian legends",
             "Jungian archetypes",
             "Hero's Journey (monomyth)",
-            "Comparative mythology patterns"
-        ]
+            "Comparative mythology patterns",
+        ],
     },
     {
         "name": "feng-shui-space-harmony",
@@ -592,8 +592,8 @@ Example: 10/21/1985
             "Color and material associations",
             "Room-by-room guidance",
             "Traditional vs Western feng shui",
-            "Modern interior design integration"
-        ]
+            "Modern interior design integration",
+        ],
     },
     {
         "name": "i-ching-oracle-guide",
@@ -607,7 +607,7 @@ Example: 10/21/1985
             "Wilhelm/Baynes translation",
             "Confucian commentary tradition",
             "Taoist interpretations",
-            "Modern psychological approaches"
+            "Modern psychological approaches",
         ],
         "special_content": """## I Ching Structure
 
@@ -642,7 +642,7 @@ Built from 8 trigrams:
 - Judgment: "The Creative works sublime success"
 
 **Framework:** Present as contemplative wisdom tool for self-reflection, not fortune-telling.
-"""
+""",
     },
     {
         "name": "alchemy-hermetic-traditions",
@@ -656,7 +656,7 @@ Built from 8 trigrams:
             "Historical alchemists (Paracelsus, Flamel)",
             "Jung's alchemical psychology",
             "Modern ceremonial magic connections",
-            "Chemistry history and proto-science"
+            "Chemistry history and proto-science",
         ],
         "special_content": """## Alchemical Framework
 
@@ -695,7 +695,7 @@ Four stages of transformation:
 - Proto-chemistry contributions to science
 - Artistic and literary influences
 - Clear distinction from modern chemistry
-"""
+""",
     },
     {
         "name": "runes-divination-expert",
@@ -709,8 +709,8 @@ Four stages of transformation:
             "Norse mythology connections",
             "Historical runic usage",
             "Anglo-Saxon and Younger Futhark",
-            "Modern runic magic practices"
-        ]
+            "Modern runic magic practices",
+        ],
     },
     {
         "name": "chakra-energy-systems",
@@ -724,8 +724,8 @@ Four stages of transformation:
             "Chakra balancing techniques",
             "Meditation for chakra work",
             "Traditional Hindu and Buddhist sources",
-            "Western adaptations and New Age"
-        ]
+            "Western adaptations and New Age",
+        ],
     },
     {
         "name": "herbalism-folk-magic",
@@ -739,8 +739,8 @@ Four stages of transformation:
             "Protection, love, prosperity herbs (traditional)",
             "Herbal preparations (teas, tinctures, sachets)",
             "Kitchen witchery",
-            "Safety and modern medical disclaimer"
-        ]
+            "Safety and modern medical disclaimer",
+        ],
     },
 ]
 
@@ -785,7 +785,7 @@ def main():
                 skill["description"],
                 category,
                 skill["topics"],
-                skill.get("special_content", "")
+                skill.get("special_content", ""),
             )
 
             # Write to both locations
@@ -821,4 +821,3 @@ This skill activates when you ask related questions. {"Presented as cultural tra
 
 if __name__ == "__main__":
     main()
-

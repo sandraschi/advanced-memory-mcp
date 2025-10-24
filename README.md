@@ -1,6 +1,6 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-1113%20passing-brightgreen)](https://github.com/sandraschi/advanced-memory-mcp/actions)
+[![Tests](https://img.shields.io/badge/tests-1244%20passing-brightgreen)](https://github.com/sandraschi/advanced-memory-mcp/actions)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
 
@@ -11,6 +11,17 @@ A Model Context Protocol server that integrates personal knowledge management wi
 **New in v1.0.0b3**: Experimental Claude Skills export and unified database architecture.
 
 [Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
+
+---
+
+## ✨ Tool Modes
+
+**PORTMANTEAU MODE (Default):** 15 clean, organized tools - Perfect for Claude Desktop  
+**FULL MODE (Opt-in):** 56 individual tools - For testing/development only
+
+**Result:** No tool explosion! Clean, usable interface.
+
+See [docs/TOOL_MODES.md](docs/TOOL_MODES.md) for details.
 
 ---
 

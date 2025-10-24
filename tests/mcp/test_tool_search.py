@@ -288,28 +288,36 @@ async def test_search_all_projects(client):
         # Subsequent calls return search results for each project
         mock_call_post.side_effect = [
             MagicMock(json=lambda: mock_projects.model_dump()),  # Project list
-            MagicMock(json=lambda: SearchResponse(
-                results=[SearchResult(
-                    title="Result from project1",
-                    type=SearchItemType.ENTITY,
-                    score=1.0,
-                    permalink="test/note1",
-                    file_path="test/note1.md",
-                )],
-                current_page=1,
-                page_size=10,
-            ).model_dump()),  # Project1 search
-            MagicMock(json=lambda: SearchResponse(
-                results=[SearchResult(
-                    title="Result from project2",
-                    type=SearchItemType.ENTITY,
-                    score=1.0,
-                    permalink="test/note2",
-                    file_path="test/note2.md",
-                )],
-                current_page=1,
-                page_size=10,
-            ).model_dump()),  # Project2 search
+            MagicMock(
+                json=lambda: SearchResponse(
+                    results=[
+                        SearchResult(
+                            title="Result from project1",
+                            type=SearchItemType.ENTITY,
+                            score=1.0,
+                            permalink="test/note1",
+                            file_path="test/note1.md",
+                        )
+                    ],
+                    current_page=1,
+                    page_size=10,
+                ).model_dump()
+            ),  # Project1 search
+            MagicMock(
+                json=lambda: SearchResponse(
+                    results=[
+                        SearchResult(
+                            title="Result from project2",
+                            type=SearchItemType.ENTITY,
+                            score=1.0,
+                            permalink="test/note2",
+                            file_path="test/note2.md",
+                        )
+                    ],
+                    current_page=1,
+                    page_size=10,
+                ).model_dump()
+            ),  # Project2 search
         ]
 
         with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
@@ -365,17 +373,21 @@ async def test_search_all_projects_handles_project_errors(client):
         # Third call fails (failing project)
         mock_call_post.side_effect = [
             MagicMock(json=lambda: mock_projects.model_dump()),
-            MagicMock(json=lambda: SearchResponse(
-                results=[SearchResult(
-                    title="Working result",
-                    type=SearchItemType.ENTITY,
-                    score=1.0,
-                    permalink="test/note1",
-                    file_path="test/note1.md",
-                )],
-                current_page=1,
-                page_size=10,
-            ).model_dump()),
+            MagicMock(
+                json=lambda: SearchResponse(
+                    results=[
+                        SearchResult(
+                            title="Working result",
+                            type=SearchItemType.ENTITY,
+                            score=1.0,
+                            permalink="test/note1",
+                            file_path="test/note1.md",
+                        )
+                    ],
+                    current_page=1,
+                    page_size=10,
+                ).model_dump()
+            ),
             Exception("Project access denied"),  # Failing project
         ]
 

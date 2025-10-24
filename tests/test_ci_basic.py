@@ -66,7 +66,9 @@ class TestCIBasic:
 
         assert manifest_path.exists(), "mcpb/manifest.json should exist for MCPB package"
 
-    @pytest.mark.skip(reason="Missing security-scan.yml workflow - will add in CI/CD modernization phase")
+    @pytest.mark.skip(
+        reason="Missing security-scan.yml workflow - will add in CI/CD modernization phase"
+    )
     def test_github_workflows_exist(self):
         """Test that GitHub workflows exist."""
         project_root = Path(__file__).parent.parent

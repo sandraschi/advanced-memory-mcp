@@ -73,7 +73,7 @@ LINGUISTIC_SKILLS = [
             "Formal presentations and speeches",
             "Hierarchy and social situations",
             "Regional and generational variations",
-            "Common mistakes by non-natives"
+            "Common mistakes by non-natives",
         ],
         "instructions": """
 ## Keigo System Levels
@@ -97,7 +97,7 @@ LINGUISTIC_SKILLS = [
 - **Customer service:** High-level 尊敬語 and 謙譲語
 - **Office hierarchy:** Match to relationship (上司 vs 同僚 vs 部下)
 - **First meetings:** Err on side of more formal
-"""
+""",
     },
     {
         "name": "japanese-grammar-master",
@@ -111,8 +111,8 @@ LINGUISTIC_SKILLS = [
             "Classical vs modern grammar differences",
             "Formal vs casual speech patterns",
             "Connection forms and clause linking",
-            "Common grammar mistakes"
-        ]
+            "Common grammar mistakes",
+        ],
     },
     {
         "name": "jlpt-preparation-expert",
@@ -126,8 +126,8 @@ LINGUISTIC_SKILLS = [
             "Reading comprehension strategies",
             "Listening practice methods",
             "Test-taking strategies",
-            "Study planning and time management"
-        ]
+            "Study planning and time management",
+        ],
     },
     {
         "name": "business-japanese-specialist",
@@ -141,8 +141,8 @@ LINGUISTIC_SKILLS = [
             "Negotiation language",
             "Corporate hierarchy expressions",
             "Japanese business culture",
-            "Cross-cultural business communication"
-        ]
+            "Cross-cultural business communication",
+        ],
     },
     {
         "name": "classical-japanese-literature",
@@ -155,8 +155,8 @@ LINGUISTIC_SKILLS = [
             "古文 (classical Japanese) grammar",
             "Classical poetry (waka, renga, haiku)",
             "Literary analysis techniques",
-            "Historical and cultural context"
-        ]
+            "Historical and cultural context",
+        ],
     },
     {
         "name": "kanji-etymology-expert",
@@ -170,8 +170,8 @@ LINGUISTIC_SKILLS = [
             "Reading variations (音読み vs 訓読み)",
             "Kanji compounds and word formation",
             "Handwriting and stroke order",
-            "Chinese character connections"
-        ]
+            "Chinese character connections",
+        ],
     },
     {
         "name": "spanish-language-tutor",
@@ -184,8 +184,8 @@ LINGUISTIC_SKILLS = [
             "Regional dialects (Spain vs Latin America)",
             "Slang and colloquialisms",
             "Pronunciation and accent reduction",
-            "DELE exam preparation"
-        ]
+            "DELE exam preparation",
+        ],
     },
     {
         "name": "french-language-coach",
@@ -198,8 +198,8 @@ LINGUISTIC_SKILLS = [
             "Conversational French",
             "French culture and etiquette",
             "DELF/DALF exam preparation",
-            "Regional variations"
-        ]
+            "Regional variations",
+        ],
     },
     {
         "name": "polyglot-learning-strategies",
@@ -213,8 +213,8 @@ LINGUISTIC_SKILLS = [
             "Pronunciation practice",
             "Language learning plateaus",
             "Maintaining multiple languages",
-            "Resource selection"
-        ]
+            "Resource selection",
+        ],
     },
     {
         "name": "etymology-word-origins",
@@ -227,8 +227,8 @@ LINGUISTIC_SKILLS = [
             "Semantic change over time",
             "Borrowings and loanwords",
             "False etymologies",
-            "Historical linguistics methods"
-        ]
+            "Historical linguistics methods",
+        ],
     },
     {
         "name": "translation-techniques-specialist",
@@ -241,8 +241,8 @@ LINGUISTIC_SKILLS = [
             "Technical translation",
             "Literary translation",
             "Localization and transcreation",
-            "Translation memory tools"
-        ]
+            "Translation memory tools",
+        ],
     },
     {
         "name": "linguistic-anthropology-guide",
@@ -255,8 +255,8 @@ LINGUISTIC_SKILLS = [
             "Language change over time",
             "Pidgins and creoles",
             "Language endangerment",
-            "Linguistic relativity"
-        ]
+            "Linguistic relativity",
+        ],
     },
 ]
 
@@ -273,7 +273,7 @@ PHILOSOPHY_SKILLS = [
             "Ockham's nominalism (only particulars exist)",
             "Ockham's razor and parsimony",
             "Modern analytical perspectives",
-            "Implications for mathematics and science"
+            "Implications for mathematics and science",
         ],
         "instructions": """
 ## The Central Question
@@ -306,7 +306,7 @@ The debate continues in:
 - Philosophy of mathematics (do numbers exist?)
 - Philosophy of science (do scientific laws exist?)
 - Metaphysics (nature of properties and relations)
-"""
+""",
     },
     {
         "name": "medieval-scholasticism-expert",
@@ -320,8 +320,8 @@ The debate continues in:
             "Faith and reason relationship",
             "Five Ways (Aquinas's proofs for God)",
             "Problem of universals",
-            "Medieval logic and dialectic"
-        ]
+            "Medieval logic and dialectic",
+        ],
     },
     {
         "name": "ancient-greek-philosophy",
@@ -335,8 +335,8 @@ The debate continues in:
             "Stoicism (Epictetus, Marcus Aurelius, Seneca)",
             "Epicureanism and atomism",
             "Skepticism and epistemology",
-            "Ancient Greek schools and Academy"
-        ]
+            "Ancient Greek schools and Academy",
+        ],
     },
     {
         "name": "continental-philosophy-specialist",
@@ -349,8 +349,8 @@ The debate continues in:
             "Existentialism (Kierkegaard, Sartre, Camus)",
             "Hermeneutics (Gadamer, Ricoeur)",
             "Structuralism and post-structuralism (Derrida, Foucault)",
-            "Critical theory (Frankfurt School)"
-        ]
+            "Critical theory (Frankfurt School)",
+        ],
     },
     {
         "name": "analytic-philosophy-expert",
@@ -364,8 +364,8 @@ The debate continues in:
             "Quine and naturalized epistemology",
             "Philosophy of language",
             "Philosophy of mind",
-            "Contemporary analytic metaphysics"
-        ]
+            "Contemporary analytic metaphysics",
+        ],
     },
     {
         "name": "eastern-philosophy-guide",
@@ -378,8 +378,8 @@ The debate continues in:
             "Hindu philosophy (Vedanta, Yoga, Samkhya)",
             "Comparative East-West philosophy",
             "Meditation and contemplative practices",
-            "Eastern logic and epistemology"
-        ]
+            "Eastern logic and epistemology",
+        ],
     },
     {
         "name": "ethics-moral-philosophy",
@@ -393,8 +393,8 @@ The debate continues in:
             "Applied ethics (bioethics, business ethics)",
             "Meta-ethics and moral realism",
             "Moral psychology",
-            "Ethical dilemmas and case analysis"
-        ]
+            "Ethical dilemmas and case analysis",
+        ],
     },
     {
         "name": "logic-argumentation-specialist",
@@ -408,8 +408,8 @@ The debate continues in:
             "Argument structure and validity",
             "Critical thinking techniques",
             "Toulmin model of argumentation",
-            "Rhetorical strategies"
-        ]
+            "Rhetorical strategies",
+        ],
     },
     {
         "name": "phenomenology-existentialism",
@@ -423,8 +423,8 @@ The debate continues in:
             "Authenticity and bad faith",
             "Being-in-the-world",
             "Phenomenological reduction",
-            "Existential themes (absurdity, anxiety, death)"
-        ]
+            "Existential themes (absurdity, anxiety, death)",
+        ],
     },
     {
         "name": "comparative-religion-scholar",
@@ -438,8 +438,8 @@ The debate continues in:
             "Religious ethics and morality",
             "New religious movements",
             "Secularization and modernity",
-            "Interfaith dialogue"
-        ]
+            "Interfaith dialogue",
+        ],
     },
     {
         "name": "biblical-exegesis-expert",
@@ -453,8 +453,8 @@ The debate continues in:
             "Textual criticism",
             "Biblical languages (Hebrew, Greek, Aramaic)",
             "Dead Sea Scrolls",
-            "Interpretive traditions (Jewish, Catholic, Protestant)"
-        ]
+            "Interpretive traditions (Jewish, Catholic, Protestant)",
+        ],
     },
     {
         "name": "buddhist-philosophy-teacher",
@@ -468,8 +468,8 @@ The debate continues in:
             "Buddha nature and Yogacara",
             "Zen/Chan philosophy and koans",
             "Theravada vs Mahayana differences",
-            "Buddhist meditation techniques"
-        ]
+            "Buddhist meditation techniques",
+        ],
     },
 ]
 
@@ -514,7 +514,7 @@ def main():
                 skill["description"],
                 category,
                 skill["topics"],
-                skill.get("instructions", "")
+                skill.get("instructions", ""),
             )
 
             # Write to both locations
@@ -551,4 +551,3 @@ This skill activates in Claude Desktop when you ask questions about these topics
 
 if __name__ == "__main__":
     main()
-

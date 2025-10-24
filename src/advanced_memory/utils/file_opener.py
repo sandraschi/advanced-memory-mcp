@@ -106,6 +106,3 @@ def format_open_result(success: bool, message: str, path: str | Path | None = No
         return f"""## ⚠️ Auto-Open Failed
 
 {message}{manual_msg}"""
-
-
-

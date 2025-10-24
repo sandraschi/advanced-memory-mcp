@@ -31,10 +31,10 @@ def scan_repo(repo_path: Path) -> dict:
             continue
 
         try:
-            content = py_file.read_text(encoding='utf-8', errors='ignore')
+            content = py_file.read_text(encoding="utf-8", errors="ignore")
 
             # Look for @mcp.tool( followed by description=
-            pattern = r'@mcp\.tool\([^)]*description='
+            pattern = r"@mcp\.tool\([^)]*description="
             matches = re.findall(pattern, content, re.DOTALL)
 
             if matches:
@@ -54,14 +54,17 @@ def main():
     print("=" * 80)
 
     # Get all MCP repos (exclude copies and backups)
-    mcp_repos = sorted([
-        d for d in repos_dir.iterdir()
-        if d.is_dir()
-        and "mcp" in d.name.lower()
-        and "copy" not in d.name.lower()
-        and "backup" not in d.name.lower()
-        and "old" not in d.name.lower()
-    ])
+    mcp_repos = sorted(
+        [
+            d
+            for d in repos_dir.iterdir()
+            if d.is_dir()
+            and "mcp" in d.name.lower()
+            and "copy" not in d.name.lower()
+            and "backup" not in d.name.lower()
+            and "old" not in d.name.lower()
+        ]
+    )
 
     print(f"Found {len(mcp_repos)} MCP repositories\n")
 
@@ -73,7 +76,9 @@ def main():
 
         if result["total_count"] > 0:
             repos_with_issues.append(result)
-            print(f"❌ {result['name']:<40} {result['total_count']:>3} issues in {len(result['files_with_description'])} files")
+            print(
+                f"❌ {result['name']:<40} {result['total_count']:>3} issues in {len(result['files_with_description'])} files"
+            )
         else:
             repos_clean.append(result["name"])
             print(f"✅ {result['name']:<40} Clean!")
@@ -85,11 +90,11 @@ def main():
 
     if repos_with_issues:
         print("\n❌ Repositories needing fixes:")
-        for repo in sorted(repos_with_issues, key=lambda x: x['total_count'], reverse=True):
+        for repo in sorted(repos_with_issues, key=lambda x: x["total_count"], reverse=True):
             print(f"\n  {repo['name']} ({repo['total_count']} issues):")
-            for f in repo['files_with_description'][:5]:  # Show first 5 files
+            for f in repo["files_with_description"][:5]:  # Show first 5 files
                 print(f"    - {f}")
-            if len(repo['files_with_description']) > 5:
+            if len(repo["files_with_description"]) > 5:
                 print(f"    ... and {len(repo['files_with_description']) - 5} more files")
 
     print(f"\n✅ Clean repositories: {len(repos_clean)}")
@@ -99,4 +104,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -8,14 +8,14 @@ from pathlib import Path
 def to_kebab_case(text):
     """Convert text to kebab-case."""
     # Remove special characters except spaces and hyphens
-    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r"[^\w\s-]", "", text)
     # Replace spaces with hyphens
-    text = text.replace(' ', '-')
+    text = text.replace(" ", "-")
     # Convert to lowercase
     text = text.lower()
     # Remove multiple hyphens
-    text = re.sub(r'-+', '-', text)
-    return text.strip('-')
+    text = re.sub(r"-+", "-", text)
+    return text.strip("-")
 
 
 def fix_skill_name(skill_path):
@@ -28,7 +28,7 @@ def fix_skill_name(skill_path):
     content = skill_md.read_text(encoding="utf-8")
 
     # Extract current name
-    name_match = re.search(r'^name:\s*(.+)$', content, re.MULTILINE)
+    name_match = re.search(r"^name:\s*(.+)$", content, re.MULTILINE)
     if not name_match:
         return None
 
@@ -43,11 +43,7 @@ def fix_skill_name(skill_path):
 
     # Replace the name
     new_content = re.sub(
-        r'^name:\s*.+$',
-        f'name: {kebab_name}',
-        content,
-        count=1,
-        flags=re.MULTILINE
+        r"^name:\s*.+$", f"name: {kebab_name}", content, count=1, flags=re.MULTILINE
     )
 
     skill_md.write_text(new_content, encoding="utf-8")
@@ -66,7 +62,7 @@ def main():
     print("\n🔧 Converting all skill names to kebab-case...\n")
 
     for category_dir in skills_base.iterdir():
-        if not category_dir.is_dir() or category_dir.name == 'spanish-cooking':
+        if not category_dir.is_dir() or category_dir.name == "spanish-cooking":
             continue
 
         print(f"📁 {category_dir.name}")
@@ -103,6 +99,7 @@ def main():
     zip_dir = Path("skill-zips")
     if zip_dir.exists():
         import shutil
+
         shutil.rmtree(zip_dir)
     zip_dir.mkdir()
 
@@ -119,8 +116,8 @@ def main():
 
             zip_path = zip_dir / f"{skill_dir.name}.zip"
 
-            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                for file in skill_dir.rglob('*'):
+            with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                for file in skill_dir.rglob("*"):
                     if file.is_file():
                         arcname = file.relative_to(skill_dir.parent)
                         zipf.write(file, arcname)
@@ -137,4 +134,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

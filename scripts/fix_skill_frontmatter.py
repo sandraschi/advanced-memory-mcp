@@ -15,8 +15,8 @@ def fix_frontmatter(skill_path):
     content = skill_md.read_text(encoding="utf-8")
 
     # Extract name and description from existing frontmatter
-    name_match = re.search(r'^name:\s*(.+)$', content, re.MULTILINE)
-    desc_match = re.search(r'^description:\s*(.+)$', content, re.MULTILINE)
+    name_match = re.search(r"^name:\s*(.+)$", content, re.MULTILINE)
+    desc_match = re.search(r"^description:\s*(.+)$", content, re.MULTILINE)
 
     if not name_match or not desc_match:
         print(f"  ⚠️  Could not find name/description in {skill_path.name}")
@@ -26,7 +26,7 @@ def fix_frontmatter(skill_path):
     description = desc_match.group(1).strip()
 
     # Remove old frontmatter and get body
-    body_match = re.search(r'^---\s*\n.*?\n---\s*\n(.+)$', content, re.DOTALL)
+    body_match = re.search(r"^---\s*\n.*?\n---\s*\n(.+)$", content, re.DOTALL)
     if not body_match:
         print(f"  ⚠️  Could not parse frontmatter in {skill_path.name}")
         return False
@@ -92,6 +92,7 @@ def main():
     zip_dir = Path("skill-zips")
     if zip_dir.exists():
         import shutil
+
         shutil.rmtree(zip_dir)
     zip_dir.mkdir()
 
@@ -108,8 +109,8 @@ def main():
 
             zip_path = zip_dir / f"{skill_dir.name}.zip"
 
-            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                for file in skill_dir.rglob('*'):
+            with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                for file in skill_dir.rglob("*"):
                     if file.is_file():
                         arcname = file.relative_to(skill_dir.parent)
                         zipf.write(file, arcname)
@@ -125,4 +126,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

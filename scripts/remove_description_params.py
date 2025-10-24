@@ -19,18 +19,18 @@ def remove_description_param(file_path: Path) -> tuple[bool, str]:
     Returns:
         Tuple of (modified: bool, message: str)
     """
-    content = file_path.read_text(encoding='utf-8')
+    content = file_path.read_text(encoding="utf-8")
     original_content = content
 
     # Pattern 1: @mcp.tool(\n    description="""...""",\n)
     # Replace with: @mcp.tool
     pattern1 = r'@mcp\.tool\(\s*description=""".*?""",?\s*\)'
-    content = re.sub(pattern1, '@mcp.tool', content, flags=re.DOTALL)
+    content = re.sub(pattern1, "@mcp.tool", content, flags=re.DOTALL)
 
     # Pattern 2: @mcp.tool(\n    description="...",\n)
     # Replace with: @mcp.tool
     pattern2 = r'@mcp\.tool\(\s*description="[^"]*",?\s*\)'
-    content = re.sub(pattern2, '@mcp.tool', content, flags=re.DOTALL)
+    content = re.sub(pattern2, "@mcp.tool", content, flags=re.DOTALL)
 
     # Pattern 3: @mcp.tool("tool_name")
     # Keep as-is (this is for custom tool names)
@@ -41,7 +41,7 @@ def remove_description_param(file_path: Path) -> tuple[bool, str]:
     content = re.sub(pattern4, r'@mcp.tool("\1")', content, flags=re.DOTALL)
 
     if content != original_content:
-        file_path.write_text(content, encoding='utf-8')
+        file_path.write_text(content, encoding="utf-8")
         return True, f"✅ Fixed {file_path.name}"
 
     return False, f"⏭️  Skipped {file_path.name} (no changes needed)"
@@ -84,4 +84,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

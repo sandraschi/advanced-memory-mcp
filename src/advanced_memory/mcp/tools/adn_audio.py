@@ -26,7 +26,7 @@ async def adn_audio(
     tags: TagType | None = None,
     project: str | None = None,
 ) -> str:
-    '''Voice operations for Advanced Memory knowledge base.
+    """Voice operations for Advanced Memory knowledge base.
 
     Audio and voice operations with optional dependencies (Whisper, pyttsx3).
 
@@ -70,7 +70,7 @@ async def adn_audio(
 
         # Speak and save to audio file
         adn_audio("speak", identifier="Study Notes", save_audio=True)
-    '''
+    """
     logger.info(f"MCP tool call tool=adn_audio operation={operation}")
 
     # Get the active project
@@ -328,4 +328,3 @@ Then restart and try again!"""
     except Exception as e:
         logger.error(f"TTS error: {e}")
         return f"# Text-to-Speech Failed\n\nError: {str(e)}\n\nCheck pyttsx3 installation and audio drivers."
-

@@ -174,17 +174,17 @@ def test_tool_count():
         )
 
         expected_tools = [
-            "adn_content",      # Core CRUD
-            "adn_audio",        # Voice operations (NEW in v1.1.0)
-            "adn_project",      # Project management
-            "adn_export",       # Export operations
-            "adn_import",       # Import operations
-            "adn_search",       # Search operations
-            "adn_knowledge",    # Knowledge operations
+            "adn_content",  # Core CRUD
+            "adn_audio",  # Voice operations (NEW in v1.1.0)
+            "adn_project",  # Project management
+            "adn_export",  # Export operations
+            "adn_import",  # Import operations
+            "adn_search",  # Search operations
+            "adn_knowledge",  # Knowledge operations
             "adn_zettelmaker",  # Template generation
-            "adn_skills",       # Claude Skills
-            "adn_navigation",   # Navigation
-            "adn_inbox",        # Inbox processing
+            "adn_skills",  # Claude Skills
+            "adn_navigation",  # Navigation
+            "adn_inbox",  # Inbox processing
         ]
 
         for tool in expected_tools:

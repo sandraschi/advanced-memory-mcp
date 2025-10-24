@@ -129,6 +129,3 @@ def test_format_open_result_failure_no_path():
     assert "Auto-Open Failed" in result
     assert "Something went wrong" in result
     # Should not have manual open instructions without path
-
-
-

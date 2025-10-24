@@ -57,6 +57,3 @@ def get_pandoc_command() -> list[str]:
     """
     pandoc_path = ensure_pandoc_installed()
     return [pandoc_path]
-
-
-

@@ -51,7 +51,7 @@ async def test_export_html_basic(tmp_path, mock_notes_data):
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Test needs update for new file_opener implementation")  
+@pytest.mark.skip(reason="Test needs update for new file_opener implementation")
 async def test_export_html_with_index_opens_browser(tmp_path, mock_notes_data):
     """Test HTML export with index opens index.html in browser."""
     export_path = tmp_path / "html"
@@ -71,19 +71,17 @@ async def test_export_html_with_index_opens_browser(tmp_path, mock_notes_data):
         ) as mock_process:
             mock_process.return_value = "# Export Complete"
 
-    with patch(
-        "advanced_memory.utils.file_opener.open_file_or_folder"
-    ) as mock_open:
-                mock_open.return_value = (True, "Opened index.html")
+    with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
+        mock_open.return_value = (True, "Opened index.html")
 
-                result = await export_html_notes.fn(
-                    export_path=str(export_path),
-                    include_index=True,
-                    show_after_export=True,
-                )
+        result = await export_html_notes.fn(
+            export_path=str(export_path),
+            include_index=True,
+            show_after_export=True,
+        )
 
-                # Should try to open index.html
-                assert mock_open.called
+        # Should try to open index.html
+        assert mock_open.called
 
     assert "Opened" in result
 
@@ -104,19 +102,17 @@ async def test_export_html_no_index_opens_folder(tmp_path, mock_notes_data):
         ) as mock_process:
             mock_process.return_value = "# Export Complete"
 
-    with patch(
-        "advanced_memory.utils.file_opener.open_file_or_folder"
-    ) as mock_open:
-                mock_open.return_value = (True, "Opened folder")
+    with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
+        mock_open.return_value = (True, "Opened folder")
 
-                result = await export_html_notes.fn(
-                    export_path=str(export_path),
-                    include_index=False,
-                    show_after_export=True,
-                )
+        result = await export_html_notes.fn(
+            export_path=str(export_path),
+            include_index=False,
+            show_after_export=True,
+        )
 
-                # Should open folder
-                assert mock_open.called
+        # Should open folder
+        assert mock_open.called
 
     assert "Opened" in result
 
@@ -136,16 +132,14 @@ async def test_export_html_show_false(tmp_path, mock_notes_data):
         ) as mock_process:
             mock_process.return_value = "# Export Complete"
 
-    with patch(
-        "advanced_memory.utils.file_opener.open_file_or_folder"
-    ) as mock_open:
-                result = await export_html_notes.fn(
-                    export_path=str(export_path),
-                    show_after_export=False,
-                )
+    with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
+        result = await export_html_notes.fn(
+            export_path=str(export_path),
+            show_after_export=False,
+        )
 
-                # Should NOT open
-                mock_open.assert_not_called()
+        # Should NOT open
+        mock_open.assert_not_called()
 
     assert "Export" in result
 
@@ -198,6 +192,3 @@ async def test_export_html_mermaid_diagrams(tmp_path):
             )
 
     assert "export" in result.lower()
-
-
-
