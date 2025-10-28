@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "advanced-memory"
-version = "1.0.0b6"
+version = "1.0.0b7"
 source = { editable = "." }
 dependencies = [
     { name = "aiosqlite" },

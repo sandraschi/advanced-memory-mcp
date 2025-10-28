@@ -143,9 +143,28 @@ async def _recent_activity_operation(
     """Handle recent activity operation."""
     from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-    return await recent_activity.fn(
+    result = await recent_activity.fn(
         type_filter, depth, timeframe, page, page_size, max_related, project
     )
+
+    # Convert GraphContext to markdown string
+    output = ["# Recent Activity\n"]
+
+    if hasattr(result, 'primary_results') and result.primary_results:
+        output.append(f"**Found {len(result.primary_results)} recent items**\n")
+        for item in result.primary_results:
+            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
+            item_type = getattr(item, 'type', 'item')
+            output.append(f"- **{title}** ({item_type})")
+    else:
+        output.append("No recent activity found.\n")
+
+    if hasattr(result, 'metadata'):
+        metadata = result.metadata
+        if hasattr(metadata, 'total_count'):
+            output.append(f"\n**Total**: {metadata.total_count} items")
+
+    return '\n'.join(output)
 
 
 async def _list_directory_operation(
