@@ -70,7 +70,12 @@ async def adn_export(
         book_title: Title for PDF book exports
         tag_filter: Filter notes by tag for exports
         pdf_engine: PDF generation engine
-        project: Optional project name
+        project: Optional project specification. Supports:
+            - None (default): exports current active project
+            - "project-name": exports specific project
+            - "proj1,proj2,proj3": exports multiple projects to separate folders
+            - "ALL": exports all projects to separate folders
+            When exporting multiple projects, each gets its own subfolder
 
     Returns:
         Operation-specific result with export details and file counts
@@ -94,12 +99,115 @@ async def adn_export(
 
         # Export complete archive
         adn_export("archive")  # Default path
+
+        # Export all projects to separate folders
+        adn_export("pandoc", format_type="pdf", project="ALL")  # → Desktop/advanced-memory-exports/pandoc/project1/, project2/, etc.
+
+        # Export specific projects
+        adn_export("claude_skills", project="work,personal")  # → exports two projects
     """
     logger.info(f"MCP tool call tool=adn_export operation={operation} export_path={export_path}")
 
     # Format export path (use smart default if not provided)
     resolved_export_path = format_export_path(export_path, operation)
 
+    # Check if multi-project export is requested
+    from advanced_memory.mcp.async_client import client
+    from advanced_memory.mcp.tools.utils import call_post
+
+    projects_to_export = []
+    multi_project_export = False
+
+    if project:
+        if project.upper() == "ALL":
+            # Export all projects
+            from advanced_memory.schemas.project_info import ProjectList
+
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            projects_to_export = [p.name for p in project_list.projects]
+            multi_project_export = True
+            logger.info(f"Multi-project export: ALL ({len(projects_to_export)} projects)")
+
+        elif "," in project:
+            # Multiple specific projects
+            projects_to_export = [p.strip() for p in project.split(",")]
+            multi_project_export = True
+            logger.info(f"Multi-project export: {projects_to_export}")
+
+        else:
+            # Single specific project
+            projects_to_export = [project]
+
+    # If multi-project export, loop through projects
+    if multi_project_export:
+        all_results = []
+
+        for proj_name in projects_to_export:
+            # Create project-specific subfolder
+            proj_export_path = str(Path(resolved_export_path) / proj_name)
+            logger.info(f"Exporting project '{proj_name}' to {proj_export_path}")
+
+            try:
+                # Call export for this project
+                result = None
+                if operation == "pandoc":
+                    result = await _pandoc_export(
+                        proj_export_path,
+                        format_type,
+                        source_folder,
+                        include_subfolders,
+                        pdf_engine,
+                        show_after_export,
+                        proj_name,
+                    )
+                elif operation == "docsify":
+                    result = await _docsify_export(
+                        proj_export_path,
+                        source_folder,
+                        include_subfolders,
+                        site_title,
+                        site_description,
+                        serve,
+                        port,
+                        export_all,
+                        proj_name,
+                    )
+                elif operation == "html":
+                    result = await _html_export(
+                        proj_export_path, source_folder, include_subfolders, proj_name
+                    )
+                elif operation == "claude_skills":
+                    result = await _claude_skills_export(
+                        proj_export_path, source_folder, include_subfolders, proj_name
+                    )
+                elif operation == "archive":
+                    result = await _archive_export(proj_export_path, show_after_export, proj_name)
+                else:
+                    result = f"Skipped {operation} for project {proj_name} (not supported for multi-project)"
+
+                all_results.append(f"**{proj_name}**: {result}")
+
+            except Exception as e:
+                logger.error(f"Failed to export project {proj_name}: {e}")
+                all_results.append(f"**{proj_name}**: Error - {e}")
+
+        # Return summary of all exports
+        summary = [
+            "# Multi-Project Export Complete",
+            "",
+            f"**Operation**: {operation}",
+            f"**Projects Exported**: {len(projects_to_export)}",
+            f"**Base Path**: {resolved_export_path}",
+            "",
+            "## Results by Project",
+            "",
+        ]
+        summary.extend(all_results)
+
+        return "\n".join(summary)
+
+    # Single-project export (original behavior)
     # Route to appropriate operation
     if operation == "pandoc":
         return await _pandoc_export(

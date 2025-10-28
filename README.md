@@ -103,20 +103,36 @@ See [Tool Mode Selection](docs/user-guide/tool-mode-selection.md) for details.
 
 ### Installation
 
-**Python Package**:
+**Step 1: Install the package**
 ```bash
 pip install advanced-memory-mcp
 ```
 
-**Claude Desktop Extension** (MCPB):
+**Step 2: Configure your MCP client**
+
+#### Cursor IDE or VS Code (One-Click)
+```bash
+# Generate deeplink for Cursor
+advanced-memory deeplink cursor
+
+# Generate configuration for VS Code
+advanced-memory deeplink vscode
+
+# Interactive setup wizard
+advanced-memory setup
+```
+
+#### Claude Desktop
+
+**Option 1: MCPB Package** (Recommended for Claude Desktop)
 1. Download `advanced-memory-mcp.mcpb` from [Releases](https://github.com/sandraschi/advanced-memory-mcp/releases)
 2. Open Claude Desktop → Settings → Extensions
 3. Drop the `.mcpb` file
-4. Configure in Extensions UI (project path, settings)
+4. Configure project path in Extensions UI
 
-### Configure Claude Desktop
+**Option 2: Manual Configuration**
 
-**If using Python package** (add to `claude_desktop_config.json`):
+Add to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -128,7 +144,12 @@ pip install advanced-memory-mcp
 }
 ```
 
-**If using MCPB**: Configuration is in Claude Desktop Settings → Extensions UI
+Or generate the configuration:
+```bash
+advanced-memory deeplink claude-desktop
+```
+
+**📖 Complete Installation Guide**: [Deeplink Installation](docs/user-guide/DEEPLINK_INSTALLATION.md) | [MCPB Installation](docs/user-guide/mcpb-installation-config.md)
 
 ### First Steps
 
@@ -471,32 +492,39 @@ adn_export("claude_skills", export_path="~/ml-skills/",
 
 ## 🚀 Installation Options
 
-### Option 1: Python Package (Flexible)
+### For Cursor IDE and VS Code
+
+One-click installation via deeplinks provides the fastest setup:
 
 ```bash
-# Install
 pip install advanced-memory-mcp
-
-# Run
-advanced-memory mcp
-
-# Configure Claude Desktop
-# Add to claude_desktop_config.json
+advanced-memory deeplink cursor  # or 'vscode'
 ```
 
-**Best for**: Development, customization, running from source
+Deeplinks automatically configure the MCP connection in your IDE.
 
-### Option 2: MCPB Extension (Easy)
+### For Claude Desktop
+
+**MCPB Package** (Recommended):
+- Download `.mcpb` from [Releases](https://github.com/sandraschi/advanced-memory-mcp/releases)
+- Drag into Claude Desktop Settings → Extensions
+- Configure via GUI
+
+**Manual Configuration**:
+- Install via `pip install advanced-memory-mcp`
+- Add configuration to `claude_desktop_config.json`
+- See [installation guide](INSTALLATION.md) for details
+
+### For Other MCP Clients
+
+Install the Python package and configure manually per your client's documentation:
 
 ```bash
-# Download .mcpb from releases
-# Drag into Claude Desktop Extensions
-# Configure in Settings UI
+pip install advanced-memory-mcp
+advanced-memory mcp  # Verify installation
 ```
 
-**Best for**: Non-technical users, quick setup, GUI configuration
-
-[Detailed Installation →](INSTALLATION.md)
+[Complete Installation Guide →](INSTALLATION.md)
 
 ---
 

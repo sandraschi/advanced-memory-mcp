@@ -43,9 +43,12 @@ async def adn_import(
         include_attachments: Import images and media files
         skip_existing: Skip notes that already exist
         create_missing_files: Create placeholder notes for missing references
-        restore_mode: Archive restore mode
+        restore_mode: Archive restore mode (overwrite, merge)
         backup_existing: Backup current data before restore
-        project: Optional project name
+        project: Optional project name. Supports:
+            - None (default): imports to current active project
+            - "project-name": imports to specific project
+            For archive operations, auto-detects project structure from archive metadata
 
     Returns:
         Operation-specific result with import details and file counts
@@ -60,8 +63,11 @@ async def adn_import(
         # Import Notion workspace
         adn_import("notion", source_path="Notion-Export.zip", destination_folder="imported/notion")
 
-        # Import from archive
+        # Import from archive (auto-detects project structure)
         adn_import("archive", source_path="backup.zip", restore_mode="merge")
+
+        # Import to specific project
+        adn_import("obsidian", source_path="/path/to/vault", destination_folder="imported", project="work-notes")
     """
     logger.info(f"MCP tool call tool=adn_import operation={operation} source_path={source_path}")
 

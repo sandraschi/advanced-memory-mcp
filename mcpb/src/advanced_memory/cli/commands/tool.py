@@ -1,4 +1,4 @@
-"""CLI tool commands for Basic Memory."""
+"""CLI tool commands for Advanced Memory."""
 
 import asyncio
 import sys
@@ -20,8 +20,8 @@ from advanced_memory.mcp.prompts.recent_activity import (
 from advanced_memory.mcp.tools import build_context as mcp_build_context
 from advanced_memory.mcp.tools import read_note as mcp_read_note
 from advanced_memory.mcp.tools import recent_activity as mcp_recent_activity
-from advanced_memory.mcp.tools import search_notes as mcp_search
 from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.search import search_notes as mcp_search
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import MemoryUrl
 from advanced_memory.schemas.search import SearchItemType
@@ -37,7 +37,7 @@ def write_note(
     content: Annotated[
         str | None,
         typer.Option(
-            help="The content of the note. If not provided, content will be read from stdin. This allows piping content from other commands, e.g.: cat file.md | basic-memory tools write-note"
+            help="The content of the note. If not provided, content will be read from stdin. This allows piping content from other commands, e.g.: cat file.md | advanced-memory tools write-note"
         ),
     ] = None,
     tags: Annotated[
@@ -53,13 +53,13 @@ def write_note(
     Examples:
 
     # Using content parameter
-    basic-memory tools write-note --title "My Note" --folder "notes" --content "Note content"
+    advanced-memory tools write-note --title "My Note" --folder "notes" --content "Note content"
 
     # Using stdin pipe
-    echo "# My Note Content" | basic-memory tools write-note --title "My Note" --folder "notes"
+    echo "# My Note Content" | advanced-memory tools write-note --title "My Note" --folder "notes"
 
     # Using heredoc
-    cat << EOF | basic-memory tools write-note --title "My Note" --folder "notes"
+    cat << EOF | advanced-memory tools write-note --title "My Note" --folder "notes"
     # My Document
 
     This is my document content.
@@ -69,7 +69,7 @@ def write_note(
     EOF
 
     # Reading from a file
-    cat document.md | basic-memory tools write-note --title "Document" --folder "docs"
+    cat document.md | advanced-memory tools write-note --title "Document" --folder "docs"
     """
     try:
         # If content is not provided, read from stdin
@@ -95,7 +95,7 @@ def write_note(
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during write_note: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -108,7 +108,7 @@ def read_note(identifier: str, page: int = 1, page_size: int = 10):
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during read_note: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -137,11 +137,11 @@ def build_context(
         import json
 
         context_dict = context.model_dump(exclude_none=True)
-        print(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during build_context: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -170,11 +170,11 @@ def recent_activity(
         import json
 
         context_dict = context.model_dump(exclude_none=True)
-        print(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(context_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             typer.echo(f"Error during build_context: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -192,7 +192,7 @@ def search_notes(
 ):
     """Search across all content in the knowledge base."""
     if permalink and title:  # pragma: no cover
-        print("Cannot search both permalink and title")
+        logger.warning("Cannot search both permalink and title")
         raise typer.Abort()
 
     try:
@@ -222,12 +222,12 @@ def search_notes(
         import json
 
         results_dict = results.model_dump(exclude_none=True)
-        print(json.dumps(results_dict, indent=2, ensure_ascii=True, default=str))
+        logger.info(json.dumps(results_dict, indent=2, ensure_ascii=True, default=str))
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             logger.exception("Error during search", e)
             typer.echo(f"Error during search: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 
@@ -240,12 +240,13 @@ def continue_conversation(
     try:
         # Prompt functions return formatted strings directly
         session = asyncio.run(mcp_continue_conversation.fn(topic=topic, timeframe=timeframe))  # type: ignore
-        rprint(session)
+        # Use plain print to avoid Rich wrapping of Markdown content
+        print(session)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
             logger.exception("Error continuing conversation", e)
             typer.echo(f"Error continuing conversation: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise
 
 

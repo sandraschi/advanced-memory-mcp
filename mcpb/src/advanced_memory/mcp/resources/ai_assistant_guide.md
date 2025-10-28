@@ -1,11 +1,11 @@
-# AI Assistant Guide for Basic Memory
+# AI Assistant Guide for Advanced Memory
 
-This guide helps AIs use Basic Memory tools effectively when working with users. It covers reading, writing, and
+This guide helps AIs use Advanced Memory tools effectively when working with users. It covers reading, writing, and
 navigating knowledge through the Model Context Protocol (MCP).
 
 ## Overview
 
-Basic Memory allows you and users to record context in local Markdown files, building a rich knowledge base through
+Advanced Memory allows you and users to record context in local Markdown files, building a rich knowledge base through
 natural conversations. The system automatically creates a semantic knowledge graph from simple text patterns.
 
 - **Local-First**: All data is stored in plain text files on the user's computer
@@ -16,13 +16,13 @@ natural conversations. The system automatically creates a semantic knowledge gra
 
 ## The Importance of the Knowledge Graph
 
-**Basic Memory's value comes from connections between notes, not just the notes themselves.**
+**Advanced Memory's value comes from connections between notes, not just the notes themselves.**
 
 When writing notes, your primary goal should be creating a rich, interconnected knowledge graph:
 
 1. **Increase Semantic Density**: Add multiple observations and relations to each note
 2. **Use Accurate References**: Aim to reference existing entities by their exact titles
-3. **Create Forward References**: Feel free to reference entities that don't exist yet - Basic Memory will resolve these
+3. **Create Forward References**: Feel free to reference entities that don't exist yet - Advanced Memory will resolve these
    when they're created later
 4. **Create Bidirectional Links**: When appropriate, connect entities from both directions
 5. **Use Meaningful Categories**: Add semantic context with appropriate observation categories
@@ -80,7 +80,7 @@ canvas_result = await canvas(
 
 ## memory:// URLs Explained
 
-Basic Memory uses a special URL format to reference entities in the knowledge graph:
+Advanced Memory uses a special URL format to reference entities in the knowledge graph:
 
 - `memory://title` - Reference by title
 - `memory://folder/title` - Reference by folder and title
@@ -123,14 +123,14 @@ Knowledge is encoded in standard markdown using simple patterns:
 **Protocol for recording context**:
 
 1. Identify valuable information in the conversation
-2. Ask the user: "Would you like me to record our discussion about [topic] in Basic Memory?"
+2. Ask the user: "Would you like me to record our discussion about [topic] in Advanced Memory?"
 3. If they agree, use `write_note` to capture the information
 4. If they decline, continue without recording
-5. Let the user know when information has been recorded: "I've saved our discussion about [topic] to Basic Memory."
+5. Let the user know when information has been recorded: "I've saved our discussion about [topic] to Advanced Memory."
 
 ## Understanding User Interactions
 
-Users will interact with Basic Memory in patterns like:
+Users will interact with Advanced Memory in patterns like:
 
 1. **Creating knowledge**:
    ```
@@ -374,7 +374,7 @@ Common issues to watch for:
     - Record decisions, rationales, and conclusions
     - Link to related topics
     - Ask for permission first: "Would you like me to save our discussion about [topic]?"
-    - Confirm when complete: "I've saved our discussion to Basic Memory"
+    - Confirm when complete: "I've saved our discussion to Advanced Memory"
 
 2. **Create a Rich Semantic Graph**
     - **Add meaningful observations**: Include at least 3-5 categorized observations in each note

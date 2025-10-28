@@ -36,8 +36,7 @@ async def adn_export(
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
 
     SUPPORTED OPERATIONS:
-    - pdf: Export to PDF using pure Python (NO LaTeX! Works immediately!)
-    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc
+    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc (auto-installs!)
     - docsify: Export to Docsify documentation website with navigation
     - html: Export to standalone HTML website with Mermaid diagram rendering
     - joplin: Export to Joplin-compatible format for cross-platform access
@@ -71,16 +70,20 @@ async def adn_export(
         book_title: Title for PDF book exports
         tag_filter: Filter notes by tag for exports
         pdf_engine: PDF generation engine
-        project: Optional project name
+        project: Optional project specification. Supports:
+            - None (default): exports current active project
+            - "project-name": exports specific project
+            - "proj1,proj2,proj3": exports multiple projects to separate folders
+            - "ALL": exports all projects to separate folders
+            When exporting multiple projects, each gets its own subfolder
 
     Returns:
         Operation-specific result with export details and file counts
 
     Examples:
-        # Export to PDF - OMIT export_path to use Desktop (RECOMMENDED!)
-        adn_export("pdf")  # → Desktop/advanced-memory-exports/pdf/
-        adn_export("pdf", export_path="C:/my-custom-path/")  # Only if user specifies!
-        
+        # Export to PDF with Pandoc - OMIT export_path to use Desktop (RECOMMENDED!)
+        adn_export("pandoc", format_type="pdf")  # → Desktop/advanced-memory-exports/pandoc/
+
         # Export to DOCX - automatically goes to Desktop
         adn_export("pandoc", format_type="docx")  # → Desktop/advanced-memory-exports/pandoc/
 
@@ -90,47 +93,170 @@ async def adn_export(
 
         # Create PDF book
         adn_export("pdf_book", book_title="Research Papers")  # Default path
-        
+
         # Export Claude Skills
         adn_export("claude_skills")  # Default: Desktop/advanced-memory-exports/claude_skills/
 
         # Export complete archive
         adn_export("archive")  # Default path
+
+        # Export all projects to separate folders
+        adn_export("pandoc", format_type="pdf", project="ALL")  # → Desktop/advanced-memory-exports/pandoc/project1/, project2/, etc.
+
+        # Export specific projects
+        adn_export("claude_skills", project="work,personal")  # → exports two projects
     """
     logger.info(f"MCP tool call tool=adn_export operation={operation} export_path={export_path}")
 
     # Format export path (use smart default if not provided)
     resolved_export_path = format_export_path(export_path, operation)
 
+    # Check if multi-project export is requested
+    from advanced_memory.mcp.async_client import client
+    from advanced_memory.mcp.tools.utils import call_post
+
+    projects_to_export = []
+    multi_project_export = False
+
+    if project:
+        if project.upper() == "ALL":
+            # Export all projects
+            from advanced_memory.schemas.project_info import ProjectList
+
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            projects_to_export = [p.name for p in project_list.projects]
+            multi_project_export = True
+            logger.info(f"Multi-project export: ALL ({len(projects_to_export)} projects)")
+
+        elif "," in project:
+            # Multiple specific projects
+            projects_to_export = [p.strip() for p in project.split(",")]
+            multi_project_export = True
+            logger.info(f"Multi-project export: {projects_to_export}")
+
+        else:
+            # Single specific project
+            projects_to_export = [project]
+
+    # If multi-project export, loop through projects
+    if multi_project_export:
+        all_results = []
+
+        for proj_name in projects_to_export:
+            # Create project-specific subfolder
+            proj_export_path = str(Path(resolved_export_path) / proj_name)
+            logger.info(f"Exporting project '{proj_name}' to {proj_export_path}")
+
+            try:
+                # Call export for this project
+                result = None
+                if operation == "pandoc":
+                    result = await _pandoc_export(
+                        proj_export_path,
+                        format_type,
+                        source_folder,
+                        include_subfolders,
+                        pdf_engine,
+                        show_after_export,
+                        proj_name,
+                    )
+                elif operation == "docsify":
+                    result = await _docsify_export(
+                        proj_export_path,
+                        source_folder,
+                        include_subfolders,
+                        site_title,
+                        site_description,
+                        serve,
+                        port,
+                        export_all,
+                        proj_name,
+                    )
+                elif operation == "html":
+                    result = await _html_export(
+                        proj_export_path, source_folder, include_subfolders, proj_name
+                    )
+                elif operation == "claude_skills":
+                    result = await _claude_skills_export(
+                        proj_export_path, source_folder, include_subfolders, proj_name
+                    )
+                elif operation == "archive":
+                    result = await _archive_export(proj_export_path, show_after_export, proj_name)
+                else:
+                    result = f"Skipped {operation} for project {proj_name} (not supported for multi-project)"
+
+                all_results.append(f"**{proj_name}**: {result}")
+
+            except Exception as e:
+                logger.error(f"Failed to export project {proj_name}: {e}")
+                all_results.append(f"**{proj_name}**: Error - {e}")
+
+        # Return summary of all exports
+        summary = [
+            "# Multi-Project Export Complete",
+            "",
+            f"**Operation**: {operation}",
+            f"**Projects Exported**: {len(projects_to_export)}",
+            f"**Base Path**: {resolved_export_path}",
+            "",
+            "## Results by Project",
+            "",
+        ]
+        summary.extend(all_results)
+
+        return "\n".join(summary)
+
+    # Single-project export (original behavior)
     # Route to appropriate operation
-    if operation == "pdf":
-        # Pure-Python PDF (NO LaTeX needed!)
-        from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
-        return await export_pdf_native(resolved_export_path, source_folder, include_subfolders, project=project)
-    elif operation == "pandoc":
+    if operation == "pandoc":
         return await _pandoc_export(
-            resolved_export_path, format_type, source_folder, include_subfolders, pdf_engine, project
+            resolved_export_path,
+            format_type,
+            source_folder,
+            include_subfolders,
+            pdf_engine,
+            show_after_export,
+            project,
         )
     elif operation == "docsify":
         return await _docsify_export(
-            resolved_export_path, source_folder, include_subfolders, site_title, site_description, serve, port, export_all, project
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            site_title,
+            site_description,
+            serve,
+            port,
+            export_all,
+            project,
         )
     elif operation == "html":
-        return await _html_export(resolved_export_path, source_folder, include_subfolders, project)
+        return await _html_export(
+            resolved_export_path, source_folder, include_subfolders, show_after_export, project
+        )
     elif operation == "joplin":
-        return await _joplin_export(resolved_export_path, source_folder, include_subfolders, project)
+        return await _joplin_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "pdf_book":
         return await _pdf_book_export(
             resolved_export_path, source_folder, include_subfolders, book_title, tag_filter, project
         )
     elif operation == "archive":
-        return await _archive_export(resolved_export_path, project)
+        return await _archive_export(resolved_export_path, show_after_export, project)
     elif operation == "evernote":
-        return await _evernote_export(resolved_export_path, source_folder, include_subfolders, project)
+        return await _evernote_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "notion":
-        return await _notion_export(resolved_export_path, source_folder, include_subfolders, project)
+        return await _notion_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     elif operation == "claude_skills":
-        return await _claude_skills_export(resolved_export_path, source_folder, include_subfolders, project)
+        return await _claude_skills_export(
+            resolved_export_path, source_folder, include_subfolders, project
+        )
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
 
@@ -141,6 +267,7 @@ async def _pandoc_export(
     source_folder: str,
     include_subfolders: bool,
     pdf_engine: str,
+    show_after_export: bool,
     project: str | None,
 ) -> str:
     """Handle Pandoc export operation."""
@@ -159,6 +286,7 @@ async def _pandoc_export(
         True,
         False,
         project,
+        show_after_export,
     )  # type: ignore[operator,no-any-return]
 
 
@@ -234,11 +362,13 @@ async def _pdf_book_export(
     )  # type: ignore[operator,no-any-return]
 
 
-async def _archive_export(export_path: str, project: str | None) -> str:
+async def _archive_export(export_path: str, show_after_export: bool, project: str | None) -> str:
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
-    return await export_to_archive(export_path, None, None, None, None, True, project)  # type: ignore[operator,no-any-return]
+    return await export_to_archive(
+        export_path, None, None, None, None, True, project, show_after_export
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_export(

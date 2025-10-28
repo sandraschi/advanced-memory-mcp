@@ -207,8 +207,7 @@ async def search_notes(
     types: list[str] | None = None,
     entity_types: list[str] | None = None,
     after_date: str | None = None,
-    project: str | None = None,
-    search_all_projects: bool = False,
+    projects: str | None = None,
 ) -> SearchResponse | str:
     """Search across all content in the knowledge base with comprehensive syntax support.
 
@@ -260,8 +259,13 @@ async def search_notes(
         types: Optional list of note types to search (e.g., ["note", "person"])
         entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
         after_date: Optional date filter for recent content (e.g., "1 week", "2d", "2024-01-01")
-        project: Optional project name to search in. If not provided, uses current active project.
-        search_all_projects: If True, searches across ALL projects and merges results (default: False)
+        projects: Optional project specification. Supports multiple formats:
+            - None (default): searches current active project only
+            - "project-name": searches specific single project
+            - "proj1,proj2,proj3": searches multiple projects (comma-delimited list)
+            - "ALL": searches across ALL projects and merges results
+            - "ALL_EXCEPT:proj1,proj2": searches all projects except specified ones
+            Results from multiple projects include project name prefix for clarity.
 
     Returns:
         SearchResponse with results and pagination info, or helpful error guidance if search fails
@@ -310,10 +314,13 @@ async def search_notes(
         )
 
         # Search in specific project
-        results = await search_notes("meeting notes", project="work-project")
+        results = await search_notes("meeting notes", projects="work-project")
 
         # Search across ALL projects
-        results = await search_notes("shinjuku", search_all_projects=True)
+        results = await search_notes("shinjuku", projects="ALL")
+
+        # Search in multiple specific projects
+        results = await search_notes("database", projects="work,personal,archive")
 
         # Complex search with multiple filters
         results = await search_notes(
@@ -345,26 +352,54 @@ async def search_notes(
     if after_date:
         search_query.after_date = after_date
 
-    # Handle search across all projects
-    if search_all_projects:
-        if project:
-            # Can't specify both
-            return "Error: Cannot use both 'project' and 'search_all_projects=True'. Please use one or the other."
+    # Parse projects parameter to determine which projects to search
+    from advanced_memory.schemas.project_info import ProjectList
 
-        logger.info(f"Searching across ALL projects for: {search_query}")
+    search_multiple = False
+    project_names_to_search = []
 
-        # Get list of all projects
-        from advanced_memory.schemas.project_info import ProjectList
+    if projects:
+        if projects.upper() == "ALL":
+            # Search all projects
+            logger.info("Searching across ALL projects")
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            project_names_to_search = [p.name for p in project_list.projects]
+            search_multiple = True
 
-        projects_response = await call_post(client, "/projects/projects", json={})
-        project_list = ProjectList.model_validate(projects_response.json())
+        elif projects.upper().startswith("ALL_EXCEPT:"):
+            # Search all except specified
+            excluded = projects[11:].split(",")  # Remove "ALL_EXCEPT:"
+            excluded = [e.strip() for e in excluded]
+            logger.info(f"Searching ALL projects except: {excluded}")
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            project_names_to_search = [
+                p.name for p in project_list.projects if p.name not in excluded
+            ]
+            search_multiple = True
 
-        # Search each project and merge results
+        elif "," in projects:
+            # Multiple specific projects (comma-delimited)
+            project_names_to_search = [p.strip() for p in projects.split(",")]
+            logger.info(f"Searching specific projects: {project_names_to_search}")
+            search_multiple = True
+
+        else:
+            # Single specific project
+            project_names_to_search = [projects]
+            logger.info(f"Searching specific project: {projects}")
+
+    # Handle multi-project search
+    if search_multiple and project_names_to_search:
+        logger.info(f"Multi-project search across {len(project_names_to_search)} project(s)")
+
         all_results = []
+        searched_projects = []
 
-        for proj in project_list.projects:
+        for proj_name in project_names_to_search:
             try:
-                proj_obj = get_active_project(proj.name)
+                proj_obj = get_active_project(proj_name)
                 response = await call_post(
                     client,
                     f"{proj_obj.project_url}/search/",
@@ -376,21 +411,28 @@ async def search_notes(
                 # Add project name to each result for context
                 for item in proj_result.results:
                     if hasattr(item, "title"):
-                        item.title = f"[{proj.name}] {item.title}"
+                        item.title = f"[{proj_name}] {item.title}"
 
                 all_results.extend(proj_result.results)
+                searched_projects.append(proj_name)
             except Exception as e:
-                logger.warning(f"Failed to search project {proj.name}: {e}")
+                logger.warning(f"Failed to search project {proj_name}: {e}")
                 continue
 
-        # Return merged results (note: SearchResponse doesn't have total_count field)
+        # Return merged results with project context
+        logger.info(
+            f"Searched {len(searched_projects)} projects, found {len(all_results)} total results"
+        )
         return SearchResponse(
             results=all_results[:results_per_page],  # Respect page size
             current_page=page,
             page_size=results_per_page,
         )
 
-    active_project = get_active_project(project)
+    # Single project search (default behavior)
+    active_project = get_active_project(
+        projects
+    )  # Will use projects as single project name, or current if None
     project_url = active_project.project_url
 
     logger.info(f"Searching for {search_query}")

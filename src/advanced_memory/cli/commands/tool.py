@@ -20,8 +20,8 @@ from advanced_memory.mcp.prompts.recent_activity import (
 from advanced_memory.mcp.tools import build_context as mcp_build_context
 from advanced_memory.mcp.tools import read_note as mcp_read_note
 from advanced_memory.mcp.tools import recent_activity as mcp_recent_activity
-from advanced_memory.mcp.tools import search_notes as mcp_search
 from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.search import search_notes as mcp_search
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import MemoryUrl
 from advanced_memory.schemas.search import SearchItemType

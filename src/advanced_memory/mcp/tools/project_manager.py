@@ -41,9 +41,14 @@ async def adn_project(
     - delete: Remove projects from configuration while preserving files on disk
     - set_default: Configure which project loads by default on startup
     - get_current: Display currently active project with comprehensive statistics
-    - list: List all available projects with status indicators
+    - list: List all available projects with status indicators and entity counts
     - sync: Sync specific project without changing default (requires project_name)
     - status: Get detailed statistics for a specific project (requires project_name)
+
+    FUTURE ENHANCEMENTS (Planned):
+    - list_cross_project_refs: Show which projects link to each other
+    - get_all_projects: List all projects with enhanced metadata
+    - get_project_info: Get detailed stats for multiple projects
 
     PROJECT CONTEXT IMPACT:
     - All file operations target the active project

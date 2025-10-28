@@ -7,23 +7,23 @@ This guide covers all installation methods for Advanced Memory across different 
 
 | Platform | Method | Command |
 |----------|--------|---------|
-| **All Platforms** | Pip (Recommended) | `pip install advanced-memory` |
-| **Mac** | Homebrew | `brew tap basicmachines-co/advanced-memory && brew install advanced-memory` |
-| **Windows/Linux** | Pip + Virtual Env | `python -m venv venv && venv\Scripts\activate && pip install advanced-memory` |
-| **Development** | From Source | `git clone https://github.com/basicmachines-co/advanced-memory-mcp.git && pip install -e .` |
-| **Docker** | Container | `docker run -v $(pwd):/vault basicmachines-co/advanced-memory` |
+| **All Platforms** | Pip (Recommended) | `pip install advanced-memory-mcp` |
+| **Cursor IDE** | One-Click Deeplink | `advanced-memory deeplink cursor` |
+| **VS Code** | Deeplink Configuration | `advanced-memory deeplink vscode` |
+| **Claude Desktop** | MCPB Package | Download from releases |
+| **Development** | From Source | `git clone https://github.com/sandraschi/advanced-memory-mcp.git && pip install -e .` |
 
 ---
 
 ## 🚀 Standard Installation
 
-### Option 1: Pip (Recommended)
+### Step 1: Install the Package
 
-**Requirements**: Python 3.12+
+**Requirements**: Python 3.11+
 
 ```bash
 # Install from PyPI
-pip install advanced-memory
+pip install advanced-memory-mcp
 
 # Verify installation
 advanced-memory --version
@@ -31,8 +31,12 @@ advanced-memory --version
 
 **Upgrade**:
 ```bash
-pip install --upgrade advanced-memory
+pip install --upgrade advanced-memory-mcp
 ```
+
+### Step 2: Configure Your MCP Client
+
+Choose the method that matches your MCP client.
 
 ### Option 2: Homebrew (Mac)
 
@@ -272,16 +276,48 @@ just lint
 
 ---
 
-## 🔧 Claude Desktop Configuration
+## 🔧 Cursor IDE and VS Code Configuration
 
-### Automatic Setup (Smithery)
+### Cursor IDE (One-Click)
 
-The easiest way to configure Claude Desktop:
+After installing the package, generate a deeplink:
 
 ```bash
-# Install via Smithery
-npx @modelcontextprotocol/inspector npx -y @smithery/cli@latest install @basicmachines-co/advanced-memory --client claude
+advanced-memory deeplink cursor
 ```
+
+Click the generated link to automatically configure Cursor with the MCP server.
+
+### VS Code
+
+Generate the configuration:
+
+```bash
+advanced-memory deeplink vscode
+```
+
+This will create the necessary configuration. VS Code requires a manual restart after configuration.
+
+### Interactive Setup Wizard
+
+For guided setup across all supported clients:
+
+```bash
+advanced-memory setup
+```
+
+See [Deeplink Installation Guide](docs/user-guide/DEEPLINK_INSTALLATION.md) for complete details.
+
+---
+
+## 🔧 Claude Desktop Configuration
+
+### MCPB Package (Recommended)
+
+1. Download `advanced-memory-mcp.mcpb` from [Releases](https://github.com/sandraschi/advanced-memory-mcp/releases)
+2. Open Claude Desktop → Settings → Extensions
+3. Drag and drop the `.mcpb` file
+4. Configure project path in the Extensions UI
 
 ### Manual Configuration
 
@@ -299,32 +335,6 @@ npx @modelcontextprotocol/inspector npx -y @smithery/cli@latest install @basicma
 {
   "mcpServers": {
     "advanced-memory": {
-      "command": "advanced-memory",
-      "args": ["mcp"]
-    }
-  }
-}
-```
-
-**3. Alternative configurations:**
-
-**With uv**:
-```json
-{
-  "mcpServers": {
-    "advanced-memory": {
-      "command": "uvx",
-      "args": ["advanced-memory", "mcp"]
-    }
-  }
-}
-```
-
-**From source**:
-```json
-{
-  "mcpServers": {
-    "advanced-memory": {
       "command": "python",
       "args": ["-m", "advanced_memory.mcp.server"]
     }
@@ -332,52 +342,26 @@ npx @modelcontextprotocol/inspector npx -y @smithery/cli@latest install @basicma
 }
 ```
 
-**4. Restart Claude Desktop**
+Or generate this configuration automatically:
 
----
-
-## 🎛️ Cursor IDE Configuration
-
-Cursor supports MCP servers natively. Add to your Cursor settings:
-
-```json
-{
-  "mcp": {
-    "servers": {
-      "advanced-memory": {
-        "command": "advanced-memory",
-        "args": ["mcp"]
-      }
-    }
-  }
-}
+```bash
+advanced-memory deeplink claude-desktop
 ```
+
+**3. Restart Claude Desktop**
 
 ---
 
 ## 🌐 Other MCP Clients
 
-### VS Code with MCP
+For MCP clients not listed above, install the package and configure according to your client's documentation:
 
-```json
-// .vscode/settings.json
-{
-  "mcp": {
-    "servers": {
-      "advanced-memory": {
-        "command": "advanced-memory",
-        "args": ["mcp"]
-      }
-    }
-  }
-}
+```bash
+pip install advanced-memory-mcp
+advanced-memory mcp  # Verify installation
 ```
 
-### Glama.ai
-
-Use the Glama badge to install:
-
-[![Install on Glama](https://glama.ai/mcp/servers/o90kttu9ym/badge)](https://glama.ai/mcp/servers/o90kttu9ym)
+Consult your client's MCP server configuration documentation for connection details.
 
 ---
 

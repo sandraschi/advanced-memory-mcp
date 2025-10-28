@@ -61,10 +61,13 @@ async def adn_navigation(
         type_filter: Type filter for recent activity
         level: Status detail level
         focus: Specific area to focus on
-        project: Optional project name
+        project: Optional project name. Supports:
+            - None (default): uses current active project
+            - "project-name": uses specific project
+            For operations like recent_activity and backlinks, searches within specified project.
 
     Returns:
-        Operation-specific result with navigation details and system information
+        Operation-specific result with navigation details, system information, and project context
 
     Examples:
         # Build context from memory URL

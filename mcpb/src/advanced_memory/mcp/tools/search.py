@@ -198,70 +198,7 @@ Error searching for '{query}': {error_message}
 - **Patterns**: `tag:example`, `category:observation`"""
 
 
-@mcp.tool(
-    description="""Perform comprehensive full-text search across the Advanced Memory knowledge base with advanced filtering.
-
-This powerful search tool provides multiple search modes and extensive filtering capabilities
-to help users discover relevant content across their entire knowledge base with precision and speed.
-
-SEARCH MODES:
-- **text**: Full-text content search with relevance ranking
-- **title**: Title-only search for exact matches
-- **permalink**: Path-based search using permalink patterns
-- **entity**: Semantic entity search with relationship context
-
-ADVANCED FEATURES:
-- Boolean operators (AND, OR, NOT) for complex queries
-- Phrase matching with quotes ("exact phrase")
-- Wildcard support (*, ?) for pattern matching
-- Fuzzy matching for typo tolerance
-- Semantic ranking based on relationships and recency
-
-FILTERING OPTIONS:
-- Content types: notes, entities, observations
-- Entity categories: person, project, concept, location
-- Date ranges: absolute dates or relative ("7d", "1 month")
-- Project scope: specific project or all projects
-- Pagination: controlled result sets with page size
-
-PARAMETERS:
-- query (str, REQUIRED): Search terms with boolean operators and phrases
-- page (int, default=1): Result page for pagination
-- results_per_page (int, default=10): Results per page (max 100)
-- search_type (str, default="text"): Search mode (text/title/permalink/entity)
-- types (List[str], optional): Content type filters
-- entity_types (List[str], optional): Entity category filters
-- after_date (str, optional): Date filter (ISO format or relative like "7d")
-- project (str, optional): Project scope (defaults to active project)
-
-QUERY SYNTAX:
-- Basic terms: "machine learning project"
-- Phrases: "\"exact phrase\" search"
-- Boolean: "project AND (design OR planning)"
-- Exclusion: "meeting NOT cancelled"
-- Wildcards: "project_*_notes"
-
-USAGE EXAMPLES:
-Basic search: search_notes("machine learning")
-Phrase search: search_notes("\"project planning\" meeting")
-Filtered search: search_notes("urgent", entity_types=["task"])
-Date filter: search_notes("meeting", after_date="2024-01-01")
-Project scope: search_notes("design", project="work-project")
-Pagination: search_notes("important", page=2, results_per_page=50)
-
-RETURNS:
-SearchResponse object with results, metadata, and pagination info.
-
-SEARCH OPTIMIZATION:
-- Pre-indexed full-text search for speed
-- Relevance ranking based on multiple factors
-- Semantic relationship consideration
-- Recent content prioritization
-- Typo correction and suggestions
-
-NOTE: Search is case-insensitive by default. Use quotes for exact phrases.
-Large knowledge bases may require pagination for best performance.""",
-)
+@mcp.tool
 async def search_notes(
     query: str,
     page: int = 1,
@@ -270,7 +207,7 @@ async def search_notes(
     types: list[str] | None = None,
     entity_types: list[str] | None = None,
     after_date: str | None = None,
-    project: str | None = None,
+    projects: str | None = None,
 ) -> SearchResponse | str:
     """Search across all content in the knowledge base with comprehensive syntax support.
 
@@ -322,7 +259,13 @@ async def search_notes(
         types: Optional list of note types to search (e.g., ["note", "person"])
         entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
         after_date: Optional date filter for recent content (e.g., "1 week", "2d", "2024-01-01")
-        project: Optional project name to search in. If not provided, uses current active project.
+        projects: Optional project specification. Supports multiple formats:
+            - None (default): searches current active project only
+            - "project-name": searches specific single project
+            - "proj1,proj2,proj3": searches multiple projects (comma-delimited list)
+            - "ALL": searches across ALL projects and merges results
+            - "ALL_EXCEPT:proj1,proj2": searches all projects except specified ones
+            Results from multiple projects include project name prefix for clarity.
 
     Returns:
         SearchResponse with results and pagination info, or helpful error guidance if search fails
@@ -371,7 +314,13 @@ async def search_notes(
         )
 
         # Search in specific project
-        results = await search_notes("meeting notes", project="work-project")
+        results = await search_notes("meeting notes", projects="work-project")
+
+        # Search across ALL projects
+        results = await search_notes("shinjuku", projects="ALL")
+
+        # Search in multiple specific projects
+        results = await search_notes("database", projects="work,personal,archive")
 
         # Complex search with multiple filters
         results = await search_notes(
@@ -403,7 +352,81 @@ async def search_notes(
     if after_date:
         search_query.after_date = after_date
 
-    active_project = get_active_project(project)
+    # Parse projects parameter to determine which projects to search
+    from advanced_memory.schemas.project_info import ProjectList
+
+    search_multiple = False
+    project_names_to_search = []
+
+    if projects:
+        if projects.upper() == "ALL":
+            # Search all projects
+            logger.info("Searching across ALL projects")
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            project_names_to_search = [p.name for p in project_list.projects]
+            search_multiple = True
+
+        elif projects.upper().startswith("ALL_EXCEPT:"):
+            # Search all except specified
+            excluded = projects[11:].split(",")  # Remove "ALL_EXCEPT:"
+            excluded = [e.strip() for e in excluded]
+            logger.info(f"Searching ALL projects except: {excluded}")
+            projects_response = await call_post(client, "/projects/projects", json={})
+            project_list = ProjectList.model_validate(projects_response.json())
+            project_names_to_search = [p.name for p in project_list.projects if p.name not in excluded]
+            search_multiple = True
+
+        elif "," in projects:
+            # Multiple specific projects (comma-delimited)
+            project_names_to_search = [p.strip() for p in projects.split(",")]
+            logger.info(f"Searching specific projects: {project_names_to_search}")
+            search_multiple = True
+
+        else:
+            # Single specific project
+            project_names_to_search = [projects]
+            logger.info(f"Searching specific project: {projects}")
+
+    # Handle multi-project search
+    if search_multiple and project_names_to_search:
+        logger.info(f"Multi-project search across {len(project_names_to_search)} project(s)")
+
+        all_results = []
+        searched_projects = []
+
+        for proj_name in project_names_to_search:
+            try:
+                proj_obj = get_active_project(proj_name)
+                response = await call_post(
+                    client,
+                    f"{proj_obj.project_url}/search/",
+                    json=search_query.model_dump(),
+                    params={"page": page, "page_size": results_per_page},
+                )
+                proj_result = SearchResponse.model_validate(response.json())
+
+                # Add project name to each result for context
+                for item in proj_result.results:
+                    if hasattr(item, "title"):
+                        item.title = f"[{proj_name}] {item.title}"
+
+                all_results.extend(proj_result.results)
+                searched_projects.append(proj_name)
+            except Exception as e:
+                logger.warning(f"Failed to search project {proj_name}: {e}")
+                continue
+
+        # Return merged results with project context
+        logger.info(f"Searched {len(searched_projects)} projects, found {len(all_results)} total results")
+        return SearchResponse(
+            results=all_results[:results_per_page],  # Respect page size
+            current_page=page,
+            page_size=results_per_page,
+        )
+
+    # Single project search (default behavior)
+    active_project = get_active_project(projects)  # Will use projects as single project name, or current if None
     project_url = active_project.project_url
 
     logger.info(f"Searching for {search_query}")

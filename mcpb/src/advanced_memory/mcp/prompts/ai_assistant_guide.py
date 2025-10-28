@@ -8,10 +8,10 @@ from advanced_memory.mcp.server import mcp
 @mcp.resource(
     uri="memory://ai_assistant_guide",
     name="ai assistant guide",
-    description="Give an AI assistant guidance on how to use Basic Memory tools effectively",
+    description="Give an AI assistant guidance on how to use Advanced Memory tools effectively",
 )
 def ai_assistant_guide() -> str:
-    """Return a concise guide on Basic Memory tools and how to use them.
+    """Return a concise guide on Advanced Memory tools and how to use them.
 
     Args:
         focus: Optional area to focus on ("writing", "context", "search", etc.)

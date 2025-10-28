@@ -352,18 +352,71 @@ Files used in output (templates, boilerplate, etc.).
         project=active_project.name,
     )
 
+    # Create bundled resource directories (Anthropic skill-creator pattern)
+    project_path = Path(active_project.path)
+    skill_dir = project_path / skill_folder / skill_name
+    skill_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create scripts/ directory with example
+    scripts_dir = skill_dir / "scripts"
+    scripts_dir.mkdir(exist_ok=True)
+    (scripts_dir / "example.py").write_text(
+        '"""Example script for this skill.\n\n'
+        "Scripts can be executed by Claude for deterministic tasks.\n"
+        '"""\n\n'
+        "def main():\n"
+        '    print("Hello from skill script!")\n\n'
+        'if __name__ == "__main__":\n'
+        "    main()\n",
+        encoding="utf-8",
+    )
+
+    # Create references/ directory with example
+    references_dir = skill_dir / "references"
+    references_dir.mkdir(exist_ok=True)
+    (references_dir / "example.md").write_text(
+        f"# {skill_title} Reference\n\n"
+        "This directory contains reference documentation loaded as needed.\n\n"
+        "## Usage\n\n"
+        "Reference files are loaded into context when Claude needs detailed information.\n"
+        "Keep detailed schemas, API docs, or domain knowledge here.\n",
+        encoding="utf-8",
+    )
+
+    # Create assets/ directory with README
+    assets_dir = skill_dir / "assets"
+    assets_dir.mkdir(exist_ok=True)
+    (assets_dir / "README.md").write_text(
+        f"# {skill_title} Assets\n\n"
+        "This directory contains files used in output (not loaded into context).\n\n"
+        "## Examples\n\n"
+        "- Templates (HTML, React, etc.)\n"
+        "- Images (logos, icons)\n"
+        "- Boilerplate code\n"
+        "- Fonts, styles, etc.\n",
+        encoding="utf-8",
+    )
+
     return f"""{result}
+
+## Skill Structure Created
+
+**Directory**: {skill_folder}/{skill_name}/
+- SKILL.md (main instructions)
+- scripts/ (executable code with example.py)
+- references/ (documentation with example.md)
+- assets/ (templates, resources with README.md)
 
 ## Next Steps
 
-1. Edit the skill to complete TODO sections
-2. Add scripts/ folder with helper scripts (optional)
-3. Add references/ folder with documentation (optional)
-4. Add assets/ folder with templates/files (optional)
+1. Edit SKILL.md to complete TODO sections
+2. Add Python/Bash scripts to **scripts/** for reusable code
+3. Add documentation to **references/** for detailed reference material
+4. Add templates/assets to **assets/** for output resources
 5. Validate: adn_skills("validate", identifier="{skill_name}")
-6. Export: adn_skills("export", export_path="./claude-skills/")
+6. Package: adn_skills("package", identifier="{skill_name}")
 
-✅ Skill created following skill-creator pattern!"""
+✅ Skill created following Anthropic skill-creator pattern!"""
 
 
 async def _read_operation(identifier: str | None, project: str | None) -> str:
@@ -467,7 +520,7 @@ adn_skills("import", source_path="D:/anthropic-skills/skill-creator")"""
 
 
 async def _validate_operation(identifier: str | None, project: str | None) -> str:
-    """Validate skill format compliance."""
+    """Validate skill format compliance with repair suggestions."""
     if not identifier:
         return "# Error\n\nValidate requires: identifier parameter"
 
@@ -479,50 +532,37 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
     if "# Note Not Found:" in content:
         return content
 
-    # Parse YAML frontmatter
-    import re
+    # Use skill_helpers for validation
+    from advanced_memory.mcp.tools.skill_helpers import (
+        generate_repair_suggestions,
+        parse_skill_frontmatter,
+        validate_skill_frontmatter,
+    )
 
-    import yaml
+    # Parse frontmatter
+    frontmatter, body, parse_errors = parse_skill_frontmatter(content)
 
-    match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
-    if not match:
-        return "# Validation Failed\n\n❌ No YAML frontmatter found\n\nSkills must start with ---\\n...\\n---"
+    # If no frontmatter, provide comprehensive repair suggestions
+    if frontmatter is None:
+        suggestions = generate_repair_suggestions(parse_errors, None, content)
+        return f"""# Validation Failed
 
-    try:
-        frontmatter = yaml.safe_load(match.group(1))
-    except Exception as e:
-        return f"# Validation Failed\n\n❌ Invalid YAML frontmatter\n\nError: {str(e)}"
+**Skill:** {identifier}
 
-    # Check required fields
-    errors = []
-    warnings = []
+## Errors
 
-    if "name" not in frontmatter:
-        errors.append("Missing required field: name")
-    else:
-        name = frontmatter["name"]
-        if not re.match(r"^[a-z0-9-]+$", name):
-            errors.append(
-                f"Name '{name}' must be hyphen-case (lowercase letters, digits, hyphens only)"
-            )
-        if name.startswith("-") or name.endswith("-") or "--" in name:
-            errors.append(f"Name '{name}' cannot start/end with hyphen or have consecutive hyphens")
+{chr(10).join(f"❌ {error}" for error in parse_errors)}
 
-    if "description" not in frontmatter:
-        errors.append("Missing required field: description")
-    else:
-        desc = frontmatter["description"]
-        if "<" in desc or ">" in desc:
-            errors.append("Description cannot contain angle brackets (< or >)")
-        if len(desc.strip()) < 20:
-            warnings.append("Description is quite short (< 20 chars) - consider expanding")
+{suggestions}
 
-    # Check optional fields format
-    if "metadata" in frontmatter and not isinstance(frontmatter["metadata"], dict):
-        warnings.append("metadata should be a dictionary")
+**After fixing, run:** `adn_skills("validate", identifier="{identifier}")`"""
+
+    # Validate frontmatter content
+    errors, warnings = validate_skill_frontmatter(frontmatter)
 
     # Build validation report
     if errors:
+        suggestions = generate_repair_suggestions(errors, frontmatter, content)
         return f"""# Validation Failed
 
 **Skill:** {identifier}
@@ -533,13 +573,16 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
 
 {f"## Warnings ({len(warnings)})" + chr(10) + chr(10).join(f"⚠️ {warning}" for warning in warnings) if warnings else ""}
 
-**Fix errors and run validate again.**"""
+{suggestions}
 
-    return f"""# Validation Passed
+**After fixing, run:** `adn_skills("validate", identifier="{identifier}")`"""
+
+    # Validation passed!
+    return f"""# Validation Passed ✅
 
 **Skill:** {identifier}
 **Name:** {frontmatter.get("name", "N/A")}
-**Description:** {frontmatter.get("description", "N/A")[:100]}...
+**Description:** {frontmatter.get("description", "N/A")[:100]}{"..." if len(frontmatter.get("description", "")) > 100 else ""}
 
 ## Checks
 
@@ -551,7 +594,11 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
 
 {f"## Warnings ({len(warnings)})" + chr(10) + chr(10).join(f"⚠️ {warning}" for warning in warnings) if warnings else ""}
 
-**Status:** Ready for export to Claude!"""
+**Status:** Ready for export to Claude! 🚀
+
+**Next steps:**
+- Export: `adn_skills("export", export_path="./claude-skills/")`
+- Package: `adn_skills("package", identifier="{identifier}")`"""
 
 
 async def _export_operation(

@@ -55,12 +55,30 @@ async def adn_content(
 
     NOTE: Audio operations (dictate, speak) moved to adn_audio tool
 
+    SKILL SUPPORT (AUTO-DETECTION):
+    When writing to skills/ folder, adn_content automatically:
+    - Detects missing Claude Skills frontmatter
+    - Auto-generates YAML frontmatter with name, description, metadata
+    - Extracts category from folder path (skills/developer -> category: developer)
+    - Sets entity_type to 'skill' automatically
+    - Validates frontmatter format against Anthropic spec
+
+    This means you can write skills like regular notes, and frontmatter is added automatically!
+
+    Example skill creation:
+        adn_content("write",
+            identifier="Python Expert",
+            content="# Python Expert\\n\\nAdvanced Python guidance...",
+            folder="skills/developer")
+        # Auto-generates frontmatter with name: python-expert
+
     CONTENT PROCESSING:
     - Automatic entity recognition and linking ([[Entity Name]] syntax)
     - Relationship extraction and graph building
     - Tag processing and categorization
     - Folder organization and hierarchy
     - Markdown rendering and syntax validation
+    - Claude Skills frontmatter generation (when writing to skills/)
 
     Args:
         operation: Operation type (write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete)
@@ -77,10 +95,13 @@ async def adn_content(
         section: Target section for replace_section operations
         page: Pagination page for read operations
         page_size: Items per page for paginated content
-        project: Optional project name (defaults to active project)
+        project: Optional project name. Supports:
+            - None (default): uses current active project
+            - "project-name": uses specific project
+            Note: Multi-project operations not supported for write/edit/delete (safety)
 
     Returns:
-        Operation-specific result with semantic content summary
+        Operation-specific result with semantic content summary and project context
 
     Examples:
         # Write a new note
@@ -206,7 +227,7 @@ pip install advanced-memory[voice]
 async def _write_operation(
     active_project, identifier: str, content: str, folder: str, tags: TagType, entity_type: str
 ) -> str:
-    """Handle write operation."""
+    """Handle write operation with auto-skill detection."""
     if not identifier or not content or not folder:
         return "# Error\n\nWrite operation requires: identifier, content, and folder parameters"
 
@@ -217,6 +238,66 @@ async def _write_operation(
             "Attempted path traversal attack blocked", folder=folder, project=active_project.name
         )
         return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
+
+    # AUTO-DETECT SKILLS: If writing to skills/ folder, ensure proper frontmatter
+    from advanced_memory.mcp.tools.skill_helpers import (
+        detect_skill_path,
+        generate_skill_frontmatter,
+        parse_skill_frontmatter,
+        title_to_skill_name,
+    )
+
+    if detect_skill_path(folder):
+        logger.info(
+            f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed."
+        )
+
+        # Check if content already has frontmatter
+        fm, body, errors = parse_skill_frontmatter(content)
+
+        if fm is None:
+            # No frontmatter found - auto-generate it
+            logger.info("No frontmatter detected. Auto-generating Claude Skills frontmatter.")
+
+            # Extract metadata from tags if present
+            tag_list = parse_tags(tags) if tags else []
+            category = None
+            difficulty = None
+
+            # Try to extract category from folder path (skills/developer -> developer)
+            if "/" in folder:
+                parts = folder.split("/")
+                if len(parts) >= 2:
+                    category = parts[1]
+
+            # Generate skill name from title
+            skill_name = title_to_skill_name(identifier)
+
+            # Create description (use first paragraph from body if available)
+            description = f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+
+            # Generate frontmatter
+            try:
+                frontmatter_yaml = generate_skill_frontmatter(
+                    name=skill_name,
+                    description=description,
+                    category=category,
+                    difficulty=difficulty,
+                )
+
+                # Prepend frontmatter to content
+                content = frontmatter_yaml + "\n" + content
+
+                logger.info(f"Auto-generated skill frontmatter for '{skill_name}'")
+
+            except Exception as e:
+                logger.warning(f"Failed to auto-generate skill frontmatter: {e}")
+                # Continue without frontmatter - will be caught by validation later
+
+        # Ensure entity_type is 'skill' when writing to skills/ folder
+        if entity_type == "note":
+            entity_type = "skill"
+            logger.info("Changed entity_type from 'note' to 'skill' for skills folder")
 
     # Process tags using the helper function
     tag_list = parse_tags(tags)
@@ -243,6 +324,7 @@ async def _write_operation(
     action = "Created" if response.status_code == 201 else "Updated"
     summary = [
         f"# {action} note",
+        f"project: {active_project.name}",
         f"file_path: {result.file_path}",
         f"permalink: {result.permalink}",
         f"checksum: {result.checksum[:8] if result.checksum else 'unknown'}",
@@ -421,6 +503,7 @@ async def _edit_tags_operation(
     response_lines = [
         "# Tag Edit Complete",
         "",
+        f"**Project:** {active_project.name}",
         f"**Note:** {result.title}",
         f"**Permalink:** {result.permalink}",
         "",

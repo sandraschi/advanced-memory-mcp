@@ -70640,3 +70640,213 @@ expected the node content, but found ':'
 2025-10-24 20:39:11 | INFO     | Loaded 4 templates for category 'uiux-designer'
 2025-10-24 20:39:11 | INFO     | Loaded 3 templates for category 'writer'
 2025-10-24 20:39:11 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-28 07:57:29 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 07:57:30 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:57:31 | INFO     | Using in-memory SQLite database
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initializing search index
+2025-10-28 07:57:31 | INFO     | Initialized project session with default project: test-project
+2025-10-28 07:57:31 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 07:58:19 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 07:58:41 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 07:59:03 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 07:59:29 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 08:01:20 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 14:22:45 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initializing search index
+2025-10-28 14:22:47 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:47 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:47 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:48 | INFO     | Initializing search index
+2025-10-28 14:22:48 | INFO     | Initializing search index
+2025-10-28 14:22:48 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:48 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:22:48 | INFO     | Using in-memory SQLite database
+2025-10-28 14:22:48 | INFO     | Initializing search index
+2025-10-28 14:22:48 | INFO     | Initializing search index
+2025-10-28 14:22:48 | INFO     | Initialized project session with default project: test-project
+2025-10-28 14:22:48 | INFO     | Switched project context: test-project -> test-project
+2025-10-28 14:23:51 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 14:27:09 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-28 14:27:30 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
