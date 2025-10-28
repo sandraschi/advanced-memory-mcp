@@ -128,7 +128,34 @@ async def _build_context_operation(
 
     from advanced_memory.mcp.tools.build_context import build_context
 
-    return await build_context.fn(url, depth, timeframe, page, page_size, max_related, project)
+    result = await build_context.fn(url, depth, timeframe, page, page_size, max_related, project)
+
+    # Convert GraphContext to markdown string
+    output = [f"# Context: {url}\n"]
+
+    if hasattr(result, 'primary_results') and result.primary_results:
+        output.append(f"**Found {len(result.primary_results)} matching items**\n")
+        for item in result.primary_results:
+            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
+            item_type = getattr(item, 'type', 'item')
+            output.append(f"- **{title}** ({item_type})")
+    else:
+        output.append("No matching items found.\n")
+
+    if hasattr(result, 'related_results') and result.related_results:
+        output.append(f"\n**Related items**: {len(result.related_results)}")
+        for item in result.related_results[:5]:  # Show first 5
+            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
+            output.append(f"- {title}")
+        if len(result.related_results) > 5:
+            output.append(f"- ... and {len(result.related_results) - 5} more")
+
+    if hasattr(result, 'metadata'):
+        metadata = result.metadata
+        if hasattr(metadata, 'total_count'):
+            output.append(f"\n**Total**: {metadata.total_count} items")
+
+    return '\n'.join(output)
 
 
 async def _recent_activity_operation(
