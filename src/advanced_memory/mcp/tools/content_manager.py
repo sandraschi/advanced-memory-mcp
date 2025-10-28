@@ -157,6 +157,10 @@ async def adn_content(
             return "# Error\n\nRead operation requires: identifier"
         return await _read_operation(active_project, identifier, page, page_size)
 
+    elif operation == "read_latest":
+        # Get and read the single most recent note (regardless of date)
+        return await _read_latest_operation(active_project)
+
     elif operation == "view":
         if identifier is None:
             return "# Error\n\nView operation requires: identifier"
@@ -377,6 +381,39 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     return await read_note.fn(
         identifier=identifier, page=page, page_size=page_size, project=active_project.name
     )
+
+
+async def _read_latest_operation(active_project) -> str:
+    """Handle read_latest operation - read the single most recent note."""
+    from advanced_memory.mcp.tools.recent_activity import recent_activity
+
+    # Get single most recent item (any type, past year)
+    result = await recent_activity.fn(
+        type="",  # All types
+        depth=1,
+        timeframe="365d",  # Past year to be safe
+        page=1,
+        page_size=1,  # Just the most recent one
+        max_related=0,
+        project=active_project.name
+    )
+
+    # Extract the most recent item
+    if hasattr(result, 'results') and result.results:
+        ctx_result = result.results[0]
+        item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
+
+        # Get identifier (permalink or title)
+        identifier = getattr(item, 'permalink', getattr(item, 'title', None))
+
+        if identifier:
+            # Read the note content
+            from advanced_memory.mcp.tools.read_note import read_note
+            return await read_note.fn(identifier=identifier, project=active_project.name)
+        else:
+            return "# Error\n\nCould not determine identifier for most recent note"
+    else:
+        return "# No Recent Activity\n\nNo notes found in the past year."
 
 
 async def _view_operation(active_project, identifier: str) -> str:
