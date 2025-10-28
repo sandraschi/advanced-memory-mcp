@@ -16,7 +16,7 @@ async def adn_navigation(
     url: str | None = None,
     dir_name: str = "/",
     depth: int = 1,
-    timeframe: str = "7d",
+    timeframe: str = "30d",
     page: int = 1,
     page_size: int = 10,
     max_related: int = 10,
@@ -74,7 +74,7 @@ async def adn_navigation(
         adn_navigation("build_context", url="memory://projects/ai", depth=2, timeframe="7d")
 
         # Get recent activity
-        adn_navigation("recent_activity", timeframe="today", type_filter="notes")
+        adn_navigation("recent_activity", timeframe="30d", type_filter="notes")
 
         # List directory contents
         adn_navigation("list_directory", dir_name="/projects", depth=2)
@@ -133,27 +133,29 @@ async def _build_context_operation(
     # Convert GraphContext to markdown string
     output = [f"# Context: {url}\n"]
 
-    if hasattr(result, 'primary_results') and result.primary_results:
-        output.append(f"**Found {len(result.primary_results)} matching items**\n")
-        for item in result.primary_results:
+    if hasattr(result, 'results') and result.results:
+        output.append(f"**Found {len(result.results)} matching items**\n")
+        for ctx_result in result.results:
+            # Each result has a primary_result nested inside
+            item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
             title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
             item_type = getattr(item, 'type', 'item')
-            output.append(f"- **{title}** ({item_type})")
+            permalink = getattr(item, 'permalink', '')
+            output.append(f"- **{title}** ({item_type}) - `{permalink}`")
+
+            # Show related results if any
+            if hasattr(ctx_result, 'related_results') and ctx_result.related_results:
+                for related in ctx_result.related_results[:3]:
+                    rel_item = related.primary_result if hasattr(related, 'primary_result') else related
+                    rel_title = getattr(rel_item, 'title', 'Unknown')
+                    output.append(f"  - Related: {rel_title}")
     else:
         output.append("No matching items found.\n")
 
-    if hasattr(result, 'related_results') and result.related_results:
-        output.append(f"\n**Related items**: {len(result.related_results)}")
-        for item in result.related_results[:5]:  # Show first 5
-            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
-            output.append(f"- {title}")
-        if len(result.related_results) > 5:
-            output.append(f"- ... and {len(result.related_results) - 5} more")
-
     if hasattr(result, 'metadata'):
         metadata = result.metadata
-        if hasattr(metadata, 'total_count'):
-            output.append(f"\n**Total**: {metadata.total_count} items")
+        if hasattr(metadata, 'total_results'):
+            output.append(f"\n**Total results**: {metadata.total_results}")
 
     return '\n'.join(output)
 
@@ -177,19 +179,23 @@ async def _recent_activity_operation(
     # Convert GraphContext to markdown string
     output = ["# Recent Activity\n"]
 
-    if hasattr(result, 'primary_results') and result.primary_results:
-        output.append(f"**Found {len(result.primary_results)} recent items**\n")
-        for item in result.primary_results:
+    if hasattr(result, 'results') and result.results:
+        output.append(f"**Found {len(result.results)} recent items**\n")
+        for ctx_result in result.results:
+            # Each result has a primary_result nested inside
+            item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
             title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
             item_type = getattr(item, 'type', 'item')
-            output.append(f"- **{title}** ({item_type})")
+            permalink = getattr(item, 'permalink', '')
+            output.append(f"- **{title}** ({item_type}) - `{permalink}`")
     else:
         output.append("No recent activity found.\n")
 
     if hasattr(result, 'metadata'):
         metadata = result.metadata
-        if hasattr(metadata, 'total_count'):
-            output.append(f"\n**Total**: {metadata.total_count} items")
+        output.append(f"\n**Timeframe**: {getattr(metadata, 'timeframe', 'N/A')}")
+        if hasattr(metadata, 'total_results'):
+            output.append(f"**Total results**: {metadata.total_results}")
 
     return '\n'.join(output)
 
