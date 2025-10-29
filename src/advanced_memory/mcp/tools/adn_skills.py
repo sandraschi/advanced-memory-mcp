@@ -1,6 +1,7 @@
 """Skills Manager portmanteau tool for Claude Skills integration."""
 
 from pathlib import Path
+from typing import Literal
 
 from loguru import logger
 
@@ -11,7 +12,7 @@ from advanced_memory.utils import generate_permalink
 
 @mcp.tool
 async def adn_skills(
-    operation: str,
+    operation: Literal["create", "read", "update", "delete", "list", "validate", "export", "import", "package", "from_zettel", "to_zettel"],
     identifier: str | None = None,
     skill_name: str | None = None,
     description: str | None = None,
@@ -19,10 +20,10 @@ async def adn_skills(
     source_path: str | None = None,
     export_path: str | None = None,
     category: str | None = None,
-    difficulty: str | None = None,
+    difficulty: Literal["beginner", "intermediate", "advanced", "expert"] | None = None,
     metadata: dict | None = None,
     filters: dict | None = None,
-    package_format: str = "folder",
+    package_format: Literal["folder", "zip"] | None = "folder",
     page: int = 1,
     page_size: int = 20,
     project: str | None = None,

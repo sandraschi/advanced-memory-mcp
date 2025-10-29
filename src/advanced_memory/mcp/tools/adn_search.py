@@ -4,6 +4,8 @@ This tool consolidates all search operations: notes, obsidian, joplin, notion, e
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+from typing import Literal
+
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -11,10 +13,10 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 @mcp.tool
 async def adn_search(
-    operation: str,
+    operation: Literal["notes", "obsidian", "joplin", "notion", "evernote"],
     query: str,
     source_path: str | None = None,
-    search_type: str = "text",
+    search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"] | None = "text",
     page: int = 1,
     page_size: int = 10,
     max_results: int = 20,

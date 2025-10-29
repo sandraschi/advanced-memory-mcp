@@ -4,6 +4,8 @@ This tool consolidates navigation operations: build_context, recent_activity, li
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+from typing import Literal
+
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -11,7 +13,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 
 @mcp.tool
 async def adn_navigation(
-    operation: str,
+    operation: Literal["build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"],
     identifier: str | None = None,
     url: str | None = None,
     dir_name: str = "/",
@@ -21,8 +23,8 @@ async def adn_navigation(
     page_size: int = 10,
     max_related: int = 10,
     file_name_glob: str | None = None,
-    type_filter: str | None = "",
-    level: str = "basic",
+    type_filter: Literal["entity", "observation", "relation", ""] | None = "",
+    level: Literal["basic", "intermediate", "advanced"] | None = "basic",
     focus: str | None = None,
     project: str | None = None,
 ) -> str:
@@ -48,18 +50,18 @@ async def adn_navigation(
     - Background process monitoring
 
     Args:
-        operation: The navigation operation to perform
+        operation: The navigation operation to perform (build_context, recent_activity, list_directory, backlinks, status, sync_status)
         identifier: Note identifier for backlinks operation
         url: Memory URL or pattern for context building
         dir_name: Directory path to list
         depth: Relationship exploration depth or directory recursion depth
-        timeframe: Time window for activity filtering
+        timeframe: Time window for activity filtering (e.g., "1d", "7d", "30d", "1 week")
         page: Pagination page for results
         page_size: Results per page
         max_related: Maximum related items to include
         file_name_glob: Glob pattern for file filtering
-        type_filter: Type filter for recent activity
-        level: Status detail level
+        type_filter: Type filter for recent activity (entity, observation, relation, or "" for all types)
+        level: Status detail level (basic, intermediate, advanced)
         focus: Specific area to focus on
         project: Optional project name. Supports:
             - None (default): uses current active project
