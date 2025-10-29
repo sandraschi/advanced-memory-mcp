@@ -115,9 +115,46 @@ async def _notes_search(
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search import search_notes
 
-    return await search_notes(
+    result = await search_notes(
         query, page, page_size, "text", types, entity_types, after_date, project
-    )  # type: ignore[operator,no-any-return]
+    )
+
+    # Convert SearchResponse to string if needed
+    if isinstance(result, str):
+        return result
+
+    # Format SearchResponse as markdown string
+    output = [f"# Search Results: {len(result.results)} matches\n"]
+
+    if not result.results:
+        output.append("No results found for your query.\n")
+        output.append("**Suggestions:**")
+        output.append("- Try broader terms")
+        output.append("- Check spelling")
+        output.append("- Use fewer search terms")
+        return "\n".join(output)
+
+    for idx, item in enumerate(result.results, 1):
+        title = item.title or "Untitled"
+        permalink = item.permalink or ""
+        item_type = item.type.value if hasattr(item.type, 'value') else str(item.type)
+
+        output.append(f"## {idx}. {title}")
+        output.append(f"**Type:** {item_type}")
+        output.append(f"**Permalink:** `{permalink}`")
+        output.append(f"**Score:** {item.score:.2f}")
+
+        # Add content snippet if available
+        if item.content:
+            snippet = item.content[:200] + "..." if len(item.content) > 200 else item.content
+            output.append(f"**Preview:** {snippet}")
+
+        output.append("")
+
+    # Add pagination info
+    output.append(f"**Page:** {result.current_page} of {((len(result.results) // result.page_size) + 1 if result.results else 1)}")
+
+    return "\n".join(output)
 
 
 async def _obsidian_search(
