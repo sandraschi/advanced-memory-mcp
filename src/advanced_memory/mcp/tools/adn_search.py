@@ -33,6 +33,12 @@ async def adn_search(
     This portmanteau tool consolidates all search operations into a single interface,
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
 
+    ⚠️ IMPORTANT: The "notes" operation searches CONTENT (text within notes), not by date/recency.
+    
+    - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
+    - To search by topic AND filter by date: Use the `after_date` parameter
+    - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
+
     SUPPORTED OPERATIONS:
     - notes: Full-text search across Advanced Memory knowledge base
     - obsidian: Search through external Obsidian vaults without importing

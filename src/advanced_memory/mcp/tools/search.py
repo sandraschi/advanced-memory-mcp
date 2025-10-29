@@ -255,6 +255,12 @@ async def search_notes(
     or exact permalink lookup. It supports filtering by content type, entity type,
     and date, with advanced boolean and phrase search capabilities.
 
+    ⚠️ IMPORTANT: This tool searches CONTENT (text within notes), not by date/recency.
+    
+    - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
+    - To find notes by topic AND filter by date: Use `after_date` parameter
+    - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
+
     ## Search Syntax Examples
 
     ### Basic Searches
