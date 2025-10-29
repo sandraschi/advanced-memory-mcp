@@ -84,8 +84,14 @@ def format_search_response(search_response: SearchResponse) -> str:
 ### Priority 3: Test all portmanteau tools
 Run comprehensive tests to ensure all portmanteau tools always return strings, not Pydantic objects.
 
-## Files to Modify
-1. `src/advanced_memory/mcp/tools/adn_search.py` - Add SearchResponse formatting
+## Files Modified
+1. ✅ `src/advanced_memory/mcp/tools/adn_search.py` - Added SearchResponse formatting (FIXED)
+
+## Changes Made
+- Modified `_notes_search` to convert `SearchResponse` objects to formatted markdown strings
+- Added proper handling for error cases (when search_notes returns a string)
+- Added content previews and pagination info to search results
+- Fixed linting errors (whitespace, unused imports)
 
 ## Related Files
 - `src/advanced_memory/mcp/tools/search.py` - source of SearchResponse
