@@ -275,7 +275,25 @@ async def _notion_search(
 ) -> str:
     """Handle Notion export search operation."""
     if not source_path:
-        return "# Error\n\nNotion search requires: source_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** notion
+
+**Missing:** source_path parameter
+
+The notion operation searches an external Notion export directory.
+You must provide the path to the export folder.
+
+**Example:**
+```
+adn_search(
+    operation="notion",
+    query="project notes",
+    source_path="/path/to/notion-export"
+)
+```
+
+**Provide the source_path parameter and try again.**"""
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
 
@@ -293,7 +311,25 @@ async def _evernote_search(
 ) -> str:
     """Handle Evernote export search operation."""
     if not source_path:
-        return "# Error\n\nEvernote search requires: source_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** evernote
+
+**Missing:** source_path parameter
+
+The evernote operation searches an external Evernote export directory.
+You must provide the path to the export folder containing .enex files.
+
+**Example:**
+```
+adn_search(
+    operation="evernote",
+    query="meeting notes",
+    source_path="/path/to/evernote-export"
+)
+```
+
+**Provide the source_path parameter and try again.**"""
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
 

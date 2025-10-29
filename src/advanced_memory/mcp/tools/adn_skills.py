@@ -286,7 +286,27 @@ async def _create_operation(
 ) -> str:
     """Create new skill using skill-creator init pattern."""
     if not skill_name or not description:
-        return "# Error\n\nCreate requires: skill_name and description parameters"
+        return """# Error: Missing Required Parameters
+
+**Operation:** create
+
+**Missing:** skill_name and/or description
+
+The create operation requires both:
+- **skill_name**: Hyphen-case name (e.g., "python-expert", "my-skill")
+- **description**: When Claude should use this skill
+
+**Example:**
+```
+adn_skills(
+    operation="create",
+    skill_name="python-expert",
+    description="Expert Python guidance for advanced patterns and best practices",
+    category="developer"
+)
+```
+
+**Provide both required parameters and try again.**"""
 
     active_project = get_active_project(project)
 
@@ -301,7 +321,20 @@ async def _create_operation(
 
     # Validate description (no angle brackets)
     if "<" in description or ">" in description:
-        return "# Error\n\nDescription cannot contain angle brackets (< or >)"
+        return f"""# Error: Invalid Description Format
+
+**Problem:** Description contains angle brackets (< or >)
+
+**Your description:** {description[:100]}...
+
+Angle brackets are not allowed in Claude Skills descriptions as they can cause parsing issues.
+
+**How to fix:** Remove < and > characters from your description.
+
+**Example of valid description:**
+"Expert Python guidance for advanced patterns and best practices"
+
+**Try again with a description without angle brackets.**"""
 
     # Create skill folder structure
     skill_folder = f"skills/{category or 'general'}"
@@ -469,7 +502,23 @@ Files used in output (templates, boilerplate, etc.).
 async def _read_operation(identifier: str | None, project: str | None) -> str:
     """Read skill in SKILL.md format."""
     if not identifier:
-        return "# Error\n\nRead requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** read
+
+**Missing:** identifier parameter
+
+The read operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="read",
+    identifier="python-expert"
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     # Read note content
     from advanced_memory.mcp.tools.read_note import read_note
@@ -487,7 +536,24 @@ async def _update_operation(
 ) -> str:
     """Update existing skill."""
     if not identifier:
-        return "# Error\n\nUpdate requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** update
+
+**Missing:** identifier parameter
+
+The update operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="update",
+    identifier="python-expert",
+    content="# Updated skill content..."
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     # Update using edit_note
     from advanced_memory.mcp.tools.edit_note import edit_note
@@ -497,13 +563,46 @@ async def _update_operation(
             identifier=identifier, operation="replace", content=content, project=project
         )
     else:
-        return f"# Error\n\nUpdate requires content parameter\n\nUse: adn_skills('update', identifier='{identifier}', content='...updated content...')"
+        return f"""# Error: Missing Required Parameter
+
+**Operation:** update
+
+**Missing:** content parameter
+
+The update operation requires new content for the skill.
+
+**Example:**
+```
+adn_skills(
+    operation="update",
+    identifier="{identifier}",
+    content="# Updated skill instructions\\n\\n..."
+)
+```
+
+**Provide the content parameter and try again.**"""
 
 
 async def _delete_operation(identifier: str | None, project: str | None) -> str:
     """Delete skill."""
     if not identifier:
-        return "# Error\n\nDelete requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** delete
+
+**Missing:** identifier parameter
+
+The delete operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="delete",
+    identifier="python-expert"
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     from advanced_memory.mcp.tools.delete_note import delete_note
 
@@ -569,7 +668,23 @@ adn_skills("import", source_path="D:/anthropic-skills/skill-creator")"""
 async def _validate_operation(identifier: str | None, project: str | None) -> str:
     """Validate skill format compliance with repair suggestions."""
     if not identifier:
-        return "# Error\n\nValidate requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** validate
+
+**Missing:** identifier parameter
+
+The validate operation requires the skill's name or identifier to check.
+
+**Example:**
+```
+adn_skills(
+    operation="validate",
+    identifier="python-expert"
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     # Read the skill
     from advanced_memory.mcp.tools.read_note import read_note
@@ -656,7 +771,26 @@ async def _export_operation(
 ) -> str:
     """Export skills to Claude Skills format."""
     if not export_path:
-        return "# Error\n\nExport requires: export_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** export
+
+**Missing:** export_path parameter
+
+The export operation requires a destination path for exported skills.
+
+**Example:**
+```
+adn_skills(
+    operation="export",
+    export_path="D:/my-skills/",
+    package_format="zip"
+)
+```
+
+**Tip:** Omit export_path to use default Desktop location.
+
+**Provide export_path or use adn_export('claude_skills') for default location.**"""
 
     # List skills to export
     skills_list = await _list_operation(filters, 1, 1000, project)
@@ -685,22 +819,68 @@ For now, use:
 async def _import_operation(source_path: str | None, project: str | None) -> str:
     """Import Claude Skills from folders."""
     if not source_path:
-        return "# Error\n\nImport requires: source_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** import
+
+**Missing:** source_path parameter
+
+The import operation requires the path to a Claude Skills folder or .zip file.
+
+**Example:**
+```
+adn_skills(
+    operation="import",
+    source_path="D:/anthropic-skills/skill-creator"
+)
+```
+
+**Provide the source_path parameter and try again.**"""
 
     source = Path(source_path)
     if not source.exists():
-        return f"# Error\n\nSource path not found: {source_path}"
+        return f"""# Error: Source Path Not Found
+
+**Operation:** import
+
+**Path you provided:** {source_path}
+
+**Problem:** This path does not exist on your file system.
+
+**How to fix:**
+1. Check the path spelling
+2. Verify the directory/file exists
+3. Use absolute paths (e.g., "D:/skills/" not "~/skills/")
+4. On Windows, use forward slashes or double backslashes
+
+**Try again with a valid path.**"""
 
     # Check for SKILL.md
     skill_md = source / "SKILL.md"
     if not skill_md.exists():
-        return f"""# Error\n\nNo SKILL.md found in {source_path}
+        return f"""# Error: Invalid Skill Structure
 
-SKILL STRUCTURE:
+**Operation:** import
+
+**Path you provided:** {source_path}
+
+**Problem:** No SKILL.md file found in this directory
+
+**Expected structure:**
+```
 skill-name/
-  └── SKILL.md (required)
+  └── SKILL.md (required entrypoint file)
+  └── scripts/ (optional)
+  └── references/ (optional)
+  └── assets/ (optional)
+```
 
-Ensure the source path contains a valid skill folder."""
+**How to fix:**
+1. Verify you're pointing to a skill folder (not a parent directory)
+2. Check that SKILL.md exists in the folder
+3. Make sure the file is named exactly "SKILL.md" (case-sensitive)
+
+**Try again with a valid skill folder path.**"""
 
     # Read and parse SKILL.md
     import yaml
@@ -712,19 +892,76 @@ Ensure the source path contains a valid skill folder."""
 
     match = re.match(r"^---\n(.*?)\n---\n(.*)$", content, re.DOTALL)
     if not match:
-        return "# Error\n\nInvalid SKILL.md format (no frontmatter)"
+        return f"""# Error: Invalid SKILL.md Format
+
+**Operation:** import
+
+**Path:** {source_path}
+
+**Problem:** SKILL.md is missing YAML frontmatter
+
+Claude Skills must start with YAML frontmatter:
+```
+---
+name: skill-name
+description: When to use this skill
+---
+
+# Skill content here
+```
+
+**Check the SKILL.md file format and try again.**"""
 
     try:
         frontmatter = yaml.safe_load(match.group(1))
         match.group(2)
     except Exception as e:
-        return f"# Error\n\nFailed to parse SKILL.md: {str(e)}"
+        return f"""# Error: Invalid YAML Frontmatter
+
+**Operation:** import
+
+**Path:** {source_path}
+
+**Problem:** Could not parse YAML frontmatter
+
+**Error details:** {str(e)}
+
+**Common issues:**
+- Indentation errors (use spaces, not tabs)
+- Unquoted special characters in values
+- Missing colons after field names
+
+**Example of valid frontmatter:**
+```yaml
+---
+name: my-skill
+description: When to use this skill
+---
+```
+
+**Fix the YAML syntax and try again.**"""
 
     skill_name = frontmatter.get("name")
     description = frontmatter.get("description")
 
     if not skill_name or not description:
-        return "# Error\n\nSKILL.md missing required fields (name and description)"
+        return f"""# Error: Missing Required Fields
+
+**Operation:** import
+
+**Path:** {source_path}
+
+**Problem:** SKILL.md frontmatter missing required fields
+
+**Required fields:**
+- **name**: skill-name-in-hyphen-case
+- **description**: When Claude should use this skill
+
+**Your frontmatter has:**
+- name: {"✅ " + skill_name if skill_name else "❌ MISSING"}
+- description: {"✅ " + description[:50] + "..." if description else "❌ MISSING"}
+
+**Add the missing fields to SKILL.md and try again.**"""
 
     # Determine category from metadata or path
     skill_metadata = frontmatter.get("metadata", {})
@@ -760,7 +997,24 @@ async def _package_operation(
 ) -> str:
     """Package skill as distributable .zip."""
     if not identifier:
-        return "# Error\n\nPackage requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** package
+
+**Missing:** identifier parameter
+
+The package operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="package",
+    identifier="python-expert",
+    export_path="D:/my-skills/"
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     return f"""# Package Skill
 
@@ -787,7 +1041,27 @@ async def _from_zettel_operation(
 ) -> str:
     """Convert zettelkasten note to Claude Skill."""
     if not identifier or not description:
-        return "# Error\n\nConversion requires: identifier and description parameters"
+        return """# Error: Missing Required Parameters
+
+**Operation:** from_zettel
+
+**Missing:** identifier and/or description
+
+Converting a note to a Claude Skill requires:
+- **identifier**: The note's title or permalink
+- **description**: When Claude should use this skill
+
+**Example:**
+```
+adn_skills(
+    operation="from_zettel",
+    identifier="Python Fundamentals",
+    description="Guide for Python fundamentals - use when teaching Python basics",
+    category="developer"
+)
+```
+
+**Provide both required parameters and try again.**"""
 
     # Read the note
     from advanced_memory.mcp.tools.read_note import read_note
@@ -861,7 +1135,23 @@ async def _from_zettel_operation(
 async def _to_zettel_operation(identifier: str | None, project: str | None) -> str:
     """Convert Claude Skill back to regular note."""
     if not identifier:
-        return "# Error\n\nConversion requires: identifier parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** to_zettel
+
+**Missing:** identifier parameter
+
+The to_zettel operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="to_zettel",
+    identifier="python-expert"
+)
+```
+
+**Provide the skill identifier and try again.**"""
 
     # Read the skill
     from advanced_memory.mcp.tools.read_note import read_note
@@ -879,7 +1169,27 @@ async def _to_zettel_operation(identifier: str | None, project: str | None) -> s
     match = re.match(r"^---\n(.*?)\n---\n(.*)$", skill_content, re.DOTALL)
 
     if not match:
-        return "# Error\n\nNo frontmatter found - already a regular note?"
+        return f"""# Error: Not a Claude Skill
+
+**Operation:** to_zettel
+
+**Identifier:** {identifier}
+
+**Problem:** This note doesn't have Claude Skills frontmatter
+
+This note may already be a regular zettelkasten note (not a skill).
+
+**Claude Skills have:**
+```markdown
+---
+name: skill-name
+description: When to use
+---
+```
+
+**Regular notes have simpler frontmatter or none.**
+
+**This note is probably already a regular note - no conversion needed.**"""
 
     frontmatter = yaml.safe_load(match.group(1))
     body = match.group(2)

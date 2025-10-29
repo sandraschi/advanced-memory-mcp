@@ -355,7 +355,25 @@ SUGGESTIONS:
 
     except Exception as e:
         logger.error(f"Error finding backlinks: {e}")
-        return f"# Error\n\nFailed to find backlinks for '{identifier}': {str(e)}"
+        return f"""# Error: Backlinks Search Failed
+
+**Operation:** backlinks
+
+**Identifier:** {identifier}
+
+**Problem:** {str(e)}
+
+**Possible causes:**
+1. The note identifier doesn't exist
+2. Database connection issue
+3. Project sync needed
+
+**How to fix:**
+1. Verify the note exists: Use `adn_content("read", identifier="{identifier}")`
+2. Check project status: Use `adn_navigation("status", level="basic")`
+3. Try searching for the note first: Use `adn_search("notes", query="{identifier}")`
+
+**Try again after verifying the note exists.**"""
 
 
 async def _sync_status_operation(project: str | None) -> str:
