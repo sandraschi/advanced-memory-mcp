@@ -61,20 +61,33 @@ async def adn_search(
     - Content previews and context highlighting
 
     Args:
-        operation: The search operation to perform
-        query: Search terms with boolean operators and phrases
-        source_path: Path to external vault/export for external searches
-        search_type: Search scope for external searches
-        page: Result page for pagination
-        page_size: Results per page
-        max_results: Maximum number of results to return
-        case_sensitive: Whether search should be case-sensitive
-        include_content: Include content previews in results
-        types: Content type filters for notes search
-        entity_types: Entity category filters for notes search
-        after_date: Date filter - content FROM this date (e.g., "1 week", "spring 2024", "2024-01-01")
-        before_date: Date filter - content UNTIL this date (e.g., "summer 2024", "2024-12-31")
-        tags: Tag filter for notes search (notes must have ALL specified tags)
+        operation: The search operation to perform. MUST be one of:
+            - "notes": Search Advanced Memory knowledge base (use this for most searches)
+            - "obsidian": Search external Obsidian vault
+            - "joplin": Search external Joplin export
+            - "notion": Search external Notion export
+            - "evernote": Search external Evernote export
+        query: Search terms with boolean operators and phrases (required)
+        source_path: Path to external vault/export (required for obsidian/joplin/notion/evernote operations)
+        search_type: Type of search. MUST be one of:
+            - "text": Full-text search (default)
+            - "title": Search titles only
+            - "permalink": Search by path/permalink
+            - "tag": Search by tag (external vaults)
+            - "file": Search by filename (external vaults)
+            - "link": Search by wikilinks (external vaults)
+            - "frontmatter": Search YAML frontmatter (external vaults)
+            Default: "text"
+        page: Result page for pagination (default: 1)
+        page_size: Results per page (default: 10)
+        max_results: Maximum number of results to return (default: 20)
+        case_sensitive: Whether search should be case-sensitive (default: False)
+        include_content: Include content previews in results (default: False)
+        types: Content type filters for notes search (e.g., ["note", "person"])
+        entity_types: Entity category filters for notes search (e.g., ["entity", "observation"])
+        after_date: Date filter - content FROM this date (e.g., "1 week", "spring 2024", "2024-01-01"). Default: None (all time)
+        before_date: Date filter - content UNTIL this date (e.g., "summer 2024", "2024-12-31"). Default: None (all time)
+        tags: Tag filter for notes search - notes must have ALL specified tags (e.g., ["dog", "training"])
         file_type: File type filter for external searches
         notebook_filter: Filter results to specific notebook
         tag_filter: Filter results by tag name
@@ -115,7 +128,28 @@ async def adn_search(
             query, source_path, case_sensitive, file_type, notebook_filter, tag_filter, max_results
         )
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: notes, obsidian, joplin, notion, evernote"
+        return f"""# Error: Invalid Search Operation
+
+**You provided:** operation="{operation}"
+
+**Valid search operations are:**
+- "notes" - Search Advanced Memory knowledge base (use this for most searches)
+- "obsidian" - Search external Obsidian vault (requires source_path)
+- "joplin" - Search external Joplin export (requires source_path)
+- "notion" - Search external Notion export (requires source_path)
+- "evernote" - Search external Evernote export (requires source_path)
+
+**Example for searching your notes:**
+```
+adn_search(
+    operation="notes",
+    query="german shepherd",
+    tags=["dog"],
+    after_date="spring 2024"
+)
+```
+
+**Check your operation parameter spelling and try again.**"""
 
 
 async def _notes_search(
@@ -179,7 +213,23 @@ async def _obsidian_search(
 ) -> str:
     """Handle Obsidian vault search operation."""
     if not source_path:
-        return "# Error\n\nObsidian search requires: source_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** obsidian
+
+**Missing:** source_path parameter
+
+The obsidian operation searches an external Obsidian vault.
+You must provide the path to the vault directory.
+
+**Example:**
+```
+adn_search(
+    operation="obsidian",
+    query="meeting notes",
+    source_path="/path/to/vault"
+)
+```"""
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
 
@@ -193,7 +243,23 @@ async def _joplin_search(
 ) -> str:
     """Handle Joplin export search operation."""
     if not source_path:
-        return "# Error\n\nJoplin search requires: source_path parameter"
+        return """# Error: Missing Required Parameter
+
+**Operation:** joplin
+
+**Missing:** source_path parameter
+
+The joplin operation searches an external Joplin export directory.
+You must provide the path to the export folder.
+
+**Example:**
+```
+adn_search(
+    operation="joplin",
+    query="project notes",
+    source_path="/path/to/joplin-export"
+)
+```"""
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
 

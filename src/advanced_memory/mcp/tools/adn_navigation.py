@@ -50,19 +50,34 @@ async def adn_navigation(
     - Background process monitoring
 
     Args:
-        operation: The navigation operation to perform (build_context, recent_activity, list_directory, backlinks, status, sync_status)
-        identifier: Note identifier for backlinks operation
-        url: Memory URL or pattern for context building
-        dir_name: Directory path to list
-        depth: Relationship exploration depth or directory recursion depth
-        timeframe: Time window for activity filtering (e.g., "1d", "7d", "30d", "1 week")
-        page: Pagination page for results
-        page_size: Results per page
-        max_related: Maximum related items to include
-        file_name_glob: Glob pattern for file filtering
-        type_filter: Type filter for recent activity (entity, observation, relation, or "" for all types)
-        level: Status detail level (basic, intermediate, advanced)
-        focus: Specific area to focus on
+        operation: The navigation operation to perform. MUST be one of:
+            - "build_context": Navigate knowledge graph via memory:// URLs
+            - "recent_activity": Get recently updated notes (use this for "latest notes")
+            - "list_directory": Browse directory contents
+            - "backlinks": Find notes that reference a specific note
+            - "status": System status and diagnostics
+            - "sync_status": File sync monitoring
+        identifier: Note identifier for backlinks operation (required for operation="backlinks")
+        url: Memory URL or pattern for context building (required for operation="build_context")
+        dir_name: Directory path to list (default: "/")
+        depth: Relationship exploration depth or directory recursion depth (default: 1)
+        timeframe: Time window for activity filtering (default: "30d"). Examples: "1d", "7d", "30d", "1 week", "spring 2024"
+        page: Pagination page for results (default: 1)
+        page_size: Results per page (default: 10)
+        max_related: Maximum related items to include (default: 10)
+        file_name_glob: Glob pattern for file filtering (e.g., "*.md", "*meeting*")
+        type_filter: Type filter for recent activity. MUST be one of:
+            - "entity": Only entity notes (default if omitted)
+            - "observation": Only observations
+            - "relation": Only relations
+            - "": All types (empty string)
+            Default: "" (all types)
+        level: Status detail level. MUST be one of:
+            - "basic": Quick overview (default)
+            - "intermediate": Detailed stats
+            - "advanced": Full diagnostics
+            Default: "basic"
+        focus: Specific area to focus on (optional, operation-specific)
         project: Optional project name. Supports:
             - None (default): uses current active project
             - "project-name": uses specific project
@@ -94,6 +109,23 @@ async def adn_navigation(
 
     # Route to appropriate operation
     if operation == "build_context":
+        if not url:
+            return """# Error: Missing Required Parameter
+
+**Operation:** build_context
+
+**Missing:** url parameter
+
+The build_context operation requires a memory:// URL to start from.
+
+**Example:**
+```
+adn_navigation(
+    operation="build_context",
+    url="memory://projects/my-project",
+    depth=2
+)
+```"""
         return await _build_context_operation(
             url, depth, timeframe, page, page_size, max_related, project
         )
@@ -105,14 +137,49 @@ async def adn_navigation(
         return await _list_directory_operation(dir_name, depth, file_name_glob, project)
     elif operation == "backlinks":
         if not identifier:
-            return "# Error\n\nBacklinks operation requires: identifier parameter"
+            return """# Error: Missing Required Parameter
+
+**Operation:** backlinks
+
+**Missing:** identifier parameter
+
+The backlinks operation finds all notes that reference a specific note.
+You must provide the note's title, permalink, or identifier.
+
+**Example:**
+```
+adn_navigation(
+    operation="backlinks",
+    identifier="Python Basics"
+)
+```"""
         return await _backlinks_operation(identifier, max_related, project)
     elif operation == "status":
         return await _status_operation(level, focus)
     elif operation == "sync_status":
         return await _sync_status_operation(project)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: build_context, recent_activity, list_directory, backlinks, status, sync_status"
+        return f"""# Error: Invalid Operation
+
+**You provided:** operation="{operation}"
+
+**Valid operations are:**
+- "build_context" - Navigate knowledge graph via memory:// URLs
+- "recent_activity" - Get recently updated notes (use this for "latest notes")
+- "list_directory" - Browse directory contents
+- "backlinks" - Find notes that reference a specific note
+- "status" - System status and diagnostics
+- "sync_status" - File sync monitoring
+
+**Example for finding latest notes:**
+```
+adn_navigation(
+    operation="recent_activity",
+    timeframe="1d"
+)
+```
+
+**Check your operation parameter spelling and try again.**"""
 
 
 async def _build_context_operation(
@@ -125,8 +192,7 @@ async def _build_context_operation(
     project: str | None,
 ) -> str:
     """Handle build context operation."""
-    if not url:
-        return "# Error\n\nBuild context requires: url parameter"
+    # URL validation already done in main function
 
     from advanced_memory.mcp.tools.build_context import build_context
 

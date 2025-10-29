@@ -142,20 +142,39 @@ async def adn_skills(
     - Returns: Conversion confirmation with note location
 
     Args:
-        operation: The skills operation to perform
-        identifier: Skill name or note identifier
-        skill_name: Name for new skill (hyphen-case, lowercase)
-        description: When Claude should use the skill
+        operation: The skills operation to perform. MUST be one of:
+            - "create": Create new skill with template
+            - "read": Read skill in SKILL.md format
+            - "update": Update skill metadata or content
+            - "delete": Remove skill from knowledge base
+            - "list": List all skills with filtering
+            - "validate": Check skill format compliance (Anthropic spec)
+            - "export": Export skills to Claude Skills format
+            - "import": Import Claude Skills from folders/zips
+            - "package": Create distributable .zip
+            - "from_zettel": Convert zettelkasten note to Claude Skill
+            - "to_zettel": Convert Claude Skill back to regular note
+        identifier: Skill name or note identifier (required for read/update/delete/validate/package/from_zettel/to_zettel)
+        skill_name: Name for new skill - must be hyphen-case, lowercase (required for create operation)
+        description: When Claude should use the skill (required for create/from_zettel operations)
         content: Skill instructions (markdown body)
-        source_path: Path to import from (folder or .zip)
-        export_path: Path to export to
-        category: Skill category (developer, researcher, writer, etc.)
-        difficulty: Difficulty level (beginner, intermediate, advanced, expert)
+        source_path: Path to import from - folder or .zip (required for import operation)
+        export_path: Path to export to (optional, defaults to Desktop)
+        category: Skill category (e.g., developer, researcher, writer, creative)
+        difficulty: Difficulty level. MUST be one of:
+            - "beginner": Basic concepts
+            - "intermediate": Standard usage
+            - "advanced": Complex scenarios
+            - "expert": Deep expertise
+            Default: None (not specified)
         metadata: Custom metadata dictionary
         filters: Filtering criteria for list operation
-        package_format: Export format (folder or zip)
-        page: Pagination page for list operation
-        page_size: Results per page
+        package_format: Export/package format. MUST be one of:
+            - "folder": Export as folder structure (default)
+            - "zip": Export as .zip archive
+            Default: "folder"
+        page: Pagination page for list operation (default: 1)
+        page_size: Results per page (default: 20)
         project: Optional project name
 
     Returns:
@@ -227,7 +246,34 @@ async def adn_skills(
     elif operation == "to_zettel":
         return await _to_zettel_operation(identifier, project)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, read, update, delete, list, validate, export, import, package, from_zettel, to_zettel"
+        return f"""# Error: Invalid Skills Operation
+
+**You provided:** operation="{operation}"
+
+**Valid skills operations are:**
+- "create" - Create new skill with template (requires: skill_name, description)
+- "read" - Read skill in SKILL.md format (requires: identifier)
+- "update" - Update skill metadata or content (requires: identifier, content)
+- "delete" - Remove skill from knowledge base (requires: identifier)
+- "list" - List all skills with filtering (optional: filters)
+- "validate" - Check skill format compliance (requires: identifier)
+- "export" - Export skills to Claude Skills format (requires: export_path)
+- "import" - Import Claude Skills from folders/zips (requires: source_path)
+- "package" - Create distributable .zip (requires: identifier)
+- "from_zettel" - Convert note to Claude Skill (requires: identifier, description)
+- "to_zettel" - Convert skill back to regular note (requires: identifier)
+
+**Example for creating a skill:**
+```
+adn_skills(
+    operation="create",
+    skill_name="my-skill",
+    description="When to use this skill",
+    category="developer"
+)
+```
+
+**Check your operation parameter spelling and required parameters.**"""
 
 
 async def _create_operation(
