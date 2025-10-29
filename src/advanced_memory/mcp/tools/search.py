@@ -247,6 +247,8 @@ async def search_notes(
     types: list[str] | None = None,
     entity_types: list[str] | None = None,
     after_date: str | None = None,
+    before_date: str | None = None,
+    tags: list[str] | None = None,
     projects: str | None = None,
 ) -> SearchResponse | str:
     """Search across all content in the knowledge base with comprehensive syntax support.
@@ -256,7 +258,7 @@ async def search_notes(
     and date, with advanced boolean and phrase search capabilities.
 
     ⚠️ IMPORTANT: This tool searches CONTENT (text within notes), not by date/recency.
-    
+
     - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
     - To find notes by topic AND filter by date: Use `after_date` parameter
     - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
@@ -288,8 +290,10 @@ async def search_notes(
     - `search_notes("query", types=["entity"])` - Search only entities
     - `search_notes("query", types=["note", "person"])` - Multiple content types
     - `search_notes("query", entity_types=["observation"])` - Filter by entity type
-    - `search_notes("query", after_date="2024-01-01")` - Recent content only
-    - `search_notes("query", after_date="1 week")` - Relative date filtering
+    - `search_notes("query", after_date="2024-01-01")` - Content after date
+    - `search_notes("query", before_date="2024-12-31")` - Content before date
+    - `search_notes("query", after_date="spring 2024", before_date="summer 2024")` - Date range
+    - `search_notes("query", tags=["dog", "training"])` - Filter by tags (must have ALL tags)
 
     ### Advanced Pattern Examples
     - `search_notes("project AND (meeting OR discussion)")` - Complex boolean logic
@@ -304,7 +308,9 @@ async def search_notes(
         search_type: Type of search to perform, one of: "text", "title", "permalink" (default: "text")
         types: Optional list of note types to search (e.g., ["note", "person"])
         entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
-        after_date: Optional date filter for recent content (e.g., "1 week", "2d", "2024-01-01")
+        after_date: Optional date filter - content FROM this date forward (e.g., "1 week", "2d", "2024-01-01", "spring 2024")
+        before_date: Optional date filter - content UNTIL this date (e.g., "2024-12-31", "summer 2024")
+        tags: Optional list of tags to filter by (notes must have ALL specified tags)
         projects: Optional project specification. Supports multiple formats:
             - None (default): searches current active project only
             - "project-name": searches specific single project
@@ -353,6 +359,14 @@ async def search_notes(
             after_date="1 week"
         )
 
+        # Search with tag and date range filter
+        results = await search_notes(
+            query="german shepherd",
+            tags=["dog", "training"],
+            after_date="spring 2024",
+            before_date="summer 2024"
+        )
+
         # Pattern matching on permalinks
         results = await search_notes(
             query="docs/meeting-*",
@@ -397,6 +411,10 @@ async def search_notes(
         search_query.types = types
     if after_date:
         search_query.after_date = after_date
+    if before_date:
+        search_query.before_date = before_date
+    if tags:
+        search_query.tags = tags
 
     # Parse projects parameter to determine which projects to search
     from advanced_memory.schemas.project_info import ProjectList

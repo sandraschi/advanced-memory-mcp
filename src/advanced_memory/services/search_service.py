@@ -81,6 +81,16 @@ class SearchService:
             else None
         )
 
+        before_date = (
+            (
+                query.before_date
+                if isinstance(query.before_date, datetime)
+                else parse(query.before_date)
+            )
+            if query.before_date
+            else None
+        )
+
         # search
         results = await self.repository.search(
             search_text=query.text,
@@ -90,6 +100,8 @@ class SearchService:
             types=query.types,
             search_item_types=query.entity_types,
             after_date=after_date,
+            before_date=before_date,
+            tags=query.tags,
             limit=limit,
             offset=offset,
         )

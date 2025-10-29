@@ -23,6 +23,8 @@ async def adn_search(
     types: list[str] | None = None,
     entity_types: list[str] | None = None,
     after_date: str | None = None,
+    before_date: str | None = None,
+    tags: list[str] | None = None,
     file_type: str | None = None,
     notebook_filter: str | None = None,
     tag_filter: str | None = None,
@@ -34,7 +36,7 @@ async def adn_search(
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
 
     ⚠️ IMPORTANT: The "notes" operation searches CONTENT (text within notes), not by date/recency.
-    
+
     - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
     - To search by topic AND filter by date: Use the `after_date` parameter
     - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
@@ -68,7 +70,9 @@ async def adn_search(
         include_content: Include content previews in results
         types: Content type filters for notes search
         entity_types: Entity category filters for notes search
-        after_date: Date filter for notes search
+        after_date: Date filter - content FROM this date (e.g., "1 week", "spring 2024", "2024-01-01")
+        before_date: Date filter - content UNTIL this date (e.g., "summer 2024", "2024-12-31")
+        tags: Tag filter for notes search (notes must have ALL specified tags)
         file_type: File type filter for external searches
         notebook_filter: Filter results to specific notebook
         tag_filter: Filter results by tag name
@@ -89,12 +93,15 @@ async def adn_search(
 
         # Search with filters
         adn_search("notes", query="research", entity_types=["note"], after_date="2024-01-01")
+
+        # Search with tags and date range
+        adn_search("notes", query="german shepherd", tags=["dog", "training"], after_date="spring 2024", before_date="summer 2024")
     """
     logger.info(f"MCP tool call tool=adn_search operation={operation} query={query}")
 
     # Route to appropriate operation
     if operation == "notes":
-        return await _notes_search(query, page, page_size, types, entity_types, after_date, project)
+        return await _notes_search(query, page, page_size, types, entity_types, after_date, before_date, tags, project)
     elif operation == "obsidian":
         return await _obsidian_search(query, source_path, search_type, max_results, include_content)
     elif operation == "joplin":
@@ -116,13 +123,15 @@ async def _notes_search(
     types: list[str] | None,
     entity_types: list[str] | None,
     after_date: str | None,
+    before_date: str | None,
+    tags: list[str] | None,
     project: str | None,
 ) -> str:
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search import search_notes
 
     result = await search_notes(
-        query, page, page_size, "text", types, entity_types, after_date, project
+        query, page, page_size, "text", types, entity_types, after_date, before_date, tags, project
     )
 
     # Convert SearchResponse to string if needed

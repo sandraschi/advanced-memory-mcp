@@ -366,6 +366,8 @@ class SearchRepository:
         title: str | None = None,
         types: list[str] | None = None,
         after_date: datetime | None = None,
+        before_date: datetime | None = None,
+        tags: list[str] | None = None,
         search_item_types: list[SearchItemType] | None = None,
         limit: int = 10,
         offset: int = 0,
@@ -440,13 +442,24 @@ class SearchRepository:
             type_list = ", ".join(f"'{t}'" for t in types)
             conditions.append(f"json_extract(metadata, '$.entity_type') IN ({type_list})")
 
-        # Handle date filter using datetime() for proper comparison
+        # Handle date filters using datetime() for proper comparison
         if after_date:
             params["after_date"] = after_date
             conditions.append("datetime(created_at) > datetime(:after_date)")
 
             # order by most recent first
             order_by_clause = ", updated_at DESC"
+
+        if before_date:
+            params["before_date"] = before_date
+            conditions.append("datetime(created_at) < datetime(:before_date)")
+
+        # Handle tag filter (notes must have ALL specified tags)
+        if tags:
+            for idx, tag in enumerate(tags):
+                tag_param = f"tag_{idx}"
+                params[tag_param] = f"%{tag}%"
+                conditions.append(f"json_extract(metadata, '$.tags') LIKE :{tag_param}")
 
         # Always filter by project_id
         params["project_id"] = self.project_id
