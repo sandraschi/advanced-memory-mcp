@@ -33,7 +33,7 @@ Here's what I found from previous conversations:
 {{/each}}
 {{/if}}
 
-You can read this document with: `adn_content("read", identifier="{{ primary_result.permalink }}")`
+Read this with `adn_content`: operation="read", identifier="{{ primary_result.permalink }}"
 
 {{#if related_results}}
 ## Related Context
@@ -44,9 +44,9 @@ You can read this document with: `adn_content("read", identifier="{{ primary_res
 - title: {{ title }}
 
 {{#if permalink}}
-You can view this document with: `adn_content("read", identifier="{{ permalink }}")`
+View with `adn_content`: operation="read", identifier="{{ permalink }}"
 {{else}}
-You can view this file with: `adn_content("read", identifier="{{ file_path }}")`
+View with `adn_content`: operation="read", identifier="{{ file_path }}"
 {{/if}}
 </related>
 {{/each}}
@@ -59,46 +59,26 @@ The supplied query did not return any information specifically on this topic.
 
 ## Opportunity to Capture New Knowledge!
 
-This is an excellent chance to start documenting this topic:
-
-```python
-await adn_content(
-    operation="write",
-    identifier="{{ topic }}",
-    content='''# {{ topic }}
-
-## Overview
-[Summary of what we know about {{ topic }}]
-
-## Key Points
-[Main aspects or components of {{ topic }}]
-
-## Observations
-- [category] [First important observation about {{ topic }}]
-- [category] [Second observation about {{ topic }}]
-
-## Relations
-- relates_to [[Related Topic]]
-- part_of [[Broader Context]]
-''',
-    folder="topics",
-    tags=["{{ topic }}"]
-)
-```
+This is an excellent chance to start documenting this topic using the `adn_content` tool:
+- **operation**: "write"
+- **identifier**: "{{ topic }}"
+- **folder**: "topics"
+- **tags**: "{{ topic }}"
+- **content**: Include ## Overview, ## Key Points, ## Observations (with categories), and ## Relations sections
 
 ## Other Options
 
 Please use the available advanced-memory tools to gather relevant context before responding.
 You can also:
 - Try a different search term
-- Check recent activity with `adn_navigation("recent_activity", timeframe="30d")`
+- Check recent activity: Use `adn_navigation` with operation="recent_activity" and timeframe="30d"
 {{/if}}
 ## Next Steps
 <instructions>
 You can:
-- Explore more with: `adn_search("notes", query="{{ topic }}")`
-- See what's changed: `adn_navigation("recent_activity", timeframe="{{default timeframe "30d"}}")`
-- **Record new learnings or decisions from this conversation:** `adn_content("write", identifier="[Create a meaningful title]", content="[Content with observations and relations]", folder="[Choose a folder]")`
+- Explore more: Use `adn_search` with operation="notes" and query="{{ topic }}"
+- See what's changed: Use `adn_navigation` with operation="recent_activity" and timeframe="{{default timeframe "30d"}}"
+- **Record new learnings or decisions**: Use `adn_content` with operation="write", a meaningful identifier/title, appropriate folder, and content with observations and relations
 
 ## Knowledge Capture Recommendation
 

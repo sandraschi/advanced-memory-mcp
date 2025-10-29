@@ -33,94 +33,43 @@ build these connections!
 
 ## Core Tools Reference
 
-### Modern Portmanteau Tools (Consolidated)
+### Core Portmanteau Tools
 
-Advanced Memory uses **portmanteau tools** - consolidated tools that combine multiple operations. This reduces tool count and improves discoverability.
+Advanced Memory uses **portmanteau tools** - consolidated tools that combine multiple operations. This reduces tool count and improves discoverability in Claude Desktop.
 
-```python
-# CONTENT MANAGEMENT - Write, read, edit, move, delete notes
-await adn_content(
-    operation="write",  # or "read", "edit", "move", "delete", "quick", "daily"
-    identifier="Search Design",
-    content="# Search Design\n...",
-    folder="specs",
-    tags=["search", "design"]
-)
+**CONTENT MANAGEMENT** - `adn_content`
+- Write, read, edit, move, delete notes
+- Operations: "write", "read", "edit", "move", "delete", "quick", "daily"
+- Key parameters: operation, identifier, content, folder, tags
 
-# NAVIGATION - Recent activity, context building, directory listing
-await adn_navigation(
-    operation="recent_activity",  # or "build_context", "list_directory", "backlinks", "status"
-    timeframe="7d",  # or "30d", "1 week", etc.
-    depth=2
-)
+**NAVIGATION** - `adn_navigation`
+- Recent activity, context building, directory listing, backlinks
+- Operations: "recent_activity", "build_context", "list_directory", "backlinks", "status"
+- Key parameters: operation, timeframe, depth, url
 
-# SEARCH - Find notes and external vaults
-await adn_search(
-    operation="notes",  # or "obsidian", "joplin", "notion", "evernote"
-    query="authentication system",
-    page=1,
-    page_size=10
-)
+**SEARCH** - `adn_search`
+- Find notes and search external vaults
+- Operations: "notes", "obsidian", "joplin", "notion", "evernote"
+- Key parameters: operation, query, page, page_size
 
-# PROJECT MANAGEMENT - Switch projects, get info
-await adn_project(
-    operation="get_current",  # or "list", "switch", "create", "delete"
-    project_name="my-project"
-)
+**PROJECT MANAGEMENT** - `adn_project`
+- Switch projects, get project info
+- Operations: "get_current", "list", "switch", "create", "delete"
+- Key parameters: operation, project_name
 
-# SKILLS MANAGEMENT - Claude Skills integration
-await adn_skills(
-    operation="create",  # or "read", "list", "validate", "export", "import"
-    skill_name="my-skill",
-    description="When to use this skill"
-)
-```
+**SKILLS MANAGEMENT** - `adn_skills`
+- Claude Skills integration (create, read, validate, export)
+- Operations: "create", "read", "list", "validate", "export", "import"
+- Key parameters: operation, skill_name, description
 
-### Legacy Individual Tools (Still Available)
+**EXPORT/IMPORT** - `adn_export`, `adn_import`
+- Export to multiple formats, import from other systems
+- Export operations: "pandoc", "docsify", "html", "claude_skills", "archive"
+- Import operations: "obsidian", "joplin", "notion", "evernote", "archive"
 
-For compatibility, individual tools still work:
+### Legacy Individual Tools
 
-```python
-# Writing knowledge
-response = await write_note(
-    title="Search Design",
-    content="# Search Design\n...",
-    folder="specs",
-    tags=["search", "design"]
-)
-
-# Reading knowledge
-content = await read_note("Search Design")  # By title
-content = await read_note("specs/search-design")  # By path
-content = await read_note("memory://specs/search")  # By memory URL
-
-# Searching for knowledge
-results = await search_notes(
-    query="authentication system",
-    page=1,
-    page_size=10
-)
-
-# Creating a knowledge visualization
-canvas_result = await canvas(
-    nodes=[{"id": "note1", "label": "Search Design"}],
-    edges=[{"from": "note1", "to": "note2"}],
-    title="Project Overview",
-    folder="diagrams"
-)
-```
-
-### Which Tools to Use?
-
-**Use portmanteau tools (`adn_*`) for:**
-- Better discoverability of all available operations
-- Cleaner tool list in Claude Desktop
-- Consistent parameter patterns
-
-**Use individual tools when:**
-- You prefer the traditional API
-- You're working with existing code
-- You only need one specific operation
+For backward compatibility, individual tools like `write_note`, `read_note`, `search_notes`, and `canvas` still work but portmanteau tools are preferred for better discoverability.
 
 ## memory:// URLs Explained
 
@@ -300,116 +249,51 @@ Discussed strategies for improving the chocolate chip cookie recipe.
 
 When creating relations, you can:
 
-1. Reference existing entities by their exact title
-2. Create forward references to entities that don't exist yet
+1. **Reference existing entities** - Use exact titles of notes that already exist
+2. **Create forward references** - Reference entities that don't exist yet (they'll be linked when created)
 
-```python
-# Example workflow for creating notes with effective relations
-async def create_note_with_effective_relations():
-    # Search for existing entities to reference
-    search_results = await search_notes("travel")
-    existing_entities = [result.title for result in search_results.primary_results]
+**Best Practice Workflow:**
 
-    # Check if specific entities exist
-    packing_tips_exists = "Packing Tips" in existing_entities
-    japan_travel_exists = "Japan Travel Guide" in existing_entities
+1. Search for existing entities before creating relations:
+   - Use `adn_search` with operation="notes" to find existing notes
+   - Check recent activity with `adn_navigation` operation="recent_activity"
 
-    # Prepare relations section - include both existing and forward references
-    relations_section = "## Relations\n"
+2. Include both existing and forward references in your ## Relations section:
+   - Existing: `- references [[Packing Tips]]` (note already exists)
+   - Forward: `- part_of [[Japan Travel Guide]]` (will be created later)
 
-    # Existing reference - exact match to known entity
-    if packing_tips_exists:
-        relations_section += "- references [[Packing Tips]]\n"
-    else:
-        # Forward reference - will be linked when that entity is created later
-        relations_section += "- references [[Packing Tips]]\n"
+3. When you write a note with relations, the response will show:
+   - **Resolved relations** - Links to existing notes
+   - **Forward references** - Placeholders that will auto-link when those notes are created
 
-    # Another possible reference
-    if japan_travel_exists:
-        relations_section += "- part_of [[Japan Travel Guide]]\n"
-
-    # You can also check recently modified notes to reference them
-    recent = await recent_activity(timeframe="1 week")
-    recent_titles = [item.title for item in recent.primary_results]
-
-    if "Transportation Options" in recent_titles:
-        relations_section += "- relates_to [[Transportation Options]]\n"
-
-    # Always include meaningful forward references, even if they don't exist yet
-    relations_section += "- located_in [[Tokyo]]\n"
-    relations_section += "- visited_during [[Spring 2023 Trip]]\n"
-
-    # Now create the note with both verified and forward relations
-    content = f"""# Tokyo Neighborhood Guide
-    
-## Overview
-Details about different Tokyo neighborhoods and their unique characteristics.
-
-## Observations
-- [area] Shibuya is a busy shopping district #shopping
-- [transportation] Yamanote Line connects major neighborhoods #transit
-- [recommendation] Visit Shimokitazawa for vintage shopping #unique
-- [tip] Get a Suica card for easy train travel #convenience
-
-{relations_section}
-    """
-
-    result = await write_note(
-        title="Tokyo Neighborhood Guide",
-        content=content,
-        verbose=True
-    )
-
-    # You can check which relations were resolved and which are forward references
-    if result and 'relations' in result:
-        resolved = [r['to_name'] for r in result['relations'] if r.get('target_id')]
-        forward_refs = [r['to_name'] for r in result['relations'] if not r.get('target_id')]
-
-        print(f"Resolved relations: {resolved}")
-        print(f"Forward references that will be resolved later: {forward_refs}")
+**Example Relations Section:**
+```markdown
+## Relations
+- references [[Packing Tips]]          # Existing note
+- part_of [[Japan Travel Guide]]       # Forward reference
+- relates_to [[Transportation Options]] # Could be either
+- located_in [[Tokyo]]                 # Forward reference
+- visited_during [[Spring 2023 Trip]]  # Forward reference
 ```
 
-## Error Handling
+Forward references are a feature, not a problem! They help you build a connected knowledge graph even when notes are created in any order.
 
-Common issues to watch for:
+## Common Situations
 
-1. **Missing Content**
-   ```python
-   try:
-       content = await read_note("Document")
-   except:
-       # Try search instead
-       results = await search_notes("Document")
-       if results and results.primary_results:
-           # Found something similar
-           content = await read_note(results.primary_results[0].permalink)
-   ```
+**1. Note Not Found**
+- If `adn_content` with operation="read" doesn't find a note, try searching first
+- Use `adn_search` with operation="notes" to find similar titles
+- Then read using the correct identifier from search results
 
-2. **Forward References (Unresolved Relations)**
-   ```python
-   response = await write_note(..., verbose=True)
-   # Check for forward references (unresolved relations)
-   forward_refs = []
-   for relation in response.get('relations', []):
-       if not relation.get('target_id'):
-           forward_refs.append(relation.get('to_name'))
-   
-   if forward_refs:
-       # This is a feature, not an error! Inform the user about forward references
-       print(f"Note created with forward references to: {forward_refs}")
-       print("These will be automatically linked when those notes are created.")
-       
-       # Optionally suggest creating those entities now
-       print("Would you like me to create any of these notes now to complete the connections?")
-   ```
+**2. Forward References (Unresolved Relations)**
+- When you create a note with relations, some may be "forward references" (target note doesn't exist yet)
+- This is a feature, not an error! The links will auto-resolve when those notes are created
+- The response will show which relations resolved and which are forward references
+- You can inform the user: "Note created with forward references to [X]. These will link automatically when those notes are created."
 
-3. **Sync Issues**
-   ```python
-   # If information seems outdated
-   activity = await recent_activity(timeframe="1 hour")
-   if not activity or not activity.primary_results:
-       print("It seems there haven't been recent updates. You might need to run 'basic-memory sync'.")
-   ```
+**3. Information Seems Outdated**
+- Use `adn_navigation` with operation="recent_activity" and timeframe="1h" to check recent changes
+- If no recent updates, the user may need to sync their files
 
 ## Best Practices
 
