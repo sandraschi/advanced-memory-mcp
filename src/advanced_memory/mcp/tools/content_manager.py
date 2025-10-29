@@ -385,6 +385,8 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
 
 async def _read_latest_operation(active_project) -> str:
     """Handle read_latest operation - read the single most recent note."""
+    from loguru import logger
+
     from advanced_memory.mcp.tools.recent_activity import recent_activity
 
     # Get single most recent item (any type, past year)
@@ -398,20 +400,36 @@ async def _read_latest_operation(active_project) -> str:
         project=active_project.name
     )
 
+    # Debug: Log the structure
+    logger.debug(f"GraphContext structure: hasattr(results)={hasattr(result, 'results')}")
+    if hasattr(result, 'results'):
+        logger.debug(f"results length={len(result.results)}")
+        if result.results:
+            logger.debug(f"First result: {result.results[0]}")
+            logger.debug(f"First result type: {type(result.results[0])}")
+
     # Extract the most recent item
     if hasattr(result, 'results') and result.results:
         ctx_result = result.results[0]
-        item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
+
+        # Get primary result from context result
+        if hasattr(ctx_result, 'primary_result') and ctx_result.primary_result:
+            item = ctx_result.primary_result
+        else:
+            # Fallback: try to get the item directly if no primary_result
+            item = ctx_result
 
         # Get identifier (permalink or title)
         identifier = getattr(item, 'permalink', getattr(item, 'title', None))
+
+        logger.debug(f"Extracted identifier: {identifier}")
 
         if identifier:
             # Read the note content
             from advanced_memory.mcp.tools.read_note import read_note
             return await read_note.fn(identifier=identifier, project=active_project.name)
         else:
-            return "# Error\n\nCould not determine identifier for most recent note"
+            return f"# Error\n\nCould not determine identifier for most recent note. Item attributes: {dir(item)}"
     else:
         return "# No Recent Activity\n\nNo notes found in the past year."
 

@@ -70850,3 +70850,370 @@ expected the node content, but found ':'
 2025-10-28 14:23:51 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
 2025-10-28 14:27:09 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
 2025-10-28 14:27:30 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-29 03:13:53 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-29 03:13:56 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-29 03:13:56 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-29 03:13:56 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-29 03:13:56 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-29 03:13:56 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-29 03:13:56 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-29 03:13:56 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-29 03:13:56 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-29 03:13:56 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-29 03:13:56 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-29 03:13:56 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-29 03:13:56 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-29 03:13:56 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-29 03:13:56 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-10-29 03:13:56 | INFO     | MCP tool call tool=adn_content operation=read_latest identifier=None
+2025-10-29 03:13:56 | WARNING  | No current/default project set, using first available: main
+2025-10-29 03:13:56 | INFO     | Getting recent activity from type=, depth=1, timeframe=365d, page=1, page_size=1, max_related=0
+2025-10-29 03:13:56 | INFO     | Switched project context: None -> main
+2025-10-29 03:13:56 | INFO     | Running database migrations...
+2025-10-29 03:13:56 | ERROR    | Error running migrations: Multiple head revisions are present for given argument 'head'; please specify a specific target revision, '<branchname>@head' to narrow to a specific head, or 'heads' for all heads
+2025-10-29 03:13:56 | ERROR    | API unhandled exception
+Traceback (most recent call last):
+
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\base.py", line 219, in _catch_revision_errors
+    yield
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\base.py", line 427, in _upgrade_revs
+    for script in reversed(list(revs))
+                                └ <generator object RevisionMap.iterate_revisions at 0x0000025DCDBA36E0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 814, in iterate_revisions
+    revisions, heads = fn(
+                       └ <bound method RevisionMap._collect_upgrade_revisions of <alembic.script.revision.RevisionMap object at 0x0000025DCDC8FE30>>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 1447, in _collect_upgrade_revisions
+    for rev in self._parse_upgrade_target(
+               │    └ <function RevisionMap._parse_upgrade_target at 0x0000025DCCE7ECA0>
+               └ <alembic.script.revision.RevisionMap object at 0x0000025DCDC8FE30>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 1234, in _parse_upgrade_target
+    return self.get_revisions(target)
+           │    │             └ 'head'
+           │    └ <function RevisionMap.get_revisions at 0x0000025DCCE7E340>
+           └ <alembic.script.revision.RevisionMap object at 0x0000025DCDC8FE30>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 544, in get_revisions
+    resolved_id, branch_label = self._resolve_revision_number(id_)
+                                │    │                        └ 'head'
+                                │    └ <function RevisionMap._resolve_revision_number at 0x0000025DCCE7E7A0>
+                                └ <alembic.script.revision.RevisionMap object at 0x0000025DCDC8FE30>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 778, in _resolve_revision_number
+    current_head = self.get_current_head(branch_label)
+                   │    │                └ None
+                   │    └ <function RevisionMap.get_current_head at 0x0000025DCCE7E200>
+                   └ <alembic.script.revision.RevisionMap object at 0x0000025DCDC8FE30>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\revision.py", line 508, in get_current_head
+    raise MultipleHeads(
+          └ <class 'alembic.script.revision.MultipleHeads'>
+
+alembic.script.revision.MultipleHeads: Multiple heads are present for given argument 'head'; 647e7a75e2cd, 6a8b2c3d4e5f
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\Dev\repos\advanced-memory-mcp\test_read_latest.py", line 19, in <module>
+    asyncio.run(test_read_latest())
+    │       │   └ <function test_read_latest at 0x0000025DC90BE160>
+    │       └ <function run at 0x0000025DC8E80680>
+    └ <module 'asyncio' from 'C:\\Users\\sandr\\AppData\\Roaming\\uv\\python\\cpython-3.12.9-windows-x86_64-none\\Lib\\asyncio\\__i...
+
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           │      │   └ <coroutine object test_read_latest at 0x0000025DCDC3C040>
+           │      └ <function Runner.run at 0x0000025DC9B858A0>
+           └ <asyncio.runners.Runner object at 0x0000025DCD9C69F0>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<test_read_latest() running at D:\Dev\repos\advanced-memory-mcp\test_read_latest.py:10> cb=[...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x0000025DC9B7F4C0>
+           │    └ <ProactorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x0000025DCD9C69F0>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\base_events.py", line 678, in run_until_complete
+    self.run_forever()
+    │    └ <function ProactorEventLoop.run_forever at 0x0000025DC9C476A0>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\windows_events.py", line 322, in run_forever
+    super().run_forever()
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\base_events.py", line 645, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x0000025DC9B85260>
+    └ <ProactorEventLoop running=True closed=False debug=False>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\base_events.py", line 1999, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x0000025DC9AC3560>
+    └ <Handle Task.task_wakeup(<Future finis...api_url=None)>)>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finis...api_url=None)>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finis...api_url=None)>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finis...api_url=None)>)>
+
+  File "D:\Dev\repos\advanced-memory-mcp\test_read_latest.py", line 10, in test_read_latest
+    result = await adn_content.fn(operation="read_latest")
+                   │           └ <function adn_content at 0x0000025DCD705760>
+                   └ FunctionTool(name='adn_content', title=None, description='Comprehensive content management tool for Advanced Memory knowledge...
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\content_manager.py", line 162, in adn_content
+    return await _read_latest_operation(active_project)
+                 │                      └ ProjectConfig(name='main', home=WindowsPath('C:/Users/sandr/Documents/claude-depot'))
+                 └ <function _read_latest_operation at 0x0000025DCD704720>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\content_manager.py", line 391, in _read_latest_operation
+    result = await recent_activity.fn(
+                   │               └ <function recent_activity at 0x0000025DCDBE9800>
+                   └ FunctionTool(name='recent_activity', title=None, description='Get recent activity across the knowledge base.\n\nArgs:\n    ty...
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\recent_activity.py", line 113, in recent_activity
+    response = await call_get(
+                     └ <function call_get at 0x0000025DCD8A6480>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools\utils.py", line 108, in call_get
+    response = await client.get(
+                     │      └ <function AsyncClient.get at 0x0000025DCA9ABD80>
+                     └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1768, in get
+    return await self.request(
+                 │    └ <function AsyncClient.request at 0x0000025DCA9AB920>
+                 └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+                 │    │    │             │                      └ <httpx._client.UseClientDefault object at 0x0000025DCA4BA030>
+                 │    │    │             └ <httpx._client.UseClientDefault object at 0x0000025DCA4BA030>
+                 │    │    └ <Request('GET', 'http://test/main/memory/recent?page=1&page_size=1&max_related=0&depth=1&timeframe=365d')>
+                 │    └ <function AsyncClient.send at 0x0000025DCA9ABB00>
+                 └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+                     │    └ <function AsyncClient._send_handling_auth at 0x0000025DCA9ABBA0>
+                     └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+                     │    └ <function AsyncClient._send_handling_redirects at 0x0000025DCA9ABC40>
+                     └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+                     │    │                    └ <Request('GET', 'http://test/main/memory/recent?page=1&page_size=1&max_related=0&depth=1&timeframe=365d')>
+                     │    └ <function AsyncClient._send_single_request at 0x0000025DCA9ABCE0>
+                     └ <httpx.AsyncClient object at 0x0000025DCD993FE0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+                     │         │                    └ <Request('GET', 'http://test/main/memory/recent?page=1&page_size=1&max_related=0&depth=1&timeframe=365d')>
+                     │         └ <function ASGITransport.handle_async_request at 0x0000025DCA98BA60>
+                     └ <httpx.ASGITransport object at 0x0000025DCD993F80>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\httpx\_transports\asgi.py", line 170, in handle_async_request
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x0000025DCDBEB740>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <fastapi.applications.FastAPI object at 0x0000025DCD236BA0>
+          └ <httpx.ASGITransport object at 0x0000025DCD993F80>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\applications.py", line 1133, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x0000025DCDBEB740>
+                           │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+                           └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function ASGITransport.handle_async_request.<locals>.send at 0x0000025DCDBEB740>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025DCDC0CB30>
+          └ <fastapi.applications.FastAPI object at 0x0000025DCD236BA0>
+> File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000025DCDBEBBA0>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025DCDC0C980>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000025DCDC0CB30>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000025DCDBEBBA0>
+          │                            │    │    │     │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │                            │    │    └ <starlette.requests.Request object at 0x0000025DCDC0C800>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000025DCDC0CA10>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000025DCDC0C980>
+          └ <function wrap_app_handling_exceptions at 0x0000025DCAE8C9A0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000025DCDC0CA10>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <fastapi.routing.APIRouter object at 0x0000025DCD8420F0>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000025DCDC0CA10>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │    │                │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x0000025DCD8420F0>>
+          └ <fastapi.routing.APIRouter object at 0x0000025DCD8420F0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │     │      │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │     └ <function Route.handle at 0x0000025DCAE8F240>
+          └ APIRoute(path='/{project}/memory/recent', name='recent', methods=['GET'])
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │    │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │    └ <function request_response.<locals>.app at 0x0000025DCD5B0F40>
+          └ APIRoute(path='/{project}/memory/recent', name='recent', methods=['GET'])
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBD80>
+          │                            │    │        │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          │                            │    └ <starlette.requests.Request object at 0x0000025DCDC0D070>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x0000025DCDBEB920>
+          └ <function wrap_app_handling_exceptions at 0x0000025DCAE8C9A0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000025DCDBEBA60>
+          │   │      └ <function ASGITransport.handle_async_request.<locals>.receive at 0x0000025DCDBEB420>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0'}, 'http_version': '1.1', 'method': 'GET', 'headers': [(b'host', b'test'), (b'accep...
+          └ <function request_response.<locals>.app.<locals>.app at 0x0000025DCDBEB920>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x0000025DCDC0D070>
+                     └ <function get_request_handler.<locals>.app at 0x0000025DCD5B1D00>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\routing.py", line 379, in app
+    solved_result = await solve_dependencies(
+                          └ <function solve_dependencies at 0x0000025DCD1D7E20>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 650, in solve_dependencies
+    solved_result = await solve_dependencies(
+                          └ <function solve_dependencies at 0x0000025DCD1D7E20>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 650, in solve_dependencies
+    solved_result = await solve_dependencies(
+                          └ <function solve_dependencies at 0x0000025DCD1D7E20>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 650, in solve_dependencies
+    solved_result = await solve_dependencies(
+                          └ <function solve_dependencies at 0x0000025DCD1D7E20>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\fastapi\dependencies\utils.py", line 672, in solve_dependencies
+    solved = await call(**solved_result.values)
+                   │      │             └ {'app_config': AdvancedMemoryConfig(env='dev', projects={'main': 'C:\\Users\\sandr\\Documents\\claude-depot', 'claude-depot-c...
+                   │      └ SolvedDependency(values={'app_config': AdvancedMemoryConfig(env='dev', projects={'main': 'C:\\Users\\sandr\\Documents\\claude...
+                   └ <function get_engine_factory at 0x0000025DCD23B920>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\deps.py", line 84, in get_engine_factory
+    engine, session_maker = await db.get_or_create_db(app_config.database_path)
+                                  │  │                │          └ <property object at 0x0000025DCB5BB560>
+                                  │  │                └ AdvancedMemoryConfig(env='dev', projects={'main': 'C:\\Users\\sandr\\Documents\\claude-depot', 'claude-depot-consolidated': '...
+                                  │  └ <function get_or_create_db at 0x0000025DCCED87C0>
+                                  └ <module 'advanced_memory.db' from 'D:\\Dev\\repos\\advanced-memory-mcp\\src\\advanced_memory\\db.py'>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\db.py", line 129, in get_or_create_db
+    await run_migrations(app_config, db_type)
+          │              │           └ <DatabaseType.FILESYSTEM: 2>
+          │              └ AdvancedMemoryConfig(env='dev', projects={'main': 'C:\\Users\\sandr\\Documents\\claude-depot', 'claude-depot-consolidated': '...
+          └ <function run_migrations at 0x0000025DCCED9080>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\db.py", line 252, in run_migrations
+    command.upgrade(config, "head")
+    │       │       └ <alembic.config.Config object at 0x0000025DCD1A7FB0>
+    │       └ <function upgrade at 0x0000025DCCEB0A40>
+    └ <module 'alembic.command' from 'D:\\Dev\\repos\\advanced-memory-mcp\\.venv\\Lib\\site-packages\\alembic\\command.py'>
+
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\command.py", line 483, in upgrade
+    script.run_env()
+    │      └ <function ScriptDirectory.run_env at 0x0000025DCCEA0D60>
+    └ <alembic.script.base.ScriptDirectory object at 0x0000025DCDC8FDD0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\base.py", line 551, in run_env
+    util.load_python_file(self.dir, "env.py")
+    │    │                │    └ 'D:\\Dev\\repos\\advanced-memory-mcp\\src\\advanced_memory\\alembic'
+    │    │                └ <alembic.script.base.ScriptDirectory object at 0x0000025DCDC8FDD0>
+    │    └ <function load_python_file at 0x0000025DCCC4D760>
+    └ <module 'alembic.util' from 'D:\\Dev\\repos\\advanced-memory-mcp\\.venv\\Lib\\site-packages\\alembic\\util\\__init__.py'>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\util\pyfiles.py", line 116, in load_python_file
+    module = load_module_py(module_id, path)
+             │              │          └ WindowsPath('D:/Dev/repos/advanced-memory-mcp/src/advanced_memory/alembic/env.py')
+             │              └ 'env_py'
+             └ <function load_module_py at 0x0000025DCCC4D800>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\util\pyfiles.py", line 136, in load_module_py
+    spec.loader.exec_module(module)  # type: ignore
+    │    │      │           └ <module 'env_py' from 'D:\\Dev\\repos\\advanced-memory-mcp\\src\\advanced_memory\\alembic\\env.py'>
+    │    │      └ <function _LoaderBasics.exec_module at 0x0000025DC8ECA340>
+    │    └ <_frozen_importlib_external.SourceFileLoader object at 0x0000025DCDCB43B0>
+    └ ModuleSpec(name='env_py', loader=<_frozen_importlib_external.SourceFileLoader object at 0x0000025DCDCB43B0>, origin='D:\\Dev\...
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\alembic\env.py", line 97, in <module>
+    run_migrations_online()
+    └ <function run_migrations_online at 0x0000025DCDD3D760>
+
+  File "D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\alembic\env.py", line 91, in run_migrations_online
+    context.run_migrations()
+    │       └ <function run_migrations at 0x0000025DCCEA3060>
+    └ <module 'alembic.context' from 'D:\\Dev\\repos\\advanced-memory-mcp\\.venv\\Lib\\site-packages\\alembic\\context.py'>
+
+  File "<string>", line 8, in run_migrations
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\runtime\environment.py", line 946, in run_migrations
+    self.get_context().run_migrations(**kw)
+    │    │                              └ {}
+    │    └ <function EnvironmentContext.get_context at 0x0000025DCCEA2520>
+    └ <alembic.runtime.environment.EnvironmentContext object at 0x0000025DCDC8FBF0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\runtime\migration.py", line 615, in run_migrations
+    for step in self._migrations_fn(heads, self):
+                │    │              │      └ <alembic.runtime.migration.MigrationContext object at 0x0000025DCD4B24E0>
+                │    │              └ ('647e7a75e2cd',)
+                │    └ <function upgrade.<locals>.upgrade at 0x0000025DCDD3D3A0>
+                └ <alembic.runtime.migration.MigrationContext object at 0x0000025DCD4B24E0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\command.py", line 472, in upgrade
+    return script._upgrade_revs(revision, rev)
+           │      │             │         └ ('647e7a75e2cd',)
+           │      │             └ 'head'
+           │      └ <function ScriptDirectory._upgrade_revs at 0x0000025DCCEA0B80>
+           └ <alembic.script.base.ScriptDirectory object at 0x0000025DCDC8FDD0>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\base.py", line 415, in _upgrade_revs
+    with self._catch_revision_errors(
+         │    └ <function ScriptDirectory._catch_revision_errors at 0x0000025DCCEA04A0>
+         └ <alembic.script.base.ScriptDirectory object at 0x0000025DCDC8FDD0>
+  File "C:\Users\sandr\AppData\Roaming\uv\python\cpython-3.12.9-windows-x86_64-none\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+    │    │   │     └ MultipleHeads("Multiple heads are present for given argument 'head'; 647e7a75e2cd, 6a8b2c3d4e5f")
+    │    │   └ <method 'throw' of 'generator' objects>
+    │    └ <generator object ScriptDirectory._catch_revision_errors at 0x0000025DCD1DBBE0>
+    └ <contextlib._GeneratorContextManager object at 0x0000025DCDCB4B60>
+  File "D:\Dev\repos\advanced-memory-mcp\.venv\Lib\site-packages\alembic\script\base.py", line 245, in _catch_revision_errors
+    raise util.CommandError(multiple_heads) from mh
+          │    │            └ "Multiple head revisions are present for given argument 'head'; please specify a specific target revision, '<branchname>@head...
+          │    └ <class 'alembic.util.exc.CommandError'>
+          └ <module 'alembic.util' from 'D:\\Dev\\repos\\advanced-memory-mcp\\.venv\\Lib\\site-packages\\alembic\\util\\__init__.py'>
+
+alembic.util.exc.CommandError: Multiple head revisions are present for given argument 'head'; please specify a specific target revision, '<branchname>@head' to narrow to a specific head, or 'heads' for all heads
+2025-10-29 03:15:14 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-10-29 03:15:16 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-10-29 03:15:16 | INFO     | Loaded 7 templates for category 'ai'
+2025-10-29 03:15:16 | INFO     | Loaded 2 templates for category 'creative'
+2025-10-29 03:15:16 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-10-29 03:15:16 | INFO     | Loaded 19 templates for category 'developer'
+2025-10-29 03:15:16 | INFO     | Loaded 7 templates for category 'devops'
+2025-10-29 03:15:16 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-10-29 03:15:16 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-10-29 03:15:16 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-10-29 03:15:16 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-10-29 03:15:16 | INFO     | Loaded 8 templates for category 'researcher'
+2025-10-29 03:15:16 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-10-29 03:15:16 | INFO     | Loaded 3 templates for category 'writer'
+2025-10-29 03:15:16 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
