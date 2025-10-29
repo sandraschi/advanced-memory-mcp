@@ -11,6 +11,46 @@ from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchItemType, SearchQuery, SearchResponse
 
 
+def _format_search_results_as_markdown(
+    search_response: SearchResponse, query: str, projects: list[str]
+) -> str:
+    """Convert SearchResponse to formatted markdown string for MCP compliance."""
+    output = [f"# Search Results for: \"{query}\"\n"]
+
+    if not search_response.results:
+        output.append("No results found for your query.\n")
+        output.append("## Suggestions:")
+        output.append("- Try broader search terms")
+        output.append("- Check spelling")
+        output.append("- Use fewer search terms")
+        output.append("- Try recent_activity() to see latest notes")
+        return "\n".join(output)
+
+    output.append(f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n")
+
+    for idx, item in enumerate(search_response.results, 1):
+        title = item.title or "Untitled"
+        permalink = item.permalink or ""
+
+        output.append(f"## {idx}. {title}")
+        output.append(f"**Type:** {item.type}")
+        output.append(f"**Permalink:** `{permalink}`")
+        output.append(f"**Score:** {item.score:.2f}")
+
+        # Add content snippet if available
+        if item.content:
+            snippet = item.content[:200] + "..." if len(item.content) > 200 else item.content
+            output.append(f"**Preview:** {snippet}")
+
+        output.append("")
+
+    # Add pagination info
+    total_pages = (len(search_response.results) // search_response.page_size) + 1 if search_response.results else 1
+    output.append(f"**Page:** {search_response.current_page} of {total_pages}")
+
+    return "\n".join(output)
+
+
 def _format_search_error_response(error_message: str, query: str, search_type: str = "text") -> str:
     """Format helpful error responses for search failures that guide users to successful searches."""
 
@@ -423,11 +463,14 @@ async def search_notes(
         logger.info(
             f"Searched {len(searched_projects)} projects, found {len(all_results)} total results"
         )
-        return SearchResponse(
+
+        # Format as markdown string for MCP compliance
+        search_response = SearchResponse(
             results=all_results[:results_per_page],  # Respect page size
             current_page=page,
             page_size=results_per_page,
         )
+        return _format_search_results_as_markdown(search_response, query, searched_projects)
 
     # Single project search (default behavior)
     active_project = get_active_project(
@@ -452,7 +495,8 @@ async def search_notes(
             # Don't treat this as an error, but the user might want guidance
             # We return the empty result as normal - the user can decide if they need help
 
-        return result
+        # Format as markdown string for MCP compliance
+        return _format_search_results_as_markdown(result, query, [active_project.name])
 
     except Exception as e:
         logger.error(f"Search failed for query '{query}': {e}")
