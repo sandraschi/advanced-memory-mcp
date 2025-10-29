@@ -23,10 +23,10 @@ Here are the most relevant results:
             {{/if}}
 
             {{#if permalink}}
-            You can view this content with: `read_note("{{ permalink }}")`
-            Or explore its context with: `build_context("memory://{{ permalink }}")`
+            You can view this content with: `adn_content("read", identifier="{{ permalink }}")`
+            Or explore its context with: `adn_navigation("build_context", url="memory://{{ permalink }}", depth=2)`
             {{else}}
-            You can view this file with: `read_file("{{ file_path }}")`
+            You can view this file with: `adn_content("read", identifier="{{ file_path }}")`
             {{/if}}
         {{/dedent}}
         {{/if_cond}}
@@ -35,35 +35,37 @@ Here are the most relevant results:
 ## Next Steps
 
 You can:
-- Refine your search: `search_notes("{{ query }} AND additional_term")`
-- Exclude terms: `search_notes("{{ query }} NOT exclude_term")`
-- View more results: `search_notes("{{ query }}", after_date=None)`
-- Check recent activity: `recent_activity()`
+- Refine your search: `adn_search("notes", query="{{ query }} AND additional_term")`
+- Exclude terms: `adn_search("notes", query="{{ query }} NOT exclude_term")`
+- View more results: `adn_search("notes", query="{{ query }}", page=2)`
+- Check recent activity: `adn_navigation("recent_activity", timeframe="30d")`
 
 ## Synthesize and Capture Knowledge
 
 Consider creating a new note that synthesizes what you've learned:
 
 ```python
-await write_note(
-    title="Synthesis of {{capitalize query}} Information",
-    content='''
-    # Synthesis of {{capitalize query}} Information
+await adn_content(
+    operation="write",
+    identifier="Synthesis of {{capitalize query}} Information",
+    content='''# Synthesis of {{capitalize query}} Information
     
-    ## Overview
-    [Synthesis of the search results and your conversation]
+## Overview
+[Synthesis of the search results and your conversation]
     
-    ## Key Insights
-    [Summary of main points learned from these results]
+## Key Insights
+[Summary of main points learned from these results]
     
-    ## Observations
-    - [insight] [Important observation from search results]
-    - [connection] [How this connects to other topics]
+## Observations
+- [insight] [Important observation from search results]
+- [connection] [How this connects to other topics]
     
-    ## Relations
-    - relates_to [[{{#if results.length}}{{#if results.0.title}}{{results.0.title}}{{else}}Related Topic{{/if}}{{else}}Related Topic{{/if}}]]
-    - extends [[Another Relevant Topic]]
-    '''
+## Relations
+- relates_to [[{{#if results.length}}{{#if results.0.title}}{{results.0.title}}{{else}}Related Topic{{/if}}{{else}}Related Topic{{/if}}]]
+- extends [[Another Relevant Topic]]
+''',
+    folder="synthesis",
+    tags=["search", "synthesis"]
 )
 ```
 
@@ -76,26 +78,28 @@ Remember that capturing synthesized knowledge is one of the most valuable featur
     This is an excellent opportunity to create new knowledge on this topic. Consider:
 
     ```python
-    await write_note(
-        title="{{capitalize query}}",
-        content='''
-        # {{capitalize query}}
+    await adn_content(
+        operation="write",
+        identifier="{{capitalize query}}",
+        content='''# {{capitalize query}}
 
-        ## Overview
-        [Summary of what we've discussed about {{ query }}]
+## Overview
+[Summary of what we've discussed about {{ query }}]
 
-        ## Observations
-        - [category] [First observation about {{ query }}]
-        - [category] [Second observation about {{ query }}]
+## Observations
+- [category] [First observation about {{ query }}]
+- [category] [Second observation about {{ query }}]
 
-        ## Relations
-        - relates_to [[Other Relevant Topic]]
-        '''
+## Relations
+- relates_to [[Other Relevant Topic]]
+''',
+        folder="new-topics",
+        tags=["{{query}}"]
     )
     ```
 
     ## Other Suggestions
     - Try a different search term
     - Broaden your search criteria
-    - Check recent activity with `recent_activity(timeframe="1w")`
+    - Check recent activity with `adn_navigation("recent_activity", timeframe="30d")`
 {{/if}}

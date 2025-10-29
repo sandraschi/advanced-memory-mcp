@@ -33,7 +33,7 @@ Here's what I found from previous conversations:
 {{/each}}
 {{/if}}
 
-You can read this document with: `read_note("{{ primary_result.permalink }}")`
+You can read this document with: `adn_content("read", identifier="{{ primary_result.permalink }}")`
 
 {{#if related_results}}
 ## Related Context
@@ -44,9 +44,9 @@ You can read this document with: `read_note("{{ primary_result.permalink }}")`
 - title: {{ title }}
 
 {{#if permalink}}
-You can view this document with: `read_note("{{ permalink }}")`
+You can view this document with: `adn_content("read", identifier="{{ permalink }}")`
 {{else}}
-You can view this file with: `read_file("{{ file_path }}")`
+You can view this file with: `adn_content("read", identifier="{{ file_path }}")`
 {{/if}}
 </related>
 {{/each}}
@@ -62,10 +62,10 @@ The supplied query did not return any information specifically on this topic.
 This is an excellent chance to start documenting this topic:
 
 ```python
-await write_note(
-    title="{{ topic }}",
-    content=f'''
-# {{ topic }}
+await adn_content(
+    operation="write",
+    identifier="{{ topic }}",
+    content='''# {{ topic }}
 
 ## Overview
 [Summary of what we know about {{ topic }}]
@@ -80,7 +80,9 @@ await write_note(
 ## Relations
 - relates_to [[Related Topic]]
 - part_of [[Broader Context]]
-'''
+''',
+    folder="topics",
+    tags=["{{ topic }}"]
 )
 ```
 
@@ -89,14 +91,14 @@ await write_note(
 Please use the available advanced-memory tools to gather relevant context before responding.
 You can also:
 - Try a different search term
-- Check recent activity with `recent_activity(timeframe="1w")`
+- Check recent activity with `adn_navigation("recent_activity", timeframe="30d")`
 {{/if}}
 ## Next Steps
 <instructions>
 You can:
-- Explore more with: `search_notes("{{ topic }}")`
-- See what's changed: `recent_activity(timeframe="{{default timeframe "7d"}}")`
-- **Record new learnings or decisions from this conversation:** `write_note(folder="[Choose a folder]" title="[Create a meaningful title]", content="[Content with observations and relations]")`
+- Explore more with: `adn_search("notes", query="{{ topic }}")`
+- See what's changed: `adn_navigation("recent_activity", timeframe="{{default timeframe "30d"}}")`
+- **Record new learnings or decisions from this conversation:** `adn_content("write", identifier="[Create a meaningful title]", content="[Content with observations and relations]", folder="[Choose a folder]")`
 
 ## Knowledge Capture Recommendation
 

@@ -33,14 +33,60 @@ build these connections!
 
 ## Core Tools Reference
 
+### Modern Portmanteau Tools (Consolidated)
+
+Advanced Memory uses **portmanteau tools** - consolidated tools that combine multiple operations. This reduces tool count and improves discoverability.
+
 ```python
-# Writing knowledge - THE MOST IMPORTANT TOOL!
+# CONTENT MANAGEMENT - Write, read, edit, move, delete notes
+await adn_content(
+    operation="write",  # or "read", "edit", "move", "delete", "quick", "daily"
+    identifier="Search Design",
+    content="# Search Design\n...",
+    folder="specs",
+    tags=["search", "design"]
+)
+
+# NAVIGATION - Recent activity, context building, directory listing
+await adn_navigation(
+    operation="recent_activity",  # or "build_context", "list_directory", "backlinks", "status"
+    timeframe="7d",  # or "30d", "1 week", etc.
+    depth=2
+)
+
+# SEARCH - Find notes and external vaults
+await adn_search(
+    operation="notes",  # or "obsidian", "joplin", "notion", "evernote"
+    query="authentication system",
+    page=1,
+    page_size=10
+)
+
+# PROJECT MANAGEMENT - Switch projects, get info
+await adn_project(
+    operation="get_current",  # or "list", "switch", "create", "delete"
+    project_name="my-project"
+)
+
+# SKILLS MANAGEMENT - Claude Skills integration
+await adn_skills(
+    operation="create",  # or "read", "list", "validate", "export", "import"
+    skill_name="my-skill",
+    description="When to use this skill"
+)
+```
+
+### Legacy Individual Tools (Still Available)
+
+For compatibility, individual tools still work:
+
+```python
+# Writing knowledge
 response = await write_note(
-    title="Search Design",  # Required: Note title
-    content="# Search Design\n...",  # Required: Note content
-    folder="specs",  # Optional: Folder to save in
-    tags=["search", "design"],  # Optional: Tags for categorization
-    verbose=True  # Optional: Get parsing details
+    title="Search Design",
+    content="# Search Design\n...",
+    folder="specs",
+    tags=["search", "design"]
 )
 
 # Reading knowledge
@@ -50,33 +96,31 @@ content = await read_note("memory://specs/search")  # By memory URL
 
 # Searching for knowledge
 results = await search_notes(
-    query="authentication system",  # Text to search for
-    page=1,  # Optional: Pagination
-    page_size=10  # Optional: Results per page
-)
-
-# Building context from the knowledge graph
-context = await build_context(
-    url="memory://specs/search",  # Starting point
-    depth=2,  # Optional: How many hops to follow
-    timeframe="1 month"  # Optional: Recent timeframe
-)
-
-# Checking recent changes
-activity = await recent_activity(
-    type="all",  # Optional: Entity types to include
-    depth=1,  # Optional: Related items to include
-    timeframe="1 week"  # Optional: Time window
+    query="authentication system",
+    page=1,
+    page_size=10
 )
 
 # Creating a knowledge visualization
 canvas_result = await canvas(
-    nodes=[{"id": "note1", "label": "Search Design"}],  # Nodes to display
-    edges=[{"from": "note1", "to": "note2"}],  # Connections
-    title="Project Overview",  # Canvas title
-    folder="diagrams"  # Storage location
+    nodes=[{"id": "note1", "label": "Search Design"}],
+    edges=[{"from": "note1", "to": "note2"}],
+    title="Project Overview",
+    folder="diagrams"
 )
 ```
+
+### Which Tools to Use?
+
+**Use portmanteau tools (`adn_*`) for:**
+- Better discoverability of all available operations
+- Cleaner tool list in Claude Desktop
+- Consistent parameter patterns
+
+**Use individual tools when:**
+- You prefer the traditional API
+- You're working with existing code
+- You only need one specific operation
 
 ## memory:// URLs Explained
 
