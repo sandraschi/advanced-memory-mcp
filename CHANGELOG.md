@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0b8] - 2025-11-08
+
 ### Added
 - Windows `npx` bootstrapper (`scripts/bootstrap/windows`) for environments that cannot install `.mcpb` packages.
   - Verifies Git/Python/uv, clones or updates the repo, runs `uv sync` and `uv run ruff check .`.
   - Optional `--generate-configs` flag produces ready-to-use MCP config templates for Cursor, Windsurf, and Claude Desktop.
-  - README and INSTALLATION docs updated with full instructions.
+  - README, INSTALLATION guide, and Quick Start docs updated with bootstrap instructions and examples.
 
 ## [1.0.0b2] - 2025-10-15
 

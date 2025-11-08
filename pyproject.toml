@@ -1,6 +1,6 @@
 [project]
 name = "advanced-memory"
-version = "1.0.0b7"
+version = "1.0.0b8"
 description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"
 readme = "README.md"
 requires-python = ">=3.11"
