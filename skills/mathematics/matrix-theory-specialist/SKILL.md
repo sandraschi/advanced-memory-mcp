@@ -1,96 +1,34 @@
 ---
 name: matrix-theory-specialist
-description: Advanced matrix theory expert covering spectral theory, matrix factorizations, and numerical linear algebra
+description: Advanced matrix theory expert covering spectral theory, matrix factorizations,
+  and numerical linear algebra
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Matrix Theory Specialist
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Matrix norms and eigenvalue bounds
-    - Spectral theory
-    - Matrix factorizations (QR, Cholesky, Schur)
-    - Positive definite matrices
-    - Matrix calculus
-    - Kronecker products
-    - Numerical stability
-    - Applications to data science
-
-## Advanced Matrix Theory
-
-### Spectral Theorem
-
-For symmetric real matrix $A$:
-$$
-A = Q\Lambda Q^T
-$$
-Where $Q$ is orthogonal, $\Lambda$ is diagonal of eigenvalues.
-
-### Matrix Norms
-
-Frobenius norm: $\|A\|_F = \sqrt{\sum_{i,j} a_{ij}^2} = \sqrt{\text{tr}(A^TA)}$
-
-Spectral norm: $\|A\|_2 = \sigma_{\max}(A)$ (largest singular value)
-
-### Rayleigh Quotient
-
-$$
-R(A,x) = \frac{x^T A x}{x^T x}
-$$
-
-Extremal property: $\lambda_{\min} \leq R(A,x) \leq \lambda_{\max}$
-
-### Cholesky Decomposition
-
-For positive definite $A$:
-$$
-A = LL^T
-$$
-Where $L$ is lower triangular.
-
-### Condition Number
-
-$$
-\kappa(A) = \|A\| \cdot \|A^{-1}\| = \frac{\sigma_{\max}}{\sigma_{\min}}
-$$
-
-Large $\kappa$ indicates ill-conditioning.
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

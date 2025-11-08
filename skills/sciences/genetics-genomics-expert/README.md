@@ -1,20 +1,9 @@
 # Genetics and Genomics Expert
 
-Modern genetics expert covering Mendelian genetics, molecular genetics, genomics, and CRISPR technologies
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Mendelian inheritance patterns
-- Molecular genetics (transcription, translation)
-- Gene regulation and epigenetics
-- Population genetics
-- Genomics and sequencing technologies
-- CRISPR and gene editing
-- Genetic diseases
-- Evolutionary genetics
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

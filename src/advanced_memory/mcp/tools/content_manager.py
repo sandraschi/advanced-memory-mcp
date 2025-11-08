@@ -4,6 +4,8 @@ This tool consolidates all content operations: write, read, view, edit, edit_tag
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+from typing import Literal
+
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -20,26 +22,43 @@ TagType = list[str] | str | None
 
 @mcp.tool
 async def adn_content(
-    operation: str,
+    operation: Literal["write", "read", "read_latest", "view", "view_rendered", "edit", "edit_tags", "quick", "daily", "move", "delete"],
     identifier: str | None = None,
     content: str | None = None,
     folder: str | None = None,
     tags: TagType | None = None,
     entity_type: str = "note",
     destination_path: str | None = None,
-    edit_operation: str | None = None,
-    tag_operation: str | None = None,
+    edit_operation: Literal["append", "prepend", "find_replace", "replace_section"] | None = None,
+    tag_operation: Literal["add", "remove", "replace", "clear"] | None = None,
     find_text: str | None = None,
     expected_replacements: int = 1,
     section: str | None = None,
     page: int = 1,
     page_size: int = 10,
+    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
 
     This portmanteau tool consolidates all content operations into a single interface,
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    WHY PORTMANTEAU TOOLS?
+    Claude Desktop has a limit on the number of available tools. Portmanteau tools like adn_content
+    combine multiple related operations (write, read, edit, delete, etc.) into a single tool interface,
+    dramatically reducing the tool count while maintaining full functionality.
+
+    PARAMETER DESIGN:
+    The 'identifier' parameter is intentionally flexible:
+    - For write operations: Pass the note title (e.g., "My Meeting Notes")
+      Advanced Memory will automatically generate the permalink from the title.
+    - For read/view operations: Can pass title, permalink, or memory:// URL
+      This flexibility allows reading notes in multiple ways.
+
+    TIP FOR CLAUDE:
+    When using this tool, always specify the operation first (write, read, edit, etc.),
+    then provide the required parameters. The documentation below shows what each operation needs.
 
     SUPPORTED OPERATIONS:
     - write: Create new notes or update existing ones with semantic processing
@@ -82,19 +101,50 @@ async def adn_content(
 
     Args:
         operation: Operation type (write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete)
-        identifier: Note title, permalink, or memory:// URL
-        content: Full markdown content for write/edit/quick/daily operations
-        folder: Target folder path for write/move operations
-        tags: Tags for categorization (string, list, or None)
-        entity_type: Content type (default: "note")
+        identifier: Note identifier - REQUIRED for most operations. What you pass depends on the operation:
+                    * Write operations: REQUIRED - The note title as a string (e.g., "My Meeting Notes")
+                      Advanced Memory will automatically create the permalink from the title.
+                    * Read/View operations: REQUIRED - Can be any of:
+                      - Note title (e.g., "My Meeting Notes")
+                      - Permalink (e.g., "meetings/my-meeting-notes")
+                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
+                    * Edit/Move/Delete/Edit_tags operations: REQUIRED - Can be any of:
+                      - Note title (e.g., "My Meeting Notes")
+                      - Permalink (e.g., "meetings/my-meeting-notes")
+                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
+                    * Quick/Daily operations: NOT USED - These operations don't require identifier
+        content: Markdown content
+                    * Write operations: REQUIRED - Full note content
+                    * Edit operations: REQUIRED - Content to add/replace (depends on edit_operation)
+                    * Quick/Daily operations: REQUIRED - Content to capture
+                    * Other operations: NOT USED
+        folder: Target folder path
+                    * Write operations: REQUIRED - Destination folder for new note
+                    * Move operations: NOT USED - Use destination_path instead
+                    * Other operations: NOT USED
         destination_path: New path for move operations
-        edit_operation: Edit type for edit operations (append, prepend, find_replace, replace_section)
-        tag_operation: Tag operation for edit_tags (add, remove, replace, clear)
-        find_text: Text to find for find_replace operations
-        expected_replacements: Expected replacement count for validation
-        section: Target section for replace_section operations
+                    * Move operations: REQUIRED - Full destination path
+                    * Other operations: NOT USED
+        edit_operation: Edit type for edit operations
+                    * Edit operations: REQUIRED - One of: "append", "prepend", "find_replace", "replace_section"
+                    * Other operations: NOT USED
+        tag_operation: Tag operation for edit_tags
+                    * Edit_tags operations: REQUIRED - One of: "add", "remove", "replace", "clear"
+                    * Other operations: NOT USED
+        tags: Tags for categorization (string, list, or None)
+                    * Write operations: Optional - Tags for categorization
+                    * Edit_tags operations: Optional - Tags to add/remove/replace (depends on tag_operation)
+                    * Other operations: NOT USED
+        entity_type: Content type (default: "note")
+                    * Write operations: Optional (default: "note")
+                    * Other operations: NOT USED
+        expected_replacements: Expected replacement count for find_replace validation (default: 1)
+        section: Section header for replace_section operations
+                    * Edit with replace_section: REQUIRED - Section header to replace (e.g., "## Summary")
+                    * Other operations: NOT USED
         page: Pagination page for read operations
         page_size: Items per page for paginated content
+        results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
         project: Optional project name. Supports:
             - None (default): uses current active project
             - "project-name": uses specific project
@@ -104,11 +154,14 @@ async def adn_content(
         Operation-specific result with semantic content summary and project context
 
     Examples:
-        # Write a new note
+        # Write a new note - identifier is REQUIRED and must be the note title
+        # Advanced Memory will auto-generate the permalink from the title
         adn_content("write", identifier="Project Plan", content="# Project Overview...", folder="projects")
 
-        # Read a note
-        adn_content("read", identifier="Project Plan")
+        # Read a note - can use title, permalink, or URL
+        adn_content("read", identifier="Project Plan")  # By title
+        adn_content("read", identifier="projects/project-plan")  # By permalink
+        adn_content("read", identifier="memory://projects/project-plan")  # By URL
 
         # Edit a note (append content)
         adn_content("edit", identifier="Project Plan", edit_operation="append", content="\\n## Updates...")
@@ -137,6 +190,12 @@ async def adn_content(
         # View note with rendered Mermaid diagrams
         adn_content("view_rendered", identifier="System Architecture")
     """
+    # Parameter aliasing for compatibility with standalone tools
+    # results_per_page → page_size (for compatibility with search_notes tool)
+    if results_per_page is not None and page_size == 10:  # Only if default value
+        page_size = results_per_page
+        logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
+
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
 
     # Get the active project
@@ -146,15 +205,22 @@ async def adn_content(
 
     # Route to appropriate operation handler
     if operation == "write":
-        if not identifier or not content or not folder:
-            return "# Error\n\nWrite operation requires: identifier, content, and folder parameters"
+        missing = []
+        if not identifier:
+            missing.append("identifier (note title)")
+        if not content:
+            missing.append("content")
+        if not folder:
+            missing.append("folder")
+        if missing:
+            return f"# Error\n\nWrite operation requires the following parameters:\n- {', '.join(missing)}\n\n**Example:**\n```python\nadn_content(\"write\",\n    identifier=\"My Note Title\",\n    content=\"# My Note\\n\\nContent here...\",\n    folder=\"notes\")\n```"
         return await _write_operation(
             active_project, identifier, content, folder, tags, entity_type
         )
 
     elif operation == "read":
         if identifier is None:
-            return "# Error\n\nRead operation requires: identifier"
+            return "# Error\n\nRead operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"read\", identifier=\"My Note Title\")\n# or\nadn_content(\"read\", identifier=\"notes/my-note-title\")\n```"
         return await _read_operation(active_project, identifier, page, page_size)
 
     elif operation == "read_latest":
@@ -173,7 +239,11 @@ async def adn_content(
 
     elif operation == "edit":
         if identifier is None:
-            return "# Error\n\nEdit operation requires: identifier"
+            return "# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"append\",\n    content=\"\\n## New Section\")\n```"
+        if not edit_operation:
+            return "# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"append\",\n    content=\"New content\")\n```"
+        if not content and edit_operation in ["append", "prepend", "replace_section"]:
+            return f"# Error\n\nEdit operation '{edit_operation}' requires: content parameter\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"{edit_operation}\",\n    content=\"Content to {edit_operation}\")\n```"
         return await _edit_operation(
             active_project,
             identifier,
@@ -186,7 +256,9 @@ async def adn_content(
 
     elif operation == "edit_tags":
         if identifier is None:
-            return "# Error\n\nEdit tags operation requires: identifier"
+            return "# Error\n\nEdit_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"edit_tags\",\n    identifier=\"My Note\",\n    tag_operation=\"add\",\n    tags=\"tag1, tag2\")\n```"
+        if not tag_operation:
+            return "# Error\n\nEdit_tags operation requires: tag_operation parameter\n\n**Valid operations:** add, remove, replace, clear\n\n**Example:**\n```python\nadn_content(\"edit_tags\",\n    identifier=\"My Note\",\n    tag_operation=\"add\",\n    tags=\"important\")\n```"
         return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
     elif operation == "quick":
@@ -483,7 +555,7 @@ async def _edit_tags_operation(
 
     # Get current note to read existing tags
     project_url = active_project.project_url
-    url = f"{project_url}/knowledge/entities/resolve/{identifier}"
+    url = f"{project_url}/knowledge/entities/{identifier}"
 
     response = await call_get(client, url)
     if response.status_code == 404:

@@ -7,12 +7,38 @@ from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.adn_skills_operations_new import (
+    _distill_from_arxiv_operation,
+    _distill_from_expert_operation,
+    _distill_from_text_operation,
+    _distill_from_textbook_operation,
+    _distill_from_wikipedia_operation,
+    _import_from_github_operation,
+)
 from advanced_memory.utils import generate_permalink
 
 
 @mcp.tool
 async def adn_skills(
-    operation: Literal["create", "read", "update", "delete", "list", "validate", "export", "import", "package", "from_zettel", "to_zettel"],
+    operation: Literal[
+        "create",
+        "read",
+        "update",
+        "delete",
+        "list",
+        "validate",
+        "export",
+        "import",
+        "package",
+        "from_zettel",
+        "to_zettel",
+        "import_from_github",
+        "distill_from_wikipedia",
+        "distill_from_arxiv",
+        "distill_from_textbook",
+        "distill_from_text",
+        "distill_from_expert",
+    ],
     identifier: str | None = None,
     skill_name: str | None = None,
     description: str | None = None,
@@ -27,6 +53,26 @@ async def adn_skills(
     page: int = 1,
     page_size: int = 20,
     project: str | None = None,
+    # GitHub import parameters
+    repository: str | None = None,
+    branch: str = "main",
+    # Distillation parameters
+    topic: str | None = None,
+    query: str | None = None,
+    max_papers: int = 5,
+    chapters: list[int] | None = None,
+    pdf_path: str | None = None,
+    text_path: str | None = None,
+    expert_name: str | None = None,
+    focus_area: str | None = None,
+    source_types: list[str] | None = None,
+    depth: int = 0,
+    include_related: bool = False,
+    quality: Literal["basic", "comprehensive", "expert"] | None = None,
+    synthesis_level: Literal["summary", "synthesis", "comprehensive"] | None = None,
+    level: Literal["beginner", "intermediate", "advanced"] | None = None,
+    focus: Literal["principles", "examples", "methodology", "all"] | None = None,
+    context_level: Literal["basic", "comprehensive", "detailed"] | None = None,
 ) -> str:
     """Claude Skills management portmanteau for Advanced Memory.
 
@@ -45,6 +91,12 @@ async def adn_skills(
     - package: Create distributable .zip (package pattern from skill-creator)
     - from_zettel: Convert zettelkasten note to Claude Skill
     - to_zettel: Convert Claude Skill back to regular note
+    - import_from_github: Import skill from GitHub repository (SkillsMP compatible)
+    - distill_from_wikipedia: Create skill from Wikipedia article
+    - distill_from_arxiv: Create skill from arXiv research papers
+    - distill_from_textbook: Create skill from textbook PDF
+    - distill_from_text: Create skill from famous text/document
+    - distill_from_expert: Create skill from SOTA thinker's work
 
     CLAUDE SKILLS FORMAT:
     Skills are folders containing SKILL.md with YAML frontmatter:
@@ -245,6 +297,28 @@ async def adn_skills(
         return await _from_zettel_operation(identifier, description, category, metadata, project)
     elif operation == "to_zettel":
         return await _to_zettel_operation(identifier, project)
+    elif operation == "import_from_github":
+        return await _import_from_github_operation(
+            repository, source_path, branch, category, project
+        )
+    elif operation == "distill_from_wikipedia":
+        return await _distill_from_wikipedia_operation(
+            topic, depth, include_related, quality, category, project
+        )
+    elif operation == "distill_from_arxiv":
+        return await _distill_from_arxiv_operation(
+            query, max_papers, synthesis_level, category, project
+        )
+    elif operation == "distill_from_textbook":
+        return await _distill_from_textbook_operation(pdf_path, chapters, level, category, project)
+    elif operation == "distill_from_text":
+        return await _distill_from_text_operation(
+            text_path, focus, context_level, category, project
+        )
+    elif operation == "distill_from_expert":
+        return await _distill_from_expert_operation(
+            expert_name, source_types, focus_area, category, project
+        )
     else:
         return f"""# Error: Invalid Skills Operation
 
@@ -262,6 +336,12 @@ async def adn_skills(
 - "package" - Create distributable .zip (requires: identifier)
 - "from_zettel" - Convert note to Claude Skill (requires: identifier, description)
 - "to_zettel" - Convert skill back to regular note (requires: identifier)
+- "import_from_github" - Import skill from GitHub repository (requires: repository)
+- "distill_from_wikipedia" - Create skill from Wikipedia article (requires: topic)
+- "distill_from_arxiv" - Create skill from arXiv papers (requires: query)
+- "distill_from_textbook" - Create skill from textbook PDF (requires: pdf_path)
+- "distill_from_text" - Create skill from famous text (requires: text_path)
+- "distill_from_expert" - Create skill from SOTA thinker (requires: expert_name)
 
 **Example for creating a skill:**
 ```

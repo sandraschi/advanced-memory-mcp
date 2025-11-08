@@ -1,17 +1,9 @@
 # Wine Sommelier Assistant
 
-Wine expert for pairing, tasting, regions, and building a wine collection
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- wine regions
-- tasting notes
-- food pairings
-- wine storage
-- Old World vs New World
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** culinary  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

@@ -1,21 +1,9 @@
 # Polyglot Learning Strategies Expert
 
-Language learning expert with proven methods for acquiring multiple languages efficiently and effectively
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Spaced repetition systems
-- Immersion techniques
-- Grammar learning strategies
-- Vocabulary acquisition methods
-- Pronunciation practice
-- Language learning plateaus
-- Maintaining multiple languages
-- Resource selection
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

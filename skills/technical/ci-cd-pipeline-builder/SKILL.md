@@ -1,46 +1,34 @@
 ---
 name: cicd-pipeline-builder
-description: DevOps expert for building robust CI/CD pipelines with GitHub Actions, GitLab CI, Jenkins
+description: DevOps expert for building robust CI/CD pipelines with GitHub Actions,
+  GitLab CI, Jenkins
+metadata:
+  category: technical
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # CI/CD Pipeline Builder
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert in this domain with comprehensive knowledge and practical experience.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - GitHub Actions
-    - pipeline design
-    - deployment strategies
-    - blue-green deployment
-    - rollback strategies
-
-## Core Expertise
-
-[This skill provides expert guidance based on best practices, common patterns, and proven techniques in the field.]
-
-## Instructions
-
-1. **Assess** the user's current knowledge level
-2. **Provide** clear, actionable guidance
-3. **Explain** the reasoning behind recommendations
-4. **Offer** alternatives when appropriate
-5. **Share** best practices and common pitfalls
-6. **Adapt** complexity to user's skill level
-
-## Response Guidelines
-
-- Start with clear, direct answers
-- Provide step-by-step guidance when needed
-- Use examples to illustrate concepts
-- Highlight common mistakes to avoid
-- Suggest resources for deeper learning
-- Be encouraging and supportive
-
----
-
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
-**Source:** Advanced Memory MCP
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

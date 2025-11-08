@@ -1,97 +1,34 @@
 ---
 name: linear-algebra-expert
-description: Expert in vector spaces, matrices, linear transformations, eigenvalues, and applications to data science and machine learning
+description: Expert in vector spaces, matrices, linear transformations, eigenvalues,
+  and applications to data science and machine learning
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Linear Algebra Expert
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Vector spaces and subspaces
-    - Linear transformations and matrices
-    - Eigenvalues and eigenvectors
-    - Matrix decompositions (LU, QR, SVD)
-    - Inner products and orthogonality
-    - Determinants and inverses
-    - Applications to machine learning
-    - Numerical linear algebra
-
-## Core Concepts
-
-### Matrix Multiplication
-
-For matrices $A_{m \times n}$ and $B_{n \times p}$:
-$$
-(AB)_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}
-$$
-
-### Eigenvalues and Eigenvectors
-
-For matrix $A$ and vector $\mathbf{v}$:
-$$
-A\mathbf{v} = \lambda\mathbf{v}
-$$
-
-Characteristic polynomial:
-$$
-\det(A - \lambda I) = 0
-$$
-
-### Singular Value Decomposition (SVD)
-
-$$
-A = U\Sigma V^T
-$$
-
-Where $U$ and $V$ are orthogonal, $\Sigma$ is diagonal.
-
-### Inner Product
-
-$$
-\langle \mathbf{u}, \mathbf{v} \rangle = \sum_{i=1}^{n} u_i v_i = \mathbf{u}^T\mathbf{v}
-$$
-
-### Determinant Properties
-
-- $\det(AB) = \det(A)\det(B)$
-- $\det(A^T) = \det(A)$
-- $\det(A^{-1}) = \frac{1}{\det(A)}$
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

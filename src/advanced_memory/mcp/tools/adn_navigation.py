@@ -72,6 +72,7 @@ async def adn_navigation(
             - "relation": Only relations
             - "": All types (empty string)
             Default: "" (all types)
+            Note: Named 'type_filter' (not 'type') to avoid shadowing Python's builtin type() function.
         level: Status detail level. MUST be one of:
             - "basic": Quick overview (default)
             - "intermediate": Detailed stats
@@ -90,8 +91,8 @@ async def adn_navigation(
         # Build context from memory URL
         adn_navigation("build_context", url="memory://projects/ai", depth=2, timeframe="7d")
 
-        # Get recent activity
-        adn_navigation("recent_activity", timeframe="30d", type_filter="notes")
+        # Get recent activity (note: use 'type_filter', not 'type' to avoid Python builtin conflicts)
+        adn_navigation("recent_activity", timeframe="30d", type_filter="entity")
 
         # List directory contents
         adn_navigation("list_directory", dir_name="/projects", depth=2)
@@ -130,6 +131,7 @@ adn_navigation(
             url, depth, timeframe, page, page_size, max_related, project
         )
     elif operation == "recent_activity":
+        # Pass type_filter to recent_activity operation
         return await _recent_activity_operation(
             type_filter, depth, timeframe, page, page_size, max_related, project
         )
@@ -229,7 +231,7 @@ async def _build_context_operation(
 
 
 async def _recent_activity_operation(
-    type_filter: str | None,
+    type_param: str | list[str] | None,  # Can be type_filter or type
     depth: int,
     timeframe: str,
     page: int,
@@ -241,7 +243,7 @@ async def _recent_activity_operation(
     from advanced_memory.mcp.tools.recent_activity import recent_activity
 
     result = await recent_activity.fn(
-        type_filter, depth, timeframe, page, page_size, max_related, project
+        type_param, depth, timeframe, page, page_size, max_related, project
     )
 
     # Convert GraphContext to markdown string

@@ -5,6 +5,7 @@ Supports markdown files and automatic conversion of .docx, .html, .pdf, and .txt
 """
 
 from textwrap import dedent
+from typing import Literal
 
 from fastmcp import Context
 from loguru import logger
@@ -16,7 +17,7 @@ from advanced_memory.services.inbox_processor import get_inbox_processor
 
 @mcp.tool
 async def adn_inbox(
-    operation: str,
+    operation: Literal["status", "process", "info", "watch"],
     file_name: str | None = None,
     ctx: Context | None = None,
 ) -> str:

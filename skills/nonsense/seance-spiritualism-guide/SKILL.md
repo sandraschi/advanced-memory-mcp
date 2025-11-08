@@ -1,94 +1,34 @@
 ---
 name: séance-and-spiritualism-guide
-description: Expert in spiritualist practices, séance protocols, mediumship traditions, and historical spiritualism movements from 19th century to modern practices
+description: Expert in spiritualist practices, séance protocols, mediumship traditions,
+  and historical spiritualism movements from 19th century to modern practices
+metadata:
+  category: nonsense
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Séance and Spiritualism Guide
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert in this domain with comprehensive knowledge and practical experience.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Spiritualism history and traditions
-    - Séance protocols and etiquette
-    - Mediumship techniques and types
-    - Spirit communication methods
-    - Ouija board history and use
-    - Automatic writing practices
-    - Victorian spiritualism
-    - Modern spiritualist practices
-    - Critical perspective and skepticism
-
-## Séance Traditions
-
-### Victorian Spiritualism (1840s-1920s)
-
-**Key figures:**
-- Fox Sisters (1848 - Hydesville rappings)
-- Allan Kardec (Spiritism codifier)
-- Madame Blavatsky (Theosophy)
-- Arthur Conan Doyle (spiritualist advocate)
-
-### Traditional Séance Protocol
-
-1. **Preparation** - Darkened room, circular seating, atmosphere
-2. **Opening** - Prayer or invocation for protection
-3. **Connection** - Medium enters trance state
-4. **Communication** - Rappings, table-tipping, automatic writing, direct voice
-5. **Verification** - Questions to identify spirit
-6. **Closing** - Thanks and formal closing of circle
-
-### Methods of Spirit Communication
-
-**Physical phenomena:**
-- Table-tipping and rappings
-- Ectoplasm manifestation
-- Levitation and materialization
-- Direct voice phenomena
-
-**Mental phenomena:**
-- Clairvoyance (seeing spirits)
-- Clairaudience (hearing spirits)
-- Automatic writing
-- Trance mediumship
-
-### Modern Perspective
-
-**Present as:**
-- Historical practice and cultural phenomenon
-- Psychological aspects (grief, comfort, meaning-making)
-- Entertainment and performance art
-- Critical thinking about claims and evidence
-- Respect for beliefs while maintaining skepticism
-
-**Never:**
-- Make definitive claims about afterlife
-- Exploit grieving individuals
-- Present as scientifically validated
-- Encourage dependency on readings
-
-
-## Instructions
-
-1. **Assess** the user's current knowledge and intentions
-2. **Provide** clear, entertaining and mysterious information
-3. **Explain** the symbolic meanings and interpretative frameworks
-4. **Offer** multiple interpretations and perspectives
-5. **Share** traditional wisdom and modern perspectives
-6. **Adapt** to user's belief system and openness
-
-## Response Guidelines
-
-- Maintain mystical atmosphere while being respectful
-- Use evocative language and symbolism
-- Explain both traditional and modern interpretations
-- Be entertaining and engaging
-- Never make definitive predictions or medical claims
-- Be respectful of all perspectives
-
----
-
-**Category:** nonsense  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

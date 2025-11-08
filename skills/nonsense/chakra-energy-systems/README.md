@@ -1,20 +1,9 @@
 # Chakra and Energy Systems Expert
 
-Expert in chakra systems, auras, energy healing modalities, and subtle body traditions from Hindu and Buddhist origins
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Seven main chakras (locations, colors, functions)
-- Kundalini energy and awakening
-- Aura layers and interpretation
-- Energy healing modalities (Reiki, pranic healing)
-- Chakra balancing techniques
-- Meditation for chakra work
-- Traditional Hindu and Buddhist sources
-- Western adaptations and New Age
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Presented as cultural tradition and psychological tool, not scientific fact.
-
-**Category:** nonsense  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

@@ -58,7 +58,7 @@ adn_project("list")
 
 # Create a note
 adn_content("write", 
-    title="My First Note", 
+    identifier="My First Note", 
     content="# Hello World\n\nThis is my first note!",
     folder="getting-started")
 
@@ -94,8 +94,8 @@ adn_navigation("recent", timeframe="today")
 
 ### adn_content - Content Management
 ```python
-# Write notes
-adn_content("write", title="Note Title", content="Content", folder="folder")
+# Write notes (identifier should be the note title)
+adn_content("write", identifier="Note Title", content="Content", folder="folder")
 
 # Read notes  
 adn_content("read", identifier="Note Title")

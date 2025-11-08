@@ -1,20 +1,9 @@
 # Ecology and Evolution Specialist
 
-Expert in evolutionary biology, ecological systems, biodiversity, and conservation
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Natural selection and evolution
-- Population ecology
-- Community ecology and interactions
-- Ecosystem dynamics
-- Biodiversity and conservation
-- Evolutionary development (evo-devo)
-- Speciation and phylogenetics
-- Climate change and ecology
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

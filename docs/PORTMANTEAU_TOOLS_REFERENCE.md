@@ -1,11 +1,11 @@
 # Advanced Memory MCP - Portmanteau Tools Reference
 
 **Version:** 1.0.0b2  
-**Purpose:** Complete reference for all 8 portmanteau tools
+**Purpose:** Complete reference for all 12 portmanteau tools
 
 ## Overview
 
-Advanced Memory MCP uses **portmanteau tools** to consolidate 50+ individual tools into 8 powerful, consistent interfaces. This reduces complexity while maintaining full functionality.
+Advanced Memory MCP uses **portmanteau tools** to consolidate 50+ individual tools into 12 powerful, consistent interfaces. This reduces complexity while maintaining full functionality.
 
 ---
 
@@ -20,17 +20,20 @@ Create or update a note.
 
 ```python
 adn_content("write", 
-    title="Meeting Notes",
+    identifier="Meeting Notes",
     content="# Meeting\n\n## Attendees\n- Alice\n- Bob",
     folder="meetings",
     tags=["work", "important"])
 ```
 
+**Important:** For write operations, the `identifier` parameter is **REQUIRED** and should be the note **title**. Advanced Memory automatically generates the permalink from the title.
+
 **Parameters:**
-- `title` (str): Note title
-- `content` (str): Markdown content
-- `folder` (str): Target folder
+- `identifier` (str, **required**): Note title - Advanced Memory will generate the permalink
+- `content` (str, required): Markdown content
+- `folder` (str, required): Target folder
 - `tags` (list[str], optional): Tags for categorization
+- `entity_type` (str, optional): "note" (default), "entity", "observation"
 
 #### read
 Read a note by identifier.
@@ -749,4 +752,91 @@ All portmanteau tools return structured error messages:
 
 ---
 
-This reference covers all 8 portmanteau tools with their operations, parameters, and examples. For more details, see the [Complete Guide](ADVANCED_MEMORY_MCP_COMPLETE_GUIDE.md).
+---
+
+## adn_skills_creator - Skill Creation Facility
+
+**Purpose:** Mirror Anthropic’s skill-creator workflow (scaffold → validate → inspect → upgrade → package) while enforcing Advanced Memory’s modular requirements.
+
+### Operations
+
+#### scaffold
+Generate a new modular skill skeleton.
+
+```python
+adn_skills_creator(
+    operation="scaffold",
+    skill_name="brand-guidelines",
+    output_dir="skills/company",
+    category="enterprise"
+)
+```
+
+**Parameters:**
+- `skill_name` (str, **required**): Hyphen-case name for the new skill.
+- `output_dir` (str, optional): Target directory (default: `skills/`).
+- `category` (str, optional): Metadata category.
+- `confidence` (str, optional): Initial confidence (`low`, `medium`, `high`).
+- `overwrite` (bool, optional): Replace existing directory if present.
+
+#### validate
+Ensure the skill complies with mandatory modules and metadata.
+
+```python
+adn_skills_creator(
+    operation="validate",
+    skill_path="skills/company/brand-guidelines"
+)
+```
+
+**Returns:** Validation status plus list of issues (path, issue, fix).
+
+#### inspect
+Retrieve frontmatter metadata for quick review.
+
+```python
+adn_skills_creator(
+    operation="inspect",
+    skill_path="skills/company/brand-guidelines"
+)
+```
+
+#### upgrade
+Convert a legacy single-file skill into the modular format.
+
+```python
+adn_skills_creator(
+    operation="upgrade",
+    skill_path="skills/legacy/old-skill"
+)
+```
+
+#### package
+Create a distributable ZIP archive (with manifest) after validation passes.
+
+```python
+adn_skills_creator(
+    operation="package",
+    skill_path="skills/company/brand-guidelines",
+    output_dir="dist"
+)
+```
+
+**Outputs:** `dist/brand-guidelines.zip` plus `dist/brand-guidelines.manifest.json`.
+
+### CLI Equivalents
+```bash
+uv run am-skill-creator scaffold brand-guidelines --output-dir skills/company
+uv run am-skill-creator validate skills/company/brand-guidelines
+uv run am-skill-creator package skills/company/brand-guidelines --output-dir dist
+uv run am-skill-creator upgrade skills/legacy/old-skill
+```
+
+### Best Practices
+1. Complete the research checklist and update `metadata.sources` before packaging.
+2. Store generated manifests alongside release notes for traceability.
+3. Integrate validation into CI/CD (call the CLI from pre-commit or pipeline scripts).
+
+---
+
+This reference covers all 12 portmanteau tools with their operations, parameters, and examples. For more details, see the [Complete Guide](ADVANCED_MEMORY_MCP_COMPLETE_GUIDE.md).

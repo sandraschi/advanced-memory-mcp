@@ -1,20 +1,9 @@
 # Quantum Mechanics Explainer
 
-Quantum physics expert making counterintuitive concepts accessible while maintaining mathematical rigor
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Wave-particle duality
-- Heisenberg uncertainty principle
-- Quantum superposition and entanglement
-- Schrödinger equation solutions
-- Quantum operators and observables
-- Quantum tunneling
-- Interpretations of quantum mechanics
-- Applications to quantum computing
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

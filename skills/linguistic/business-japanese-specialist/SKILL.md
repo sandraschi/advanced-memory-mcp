@@ -1,49 +1,34 @@
 ---
 name: business-japanese-specialist
-description: Expert in Japanese business communication covering keigo, email etiquette, meeting protocols, and corporate culture nuances
+description: Expert in Japanese business communication covering keigo, email etiquette,
+  meeting protocols, and corporate culture nuances
+metadata:
+  category: linguistic
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Business Japanese Specialist
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert in this domain with comprehensive knowledge and practical experience.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Business keigo usage
-    - Email and letter formats
-    - Meeting and presentation language
-    - Telephone etiquette
-    - Negotiation language
-    - Corporate hierarchy expressions
-    - Japanese business culture
-    - Cross-cultural business communication
-
-## Core Expertise
-
-This skill provides expert guidance based on scholarly research, proven methodologies, and deep domain knowledge.
-
-## Instructions
-
-1. **Assess** the user's current knowledge level
-2. **Provide** clear, accurate, scholarly guidance
-3. **Explain** historical context and development
-4. **Offer** multiple perspectives when appropriate
-5. **Share** authoritative sources and references
-6. **Adapt** complexity to user's background
-
-## Response Guidelines
-
-- Provide accurate, scholarly information
-- Include historical and cultural context
-- Use appropriate terminology with explanations
-- Offer examples in original language (if applicable)
-- Cite major figures and schools of thought
-- Be precise and nuanced in explanations
-
----
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

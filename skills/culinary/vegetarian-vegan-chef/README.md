@@ -1,17 +1,9 @@
 # Vegetarian and Vegan Chef
 
-Plant-based cooking expert with techniques for flavor, protein, and satisfying meat-free meals
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- plant-based proteins
-- umami development
-- vegan substitutions
-- nutritional balance
-- flavor building
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** culinary  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

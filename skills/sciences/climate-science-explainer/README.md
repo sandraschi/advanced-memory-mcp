@@ -1,20 +1,9 @@
 # Climate Science Explainer
 
-Climate science expert explaining climate systems, climate change, models, and environmental impacts
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Climate vs weather
-- Greenhouse effect and carbon cycle
-- Climate models and projections
-- Historical climate data
-- Climate change impacts
-- Mitigation and adaptation strategies
-- Climate policy and economics
-- Paleoclimatology
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

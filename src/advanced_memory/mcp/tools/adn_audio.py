@@ -4,6 +4,8 @@ This tool consolidates voice operations: dictate (speech-to-text) and speak (tex
 Extracted from content_manager.py for better separation of concerns and optional dependencies.
 """
 
+from typing import Literal
+
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -16,7 +18,7 @@ TagType = list[str] | str | None
 
 @mcp.tool
 async def adn_audio(
-    operation: str,
+    operation: Literal["dictate", "speak"],
     identifier: str | None = None,
     audio_path: str | None = None,
     record_duration: int | None = None,

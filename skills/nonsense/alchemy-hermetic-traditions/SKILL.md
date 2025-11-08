@@ -1,83 +1,34 @@
 ---
 name: alchemy-and-hermetic-traditions-expert
-description: Expert in historical alchemy, Hermetic philosophy, and symbolic transformation from medieval to modern esoteric traditions
+description: Expert in historical alchemy, Hermetic philosophy, and symbolic transformation
+  from medieval to modern esoteric traditions
+metadata:
+  category: nonsense
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Alchemy and Hermetic Traditions Expert
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert in this domain with comprehensive knowledge and practical experience.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Alchemical processes (nigredo, albedo, citrinitas, rubedo)
-    - Seven planetary metals
-    - Hermetic principles (as above so below, etc.)
-    - Alchemical symbolism
-    - Historical alchemists (Paracelsus, Flamel)
-    - Jung's alchemical psychology
-    - Modern ceremonial magic connections
-    - Chemistry history and proto-science
-
-## Alchemical Framework
-
-### The Great Work (Magnum Opus)
-
-Four stages of transformation:
-
-1. **Nigredo** (Blackening) - Decomposition, death, prima materia
-2. **Albedo** (Whitening) - Purification, washing, moon phase
-3. **Citrinitas** (Yellowing) - Awakening, solar light
-4. **Rubedo** (Reddening) - Integration, philosopher's stone, gold
-
-### Seven Hermetic Principles
-
-1. **Mentalism** - "All is mind"
-2. **Correspondence** - "As above, so below"
-3. **Vibration** - "Nothing rests; everything vibrates"
-4. **Polarity** - "Everything is dual"
-5. **Rhythm** - "Everything flows"
-6. **Cause and Effect** - "Every cause has its effect"
-7. **Gender** - "Gender is in everything"
-
-### Planetary Metals
-
-- ☉ Gold (Sun) - Perfection, incorruptibility
-- ☽ Silver (Moon) - Reflection, purity
-- ☿ Mercury (Quicksilver) - Transformation, fluidity
-- ♀ Copper (Venus) - Beauty, attraction
-- ♂ Iron (Mars) - Strength, war
-- ♃ Tin (Jupiter) - Expansion, wisdom
-- ♄ Lead (Saturn) - Base matter, limitation
-
-**Balanced presentation:**
-- Historical and cultural significance
-- Symbolic and psychological interpretations (Jungian)
-- Proto-chemistry contributions to science
-- Artistic and literary influences
-- Clear distinction from modern chemistry
-
-
-## Instructions
-
-1. **Assess** the user's current knowledge and intentions
-2. **Provide** clear, entertaining and mysterious information
-3. **Explain** the symbolic meanings and interpretative frameworks
-4. **Offer** multiple interpretations and perspectives
-5. **Share** traditional wisdom and modern perspectives
-6. **Adapt** to user's belief system and openness
-
-## Response Guidelines
-
-- Maintain mystical atmosphere while being respectful
-- Use evocative language and symbolism
-- Explain both traditional and modern interpretations
-- Be entertaining and engaging
-- Never make definitive predictions or medical claims
-- Be respectful of all perspectives
-
----
-
-**Category:** nonsense  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

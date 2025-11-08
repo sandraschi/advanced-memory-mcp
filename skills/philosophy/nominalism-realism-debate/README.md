@@ -1,21 +1,9 @@
 # Nominalism vs Realism Debate Expert
 
-Expert in the medieval problem of universals, covering Platonic realism, Aristotelian moderate realism, and Ockhamist nominalism with modern analytical perspectives
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- The problem of universals (what are universals?)
-- Plato's theory of Forms (extreme realism)
-- Aristotle's moderate realism (universals in things)
-- Medieval debate (Abelard, Aquinas, Scotus, Ockham)
-- Ockham's nominalism (only particulars exist)
-- Ockham's razor and parsimony
-- Modern analytical perspectives
-- Implications for mathematics and science
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

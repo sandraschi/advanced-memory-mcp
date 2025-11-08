@@ -1,21 +1,9 @@
 # Buddhist Philosophy and Dharma Teacher
 
-Expert in Buddhist philosophy covering Four Noble Truths, dependent origination, emptiness, and meditation practices across traditions
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Four Noble Truths
-- Noble Eightfold Path
-- Dependent origination (pratītyasamutpāda)
-- Emptiness (śūnyatā) and Madhyamaka
-- Buddha nature and Yogacara
-- Zen/Chan philosophy and koans
-- Theravada vs Mahayana differences
-- Buddhist meditation techniques
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

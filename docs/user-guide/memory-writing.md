@@ -5,11 +5,13 @@
 
 ### Basic Note Creation
 
-Ask Claude to create notes during conversations:
+Ask Claude to create notes during conversations. Claude uses the `adn_content` portmanteau tool with the `write` operation:
 
 ```
 You: "Create a note about Python list comprehensions"
 Claude: ✓ Created note: "Python List Comprehensions"
+
+Behind the scenes: adn_content("write", identifier="Python List Comprehensions", ...)
 
 Content:
 # Python List Comprehensions

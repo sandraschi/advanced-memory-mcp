@@ -6,7 +6,7 @@ connections, and knowledge gap analysis.
 """
 
 from textwrap import dedent
-from typing import Any
+from typing import Any, Literal
 
 from fastmcp import Context
 from loguru import logger
@@ -25,14 +25,14 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 @mcp.tool
 async def adn_zettelmaker(
-    operation: str,
+    operation: Literal["generate", "customize", "expand", "suggest", "connect", "analyze"],
     category: str | None = None,
     topic: str | None = None,
     note_identifier: str | None = None,
     depth: int = 3,
     count: int = 5,
     ai_generate: bool = False,
-    quality: str = "standard",
+    quality: Literal["quick", "standard", "comprehensive", "expert"] = "standard",
     ctx: Context | None = None,
 ) -> str:
     """Intelligent zettelkasten generation and management for knowledge scaffolding.
@@ -67,14 +67,29 @@ async def adn_zettelmaker(
     - knowledge-worker: productivity, note-taking, communication
 
     Args:
-        operation: The operation to perform (generate, customize, expand, suggest, connect, analyze)
-        category: Template category (developer, researcher, writer, knowledge-worker)
-        topic: Specific topic within category (python-core, git, etc.) or any custom topic with ai_generate=True
-        note_identifier: Title/permalink of existing note (for expand operation)
+        operation: The zettelkasten operation to perform (generate, customize, expand, suggest, connect, analyze)
+        category: Template category for generation
+                    * generate operation: REQUIRED - One of: "developer", "researcher", "writer", "knowledge-worker", "devops", "data-scientist", "uiux-designer", "product-manager", "entrepreneur", "creative"
+                    * Other operations: NOT USED
+        topic: Specific topic within category or custom topic
+                    * generate operation: REQUIRED - Pre-built topic (e.g., "python-core", "git") or custom topic with ai_generate=True
+                    * expand operation: REQUIRED - Topic to expand existing note with
+                    * Other operations: NOT USED
+        note_identifier: Title/permalink of existing note
+                    * expand operation: REQUIRED - Note to expand
+                    * Other operations: NOT USED
         depth: Depth of analysis or generation (1-5, default: 3)
+                    * expand, analyze operations: Optional (default: 3)
+                    * Other operations: NOT USED
         count: Number of suggestions/connections to return (default: 5)
+                    * suggest, connect operations: Optional (default: 5)
+                    * Other operations: NOT USED
         ai_generate: Use AI to generate templates for any topic (requires API key, default: False)
+                    * generate operation: Optional (default: False)
+                    * Other operations: NOT USED
         quality: Quality level for AI generation (quick, standard, comprehensive, expert, default: standard)
+                    * generate operation with ai_generate=True: Optional (default: "standard")
+                    * Other operations: NOT USED
         ctx: Optional MCP context for progress reporting
 
     Returns:

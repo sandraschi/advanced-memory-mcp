@@ -289,11 +289,13 @@ async def search_notes(
     ### Filtering Options
     - `search_notes("query", types=["entity"])` - Search only entities
     - `search_notes("query", types=["note", "person"])` - Multiple content types
-    - `search_notes("query", entity_types=["observation"])` - Filter by entity type
+    - `search_notes("query", entity_types=["observation"])` - Filter by entity type (valid: entity, observation, relation)
     - `search_notes("query", after_date="2024-01-01")` - Content after date
     - `search_notes("query", before_date="2024-12-31")` - Content before date
     - `search_notes("query", after_date="spring 2024", before_date="summer 2024")` - Date range
     - `search_notes("query", tags=["dog", "training"])` - Filter by tags (must have ALL tags)
+
+    Note: Invalid entity_types are ignored with a warning. If all types are invalid, falls back to all types.
 
     ### Advanced Pattern Examples
     - `search_notes("project AND (meeting OR discussion)")` - Complex boolean logic
@@ -406,7 +408,27 @@ async def search_notes(
 
     # Add optional filters if provided
     if entity_types:
-        search_query.entity_types = [SearchItemType(t) for t in entity_types]
+        # Validate entity_types with graceful fallback
+        validated_entity_types = []
+        invalid_entity_types = []
+        for t in entity_types:
+            try:
+                validated_entity_types.append(SearchItemType(t))
+            except ValueError:
+                # Track invalid types but don't fail
+                invalid_entity_types.append(t)
+                logger.warning(f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types.")
+
+        # If we have valid types, use them. If all were invalid, fall back to all types
+        if validated_entity_types:
+            search_query.entity_types = validated_entity_types
+        elif invalid_entity_types:
+            # All types were invalid - fallback to all types with warning
+            valid_types = [t.value for t in SearchItemType]
+            logger.warning(
+                f"All provided entity_types were invalid: {invalid_entity_types}. "
+                f"Falling back to all types. Valid options: {valid_types}"
+            )
     if types:
         search_query.types = types
     if after_date:

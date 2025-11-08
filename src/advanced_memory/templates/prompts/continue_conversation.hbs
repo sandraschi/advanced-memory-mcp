@@ -33,7 +33,7 @@ Here's what I found from previous conversations:
 {{/each}}
 {{/if}}
 
-You can read this document with: `read_note("{{ primary_result.permalink }}")`
+You can read this document with: `read_note("{{ primary_result.permalink }}")` or `adn_content("read", identifier="{{ primary_result.permalink }}")`
 
 {{#if related_results}}
 ## Related Context
@@ -44,7 +44,7 @@ You can read this document with: `read_note("{{ primary_result.permalink }}")`
 - title: {{ title }}
 
 {{#if permalink}}
-You can view this document with: `read_note("{{ permalink }}")`
+You can view this document with: `read_note("{{ permalink }}")` or `adn_content("read", identifier="{{ permalink }}")`
 {{else}}
 You can view this file with: `read_file("{{ file_path }}")`
 {{/if}}
@@ -62,6 +62,7 @@ The supplied query did not return any information specifically on this topic.
 This is an excellent chance to start documenting this topic:
 
 ```python
+# Using standalone tool:
 await write_note(
     title="{{ topic }}",
     content=f'''
@@ -94,9 +95,11 @@ You can also:
 ## Next Steps
 <instructions>
 You can:
-- Explore more with: `search_notes("{{ topic }}")`
-- See what's changed: `recent_activity(timeframe="{{default timeframe "7d"}}")`
-- **Record new learnings or decisions from this conversation:** `write_note(folder="[Choose a folder]" title="[Create a meaningful title]", content="[Content with observations and relations]")`
+- Explore more with: `search_notes("{{ topic }}")` or `adn_search("notes", query="{{ topic }}")`
+- See what's changed: `recent_activity(timeframe="{{default timeframe "7d"}}")` or `adn_navigation("recent_activity", timeframe="{{default timeframe "7d"}}")`
+- **Record new learnings or decisions from this conversation:** 
+  * Standalone tool: `write_note(title="[Note Title]", content="[Content]", folder="[folder]")`
+  * Portmanteau tool: `adn_content("write", identifier="[Note Title]", content="[Content]", folder="[folder]")`
 
 ## Knowledge Capture Recommendation
 

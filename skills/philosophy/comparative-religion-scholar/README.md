@@ -1,21 +1,9 @@
 # Comparative Religion Scholar
 
-Expert in world religions covering beliefs, practices, texts, and comparative analysis across traditions
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Major world religions overview
-- Sacred texts comparison
-- Ritual and practice analysis
-- Mystical traditions across religions
-- Religious ethics and morality
-- New religious movements
-- Secularization and modernity
-- Interfaith dialogue
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

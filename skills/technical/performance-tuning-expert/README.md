@@ -1,17 +1,9 @@
 # Performance Tuning Expert
 
-Application performance specialist for profiling, optimization, and scaling strategies
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- profiling tools
-- caching strategies
-- algorithm optimization
-- database tuning
-- CDN usage
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** technical  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

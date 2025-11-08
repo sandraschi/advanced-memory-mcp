@@ -149,6 +149,31 @@ Or generate the configuration:
 advanced-memory deeplink claude-desktop
 ```
 
+**Option 3: Windows Bootstrap (No MCPB)**
+
+Use this when you cannot install the `.mcpb` package (e.g., Windsurf/Cursor on Windows).
+
+Prerequisites: Node.js 18+, Git for Windows, Python 3.11+, [`uv`](https://docs.astral.sh/uv/).
+
+```powershell
+# Clones to D:\Dev\repos\advanced-memory-mcp by default
+npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows
+
+# Custom target location
+npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows -- --target C:\Work\mcp
+
+# Also emit Cursor/Windsurf/Claude config templates
+npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows -- --generate-configs
+```
+
+What it does:
+- Verifies dependencies (Git, Python, uv)
+- Clones or updates `advanced-memory-mcp`
+- Runs `uv sync`, `uv run ruff check .`, and a skills validation smoke test
+- Optionally writes ready-to-use config templates into `bootstrap-configs/`
+
+An npm-published bootstrapper will follow; the script above is ready for `npm publish` when we are.
+
 **📖 Complete Installation Guide**: [Deeplink Installation](docs/user-guide/DEEPLINK_INSTALLATION.md) | [MCPB Installation](docs/user-guide/mcpb-installation-config.md)
 
 ### First Steps

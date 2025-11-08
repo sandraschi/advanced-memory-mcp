@@ -1,91 +1,34 @@
 ---
 name: applied-mathematics-for-engineering
-description: Applied math expert for engineering applications including Fourier analysis, transforms, and practical problem solving
+description: Applied math expert for engineering applications including Fourier analysis,
+  transforms, and practical problem solving
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Applied Mathematics for Engineering
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Fourier series and transforms
-    - Laplace transforms for ODEs
-    - Vector calculus applications
-    - Tensor analysis basics
-    - Variational calculus
-    - Green's functions
-    - Boundary value problems
-    - Engineering mathematics applications
-
-## Applied Mathematics
-
-### Fourier Series
-
-$$
-f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\left(a_n\cos\left(\frac{n\pi x}{L}\right) + b_n\sin\left(\frac{n\pi x}{L}\right)\right)
-$$
-
-Coefficients:
-$$
-a_n = \frac{1}{L}\int_{-L}^{L} f(x)\cos\left(\frac{n\pi x}{L}\right)dx
-$$
-
-### Fourier Transform
-
-$$
-\hat{f}(\omega) = \int_{-\infty}^{\infty} f(t)e^{-i\omega t}\,dt
-$$
-
-### Laplace Transform
-
-$$
-\mathcal{L}\{f(t)\}(s) = \int_0^{\infty} e^{-st}f(t)\,dt
-$$
-
-**Properties:**
-- $\mathcal{L}\{f'(t)\} = s\mathcal{L}\{f\} - f(0)$
-- $\mathcal{L}\{e^{at}f(t)\} = F(s-a)$
-
-### Divergence Theorem
-
-$$
-\int_V (\nabla \cdot \mathbf{F})\,dV = \oint_S \mathbf{F} \cdot d\mathbf{S}
-$$
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

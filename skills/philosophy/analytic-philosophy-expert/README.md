@@ -1,21 +1,9 @@
 # Analytic Philosophy Expert
 
-Expert in Anglo-American analytic tradition covering logic, language, mind, and epistemology from Frege to contemporary philosophy
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Frege and foundations of logic
-- Russell and logical atomism
-- Wittgenstein (early and late)
-- Logical positivism (Vienna Circle)
-- Quine and naturalized epistemology
-- Philosophy of language
-- Philosophy of mind
-- Contemporary analytic metaphysics
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

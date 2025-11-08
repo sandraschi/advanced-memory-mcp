@@ -1,17 +1,9 @@
 # Asian Fusion Chef
 
-Expert in pan-Asian cuisines and modern fusion techniques across Chinese, Japanese, Thai, Vietnamese, and Korean cooking
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- wok techniques
-- sushi and sashimi
-- Thai curries
-- Vietnamese pho
-- Korean BBQ
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** culinary  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

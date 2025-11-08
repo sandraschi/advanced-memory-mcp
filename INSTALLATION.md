@@ -12,6 +12,7 @@ This guide covers all installation methods for Advanced Memory across different 
 | **VS Code** | Deeplink Configuration | `advanced-memory deeplink vscode` |
 | **Claude Desktop** | MCPB Package | Download from releases |
 | **Development** | From Source | `git clone https://github.com/sandraschi/advanced-memory-mcp.git && pip install -e .` |
+| **Windows (Cursor/Windsurf)** | `npx` Bootstrap | `npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows` |
 
 ---
 
@@ -101,6 +102,25 @@ pip install advanced-memory
 
 **3. Configure Claude Desktop**
 Location: `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Optional: Run the Windows Bootstrapper**
+- Requirements: Node.js 18+, Git, Python 3.11+, [`uv`](https://docs.astral.sh/uv/).
+- Clones/updates the repo, runs `uv sync`, `uv run ruff check .`, and can emit ready-to-use MCP configs.
+
+```powershell
+# Default target (D:\Dev\repos if drive D exists, otherwise C:\Dev\repos)
+npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows
+
+# Custom clone location + config emission
+npx --yes github:sandraschi/advanced-memory-mcp/scripts/bootstrap/windows -- --target C:\Work\mcp --generate-configs
+```
+
+Outputs:
+- Cloned repository root
+- Optional `bootstrap-configs/` folder with JSON templates for Cursor, Windsurf, Claude Desktop (portmanteau-only mode preconfigured)
+- Next-step instructions in the console (where to copy configs, how to point clients)
+
+> Planning an npm publish? The same script doubles as the CLI entry-point when we reserve a package name.
 
 ### Linux (Ubuntu/Debian)
 

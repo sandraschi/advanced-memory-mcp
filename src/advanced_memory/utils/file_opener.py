@@ -107,3 +107,15 @@ def format_open_result(success: bool, message: str, path: str | Path | None = No
 
 {message}{manual_msg}"""
 
+
+
+
+
+
+
+
+
+
+
+
+

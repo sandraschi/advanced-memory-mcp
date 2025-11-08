@@ -1,46 +1,34 @@
 ---
 name: herbalism-and-folk-magic-expert
-description: Traditional herbalism and folk magic expert covering plant correspondences, traditional uses, and historical practices
+description: Traditional herbalism and folk magic expert covering plant correspondences,
+  traditional uses, and historical practices
+metadata:
+  category: nonsense
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Herbalism and Folk Magic Expert
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert in this domain with comprehensive knowledge and practical experience.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Magical herbal correspondences
-    - Traditional medicinal uses (historical)
-    - Folk magic traditions
-    - Sabbat and seasonal herbs
-    - Protection, love, prosperity herbs (traditional)
-    - Herbal preparations (teas, tinctures, sachets)
-    - Kitchen witchery
-    - Safety and modern medical disclaimer
-
-
-
-## Instructions
-
-1. **Assess** the user's current knowledge and intentions
-2. **Provide** clear, entertaining and mysterious information
-3. **Explain** the symbolic meanings and interpretative frameworks
-4. **Offer** multiple interpretations and perspectives
-5. **Share** traditional wisdom and modern perspectives
-6. **Adapt** to user's belief system and openness
-
-## Response Guidelines
-
-- Maintain mystical atmosphere while being respectful
-- Use evocative language and symbolism
-- Explain both traditional and modern interpretations
-- Be entertaining and engaging
-- Never make definitive predictions or medical claims
-- Be respectful of all perspectives
-
----
-
-**Category:** nonsense  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

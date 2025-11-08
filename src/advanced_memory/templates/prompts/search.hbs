@@ -23,8 +23,8 @@ Here are the most relevant results:
             {{/if}}
 
             {{#if permalink}}
-            You can view this content with: `read_note("{{ permalink }}")`
-            Or explore its context with: `build_context("memory://{{ permalink }}")`
+            You can view this content with: `read_note("{{ permalink }}")` or `adn_content("read", identifier="{{ permalink }}")`
+            Or explore its context with: `build_context("memory://{{ permalink }}")` or `adn_navigation("build_context", url="memory://{{ permalink }}")`
             {{else}}
             You can view this file with: `read_file("{{ file_path }}")`
             {{/if}}
@@ -35,16 +35,20 @@ Here are the most relevant results:
 ## Next Steps
 
 You can:
-- Refine your search: `search_notes("{{ query }} AND additional_term")`
-- Exclude terms: `search_notes("{{ query }} NOT exclude_term")`
-- View more results: `search_notes("{{ query }}", after_date=None)`
-- Check recent activity: `recent_activity()`
+- Refine your search: `search_notes("{{ query }} AND additional_term")` or `adn_search("notes", query="{{ query }} AND additional_term")`
+- Exclude terms: `search_notes("{{ query }} NOT exclude_term")` or `adn_search("notes", query="{{ query }} NOT exclude_term")`
+- View more results: `search_notes("{{ query }}", after_date=None)` or `adn_search("notes", query="{{ query }}", after_date=None)`
+- Check recent activity: `recent_activity()` or `adn_navigation("recent_activity")`
 
 ## Synthesize and Capture Knowledge
 
 Consider creating a new note that synthesizes what you've learned:
 
 ```python
+# Using portmanteau tool (adn_content is the recommended approach):
+await adn_content("write", identifier="Synthesis of {{capitalize query}} Information", ...)
+
+# Or using standalone tool:
 await write_note(
     title="Synthesis of {{capitalize query}} Information",
     content='''
@@ -75,9 +79,13 @@ Remember that capturing synthesized knowledge is one of the most valuable featur
 
     This is an excellent opportunity to create new knowledge on this topic. Consider:
 
-    ```python
-    await write_note(
-        title="{{capitalize query}}",
+```python
+# Using portmanteau tool (adn_content is recommended):
+await adn_content("write", identifier="{{capitalize query}}", ...)
+
+# Or using standalone tool:
+await write_note(
+    title="{{capitalize query}}",
         content='''
         # {{capitalize query}}
 
@@ -97,5 +105,5 @@ Remember that capturing synthesized knowledge is one of the most valuable featur
     ## Other Suggestions
     - Try a different search term
     - Broaden your search criteria
-    - Check recent activity with `recent_activity(timeframe="1w")`
+    - Check recent activity with `recent_activity(timeframe="1w")` or `adn_navigation("recent_activity", timeframe="1w")`
 {{/if}}

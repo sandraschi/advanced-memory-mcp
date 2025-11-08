@@ -2,7 +2,7 @@
 
 **Comprehensive documentation for all Advanced Memory MCP tools.**
 
-[Portmanteau Tools](#portmanteau-tools-11-total) | [Standard Tools](#standard-tools-46-total) | [Tool Mode Selection](user-guide/tool-mode-selection.md)
+[Portmanteau Tools](#portmanteau-tools-12-total) | [Standard Tools](#standard-tools-46-total) | [Tool Mode Selection](user-guide/tool-mode-selection.md)
 
 ---
 
@@ -20,10 +20,11 @@
 - [Navigation](#9-adn_navigation---navigation--exploration) - Explore, context, status
 - [Editor Integration](#10-adn_editor---editor-integration) - Notepad++, Typora, canvas
 - [Help System](#11-help---documentation-system) - Interactive documentation
+- [Skill Creator](#12-adn_skills_creator---skill-creation-facility) - Scaffold, validate, package skills
 
 ---
 
-## Portmanteau Tools (11 Total)
+## Portmanteau Tools (12 Total)
 
 **What are portmanteau tools?**
 
@@ -61,12 +62,14 @@ adn_content(
 )
 ```
 
+**Important:** For write operations, `identifier` is **REQUIRED** and should be the note **title**. Advanced Memory automatically generates the permalink from the title.
+
 **Parameters**:
-- `identifier`: Note title (required)
-- `content`: Markdown content (required)
-- `folder`: Destination folder (required)
-- `tags`: List of tags or comma-separated string
-- `entity_type`: "note" (default), "entity", "observation"
+- `identifier` (str, **required**): Note title - Advanced Memory generates permalink from this
+- `content` (str, required): Markdown content
+- `folder` (str, required): Destination folder
+- `tags`: List of tags or comma-separated string (optional)
+- `entity_type`: "note" (default), "entity", "observation" (optional)
 
 **Features**:
 - Automatic `[[WikiLink]]` detection
@@ -905,6 +908,49 @@ help("basic", "tools")
 - `intermediate`: Detailed tool descriptions, workflows
 - `advanced`: Technical architecture, implementation
 - `expert`: Development, troubleshooting, internals
+
+### 12. `adn_skills_creator` - Skill Creation Facility
+
+**Purpose**: Scaffold, validate, inspect, upgrade, and package Claude skills using the modular architecture.
+
+#### Operations
+
+- `scaffold` – Generate a new skill folder with `SKILL.md`, `_toc.md`, modules, and placeholder resources.
+- `validate` – Ensure required modules, metadata fields, and research checklist are present.
+- `inspect` – Return frontmatter metadata for quick review.
+- `upgrade` – Convert legacy single-file skills into the modular layout.
+- `package` – Create a ZIP archive (with manifest) for distribution.
+
+#### Usage
+
+```python
+# Create a new scaffold
+adn_skills_creator(
+    operation="scaffold",
+    skill_name="brand-guidelines",
+    output_dir="skills/company",
+    category="enterprise"
+)
+
+# Validate an existing skill
+adn_skills_creator(
+    operation="validate",
+    skill_path="skills/company/brand-guidelines"
+)
+
+# Package the skill for sharing
+adn_skills_creator(
+    operation="package",
+    skill_path="skills/company/brand-guidelines",
+    output_dir="dist"
+)
+```
+
+**Outputs**:
+- `success`: Boolean status.
+- `data`: Result payload (paths, archives, validation issues).
+- `metadata`: Operation context (skill path, action).
+- On failure, structured error with actionable suggestions.
 
 ---
 

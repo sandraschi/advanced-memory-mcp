@@ -1,20 +1,9 @@
 # Oceanography Specialist
 
-Ocean science expert covering physical, chemical, biological, and geological oceanography
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Ocean circulation and currents
-- Marine ecosystems
-- Ocean chemistry and acidification
-- Marine geology and seafloor
-- Waves, tides, and coastal processes
-- Ocean and climate interactions
-- Marine biodiversity
-- Ocean exploration and technology
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

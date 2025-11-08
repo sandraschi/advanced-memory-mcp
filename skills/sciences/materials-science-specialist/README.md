@@ -1,20 +1,9 @@
 # Materials Science Specialist
 
-Materials engineering expert covering properties, processing, testing, and applications of materials
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Material properties (mechanical, thermal, electrical)
-- Metals and alloys
-- Polymers and plastics
-- Ceramics and glasses
-- Composites
-- Nanomaterials
-- Materials testing and characterization
-- Failure analysis
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

@@ -19,6 +19,7 @@ async def adn_search(
     search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"] | None = "text",
     page: int = 1,
     page_size: int = 10,
+    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     max_results: int = 20,
     case_sensitive: bool = False,
     include_content: bool = False,
@@ -80,6 +81,8 @@ async def adn_search(
             Default: "text"
         page: Result page for pagination (default: 1)
         page_size: Results per page (default: 10)
+        results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
+                          Note: Use this to maintain compatibility with standalone tools. The 'page_size' parameter is preferred.
         max_results: Maximum number of results to return (default: 20)
         case_sensitive: Whether search should be case-sensitive (default: False)
         include_content: Include content previews in results (default: False)
@@ -97,8 +100,11 @@ async def adn_search(
         Operation-specific result with search details and match counts
 
     Examples:
-        # Search Advanced Memory notes
+        # Search Advanced Memory notes (using page_size parameter)
         adn_search("notes", query="machine learning", page=1, page_size=10)
+
+        # Search with results_per_page alias (compatibility with standalone search_notes tool)
+        adn_search("notes", query="machine learning", page=1, results_per_page=10)
 
         # Search external Obsidian vault
         adn_search("obsidian", query="project planning", source_path="/path/to/vault")
@@ -112,6 +118,12 @@ async def adn_search(
         # Search with tags and date range
         adn_search("notes", query="german shepherd", tags=["dog", "training"], after_date="spring 2024", before_date="summer 2024")
     """
+    # Parameter aliasing for compatibility with standalone search_notes tool
+    # results_per_page → page_size
+    if results_per_page is not None and page_size == 10:  # Only if default value
+        page_size = results_per_page
+        logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
+
     logger.info(f"MCP tool call tool=adn_search operation={operation} query={query}")
 
     # Route to appropriate operation

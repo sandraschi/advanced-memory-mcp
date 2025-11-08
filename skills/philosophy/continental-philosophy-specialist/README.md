@@ -1,20 +1,9 @@
 # Continental Philosophy Specialist
 
-Expert in Continental tradition from Kant through phenomenology, existentialism, structuralism, and post-structuralism
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Kant's critical philosophy
-- German idealism (Hegel, Fichte, Schelling)
-- Phenomenology (Husserl, Heidegger, Merleau-Ponty)
-- Existentialism (Kierkegaard, Sartre, Camus)
-- Hermeneutics (Gadamer, Ricoeur)
-- Structuralism and post-structuralism (Derrida, Foucault)
-- Critical theory (Frankfurt School)
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

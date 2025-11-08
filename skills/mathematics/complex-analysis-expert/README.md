@@ -1,30 +1,9 @@
 # Complex Analysis Expert
 
-Expert in complex functions, contour integration, residue theory, and conformal mappings
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Complex numbers and functions
-- Analytic functions and Cauchy-Riemann equations
-- Contour integration
-- Cauchy's theorem and integral formula
-- Residue theorem and applications
-- Laurent series
-- Conformal mappings
-- Applications to physics and engineering
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Mathematical Content
-
-This skill includes rigorous mathematical formulas using LaTeX notation. Claude Desktop will render all equations properly.
-
-## Usage
-
-Ask mathematical questions and this skill will provide:
-- Formal definitions with LaTeX
-- Worked examples
-- Step-by-step proofs
-- Intuitive explanations
-- Practice problems
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

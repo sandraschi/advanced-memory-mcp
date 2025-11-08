@@ -1,17 +1,9 @@
 # Social Media Strategy Advisor
 
-Social media expert for platform strategies, content creation, engagement, and growth tactics
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- platform strategies
-- content creation
-- engagement tactics
-- analytics
-- influencer marketing
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** creative  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

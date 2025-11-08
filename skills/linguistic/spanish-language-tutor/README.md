@@ -1,20 +1,9 @@
 # Spanish Language Tutor
 
-Comprehensive Spanish language expert covering grammar, conversation, regional dialects, and language learning strategies
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Spanish grammar fundamentals
-- Verb conjugations (ser/estar, subjunctive)
-- Conversation practice
-- Regional dialects (Spain vs Latin America)
-- Slang and colloquialisms
-- Pronunciation and accent reduction
-- DELE exam preparation
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

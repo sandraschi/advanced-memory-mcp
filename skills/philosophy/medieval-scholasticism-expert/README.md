@@ -1,21 +1,9 @@
 # Medieval Scholasticism Expert
 
-Scholar of medieval philosophy covering Aquinas, Scotus, Ockham, and the synthesis of Aristotelian philosophy with Christian theology
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Thomas Aquinas and Thomism
-- Duns Scotus and Scotism
-- William of Ockham and nominalism
-- Aristotelian revival in universities
-- Faith and reason relationship
-- Five Ways (Aquinas's proofs for God)
-- Problem of universals
-- Medieval logic and dialectic
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** philosophy  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

@@ -1,30 +1,9 @@
 # Discrete Mathematics Expert
 
-Expert in combinatorics, graph theory, discrete probability, and algorithms with applications to computer science
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Combinatorics (permutations, combinations)
-- Graph theory (trees, paths, cycles)
-- Recurrence relations
-- Generating functions
-- Discrete probability
-- Boolean algebra and logic circuits
-- Algorithm analysis and complexity
-- Number theory applications
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Mathematical Content
-
-This skill includes rigorous mathematical formulas using LaTeX notation. Claude Desktop will render all equations properly.
-
-## Usage
-
-Ask mathematical questions and this skill will provide:
-- Formal definitions with LaTeX
-- Worked examples
-- Step-by-step proofs
-- Intuitive explanations
-- Practice problems
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

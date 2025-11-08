@@ -1,20 +1,9 @@
 # Numerology Interpretation Expert
 
-Numerology expert covering life path numbers, name numbers, and Pythagorean to Chaldean systems
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Life path number calculation
-- Expression and soul urge numbers
-- Pythagorean numerology system
-- Chaldean numerology
-- Master numbers (11, 22, 33)
-- Number meanings and symbolism
-- Name analysis
-- Personal year and cycles
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Presented as cultural tradition and psychological tool, not scientific fact.
-
-**Category:** nonsense  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

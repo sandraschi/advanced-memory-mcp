@@ -202,18 +202,65 @@ async def edit_note(
 
     logger.info("MCP tool call", tool="edit_note", identifier=identifier, operation=operation)
 
-    # Validate operation
+    # Validate operation with helpful error message
     valid_operations = ["append", "prepend", "find_replace", "replace_section"]
     if operation not in valid_operations:
-        raise ValueError(
-            f"Invalid operation '{operation}'. Must be one of: {', '.join(valid_operations)}"
-        )
+        return f"""# Edit Failed - Invalid Operation
 
-    # Validate required parameters for specific operations
+**You provided:** `operation="{operation}"`
+
+**Valid edit operations:**
+- `append` - Add content to the end of the note
+- `prepend` - Add content to the beginning of the note
+- `find_replace` - Find and replace specific text
+- `replace_section` - Replace an entire markdown section
+
+**Example (append):**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="append",
+    content="\\n## Additional Notes\\nNew content here"
+)
+```
+
+**Try again with a valid operation.**"""
+
+    # Validate required parameters for specific operations with helpful error messages
     if operation == "find_replace" and not find_text:
-        raise ValueError("find_text parameter is required for find_replace operation")
+        return f"""# Edit Failed - Missing Parameter
+
+**Operation:** `find_replace`
+**Missing:** `find_text` parameter
+
+The find_replace operation requires both `find_text` and `content` parameters.
+
+**Example:**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="find_replace",
+    find_text="old text",
+    content="new text"
+)
+```"""
     if operation == "replace_section" and not section:
-        raise ValueError("section parameter is required for replace_section operation")
+        return f"""# Edit Failed - Missing Parameter
+
+**Operation:** `replace_section`
+**Missing:** `section` parameter
+
+The replace_section operation requires a `section` name (the markdown heading to replace).
+
+**Example:**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="replace_section",
+    section="## Introduction",
+    content="New introduction content"
+)
+```"""
 
     # Use the PATCH endpoint to edit the entity
     try:

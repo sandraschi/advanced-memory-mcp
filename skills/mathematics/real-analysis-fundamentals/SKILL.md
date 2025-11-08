@@ -1,88 +1,34 @@
 ---
 name: real-analysis-fundamentals
-description: Rigorous analysis expert covering limits, continuity, sequences, series, and measure theory foundations
+description: Rigorous analysis expert covering limits, continuity, sequences, series,
+  and measure theory foundations
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Real Analysis Fundamentals
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Real number completeness
-    - Sequences and convergence
-    - Series convergence tests
-    - Continuous functions
-    - Uniform convergence
-    - Riemann integration
-    - Measure theory basics
-    - Metric space topology
-
-## Rigorous Foundations
-
-### Limit Definition (ε-δ)
-
-$$
-\lim_{x \to a} f(x) = L \iff \forall \varepsilon > 0, \exists \delta > 0: 0 < |x-a| < \delta \Rightarrow |f(x)-L| < \varepsilon
-$$
-
-### Sequence Convergence
-
-$$
-\lim_{n\to\infty} a_n = L \iff \forall \varepsilon > 0, \exists N: n > N \Rightarrow |a_n - L| < \varepsilon
-$$
-
-### Cauchy Sequence
-
-$$
-\forall \varepsilon > 0, \exists N: m,n > N \Rightarrow |a_m - a_n| < \varepsilon
-$$
-
-### Convergence Tests
-
-**Ratio test:** $\lim_{n\to\infty} \left|\frac{a_{n+1}}{a_n}\right| < 1 \Rightarrow$ series converges
-
-**Root test:** $\limsup_{n\to\infty} \sqrt[n]{|a_n|} < 1 \Rightarrow$ series converges
-
-### Uniform Convergence
-
-$$
-\forall \varepsilon > 0, \exists N: n > N, x \in D \Rightarrow |f_n(x) - f(x)| < \varepsilon
-$$
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

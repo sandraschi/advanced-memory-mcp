@@ -13,7 +13,7 @@ from advanced_memory.schemas.search import SearchItemType
 
 @mcp.tool
 async def recent_activity(
-    type: str | list[str] = "",
+    type_filter: str | list[str] = "",
     depth: int = 1,
     timeframe: TimeFrame = "7d",
     page: int = 1,
@@ -24,7 +24,7 @@ async def recent_activity(
     """Get recent activity across the knowledge base.
 
     Args:
-        type: Filter by content type(s). Can be a string or list of strings.
+        type_filter: Filter by content type(s). Can be a string or list of strings.
             Valid options:
             - "entity" or ["entity"] for knowledge entities
             - "relation" or ["relation"] for connections between entities
@@ -32,6 +32,7 @@ async def recent_activity(
             Multiple types can be combined: ["entity", "relation"]
             Case-insensitive: "ENTITY" and "entity" are treated the same.
             Default is an empty string, which returns all types.
+            Fallback: Invalid types are ignored. If all types are invalid, falls back to all types with a warning.
         depth: How many relation hops to traverse (1-3 recommended)
         timeframe: Time window to search. Supports natural language:
             - Relative: "2 days ago", "last week", "yesterday"
@@ -53,19 +54,19 @@ async def recent_activity(
         recent_activity()
 
         # Get all entities from yesterday (string format)
-        recent_activity(type="entity", timeframe="yesterday")
+        recent_activity(type_filter="entity", timeframe="yesterday")
 
         # Get all entities from yesterday (list format)
-        recent_activity(type=["entity"], timeframe="yesterday")
+        recent_activity(type_filter=["entity"], timeframe="yesterday")
 
         # Get recent relations and observations
-        recent_activity(type=["relation", "observation"], timeframe="today")
+        recent_activity(type_filter=["relation", "observation"], timeframe="today")
 
         # Look back further with more context
-        recent_activity(type="entity", depth=2, timeframe="2 weeks ago")
+        recent_activity(type_filter="entity", depth=2, timeframe="2 weeks ago")
 
         # Get activity from specific project
-        recent_activity(type="entity", project="work-project")
+        recent_activity(type_filter="entity", project="work-project")
 
     Notes:
         - Higher depth values (>3) may impact performance with large result sets
@@ -73,7 +74,7 @@ async def recent_activity(
         - Max timeframe is 1 year in the past
     """
     logger.info(
-        f"Getting recent activity from type={type}, depth={depth}, timeframe={timeframe}, page={page}, page_size={page_size}, max_related={max_related}"
+        f"Getting recent activity from type_filter={type_filter}, depth={depth}, timeframe={timeframe}, page={page}, page_size={page_size}, max_related={max_related}"
     )
     params = {
         "page": page,
@@ -85,13 +86,14 @@ async def recent_activity(
     if timeframe:
         params["timeframe"] = timeframe  # pyright: ignore
 
-    # Validate and convert type parameter
-    if type:
+    # Validate and convert type_filter parameter
+    invalid_types = []
+    if type_filter:
         # Convert single string to list
-        if isinstance(type, str):
-            type_list = [type]
+        if isinstance(type_filter, str):
+            type_list = [type_filter]
         else:
-            type_list = type
+            type_list = type_filter
 
         # Validate each type against SearchItemType enum
         validated_types = []
@@ -100,12 +102,21 @@ async def recent_activity(
                 # Try to convert string to enum
                 if isinstance(t, str):
                     validated_types.append(SearchItemType(t.lower()))
-            except ValueError as e:
-                valid_types = [t.value for t in SearchItemType]
-                raise ValueError(f"Invalid type: {t}. Valid types are: {valid_types}") from e
+            except ValueError:
+                # Track invalid types but don't fail
+                invalid_types.append(t)
+                logger.warning(f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types.")
 
-        # Add validated types to params
-        params["type"] = [t.value for t in validated_types]  # pyright: ignore
+        # If we have valid types, use them. If all were invalid, fall back to all types
+        if validated_types:
+            params["type"] = [t.value for t in validated_types]  # pyright: ignore
+        elif invalid_types:
+            # All types were invalid - fallback to all types with warning
+            valid_types = [t.value for t in SearchItemType]
+            logger.warning(
+                f"All provided types were invalid: {invalid_types}. "
+                f"Falling back to all types. Valid options: {valid_types}"
+            )
 
     active_project = get_active_project(project)
     project_url = active_project.project_url

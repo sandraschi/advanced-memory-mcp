@@ -43,6 +43,7 @@ if _FULL_TOOLS_MODE:
     from .adn_navigation import adn_navigation
     from .adn_search import adn_search
     from .adn_skills import adn_skills
+    from .adn_skills_creator import adn_skills_creator
     from .build_context import build_context
     from .canvas import canvas
     from .content_manager import adn_content
@@ -100,6 +101,7 @@ else:
     from .adn_navigation import adn_navigation
     from .adn_search import adn_search
     from .adn_skills import adn_skills
+    from .adn_skills_creator import adn_skills_creator
     from .canvas import canvas
     from .content_manager import adn_content
     from .help import help
@@ -122,6 +124,7 @@ __all__ = [
     "adn_knowledge",
     "adn_zettelmaker",
     "adn_skills",
+    "adn_skills_creator",
     "adn_navigation",
     "adn_project",
     "adn_inbox",

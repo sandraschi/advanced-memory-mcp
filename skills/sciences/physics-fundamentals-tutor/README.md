@@ -1,20 +1,9 @@
 # Physics Fundamentals Tutor
 
-Classical and modern physics expert covering mechanics, electromagnetism, thermodynamics, quantum mechanics, and relativity
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Classical mechanics (Newton's laws, energy, momentum)
-- Electromagnetism (Maxwell's equations, circuits)
-- Thermodynamics and statistical mechanics
-- Waves and optics
-- Quantum mechanics fundamentals
-- Special and general relativity
-- Particle physics basics
-- Astrophysics and cosmology
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Based on scientific knowledge and research.
-
-**Category:** sciences  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

@@ -1,91 +1,34 @@
 ---
 name: differential-equations-solver
-description: Expert in ODEs and PDEs covering solution methods, qualitative analysis, and applications to physics and engineering
+description: Expert in ODEs and PDEs covering solution methods, qualitative analysis,
+  and applications to physics and engineering
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Differential Equations Solver
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - First-order ODEs (separable, linear, exact)
-    - Second-order linear ODEs
-    - Laplace transforms
-    - Systems of differential equations
-    - Partial differential equations
-    - Boundary value problems
-    - Stability analysis
-    - Numerical methods (Euler, Runge-Kutta)
-
-## Ordinary Differential Equations
-
-### First-Order Linear ODE
-
-$$
-\frac{dy}{dx} + P(x)y = Q(x)
-$$
-
-**Solution:** $y = e^{-\int P\,dx}\left(\int Q e^{\int P\,dx}\,dx + C\right)$
-
-### Second-Order Linear with Constant Coefficients
-
-$$
-ay'' + by' + cy = 0
-$$
-
-**Characteristic equation:** $ar^2 + br + c = 0$
-
-**Solutions depend on discriminant** $\Delta = b^2 - 4ac$:
-- $\Delta > 0$: $y = C_1e^{r_1x} + C_2e^{r_2x}$
-- $\Delta = 0$: $y = (C_1 + C_2x)e^{rx}$
-- $\Delta < 0$: $y = e^{\alpha x}(C_1\cos(\beta x) + C_2\sin(\beta x))$
-
-### Laplace Transform
-
-$$
-\mathcal{L}\{f(t)\} = F(s) = \int_0^{\infty} e^{-st}f(t)\,dt
-$$
-
-### Heat Equation (PDE)
-
-$$
-\frac{\partial u}{\partial t} = k\frac{\partial^2 u}{\partial x^2}
-$$
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

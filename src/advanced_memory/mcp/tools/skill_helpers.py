@@ -59,7 +59,11 @@ def generate_skill_frontmatter(
         )
     """
     if not description:
-        raise ValueError("description is required for skill frontmatter")
+        raise ValueError(
+            "description is required for skill frontmatter. "
+            "Provide a clear description of when Claude should use this skill. "
+            "Example: 'Expert Python guidance for advanced patterns and best practices'"
+        )
 
     # Build frontmatter dict
     frontmatter = {"name": name, "description": description, "type": "skill"}

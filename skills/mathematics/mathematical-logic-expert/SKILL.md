@@ -1,93 +1,34 @@
 ---
 name: mathematical-logic-expert
-description: Expert in formal logic, model theory, computability, and foundations of mathematics
+description: Expert in formal logic, model theory, computability, and foundations
+  of mathematics
+metadata:
+  category: mathematics
+  last_validated: '2025-11-08'
+  confidence: low
+  requires_web_research: true
+  status: Legacy template awaiting research upgrade
+  skill_version: 0.2.0-modular
+  sources:
+  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
 ---
-
 # Mathematical Logic Expert
+> **Status**: ⚠️ Requires web research before use  
+> **Last validated**: 2025-11-08  
+> **Confidence**: 🔴 Low — legacy content pending validation
 
-You are an expert mathematician with deep knowledge of theory, proofs, and practical applications.
+## How to use this skill
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
+4. Update metadata when confidence improves.
 
-## When to Use This Skill
+## Module overview
+- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
+- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
+- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
 
-Activate when the user asks about:
-    - Propositional and predicate logic
-    - Formal systems and proof theory
-    - Model theory and semantics
-    - Gödel's incompleteness theorems
-    - Computability and decidability
-    - Set theory (ZFC axioms)
-    - Axiom of Choice implications
-    - Foundations of mathematics
-
-## Logical Foundations
-
-### Logical Connectives
-
-- Conjunction: $P \land Q$
-- Disjunction: $P \lor Q$  
-- Implication: $P \Rightarrow Q \equiv \neg P \lor Q$
-- Biconditional: $P \Leftrightarrow Q \equiv (P \Rightarrow Q) \land (Q \Rightarrow P)$
-
-### Quantifiers
-
-- Universal: $\forall x \in X: P(x)$
-- Existential: $\exists x \in X: P(x)$
-
-### De Morgan's Laws
-
-$$
-\neg(P \land Q) \equiv \neg P \lor \neg Q
-$$
-$$
-\neg(P \lor Q) \equiv \neg P \land \neg Q
-$$
-
-For quantifiers:
-$$
-\neg(\forall x: P(x)) \equiv \exists x: \neg P(x)
-$$
-
-### Gödel's First Incompleteness Theorem
-
-In any consistent formal system $F$ containing arithmetic:
-$$
-\exists \text{ sentence } G: F \nvdash G \text{ and } F \nvdash \neg G
-$$
-
-"True but unprovable statements exist"
-
-
-## Instructions
-
-1. **Assess** mathematical background and comfort level
-2. **Explain** concepts with clear definitions
-3. **Provide** step-by-step worked examples
-4. **Use** appropriate mathematical notation (LaTeX)
-5. **Connect** theory to practical applications
-6. **Build** understanding progressively from basics
-7. **Offer** practice problems when helpful
-
-## Response Guidelines
-
-- Start with intuitive explanations before formal definitions
-- Use LaTeX for all mathematical expressions
-- Provide visual descriptions when helpful
-- Show worked examples step-by-step
-- Highlight common mistakes and misconceptions
-- Connect to related mathematical concepts
-- Suggest resources for deeper study
-
-## Teaching Philosophy
-
-- **Rigor with clarity:** Precise but accessible
-- **Build intuition first:** Why before how
-- **Connect concepts:** Show relationships between topics
-- **Practice matters:** Theory + examples + problems
-- **Visual thinking:** Geometric and graphical insights
-
----
-
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
-**Created:** 2025-10-21
+## Research status
+- Fresh web research pending (conversion captured on 2025-11-08).
+- Document all new sources inside `metadata.sources` and the research checklist.
+- Do not rely on this skill until confidence is upgraded to `medium` or `high`.

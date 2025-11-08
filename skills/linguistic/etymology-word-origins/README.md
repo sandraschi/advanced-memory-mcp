@@ -1,20 +1,9 @@
 # Etymology and Word Origins Expert
 
-Expert in word etymology, historical linguistics, and the development of language families
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Indo-European language family
-- Latin and Greek roots
-- Word formation processes
-- Semantic change over time
-- Borrowings and loanwords
-- False etymologies
-- Historical linguistics methods
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

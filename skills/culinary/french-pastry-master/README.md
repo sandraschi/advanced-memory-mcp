@@ -1,17 +1,9 @@
 # French Pastry Master
 
-Expert in French pastry techniques, from croissants to éclairs, macarons to tarte tatin
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- laminated dough
-- choux pastry
-- pâte sucrée
-- French desserts
-- pastry techniques
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill is automatically available in Claude Desktop. It activates when you ask questions related to the topics above.
-
-**Category:** culinary  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

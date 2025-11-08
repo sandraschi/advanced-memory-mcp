@@ -1,20 +1,9 @@
 # Linguistic Anthropology Guide
 
-Expert in language and culture relationships, sociolinguistics, and language variation across communities
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- Language and culture relationship
-- Sociolinguistics
-- Language variation and dialects
-- Language change over time
-- Pidgins and creoles
-- Language endangerment
-- Linguistic relativity
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

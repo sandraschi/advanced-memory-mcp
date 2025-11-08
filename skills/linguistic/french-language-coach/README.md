@@ -1,20 +1,9 @@
 # French Language Coach
 
-French language expert for grammar, pronunciation, conversation, and cultural fluency
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- French grammar and syntax
-- Pronunciation and phonetics
-- Verb conjugations and tenses
-- Conversational French
-- French culture and etiquette
-- DELF/DALF exam preparation
-- Regional variations
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage
-
-This skill activates in Claude Desktop when you ask questions about these topics.
-
-**Category:** linguistic  
-**Difficulty:** Advanced  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_

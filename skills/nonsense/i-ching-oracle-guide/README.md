@@ -1,20 +1,9 @@
 # I Ching Oracle Guide
 
-I Ching (易經) expert covering hexagram interpretation, traditional wisdom, and consultation methods
+This skill now follows the modular Claude Skills architecture.
 
-## Topics Covered
-- 64 hexagrams and their meanings
-- Trigram combinations
-- Changing lines
-- Consultation methods (coins, yarrow stalks)
-- Wilhelm/Baynes translation
-- Confucian commentary tradition
-- Taoist interpretations
-- Modern psychological approaches
+- Overview: `SKILL.md`
+- Module index: `_toc.md`
+- Begin with `modules/research-checklist.md` before trusting any guidance.
 
-## Usage in Claude Desktop
-
-This skill activates when you ask related questions. Presented as cultural tradition and psychological tool, not scientific fact.
-
-**Category:** nonsense  
-**Version:** 1.0.0
+_Last automated conversion: 2025-11-08_
