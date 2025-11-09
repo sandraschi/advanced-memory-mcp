@@ -1,0 +1,12 @@
+{
+  "name": "french-language-coach",
+  "packaged_at": "2025-11-09T18:18:08.701484Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\linguistic\\french-language-coach",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\french-language-coach.zip",
+  "sha256": "980a00b937d03e55e273c96d0e2afdc893e3e584ca7c517be454d75814e693d4",
+  "metadata": {
+    "name": "french-language-coach",
+    "description": "French language expert for grammar, pronunciation, conversation, and cultural fluency",
+    "license": "Proprietary"
+  }
+}

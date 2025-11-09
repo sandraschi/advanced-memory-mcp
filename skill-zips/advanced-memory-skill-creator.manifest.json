@@ -1,0 +1,12 @@
+{
+  "name": "advanced-memory-skill-creator",
+  "packaged_at": "2025-11-09T18:18:08.554176Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\advanced-memory\\advanced-memory-skill-creator",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\advanced-memory-skill-creator.zip",
+  "sha256": "e5240243169146efade640c9af0fd67565327b9aa659d24248180e969523a65f",
+  "metadata": {
+    "name": "advanced-memory-skill-creator",
+    "description": "Use when planning, scaffolding, validating, or packaging Claude skills inside Advanced Memory MCP.",
+    "license": "Proprietary"
+  }
+}

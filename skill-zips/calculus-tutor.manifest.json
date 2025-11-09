@@ -1,0 +1,12 @@
+{
+  "name": "calculus-tutor",
+  "packaged_at": "2025-11-09T18:18:08.768948Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\calculus-tutor",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\calculus-tutor.zip",
+  "sha256": "c1784cdb9c12e7fb86016bde50d9795e87855110ff4f104bae955f9cf2772e60",
+  "metadata": {
+    "name": "calculus-tutor-single-multivariable",
+    "description": "Comprehensive calculus expert covering limits, derivatives, integrals, sequences, series, and multivariable calculus with rigorous proofs and practical applications",
+    "license": "Proprietary"
+  }
+}

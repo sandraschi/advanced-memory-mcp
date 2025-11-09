@@ -1,0 +1,12 @@
+{
+  "name": "differential-equations-solver",
+  "packaged_at": "2025-11-09T18:18:08.784472Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\differential-equations-solver",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\differential-equations-solver.zip",
+  "sha256": "cd674fcc291049250f2dc744142f40797ff509c692742ac7d7b24749b51dc4b6",
+  "metadata": {
+    "name": "differential-equations-solver",
+    "description": "Expert in ODEs and PDEs covering solution methods, qualitative analysis, and applications to physics and engineering",
+    "license": "Proprietary"
+  }
+}

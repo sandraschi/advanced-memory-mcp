@@ -1,0 +1,12 @@
+{
+  "name": "applied-mathematics-engineering",
+  "packaged_at": "2025-11-09T18:18:08.762596Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\applied-mathematics-engineering",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\applied-mathematics-engineering.zip",
+  "sha256": "b90fa958ecd16b0fc17c23722a9cc69723132b0ec82e59cd8a902661ce141651",
+  "metadata": {
+    "name": "applied-mathematics-for-engineering",
+    "description": "Applied math expert for engineering applications including Fourier analysis, transforms, and practical problem solving",
+    "license": "Proprietary"
+  }
+}

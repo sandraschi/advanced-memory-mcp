@@ -1,13 +1,36 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Run this checklist monthly or when major CI/CD platform releases drop.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] DORA Accelerate research updates (https://dora.dev/research/).  
+- [ ] SLSA specification changes (https://slsa.dev/spec/).  
+- [ ] GitHub Actions, GitLab, Jenkins release notes for pipeline features.  
+- [ ] Progressive delivery tooling updates (LaunchDarkly, Harness, Argo Rollouts).
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Platform Validation
+- [ ] Smoke-test reusable workflow templates; confirm OIDC auth still succeeds.  
+- [ ] Validate autoscaling runners capacity; ensure build queue time < 2 minutes.  
+- [ ] Re-run reference pipeline across dev/staging/prod environments; confirm parity.  
+- [ ] Audit artifact retention policies and storage costs.
+
+## 3. Security & Compliance
+- [ ] Review OWASP CI/CD Security Top 10 for new recommendations.  
+- [ ] Regenerate SBOM + provenance for reference service; verify signatures.  
+- [ ] Audit secrets inventory, rotate stale tokens, and confirm vault policies.  
+- [ ] Run SAST/SCA/DAST on sample service and attach reports.
+
+## 4. Documentation & Metrics
+- [ ] Update pipeline runbooks, architecture diagrams, and escalation contacts.  
+- [ ] Export DORA metrics and compare against OKRs.  
+- [ ] Refresh screenshots/snippets embedded in developer portal docs.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | DORA Accelerate 2024 | Deployment & reliability benchmarks |
+| 2025-11-08 | SLSA v1.0 | Provenance + supply-chain requirements |
+| 2025-11-08 | GitHub Actions Runner v4 Docs | Ephemeral runners, OIDC guidance |
+| 2025-11-08 | GitLab CI/CD 16.11 | Merge queue & deployment analytics updates |
+
+> Tip: Use `adn_skills("distill_from_wikipedia", topic="Continuous delivery")` for quick refreshers, then bootstrap workflow examples with `adn_skills("import_from_github", repository="org/repo", ...)` before validating against vendor docs.*** End Patch

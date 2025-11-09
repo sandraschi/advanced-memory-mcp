@@ -193,6 +193,15 @@ Claude: Exported 30 skills to ~/claude-skills/
 
 ---
 
+## Testing & Diagnostics
+
+- `pwsh ./scripts/testing/run-all-tool-exercisers.ps1`  
+  Runs the four portmanteau exerciser suites (core tools, import/export, skills, health/status) and stops at the first failure.
+- Flags: `-SkipHeavy` (skip archive export/import), `-SkipNetwork` (skip Wikipedia/arXiv calls), `-SkipPackaging` (skip skills ZIP packaging). Combine flags as needed.
+- Individual Python scripts live in `scripts/testing/` if you need to probe a single tool group.
+
+---
+
 ## Core Capabilities
 
 ### Claude Skills Format Conversion (Experimental)

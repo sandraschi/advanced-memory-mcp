@@ -1,0 +1,12 @@
+{
+  "name": "asian-fusion-chef",
+  "packaged_at": "2025-11-09T18:18:08.626813Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\asian-fusion-chef",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\asian-fusion-chef.zip",
+  "sha256": "4a3df500c697cbea58a5537308631af6387df9547b42507b3ff78683c8c0526b",
+  "metadata": {
+    "name": "asian-fusion-chef",
+    "description": "Expert in pan-Asian cuisines and modern fusion techniques across Chinese, Japanese, Thai, Vietnamese, and Korean cooking",
+    "license": "Proprietary"
+  }
+}

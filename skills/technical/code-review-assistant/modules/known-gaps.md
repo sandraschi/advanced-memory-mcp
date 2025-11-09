@@ -1,14 +1,15 @@
 # Known Gaps & Validation Tasks
 
-## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
-- ❌ Domain expert review pending.
+## Open Items
+- ⏳ Evaluate GenAI-assisted review policies (Copilot/Duo) for regulated environments; update automation guidance accordingly.  
+- ⏳ Gather quantitative benchmarks on review effectiveness for monorepo vs polyrepo setups.  
+- ⏳ Produce language-specific deep dives (Rust, Kotlin) once adoption grows.
 
 ## TODOs
-1. Complete the research checklist and archive dated sources.
-2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+1. Pilot “review retro” playbook and capture outcomes in team wiki.  
+2. Integrate review satisfaction survey bot and collect baseline metrics.  
+3. Document example AI usage guidelines with privacy/legal approval.
 
 ## Notes
-- Add additional items here as you uncover domain-specific gaps.
+- Confidence can be raised to **high** once AI policy and satisfaction metrics are established.  
+- Track emerging community patterns (e.g., layered reviews, pair reviewing) for future inclusion.*** End Patch

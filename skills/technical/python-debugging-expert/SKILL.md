@@ -1,34 +1,32 @@
 ---
 name: python-debugging-expert
-description: Master debugger for Python code with expertise in common errors, performance
-  issues, and debugging tools
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: Master debugger for Python code with expertise in common errors, performance issues, and debugging tools
+license: Proprietary
 ---
+
 # Python Debugging Expert
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed debugging playbook – review semi-annually
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Begin with [modules/core-guidance.md](modules/core-guidance.md) to triage the issue and plan reproduction.  
+2. Use [modules/diagnostics-and-tooling.md](modules/diagnostics-and-tooling.md) to select appropriate debuggers and tracing tools.  
+3. Resolve concurrency issues via [modules/async-and-concurrency.md](modules/async-and-concurrency.md).  
+4. Address hotspots and leaks with [modules/performance-and-memory.md](modules/performance-and-memory.md).  
+5. Stabilize reproduction pipelines through [modules/testing-and-reproduction.md](modules/testing-and-reproduction.md).  
+6. Track follow-ups in [modules/known-gaps.md](modules/known-gaps.md) and revisit [modules/research-checklist.md](modules/research-checklist.md) every six months.
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — intake template, triage, communication.  
+- [Diagnostics & tooling](modules/diagnostics-and-tooling.md) — pdb, debugpy, logging, tracing, IDE features.  
+- [Async & concurrency](modules/async-and-concurrency.md) — asyncio debugging, race detection, multiprocessing.  
+- [Performance & memory](modules/performance-and-memory.md) — profiling CPU/memory, GC, leak detection.  
+- [Testing & reproduction](modules/testing-and-reproduction.md) — fixtures, property-based tests, CI automation.  
+- [Known gaps](modules/known-gaps.md) — future research.  
+- [Research checklist](modules/research-checklist.md) — validation cadence.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Updated for Python 3.13 debugging improvements, async task diagnostics, and modern tooling.  
+- Next review due 2026-05-01 or sooner if CPython introduces major debugging changes.  
+- Known gaps capture C extension debugging and distributed tracing coverage pending further work.

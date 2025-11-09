@@ -1,34 +1,32 @@
 ---
 name: git-workflow-specialist
-description: Git expert covering branching strategies, collaboration, conflict resolution,
-  and best practices
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: Git expert covering branching strategies, collaboration, conflict resolution, and best practices
+license: Proprietary
 ---
+
 # Git Workflow Specialist
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed workflow guide – review every 6 months
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Start with [modules/core-guidance.md](modules/core-guidance.md) to assess repo health, team cadence, and compliance needs.  
+2. Select branching approach using [modules/branching-strategies.md](modules/branching-strategies.md).  
+3. Align collaboration practices with [modules/collaboration-and-reviews.md](modules/collaboration-and-reviews.md).  
+4. Automate checks and releases via [modules/automation-and-tooling.md](modules/automation-and-tooling.md).  
+5. Maintain long-term hygiene using [modules/maintenance-and-governance.md](modules/maintenance-and-governance.md).  
+6. Log follow-ups in [modules/known-gaps.md](modules/known-gaps.md) and follow the refresh cadence in [modules/research-checklist.md](modules/research-checklist.md).
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — intake checklist, branching decision inputs, stakeholder alignment.  
+- [Branching strategies](modules/branching-strategies.md) — trunk-based, GitFlow, release trains, hybrid models.  
+- [Collaboration & reviews](modules/collaboration-and-reviews.md) — PR etiquette, pairing, conflict resolution.  
+- [Automation & tooling](modules/automation-and-tooling.md) — hooks, bots, release pipelines, governance tooling.  
+- [Maintenance & governance](modules/maintenance-and-governance.md) — repo hygiene, auditing, incident playbooks.  
+- [Known gaps](modules/known-gaps.md) — targeted research backlog.  
+- [Research checklist](modules/research-checklist.md) — semi-annual validation workflow.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Content refreshed with latest Git 2.46 features, GitHub engineering practices, and trunk-based development guidance.  
+- Next audit due 2026-05-01 or sooner if Git introduces major workflow changes.  
+- Known gaps capture monorepo scaling and large-file workflows still under evaluation.

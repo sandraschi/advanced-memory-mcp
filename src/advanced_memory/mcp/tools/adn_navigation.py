@@ -4,11 +4,13 @@ This tool consolidates navigation operations: build_context, recent_activity, li
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import re
 from typing import Literal
 
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.schemas.memory import GraphContext
 
 
 @mcp.tool
@@ -108,6 +110,20 @@ async def adn_navigation(
     """
     logger.info(f"MCP tool call tool=adn_navigation operation={operation}")
 
+    original_operation = operation
+    normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
+    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    alias_map = {
+        "last_activity": "recent_activity",
+        "latest_activity": "recent_activity",
+        "lastactivity": "recent_activity",
+        "latestactivity": "recent_activity",
+        "recentactivity": "recent_activity",
+        "listdirectory": "list_directory",
+        "syncstatus": "sync_status",
+    }
+    operation = alias_map.get(normalized_operation, normalized_operation)
+
     # Route to appropriate operation
     if operation == "build_context":
         if not url:
@@ -161,19 +177,19 @@ adn_navigation(
     elif operation == "sync_status":
         return await _sync_status_operation(project)
     else:
-        return f"""# Error: Invalid Operation
+        return f"""# Error: Invalid operation parameter
 
-**You provided:** operation="{operation}"
+**Received:** `{original_operation}` → normalized to `{operation}`
 
 **Valid operations are:**
-- "build_context" - Navigate knowledge graph via memory:// URLs
-- "recent_activity" - Get recently updated notes (use this for "latest notes")
-- "list_directory" - Browse directory contents
-- "backlinks" - Find notes that reference a specific note
-- "status" - System status and diagnostics
-- "sync_status" - File sync monitoring
+- `build_context` – Navigate knowledge graph via memory:// URLs
+- `recent_activity` – Get recently updated notes (use this for "latest notes")
+- `list_directory` – Browse directory contents
+- `backlinks` – Find notes that reference a specific note
+- `status` – System status and diagnostics
+- `sync_status` – File sync monitoring
 
-**Example for finding latest notes:**
+**Example for "latest notes":**
 ```
 adn_navigation(
     operation="recent_activity",
@@ -181,7 +197,7 @@ adn_navigation(
 )
 ```
 
-**Check your operation parameter spelling and try again.**"""
+Please adjust the `operation` parameter and try again."""
 
 
 async def _build_context_operation(
@@ -242,9 +258,28 @@ async def _recent_activity_operation(
     """Handle recent activity operation."""
     from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-    result = await recent_activity.fn(
+    raw_result = await recent_activity.fn(
         type_param, depth, timeframe, page, page_size, max_related, project
     )
+
+    if isinstance(raw_result, GraphContext):
+        result = raw_result
+    elif isinstance(raw_result, dict):
+        result = GraphContext.model_validate(raw_result)
+    else:
+        # Fallback: attempt to convert from json-like (list, etc.)
+        try:
+            result = GraphContext.model_validate(raw_result)  # type: ignore[arg-type]
+        except Exception:  # pragma: no cover
+            logger.error(
+                "adn_navigation_recent_activity_invalid_payload",
+                payload_type=type(raw_result),
+            )
+            return (
+                "# Error\n\n"
+                "recent_activity returned data in an unexpected format. "
+                "Please retry or check server logs."
+            )
 
     # Convert GraphContext to markdown string
     output = ["# Recent Activity\n"]

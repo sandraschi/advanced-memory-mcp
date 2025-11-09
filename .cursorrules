@@ -167,6 +167,26 @@ uv run python -m pytest -v
 
 ---
 
+## Distribution & IDE Integration
+
+- Maintain both MCPB (Claude Desktop) and npx/npm installer paths; keep README/INSTALLATION/CHANGELOG in sync.
+- Provide `bootstrap-configs/` templates (Cursor, Windsurf, Claude) whenever installers change; regenerate after major releases.
+- Keep `.cursor/mcp.json` templates current (see `skills/technical/mcp-server-developer/modules/ai-ide-development.md`); test via Cursor Composer after updates.
+- `.cursorrules` must reference the latest MCP standards and release workflow; verify it loads in Cursor (Settings → Rules).
+- Document post-install smoke tests (tool exercisers, `adn_health`) so Cursor and Claude users can self-validate installs.
+- Track Cursor documentation (https://docs.cursor.com/context/rules) and adjust guidance quarterly.
+
+---
+
+## ADN Notes & Tagging Discipline
+
+- Every new ADN note **must include purposeful tags** (topic, error pattern, mitigation, etc.) in the frontmatter.
+- Tags enable fast retrieval; untagged notes effectively disappear into the archive.
+- When editing older notes, add missing tags before closing the task.
+- Record behaviour fixes and mitigations (e.g., Claude tool usage patterns) with consistent tagging so they surface in search.
+
+---
+
 ## Portmanteau Tool Rules
 
 ### When to Use Portmanteau Pattern

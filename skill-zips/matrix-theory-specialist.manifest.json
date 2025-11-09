@@ -1,0 +1,12 @@
+{
+  "name": "matrix-theory-specialist",
+  "packaged_at": "2025-11-09T18:18:08.834570Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\matrix-theory-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\matrix-theory-specialist.zip",
+  "sha256": "95d260582249419726b0028824e1d550dfcc382025f87450a2a4a53f20e0158c",
+  "metadata": {
+    "name": "matrix-theory-specialist",
+    "description": "Advanced matrix theory expert covering spectral theory, matrix factorizations, and numerical linear algebra",
+    "license": "Proprietary"
+  }
+}

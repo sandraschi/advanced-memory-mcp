@@ -43,16 +43,26 @@ def upgrade_skill(skill_path: str | Path) -> Path:
     existing_name = frontmatter.get("name") or slugify_skill_name(skill_root.name)
     slug = slugify_skill_name(existing_name)
     title = title_from_slug(slug)
-    category = (
-        frontmatter.get("metadata", {}).get("category")
-        if isinstance(frontmatter.get("metadata"), dict)
-        else "general"
-    )
-    confidence = (
-        frontmatter.get("metadata", {}).get("confidence", "low")
-        if isinstance(frontmatter.get("metadata"), dict)
-        else "low"
-    )
+    meta_block = frontmatter.get("metadata")
+    if isinstance(meta_block, dict):
+        category = meta_block.get("category", "general")
+        confidence = meta_block.get("confidence", "low")
+        status_note = meta_block.get(
+            "status", "Legacy content converted — complete research checklist before use"
+        )
+        last_validated = meta_block.get("last_validated")
+        requires_research = meta_block.get("requires_web_research", True)
+    else:
+        category = "general"
+        confidence = "low"
+        status_note = "Legacy content converted — complete research checklist before use"
+        last_validated = None
+        requires_research = True
+
+    if requires_research is False:
+        status_line = "✅ Research complete"
+    else:
+        status_line = status_note if status_note.startswith(("⚠️", "✅")) else f"⚠️ {status_note}"
 
     logger.debug("Upgrading skill %s (slug=%s)", skill_root, slug)
 
@@ -72,7 +82,9 @@ def upgrade_skill(skill_path: str | Path) -> Path:
             description=description,
             category=category,
             confidence=confidence,
-            status="Legacy content converted — complete research checklist before use",
+            status=status_line,
+            confidence_note=status_note,
+            last_validated=last_validated,
         ),
         encoding="utf-8",
     )

@@ -1,0 +1,12 @@
+{
+  "name": "discrete-mathematics-expert",
+  "packaged_at": "2025-11-09T18:18:08.793631Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\discrete-mathematics-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\discrete-mathematics-expert.zip",
+  "sha256": "9deea53a7ace505d9b40156866761f9ba01aa853308bbfd6cbc5f8bf0f6bdd61",
+  "metadata": {
+    "name": "discrete-mathematics-expert",
+    "description": "Expert in combinatorics, graph theory, discrete probability, and algorithms with applications to computer science",
+    "license": "Proprietary"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "code-review-assistant",
+  "packaged_at": "2025-11-09T18:18:09.144574Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\code-review-assistant",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\code-review-assistant.zip",
+  "sha256": "d40e684a025a1c0823b39b5f6a96b53abdc0db125d06610e3d7095cb6d9c7370",
+  "metadata": {
+    "name": "code-review-assistant",
+    "description": "Expert code reviewer focusing on quality, maintainability, performance, and best practices",
+    "license": "Proprietary"
+  }
+}

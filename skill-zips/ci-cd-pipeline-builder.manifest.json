@@ -1,0 +1,12 @@
+{
+  "name": "ci-cd-pipeline-builder",
+  "packaged_at": "2025-11-09T18:18:09.128953Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\ci-cd-pipeline-builder",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\ci-cd-pipeline-builder.zip",
+  "sha256": "9cfec0fac6f6d749997a2bc20af019e7d12fe64d249dbe3c3fea1a9871ede273",
+  "metadata": {
+    "name": "cicd-pipeline-builder",
+    "description": "DevOps expert for building robust CI/CD pipelines with GitHub Actions, GitLab CI, Jenkins",
+    "license": "Proprietary"
+  }
+}

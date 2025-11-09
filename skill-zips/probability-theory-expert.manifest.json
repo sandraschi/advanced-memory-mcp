@@ -1,0 +1,12 @@
+{
+  "name": "probability-theory-expert",
+  "packaged_at": "2025-11-09T18:18:08.857362Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\probability-theory-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\probability-theory-expert.zip",
+  "sha256": "c25f99bc0336b58e975fd386b2ddb73141fdbdbeca41745a7dd6289acd125dee",
+  "metadata": {
+    "name": "probability-theory-expert",
+    "description": "Rigorous probability theorist covering measure-theoretic probability, stochastic processes, and advanced probability",
+    "license": "Proprietary"
+  }
+}

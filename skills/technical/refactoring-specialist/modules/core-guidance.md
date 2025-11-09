@@ -1,3 +1,69 @@
+# Core Guidance
+
+**Confidence**: 🟡 MEDIUM  
+**Last validated**: 2025-11-08
+
+> Launch every refactoring effort with a clear why, measurable goals, and stakeholder alignment.
+
+---
+
+## 1. Refactoring Charter
+
+| Element | Description |
+| --- | --- |
+| Business driver | e.g., faster feature delivery, reduce production bugs, regulatory requirement |
+| Scope | Modules/packages affected, boundaries, exclusions |
+| Success metrics | Lead time, defect rate, cycle time, code health score |
+| Timebox/Budget | Sprint allocation, dedicated team, guardrails |
+| Risks | Potential regressions, schedule impact, coordination with other teams |
+
+Document charter in shared workspace; review with stakeholders.
+
+---
+
+## 2. Intake & Discovery
+
+- Gather pain points from engineers, QA, support.  
+- Run codebase diagnostics (lint, static analysis, complexity metrics).  
+- Evaluate test coverage and automation maturity.  
+- Decide between opportunistic vs planned refactoring.
+
+---
+
+## 3. Prioritization Principles
+
+- Tackle high-impact, high-risk areas with clear value.  
+- Favor refactoring in conjunction with feature work (“scout rule”).  
+- Avoid large big-bang rewrites unless supported by strong business case.  
+- Maintain incremental delivery with continuous integration.
+
+---
+
+## 4. Safety Guidelines
+
+- Establish minimum test coverage or create characterization tests.  
+- Use feature flags or toggles for risky transformations.  
+- Ensure CI/CD pipeline is green before/after each slice.  
+- Plan rollback strategy for each milestone.
+
+---
+
+## 5. Communication Cadence
+
+- Kick-off meeting with engineering + product + QA + stakeholders.  
+- Weekly updates on progress, risks, metrics.  
+- Retrospective post-completion capturing lessons learned.
+
+---
+
+### Module Map
+- Assessment/prioritization → [modules/assessment-and-prioritization.md](modules/assessment-and-prioritization.md)  
+- Tactical patterns → [modules/refactoring-patterns.md](modules/refactoring-patterns.md)  
+- Safety nets → [modules/safety-net-and-testing.md](modules/safety-net-and-testing.md)  
+- Architecture modernization → [modules/architecture-modernization.md](modules/architecture-modernization.md)  
+- Stakeholder management → [modules/change-management-and-communication.md](modules/change-management-and-communication.md)
+
+Review charter quarterly to ensure refactoring remains aligned with strategic goals.***
 # Core Guidance (Legacy Template)
 
 **Confidence**: 🔴 LOW  

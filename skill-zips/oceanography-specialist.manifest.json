@@ -1,0 +1,12 @@
+{
+  "name": "oceanography-specialist",
+  "packaged_at": "2025-11-09T18:18:09.084052Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\oceanography-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\oceanography-specialist.zip",
+  "sha256": "6f948c729ae5e29af17664310d8236dc2d1c915d5c649844971add3da4f92620",
+  "metadata": {
+    "name": "oceanography-specialist",
+    "description": "Ocean science expert covering physical, chemical, biological, and geological oceanography",
+    "license": "Proprietary"
+  }
+}

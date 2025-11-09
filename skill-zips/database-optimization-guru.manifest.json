@@ -1,0 +1,12 @@
+{
+  "name": "database-optimization-guru",
+  "packaged_at": "2025-11-09T18:18:09.159803Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\database-optimization-guru",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\database-optimization-guru.zip",
+  "sha256": "39bddf90e2823178bccf8ea84aefc8252519c34742bd6782cb4f62401a91b168",
+  "metadata": {
+    "name": "database-optimization-guru",
+    "description": "Database expert for query optimization, indexing, schema design, and performance tuning",
+    "license": "Proprietary"
+  }
+}

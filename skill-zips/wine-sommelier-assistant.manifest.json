@@ -1,0 +1,12 @@
+{
+  "name": "wine-sommelier-assistant",
+  "packaged_at": "2025-11-09T18:18:08.679030Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\wine-sommelier-assistant",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\wine-sommelier-assistant.zip",
+  "sha256": "4073a50826f5783244294891aba99c3fb4a3c46734f50c13ce869662ce000012",
+  "metadata": {
+    "name": "wine-sommelier-assistant",
+    "description": "Wine expert for pairing, tasting, regions, and building a wine collection",
+    "license": "Proprietary"
+  }
+}

@@ -21,12 +21,14 @@ class SkillValidationIssue:
 
 REQUIRED_METADATA_KEYS = {
     "category",
+    "difficulty",
     "last_validated",
     "confidence",
     "requires_web_research",
     "status",
     "skill_version",
     "sources",
+    "tags",
 }
 
 REQUIRED_MODULES = [
@@ -93,60 +95,75 @@ def _validate_frontmatter(path: Path, issues: list[SkillValidationIssue]) -> dic
             )
         )
 
-    metadata = data.get("metadata")
-    if not isinstance(metadata, dict):
+    allowed_tools = data.get("allowed-tools")
+    if allowed_tools is not None and (
+        not isinstance(allowed_tools, Iterable) or isinstance(allowed_tools, str | bytes)
+    ):
         issues.append(
             SkillValidationIssue(
                 path=str(path),
-                issue="Missing 'metadata' mapping in frontmatter.",
-                fix="Add a metadata block with category, last_validated, confidence, requires_web_research, status, skill_version, sources.",
+                issue="'allowed-tools' must be a YAML list.",
+                fix="Provide a YAML list for allowed-tools (e.g., `allowed-tools: []` or `allowed-tools: ['adn_search']`).",
             )
         )
-        metadata = {}
-
-    missing_keys = REQUIRED_METADATA_KEYS - set(metadata.keys())
-    for key in sorted(missing_keys):
-        issues.append(
-            SkillValidationIssue(
-                path=str(path),
-                issue=f"Metadata missing `{key}`.",
-                fix=f"Add `{key}` to the metadata block.",
-            )
-        )
-
-    sources = metadata.get("sources")
-    if isinstance(sources, Iterable) and not isinstance(sources, str):
-        sources_list = list(sources)
-        if not sources_list:
+    elif allowed_tools:
+        non_string_tools = [tool for tool in allowed_tools if not isinstance(tool, str)]
+        if non_string_tools:
             issues.append(
                 SkillValidationIssue(
                     path=str(path),
-                    issue="Metadata.sources list is empty.",
-                    fix="Record at least one placeholder (e.g., 'UNVERIFIED: ...') or real source.",
+                    issue="'allowed-tools' entries must be strings.",
+                    fix="Ensure every entry in allowed-tools is a string tool name.",
                 )
             )
-    else:
+
+    license_value = data.get("license")
+    if license_value is not None and not isinstance(license_value, str):
         issues.append(
             SkillValidationIssue(
                 path=str(path),
-                issue="Metadata.sources must be a list of strings.",
-                fix="Provide a YAML list under metadata.sources.",
+                issue="'license' field must be a string.",
+                fix="Provide a simple string identifier for the license (e.g., MIT, Apache-2.0, Proprietary).",
             )
         )
 
-    status_markers = [
-        "⚠️ Requires web research",
-        "✅ Research complete",
-        "🔴 Low",
-        "🟡 Medium",
-        "🟢 High",
-    ]
-    if not any(marker in body for marker in status_markers):
+    if "metadata" in data:
+        issues.append(
+            SkillValidationIssue(
+                path=str(path),
+                issue="Legacy 'metadata' block detected in frontmatter.",
+                fix="Remove the metadata mapping and migrate details into the markdown body (status banner, source log, etc.).",
+            )
+        )
+
+    status_line_present = any(
+        marker in body for marker in ("⚠️", "✅", "Research complete", "Requires web research")
+    )
+    if not status_line_present:
         issues.append(
             SkillValidationIssue(
                 path=str(path),
                 issue="SKILL.md body missing research status banner.",
-                fix="Include the standard status section indicating research pending and confidence level.",
+                fix="Include a status line such as `> **Status**: ⚠️ Requires web research before use`.",
+            )
+        )
+
+    confidence_marker_present = any(emoji in body for emoji in ("🔴", "🟡", "🟢"))
+    if not confidence_marker_present:
+        issues.append(
+            SkillValidationIssue(
+                path=str(path),
+                issue="SKILL.md body missing confidence indicator.",
+                fix="Add a confidence line (e.g., `> **Confidence**: 🔴 Low — pending validation`).",
+            )
+        )
+
+    if "metadata." in body:
+        issues.append(
+            SkillValidationIssue(
+                path=str(path),
+                issue="Body references legacy `metadata.*` fields.",
+                fix="Update guidance to reference the status banner or Source Log instead of metadata entries.",
             )
         )
 

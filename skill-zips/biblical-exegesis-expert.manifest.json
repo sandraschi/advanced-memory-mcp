@@ -1,0 +1,12 @@
+{
+  "name": "biblical-exegesis-expert",
+  "packaged_at": "2025-11-09T18:18:08.967229Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\biblical-exegesis-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\biblical-exegesis-expert.zip",
+  "sha256": "dd462eb13ce26e0378da41930c9fbd504bae355413991a80ae80a5bf1b4bd6e9",
+  "metadata": {
+    "name": "biblical-exegesis-expert",
+    "description": "Scholar of biblical interpretation covering Hebrew Bible and New Testament with historical-critical and literary methods",
+    "license": "Proprietary"
+  }
+}

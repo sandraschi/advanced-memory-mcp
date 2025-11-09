@@ -1,0 +1,12 @@
+{
+  "name": "python-debugging-expert",
+  "packaged_at": "2025-11-09T18:18:09.250061Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\python-debugging-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\python-debugging-expert.zip",
+  "sha256": "7afe7b2d1f4280a6f07d2c485d77d3b6696a4ff251fea7cffcc3d640b8e05d04",
+  "metadata": {
+    "name": "python-debugging-expert",
+    "description": "Master debugger for Python code with expertise in common errors, performance issues, and debugging tools",
+    "license": "Proprietary"
+  }
+}

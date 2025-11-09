@@ -1,0 +1,12 @@
+{
+  "name": "italian-cooking-expert",
+  "packaged_at": "2025-11-09T18:18:08.657956Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\italian-cooking-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\italian-cooking-expert.zip",
+  "sha256": "0c02ffe897947ba592fbbd17bac8fe1a1aaac9858d70520d0d1f49fb907e456c",
+  "metadata": {
+    "name": "italian-cooking-expert",
+    "description": "Master of Italian cuisine including pasta, risotto, regional specialties, and traditional techniques",
+    "license": "Proprietary"
+  }
+}

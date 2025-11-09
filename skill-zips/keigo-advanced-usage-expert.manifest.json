@@ -1,0 +1,12 @@
+{
+  "name": "keigo-advanced-usage-expert",
+  "packaged_at": "2025-11-09T18:18:08.725077Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\linguistic\\keigo-advanced-usage-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\keigo-advanced-usage-expert.zip",
+  "sha256": "4154d84c8c17a2ff51fda9cb26c735ee6effa4bc4845d165d7ecb612807ff11a",
+  "metadata": {
+    "name": "advanced-keigo-usage-expert",
+    "description": "Expert in Japanese honorific language covering 尊敬語・謙譲語・丁寧語 with deep understanding of situational usage, business contexts, and cultural nuances",
+    "license": "Proprietary"
+  }
+}

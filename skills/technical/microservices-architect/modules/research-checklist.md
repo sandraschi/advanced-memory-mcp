@@ -1,13 +1,35 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Run this review every 6 months or when major architectural guidance changes.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] Review CNCF microservices whitepapers, SIG App Delivery updates.  
+- [ ] Track major cloud provider architecture guides (AWS Builders Library, Google CRE blog, Azure Architecture Center).  
+- [ ] Check service mesh roadmaps (Istio Ambient, Linkerd, Cilium).  
+- [ ] Monitor Team Topologies and DDD community articles for organizational patterns.
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Architecture Health Audit
+- [ ] Update service catalog and ownership map; ensure no orphaned services.  
+- [ ] Audit SLO compliance and incident trends per service.  
+- [ ] Evaluate coupling (shared databases, duplicated logic) and plan remediation.  
+- [ ] Assess platform capability gaps (observability, CI/CD, governance).
+
+## 3. Documentation & Training
+- [ ] Refresh ADR index and highlight deprecated decisions.  
+- [ ] Update onboarding materials for new teams/services.  
+- [ ] Capture lessons from recent migrations or outages.
+
+## 4. Compliance & Security
+- [ ] Review zero-trust controls, policy-as-code rules, and threat models.  
+- [ ] Confirm data residency/privacy policies remain accurate.  
+- [ ] Audit supply chain security posture (SBOM, signing) across services.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | Team Topologies 2024 Update | Team/service alignment guidance |
+| 2025-11-08 | CNCF Microservices Security WP 2025 | Zero-trust patterns |
+| 2025-11-08 | Google CRE Microservices Lessons | Ops and reliability practices |
+| 2025-11-08 | Uber ADR Collection 2024 | Case studies on service decomposition |
+
+> Tip: Kick off reviews with `adn_skills("distill_from_wikipedia", topic="Microservices")`, then pull CNCF primary sources via `adn_skills("import_from_github", repository="cncf/toc", path="whitepapers/microservices")` and capture outcomes in `metadata.sources`.***

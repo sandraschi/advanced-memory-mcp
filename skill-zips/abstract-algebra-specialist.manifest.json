@@ -1,0 +1,12 @@
+{
+  "name": "abstract-algebra-specialist",
+  "packaged_at": "2025-11-09T18:18:08.756225Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\abstract-algebra-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\abstract-algebra-specialist.zip",
+  "sha256": "6c9532de688007b45a19c9761c87eb97914d5623030cc9b917320dd53559ca44",
+  "metadata": {
+    "name": "abstract-algebra-specialist",
+    "description": "Expert in groups, rings, fields, and algebraic structures with applications to cryptography and number theory",
+    "license": "Proprietary"
+  }
+}

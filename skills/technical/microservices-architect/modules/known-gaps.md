@@ -1,14 +1,15 @@
 # Known Gaps & Validation Tasks
 
-## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
-- ❌ Domain expert review pending.
+## Open Items
+- ⏳ Evaluate WASM/edge microservices patterns (Spin, Cloudflare Workers) for inclusion.  
+- ⏳ Document case studies on multi-runtime platforms (JVM + Node + Python) and governance.  
+- ⏳ Deep dive into service mesh alternatives (Cilium, Ambient Mesh) and operational trade-offs.
 
 ## TODOs
-1. Complete the research checklist and archive dated sources.
-2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+1. Build reference implementation showcasing saga + outbox with event sourcing.  
+2. Publish cost modeling template comparing monolith vs microservices TCO.  
+3. Align security playbook with latest zero-trust mandates (CISA) and update module accordingly.
 
 ## Notes
-- Add additional items here as you uncover domain-specific gaps.
+- Promote confidence to **high** after WASM/multi-runtime research and cost modeling complete.  
+- Monitor CNCF landscape for emerging patterns (e.g., micro frontends, serverless + microservices hybrids).***

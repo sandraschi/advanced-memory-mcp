@@ -1,0 +1,12 @@
+{
+  "name": "logic-argumentation-specialist",
+  "packaged_at": "2025-11-09T18:18:08.999177Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\logic-argumentation-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\logic-argumentation-specialist.zip",
+  "sha256": "e46933f220ed387d4fc1714b245a0d8e757aab58a6dba659d7d064aa6558a250",
+  "metadata": {
+    "name": "logic-and-argumentation-specialist",
+    "description": "Expert in formal logic, informal logic, fallacies, and argumentation theory",
+    "license": "Proprietary"
+  }
+}

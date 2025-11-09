@@ -1,0 +1,12 @@
+{
+  "name": "classical-japanese-literature",
+  "packaged_at": "2025-11-09T18:18:08.690728Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\linguistic\\classical-japanese-literature",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\classical-japanese-literature.zip",
+  "sha256": "88cc8f6d5df4d2718e08782f8ba597be592e17e97d9dd196bbcc67e6eea10737",
+  "metadata": {
+    "name": "classical-japanese-literature-guide",
+    "description": "Expert in classical Japanese literature from Heian period to Edo period including 古文 grammar and literary analysis",
+    "license": "Proprietary"
+  }
+}

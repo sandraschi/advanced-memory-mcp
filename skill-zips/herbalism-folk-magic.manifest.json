@@ -1,0 +1,12 @@
+{
+  "name": "herbalism-folk-magic",
+  "packaged_at": "2025-11-09T18:18:08.913220Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\nonsense\\herbalism-folk-magic",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\herbalism-folk-magic.zip",
+  "sha256": "e1f496f1f060b990a5ace4720f638927ad51e9ac7dcb692b0ed98018da667a50",
+  "metadata": {
+    "name": "herbalism-and-folk-magic-expert",
+    "description": "Traditional herbalism and folk magic expert covering plant correspondences, traditional uses, and historical practices",
+    "license": "Proprietary"
+  }
+}

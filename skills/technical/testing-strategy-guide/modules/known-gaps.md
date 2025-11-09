@@ -1,14 +1,15 @@
 # Known Gaps & Validation Tasks
 
-## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
-- ❌ Domain expert review pending.
+## Open Items
+- ⏳ Evaluate AI-assisted test generation tools (Testim, Mabl, GitHub Copilot) and governance.  
+- ⏳ Research contract testing at scale in event-driven architectures.  
+- ⏳ Collect case studies on testing strategies for LLM/AI features.
 
 ## TODOs
-1. Complete the research checklist and archive dated sources.
-2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+1. Build template for test ROI calculations (time saved, defect reduction).  
+2. Document rollout plan for chaos testing integrated with CI.  
+3. Establish process for archiving/retiring obsolete test suites.
 
 ## Notes
-- Add additional items here as you uncover domain-specific gaps.
+- Increase confidence to **high** once AI testing guidance and chaos integration patterns are complete.  
+- Keep watch on new testing frameworks and metrics research.***

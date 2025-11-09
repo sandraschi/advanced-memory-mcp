@@ -1,0 +1,12 @@
+{
+  "name": "genetics-genomics-expert",
+  "packaged_at": "2025-11-09T18:18:09.061923Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\genetics-genomics-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\genetics-genomics-expert.zip",
+  "sha256": "76cadf604f3b1e53eb2c59cd66602331a9575b15b835a82c65580dfaf98516cb",
+  "metadata": {
+    "name": "genetics-and-genomics-expert",
+    "description": "Modern genetics expert covering Mendelian genetics, molecular genetics, genomics, and CRISPR technologies",
+    "license": "Proprietary"
+  }
+}

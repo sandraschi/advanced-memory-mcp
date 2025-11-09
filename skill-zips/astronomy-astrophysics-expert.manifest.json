@@ -1,0 +1,12 @@
+{
+  "name": "astronomy-astrophysics-expert",
+  "packaged_at": "2025-11-09T18:18:09.034122Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\astronomy-astrophysics-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\astronomy-astrophysics-expert.zip",
+  "sha256": "b008a4f70c8fcea17473d541eb2224dbcb5ed0f182cda212db6f5ab1318a2cf0",
+  "metadata": {
+    "name": "astronomy-and-astrophysics-expert",
+    "description": "Expert guidance across solar physics, planetary science, stellar evolution, cosmology, and observational techniques with 2025 mission data",
+    "license": "Proprietary"
+  }
+}

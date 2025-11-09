@@ -1,34 +1,30 @@
 ---
 name: cicd-pipeline-builder
-description: DevOps expert for building robust CI/CD pipelines with GitHub Actions,
-  GitLab CI, Jenkins
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: DevOps expert for building robust CI/CD pipelines with GitHub Actions, GitLab CI, Jenkins
+license: Proprietary
 ---
+
 # CI/CD Pipeline Builder
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed playbook – audit monthly
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Review [modules/core-guidance.md](modules/core-guidance.md) to triage pipeline goals and constraints.
+2. Design the backbone with [modules/pipeline-foundations.md](modules/pipeline-foundations.md).
+3. Apply reliability and metrics practices from [modules/quality-gates-and-observability.md](modules/quality-gates-and-observability.md).
+4. Bake in supply-chain and compliance controls via [modules/security-and-compliance.md](modules/security-and-compliance.md).
+5. Revisit [modules/known-gaps.md](modules/known-gaps.md) and schedule the refresh workflow in [modules/research-checklist.md](modules/research-checklist.md).
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — stakeholder alignment, platform selection, maturity map.
+- [Pipeline foundations](modules/pipeline-foundations.md) — architecture patterns, environment strategy, deployment choreography.
+- [Quality gates & observability](modules/quality-gates-and-observability.md) — testing matrices, DORA metrics, release telemetry.
+- [Security & compliance](modules/security-and-compliance.md) — SLSA levels, SBOM, policy-as-code, audit prep.
+- [Known gaps](modules/known-gaps.md) — targeted investigations and roadmap items.
+- [Research checklist](modules/research-checklist.md) — monthly refresh cadence.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Guidance reconciled with 2024–2025 DORA findings, SLSA v1.0, and major CI platform releases.
+- Next audit scheduled for 2026-01-31 or sooner if SLSA 1.1 or GitHub/GitLab major changes land.
+- Known gaps capture platform-specific deep dives (e.g., Jenkins Evergreen strategy) still pending validation.

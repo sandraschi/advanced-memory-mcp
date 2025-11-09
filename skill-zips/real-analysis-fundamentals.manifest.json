@@ -1,0 +1,12 @@
+{
+  "name": "real-analysis-fundamentals",
+  "packaged_at": "2025-11-09T18:18:08.863975Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\real-analysis-fundamentals",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\real-analysis-fundamentals.zip",
+  "sha256": "274c686b5e97469757212d450fb7230eed228e9f10d475300cd6968db88d2131",
+  "metadata": {
+    "name": "real-analysis-fundamentals",
+    "description": "Rigorous analysis expert covering limits, continuity, sequences, series, and measure theory foundations",
+    "license": "Proprietary"
+  }
+}

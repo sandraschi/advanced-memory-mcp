@@ -1,0 +1,12 @@
+{
+  "name": "french-pastry-master",
+  "packaged_at": "2025-11-09T18:18:08.652872Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\french-pastry-master",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\french-pastry-master.zip",
+  "sha256": "4b1293fb60813a9eb90c3fbae354d67cf86154371aa69faa02ae81cec48e86e8",
+  "metadata": {
+    "name": "french-pastry-master",
+    "description": "Expert in French pastry techniques, from croissants to éclairs, macarons to tarte tatin",
+    "license": "Proprietary"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "medieval-scholasticism-expert",
+  "packaged_at": "2025-11-09T18:18:09.003739Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\medieval-scholasticism-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\medieval-scholasticism-expert.zip",
+  "sha256": "f6b1f6a97b2eb5b554928cfce7829012f92682c8c2844f34e23c3c94feac9eb1",
+  "metadata": {
+    "name": "medieval-scholasticism-expert",
+    "description": "Scholar of medieval philosophy covering Aquinas, Scotus, Ockham, and the synthesis of Aristotelian philosophy with Christian theology",
+    "license": "Proprietary"
+  }
+}

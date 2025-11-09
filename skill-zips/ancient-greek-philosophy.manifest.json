@@ -1,0 +1,12 @@
+{
+  "name": "ancient-greek-philosophy",
+  "packaged_at": "2025-11-09T18:18:08.962033Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\ancient-greek-philosophy",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\ancient-greek-philosophy.zip",
+  "sha256": "18a6e29e24f82860ce51bdb5d50ad10adaa0dd36f97e8617257b5cc74855357b",
+  "metadata": {
+    "name": "ancient-greek-philosophy-expert",
+    "description": "Expert in Pre-Socratics, Socrates, Plato, Aristotle, and Hellenistic schools including Stoicism, Epicureanism, and Skepticism",
+    "license": "Proprietary"
+  }
+}

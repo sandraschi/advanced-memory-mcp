@@ -1,0 +1,12 @@
+{
+  "name": "kanji-etymology-expert",
+  "packaged_at": "2025-11-09T18:18:08.718713Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\linguistic\\kanji-etymology-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\kanji-etymology-expert.zip",
+  "sha256": "7810ffc4212a41e75d3821c8e1dda2ed0c4d7f1666ec2c794229738f727b7b6c",
+  "metadata": {
+    "name": "kanji-etymology-and-learning-expert",
+    "description": "Kanji specialist covering character origins, radical systems, mnemonic techniques, and historical development",
+    "license": "Proprietary"
+  }
+}

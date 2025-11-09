@@ -1,0 +1,12 @@
+{
+  "name": "tarot-reading-expert",
+  "packaged_at": "2025-11-09T18:18:08.950530Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\nonsense\\tarot-reading-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\tarot-reading-expert.zip",
+  "sha256": "457af473059486370f6001d50da42079630284f518351e891f87b46fae956b31",
+  "metadata": {
+    "name": "tarot-reading-expert",
+    "description": "Comprehensive tarot expert covering Major and Minor Arcana, spreads, symbolism, and interpretative frameworks from Rider-Waite to Thoth traditions",
+    "license": "Proprietary"
+  }
+}

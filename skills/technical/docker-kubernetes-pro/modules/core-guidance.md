@@ -1,3 +1,76 @@
+# Core Guidance
+
+**Confidence**: 🟡 MEDIUM  
+**Last validated**: 2025-11-08
+
+> Use this module to align on platform goals, constraints, and readiness before implementing container/Kubernetes solutions.
+
+---
+
+## 1. Intake Checklist
+
+| Question | Why it matters |
+| --- | --- |
+| What workloads are targeted (stateful, stateless, batch, ML)? | Influences storage strategy, controllers, autoscaling. |
+| Target environments (dev/staging/prod, multi-cloud, edge)? | Determines cluster topology and networking. |
+| Compliance/security requirements? | Drives policy-as-code, image scanning, RBAC. |
+| Delivery model (CI/CD, GitOps, platform team vs product team)? | Sets expectations for tooling and automation modules. |
+| SLOs (availability, latency, recovery)? | Guides scaling, observability, incident runbooks. |
+
+Document answers in an architecture brief before design work.
+
+---
+
+## 2. Platform Fit Assessment
+
+- Evaluate whether managed Kubernetes (EKS/GKE/AKS), self-hosted, or alternative (Nomad, ECS, Cloud Run) is appropriate.  
+- Consider build vs buy: do teams have ops capability to run clusters 24/7?  
+- Assess data services: externalize databases/message queues unless strong reason to run in-cluster.  
+- Identify ecosystem integrations (service mesh, ingress, secrets, logging).
+
+---
+
+## 3. Maturity Ladder
+
+| Level | Characteristics | Next Steps |
+| --- | --- | --- |
+| **Foundation** | Containerized apps, basic manifests, manual deployments | Set up registries, implement CI builds, define namespaces. |
+| **Intermediate** | CI/CD pipelines, Helm/Kustomize, monitoring in place | Introduce GitOps, policy enforcement, autoscaling. |
+| **Advanced** | Multi-cluster, service mesh, progressive delivery, SLOs | Add chaos engineering, cost optimization, platform APIs. |
+
+Use the ladder to set roadmap targets with stakeholders.
+
+---
+
+## 4. Stakeholder Alignment
+
+- **App teams**: define onboarding process, responsibilities for manifests vs platform modules.  
+- **Security**: agree on scanning, RBAC, secrets, network policies.  
+- **Ops/SRE**: establish observability, incident response, capacity planning.  
+- **Finance**: track cost per cluster/workload, implement governance.
+
+---
+
+## 5. Escalation Triggers
+
+- Frequent pod evictions or crash loops without clear root cause.  
+- Security scan failures blocking releases with no remediation plan.  
+- Cluster capacity < 20% headroom or frequent scaling failures.  
+- Network policy misconfigurations causing outages.  
+- Governance/gating inconsistencies between environments.
+
+Escalate to platform steering group; document incidents and action items.
+
+---
+
+### Module Map
+- Foundations → [modules/platform-foundations.md](modules/platform-foundations.md)  
+- Deployment patterns → [modules/deployment-patterns.md](modules/deployment-patterns.md)  
+- Security & compliance → [modules/security-and-compliance.md](modules/security-and-compliance.md)  
+- Operations → [modules/observability-and-operations.md](modules/observability-and-operations.md)  
+- Follow-ups → [modules/known-gaps.md](modules/known-gaps.md)
+
+Review this guidance quarterly to stay aligned with evolving platform strategy.*** End Patch
 # Core Guidance (Legacy Template)
 
 **Confidence**: 🔴 LOW  

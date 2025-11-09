@@ -1,14 +1,15 @@
 # Known Gaps & Validation Tasks
 
-## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
-- ❌ Domain expert review pending.
+## Open Items
+- ⏳ Document debugging strategies for CPython free-threaded mode and sub-interpreters (PEP 703 rollout).  
+- ⏳ Research distributed debugging with Ray/Dask clusters.  
+- ⏳ Capture best practices for debugging PyTorch/TensorFlow GPU pipelines.
 
 ## TODOs
-1. Complete the research checklist and archive dated sources.
-2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+1. Create quickstart for remote debugging inside Kubernetes/containers.  
+2. Publish checklist for securing debug endpoints in production environments.  
+3. Gather common error patterns from error tracking tool and surface playbook.
 
 ## Notes
-- Add additional items here as you uncover domain-specific gaps.
+- Promote confidence to **high** after CPython free-threaded guidance and distributed debugging patterns are added.  
+- Monitor Python Steering Council updates for changes affecting debugging APIs.*** End Patch

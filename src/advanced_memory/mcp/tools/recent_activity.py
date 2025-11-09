@@ -1,5 +1,8 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
+from datetime import UTC, datetime
+from typing import Any
+
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -20,7 +23,7 @@ async def recent_activity(
     page_size: int = 10,
     max_related: int = 10,
     project: str | None = None,
-) -> GraphContext:
+) -> dict[str, Any]:
     """Get recent activity across the knowledge base.
 
     Args:
@@ -44,10 +47,10 @@ async def recent_activity(
         project: Optional project name to get activity from. If not provided, uses current active project.
 
     Returns:
-        GraphContext containing:
-            - primary_results: Latest activities matching the filters
-            - related_results: Connected content via relations
+        Dictionary containing:
+            - results: Latest activities matching the filters
             - metadata: Query details and statistics
+            - page/page_size: Pagination info (when available)
 
     Examples:
         # Get all entities for the last 10 days (default)
@@ -126,4 +129,61 @@ async def recent_activity(
         f"{project_url}/memory/recent",
         params=params,
     )
-    return GraphContext.model_validate(response.json())
+    raw_data = response.json()
+
+    def normalize_timestamp(value: Any) -> str | None:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            try:
+                # Handle timestamps with or without timezone info
+                ts = value.replace("Z", "+00:00")
+                dt = datetime.fromisoformat(ts)
+            except ValueError:
+                return value
+        elif isinstance(value, datetime):
+            dt = value
+        else:
+            return str(value)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=UTC)
+        return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+
+    def normalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
+        summary_type = summary.get("type")
+
+        if summary_type == "relation":
+            summary["relation_type"] = summary.get("relation_type") or "related_to"
+            summary["from_entity"] = summary.get("from_entity")
+            summary["to_entity"] = summary.get("to_entity")
+        elif summary_type == "observation":
+            summary["category"] = summary.get("category") or "general"
+            summary["content"] = summary.get("content") or ""
+
+        summary["created_at"] = normalize_timestamp(summary.get("created_at"))
+        return summary
+
+    results = raw_data.get("results", [])
+    for item in results:
+        if "primary_result" in item and isinstance(item["primary_result"], dict):
+            item["primary_result"] = normalize_summary(item["primary_result"])
+
+        observations = item.get("observations", [])
+        item["observations"] = [
+            normalize_summary(obs) for obs in observations if isinstance(obs, dict)
+        ]
+
+        related = item.get("related_results", [])
+        item["related_results"] = [
+            normalize_summary(rel) for rel in related if isinstance(rel, dict)
+        ]
+
+    metadata = raw_data.get("metadata", {})
+    metadata["generated_at"] = normalize_timestamp(metadata.get("generated_at"))
+    metadata["timeframe"] = metadata.get("timeframe")
+    raw_data["metadata"] = metadata
+
+    raw_data["results"] = results
+
+    context = GraphContext.model_validate(raw_data)
+    return context.model_dump(mode="json")

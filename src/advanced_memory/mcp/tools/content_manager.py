@@ -4,6 +4,7 @@ This tool consolidates all content operations: write, read, view, edit, edit_tag
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import re
 from typing import Literal
 
 from loguru import logger
@@ -14,6 +15,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_get, call_put
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
+from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
@@ -198,6 +200,28 @@ async def adn_content(
 
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
 
+    original_operation = operation
+    normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
+    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    alias_map = {
+        "createnote": "write",
+        "newnote": "write",
+        "appendnote": "edit",
+        "modifytags": "edit_tags",
+        "readnote": "read",
+        "readlatest": "read_latest",
+        "latest": "read_latest",
+        "last": "read_latest",
+        "lastnote": "read_latest",
+        "latestnote": "read_latest",
+        "showlatest": "read_latest",
+        "viewnote": "view",
+        "previewnote": "view",
+        "viewlatest": "view",
+        "previewlatest": "view",
+    }
+    operation = alias_map.get(normalized_operation, normalized_operation)
+
     # Get the active project
     active_project = get_active_project(project)
     if not active_project:
@@ -219,8 +243,17 @@ async def adn_content(
         )
 
     elif operation == "read":
-        if identifier is None:
-            return "# Error\n\nRead operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"read\", identifier=\"My Note Title\")\n# or\nadn_content(\"read\", identifier=\"notes/my-note-title\")\n```"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            logger.info(
+                "adn_content_auto_read_latest",
+                original_operation=original_operation,
+                identifier=identifier,
+            )
+            return await _read_latest_operation(active_project)
+
         return await _read_operation(active_project, identifier, page, page_size)
 
     elif operation == "read_latest":
@@ -228,13 +261,27 @@ async def adn_content(
         return await _read_latest_operation(active_project)
 
     elif operation == "view":
-        if identifier is None:
-            return "# Error\n\nView operation requires: identifier"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            if not latest_identifier:
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
+            identifier = latest_identifier
+
         return await _view_operation(active_project, identifier)
 
     elif operation == "view_rendered":
-        if identifier is None:
-            return "# Error\n\nView rendered operation requires: identifier"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            if not latest_identifier:
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
+            identifier = latest_identifier
+
         return await _view_rendered_operation(active_project, identifier)
 
     elif operation == "edit":
@@ -455,55 +502,68 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     )
 
 
-async def _read_latest_operation(active_project) -> str:
-    """Handle read_latest operation - read the single most recent note."""
+async def _get_latest_identifier(active_project) -> tuple[str | None, str | None]:
     from loguru import logger
 
-    from advanced_memory.mcp.tools.recent_activity import recent_activity
+    try:
+        from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-    # Get single most recent item (any type, past year)
-    result = await recent_activity.fn(
-        type="",  # All types
-        depth=1,
-        timeframe="365d",  # Past year to be safe
-        page=1,
-        page_size=1,  # Just the most recent one
-        max_related=0,
-        project=active_project.name
-    )
+        raw_context = await recent_activity.fn(
+            type_filter=["entity", "observation"],
+            depth=1,
+            timeframe="365d",
+            page=1,
+            page_size=1,
+            max_related=0,
+            project=active_project.name,
+        )
 
-    # Debug: Log the structure
-    logger.debug(f"GraphContext structure: hasattr(results)={hasattr(result, 'results')}")
-    if hasattr(result, 'results'):
-        logger.debug(f"results length={len(result.results)}")
-        if result.results:
-            logger.debug(f"First result: {result.results[0]}")
-            logger.debug(f"First result type: {type(result.results[0])}")
-
-    # Extract the most recent item
-    if hasattr(result, 'results') and result.results:
-        ctx_result = result.results[0]
-
-        # Get primary result from context result
-        if hasattr(ctx_result, 'primary_result') and ctx_result.primary_result:
-            item = ctx_result.primary_result
+        if isinstance(raw_context, GraphContext):
+            result = raw_context
         else:
-            # Fallback: try to get the item directly if no primary_result
-            item = ctx_result
+            result = GraphContext.model_validate(raw_context)
 
-        # Get identifier (permalink or title)
-        identifier = getattr(item, 'permalink', getattr(item, 'title', None))
+    except Exception as exc:  # pragma: no cover
+        logger.error("adn_content_latest_identifier_error", exc_info=True)
+        return None, (
+            "# Error\n\n"
+            "Unable to load recent activity to determine the latest note.\n"
+            f"Details: {exc}"
+        )
 
-        logger.debug(f"Extracted identifier: {identifier}")
+    context_results = getattr(result, "results", [])
+    if not context_results:
+        return None, "# No Recent Activity\n\nNo notes found in the past year."
 
-        if identifier:
-            # Read the note content
-            from advanced_memory.mcp.tools.read_note import read_note
-            return await read_note.fn(identifier=identifier, project=active_project.name)
-        else:
-            return f"# Error\n\nCould not determine identifier for most recent note. Item attributes: {dir(item)}"
+    ctx_result = context_results[0]
+    if getattr(ctx_result, "primary_result", None):
+        item = ctx_result.primary_result
+    elif getattr(ctx_result, "observations", None):
+        item = ctx_result.observations[0]
     else:
-        return "# No Recent Activity\n\nNo notes found in the past year."
+        item = ctx_result
+
+    identifier = getattr(item, "permalink", None) or getattr(item, "file_path", None)
+    if not identifier:
+        return None, (
+            "# Error\n\n"
+            "Could not determine identifier for most recent note.\n"
+            f"Item attributes: {dir(item)}"
+        )
+
+    logger.debug(f"Extracted latest identifier: {identifier}")
+    return identifier, None
+
+
+async def _read_latest_operation(active_project) -> str:
+    """Handle read_latest operation - read the single most recent note."""
+    identifier, error_message = await _get_latest_identifier(active_project)
+    if not identifier:
+        return error_message or "# No Recent Activity\n\nNo notes found in the past year."
+
+    from advanced_memory.mcp.tools.read_note import read_note
+
+    return await read_note.fn(identifier=identifier, project=active_project.name)
 
 
 async def _view_operation(active_project, identifier: str) -> str:
@@ -562,9 +622,17 @@ async def _edit_tags_operation(
         return f"# Error\n\nNote not found: {identifier}\n\nPlease provide exact note title or permalink."
 
     current_entity = EntityResponse.model_validate(response.json())
-    current_tags = (
+
+    # Normalize current tags to a list[str]
+    existing_tags_raw = (
         current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     )
+    if isinstance(existing_tags_raw, str):
+        current_tags: list[str] = [existing_tags_raw]
+    elif isinstance(existing_tags_raw, list):
+        current_tags = [str(tag) for tag in existing_tags_raw]
+    else:
+        current_tags = []
 
     # Parse input tags (unless clear operation)
     if tag_operation != "clear":
@@ -575,6 +643,8 @@ async def _edit_tags_operation(
 
         if not new_tags and tag_operation != "clear":
             return f"# Error\n\nNo valid tags provided.\n\nTags: {tags}"
+    else:
+        new_tags = []
 
     # Perform the operation
     if tag_operation == "add":
@@ -614,12 +684,25 @@ async def _edit_tags_operation(
     metadata = current_entity.entity_metadata or {}
     metadata["tags"] = updated_tags
 
+    # Fetch the existing note content so we don't overwrite it with None
+    resource_url = f"{project_url}/resource/{current_entity.permalink}"
+    resource_response = await call_get(client, resource_url)
+    if resource_response.status_code != 200:
+        return (
+            "# Error\n\n"
+            f"Failed to retrieve current note content for '{identifier}'.\n"
+            "Tag update aborted to avoid overwriting content.\n"
+            f"Details: HTTP {resource_response.status_code}"
+        )
+
+    current_content = resource_response.text
+
     update_url = f"{project_url}/knowledge/entities/{current_entity.permalink}"
     update_data = {
         "title": current_entity.title,
         "entity_type": current_entity.entity_type,
         "content_type": current_entity.content_type,
-        "content": current_entity.content,
+        "content": current_content,
         "entity_metadata": metadata,
     }
 

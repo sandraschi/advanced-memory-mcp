@@ -1,0 +1,12 @@
+{
+  "name": "mathematical-logic-expert",
+  "packaged_at": "2025-11-09T18:18:08.822272Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\mathematical-logic-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\mathematical-logic-expert.zip",
+  "sha256": "35eff32ef79626c9a828ca55618b3dffc302d4eb2819512e2aca4302bf233bed",
+  "metadata": {
+    "name": "mathematical-logic-expert",
+    "description": "Expert in formal logic, model theory, computability, and foundations of mathematics",
+    "license": "Proprietary"
+  }
+}

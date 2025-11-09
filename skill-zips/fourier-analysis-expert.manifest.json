@@ -1,0 +1,12 @@
+{
+  "name": "fourier-analysis-expert",
+  "packaged_at": "2025-11-09T18:18:08.801641Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\fourier-analysis-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\fourier-analysis-expert.zip",
+  "sha256": "9b9ee527d9c18f7eae10090efeca87b7d894fb852c6e53d0e4792f621a0de83c",
+  "metadata": {
+    "name": "fourier-analysis-expert",
+    "description": "Fourier analysis specialist covering series, transforms, signal processing, and harmonic analysis",
+    "license": "Proprietary"
+  }
+}

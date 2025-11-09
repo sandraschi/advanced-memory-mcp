@@ -5,6 +5,7 @@ Run this before committing to catch issues early.
 Usage: python scripts/pre_commit_check.py
 """
 
+import asyncio
 import sys
 from pathlib import Path
 
@@ -49,13 +50,17 @@ def check_tools_registration():
     try:
         from advanced_memory.mcp.server import mcp
 
-        # Check that mcp instance exists and has tools
-        if hasattr(mcp, "tools") and len(mcp.tools) > 0:
-            print(f"[OK] Found {len(mcp.tools)} tools registered")
+        async def _collect_tools():
+            tools = await mcp.get_tools()
+            return tools
+
+        tools = asyncio.run(_collect_tools())
+        if tools:
+            print(f"[OK] Found {len(tools)} tools registered")
             return True
-        else:
-            print("[WARN] No tools found registered")
-            return False
+
+        print("[WARN] No tools found registered")
+        return False
     except Exception as e:
         print(f"[FAIL] Tool registration error: {e}")
         return False

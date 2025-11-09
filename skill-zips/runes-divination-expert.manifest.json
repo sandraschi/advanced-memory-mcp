@@ -1,0 +1,12 @@
+{
+  "name": "runes-divination-expert",
+  "packaged_at": "2025-11-09T18:18:08.939852Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\nonsense\\runes-divination-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\runes-divination-expert.zip",
+  "sha256": "f0ce258f3e2d4b279524a359bc157afd4e5eda8c1ad3629e78b06e34c74533f0",
+  "metadata": {
+    "name": "runes-and-nordic-divination-expert",
+    "description": "Expert in Elder Futhark runes, Norse mythology, runic divination, and historical runic practices",
+    "license": "Proprietary"
+  }
+}

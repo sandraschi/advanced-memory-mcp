@@ -1,0 +1,12 @@
+{
+  "name": "mcp-server-developer",
+  "packaged_at": "2025-11-09T18:18:09.206412Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\mcp-server-developer",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\mcp-server-developer.zip",
+  "sha256": "d60338d709e6a8e492ed2241e100255270cf48515ff281b84425293ceefec5dd",
+  "metadata": {
+    "name": "mcp-server-developer",
+    "description": "Build, harden, document, and ship MCP servers to Claude standards with FastMCP 2.13+ architecture, disciplined tooling, and release-ready workflows.",
+    "license": "Proprietary"
+  }
+}

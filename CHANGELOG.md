@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Portmanteau tool exerciser suite (`scripts/testing/test_*.py`) and Windows wrapper (`scripts/testing/run-all-tool-exercisers.ps1`) for smoke-testing every core tool group with success/failure validation and optional skip flags.
+
+### Documentation
+- Updated README testing section and `docs/testing/RUNNING_TESTS_GUIDE.md` with instructions for running the new exerciser suite.
+
 ## [1.0.0b8] - 2025-11-08
 
 ### Added

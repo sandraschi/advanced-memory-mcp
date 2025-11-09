@@ -1,0 +1,12 @@
+{
+  "name": "microservices-architect",
+  "packaged_at": "2025-11-09T18:18:09.221457Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\microservices-architect",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\microservices-architect.zip",
+  "sha256": "dec8f78306b0044e4ef84f42ead4a80dae3d2769b56d87b27ec393104a64f75f",
+  "metadata": {
+    "name": "microservices-architect",
+    "description": "Microservices design expert covering service decomposition, communication patterns, and distributed systems",
+    "license": "Proprietary"
+  }
+}

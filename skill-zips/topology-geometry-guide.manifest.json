@@ -1,0 +1,12 @@
+{
+  "name": "topology-geometry-guide",
+  "packaged_at": "2025-11-09T18:18:08.874853Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\topology-geometry-guide",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\topology-geometry-guide.zip",
+  "sha256": "3b8da22b9277472b64f2dec7209d1a8277251805f8e02be75daceaa7c2b69932",
+  "metadata": {
+    "name": "topology-and-geometry-guide",
+    "description": "Expert in point-set topology, algebraic topology, differential geometry, and geometric intuition for abstract concepts",
+    "license": "Proprietary"
+  }
+}

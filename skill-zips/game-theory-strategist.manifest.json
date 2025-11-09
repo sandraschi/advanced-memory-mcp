@@ -1,0 +1,12 @@
+{
+  "name": "game-theory-strategist",
+  "packaged_at": "2025-11-09T18:18:08.808487Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\game-theory-strategist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\game-theory-strategist.zip",
+  "sha256": "65c682bbb1e22d80f93a6ce0cfe76272cabb6fbcbafbb8be65812242cc06ce10",
+  "metadata": {
+    "name": "game-theory-strategist",
+    "description": "Game theory expert covering Nash equilibrium, strategic thinking, auction theory, and cooperative games",
+    "license": "Proprietary"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "video-editing-advisor",
+  "packaged_at": "2025-11-09T18:18:08.620760Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\creative\\video-editing-advisor",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\video-editing-advisor.zip",
+  "sha256": "e5f9d471b9ffa4ffe53939ba5a623515be1db6fae65d955b699f157a04c9bf12",
+  "metadata": {
+    "name": "video-editing-advisor",
+    "description": "Video editing expert covering cutting techniques, pacing, color grading, and post-production workflows",
+    "license": "Proprietary"
+  }
+}

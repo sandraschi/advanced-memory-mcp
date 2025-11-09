@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Literal
 
+import frontmatter
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -693,56 +694,152 @@ adn_skills(
 async def _list_operation(
     filters: dict | None, page: int, page_size: int, project: str | None
 ) -> str:
-    """List all skills with filtering."""
-    from advanced_memory.mcp.tools.search import search_notes
+    """List all skills with optional filtering."""
 
-    # Search for skills (entity_type = skill)
-    results = await search_notes.fn(
-        query="*",
-        entity_types=["skill"],
-        page=page,
-        results_per_page=page_size,
-        project=project,
-    )
-
-    if not results or not results.results:
+    skills_root = Path("skills")
+    if not skills_root.exists():
         return """# Skills List
 
-No skills found.
+No `skills/` directory found.
 
-CREATE YOUR FIRST SKILL:
+Create your first skill with:
+```
 adn_skills("create", skill_name="my-skill", description="My first skill")
+```
+"""
 
-OR IMPORT FROM ANTHROPIC:
-adn_skills("import", source_path="D:/anthropic-skills/skill-creator")"""
+    def _matches_filters(record: dict[str, str | list[str]]) -> bool:
+        if not filters:
+            return True
 
-    # Format results
-    response_lines = [
+        category_filter = filters.get("category")
+        if category_filter:
+            categories = (
+                {category_filter.lower()}
+                if isinstance(category_filter, str)
+                else {str(cat).lower() for cat in category_filter}
+            )
+            if record["category"].lower() not in categories:
+                return False
+
+        confidence_filter = filters.get("confidence")
+        if confidence_filter and record["confidence"].lower() != str(confidence_filter).lower():
+            return False
+
+        difficulty_filter = filters.get("difficulty")
+        if difficulty_filter and record["difficulty"].lower() != str(difficulty_filter).lower():
+            return False
+
+        tag_filter = filters.get("tags")
+        if tag_filter:
+            requested_tags = (
+                {tag.lower() for tag in tag_filter}
+                if isinstance(tag_filter, list | tuple | set)
+                else {str(tag_filter).lower()}
+            )
+            record_tags = {tag.lower() for tag in record["tags"]}
+            if not record_tags.intersection(requested_tags):
+                return False
+
+        return True
+
+    skill_records: list[dict[str, str | list[str]]] = []
+    for skill_file in sorted(skills_root.glob("**/SKILL.md")):
+        try:
+            post = frontmatter.loads(skill_file.read_text(encoding="utf-8"))
+        except Exception as exc:  # noqa: BLE001
+            logger.warning(f"Failed to parse {skill_file}: {exc}")
+            skill_records.append(
+                {
+                    "title": skill_file.parent.name,
+                    "category": "unknown",
+                    "confidence": "unknown",
+                    "difficulty": "unassigned",
+                    "status": "Parse error",
+                    "license": "unknown",
+                    "allowed_tools": [],
+                    "tags": [],
+                    "rel_path": skill_file.parent.relative_to(skills_root).as_posix(),
+                    "issues": f"Failed to parse frontmatter: {exc}",
+                }
+            )
+            continue
+
+        fm = post.metadata
+        meta_block = fm.get("metadata")
+        if not isinstance(meta_block, dict):
+            meta_block = {}
+
+        category = meta_block.get("category", "general")
+        confidence = meta_block.get("confidence", "low")
+        difficulty = meta_block.get("difficulty", "unassigned")
+        status = meta_block.get("status", "Draft scaffold – complete research checklist before use")
+        license_value = fm.get("license", "Proprietary")
+        allowed_tools = fm.get("allowed-tools") or []
+        if not isinstance(allowed_tools, list):
+            allowed_tools = [str(allowed_tools)]
+        tags = meta_block.get("tags", [])
+        if not isinstance(tags, list):
+            tags = [str(tags)]
+
+        record = {
+            "title": fm.get("name", skill_file.parent.name),
+            "category": str(category),
+            "confidence": str(confidence),
+            "difficulty": str(difficulty),
+            "status": str(status),
+            "license": str(license_value),
+            "allowed_tools": [str(tool) for tool in allowed_tools],
+            "tags": [str(tag) for tag in tags],
+            "rel_path": skill_file.parent.relative_to(skills_root).as_posix(),
+        }
+
+        if _matches_filters(record):
+            skill_records.append(record)
+
+    total = len(skill_records)
+    if total == 0:
+        return """# Skills List
+
+No skills matched the requested filters.
+
+Create a new skill:
+```
+adn_skills("create", skill_name="my-skill", description="My first skill")
+```
+"""
+
+    start = max((page - 1) * page_size, 0)
+    end = start + page_size
+    page_entries = skill_records[start:end]
+
+    if not page_entries:
+        return f"# Skills List\n\nRequested page {page} is out of range for {total} skill(s)."
+
+    lines = [
         "# Skills List",
         "",
-        f"Found {len(results.results)} skill(s):",
+        f"Found {total} skill(s). Showing page {page} (items {start + 1}–{start + len(page_entries)}).",
         "",
     ]
 
-    for idx, skill in enumerate(results.results, 1):
-        title = skill.title or "Unknown"
-        permalink = skill.permalink or ""
-        metadata_str = skill.metadata or {}
-        cat = (
-            metadata_str.get("category", "general") if isinstance(metadata_str, dict) else "general"
-        )
+    for idx, record in enumerate(page_entries, start=start + 1):
+        allowed = ", ".join(record["allowed_tools"]) if record["allowed_tools"] else "None"
+        tags = ", ".join(record["tags"]) if record["tags"] else "None"
+        lines.append(f"## {idx}. {record['title']}")
+        lines.append(f"**Directory:** `skills/{record['rel_path']}`")
+        lines.append(f"**Category:** {record['category']}")
+        lines.append(f"**Confidence:** {record['confidence']}")
+        lines.append(f"**Difficulty:** {record['difficulty']}")
+        lines.append(f"**Status:** {record['status']}")
+        lines.append(f"**License:** {record['license']}")
+        lines.append(f"**Allowed tools:** {allowed}")
+        lines.append(f"**Tags:** {tags}")
+        if record.get("issues"):
+            lines.append(f"**Warnings:** {record['issues']}")
+        lines.append("")
 
-        response_lines.append(f"## {idx}. {title}")
-        response_lines.append(f"**Category:** {cat}")
-        response_lines.append(f"**Permalink:** {permalink}")
-        response_lines.append("")
-
-    response_lines.append(f"**Total:** {len(results.results)} skills")
-    response_lines.append(
-        f"**Page:** {page} of {(results.total + page_size - 1) // page_size if hasattr(results, 'total') else '?'}"
-    )
-
-    return "\n".join(response_lines)
+    return "\n".join(lines)
 
 
 async def _validate_operation(identifier: str | None, project: str | None) -> str:

@@ -1,0 +1,12 @@
+{
+  "name": "materials-science-specialist",
+  "packaged_at": "2025-11-09T18:18:09.071935Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\materials-science-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\materials-science-specialist.zip",
+  "sha256": "b03e0a6d6c4717124c2dcba25d71cb21ce9e351951d29ff00828177ac4556987",
+  "metadata": {
+    "name": "materials-science-specialist",
+    "description": "Materials engineering expert covering properties, processing, testing, and applications of materials",
+    "license": "Proprietary"
+  }
+}

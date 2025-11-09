@@ -1,0 +1,12 @@
+{
+  "name": "number-theory-explorer",
+  "packaged_at": "2025-11-09T18:18:08.840354Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\number-theory-explorer",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\number-theory-explorer.zip",
+  "sha256": "04963f555ff960bbd2a6ae810adfe7c5dbd72e6e5bf6484029459976a96c16f9",
+  "metadata": {
+    "name": "number-theory-explorer",
+    "description": "Number theory expert covering primes, divisibility, modular arithmetic, Diophantine equations, and cryptographic applications",
+    "license": "Proprietary"
+  }
+}

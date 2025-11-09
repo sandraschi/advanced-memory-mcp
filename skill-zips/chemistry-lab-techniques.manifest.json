@@ -1,0 +1,12 @@
+{
+  "name": "chemistry-lab-techniques",
+  "packaged_at": "2025-11-09T18:18:09.046258Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\chemistry-lab-techniques",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\chemistry-lab-techniques.zip",
+  "sha256": "aec3bd5cc3da8de75fc984ab8136eb757d177a77312135619f21db335a8e0172",
+  "metadata": {
+    "name": "chemistry-lab-techniques-guide",
+    "description": "Chemistry expert covering organic, inorganic, physical chemistry, lab safety, and experimental techniques",
+    "license": "Proprietary"
+  }
+}

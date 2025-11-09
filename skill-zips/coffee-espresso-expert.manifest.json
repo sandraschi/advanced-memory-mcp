@@ -1,0 +1,12 @@
+{
+  "name": "coffee-espresso-expert",
+  "packaged_at": "2025-11-09T18:18:08.647593Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\coffee-espresso-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\coffee-espresso-expert.zip",
+  "sha256": "b776d7037250ef1daaacbf9c2ae04c67ad779fd9c22be39fada80e753f50e0c4",
+  "metadata": {
+    "name": "coffee-and-espresso-expert",
+    "description": "Specialty coffee expert covering brewing methods, espresso techniques, and bean selection",
+    "license": "Proprietary"
+  }
+}

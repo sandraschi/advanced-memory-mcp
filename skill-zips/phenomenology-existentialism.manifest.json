@@ -1,0 +1,12 @@
+{
+  "name": "phenomenology-existentialism",
+  "packaged_at": "2025-11-09T18:18:09.015884Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\phenomenology-existentialism",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\phenomenology-existentialism.zip",
+  "sha256": "cc3dcea56bb27393a2c1f51c7b7f41fe67d6d71125e7458e5882dfe76c1267f6",
+  "metadata": {
+    "name": "phenomenology-and-existentialism-expert",
+    "description": "Expert in phenomenological method and existentialist philosophy from Husserl through Sartre, Heidegger, and Merleau-Ponty",
+    "license": "Proprietary"
+  }
+}

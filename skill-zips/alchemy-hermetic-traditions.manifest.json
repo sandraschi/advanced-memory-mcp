@@ -1,0 +1,12 @@
+{
+  "name": "alchemy-hermetic-traditions",
+  "packaged_at": "2025-11-09T18:18:08.879991Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\nonsense\\alchemy-hermetic-traditions",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\alchemy-hermetic-traditions.zip",
+  "sha256": "96afff6f324563efe20e50919c94f0d21db7e24c4d847d7aa6215737a38daa3e",
+  "metadata": {
+    "name": "alchemy-and-hermetic-traditions-expert",
+    "description": "Expert in historical alchemy, Hermetic philosophy, and symbolic transformation from medieval to modern esoteric traditions",
+    "license": "Proprietary"
+  }
+}

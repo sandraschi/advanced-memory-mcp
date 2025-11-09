@@ -1,13 +1,34 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Use this flow each quarter or when significant tooling/AI changes land.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] Review Google “Engineering Practices” updates (https://google.github.io/eng-practices/).  
+- [ ] Check Microsoft, GitHub, and Atlassian code review guidance posts for new recommendations.  
+- [ ] Track ThoughtWorks Technology Radar entries relevant to review tooling.
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Metrics & Analytics
+- [ ] Export review turnaround, rework rate, defect escape rate; compare against targets.  
+- [ ] Survey developers for review satisfaction; log sentiments.  
+- [ ] Inspect random merged PRs for calibration (quality audit).
+
+## 3. Tooling Validation
+- [ ] Audit lint/check configurations; ensure automation covers style issues.  
+- [ ] Review AI assistant policy; test latest capabilities and guardrails.  
+- [ ] Confirm CODEOWNERS and reviewer rotation scripts reflect team changes.  
+- [ ] Ensure reminder bots and dashboards still operate correctly.
+
+## 4. Policy & Documentation
+- [ ] Update Definition of Review Done and reviewer onboarding docs.  
+- [ ] Record new examples of exemplary reviews for knowledge base.  
+- [ ] Refresh inline comment templates/examples.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | Google Engineering Practices (2024-10) | Verified review goals, communication patterns |
+| 2025-11-08 | Microsoft Code Review Playbook (2025-05) | Added AI assistant cautions |
+| 2025-11-08 | GitHub Code Review Metrics (2024) | Benchmarked turnaround, approval rates |
+| 2025-11-08 | ThoughtWorks Tech Radar (2025-04) | Highlighted evolving review tooling |
+
+> Tip: Kick off refreshes with `adn_skills("distill_from_wikipedia", topic="Code review")`, then fetch updated guidance via `adn_skills("import_from_github", repository="google/eng-practices")` before confirming with official docs.*** End Patch

@@ -1,0 +1,12 @@
+{
+  "name": "testing-strategy-guide",
+  "packaged_at": "2025-11-09T18:18:09.296408Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\testing-strategy-guide",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\testing-strategy-guide.zip",
+  "sha256": "7b5192061eca9c008dc40cedb954444ad90df6e8c8a7fa342003499649a6de64",
+  "metadata": {
+    "name": "testing-strategy-guide",
+    "description": "Test automation expert covering unit tests, integration tests, TDD, and testing best practices",
+    "license": "Proprietary"
+  }
+}

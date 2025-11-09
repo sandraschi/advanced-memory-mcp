@@ -1,25 +1,15 @@
 ---
 name: advanced-memory-skill-creator
 description: Use when planning, scaffolding, validating, or packaging Claude skills inside Advanced Memory MCP.
-metadata:
-  category: developer
-  last_validated: 2025-11-08
-  confidence: medium
-  requires_web_research: false
-  status: Ready for packaging – keep sources current
-  skill_version: 0.2.0-modular
-  sources:
-    - "[2025-10-16] Anthropic skill-creator (https://github.com/anthropics/skills/blob/main/skill-creator/SKILL.md)"
-    - "[2025-10-16] Anthropic skill-creator tooling (scripts/init_skill.py, scripts/package_skill.py) – same repository"
-    - "[2025-11-08] Advanced Memory Skill Creator Design (docs-private/ADVANCED_MEMORY_SKILL_CREATOR_DESIGN.md)"
-    - "[2025-11-08] adn_skills_creator implementation (src/advanced_memory/mcp/tools/adn_skills_creator.py)"
+license: Proprietary
 ---
+
 # Advanced Memory Skill Creator
-> **Status**: ✅ Research complete – keep sources fresh
+> **Status**: ✅ Research complete  
 >
-> **Last validated**: 2025-11-08
+> **Last validated**: 2025-11-08  
 >
-> **Confidence**: 🟡 Medium – run checklist before publishing
+> **Confidence**: 🟡 Medium — Ready for packaging – keep sources current
 
 ## When to load this skill
 - You need to build a new Claude skill that matches Anthropic’s gold-standard structure.
@@ -44,7 +34,7 @@ metadata:
    adn_skills_creator(operation="validate", skill_path="skills/custom/my-new-skill")
    adn_skills_creator(operation="package", skill_path="skills/custom/my-new-skill", output_dir="dist")
    ```
-5. Record sources, update `metadata.confidence`, and publish.
+5. Record sources, update `the status banner`, and publish.
 
 ## CLI equivalents
 - Scaffold: `uv run am-skill-creator scaffold my-new-skill --output-dir skills/custom`
@@ -60,8 +50,8 @@ metadata:
 
 ## Research status
 - Research complete as of 2025-11-08 (see sources above); rerun checklist quarterly or after Anthropic updates.
-- Document new sources inside `metadata.sources` and [modules/research-checklist.md](modules/research-checklist.md) when revisions are made.
-- Update `metadata.confidence` to 🟢 High after field validation and peer review.
+- Document new sources inside `the Source Log` and [modules/research-checklist.md](modules/research-checklist.md) when revisions are made.
+- Update `the status banner` to 🟢 High after field validation and peer review.
 
 ## Related tools and references
 - `adn_skills_creator` portmanteau – runtime interface for all operations.

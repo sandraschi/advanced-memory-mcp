@@ -1,0 +1,12 @@
+{
+  "name": "physics-fundamentals-tutor",
+  "packaged_at": "2025-11-09T18:18:09.089068Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\physics-fundamentals-tutor",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\physics-fundamentals-tutor.zip",
+  "sha256": "85bdcfdfbe7844922c7a4c8c7f18999c07c38513f13fc9f3454d050fca6ac685",
+  "metadata": {
+    "name": "physics-fundamentals-tutor",
+    "description": "Classical and modern physics expert covering mechanics, electromagnetism, thermodynamics, quantum mechanics, and relativity",
+    "license": "Proprietary"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "complex-analysis-expert",
+  "packaged_at": "2025-11-09T18:18:08.775435Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\complex-analysis-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\complex-analysis-expert.zip",
+  "sha256": "6602f58e9c949ab1663324cdb3fa9c476547b430f0127f76945c083ae5cb4180",
+  "metadata": {
+    "name": "complex-analysis-expert",
+    "description": "Expert in complex functions, contour integration, residue theory, and conformal mappings",
+    "license": "Proprietary"
+  }
+}

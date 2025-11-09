@@ -1,0 +1,12 @@
+{
+  "name": "bread-baking-artisan",
+  "packaged_at": "2025-11-09T18:18:08.636941Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\bread-baking-artisan",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\bread-baking-artisan.zip",
+  "sha256": "941c6821ca71d7afc59f3cfd184725e6ee1e3bd3e22b8cc56c23e2ca5f2dc804",
+  "metadata": {
+    "name": "bread-baking-artisan",
+    "description": "Sourdough and artisan bread expert covering fermentation, scoring, and professional baking techniques",
+    "license": "Proprietary"
+  }
+}

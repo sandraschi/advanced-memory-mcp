@@ -5,6 +5,12 @@ from __future__ import annotations
 import datetime
 from textwrap import dedent
 
+CONFIDENCE_LABELS = {
+    "low": "🔴 Low",
+    "medium": "🟡 Medium",
+    "high": "🟢 High",
+}
+
 
 def today_iso() -> str:
     """Return today's date in ISO format."""
@@ -18,63 +24,66 @@ def render_skill_markdown(
     category: str,
     confidence: str,
     status: str,
+    *,
+    allowed_tools: list[str] | None = None,
+    license_: str | None = "Proprietary",
+    confidence_note: str | None = None,
+    last_validated: str | None = None,
 ) -> str:
-    """Render the SKILL.md body for a modular skill."""
+    """Render the SKILL.md body following Anthropic's minimal YAML contract."""
 
-    metadata_block = {
-        "name": name,
-        "description": description
-        or "[TODO] Concise description of what this skill does and when Claude should load it.",
-        "metadata": {
-            "category": category,
-            "last_validated": today_iso(),
-            "confidence": confidence,
-            "requires_web_research": True,
-            "status": status,
-            "skill_version": "0.2.0-modular",
-            "sources": [
-                "UNVERIFIED: Complete research checklist before relying on this skill."
-            ],
-        },
-    }
+    description_text = (
+        description
+        or "[TODO] Add a concise description explaining what this skill does and when Claude should load it."
+    )
+    allowed_tools = [tool for tool in (allowed_tools or []) if tool]
 
-    metadata_lines = ["---"]
-    metadata_lines.append(f"name: {metadata_block['name']}")
-    metadata_lines.append(f"description: {metadata_block['description']}")
-    metadata_lines.append("metadata:")
-    for key, value in metadata_block["metadata"].items():
-        if isinstance(value, list):
-            metadata_lines.append(f"  {key}:")
-            for entry in value:
-                metadata_lines.append(f"    - {entry}")
-        else:
-            metadata_lines.append(f"  {key}: {value}")
-    metadata_lines.append("---")
+    frontmatter_lines = ["---", f"name: {name}", f"description: {description_text}"]
+    if allowed_tools:
+        frontmatter_lines.append("allowed-tools:")
+        for tool in allowed_tools:
+            frontmatter_lines.append(f"  - {tool}")
+    if license_:
+        frontmatter_lines.append(f"license: {license_}")
+    frontmatter_lines.append("---")
+
+    confidence_label = CONFIDENCE_LABELS.get(confidence.lower(), confidence.title())
+    confidence_line = (
+        f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
+    )
+
+    status_line = status or "⚠️ Requires web research before use"
+    last_validated_line = last_validated or today_iso()
+
+    status_banner = "\n".join(
+        [
+            f"> **Status**: {status_line}  ",
+            f"> **Last validated**: {last_validated_line}  ",
+            f"> **Confidence**: {confidence_line}",
+        ]
+    )
 
     body = f"""# {title}
-> **Status**: ⚠️ Requires web research before use
->
-> **Last validated**: {today_iso()}
->
-> **Confidence**: 🔴 Low — legacy content pending validation
+{status_banner}
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture dated sources.
+2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items before trusting the core guidance.
+3. Load topic-specific modules from [_toc.md](_toc.md) only after validation passes.
+4. Update the status banner above whenever research completes or confidence improves.
 
 ## Module overview
 - [Core guidance](modules/core-guidance.md) — legacy or placeholder instructions preserved for review.
 - [Known gaps](modules/known-gaps.md) — validation tasks and open questions.
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness.
+- [Research checklist](modules/research-checklist.md) — required workflow for keeping the skill current.
 
 ## Research status
-- Fresh web research pending (conversion captured on {today_iso()}).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Category: {category}
+- Fresh research pending (conversion captured on {today_iso()}).
+- Maintain a dated source log inside `modules/research-checklist.md`.
+- Do not rely on this skill until confidence is upgraded to Medium or High.
 """
-    return "\n".join(metadata_lines) + "\n" + dedent(body).strip() + "\n"
+    return "\n".join(frontmatter_lines) + "\n" + dedent(body).strip() + "\n"
 
 
 def render_core_guidance(content: str | None = None) -> str:
@@ -106,13 +115,13 @@ def render_known_gaps() -> str:
 
 ## Critical gaps
 - ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
+- ❌ Source log has not been updated in the research checklist.
 - ❌ Domain expert review pending.
 
 ## TODOs
 1. Complete the research checklist and archive dated sources.
 2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+3. Refresh the status banner in `SKILL.md` once validation is complete.
 
 ## Notes
 - Add additional items here as you uncover domain-specific gaps.
@@ -129,11 +138,14 @@ Follow these steps before trusting this skill:
 
 1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
 2. Run targeted web searches (official docs, release notes, expert articles) dated {today_iso()[:4]} or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
+3. Record each source with title, URL, and access date in the Source Log below.
 4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
+5. Update the status banner in `SKILL.md` (status, last validated, confidence) once validation is complete.
 6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
 7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+
+## Source Log
+- _Add sources here with format:_ `- YYYY-MM-DD — Title (URL)`
 
 > Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
 """

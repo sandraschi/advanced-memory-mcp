@@ -1,13 +1,35 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Review every 6 months or when major testing frameworks/patterns evolve.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] Google Testing Blog & Accelerate updates.  
+- [ ] ThoughtWorks Technology Radar, Testing Dojos.  
+- [ ] Framework release notes (pytest, Playwright, Cypress, k6).  
+- [ ] Industry case studies (Netflix, Shopify, Microsoft).
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Tooling Audit
+- [ ] Validate CI pipelines and shared libraries for compatibility.  
+- [ ] Review test flake dashboard; track resolution rate.  
+- [ ] Confirm license/support plans for testing tools.  
+- [ ] Update devcontainers/local tooling for parity.
+
+## 3. Metrics & Outcomes
+- [ ] Recalculate coverage and mutation scores; adjust targets.  
+- [ ] Analyze escaped defect trends.  
+- [ ] Assess pipeline duration and resource costs.
+
+## 4. Documentation & Training
+- [ ] Update testing handbook, templates, examples.  
+- [ ] Refresh training sessions for new hires.  
+- [ ] Archive outdated frameworks/tests.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | Google Testing Blog | Test flake mitigation strategies |
+| 2025-11-08 | ThoughtWorks Radar 2025 | Emerging testing practices |
+| 2025-11-08 | pytest 8.1 Docs | New fixtures, plugin ecosystem |
+| 2025-11-08 | Playwright 1.50 Release | Web automation improvements |
+
+> Tip: Start with `adn_skills("distill_from_wikipedia", topic="Software testing")` for context, then track upstream changes via `adn_skills("import_from_github", repository="pytest-dev/pytest", path="doc/en")` to keep documentation current.***

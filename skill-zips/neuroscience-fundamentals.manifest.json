@@ -1,0 +1,12 @@
+{
+  "name": "neuroscience-fundamentals",
+  "packaged_at": "2025-11-09T18:18:09.078034Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\sciences\\neuroscience-fundamentals",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\neuroscience-fundamentals.zip",
+  "sha256": "924b89fe9bef1dc746c56f2b26818c3f64b80b945e7110eee8d967df39a63d3f",
+  "metadata": {
+    "name": "neuroscience-fundamentals",
+    "description": "Neuroscience expert covering brain structure, neural signaling, cognition, and neurological disorders",
+    "license": "Proprietary"
+  }
+}

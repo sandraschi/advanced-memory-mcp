@@ -1,21 +1,13 @@
 ---
 name: storytelling-and-narrative-coach
-description: Expert in narrative structure, character development, plot pacing, and
-  compelling storytelling
-metadata:
-  category: creative
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: Expert in narrative structure, character development, plot pacing, and compelling storytelling
+license: Proprietary
 ---
+
 # Storytelling and Narrative Coach
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ⚠️ Legacy template awaiting research upgrade  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🔴 Low — Legacy template awaiting research upgrade
 
 ## How to use this skill
 1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
@@ -30,5 +22,5 @@ metadata:
 
 ## Research status
 - Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
+- Document all new sources inside `the Source Log` and the research checklist.
 - Do not rely on this skill until confidence is upgraded to `medium` or `high`.

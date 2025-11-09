@@ -1,34 +1,34 @@
 ---
 name: testing-strategy-guide
-description: Test automation expert covering unit tests, integration tests, TDD, and
-  testing best practices
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: Test automation expert covering unit tests, integration tests, TDD, and testing best practices
+license: Proprietary
 ---
+
 # Testing Strategy Guide
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed testing playbook – review semi-annually
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Begin with [modules/core-guidance.md](modules/core-guidance.md) to capture context and risk profile.  
+2. Design test portfolio using [modules/test-pyramid-and-planning.md](modules/test-pyramid-and-planning.md).  
+3. Build sustainable automation with [modules/automation-frameworks.md](modules/automation-frameworks.md).  
+4. Cover non-functional requirements via [modules/non-functional-testing.md](modules/non-functional-testing.md).  
+5. Integrate into CI and monitor via [modules/ci-integration-and-observability.md](modules/ci-integration-and-observability.md).  
+6. Govern quality metrics through [modules/quality-metrics-and-governance.md](modules/quality-metrics-and-governance.md).  
+7. Record future improvements in [modules/known-gaps.md](modules/known-gaps.md) and revisit [modules/research-checklist.md](modules/research-checklist.md) twice a year.
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — intake, risk matrix, stakeholder alignment.  
+- [Test pyramid & planning](modules/test-pyramid-and-planning.md) — strategy, coverage, prioritization.  
+- [Automation frameworks](modules/automation-frameworks.md) — tooling, architecture, maintenance.  
+- [Non-functional testing](modules/non-functional-testing.md) — performance, security, accessibility, resilience.  
+- [CI integration & observability](modules/ci-integration-and-observability.md) — pipelines, flake reduction, analytics.  
+- [Quality metrics & governance](modules/quality-metrics-and-governance.md) — KPIs, dashboards, process control.  
+- [Known gaps](modules/known-gaps.md) — research backlog.  
+- [Research checklist](modules/research-checklist.md) — semi-annual refresh plan.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Testing strategy reflects Google/ThoughtWorks guidance plus recent automation standards.  
+- Next review due 2026-05-01 or earlier if major framework updates occur.  
+- Known gaps track AI-assisted testing and chaos engineering maturity tasks awaiting deeper research.

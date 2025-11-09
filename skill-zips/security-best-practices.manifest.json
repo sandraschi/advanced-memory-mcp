@@ -1,0 +1,12 @@
+{
+  "name": "security-best-practices",
+  "packaged_at": "2025-11-09T18:18:09.281258Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\security-best-practices",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\security-best-practices.zip",
+  "sha256": "9d419ed3fd534c1a2c01135dea80f3ca673660cde770d414b894b2752a351263",
+  "metadata": {
+    "name": "security-best-practices-expert",
+    "description": "Application security specialist covering OWASP top 10, secure coding, and vulnerability prevention",
+    "license": "Proprietary"
+  }
+}

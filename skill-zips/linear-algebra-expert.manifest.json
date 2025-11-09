@@ -1,0 +1,12 @@
+{
+  "name": "linear-algebra-expert",
+  "packaged_at": "2025-11-09T18:18:08.815291Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\linear-algebra-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\linear-algebra-expert.zip",
+  "sha256": "36bcbf261f982bfa25d73a6fd3b7e3a7cbeaebf6292a9f0c5eed99cc27e70ea5",
+  "metadata": {
+    "name": "linear-algebra-expert",
+    "description": "Expert in vector spaces, matrices, linear transformations, eigenvalues, and applications to data science and machine learning",
+    "license": "Proprietary"
+  }
+}

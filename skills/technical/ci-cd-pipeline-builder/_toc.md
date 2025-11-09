@@ -2,6 +2,9 @@
 
 | Module | Purpose |
 | --- | --- |
-| [modules/core-guidance.md](modules/core-guidance.md) | Legacy guidance captured prior to fresh research. Review and update after validation. |
+| [modules/core-guidance.md](modules/core-guidance.md) | Pipeline triage, platform choices, and stakeholder alignment. |
+| [modules/pipeline-foundations.md](modules/pipeline-foundations.md) | End-to-end CI/CD architecture patterns for cloud and on-prem. |
+| [modules/quality-gates-and-observability.md](modules/quality-gates-and-observability.md) | Quality controls, test orchestration, release metrics, and telemetry. |
+| [modules/security-and-compliance.md](modules/security-and-compliance.md) | Supply-chain security, SBOM, compliance automation, and audit trails. |
 | [modules/known-gaps.md](modules/known-gaps.md) | Track missing evidence, unresolved questions, and validation tasks. |
-| [modules/research-checklist.md](modules/research-checklist.md) | Required web research workflow before using this skill. |
+| [modules/research-checklist.md](modules/research-checklist.md) | Lightweight refresh workflow to keep guidance current. |

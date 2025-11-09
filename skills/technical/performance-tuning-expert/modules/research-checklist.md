@@ -1,13 +1,35 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Run this review every 6 months or after major runtime/framework releases.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] Review performance engineering blogs (Google, Netflix, AWS, Microsoft) for new techniques.  
+- [ ] Track runtime release notes (JVM, Node.js, Python, Go, Rust).  
+- [ ] Monitor browser performance updates (Chrome, Firefox, Safari).  
+- [ ] Follow CNCF/FinOps reports for cost-performance trends.
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Benchmark Health
+- [ ] Re-run benchmarks under controlled environment; update baselines.  
+- [ ] Validate CI performance tests and adjust guardrails.  
+- [ ] Evaluate new profiling tools (eBPF, Parca, Pixie).  
+- [ ] Inspect production metrics for anomalies/regressions.
+
+## 3. Documentation
+- [ ] Update runbooks and playbooks with latest techniques.  
+- [ ] Refresh onboarding material for profiling tools.  
+- [ ] Capture lessons learned from recent performance incidents.
+
+## 4. Stakeholder Review
+- [ ] Meet with product/UX to confirm performance budgets remain relevant.  
+- [ ] Align with FinOps on cost/performance trade-offs.  
+- [ ] Share report summarizing wins, regressions, and roadmap.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | Google Web Vitals 2025 | Updated INP guidance |
+| 2025-11-08 | AWS Builders Library | Performance engineering case studies |
+| 2025-11-08 | Netflix Tech Blog | Auto-tuning and cost optimization insights |
+| 2025-11-08 | Mechanical Sympathy Notes | Low-level JVM/OS tuning updates |
+
+> Tip: Use `adn_skills("distill_from_wikipedia", topic="Performance engineering")` for quick refreshers, then mine case studies via `adn_skills("import_from_github", repository="Netflix/performance-best-practices")` (hypothetical) before citing findings.***

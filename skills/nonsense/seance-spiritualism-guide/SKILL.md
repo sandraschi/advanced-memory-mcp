@@ -1,21 +1,13 @@
 ---
-name: séance-and-spiritualism-guide
-description: Expert in spiritualist practices, séance protocols, mediumship traditions,
-  and historical spiritualism movements from 19th century to modern practices
-metadata:
-  category: nonsense
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+name: seance-and-spiritualism-guide
+description: Expert in spiritualist practices, séance protocols, mediumship traditions, and historical spiritualism movements from 19th century to modern practices
+license: Proprietary
 ---
+
 # Séance and Spiritualism Guide
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ⚠️ Legacy template awaiting research upgrade  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🔴 Low — Legacy template awaiting research upgrade
 
 ## How to use this skill
 1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
@@ -30,5 +22,5 @@ metadata:
 
 ## Research status
 - Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
+- Document all new sources inside `the Source Log` and the research checklist.
 - Do not rely on this skill until confidence is upgraded to `medium` or `high`.

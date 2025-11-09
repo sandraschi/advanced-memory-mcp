@@ -203,6 +203,28 @@ After 4 minutes:
 
 ---
 
+## ✅ Tool Exerciser Smoke Suite
+
+Need to verify portmanteau tooling without waiting for the full pytest run? Use the dedicated exerciser scripts.
+
+```powershell
+# Full suite: core tools, import/export, skills, health/status
+pwsh ./scripts/testing/run-all-tool-exercisers.ps1
+
+# Lighter run (skip archive exports/imports and network calls)
+pwsh ./scripts/testing/run-all-tool-exercisers.ps1 -SkipHeavy -SkipNetwork -SkipPackaging
+```
+
+What it covers:
+- Core portmanteau operations (`adn_content`, `adn_search`, `adn_navigation`, etc.)
+- Import/export archive flows and error handling
+- Skills management + skill-creator workflows (CRUD, packaging, distillation)
+- Health/status/sync diagnostics
+
+Each Python exerciser lives in `scripts/testing/` if you want to run or extend them individually. The PowerShell wrapper stops at the first failure and surfaces the exact command that broke, making it ideal for on-demand smoke checks or CI gating.
+
+---
+
 ## 🎯 Recommended Workflow
 
 ### During Development (Fast Iteration)

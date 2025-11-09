@@ -1,0 +1,12 @@
+{
+  "name": "git-workflow-specialist",
+  "packaged_at": "2025-11-09T18:18:09.189174Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\git-workflow-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\git-workflow-specialist.zip",
+  "sha256": "3c07b4aead46e97052966c4f038d2e55754a507f16d1e011789de8370e5da043",
+  "metadata": {
+    "name": "git-workflow-specialist",
+    "description": "Git expert covering branching strategies, collaboration, conflict resolution, and best practices",
+    "license": "Proprietary"
+  }
+}

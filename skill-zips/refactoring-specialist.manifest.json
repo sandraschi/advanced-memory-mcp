@@ -1,0 +1,12 @@
+{
+  "name": "refactoring-specialist",
+  "packaged_at": "2025-11-09T18:18:09.264149Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\refactoring-specialist",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\refactoring-specialist.zip",
+  "sha256": "1028aa74ac25e846ef91978f4fe34fcd4ae1d59794aaab5927ed1e6653aca98d",
+  "metadata": {
+    "name": "refactoring-specialist",
+    "description": "Code refactoring expert for improving code quality, reducing technical debt, and safe transformations",
+    "license": "Proprietary"
+  }
+}

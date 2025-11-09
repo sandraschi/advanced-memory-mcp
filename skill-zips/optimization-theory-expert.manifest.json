@@ -1,0 +1,12 @@
+{
+  "name": "optimization-theory-expert",
+  "packaged_at": "2025-11-09T18:18:08.852338Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\mathematics\\optimization-theory-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\optimization-theory-expert.zip",
+  "sha256": "896141c3fd51c870d1b31776d761d6fa16ce464a8c33fe0368c50fa485eb682b",
+  "metadata": {
+    "name": "optimization-theory-expert",
+    "description": "Expert in optimization methods covering linear programming, convex optimization, gradient methods, and constrained optimization",
+    "license": "Proprietary"
+  }
+}

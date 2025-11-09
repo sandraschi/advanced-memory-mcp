@@ -86,6 +86,7 @@ def scaffold_skill(
             category=category,
             confidence=confidence,
             status="Draft scaffold – complete research checklist before use",
+            confidence_note="Legacy content pending validation",
         ),
         encoding="utf-8",
     )

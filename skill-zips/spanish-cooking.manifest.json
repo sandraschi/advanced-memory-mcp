@@ -1,0 +1,12 @@
+{
+  "name": "spanish-cooking",
+  "packaged_at": "2025-11-09T18:18:09.100185Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\spanish-cooking",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\spanish-cooking.zip",
+  "sha256": "e0d1d4b038a5f9a32e862e3712bd48498665e777559cf5e9b78d83b9f768cd60",
+  "metadata": {
+    "name": "spanish-cooking-expert",
+    "description": "Comprehensive expertise in Spanish cuisine, from traditional tapas to modern paella techniques, regional specialties, and authentic ingredient selection",
+    "license": "Proprietary"
+  }
+}

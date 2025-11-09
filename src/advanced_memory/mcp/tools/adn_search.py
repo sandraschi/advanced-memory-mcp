@@ -4,6 +4,7 @@ This tool consolidates all search operations: notes, obsidian, joplin, notion, e
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import re
 from typing import Literal
 
 from loguru import logger
@@ -124,6 +125,72 @@ async def adn_search(
         page_size = results_per_page
         logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
 
+    original_operation = operation
+    normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
+    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    alias_map = {
+        "note": "notes",
+        "notesearch": "notes",
+        "searchnotes": "notes",
+        "search": "notes",
+        "text": "notes",
+        "plaintext": "notes",
+        "title": "notes",
+        "permalink": "notes",
+        "tags": "notes",
+        "tag": "notes",
+        "files": "notes",
+        "file": "notes",
+        "wikilink": "notes",
+        "links": "notes",
+        "frontmatter": "notes",
+    }
+    operation = alias_map.get(normalized_operation, normalized_operation)
+
+    search_type_overrides = {
+        "title": "title",
+        "permalink": "permalink",
+        "tag": "tag",
+        "tags": "tag",
+        "file": "file",
+        "files": "file",
+        "link": "link",
+        "links": "link",
+        "frontmatter": "frontmatter",
+        "wikilink": "link",
+        "text": "text",
+        "plaintext": "text",
+    }
+    entity_types_override: list[str] | None = None
+
+    if operation == "notes" and normalized_operation in search_type_overrides:
+        override_type = search_type_overrides[normalized_operation]
+        applied = False
+        if normalized_operation in ("text", "plaintext") and search_type not in (None, "text"):
+            logger.info(
+                "adn_search_text_no_override",
+                original_operation=original_operation,
+                normalized_operation=normalized_operation,
+                requested_search_type=search_type,
+            )
+        else:
+            search_type = override_type
+            applied = True
+
+        if applied:
+            logger.debug(
+                "adn_search_operation_alias_applied",
+                original_operation=original_operation,
+                normalized_operation=normalized_operation,
+                resolved_operation=operation,
+                search_type=search_type,
+            )
+            if normalized_operation in ("text", "plaintext", "title", "permalink"):
+                entity_types_override = ["entity", "observation"]
+
+    if entity_types_override and not entity_types:
+        entity_types = entity_types_override
+
     logger.info(f"MCP tool call tool=adn_search operation={operation} query={query}")
 
     # Route to appropriate operation
@@ -178,7 +245,7 @@ async def _notes_search(
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search import search_notes
 
-    result = await search_notes(
+    result = await search_notes.fn(
         query, page, page_size, "text", types, entity_types, after_date, before_date, tags, project
     )
 

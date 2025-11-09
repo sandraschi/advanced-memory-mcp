@@ -159,7 +159,7 @@ async def call_put(
     headers: HeaderTypes | None = None,
     cookies: CookieTypes | None = None,
     auth: AuthTypes | UseClientDefault = USE_CLIENT_DEFAULT,
-    follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,
+    follow_redirects: bool | UseClientDefault = True,
     timeout: TimeoutTypes | UseClientDefault = USE_CLIENT_DEFAULT,
     extensions: RequestExtensions | None = None,
 ) -> Response:
@@ -382,6 +382,7 @@ async def call_post(
     logger.debug(f"Calling POST '{url}'")
     error_message = None
     try:
+        follow_redirects_value = True if isinstance(follow_redirects, UseClientDefault) else follow_redirects
         response = await client.post(
             url=url,
             content=content,
@@ -392,11 +393,22 @@ async def call_post(
             headers=headers,
             cookies=cookies,
             auth=auth,
-            follow_redirects=follow_redirects,
+            follow_redirects=follow_redirects_value,
             timeout=timeout,
             extensions=extensions,
         )
-        logger.debug(f"response: {response.json()}")
+        content_type = response.headers.get("content-type", "")
+        response_payload: typing.Any
+        if content_type and "application/json" in content_type.lower():
+            try:
+                response_payload = response.json()
+            except ValueError:
+                response_payload = None
+        else:
+            response_payload = response.text or None
+
+        if response_payload is not None:
+            logger.debug(f"POST {url} response body: {response_payload}")
 
         if response.is_success:
             return response
@@ -404,11 +416,13 @@ async def call_post(
         # Handle different status codes differently
         status_code = response.status_code
         # get the message if available
-        response_data = response.json()
-        if isinstance(response_data, dict) and "detail" in response_data:
+        response_data = response_payload if isinstance(response_payload, dict) else None
+        if response_data and "detail" in response_data:
             error_message = response_data["detail"]
         else:
             error_message = get_error_message(status_code, url, "POST")
+            if isinstance(response_payload, str) and response_payload.strip():
+                error_message = f"{error_message}. Response: {response_payload.strip()}"
 
         # Log at appropriate level based on status code
         if 400 <= status_code < 500:
@@ -426,6 +440,16 @@ async def call_post(
         return response  # This line will never execute, but it satisfies the type checker  # pragma: no cover
 
     except HTTPStatusError as e:
+        status_code = e.response.status_code
+        if not error_message:
+            try:
+                response_data = e.response.json()
+                if isinstance(response_data, dict) and "detail" in response_data:
+                    error_message = response_data["detail"]
+                else:
+                    error_message = get_error_message(status_code, url, "POST")
+            except Exception:
+                error_message = get_error_message(status_code, url, "POST")
         raise ToolError(error_message) from e
 
 

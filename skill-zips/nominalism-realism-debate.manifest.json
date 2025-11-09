@@ -1,0 +1,12 @@
+{
+  "name": "nominalism-realism-debate",
+  "packaged_at": "2025-11-09T18:18:09.010265Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\philosophy\\nominalism-realism-debate",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\nominalism-realism-debate.zip",
+  "sha256": "399f882e4a9f4ece8f0d16218b61f052c9d28f42aad47a97b141261a62c1c1fc",
+  "metadata": {
+    "name": "nominalism-vs-realism-debate-expert",
+    "description": "Expert in the medieval problem of universals, covering Platonic realism, Aristotelian moderate realism, and Ockhamist nominalism with modern analytical perspectives",
+    "license": "Proprietary"
+  }
+}

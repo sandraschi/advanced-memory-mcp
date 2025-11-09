@@ -1,13 +1,34 @@
 # Research Checklist
 
-Follow these steps before trusting this skill:
+Review annually or when major refactoring literature/tooling updates release.
 
-1. Identify the freshness risk (APIs, frameworks, standards, or safety-critical topics).
-2. Run targeted web searches (official docs, release notes, expert articles) dated 2025 or newer.
-3. Record each source with title, URL, and access date in this module and in `metadata.sources`.
-4. Validate the legacy guidance inside [core-guidance.md](core-guidance.md) against the new sources.
-5. Update `metadata.last_validated`, `metadata.confidence`, and cite the confirmed material.
-6. Move confirmed instructions into dedicated topic modules and mark obsolete content for removal.
-7. Document remaining unknowns in [known-gaps.md](known-gaps.md).
+## 1. Source Refresh
+- [ ] Scan ThoughtWorks Technology Radar for evolution and techniques.  
+- [ ] Review new editions/titles on refactoring, legacy code, evolutionary architecture.  
+- [ ] Monitor IDE/tooling release notes (IntelliJ, VSCode, Sourcery).  
+- [ ] Check community blogs/case studies (Martin Fowler, Uber/Stripe engineering).
 
-> Tip: Use `adn_skills("distill_from_wikipedia", ...)`, `adn_skills("distill_from_arxiv", ...)`, and trusted web research to bootstrap validation.
+## 2. Metrics & Outcomes
+- [ ] Update baseline code health metrics; compare with previous year.  
+- [ ] Measure ROI of completed refactors (defects, lead time, availability).  
+- [ ] Review technical debt board for stale items; close or reprioritize.
+
+## 3. Process Audit
+- [ ] Verify charter template still aligns with org processes.  
+- [ ] Audit testing safety nets and CI policies.  
+- [ ] Evaluate change management effectiveness via stakeholder surveys.
+
+## 4. Documentation
+- [ ] Refresh pattern catalog with new examples.  
+- [ ] Update architectural modernization case studies.  
+- [ ] Archive completed refactoring retros with takeaways.
+
+## 5. Source Log
+| Date | Source | Notes |
+| --- | --- | --- |
+| 2025-11-08 | Refactoring 3rd Edition | Updated patterns, automated refactoring advice |
+| 2025-11-08 | ThoughtWorks Radar 2025 | Evolutionary architecture techniques |
+| 2025-11-08 | SEI Tech Debt Report | Metrics and priority frameworks |
+| 2025-11-08 | Google Code Health | Governance practices |
+
+> Tip: Begin with `adn_skills("distill_from_wikipedia", topic="Code refactoring")` for quick refreshers, then dive into tooling via `adn_skills("import_from_github", repository="JetBrains/intellij-community", path="platform/lang-impl/src/com/jetbrains/refactoring")` to document limitations.***

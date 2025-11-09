@@ -1,0 +1,12 @@
+{
+  "name": "mythology-archetype-expert",
+  "packaged_at": "2025-11-09T18:18:08.923793Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\nonsense\\mythology-archetype-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\mythology-archetype-expert.zip",
+  "sha256": "eb7edc6ff200356b4a95cecc9ec289ac0c2b4f30f32e6bcb18095195d5d2bd8f",
+  "metadata": {
+    "name": "mythology-and-archetype-expert",
+    "description": "Comparative mythology expert covering world mythologies, archetypal patterns, and Joseph Campbell's monomyth",
+    "license": "Proprietary"
+  }
+}

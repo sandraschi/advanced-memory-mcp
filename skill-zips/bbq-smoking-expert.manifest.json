@@ -1,0 +1,12 @@
+{
+  "name": "bbq-smoking-expert",
+  "packaged_at": "2025-11-09T18:18:08.631400Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\culinary\\bbq-smoking-expert",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\bbq-smoking-expert.zip",
+  "sha256": "a915c32dccfc50b8971668d03331cad88c6e53ba858a839dc7733f71635d7422",
+  "metadata": {
+    "name": "bbq-and-smoking-expert",
+    "description": "Master of low-and-slow BBQ, smoking techniques, rubs, and regional American BBQ styles",
+    "license": "Proprietary"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "docker-kubernetes-pro",
+  "packaged_at": "2025-11-09T18:18:09.174522Z",
+  "source_path": "D:\\Dev\\repos\\advanced-memory-mcp\\skills\\technical\\docker-kubernetes-pro",
+  "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\docker-kubernetes-pro.zip",
+  "sha256": "4af6562da947edfe398bc851a45d62c7f04d4d7d3e20a4fdb05be35000c30547",
+  "metadata": {
+    "name": "docker-and-kubernetes-pro",
+    "description": "Container orchestration expert for Docker, Kubernetes, and cloud-native deployments",
+    "license": "Proprietary"
+  }
+}

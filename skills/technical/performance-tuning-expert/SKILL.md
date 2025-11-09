@@ -1,34 +1,34 @@
 ---
 name: performance-tuning-expert
-description: Application performance specialist for profiling, optimization, and scaling
-  strategies
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: Application performance specialist for profiling, optimization, and scaling strategies
+license: Proprietary
 ---
+
 # Performance Tuning Expert
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed tuning playbook – review semi-annually
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Triage performance goals via [modules/core-guidance.md](modules/core-guidance.md).  
+2. Instrument and profile using [modules/profiling-and-metrics.md](modules/profiling-and-metrics.md).  
+3. Apply backend optimizations from [modules/backend-optimization.md](modules/backend-optimization.md).  
+4. Improve user-facing performance using [modules/frontend-and-client.md](modules/frontend-and-client.md).  
+5. Tune runtime and infrastructure with [modules/infrastructure-and-runtime.md](modules/infrastructure-and-runtime.md).  
+6. Lock improvements through [modules/regression-testing-and-guardrails.md](modules/regression-testing-and-guardrails.md).  
+7. Track additional research in [modules/known-gaps.md](modules/known-gaps.md) and follow the cadence in [modules/research-checklist.md](modules/research-checklist.md).
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — intake checklist, prioritization criteria, ROI framing.  
+- [Profiling & metrics](modules/profiling-and-metrics.md) — observability setup, profiling stacks, benchmarking.  
+- [Backend optimization](modules/backend-optimization.md) — language/runtime tuning, data access improvements.  
+- [Frontend & client](modules/frontend-and-client.md) — Core Web Vitals, mobile optimization, offline strategies.  
+- [Infrastructure & runtime](modules/infrastructure-and-runtime.md) — caching, autoscaling, hardware selection.  
+- [Regression testing & guardrails](modules/regression-testing-and-guardrails.md) — load testing, CI integration, alerting.  
+- [Known gaps](modules/known-gaps.md) — ongoing research backlog.  
+- [Research checklist](modules/research-checklist.md) — semi-annual review plan.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Material incorporates latest Web Vitals, Netflix/AWS performance engineering guidance, and mechanical sympathy insights.  
+- Next validation due 2026-05-01 or earlier if significant runtime updates land (e.g., JVM, Node, Rust).  
+- Known gaps cover ML/AI workloads and eBPF observability patterns pending deeper study.

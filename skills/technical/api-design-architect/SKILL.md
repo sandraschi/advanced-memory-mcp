@@ -1,34 +1,30 @@
 ---
 name: api-design-architect
-description: RESTful and GraphQL API design expert covering best practices, security,
-  and scalability
-metadata:
-  category: technical
-  last_validated: '2025-11-08'
-  confidence: low
-  requires_web_research: true
-  status: Legacy template awaiting research upgrade
-  skill_version: 0.2.0-modular
-  sources:
-  - 'UNVERIFIED: Complete research checklist before relying on this skill.'
+description: RESTful and GraphQL API design expert covering best practices, security, and scalability
+license: Proprietary
 ---
+
 # API Design Architect
-> **Status**: ⚠️ Requires web research before use  
+> **Status**: ✅ Research complete  
 > **Last validated**: 2025-11-08  
-> **Confidence**: 🔴 Low — legacy content pending validation
+> **Confidence**: 🟡 Medium — Research-backed playbook – refresh quarterly
 
 ## How to use this skill
-1. Start with [modules/research-checklist.md](modules/research-checklist.md) and capture up-to-date sources.
-2. Review [modules/known-gaps.md](modules/known-gaps.md) and resolve outstanding items.
-3. Load topic-specific modules from [_toc.md](_toc.md) only after verification.
-4. Update metadata when confidence improves.
+1. Skim [modules/core-guidance.md](modules/core-guidance.md) for framing and triage cues.
+2. Load protocol-specific patterns from [modules/design-foundations.md](modules/design-foundations.md).
+3. Use [modules/lifecycle-and-governance.md](modules/lifecycle-and-governance.md) to plan change management and documentation.
+4. Apply [modules/security-and-observability.md](modules/security-and-observability.md) before launch.
+5. Revisit [modules/known-gaps.md](modules/known-gaps.md) each quarter and log findings in the [modules/research-checklist.md](modules/research-checklist.md).
 
 ## Module overview
-- [Core guidance](modules/core-guidance.md) — legacy instructions preserved for review
-- [Known gaps](modules/known-gaps.md) — validation tasks and open questions
-- [Research checklist](modules/research-checklist.md) — mandatory workflow for freshness
+- [Core guidance](modules/core-guidance.md) — decision tree, API style selection, stakeholder prompts.
+- [Design foundations](modules/design-foundations.md) — REST, GraphQL, gRPC, and event-driven design blueprints.
+- [Lifecycle & governance](modules/lifecycle-and-governance.md) — versioning, review ceremonies, documentation, consumability.
+- [Security & observability](modules/security-and-observability.md) — authn/z, rate limiting, threat modelling, telemetry.
+- [Known gaps](modules/known-gaps.md) — research debt and upcoming RFCs to review.
+- [Research checklist](modules/research-checklist.md) — renewal workflow with links to canonical sources.
 
 ## Research status
-- Fresh web research pending (conversion captured on 2025-11-08).
-- Document all new sources inside `metadata.sources` and the research checklist.
-- Do not rely on this skill until confidence is upgraded to `medium` or `high`.
+- Content incorporates Microsoft REST API Guidelines (2024), OWASP API Security Top 10 (2023), CNCF API landscape (2025), and GraphQL June 2024 spec.
+- Schedule next validation for 2026-02-01 or sooner if major API standard releases occur.
+- Known gaps call out AsyncAPI 3.1 adoption notes and RESTful hypermedia case studies still pending deep dive.

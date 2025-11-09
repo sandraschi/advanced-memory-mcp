@@ -1,14 +1,15 @@
 # Known Gaps & Validation Tasks
 
-## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
-- ❌ Authoritative sources are missing from `metadata.sources`.
-- ❌ Domain expert review pending.
+## Open Items
+- ⏳ Evaluate AI-assisted refactoring tools (GitHub Copilot Refactor, Sourcery AI) and document governance.  
+- ⏳ Research socio-technical metrics (code churn, team radius) for prioritizing refactors.  
+- ⏳ Collect case studies on refactoring data-intensive pipelines.
 
 ## TODOs
-1. Complete the research checklist and archive dated sources.
-2. Update `modules/core-guidance.md` with verified guidance and confidence markers.
-3. Adjust `metadata.confidence` once validation is complete.
+1. Build template for refactoring ROI calculations (time saved, defects reduced).  
+2. Create playbook for cross-team refactoring initiatives in large orgs.  
+3. Document post-refactor monitoring to ensure behavior stability.
 
 ## Notes
-- Add additional items here as you uncover domain-specific gaps.
+- Upgrade confidence to **high** once AI tooling guidance and socio-technical metrics integration are validated.  
+- Track new literature on evolutionary database design and apply updates to architecture module.***
