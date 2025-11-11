@@ -1,5 +1,6 @@
 """Search tools for Advanced Memory MCP server."""
 
+import re
 from textwrap import dedent
 
 from loguru import logger
@@ -9,6 +10,43 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchItemType, SearchQuery, SearchResponse
+
+_TAG_FILTER_PATTERN = re.compile(
+    r"(?<!\S)tag:(?P<value>\"[^\"]+\"|'[^']+'|[^\s]+)",
+    flags=re.IGNORECASE,
+)
+
+
+def _extract_tags_from_query_string(query: str) -> tuple[str, list[str]]:
+    """Extract tag filters (tag:foo) from a free-form query string."""
+    if not query:
+        return "", []
+
+    extracted_tags: list[str] = []
+
+    def _replacement(match: re.Match[str]) -> str:
+        raw_value = match.group("value") or ""
+        tag_value = raw_value.strip().strip(",;")
+
+        if (
+            len(tag_value) >= 2
+            and tag_value[0] in ("'", '"')
+            and tag_value[-1] == tag_value[0]
+        ):
+            tag_value = tag_value[1:-1]
+
+        tag_value = tag_value.strip().strip(",;")
+        tag_value = tag_value.lstrip("#")
+
+        if tag_value:
+            extracted_tags.append(tag_value)
+
+        # Replace with single space to avoid concatenating words
+        return " "
+
+    cleaned_query = _TAG_FILTER_PATTERN.sub(_replacement, query)
+    cleaned_query = " ".join(cleaned_query.split())
+    return cleaned_query, extracted_tags
 
 
 def _format_search_results_as_markdown(
@@ -250,6 +288,8 @@ async def search_notes(
     before_date: str | None = None,
     tags: list[str] | None = None,
     projects: str | None = None,
+    project: str | None = None,
+    search_all_projects: bool = False,
 ) -> SearchResponse | str:
     """Search across all content in the knowledge base with comprehensive syntax support.
 
@@ -320,6 +360,11 @@ async def search_notes(
             - "ALL": searches across ALL projects and merges results
             - "ALL_EXCEPT:proj1,proj2": searches all projects except specified ones
             Results from multiple projects include project name prefix for clarity.
+        project: Backwards-compatible alias for `projects` (single project name).
+            - Ignored if `projects` is provided.
+        search_all_projects: When True, searches across every available project.
+            - Mutually exclusive with the projects parameter
+            - Equivalent to projects="ALL"
 
     Returns:
         SearchResponse with results and pagination info, or helpful error guidance if search fails
@@ -391,20 +436,66 @@ async def search_notes(
             after_date="2024-01-01"
         )
     """
+    # Normalize query and extract inline tag filters when applicable
+    raw_query = (query or "").strip()
+    inline_tags: list[str] = []
+
+    parse_tag_filters = search_type in (None, "", "text", "tag")
+    if parse_tag_filters and raw_query:
+        raw_query, inline_tags = _extract_tags_from_query_string(raw_query)
+
+    # Combine explicit tags parameter with inline tag filters
+    combined_tags: list[str] = []
+    seen_tag_keys: set[str] = set()
+
+    def _add_tag_value(value: str) -> None:
+        normalized_value = str(value).strip()
+        if not normalized_value:
+            return
+
+        normalized_value = normalized_value.lstrip("#")
+        tag_key = normalized_value.lower()
+
+        if tag_key in seen_tag_keys:
+            return
+
+        seen_tag_keys.add(tag_key)
+        combined_tags.append(normalized_value)
+
+    if tags:
+        for explicit_tag in tags:
+            _add_tag_value(explicit_tag)
+
+    for inline_tag in inline_tags:
+        _add_tag_value(inline_tag)
+
+    if search_type == "tag" and not combined_tags and raw_query:
+        _add_tag_value(raw_query)
+        raw_query = ""
+
     # Create a SearchQuery object based on the parameters
     search_query = SearchQuery()
 
+    search_term = raw_query.strip()
+
     # Set the appropriate search field based on search_type
     if search_type == "text":
-        search_query.text = query
+        if search_term:
+            search_query.text = search_term
     elif search_type == "title":
-        search_query.title = query
-    elif search_type == "permalink" and "*" in query:
-        search_query.permalink_match = query
+        if search_term:
+            search_query.title = search_term
+    elif search_type == "permalink" and "*" in search_term:
+        search_query.permalink_match = search_term
     elif search_type == "permalink":
-        search_query.permalink = query
+        if search_term:
+            search_query.permalink = search_term
+    elif search_type == "tag":
+        # Tags handled separately; no text criteria required
+        pass
     else:
-        search_query.text = query  # Default to text search
+        if search_term:
+            search_query.text = search_term  # Default to text search when not empty
 
     # Add optional filters if provided
     if entity_types:
@@ -435,8 +526,26 @@ async def search_notes(
         search_query.after_date = after_date
     if before_date:
         search_query.before_date = before_date
-    if tags:
-        search_query.tags = tags
+    if combined_tags:
+        search_query.tags = combined_tags
+
+    if project and not projects:
+        projects = project
+
+    if search_all_projects and projects:
+        return dedent(
+            """# Error: Conflicting Parameters
+
+Cannot use both `projects` and `search_all_projects=True` in the same request.
+
+**How to fix:**
+- Set `search_all_projects=True` without specifying `projects`
+- Or remove `search_all_projects` and provide a specific project list
+"""
+        ).strip()
+
+    if search_all_projects:
+        projects = "ALL"
 
     # Parse projects parameter to determine which projects to search
     from advanced_memory.schemas.project_info import ProjectList
@@ -512,11 +621,11 @@ async def search_notes(
 
         # Format as markdown string for MCP compliance
         search_response = SearchResponse(
-            results=all_results[:results_per_page],  # Respect page size
+            results=all_results[:results_per_page],
             current_page=page,
             page_size=results_per_page,
         )
-        return _format_search_results_as_markdown(search_response, query, searched_projects)
+        return search_response
 
     # Single project search (default behavior)
     active_project = get_active_project(
@@ -541,8 +650,7 @@ async def search_notes(
             # Don't treat this as an error, but the user might want guidance
             # We return the empty result as normal - the user can decide if they need help
 
-        # Format as markdown string for MCP compliance
-        return _format_search_results_as_markdown(result, query, [active_project.name])
+        return result
 
     except Exception as e:
         logger.error(f"Search failed for query '{query}': {e}")

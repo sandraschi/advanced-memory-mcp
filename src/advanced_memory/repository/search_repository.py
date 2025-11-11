@@ -456,10 +456,35 @@ class SearchRepository:
 
         # Handle tag filter (notes must have ALL specified tags)
         if tags:
+            seen_tag_keys: set[str] = set()
             for idx, tag in enumerate(tags):
+                normalized_tag = str(tag).strip()
+                if not normalized_tag:
+                    continue
+
+                normalized_tag = normalized_tag.lstrip("#")
+                tag_key = normalized_tag.lower()
+
+                if tag_key in seen_tag_keys:
+                    continue
+                seen_tag_keys.add(tag_key)
+
                 tag_param = f"tag_{idx}"
-                params[tag_param] = f"%{tag}%"
-                conditions.append(f"json_extract(metadata, '$.tags') LIKE :{tag_param}")
+                tag_like_param = f"tag_like_{idx}"
+
+                params[tag_param] = normalized_tag
+                params[tag_like_param] = f"%{normalized_tag}%"
+
+                conditions.append(
+                    f"""(
+                        EXISTS (
+                            SELECT 1
+                            FROM json_each(search_index.metadata, '$.tags')
+                            WHERE lower(json_each.value) = lower(:{tag_param})
+                        )
+                        OR content_stems LIKE :{tag_like_param}
+                    )"""
+                )
 
         # Always filter by project_id
         params["project_id"] = self.project_id

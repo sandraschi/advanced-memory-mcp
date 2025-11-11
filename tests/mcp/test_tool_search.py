@@ -5,16 +5,32 @@ from unittest.mock import patch
 
 import pytest
 
-from advanced_memory.mcp.tools import write_note
+from advanced_memory.mcp.tools import adn_content
 from advanced_memory.mcp.tools.search import _format_search_error_response, search_notes
 from advanced_memory.schemas.search import SearchResponse
+
+
+async def create_note(
+    title: str,
+    folder: str,
+    content: str,
+    tags: list[str] | None = None,
+) -> str:
+    """Helper to create notes via the adn_content portmanteau tool."""
+    return await adn_content.fn(
+        operation="write",
+        identifier=title,
+        folder=folder,
+        content=content,
+        tags=tags,
+    )
 
 
 @pytest.mark.asyncio
 async def test_search_text(client):
     """Test basic search functionality."""
     # Create a test note
-    result = await write_note.fn(
+    result = await create_note(
         title="Test Search Note",
         folder="test",
         content="# Test\nThis is a searchable test note",
@@ -36,10 +52,72 @@ async def test_search_text(client):
 
 
 @pytest.mark.asyncio
+async def test_search_tag_filter_inline(client):
+    """Search notes using inline tag: syntax."""
+    # Create notes with and without the target tag
+    await create_note(
+        title="Important Inline Tag Note",
+        folder="search-tags",
+        content="# Tag Inline\nThis note should match inline tag filters.",
+        tags=["important", "search"],
+    )
+    await create_note(
+        title="Non Matching Tag Note",
+        folder="search-tags",
+        content="# Tag Inline\nThis note should not match inline tag filters.",
+        tags=["optional"],
+    )
+
+    response = await search_notes.fn(query="tag:important")
+
+    assert isinstance(response, SearchResponse)
+    assert any(r.permalink == "search-tags/important-inline-tag-note" for r in response.results)
+    assert not any(r.permalink == "search-tags/non-matching-tag-note" for r in response.results)
+
+
+@pytest.mark.asyncio
+async def test_search_tag_filter_with_text(client):
+    """Search notes using inline tag filter combined with text criteria."""
+    await create_note(
+        title="Important Status Update",
+        folder="search-tags",
+        content="# Weekly Status\nStatus update and planning notes.",
+        tags=["important", "meeting"],
+    )
+    await create_note(
+        title="Important Without Keyword",
+        folder="search-tags",
+        content="# Random\nThis note lacks the keyword.",
+        tags=["important", "random"],
+    )
+
+    response = await search_notes.fn(query="tag:important status")
+
+    assert isinstance(response, SearchResponse)
+    assert any(r.permalink == "search-tags/important-status-update" for r in response.results)
+    assert not any(r.permalink == "search-tags/important-without-keyword" for r in response.results)
+
+
+@pytest.mark.asyncio
+async def test_search_tag_parameter_filter(client):
+    """Search notes using the tags parameter."""
+    await create_note(
+        title="Priority Review Note",
+        folder="search-tags",
+        content="# Review\nThis note requires review.",
+        tags=["priority", "important"],
+    )
+
+    response = await search_notes.fn(query="review", tags=["priority"])
+
+    assert isinstance(response, SearchResponse)
+    assert any(r.permalink == "search-tags/priority-review-note" for r in response.results)
+
+@pytest.mark.asyncio
 async def test_search_title(client):
     """Test basic search functionality."""
     # Create a test note
-    result = await write_note.fn(
+    result = await create_note(
         title="Test Search Note",
         folder="test",
         content="# Test\nThis is a searchable test note",
@@ -64,7 +142,7 @@ async def test_search_title(client):
 async def test_search_permalink(client):
     """Test basic search functionality."""
     # Create a test note
-    result = await write_note.fn(
+    result = await create_note(
         title="Test Search Note",
         folder="test",
         content="# Test\nThis is a searchable test note",
@@ -89,7 +167,7 @@ async def test_search_permalink(client):
 async def test_search_permalink_match(client):
     """Test basic search functionality."""
     # Create a test note
-    result = await write_note.fn(
+    result = await create_note(
         title="Test Search Note",
         folder="test",
         content="# Test\nThis is a searchable test note",
@@ -114,7 +192,7 @@ async def test_search_permalink_match(client):
 async def test_search_pagination(client):
     """Test basic search functionality."""
     # Create a test note
-    result = await write_note.fn(
+    result = await create_note(
         title="Test Search Note",
         folder="test",
         content="# Test\nThis is a searchable test note",
@@ -139,7 +217,7 @@ async def test_search_pagination(client):
 async def test_search_with_type_filter(client):
     """Test search with entity type filter."""
     # Create test content
-    await write_note.fn(
+    await create_note(
         title="Entity Type Test",
         folder="test",
         content="# Test\nFiltered by type",
@@ -161,7 +239,7 @@ async def test_search_with_type_filter(client):
 async def test_search_with_entity_type_filter(client):
     """Test search with entity type filter."""
     # Create test content
-    await write_note.fn(
+    await create_note(
         title="Entity Type Test",
         folder="test",
         content="# Test\nFiltered by type",
@@ -183,7 +261,7 @@ async def test_search_with_entity_type_filter(client):
 async def test_search_with_date_filter(client):
     """Test search with date filter."""
     # Create test content
-    await write_note.fn(
+    await create_note(
         title="Recent Note",
         folder="test",
         content="# Test\nRecent content",
@@ -258,10 +336,65 @@ class TestSearchErrorFormatting:
 
 
 @pytest.mark.asyncio
+async def test_search_e2e_write_search_delete(client):
+    """End-to-end write → search → delete flow with butterfly tags."""
+    title = "Butterfly Lifecycle Notes"
+    folder = "z-tests/butterflies"
+    content = "\n".join(
+        [
+            "# Butterfly Lifecycle",
+            "",
+            "Butterflies undergo complete metamorphosis.",
+            "",
+            "## Stages",
+            "- Egg",
+            "- Larva",
+            "- Pupa",
+            "- Adult butterfly",
+        ]
+    )
+    tags = ["insect", "butterfly"]
+
+    # Write note and verify creation
+    create_result = await adn_content.fn(
+        operation="write",
+        identifier=title,
+        folder=folder,
+        content=content,
+        tags=tags,
+    )
+    assert "Created note" in create_result
+
+    # Search by title
+    title_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
+    assert isinstance(title_response, SearchResponse)
+    assert any(r.permalink.endswith("butterfly-lifecycle-notes") for r in title_response.results)
+
+    # Search by content keyword
+    content_response = await search_notes.fn(query="metamorphosis")
+    assert isinstance(content_response, SearchResponse)
+    assert any("Butterfly Lifecycle" in r.title for r in content_response.results)
+
+    # Search by tag
+    tag_response = await search_notes.fn(query="tag:butterfly")
+    assert isinstance(tag_response, SearchResponse)
+    assert any("Butterfly Lifecycle" in r.title for r in tag_response.results)
+
+    # Delete the note
+    delete_result = await adn_content.fn(operation="delete", identifier=title)
+    assert delete_result is True
+
+    # Confirm no results
+    post_delete_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
+    assert isinstance(post_delete_response, SearchResponse)
+    assert not any(r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results)
+
+
+@pytest.mark.asyncio
 async def test_search_all_projects(client):
     """Test search across all projects."""
     # Create test notes in current project
-    await write_note.fn(
+    await create_note(
         title="Multi-Project Test Note",
         folder="test",
         content="# Test\nThis should be found across projects",

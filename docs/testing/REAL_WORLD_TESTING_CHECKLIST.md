@@ -326,7 +326,7 @@ adn_search("joplin", query="test", source_path="/path/to/export/")
 - [ ] Basic content management (write, read, edit)
 - [ ] Project creation and switching
 - [ ] Database creation and isolation
-- [ ] Search functionality
+- [x] Search functionality *(automated end-to-end: write → title/content/tag search → delete → verify missing, `test_search_e2e_write_search_delete`, 2025-11-11)*
 - [ ] Claude Skills export (already tested)
 - [ ] Claude Skills import (already tested)
 
@@ -414,7 +414,7 @@ adn_search("joplin", query="test", source_path="/path/to/export/")
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: November 11, 2025  
 **Next Review**: Before v1.0.0 final release
 
 **Maintainer Note**: This is our accountability document. Mark features as tested only after real-world verification. Public repo = public reputation.

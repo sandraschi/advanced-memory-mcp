@@ -255,6 +255,14 @@ class SearchService:
 
         entity_content_stems = "\n".join(p for p in content_stems if p and p.strip())
 
+        # Build metadata including tags for tag-based search filtering
+        metadata: dict[str, str | list[str]] = {
+            "entity_type": entity.entity_type,
+        }
+
+        if entity_tags:
+            metadata["tags"] = entity_tags
+
         # Index entity
         await self.repository.index_item(
             SearchIndexRow(
@@ -266,9 +274,7 @@ class SearchService:
                 permalink=entity.permalink,
                 file_path=entity.file_path,
                 entity_id=entity.id,
-                metadata={
-                    "entity_type": entity.entity_type,
-                },
+                metadata=metadata,
                 created_at=entity.created_at,
                 updated_at=entity.updated_at,
                 project_id=entity.project_id,
