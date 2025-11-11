@@ -11,6 +11,7 @@ from advanced_memory.mcp.tools import (
     adn_export,
     adn_import,
     adn_knowledge,
+    adn_llm,
     adn_navigation,
     adn_project,
     adn_search,
@@ -26,6 +27,7 @@ adn_import_fn = adn_import.fn
 adn_search_fn = adn_search.fn
 adn_knowledge_fn = adn_knowledge.fn
 adn_navigation_fn = adn_navigation.fn
+adn_llm_fn = adn_llm.fn
 
 
 class TestPortmanteauToolRegistration:
@@ -79,6 +81,13 @@ class TestPortmanteauToolRegistration:
         assert adn_navigation.name == "adn_navigation"
         assert hasattr(adn_navigation, "fn")
         assert callable(adn_navigation.fn)
+
+    def test_adn_llm_registration(self):
+        """Test adn_llm tool registration."""
+        assert hasattr(adn_llm, "name")
+        assert adn_llm.name == "adn_llm"
+        assert hasattr(adn_llm, "fn")
+        assert callable(adn_llm.fn)
 
     @pytest.mark.skip(reason="adn_editor is deprecated and only available in FULL_TOOLS_MODE")
     def test_adn_editor_registration(self):
@@ -160,6 +169,16 @@ class TestPortmanteauToolSignatures:
         assert "operation" in params
         assert "url" in params
         assert "dir_name" in params
+
+    def test_adn_llm_signature(self):
+        """Test adn_llm function signature."""
+        import inspect
+
+        sig = inspect.signature(adn_llm_fn)
+        params = list(sig.parameters.keys())
+        assert "operation" in params
+        assert "provider" in params
+        assert "model" in params
 
     @pytest.mark.skip(reason="adn_editor is deprecated and only available in FULL_TOOLS_MODE")
     def test_adn_editor_signature(self):

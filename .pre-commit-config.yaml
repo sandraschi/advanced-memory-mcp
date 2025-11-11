@@ -6,7 +6,7 @@
 repos:
   # Ruff - Fast Python linter and formatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.4
+    rev: v0.14.5
     hooks:
       # Run the linter
       - id: ruff
@@ -14,9 +14,20 @@ repos:
       # Run the formatter
       - id: ruff-format
 
+  # MyPy - Type checking (catches type errors ruff doesn't)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports, --explicit-package-bases]
+        additional_dependencies: [types-setuptools]
+        pass_filenames: false
+        # Only check changed Python files (faster)
+        files: ^src/.*\.py$
+
   # Standard pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -44,11 +55,11 @@ repos:
 
   # Conventional Commits - Enforce commit message format
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.6.0
+    rev: v4.3.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
 
 # Configuration
-default_stages: [commit]
+default_stages: [pre-commit]
 fail_fast: false

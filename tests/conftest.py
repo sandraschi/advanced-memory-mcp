@@ -44,6 +44,22 @@ from advanced_memory.sync.watch_service import WatchService
 
 
 @pytest.fixture
+def mock_llm_client(monkeypatch):
+    """Mock LLM client for testing LLM-powered features."""
+    from unittest.mock import AsyncMock, MagicMock
+
+    mock_client = MagicMock()
+    mock_client.generate = AsyncMock(return_value="Mock LLM response")
+    mock_client.generate_json = AsyncMock(return_value={"result": "mock"})
+
+    def mock_get_llm_client(*args, **kwargs):
+        return mock_client
+
+    monkeypatch.setattr("advanced_memory.services.llm_client.get_llm_client", mock_get_llm_client)
+    return mock_client
+
+
+@pytest.fixture
 def anyio_backend():
     return "asyncio"
 

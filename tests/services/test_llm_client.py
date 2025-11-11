@@ -1,0 +1,112 @@
+"""Tests for LLM client service."""
+
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+
+from advanced_memory.services.llm_client import LLMClient, get_llm_client
+
+
+class TestLLMClient:
+    """Test LLM client functionality."""
+
+    def test_llm_client_init_defaults(self):
+        """Test LLM client initialization with defaults."""
+        client = LLMClient()
+        assert client.provider in ["ollama", "lmstudio", "openai"]
+        assert client.model is not None
+
+    def test_llm_client_init_with_provider(self):
+        """Test LLM client initialization with explicit provider."""
+        client = LLMClient(provider="ollama", model="llama3")
+        assert client.provider == "ollama"
+        assert client.model == "llama3"
+
+    @pytest.mark.asyncio
+    async def test_generate_ollama(self):
+        """Test Ollama generation."""
+        client = LLMClient(provider="ollama", model="llama3", base_url="http://localhost:11434")
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_response = MagicMock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {"response": "Test response"}
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
+                return_value=mock_response
+            )
+
+            result = await client.generate("Test prompt")
+            assert result == "Test response"
+
+    @pytest.mark.asyncio
+    async def test_generate_lmstudio(self):
+        """Test LM Studio generation."""
+        client = LLMClient(
+            provider="lmstudio", model="local-model", base_url="http://localhost:1234"
+        )
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_response = MagicMock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {
+                "choices": [{"message": {"content": "Test response"}}]
+            }
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
+                return_value=mock_response
+            )
+
+            result = await client.generate("Test prompt")
+            assert result == "Test response"
+
+    @pytest.mark.asyncio
+    async def test_generate_openai(self):
+        """Test OpenAI generation."""
+        import os
+
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "test-key"}):  # pragma: allowlist secret
+            client = LLMClient(provider="openai", model="gpt-3.5-turbo")
+
+            with patch("openai.AsyncOpenAI") as mock_openai:
+                mock_response = MagicMock()
+                mock_response.choices = [MagicMock()]
+                mock_response.choices[0].message.content = "Test response"
+                mock_openai.return_value.chat.completions.create = AsyncMock(
+                    return_value=mock_response
+                )
+
+                result = await client.generate("Test prompt")
+                assert result == "Test response"
+
+    @pytest.mark.asyncio
+    async def test_generate_json(self):
+        """Test JSON generation."""
+        client = LLMClient(provider="ollama", model="llama3", base_url="http://localhost:11434")
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_response = MagicMock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {"response": '{"key": "value"}'}
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
+                return_value=mock_response
+            )
+
+            result = await client.generate_json("Test prompt")
+            assert result == {"key": "value"}
+
+    def test_get_llm_client_with_params(self):
+        """Test get_llm_client with explicit parameters."""
+        client = get_llm_client(provider="ollama", model="llama3")
+        assert client.provider == "ollama"
+        assert client.model == "llama3"
+
+    def test_get_llm_client_from_config(self, app_config, monkeypatch):
+        """Test get_llm_client loading from config."""
+        app_config.llm_provider = "ollama"
+        app_config.llm_model = "llama3"
+
+        # Mock config manager
+        with patch("advanced_memory.services.llm_client.ConfigManager") as mock_config:
+            mock_config.return_value.config = app_config
+            client = get_llm_client()
+            assert client.provider == "ollama"
+            assert client.model == "llama3"

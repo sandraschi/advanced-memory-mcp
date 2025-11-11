@@ -55,6 +55,16 @@ Test data and sample files used across test suites:
   - `test_obsidian_vault/` - Sample Obsidian vault for import testing
   - `test_canvas.canvas` - Sample Obsidian canvas file for testing
 
+### 🤖 LLM Testing
+LLM-powered features are tested with mocked LLM clients:
+
+- **services/test_llm_client.py** - LLM client service tests
+- **mcp/test_adn_llm.py** - LLM management tool tests
+- **mcp/test_adn_content_llm.py** - LLM-powered content operations (suggest_tags, summarize, enhance, generate)
+- **mcp/test_adn_knowledge_llm.py** - LLM-powered knowledge analysis (analyze_quality, suggest_relationships, find_gaps, cluster_content, extract_insights)
+
+All LLM tests use the `mock_llm_client` fixture from `conftest.py` to avoid requiring actual LLM providers during testing.
+
 ## Running Tests
 
 ### All Tests
@@ -120,4 +130,3 @@ Tests run automatically on:
 - Release tags
 
 See `.github/workflows/` for CI configuration.
-
