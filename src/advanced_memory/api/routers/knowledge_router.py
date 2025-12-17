@@ -131,6 +131,7 @@ async def edit_entity(
             section=data.section,
             find_text=data.find_text,
             expected_replacements=data.expected_replacements,
+            use_regex=data.use_regex,
         )
 
         # Reindex the updated entity

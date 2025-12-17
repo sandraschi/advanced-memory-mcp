@@ -1,0 +1,272 @@
+"""
+Advanced Memory FastMCP server with console output suppression.
+"""
+
+# CRITICAL: Configure logging FIRST, before any imports that might log
+# Logging is configured in mcp_instance.py which is imported below
+# This ensures consistent logging configuration across all entry points
+import sys
+import warnings
+import logging
+import os
+from io import StringIO
+
+# CRITICAL: Set stdio to binary mode on Windows for Antigravity IDE compatibility
+# MUST be done BEFORE patching stdout, otherwise DevNullStdout won't have fileno()
+# Antigravity IDE is strict about JSON-RPC protocol and interprets trailing \r as "invalid trailing data"
+# Binary mode prevents Python from automatically converting line endings
+if os.name == 'nt':  # Windows
+    try:
+        import msvcrt
+        # Set stdin/stdout to binary mode to prevent line ending conversion
+        # This fixes "invalid trailing data" errors with Antigravity IDE
+        # Use try/except to handle cases where fileno() doesn't exist or isn't callable
+        # (stdout might already be patched by mcp_instance.py if imported before)
+        try:
+            msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+        except (OSError, AttributeError):
+            pass  # stdin might not be a real file descriptor or already patched
+        try:
+            msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+        except (OSError, AttributeError):
+            pass  # stdout might not be a real file descriptor or already patched
+    except (ImportError, OSError, AttributeError):
+        # If msvcrt is not available or setting fails, continue without it
+        # This might happen in some environments, but it's not critical
+        pass
+
+# Detect if we're running in stdio mode (MCP server)
+_is_stdio_mode = (
+    not sys.stdout.isatty() 
+    or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
+    or "stdio" in sys.argv
+    or __name__ == "__main__"
+)
+
+if _is_stdio_mode:
+    # CRITICAL: Patch stdout to prevent ANY writes during initialization
+    # This catches print statements, Rich console, FastMCP banners, etc.
+    # Note: mcp_instance.py may have already patched stdout, so check first
+    if not hasattr(sys, '_original_stdout'):
+        class DevNullStdout:
+            """A file-like object that discards all writes (like /dev/null)."""
+            def write(self, s: str) -> int:
+                # Discard all writes to stdout - they would break JSON-RPC
+                return len(s)
+            
+            def flush(self) -> None:
+                pass
+            
+            def isatty(self) -> bool:
+                return False
+            
+            def readable(self) -> bool:
+                return False
+            
+            def writable(self) -> bool:
+                return True
+            
+            def seekable(self) -> bool:
+                return False
+        
+        # Store original stdout and replace with null device
+        # This will be restored before FastMCP.run()
+        sys._original_stdout = sys.stdout
+        sys.stdout = DevNullStdout()
+    # Suppress SQLAlchemy deprecation warnings
+    warnings.filterwarnings("ignore", category=DeprecationWarning, module="sqlalchemy")
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    
+    # Configure Python's logging module to prevent stdout pollution
+    # FastMCP uses Python's logging module internally
+    logging.basicConfig(
+        level=logging.CRITICAL,  # Only show CRITICAL (suppress everything else)
+        format="%(message)s",
+        stream=sys.stderr,  # Send to stderr, not stdout
+        force=True,  # Override any existing configuration
+    )
+    
+    # Suppress ALL loggers to prevent any output
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.CRITICAL)
+    root_logger.handlers = []
+    
+    # Suppress FastMCP and other noisy loggers completely
+    for logger_name in ['fastmcp', 'mcp', 'httpx', 'httpcore', 'h11', 'uvicorn', 'asyncio']:
+        log = logging.getLogger(logger_name)
+        log.setLevel(logging.CRITICAL)
+        log.handlers = []
+        log.propagate = False
+    
+    # NUCLEAR OPTION: Completely disable loguru during stdio mode
+    try:
+        # Create a complete no-op logger class
+        class NoOpLogger:
+            """Complete no-op logger that does nothing - nuclear option for stdio mode."""
+            def __call__(self, *args, **kwargs):
+                return self
+            def info(self, *args, **kwargs): pass
+            def error(self, *args, **kwargs): pass
+            def warning(self, *args, **kwargs): pass
+            def debug(self, *args, **kwargs): pass
+            def exception(self, *args, **kwargs): pass
+            def critical(self, *args, **kwargs): pass
+            def success(self, *args, **kwargs): pass
+            def trace(self, *args, **kwargs): pass
+            def remove(self, *args, **kwargs): return self
+            def add(self, *args, **kwargs): return self
+            def disable(self, *args, **kwargs): return self
+            def enable(self, *args, **kwargs): return self
+            def bind(self, *args, **kwargs): return self
+            def patch(self, *args, **kwargs): return self
+            def opt(self, *args, **kwargs): return self
+        
+        # Replace loguru logger module with no-op
+        import sys
+        if 'loguru' not in sys.modules:
+            sys.modules['loguru'] = type('Module', (), {'logger': NoOpLogger()})()
+        from loguru import logger
+        # Force replace the logger instance
+        logger = NoOpLogger()
+    except Exception:
+        # If anything fails, create a no-op logger anyway
+        class NoOpLogger:
+            def __call__(self, *args, **kwargs): return self
+            def info(self, *args, **kwargs): pass
+            def error(self, *args, **kwargs): pass
+            def warning(self, *args, **kwargs): pass
+            def debug(self, *args, **kwargs): pass
+            def exception(self, *args, **kwargs): pass
+            def critical(self, *args, **kwargs): pass
+            def success(self, *args, **kwargs): pass
+            def trace(self, *args, **kwargs): pass
+            def remove(self, *args, **kwargs): return self
+            def add(self, *args, **kwargs): return self
+        logger = NoOpLogger()
+
+import asyncio
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from dataclasses import dataclass
+from typing import Any
+
+from fastmcp import FastMCP
+
+from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.services.initialization import initialize_app
+
+
+@dataclass
+class AppContext:
+    watch_task: asyncio.Task | None
+    migration_manager: Any | None = None
+
+
+@asynccontextmanager
+async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma: no cover
+    """MCP server lifespan - handles initialization and cleanup including file watching.
+    
+    CRITICAL: This function runs AFTER stdout is restored for JSON-RPC communication.
+    All logging MUST go to stderr only to prevent polluting the JSON-RPC stream.
+    """
+    # defer import so tests can monkeypatch
+    from advanced_memory.mcp.project_session import session
+    
+    # CRITICAL: Ensure loguru is configured for stderr-only logging during lifespan
+    # This prevents any accidental stdout writes that would break JSON-RPC protocol
+    try:
+        from loguru import logger
+        # Remove any handlers that might write to stdout
+        logger.remove()
+        # Only log to stderr, and only CRITICAL level to minimize output
+        logger.add(sys.stderr, level="CRITICAL", format="{message}")
+    except ImportError:
+        pass
+
+    app_config = ConfigManager().config
+    # Initialize on startup (now returns migration_manager)
+    migration_manager = await initialize_app(app_config)
+
+    # Initialize project session with default project
+    session.initialize(app_config.default_project)
+
+    # Start file watcher if sync_changes is enabled
+    watch_task = None
+    if app_config.sync_changes:
+        from advanced_memory.services.initialization import initialize_file_sync
+
+        # Start watch service as a background task
+        watch_task = asyncio.create_task(initialize_file_sync(app_config))
+
+    try:
+        yield AppContext(watch_task=watch_task, migration_manager=migration_manager)
+    finally:
+        # Cleanup on shutdown
+        if watch_task and not watch_task.done():
+            watch_task.cancel()
+            try:
+                await watch_task
+            except asyncio.CancelledError:
+                pass
+
+
+# Logging is now configured at the top of the file before any imports
+
+# CRITICAL: Import tools to register them with the MCP instance
+# This must happen after mcp instance is created but before running server
+from advanced_memory.mcp import tools  # noqa: E402, F401
+
+# Use the shared MCP instance as the server
+server = mcp
+
+# Add stdio runner for MCP protocol
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Advanced Memory MCP Server")
+    parser.add_argument(
+        "--transport",
+        type=str,
+        default="stdio",
+        choices=["stdio"],
+        help="Transport protocol (only stdio supported)",
+    )
+    args = parser.parse_args()
+
+    # CRITICAL: Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
+    # But ensure it's completely clean and in binary mode for Antigravity IDE compatibility
+    if _is_stdio_mode and hasattr(sys, '_original_stdout'):
+        # Restore original stdout
+        sys.stdout = sys._original_stdout
+        
+        # CRITICAL: Set binary mode AFTER restoration for Antigravity IDE compatibility
+        # This must happen after restoration but before FastMCP starts
+        if os.name == 'nt':  # Windows
+            try:
+                import msvcrt
+                # Set stdout to binary mode to prevent line ending conversion
+                # This fixes "invalid trailing data" errors with Antigravity IDE
+                msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+            except (ImportError, OSError, AttributeError):
+                pass  # If binary mode can't be set, continue anyway
+        
+        # Ensure stdout is clean and unbuffered for JSON-RPC
+        sys.stdout.flush()
+        # Set unbuffered mode to prevent any buffering issues
+        os.environ.setdefault('PYTHONUNBUFFERED', '1')
+        
+        # CRITICAL: Ensure loguru logger is configured to NEVER write to stdout
+        # This prevents any accidental stdout writes during lifespan initialization
+        try:
+            from loguru import logger
+            # Remove all handlers and ensure only stderr logging
+            logger.remove()
+            logger.add(sys.stderr, level="CRITICAL", format="{message}")
+        except ImportError:
+            pass
+
+    # FastMCP automatically uses stdio when run as module
+    # The run() method handles transport automatically
+    # CRITICAL: show_banner=False prevents FastMCP from writing banner to stdout
+    server.run(show_banner=False)

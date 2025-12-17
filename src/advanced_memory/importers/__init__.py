@@ -6,6 +6,7 @@ from advanced_memory.importers.claude_conversations_importer import (
     ClaudeConversationsImporter,
 )
 from advanced_memory.importers.claude_projects_importer import ClaudeProjectsImporter
+from advanced_memory.importers.gemini_importer import GeminiImporter
 from advanced_memory.importers.memory_json_importer import MemoryJsonImporter
 from advanced_memory.schemas.importer import (
     ChatImportResult,
@@ -19,6 +20,7 @@ __all__ = [
     "ChatGPTImporter",
     "ClaudeConversationsImporter",
     "ClaudeProjectsImporter",
+    "GeminiImporter",
     "MemoryJsonImporter",
     "ImportResult",
     "ChatImportResult",

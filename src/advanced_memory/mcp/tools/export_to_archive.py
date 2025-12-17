@@ -4,6 +4,7 @@ import json
 import shutil
 import sqlite3
 import tempfile
+import zipfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -184,7 +185,12 @@ async def export_to_archive(
     Export complete Advanced Memory system to archive for migration/backup.
 
     Args:
-        archive_path: Path for the archive file (with or without extension)
+        archive_path: Path for the archive file (with or without extension).
+                     If directory, creates filename with timestamp.
+                     Timestamp format: YYYYMMDD-HHMMSS (e.g., 20251202-143022)
+                     Examples:
+                     - "d:/backup/dev" → "d:/backup/dev/advanced-memory-backup-20251202-143022.zip"
+                     - "d:/backup/my-backup.zip" → "d:/backup/my-backup-20251202-143022.zip"
         include_projects: List of project names to include (None = all projects)
         exclude_projects: List of project names to exclude (takes precedence over include_projects)
         exclude_tags: List of tags to exclude from export (e.g., ["obsolete", "test"])
@@ -199,12 +205,31 @@ async def export_to_archive(
         config_manager = ConfigManager()
         config = config_manager.load_config()
 
-        # Ensure archive path has extension
+        # Ensure archive path has extension and add timestamp
         archive_path = Path(archive_path)
-        if compress and archive_path.suffix.lower() != ".zip":
-            archive_path = archive_path.with_suffix(".zip")
-        elif not compress and not archive_path.suffix:
-            archive_path = archive_path.with_suffix(".tar")
+        
+        # Generate timestamp string (YYYYMMDD-HHMMSS)
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        
+        # If path is a directory or doesn't have a filename, create default name with timestamp
+        if archive_path.is_dir() or not archive_path.name or archive_path.name == archive_path.suffix:
+            # Use directory name or default name
+            default_name = "advanced-memory-backup"
+            if compress:
+                archive_path = archive_path / f"{default_name}-{timestamp}.zip"
+            else:
+                archive_path = archive_path / f"{default_name}-{timestamp}.tar"
+        else:
+            # Add timestamp before extension
+            stem = archive_path.stem
+            suffix = archive_path.suffix
+            if compress and suffix.lower() != ".zip":
+                archive_path = archive_path.parent / f"{stem}-{timestamp}.zip"
+            elif not compress and suffix.lower() != ".tar":
+                archive_path = archive_path.parent / f"{stem}-{timestamp}.tar"
+            else:
+                # Has correct extension, insert timestamp before it
+                archive_path = archive_path.parent / f"{stem}-{timestamp}{suffix}"
 
         # Validate and parse parameters
         filters_applied = []
@@ -358,13 +383,70 @@ async def export_to_archive(
             # 5. Create archive
             logger.info(f"Creating archive: {archive_path}")
             if compress:
-                # Create ZIP archive
-                shutil.make_archive(
-                    str(archive_path.with_suffix("")),  # remove extension for make_archive
-                    "zip",
-                    temp_path,
-                    "advanced-memory-backup",
+                # Create ZIP archive using zipfile for Windows Explorer compatibility
+                # shutil.make_archive can create ZIPs that Windows Explorer doesn't recognize
+                source_dir = temp_path / "advanced-memory-backup"
+                
+                # Check if ZIP64 is needed (Windows Explorer has issues with ZIP64)
+                # ZIP64 is only needed if any file > 4GB or total size > 4GB
+                needs_zip64 = False
+                max_file_size = 0
+                total_size_check = 0
+                for file_path in source_dir.rglob("*"):
+                    if file_path.is_file():
+                        file_size = file_path.stat().st_size
+                        max_file_size = max(max_file_size, file_size)
+                        total_size_check += file_size
+                        # Check if any file exceeds 4GB limit (ZIP32 max file size)
+                        if file_size > 4 * 1024 * 1024 * 1024:
+                            needs_zip64 = True
+                            break
+                
+                # Check if total archive size would exceed 4GB (ZIP32 max archive size)
+                if not needs_zip64 and total_size_check > 4 * 1024 * 1024 * 1024:
+                    needs_zip64 = True
+                
+                if needs_zip64:
+                    logger.warning(
+                        f"Archive requires ZIP64 format (max file: {max_file_size / (1024**3):.2f} GB, "
+                        f"total: {total_size_check / (1024**3):.2f} GB). "
+                        "Windows Explorer may have issues opening this archive. Use WinRAR or 7-Zip instead."
+                    )
+                
+                # Create ZIP file with explicit Windows Explorer compatibility settings
+                # Use explicit open/close instead of context manager to ensure proper finalization
+                zipf = zipfile.ZipFile(
+                    archive_path,
+                    "w",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=6,  # Balanced compression
+                    allowZip64=needs_zip64,  # Only use ZIP64 when necessary for Windows Explorer compatibility
                 )
+                
+                try:
+                    # Walk through all files in the source directory
+                    for file_path in source_dir.rglob("*"):
+                        if file_path.is_file():
+                            # Calculate relative path from source_dir
+                            arcname = file_path.relative_to(source_dir)
+                            # Use forward slashes for ZIP standard (Windows compatibility)
+                            arcname_str = str(arcname).replace("\\", "/")
+                            # Write file with explicit encoding
+                            zipf.write(file_path, arcname_str)
+                            logger.debug(f"Added to ZIP: {arcname_str}")
+                finally:
+                    # Explicitly close and finalize the ZIP file
+                    # This ensures proper ZIP structure that Windows Explorer expects
+                    zipf.close()
+                
+                # Verify the ZIP file is valid
+                try:
+                    test_zip = zipfile.ZipFile(archive_path, "r")
+                    test_zip.close()
+                    logger.info(f"ZIP archive created and verified: {archive_path} (ZIP64: {needs_zip64})")
+                except zipfile.BadZipFile as e:
+                    logger.error(f"Created ZIP file is invalid: {e}")
+                    raise
             else:
                 # Create uncompressed tar archive
                 shutil.make_archive(

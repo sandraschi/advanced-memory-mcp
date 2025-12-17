@@ -238,14 +238,16 @@ class ProjectService:
 
         logger.info("Synchronizing projects between database and configuration")
 
-        # Get all projects from database
-        db_projects = await self.repository.get_active_projects()
+        # Get ALL projects from database (including inactive ones) to avoid duplicate inserts
+        # We need all projects because an inactive project might be reactivated
+        db_projects = await self.repository.get_all_projects()
         db_projects_by_permalink = {p.permalink: p for p in db_projects}
 
         # Get all projects from configuration and normalize names if needed
         config_projects = self.config_manager.projects.copy()
         updated_config = {}
         config_updated = False
+        path_to_names: dict[str, list[str]] = {}  # Track which names map to each path
 
         for name, path in config_projects.items():
             # Generate normalized name (what the database expects)
@@ -255,7 +257,21 @@ class ProjectService:
                 logger.info(f"Normalizing project name in config: '{name}' -> '{normalized_name}'")
                 config_updated = True
 
-            updated_config[normalized_name] = path
+            # Track path collisions - if multiple projects share the same path, keep all of them
+            if path not in path_to_names:
+                path_to_names[path] = []
+            path_to_names[path].append(normalized_name)
+
+            # Only overwrite if it's the same name, not just the same path
+            # This prevents one project from overwriting another when they share a path
+            if normalized_name not in updated_config:
+                updated_config[normalized_name] = path
+            elif updated_config[normalized_name] != path:
+                # Same name but different path - this is a conflict, log it
+                logger.warning(
+                    f"Project name conflict: '{normalized_name}' maps to both "
+                    f"'{updated_config[normalized_name]}' and '{path}'. Keeping first path."
+                )
 
         # Update the configuration if any changes were made
         if config_updated:
@@ -267,24 +283,56 @@ class ProjectService:
         # Use the normalized config for further processing
         config_projects = updated_config
 
-        # Add projects that exist in config but not in DB
+        # Add projects that exist in config but not in DB, or reactivate inactive ones
         for name, path in config_projects.items():
-            if name not in db_projects_by_permalink:
+            permalink = generate_permalink(name)
+            existing_project = db_projects_by_permalink.get(permalink)
+
+            if existing_project is None:
+                # Project doesn't exist - create it
                 logger.info(f"Adding project '{name}' to database")
                 project_data = {
                     "name": name,
                     "path": path,
-                    "permalink": generate_permalink(name),
+                    "permalink": permalink,
                     "is_active": True,
                     # Don't set is_default here - let the enforcement logic handle it
                 }
                 await self.repository.create(project_data)
+            elif not existing_project.is_active:
+                # Project exists but is inactive - reactivate it and update path if needed
+                logger.info(f"Reactivating project '{name}' in database")
+                update_data = {
+                    "is_active": True,
+                    "path": path,  # Update path in case it changed
+                }
+                await self.repository.update(existing_project.id, update_data)
+            else:
+                # Project exists and is active - update path if it changed
+                from advanced_memory.sync.sync_service import normalize_file_path
+
+                normalized_path = normalize_file_path(path)
+                if existing_project.path != normalized_path:
+                    logger.info(
+                        f"Updating path for project '{name}': {existing_project.path} -> {normalized_path}"
+                    )
+                    await self.repository.update(existing_project.id, {"path": normalized_path})
 
         # Don't automatically add database projects back to config
         # This allows users to remove projects from config without them being re-added
         # Projects in DB but not in config will be marked as inactive instead
+        # SAFETY: Never mark the only active project as inactive - this would lock the user out
+        active_projects_in_db = [p for p in db_projects_by_permalink.values() if p.is_active]
         for name, project in db_projects_by_permalink.items():
             if name not in config_projects:
+                # Safety check: Don't mark the only active project as inactive
+                if project.is_active and len(active_projects_in_db) == 1:
+                    logger.warning(
+                        f"Project '{name}' exists in database but not in config. "
+                        f"NOT marking inactive because it's the only active project. "
+                        f"This prevents accidental lockout. Please manually remove if needed."
+                    )
+                    continue
                 logger.info(
                     f"Project '{name}' exists in database but not in config - marking inactive"
                 )
@@ -298,9 +346,26 @@ class ProjectService:
         config_default = self.config_manager.default_project
 
         if db_default and db_default.name != config_default:
-            # Update config to match DB default
-            logger.info(f"Updating default project in config to '{db_default.name}'")
-            self.config_manager.set_default_project(db_default.name)
+            # Update config to match DB default, but only if the project exists in config
+            project_name, _ = self.config_manager.get_project(db_default.name)
+            if project_name:
+                logger.info(f"Updating default project in config to '{db_default.name}'")
+                self.config_manager.set_default_project(db_default.name)
+            else:
+                # DB default doesn't exist in config - set DB to match config default instead
+                logger.warning(
+                    f"Database default project '{db_default.name}' not found in config. "
+                    f"Setting database default to match config default '{config_default}'."
+                )
+                project = await self.repository.get_by_name(config_default)
+                if project:
+                    logger.info(f"Updating default project in database to '{config_default}'")
+                    await self.repository.set_as_default(project.id)
+                else:
+                    logger.error(
+                        f"Config default project '{config_default}' not found in database. "
+                        f"Cannot synchronize default project."
+                    )
         elif not db_default and config_default:
             # Update DB to match config default (if the project exists)
             project = await self.repository.get_by_name(config_default)

@@ -25,7 +25,9 @@ from advanced_memory.utils import generate_permalink
 
 @mcp.tool
 async def adn_project(
-    operation: Literal["create", "switch", "delete", "set_default", "get_current", "list", "sync", "status"],
+    operation: Literal[
+        "create", "switch", "delete", "set_default", "get_current", "list", "sync", "status", "detect"
+    ],
     project_name: str | None = None,
     project_path: str | None = None,
     set_default: bool = False,
@@ -33,8 +35,7 @@ async def adn_project(
 ) -> str:
     """Comprehensive project management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all project operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+    PORTMANTEAU PATTERN: Consolidates 8 project management operations into one tool.
 
     SUPPORTED OPERATIONS:
     - create: Create new projects with specified name and path
@@ -45,6 +46,7 @@ async def adn_project(
     - list: List all available projects with status indicators and entity counts
     - sync: Sync specific project without changing default (requires project_name)
     - status: Get detailed statistics for a specific project (requires project_name)
+    - detect: AI-managed project detection from conversation context (auto-switches if confident ≥ 60%)
 
     FUTURE ENHANCEMENTS (Planned):
     - list_cross_project_refs: Show which projects link to each other
@@ -58,41 +60,52 @@ async def adn_project(
     - New notes are created in the active project
     - Sync status reflects the active project's state
 
+    AI-MANAGED PROJECT DETECTION:
+    - Use "detect" operation to automatically detect relevant project from user queries
+    - Analyzes query for project names, context keywords (personal/work/research), folder mentions
+    - Auto-switches when confidence ≥ 60%
+    - Helps avoid ambiguity (e.g., "Steve" in private project vs "Steve Jobs" in research)
+    - Example: User says "Tomorrow I meet Steve" → detects "private" project (personal context)
+
     Args:
-        operation: The operation to perform (create, switch, delete, set_default, get_current, list, sync, status)
+        operation: The operation to perform (create, switch, delete, set_default, get_current, list, sync, status, detect)
         project_name: Project name
-                    * create, switch, delete, sync, status operations: REQUIRED
-                    * set_default operation: REQUIRED (project to set as default)
+                    * create, switch, delete, sync, status, set_default operations: REQUIRED
+                    * detect operation: Optional - If provided, used as additional context hint
                     * get_current, list operations: NOT USED
         project_path: File system path for new project
                     * create operation: REQUIRED - Path where project files will be stored
                     * Other operations: NOT USED
-        set_default: Whether to set new project as default (for create operation only)
-                    * create operation: Optional (default: False)
+        set_default: Whether to set new project as default
+                    * create operation: Optional - If True, sets new project as default (default: False)
                     * Other operations: NOT USED
         ctx: Optional MCP context for progress reporting
+                    * All operations: Optional - MCP context for progress updates
 
     Returns:
         Operation-specific result with project details and statistics
 
     Examples:
         # Create a new project
-        project_manager("create", project_name="my-research", project_path="~/Documents/research")
+        adn_project("create", project_name="my-research", project_path="~/Documents/research")
 
         # Switch to a different project
-        project_manager("switch", project_name="work-project")
+        adn_project("switch", project_name="work-project")
 
         # List all available projects
-        project_manager("list")
+        adn_project("list")
 
         # Get current project information
-        project_manager("get_current")
+        adn_project("get_current")
 
         # Set default project
-        project_manager("set_default", project_name="personal-notes")
+        adn_project("set_default", project_name="personal-notes")
 
         # Delete a project
-        project_manager("delete", project_name="old-project")
+        adn_project("delete", project_name="old-project")
+
+        # AI-managed project detection (auto-switches if confident)
+        adn_project("detect")  # AI analyzes conversation context to detect relevant project
     """
     logger.info(f"MCP tool call tool=adn_project operation={operation} project_name={project_name}")
 
@@ -113,8 +126,10 @@ async def adn_project(
         return await _sync_operation(project_name, ctx)
     elif operation == "status":
         return await _status_operation(project_name, ctx)
+    elif operation == "detect":
+        return await _detect_operation(ctx)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, switch, delete, set_default, get_current, list, sync, status"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, switch, delete, set_default, get_current, list, sync, status, detect"
 
 
 async def _create_operation(
@@ -127,7 +142,7 @@ async def _create_operation(
     if not project_path:
         missing.append("project_path")
     if missing:
-        return f"# Error\n\nCreate operation requires the following parameters:\n- {', '.join(missing)}\n\n**Example:**\n```python\nadn_project(\"create\",\n    project_name=\"my-research\",\n    project_path=\"~/Documents/research\")\n```"
+        return f'# Error\n\nCreate operation requires the following parameters:\n- {", ".join(missing)}\n\n**Example:**\n```python\nadn_project("create",\n    project_name="my-research",\n    project_path="~/Documents/research")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Creating project: {project_name} at {project_path}")
@@ -163,7 +178,7 @@ async def _create_operation(
 async def _switch_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle switch operation."""
     if not project_name:
-        return "# Error\n\nSwitch operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project(\"switch\", project_name=\"work-project\")\n```"
+        return '# Error\n\nSwitch operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("switch", project_name="work-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Switching to project: {project_name}")
@@ -253,7 +268,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
 async def _delete_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle delete operation."""
     if not project_name:
-        return "# Error\n\nDelete operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project(\"delete\", project_name=\"old-project\")\n```"
+        return '# Error\n\nDelete operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("delete", project_name="old-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Deleting project: {project_name}")
@@ -295,7 +310,7 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> st
 async def _set_default_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle set_default operation."""
     if not project_name:
-        return "# Error\n\nSet_default operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project(\"set_default\", project_name=\"personal-notes\")\n```"
+        return '# Error\n\nSet_default operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("set_default", project_name="personal-notes")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Setting default project to: {project_name}")
@@ -373,7 +388,7 @@ async def _list_operation(ctx: Context | None) -> str:
 async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle sync operation - sync a specific project without changing default."""
     if not project_name:
-        return "# Error\n\nSync operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project(\"sync\", project_name=\"my-project\")\n```"
+        return '# Error\n\nSync operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("sync", project_name="my-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Syncing project: {project_name}")
@@ -397,7 +412,7 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
 async def _status_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle status operation - get detailed statistics for a specific project."""
     if not project_name:
-        return "# Error\n\nStatus operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project(\"status\", project_name=\"my-project\")\n```"
+        return '# Error\n\nStatus operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("status", project_name="my-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Getting status for project: {project_name}")
@@ -431,3 +446,117 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> st
             f"❌ Error getting status for project '{project_name}': {str(e)}",
             session.get_current_project(),
         )
+
+
+async def _detect_operation(ctx: Context | None) -> str:
+    """Handle detect operation - AI-managed project detection.
+
+    This operation analyzes conversation context to detect which project
+    the user is likely referring to and optionally switches automatically.
+
+    The AI should call this with a user_query parameter extracted from the conversation.
+    """
+    from advanced_memory.services.project_detector import get_project_detector
+
+    if ctx:  # pragma: no cover
+        await ctx.info("Detecting relevant project from context...")
+
+    current_project = session.get_current_project()
+    detector = get_project_detector()
+
+    # Try to extract query from context if available
+    # In practice, the AI will pass this explicitly
+    user_query = ""
+    if ctx and hasattr(ctx, "user_query"):
+        user_query = ctx.user_query  # type: ignore
+    elif ctx and hasattr(ctx, "message"):
+        user_query = ctx.message  # type: ignore
+
+    # Detect project from context
+    detection = await detector.detect_project_from_context(
+        user_query=user_query or "",
+        current_project=current_project,
+    )
+
+    suggested_project = detection["suggested_project"]
+    confidence = detection["confidence"]
+    reason = detection["reason"]
+    should_switch = detection["should_switch"]
+
+    result_lines = [
+        "# 🤖 AI-Managed Project Detection",
+        "",
+        f"**Current Project**: {current_project}",
+        "",
+    ]
+
+    if suggested_project:
+        result_lines.extend([
+            f"**Suggested Project**: {suggested_project}",
+            f"**Confidence**: {confidence:.0%}",
+            f"**Reason**: {reason}",
+            "",
+        ])
+
+        if should_switch and suggested_project != current_project:
+            # Auto-switch if confidence is high enough
+            try:
+                switch_result = await _switch_operation(suggested_project, ctx)
+                result_lines.extend([
+                    "## ✅ Auto-Switched Project",
+                    "",
+                    f"I've automatically switched to **{suggested_project}** project based on context.",
+                    "",
+                    switch_result.split("\n\n")[-1] if "\n\n" in switch_result else switch_result,
+                ])
+            except Exception as e:
+                result_lines.extend([
+                    "## ⚠️ Auto-Switch Failed",
+                    "",
+                    f"Could not automatically switch: {e}",
+                    "",
+                    f"You can manually switch: `adn_project('switch', project_name='{suggested_project}')`",
+                ])
+        elif suggested_project == current_project:
+            result_lines.extend([
+                "## ✓ Already on Correct Project",
+                "",
+                f"You're already on the **{suggested_project}** project. No switch needed.",
+            ])
+        else:
+            result_lines.extend([
+                "## 💡 Project Suggestion",
+                "",
+                f"Based on context, you might want to switch to **{suggested_project}** project.",
+                "",
+                f"**Confidence**: {confidence:.0%} (threshold: 60% for auto-switch)",
+                "",
+                f"To switch manually: `adn_project('switch', project_name='{suggested_project}')`",
+            ])
+    else:
+        result_lines.extend([
+            "## ℹ️ No Clear Project Detected",
+            "",
+            "Could not detect a specific project from the context.",
+            "",
+            "**Available projects**:",
+        ])
+        projects = await detector._get_all_projects()
+        for proj in projects:
+            marker = "⭐ " if proj["name"] == current_project else "  "
+            result_lines.append(f"{marker}- {proj['name']}")
+
+    result_lines.extend([
+        "",
+        "## How It Works",
+        "",
+        "The AI analyzes your queries for:",
+        "- Explicit project name mentions (e.g., 'work project', 'private notes')",
+        "- Folder/path references that match project names",
+        "- Search results that contain project metadata",
+        "- File paths that belong to specific projects",
+        "",
+        "**Auto-switch happens when confidence ≥ 60%**",
+    ])
+
+    return add_project_metadata("\n".join(result_lines), current_project)

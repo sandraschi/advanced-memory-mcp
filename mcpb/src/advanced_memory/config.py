@@ -34,7 +34,7 @@ class ProjectConfig:
     home: Path
 
     @property
-    def project(self):
+    def project(self) -> str:
         return self.name
 
     @property
@@ -114,13 +114,12 @@ class AdvancedMemoryConfig(BaseSettings):
 
     def model_post_init(self, __context: Any) -> None:
         """Ensure configuration is valid after initialization."""
-        # Ensure main project exists
-        if "main" not in self.projects:  # pragma: no cover
-            self.projects["main"] = str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))
+        # Note: Removed auto-creation of "main" project - users should explicitly create projects
 
         # Ensure default project is valid
-        if self.default_project not in self.projects:  # pragma: no cover
-            self.default_project = "main"
+        if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
+            # Set default to first available project instead of auto-creating "main"
+            self.default_project = list(self.projects.keys())[0]
 
     @property
     def app_database_path(self) -> Path:
@@ -336,7 +335,7 @@ log_dir.mkdir(parents=True, exist_ok=True)
 
 
 # Process info for logging
-def get_process_name():  # pragma: no cover
+def get_process_name() -> str:  # pragma: no cover
     """
     get the type of process for logging
     """
@@ -361,12 +360,12 @@ _LOGGING_SETUP = False
 # Logging
 
 
-def setup_advanced_memory_logging():  # pragma: no cover
+def setup_advanced_memory_logging() -> None:  # pragma: no cover
     """Set up logging for advanced-memory, ensuring it only happens once."""
     global _LOGGING_SETUP
     if _LOGGING_SETUP:
         # We can't log before logging is set up
-        # print("Skipping duplicate logging setup")
+        # logger.debug("Skipping duplicate logging setup")
         return
 
     # Check for console logging environment variable

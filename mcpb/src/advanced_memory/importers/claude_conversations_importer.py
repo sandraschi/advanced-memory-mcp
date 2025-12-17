@@ -1,4 +1,4 @@
-"""Claude conversations import service for Basic Memory."""
+"""Claude conversations import service for Advanced Memory."""
 
 import logging
 from datetime import datetime
@@ -13,11 +13,11 @@ from advanced_memory.schemas.importer import ChatImportResult
 logger = logging.getLogger(__name__)
 
 
-class ClaudeConversationsImporter(Importer[ChatImportResult]):
+class ClaudeConversationsImporter(Importer):
     """Service for importing Claude conversations."""
 
     async def import_data(
-        self, source_data, destination_folder: str, **kwargs: Any
+        self, source_data: Any, destination_folder: str, **kwargs: Any
     ) -> ChatImportResult:
         """Import conversations from Claude JSON export.
 
@@ -75,7 +75,7 @@ class ClaudeConversationsImporter(Importer[ChatImportResult]):
         created_at: str,
         modified_at: str,
     ) -> EntityMarkdown:
-        """Convert chat messages to Basic Memory entity format.
+        """Convert chat messages to Advanced Memory entity format.
 
         Args:
             base_path: Base path for the entity.

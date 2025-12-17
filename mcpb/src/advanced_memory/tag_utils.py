@@ -1,4 +1,4 @@
-"""Tag parsing and manipulation utilities for basic-memory."""
+"""Tag parsing and manipulation utilities for advanced-memory."""
 
 
 def parse_tags(tags: list[str] | str | None) -> list[str]:

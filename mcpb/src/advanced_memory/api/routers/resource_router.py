@@ -222,4 +222,4 @@ async def write_resource(
         )
     except Exception as e:  # pragma: no cover
         logger.error(f"Error writing resource {file_path}: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to write resource: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to write resource: {str(e)}") from e

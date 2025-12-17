@@ -33663,18 +33663,18 @@ Exception: Sync failed
 2025-10-22 08:26:15 | INFO     | Initialized project session with default project: test-project
 2025-10-22 08:26:15 | INFO     | Switched project context: test-project -> test-project
 2025-10-22 08:26:15 | INFO     | Attempting to read note from URL: /test-project/resource/
-2025-10-22 08:26:15 | INFO     | Client error: GET /test-project/resource/: Resource not found: 
-2025-10-22 08:26:15 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found: 
+2025-10-22 08:26:15 | INFO     | Client error: GET /test-project/resource/: Resource not found:
+2025-10-22 08:26:15 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found:
 2025-10-22 08:26:15 | INFO     | Trying sanitized path: /test-project/resource/untitled.md
 2025-10-22 08:26:15 | INFO     | Client error: GET /test-project/resource/untitled.md: Resource not found: untitled.md
 2025-10-22 08:26:15 | INFO     | Sanitized path lookup also failed for '/test-project/resource/untitled.md': Resource not found: untitled.md
-2025-10-22 08:26:15 | INFO     | Search title for: 
+2025-10-22 08:26:15 | INFO     | Search title for:
 2025-10-22 08:26:15 | INFO     | Searching for permalink=None permalink_match=None text=None title='' types=None entity_types=None after_date=None
-2025-10-22 08:26:15 | INFO     | Search returned no results for query: 
-2025-10-22 08:26:15 | INFO     | No results in title search for: 
-2025-10-22 08:26:15 | INFO     | Title search failed, trying text search for: 
+2025-10-22 08:26:15 | INFO     | Search returned no results for query:
+2025-10-22 08:26:15 | INFO     | No results in title search for:
+2025-10-22 08:26:15 | INFO     | Title search failed, trying text search for:
 2025-10-22 08:26:15 | INFO     | Searching for permalink=None permalink_match=None text='' title=None types=None entity_types=None after_date=None
-2025-10-22 08:26:15 | INFO     | Search returned no results for query: 
+2025-10-22 08:26:15 | INFO     | Search returned no results for query:
 2025-10-22 08:26:15 | INFO     | Using in-memory SQLite database
 2025-10-22 08:26:15 | INFO     | Initializing search index
 2025-10-22 08:26:15 | INFO     | Initializing search index
@@ -47024,14 +47024,14 @@ Traceback (most recent call last):
              └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001ED6A0A93F0>)
 
 sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-22 08:35:43 | ERROR    | Error getting notes from folder /: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
@@ -47620,14 +47620,14 @@ Traceback (most recent call last):
              └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001ED6A0A93F0>)
 
 sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-22 08:35:43 | ERROR    | Error getting notes from folder /: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
@@ -48216,14 +48216,14 @@ Traceback (most recent call last):
              └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001ED6A0A93F0>)
 
 sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-22 08:35:43 | ERROR    | Error getting notes from folder /: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
@@ -49884,18 +49884,18 @@ WHERE project.permalink = ?]
 2025-10-22 08:36:32 | INFO     | Initialized project session with default project: test-project
 2025-10-22 08:36:32 | INFO     | Switched project context: test-project -> test-project
 2025-10-22 08:36:32 | INFO     | Attempting to read note from URL: /test-project/resource/
-2025-10-22 08:36:32 | INFO     | Client error: GET /test-project/resource/: Resource not found: 
-2025-10-22 08:36:32 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found: 
+2025-10-22 08:36:32 | INFO     | Client error: GET /test-project/resource/: Resource not found:
+2025-10-22 08:36:32 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found:
 2025-10-22 08:36:32 | INFO     | Trying sanitized path: /test-project/resource/untitled.md
 2025-10-22 08:36:32 | INFO     | Client error: GET /test-project/resource/untitled.md: Resource not found: untitled.md
 2025-10-22 08:36:32 | INFO     | Sanitized path lookup also failed for '/test-project/resource/untitled.md': Resource not found: untitled.md
-2025-10-22 08:36:32 | INFO     | Search title for: 
+2025-10-22 08:36:32 | INFO     | Search title for:
 2025-10-22 08:36:32 | INFO     | Searching for permalink=None permalink_match=None text=None title='' types=None entity_types=None after_date=None
-2025-10-22 08:36:32 | INFO     | Search returned no results for query: 
-2025-10-22 08:36:32 | INFO     | No results in title search for: 
-2025-10-22 08:36:32 | INFO     | Title search failed, trying text search for: 
+2025-10-22 08:36:32 | INFO     | Search returned no results for query:
+2025-10-22 08:36:32 | INFO     | No results in title search for:
+2025-10-22 08:36:32 | INFO     | Title search failed, trying text search for:
 2025-10-22 08:36:32 | INFO     | Searching for permalink=None permalink_match=None text='' title=None types=None entity_types=None after_date=None
-2025-10-22 08:36:32 | INFO     | Search returned no results for query: 
+2025-10-22 08:36:32 | INFO     | Search returned no results for query:
 2025-10-22 08:36:32 | INFO     | Using in-memory SQLite database
 2025-10-22 08:36:32 | INFO     | Initializing search index
 2025-10-22 08:36:32 | INFO     | Initializing search index
@@ -63168,14 +63168,14 @@ Traceback (most recent call last):
              └ functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001AA04649D50>)
 
 sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-22 08:42:31 | ERROR    | Error getting notes from folder /: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
@@ -64836,18 +64836,18 @@ WHERE project.permalink = ?]
 2025-10-22 08:43:20 | INFO     | Initialized project session with default project: test-project
 2025-10-22 08:43:20 | INFO     | Switched project context: test-project -> test-project
 2025-10-22 08:43:20 | INFO     | Attempting to read note from URL: /test-project/resource/
-2025-10-22 08:43:20 | INFO     | Client error: GET /test-project/resource/: Resource not found: 
-2025-10-22 08:43:20 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found: 
+2025-10-22 08:43:20 | INFO     | Client error: GET /test-project/resource/: Resource not found:
+2025-10-22 08:43:20 | INFO     | Direct lookup failed for '/test-project/resource/': Resource not found:
 2025-10-22 08:43:20 | INFO     | Trying sanitized path: /test-project/resource/untitled.md
 2025-10-22 08:43:20 | INFO     | Client error: GET /test-project/resource/untitled.md: Resource not found: untitled.md
 2025-10-22 08:43:20 | INFO     | Sanitized path lookup also failed for '/test-project/resource/untitled.md': Resource not found: untitled.md
-2025-10-22 08:43:20 | INFO     | Search title for: 
+2025-10-22 08:43:20 | INFO     | Search title for:
 2025-10-22 08:43:20 | INFO     | Searching for permalink=None permalink_match=None text=None title='' types=None entity_types=None after_date=None
-2025-10-22 08:43:21 | INFO     | Search returned no results for query: 
-2025-10-22 08:43:21 | INFO     | No results in title search for: 
-2025-10-22 08:43:21 | INFO     | Title search failed, trying text search for: 
+2025-10-22 08:43:21 | INFO     | Search returned no results for query:
+2025-10-22 08:43:21 | INFO     | No results in title search for:
+2025-10-22 08:43:21 | INFO     | Title search failed, trying text search for:
 2025-10-22 08:43:21 | INFO     | Searching for permalink=None permalink_match=None text='' title=None types=None entity_types=None after_date=None
-2025-10-22 08:43:21 | INFO     | Search returned no results for query: 
+2025-10-22 08:43:21 | INFO     | Search returned no results for query:
 2025-10-22 08:43:21 | INFO     | Using in-memory SQLite database
 2025-10-22 08:43:21 | INFO     | Initializing search index
 2025-10-22 08:43:21 | INFO     | Initializing search index
@@ -77791,3 +77791,885 @@ AttributeError: 'str' object has no attribute 'results'
 2025-11-09 19:34:15 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
 2025-11-09 19:36:19 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
 2025-11-09 19:36:22 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 11:56:59 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 11:57:03 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-11 11:57:03 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-11 11:57:03 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-11 11:57:03 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-11 11:57:03 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-11 11:57:03 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-11 11:57:03 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-11 11:57:03 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-11 11:57:03 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-11 11:57:03 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-11 11:57:03 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-11 11:57:03 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-11 11:57:03 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-11 11:57:03 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-11 11:57:03 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:03 | INFO     | Initializing search index
+2025-11-11 11:57:03 | INFO     | Initializing search index
+2025-11-11 11:57:03 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:03 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:04 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:04 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:04 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:04 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Searching for permalink=None permalink_match=None text='test query' title=None types=None entity_types=None after_date=None before_date=None tags=None
+2025-11-11 11:57:05 | ERROR    | Search failed for query 'test query': syntax error
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Searching for permalink=None permalink_match=None text='test query' title=None types=None entity_types=None after_date=None before_date=None tags=None
+2025-11-11 11:57:05 | ERROR    | Search failed for query 'test query': permission denied
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 11:57:05 | INFO     | Using in-memory SQLite database
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initializing search index
+2025-11-11 11:57:05 | INFO     | Initialized project session with default project: test-project
+2025-11-11 11:57:05 | INFO     | Switched project context: test-project -> test-project
+2025-11-11 18:32:02 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 18:33:52 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 22:31:52 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 22:31:55 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-11 22:31:55 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-11 22:31:55 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-11 22:31:55 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-11 22:31:55 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-11 22:31:55 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-11 22:31:55 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-11 22:31:55 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-11 22:31:55 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-11 22:31:55 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-11 22:31:55 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-11 22:31:55 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-11 22:31:55 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-11 22:31:55 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-11 22:31:55 | INFO     | MCP tool call tool=adn_search operation=notes query=tag:critical
+2025-11-11 22:31:55 | WARNING  | No current/default project set, using first available: main
+2025-11-11 22:31:55 | INFO     | Searching for permalink=None permalink_match=None text=None title=None types=None entity_types=None after_date=None before_date=None tags=['critical']
+2025-11-11 22:31:55 | INFO     | Running database migrations...
+2025-11-11 22:31:55 | INFO     | Migrations completed successfully
+2025-11-11 22:31:55 | INFO     | Initializing search index
+2025-11-11 22:32:45 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 22:32:47 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-11 22:32:47 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-11 22:32:47 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-11 22:32:47 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-11 22:32:47 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-11 22:32:47 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-11 22:32:47 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-11 22:32:47 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-11 22:32:47 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-11 22:32:47 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-11 22:32:47 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-11 22:32:47 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-11 22:32:47 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-11 22:32:47 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-11 22:32:47 | INFO     | MCP tool call tool=adn_search operation=notes query=tag:critical
+2025-11-11 22:32:47 | WARNING  | No current/default project set, using first available: main
+2025-11-11 22:32:47 | INFO     | Searching for permalink=None permalink_match=None text=None title=None types=None entity_types=None after_date=None before_date=None tags=['critical']
+2025-11-11 22:32:47 | INFO     | Running database migrations...
+2025-11-11 22:32:47 | INFO     | Migrations completed successfully
+2025-11-11 22:32:47 | INFO     | Initializing search index
+2025-11-11 22:38:44 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-11 22:40:35 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 11:50:54 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:23:54 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:30:16 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:30:40 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:30:55 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:31:20 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:31:57 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:32:22 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:32:52 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:33:27 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:33:51 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:34:11 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:34:47 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:35:16 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:35:41 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:35:58 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:36:26 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 12:36:54 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 13:53:42 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-11-17 13:55:18 | INFO     | Advanced Memory 1.0.0b1 (Project: claude-depot-consolidated)
+2025-11-17 22:58:07 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 22:58:11 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-17 22:58:11 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-17 22:58:11 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-17 22:58:11 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-17 22:58:11 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-17 22:58:11 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-17 22:58:11 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-17 22:58:11 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-17 22:58:11 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-17 22:58:11 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-17 22:58:11 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-17 22:58:11 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-17 22:58:11 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-17 22:58:11 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-17 22:58:18 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 22:58:21 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-17 22:58:21 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-17 22:58:21 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-17 22:58:21 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-17 22:58:21 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-17 22:58:21 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-17 22:58:21 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-17 22:58:21 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-17 22:58:21 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-17 22:58:21 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-17 22:58:21 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-17 22:58:21 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-17 22:58:21 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-17 22:58:21 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-17 22:58:22 | INFO     | Using in-memory SQLite database
+2025-11-17 22:58:22 | INFO     | Initializing search index
+2025-11-17 22:58:22 | INFO     | Initializing search index
+2025-11-17 22:58:22 | INFO     | Initialized project session with default project: test-project
+2025-11-17 22:58:22 | INFO     | Switched project context: test-project -> test-project
+2025-11-17 22:58:25 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-17 22:58:26 | INFO     | Using in-memory SQLite database
+2025-11-17 22:58:26 | INFO     | Initializing search index
+2025-11-17 22:58:26 | INFO     | Initializing search index
+2025-11-17 22:58:26 | INFO     | Initialized project session with default project: test-project
+2025-11-17 22:58:26 | INFO     | Switched project context: test-project -> test-project
+2025-11-22 21:28:02 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:28:07 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-22 21:28:07 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-22 21:28:07 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-22 21:28:07 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-22 21:28:07 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-22 21:28:07 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-22 21:28:07 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-22 21:28:07 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-22 21:28:07 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-22 21:28:07 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-22 21:28:07 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-22 21:28:07 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-22 21:28:07 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-22 21:28:07 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-22 21:28:30 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:29:13 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:29:17 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-22 21:29:17 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-22 21:29:17 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-22 21:29:17 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-22 21:29:17 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-22 21:29:17 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-22 21:29:17 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-22 21:29:17 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-22 21:29:17 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-22 21:29:17 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-22 21:29:17 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-22 21:29:17 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-22 21:29:17 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-22 21:29:17 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-22 21:29:17 | INFO     | Using in-memory SQLite database
+2025-11-22 21:29:17 | INFO     | Initializing search index
+2025-11-22 21:29:17 | INFO     | Initializing search index
+2025-11-22 21:29:17 | INFO     | Initialized project session with default project: test-project
+2025-11-22 21:29:17 | INFO     | Switched project context: test-project -> test-project
+2025-11-22 21:29:28 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:29:33 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-22 21:29:33 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-22 21:29:33 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-22 21:29:33 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-22 21:29:33 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-22 21:29:33 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-22 21:29:33 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-22 21:29:33 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-22 21:29:33 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-22 21:29:33 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-22 21:29:33 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-22 21:29:33 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-22 21:29:33 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-22 21:29:33 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-22 21:29:53 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:29:58 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-22 21:29:58 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-22 21:29:58 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-22 21:29:58 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-22 21:29:58 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-22 21:29:58 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-22 21:29:58 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-22 21:29:58 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-22 21:29:58 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-22 21:29:58 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-22 21:29:58 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-22 21:29:58 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-22 21:29:58 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-22 21:29:58 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-22 21:30:22 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-22 21:30:26 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-22 21:30:26 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-22 21:30:26 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-22 21:30:26 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-22 21:30:26 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-22 21:30:26 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-22 21:30:26 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-22 21:30:26 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-22 21:30:26 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-22 21:30:26 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-22 21:30:26 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-22 21:30:26 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-22 21:30:26 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-22 21:30:26 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-24 15:47:44 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-27 23:53:10 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-27 23:53:13 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-27 23:53:13 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-27 23:53:13 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-27 23:53:13 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-27 23:53:13 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-27 23:53:13 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-27 23:53:13 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-27 23:53:13 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-27 23:53:13 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-27 23:53:13 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-27 23:53:13 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-27 23:53:13 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-27 23:53:13 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-27 23:53:13 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | ERROR    | Pandoc error for Research Note: Error: conversion failed
+2025-11-27 23:53:14 | ERROR    | Pandoc error for Meeting Minutes: Error: conversion failed
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:53:14 | INFO     | Using in-memory SQLite database
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initializing search index
+2025-11-27 23:53:14 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:53:14 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:38 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-27 23:54:40 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-27 23:54:40 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-27 23:54:40 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-27 23:54:40 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-27 23:54:40 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-27 23:54:40 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-27 23:54:40 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-27 23:54:40 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-27 23:54:40 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-27 23:54:40 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-27 23:54:40 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-27 23:54:40 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-27 23:54:40 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-27 23:54:40 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-27 23:54:41 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-11-27 23:54:52 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-11-27 23:54:52 | INFO     | Loaded 7 templates for category 'ai'
+2025-11-27 23:54:52 | INFO     | Loaded 2 templates for category 'creative'
+2025-11-27 23:54:52 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-11-27 23:54:52 | INFO     | Loaded 19 templates for category 'developer'
+2025-11-27 23:54:52 | INFO     | Loaded 7 templates for category 'devops'
+2025-11-27 23:54:52 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-11-27 23:54:52 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-11-27 23:54:52 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-11-27 23:54:52 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-11-27 23:54:52 | INFO     | Loaded 8 templates for category 'researcher'
+2025-11-27 23:54:52 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-11-27 23:54:52 | INFO     | Loaded 3 templates for category 'writer'
+2025-11-27 23:54:52 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | ERROR    | Pandoc error for Research Note: Error: conversion failed
+2025-11-27 23:54:53 | ERROR    | Pandoc error for Meeting Minutes: Error: conversion failed
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-11-27 23:54:53 | INFO     | Using in-memory SQLite database
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initializing search index
+2025-11-27 23:54:53 | INFO     | Initialized project session with default project: test-project
+2025-11-27 23:54:53 | INFO     | Switched project context: test-project -> test-project
+2025-12-04 12:08:07 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-04 12:08:09 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-04 12:08:09 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-04 12:08:09 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-04 12:08:09 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-04 12:08:09 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-04 12:08:09 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-04 12:08:09 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-04 12:08:09 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-04 12:08:09 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-04 12:08:09 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-04 12:08:09 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-04 12:08:09 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-04 12:08:09 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-04 12:08:09 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-04 12:09:05 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-04 12:09:07 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-04 12:09:07 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-04 12:09:07 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-04 12:09:07 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-04 12:09:07 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-04 12:09:07 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-04 12:09:07 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-04 12:09:07 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-04 12:09:07 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-04 12:09:07 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-04 12:09:07 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-04 12:09:07 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-04 12:09:07 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-04 12:09:07 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-04 12:09:47 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-04 12:09:49 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-04 12:09:49 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-04 12:09:49 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-04 12:09:49 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-04 12:09:49 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-04 12:09:49 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-04 12:09:49 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-04 12:09:49 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-04 12:09:49 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-04 12:09:49 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-04 12:09:49 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-04 12:09:49 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-04 12:09:49 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-04 12:09:49 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-05 10:20:15 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-05 10:20:15 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-05 10:20:18 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-05 10:20:18 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-05 10:20:18 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-05 10:20:18 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-05 10:20:18 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-05 10:20:18 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-05 10:20:18 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-05 10:20:18 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-05 10:20:18 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-05 10:20:18 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-05 10:20:18 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-05 10:20:18 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-05 10:20:18 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-05 10:20:18 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-05 10:20:18 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-05 10:22:29 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-05 10:22:31 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-05 10:22:31 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-05 10:22:31 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-05 10:22:31 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-05 10:22:31 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-05 10:22:31 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-05 10:22:31 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-05 10:22:31 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-05 10:22:31 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-05 10:22:31 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-05 10:22:31 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-05 10:22:31 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-05 10:22:31 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-05 10:22:31 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-07 23:42:04 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-09 21:13:12 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-09 23:11:38 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-09 23:13:11 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-09 23:13:11 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-09 23:13:11 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-09 23:13:11 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-09 23:13:11 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-09 23:13:11 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-09 23:13:11 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-09 23:13:11 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-09 23:13:11 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-09 23:13:11 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-09 23:13:11 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-09 23:13:11 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-09 23:13:11 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-09 23:13:11 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-09 23:14:26 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-09 23:18:48 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-09 23:18:48 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-09 23:18:48 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-09 23:18:48 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-09 23:18:48 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-09 23:18:48 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-09 23:18:48 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-09 23:18:48 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-09 23:18:48 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-09 23:18:48 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-09 23:18:48 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-09 23:18:48 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-09 23:18:48 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-09 23:18:48 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-10 00:27:14 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-10 00:27:17 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-10 00:27:17 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-10 00:27:17 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-10 00:27:17 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-10 00:27:17 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-10 00:27:17 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-10 00:27:17 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-10 00:27:17 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-10 00:27:17 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-10 00:27:17 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-10 00:27:17 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-10 00:27:17 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-10 00:27:17 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-10 00:27:17 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-10 09:03:57 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:46:05 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:47:59 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:48:02 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 14:48:02 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 14:48:02 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 14:48:02 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 14:48:02 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 14:48:02 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 14:48:02 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 14:48:02 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 14:48:02 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 14:48:02 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 14:48:02 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 14:48:02 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 14:48:02 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 14:48:02 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-11 14:48:15 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:48:18 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 14:48:18 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 14:48:18 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 14:48:18 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 14:48:18 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 14:48:18 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 14:48:18 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 14:48:18 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 14:48:18 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 14:48:18 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 14:48:18 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 14:48:18 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 14:48:18 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 14:48:18 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-11 14:48:18 | INFO     | Initializing app...
+2025-12-11 14:48:18 | ERROR    | Error initializing database: Invalid argument(s) 'pool_size','max_overflow' sent to create_engine(), using configuration SQLiteDialect_aiosqlite/NullPool/Engine.  Please check that the keyword arguments are appropriate for this combination of components.
+2025-12-11 14:48:18 | INFO     | Reconciling projects from config with database...
+2025-12-11 14:48:50 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:48:53 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 14:48:53 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 14:48:53 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 14:48:53 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 14:48:53 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 14:48:53 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 14:48:53 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 14:48:53 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 14:48:53 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 14:48:53 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 14:48:53 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 14:48:53 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 14:48:53 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 14:48:53 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-11 14:48:53 | INFO     | Initializing app...
+2025-12-11 14:48:53 | INFO     | Running database migrations...
+2025-12-11 14:48:53 | INFO     | Migrations completed successfully
+2025-12-11 14:48:53 | INFO     | Initializing search index
+2025-12-11 14:48:53 | INFO     | Database initialization completed
+2025-12-11 14:48:53 | INFO     | Reconciling projects from config with database...
+2025-12-11 14:48:53 | INFO     | Synchronizing projects between database and configuration
+2025-12-11 14:48:53 | INFO     | Project 'japan-trip-2025' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'general-ai' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'mcp-investigation' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'obsidian-integrated' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'chitchat' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'advanced-memory-mcp' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'main' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project 'japan-2025' exists in database but not in config - marking inactive
+2025-12-11 14:48:53 | INFO     | Project synchronization complete
+2025-12-11 14:48:53 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 14:48:53 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-12-11 14:48:53 | INFO     | Projects successfully reconciled between config and database
+2025-12-11 14:48:53 | INFO     | App initialization completed (migration running in background if needed)
+2025-12-11 14:48:53 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 14:51:45 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 14:51:48 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 14:51:48 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 14:51:48 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 14:51:48 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 14:51:48 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 14:51:48 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 14:51:48 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 14:51:48 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 14:51:48 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 14:51:48 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 14:51:48 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 14:51:48 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 14:51:48 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 14:51:48 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-11 14:51:48 | INFO     | Initializing app...
+2025-12-11 14:51:48 | INFO     | Running database migrations...
+2025-12-11 14:51:48 | INFO     | Migrations completed successfully
+2025-12-11 14:51:48 | INFO     | Initializing search index
+2025-12-11 14:51:48 | INFO     | Database initialization completed
+2025-12-11 14:51:48 | INFO     | Reconciling projects from config with database...
+2025-12-11 14:51:48 | INFO     | Synchronizing projects between database and configuration
+2025-12-11 14:51:48 | INFO     | Project 'japan-trip-2025' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'general-ai' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'mcp-investigation' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'obsidian-integrated' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'chitchat' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'advanced-memory-mcp' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'main' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project 'japan-2025' exists in database but not in config - marking inactive
+2025-12-11 14:51:48 | INFO     | Project synchronization complete
+2025-12-11 14:51:48 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 14:51:48 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-12-11 14:51:48 | INFO     | Projects successfully reconciled between config and database
+2025-12-11 14:51:48 | INFO     | App initialization completed (migration running in background if needed)
+2025-12-11 14:51:48 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 16:45:02 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-11 16:45:04 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 16:45:04 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 16:45:04 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 16:45:04 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 16:45:04 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 16:45:04 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 16:45:04 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 16:45:04 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 16:45:04 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 16:45:04 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 16:45:04 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 16:45:04 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 16:45:04 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 16:45:04 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-11 16:45:04 | INFO     | Initializing app...
+2025-12-11 16:45:04 | INFO     | Running database migrations...
+2025-12-11 16:45:04 | INFO     | Migrations completed successfully
+2025-12-11 16:45:04 | INFO     | Initializing search index
+2025-12-11 16:45:04 | INFO     | Database initialization completed
+2025-12-11 16:45:04 | INFO     | Reconciling projects from config with database...
+2025-12-11 16:45:04 | INFO     | Synchronizing projects between database and configuration
+2025-12-11 16:45:04 | INFO     | Project 'japan-trip-2025' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'general-ai' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'mcp-investigation' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'obsidian-integrated' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'chitchat' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'advanced-memory-mcp' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'main' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project 'japan-2025' exists in database but not in config - marking inactive
+2025-12-11 16:45:04 | INFO     | Project synchronization complete
+2025-12-11 16:45:04 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 16:45:04 | INFO     | Refreshed project session from config, new default: claude-depot-consolidated
+2025-12-11 16:45:04 | INFO     | Projects successfully reconciled between config and database
+2025-12-11 16:45:04 | INFO     | App initialization completed (migration running in background if needed)
+2025-12-11 16:45:04 | INFO     | Initialized project session with default project: claude-depot-consolidated
+2025-12-11 16:45:51 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-11 16:45:51 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-11 16:45:51 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-11 16:45:51 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-11 16:45:51 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-11 16:45:51 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-11 16:45:51 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-11 16:45:51 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-11 16:45:51 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-11 16:45:51 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-11 16:45:51 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-11 16:45:51 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-11 16:45:51 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-11 16:45:51 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 20:31:59 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-12 20:32:02 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 20:32:02 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 20:32:02 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 20:32:02 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 20:32:02 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 20:32:02 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 20:32:02 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 20:32:02 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 20:32:02 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 20:32:02 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 20:32:02 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 20:32:02 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 20:32:02 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 20:32:02 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 20:38:47 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-12 20:38:49 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 20:38:49 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 20:38:49 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 20:38:49 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 20:38:49 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 20:38:49 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 20:38:49 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 20:38:49 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 20:38:49 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 20:38:49 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 20:38:49 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 20:38:49 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 20:38:49 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 20:38:49 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 20:40:22 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-12 20:40:24 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 20:40:24 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 20:40:24 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 20:40:24 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 20:40:24 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 20:40:24 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 20:40:24 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 20:40:24 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 20:40:24 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 20:40:24 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 20:40:24 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 20:40:24 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 20:40:24 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 20:40:24 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 20:40:47 | INFO     | Advanced Memory 1.0.0b4 (Project: claude-depot-consolidated)
+2025-12-12 20:40:49 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 20:40:49 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 20:40:49 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 20:40:49 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 20:40:49 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 20:40:49 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 20:40:49 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 20:40:49 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 20:40:49 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 20:40:49 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 20:40:49 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 20:40:49 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 20:40:49 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 20:40:49 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 23:40:06 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 23:40:06 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 23:40:06 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 23:40:06 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 23:40:06 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 23:40:06 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 23:40:06 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 23:40:06 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 23:40:06 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 23:40:06 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 23:40:06 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 23:40:06 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 23:40:06 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 23:40:06 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 23:40:15 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 23:40:15 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 23:40:15 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 23:40:15 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 23:40:15 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 23:40:15 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 23:40:15 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 23:40:15 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 23:40:15 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 23:40:15 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 23:40:15 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 23:40:15 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 23:40:15 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 23:40:15 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2025-12-12 23:40:23 | INFO     | Template loader initialized with directory: D:\Dev\repos\advanced-memory-mcp\zettelkasten\templates
+2025-12-12 23:40:23 | INFO     | Loaded 7 templates for category 'ai'
+2025-12-12 23:40:23 | INFO     | Loaded 2 templates for category 'creative'
+2025-12-12 23:40:23 | INFO     | Loaded 3 templates for category 'data-scientist'
+2025-12-12 23:40:23 | INFO     | Loaded 19 templates for category 'developer'
+2025-12-12 23:40:23 | INFO     | Loaded 7 templates for category 'devops'
+2025-12-12 23:40:23 | INFO     | Loaded 2 templates for category 'entrepreneur'
+2025-12-12 23:40:23 | INFO     | Loaded 3 templates for category 'knowledge-worker'
+2025-12-12 23:40:23 | INFO     | Loaded 2 templates for category 'philosophy'
+2025-12-12 23:40:23 | INFO     | Loaded 2 templates for category 'product-manager'
+2025-12-12 23:40:23 | INFO     | Loaded 8 templates for category 'researcher'
+2025-12-12 23:40:23 | INFO     | Loaded 4 templates for category 'uiux-designer'
+2025-12-12 23:40:23 | INFO     | Loaded 3 templates for category 'writer'
+2025-12-12 23:40:23 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates

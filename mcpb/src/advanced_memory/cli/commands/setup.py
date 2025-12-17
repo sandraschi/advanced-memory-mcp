@@ -60,7 +60,10 @@ def setup():
 
     if client == "cursor":
         link = generate_cursor_deeplink(
-            "advanced-memory", transport, host or "127.0.0.1", port or 8000  # type: ignore
+            "advanced-memory",
+            transport,
+            host or "127.0.0.1",
+            port or 8000,  # type: ignore
         )
         rprint(
             Panel.fit(
@@ -81,14 +84,19 @@ def setup():
                 rprint("[yellow]→[/yellow] Click 'Install' to complete setup\n")
             except Exception as e:
                 rprint(f"[red]✗[/red] Could not open browser: {e}")
-                rprint("[yellow]→[/yellow] Please copy the link above and paste it into your browser\n")
+                rprint(
+                    "[yellow]→[/yellow] Please copy the link above and paste it into your browser\n"
+                )
         else:
             rprint("\n[yellow]>> Copy the link above and paste it into your browser[/yellow]")
             rprint("[yellow]>> Cursor will prompt you to install[/yellow]\n")
 
     elif client == "vscode":
         link = generate_vscode_deeplink(
-            "advanced-memory", transport, host or "127.0.0.1", port or 8000  # type: ignore
+            "advanced-memory",
+            transport,
+            host or "127.0.0.1",
+            port or 8000,  # type: ignore
         )
         rprint(
             Panel.fit(
@@ -103,18 +111,25 @@ def setup():
             try:
                 webbrowser.open(link)
                 rprint("[green]Opening link in browser...[/green]")
-                rprint("\n[yellow]VS Code should prompt you to install Advanced Memory MCP[/yellow]")
+                rprint(
+                    "\n[yellow]VS Code should prompt you to install Advanced Memory MCP[/yellow]"
+                )
                 rprint("[yellow]Click 'Install' to complete setup[/yellow]\n")
             except Exception as e:
                 rprint(f"[red]Could not open browser: {e}[/red]")
-                rprint("[yellow]Please copy the link above and paste it into your browser[/yellow]\n")
+                rprint(
+                    "[yellow]Please copy the link above and paste it into your browser[/yellow]\n"
+                )
         else:
             rprint("\n[yellow]Copy the link above and paste it into your browser[/yellow]")
             rprint("[yellow]VS Code will prompt you to install[/yellow]\n")
 
     elif client == "claude-desktop":
         config = generate_claude_config(
-            "advanced-memory", transport, host or "127.0.0.1", port or 8000  # type: ignore
+            "advanced-memory",
+            transport,
+            host or "127.0.0.1",
+            port or 8000,  # type: ignore
         )
         config_json = json.dumps(config, indent=2)
         rprint(
@@ -127,19 +142,23 @@ def setup():
         rprint("\n[yellow]NOTE: Claude Desktop requires manual configuration[/yellow]\n")
         rprint("[bold]Steps:[/bold]")
         rprint("  1. Open your claude_desktop_config.json file:")
-        rprint("     [dim]• macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]")
+        rprint(
+            "     [dim]• macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]"
+        )
         rprint("     [dim]• Windows: %APPDATA%\\Claude\\claude_desktop_config.json[/dim]")
         rprint("     [dim]• Linux: ~/.config/Claude/claude_desktop_config.json[/dim]")
         rprint("  2. Add the configuration shown above to the 'mcpServers' section")
         rprint("  3. Restart Claude Desktop\n")
 
     else:
-        rprint(Panel.fit(
-            "[yellow]For manual setup, please refer to the documentation:[/yellow]\n"
-            "[cyan]https://github.com/yourusername/advanced-memory-mcp[/cyan]",
-            title="Manual Setup",
-            border_style="yellow",
-        ))
+        rprint(
+            Panel.fit(
+                "[yellow]For manual setup, please refer to the documentation:[/yellow]\n"
+                "[cyan]https://github.com/yourusername/advanced-memory-mcp[/cyan]",
+                title="Manual Setup",
+                border_style="yellow",
+            )
+        )
         rprint("")
 
     # Step 4: Next steps
@@ -151,9 +170,10 @@ def setup():
     else:
         rprint("[bold]Next Steps:[/bold]")
         rprint("  1. Start the Advanced Memory MCP server:")
-        rprint(f"     [cyan]advanced-memory mcp --transport {transport} --host {host} --port {port}[/cyan]")
+        rprint(
+            f"     [cyan]advanced-memory mcp --transport {transport} --host {host} --port {port}[/cyan]"
+        )
         rprint("  2. Click the installation link")
         rprint("  3. Start using Advanced Memory MCP in your AI client!\n")
 
     rprint("[green]Setup complete! Happy note-taking![/green]\n")
-

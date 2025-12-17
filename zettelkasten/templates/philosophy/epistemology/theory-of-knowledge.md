@@ -11,7 +11,7 @@ graph LR
     K[Knowledge] --> J[Justified]
     K --> T[True]
     K --> B[Belief]
-    
+
     J --> J1[Evidence]
     J --> J2[Reason]
     T --> T1[Corresponds to reality]
@@ -23,7 +23,7 @@ graph LR
 ```python
 class JustifiedTrueBelief:
     """Classical account of knowledge"""
-    
+
     def requirements(self):
         return {
             "belief": {
@@ -42,7 +42,7 @@ class JustifiedTrueBelief:
                 "note": "Lucky guess doesn't count as knowledge"
             }
         }
-    
+
     def examples(self):
         """Testing the definition"""
         return {
@@ -72,7 +72,7 @@ class JustifiedTrueBelief:
 ```python
 class GettierProblem:
     """JTB is not enough"""
-    
+
     def original_case(self):
         """Edmund Gettier's first example"""
         return {
@@ -95,7 +95,7 @@ class GettierProblem:
             },
             "impact": "Destroyed 2000 years of JTB consensus"
         }
-    
+
     def barn_facade_case(self):
         """Alvin Goldman's example"""
         return {
@@ -119,7 +119,7 @@ class GettierProblem:
 ```python
 class Foundationalism:
     """Knowledge has foundations"""
-    
+
     def structure(self):
         """Pyramid of beliefs"""
         return {
@@ -139,7 +139,7 @@ class Foundationalism:
             },
             "metaphor": "Building on solid foundation"
         }
-    
+
     def problems(self):
         return {
             "regress_solved": "Stops infinite regress with basic beliefs ✓",
@@ -154,7 +154,7 @@ class Foundationalism:
 ```python
 class Coherentism:
     """Knowledge as coherent web"""
-    
+
     def structure(self):
         """Web of mutually supporting beliefs"""
         return {
@@ -164,7 +164,7 @@ class Coherentism:
             "mutual_support": "Beliefs support each other holistically",
             "example": "Scientific theories - judged by coherence with observations, other theories"
         }
-    
+
     def problems(self):
         return {
             "isolation_objection": "Coherent fairy tales still not knowledge",
@@ -179,7 +179,7 @@ class Coherentism:
 ```python
 class Reliabilism:
     """Knowledge from reliable processes"""
-    
+
     def core_idea(self):
         """You know P if belief formed by reliable process"""
         return {
@@ -208,7 +208,7 @@ class Reliabilism:
 ```python
 class Skepticism:
     """Can we know anything about external world?"""
-    
+
     def descartes_method(self):
         """Systematic doubt"""
         return {
@@ -222,7 +222,7 @@ class Skepticism:
             "survives_doubt": "Cogito ergo sum (I think therefore I am)",
             "problem": "Hard to get from 'I exist' to 'External world exists'"
         }
-    
+
     def brain_in_vat(self):
         """Modern skeptical scenario"""
         return {
@@ -243,7 +243,7 @@ class Skepticism:
 ```python
 class AntiSkepticism:
     """How philosophers respond"""
-    
+
     def moorean_response(self):
         """G.E. Moore's common sense"""
         return {
@@ -252,7 +252,7 @@ class AntiSkepticism:
             "method": "Reverse the argument - use common sense to reject skepticism",
             "problem": "Doesn't answer skeptic, just asserts confidence"
         }
-    
+
     def contextualism(self):
         """Standards shift by context"""
         return {
@@ -271,7 +271,7 @@ class AntiSkepticism:
 ```python
 class APrioriKnowledge:
     """Knowledge independent of experience"""
-    
+
     def rationalism(self):
         """Descartes, Leibniz, Spinoza"""
         return {
@@ -284,7 +284,7 @@ class APrioriKnowledge:
             "method": "Pure reason, innate ideas",
             "appeal": "Certainty, necessity"
         }
-    
+
     def empiricism(self):
         """Locke, Berkeley, Hume"""
         return {
@@ -295,7 +295,7 @@ class APrioriKnowledge:
             "method": "Observation, experiment, induction",
             "problem": "How to justify induction? (Hume's problem)"
         }
-    
+
     def synthetic_a_priori(self):
         """Kant's synthesis"""
         return {
@@ -318,7 +318,7 @@ class APrioriKnowledge:
 ```python
 class InductionProblem:
     """The scandal of philosophy"""
-    
+
     def the_problem(self):
         return {
             "observation": "Sun has risen every day in past",
@@ -328,7 +328,7 @@ class InductionProblem:
             "problem": "That's using induction to justify induction! (Circular)",
             "hume_conclusion": "Induction cannot be rationally justified; it's habit/custom"
         }
-    
+
     def responses(self):
         return {
             "pragmatic": {
@@ -356,7 +356,7 @@ class InductionProblem:
 ```python
 class SocialKnowledge:
     """Most knowledge from others"""
-    
+
     def testimony(self):
         """Knowledge from what others tell us"""
         return {
@@ -372,7 +372,7 @@ class SocialKnowledge:
             "non_reductionism": "Testimony is basic source of justification",
             "current_crisis": "Misinformation, deepfakes, epistemic crisis"
         }
-    
+
     def epistemic_injustice(self):
         """Miranda Fricker's concept"""
         return {
@@ -404,34 +404,3 @@ class SocialKnowledge:
 ---
 
 *"We know very little, and yet it is astonishing that we know so much, and still more astonishing that so little knowledge can give us so much power." - Bertrand Russell*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

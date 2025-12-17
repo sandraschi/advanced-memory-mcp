@@ -28,13 +28,13 @@ async def export_pandoc(
     format_type: str = "pdf",
     source_folder: str = "/",
     include_subfolders: bool = True,
-    pdf_engine: str = "pdflatex",
+    pdf_engine: str = "none",
     template_path: str | None = None,
     css_path: str | None = None,
     toc: bool = False,
     highlight_style: str = "tango",
     standalone: bool = True,
-    self_contained: bool = False,
+    self_contained: bool = True,
     project: str | None = None,
     show_after_export: bool = True,
 ) -> str:
@@ -49,36 +49,74 @@ async def export_pandoc(
     - format_type: Output format (pdf, html, docx, odt, rtf, tex, epub, etc.)
     - source_folder: Advanced Memory folder to export from (default: "/")
     - include_subfolders: Include notes from subfolders (default: True)
-    - pdf_engine: PDF generation engine (pdflatex, xelatex, lualatex, wkhtmltopdf, etc.)
+    - pdf_engine: DEPRECATED - PDF not supported, use adn_export("pdf") instead
     - template_path: Path to custom Pandoc template file
-    - css_path: Path to custom CSS file for HTML output
+    - css_path: Path to custom CSS file (defaults to water.css dark mode)
     - toc: Generate table of contents (default: False)
     - highlight_style: Syntax highlighting style (tango, pygments, kate, etc.)
     - standalone: Generate standalone document with headers (default: True)
-    - self_contained: Embed images and styles in output (HTML only, default: False)
+    - self_contained: Embed resources in output (default: True for HTML)
     - project: Specific Advanced Memory project to export from
+    - show_after_export: Open exported file/folder when done (default: True)
 
     Supported Formats:
-    - pdf: PDF document (requires LaTeX)
-    - html: HTML page
+    - pdf: NOT SUPPORTED - Use adn_export("pdf") instead (fpdf2, no LaTeX!)
+    - html: HTML page (with embedded resources and dark CSS by default)
     - docx: Microsoft Word document
     - odt: OpenDocument Text
     - rtf: Rich Text Format
     - tex: LaTeX source
     - epub: EPUB ebook
     - txt: Plain text
-    - And many more...
+
+    PDF Export Notes:
+    - Default engine is weasyprint (pure Python, already installed!)
+    - No external dependencies required
+    - Alternative: wkhtmltopdf (needs separate install)
+    - Alternative: LaTeX engines for advanced typography
+
+    HTML Export Notes:
+    - Uses --embed-resources for self-contained files
+    - Default CSS: water.css dark mode (beautiful, minimal)
+    - Custom CSS path supported
 
     Examples:
     - Export all notes as PDF: export_pandoc("/exports", "pdf")
-    - Export project docs as HTML: export_pandoc("/exports", "html", source_folder="/projects")
-    - Export as Word with TOC: export_pandoc("/exports", "docx", toc=True)
-    - Export with custom CSS: export_pandoc("/exports", "html", css_path="/styles/custom.css")
+    - Export as HTML with TOC: export_pandoc("/exports", "html", toc=True)
+    - Export as Word: export_pandoc("/exports", "docx")
+    - Use wkhtmltopdf: export_pandoc("/exports", "pdf", pdf_engine="wkhtmltopdf")
+    - Use LaTeX: export_pandoc("/exports", "pdf", pdf_engine="xelatex")
 
     Returns:
     Summary of export operation with file counts and any errors encountered.
     """
     try:
+        # Reject PDF format - use native PDF export instead (fpdf2, no LaTeX!)
+        if format_type == "pdf":
+            return """# PDF Export Not Supported via Pandoc
+
+PDF export has been moved to the native PDF export tool using **fpdf2** - pure Python, no LaTeX needed!
+
+**Use this instead:**
+```python
+adn_export("pdf", export_path="...", source_folder="...")
+```
+
+**Why?**
+- ✅ No 2GB LaTeX installation required
+- ✅ No weasyprint dependencies
+- ✅ Pure Python - works immediately
+- ✅ Lightweight and fast
+
+**Pandoc still supports these formats:**
+- docx: Word documents
+- html: HTML pages
+- epub: eBooks
+- odt: OpenDocument Text
+- rtf: Rich Text Format
+- And 40+ other formats (but NOT PDF)
+"""
+
         # Create export directory
         export_dir = Path(export_path)
         export_dir.mkdir(parents=True, exist_ok=True)
@@ -144,41 +182,50 @@ async def _get_notes_from_folder(
     Retrieve all notes from the specified folder using the search API.
     """
     try:
-        # Use search API to find notes (exclude entities for now)
-        query = SearchQuery(
-            text="",  # Empty query to get all notes
-            types=["note"],  # Only notes, not entities
-        )
+        # Use same working pattern as export_html_notes
+        from advanced_memory.mcp.project_session import get_active_project
+        from advanced_memory.schemas.search import SearchResponse
 
-        # Add project filter if specified
-        if project:
-            # Note: This assumes the search API supports project filtering
-            # May need adjustment based on actual API
-            pass
+        active_project = get_active_project(project)
+        project_url = active_project.project_url
+
+        # Use wildcard search to get all notes (same as HTML export)
+        query = SearchQuery(text="*")  # Use wildcard instead of empty string
 
         response = await call_post(
-            client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump()
+            client,
+            f"{project_url}/search/",  # Use project URL endpoint
+            params={"page": 1, "page_size": 1000},
+            json=query.model_dump(),
         )
 
         if not response:
             return []
 
-        response_data = response.json()
-        if not hasattr(response_data, "results") or not response_data.results:
-            return []
+        search_result = SearchResponse.model_validate(response.json())
 
         notes_data = []
-        for note in response_data.results:
+        for note in search_result.results:
             # Filter by folder path
-            note_path = getattr(note, "file_path", "")
-            if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
+            note_path = note.file_path
+
+            # Check if note is in the requested folder
+            if include_subfolders:
+                # Include notes in subfolders
+                folder_matches = note_path.startswith(source_folder.lstrip("/"))
+            else:
+                # Only notes directly in the folder
+                note_folder = "/".join(note_path.split("/")[:-1])
+                folder_matches = note_folder == source_folder.lstrip("/")
+
+            if folder_matches and note_path.endswith(".md"):
                 # Get full note content
                 content = await _get_note_content(note)
                 if content:
                     notes_data.append(
                         {
-                            "id": getattr(note, "id", ""),
-                            "title": getattr(note, "title", ""),
+                            "id": note.id if hasattr(note, "id") else "",
+                            "title": note.title,
                             "file_path": note_path,
                             "content": content,
                         }
@@ -197,7 +244,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools import read_note as mcp_read_note
+        from advanced_memory.mcp.tools.read_note import read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
@@ -205,7 +252,7 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await mcp_read_note.fn(identifier)
+        content = await read_note.fn(identifier)
         return content if content else None
 
     except Exception as e:
@@ -294,7 +341,18 @@ def _build_pandoc_command(
     Build the Pandoc command with all specified options.
 
     Pandoc is auto-installed on first use if not found.
+
+    PDF Export Strategy:
+    - Default: weasyprint (pure Python, already installed as dependency)
+    - Alternative: wkhtmltopdf (needs separate install)
+    - Alternative: LaTeX engines (pdflatex, xelatex, lualatex) for advanced typography
+
+    HTML Export Strategy:
+    - Uses --embed-resources for self-contained output (replaces deprecated --self-contained)
+    - Default dark-mode CSS from water.css CDN if no custom CSS specified
     """
+    import shutil
+
     # Get pandoc executable (auto-installs if needed)
     try:
         cmd = get_pandoc_command()
@@ -308,8 +366,37 @@ def _build_pandoc_command(
 
     # Format specification
     if format_type == "pdf":
-        cmd.extend(["-t", "pdf"])
-        cmd.extend(["--pdf-engine", pdf_engine])
+        if pdf_engine == "weasyprint":
+            # weasyprint is pure Python, already in our dependencies
+            # Pandoc calls it directly - no path lookup needed
+            cmd.extend(["--pdf-engine", "weasyprint"])
+        elif pdf_engine == "wkhtmltopdf":
+            # wkhtmltopdf needs to be found in PATH or standard locations
+            wkhtmltopdf_path = shutil.which("wkhtmltopdf")
+            if not wkhtmltopdf_path:
+                # Try common install locations on Windows
+                import os
+
+                program_files = os.environ.get("ProgramFiles", "C:\\Program Files")
+                wkhtmltopdf_bin = Path(program_files) / "wkhtmltopdf" / "bin" / "wkhtmltopdf.exe"
+                if wkhtmltopdf_bin.exists():
+                    wkhtmltopdf_path = str(wkhtmltopdf_bin)
+                else:
+                    raise RuntimeError(
+                        "wkhtmltopdf not found. Install from: https://wkhtmltopdf.org/downloads.html\n"
+                        "Or use pdf_engine='weasyprint' (default, pure Python)"
+                    )
+            cmd.extend(["--pdf-engine", wkhtmltopdf_path])
+        else:
+            # LaTeX-based engines (pdflatex, xelatex, lualatex)
+            cmd.extend(["--pdf-engine", pdf_engine])
+
+        # Add sensible margin defaults for HTML-based engines
+        if pdf_engine in ("weasyprint", "wkhtmltopdf"):
+            cmd.extend(["-V", "margin-top=15mm"])
+            cmd.extend(["-V", "margin-bottom=15mm"])
+            cmd.extend(["-V", "margin-left=15mm"])
+            cmd.extend(["-V", "margin-right=15mm"])
     else:
         cmd.extend(["-t", format_type])
 
@@ -319,7 +406,27 @@ def _build_pandoc_command(
 
     # Table of contents
     if toc:
-        cmd.append("--toc")
+        if format_type == "docx":
+            # Use Lua filter for native Word TOC (clickable, no "external files" popup)
+            import importlib.resources
+
+            try:
+                # Python 3.9+
+                with importlib.resources.files("advanced_memory.resources.pandoc") as pandoc_res:
+                    lua_filter = pandoc_res / "word-toc.lua"
+                    if lua_filter.exists():
+                        cmd.extend(["--lua-filter", str(lua_filter)])
+                    else:
+                        # Fallback to Pandoc's built-in TOC (may cause popup)
+                        cmd.append("--toc")
+                        cmd.extend(["--toc-depth", "3"])
+            except Exception:
+                # Fallback
+                cmd.append("--toc")
+                cmd.extend(["--toc-depth", "3"])
+        else:
+            cmd.append("--toc")
+            cmd.extend(["--toc-depth", "3"])
 
     # Syntax highlighting
     if highlight_style:
@@ -329,13 +436,20 @@ def _build_pandoc_command(
     if template_path and Path(template_path).exists():
         cmd.extend(["--template", template_path])
 
-    # CSS for HTML output
-    if css_path and format_type == "html" and Path(css_path).exists():
-        cmd.extend(["--css", css_path])
+    # CSS for HTML output (or PDF via HTML-based engines)
+    if format_type == "html" or (
+        format_type == "pdf" and pdf_engine in ("weasyprint", "wkhtmltopdf")
+    ):
+        if css_path and Path(css_path).exists():
+            cmd.extend(["--css", css_path])
+        else:
+            # Default to water.css dark mode for nice styling
+            cmd.extend(["--css", "https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css"])
 
-    # Self-contained HTML
+    # Self-contained / embedded resources for HTML
     if self_contained and format_type == "html":
-        cmd.append("--self-contained")
+        # Use --embed-resources (Pandoc 2.19+) instead of deprecated --self-contained
+        cmd.append("--embed-resources")
 
     return cmd
 

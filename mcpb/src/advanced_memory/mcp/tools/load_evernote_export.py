@@ -2,67 +2,21 @@
 
 import base64
 import re
-import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from xml.etree.ElementTree import Element
 
+import defusedxml.ElementTree as ET
 from loguru import logger
 
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.tools.utils import call_post
 
 
-@mcp.tool(
-    description="""Import Evernote ENEX files into Advanced Memory with complete content and metadata preservation.
-
-This tool processes Evernote's ENEX (Evernote XML) export format, converting rich notes
-with attachments into clean Advanced Memory markdown while preserving all organizational structure.
-
-EVERNOTE FEATURES SUPPORTED:
-- ENEX XML format parsing with full metadata extraction
-- Rich HTML content conversion to clean markdown
-- Notebook hierarchy preservation (stacks become folders)
-- Tag system conversion and mapping
-- Creation and modification timestamps
-- Base64-encoded attachment extraction (images, files, audio)
-- Note links and cross-references
-
-PARAMETERS:
-- export_path (str, REQUIRED): Path to .enex file or directory containing ENEX files
-- folder (str, default="evernote-import"): Advanced Memory folder for imported content
-- preserve_notebooks (bool, default=True): Maintain Evernote notebook hierarchy
-- include_attachments (bool, default=True): Extract and save embedded media files
-- project (str, optional): Target Advanced Memory project
-
-ENEX FILE STRUCTURE:
-Evernote exports are XML files containing:
-- Note content in HTML format with Evernote-specific styling
-- Metadata: title, creation date, modification date, tags
-- Notebook and stack information
-- Embedded resources (images, files, audio) as base64
-
-CONTENT CONVERSION:
-- HTML rich text [UNICODE] Clean markdown formatting
-- Evernote tables [UNICODE] Markdown table syntax
-- Embedded images [UNICODE] Extracted files with proper references
-- Internal links [UNICODE] Advanced Memory entity relationships
-- Tags [UNICODE] Preserved as metadata tags
-
-USAGE EXAMPLES:
-Single file: load_evernote_export("my-notes.enex")
-Directory: load_evernote_export("/path/to/enex-files")
-Custom folder: load_evernote_export("export.enex", folder="archive/evernote")
-No attachments: load_evernote_export("notes.enex", include_attachments=False)
-Flat structure: load_evernote_export("notes.enex", preserve_notebooks=False)
-
-RETURNS:
-Detailed import report with note counts, attachment extractions, notebook mappings, and any conversion issues.
-
-NOTE: ENEX files can be large with many embedded attachments. Processing time depends on file size
-and attachment count. Use include_attachments=False for faster imports without media files.""",
-)
+@mcp.tool
 async def load_evernote_export(
     export_path: str,
     folder: str = "evernote-import",
@@ -214,8 +168,8 @@ async def _process_enex_file(
 
                 if entity_data:
                     # Create the note in Advanced Memory
-                    response = await call_get(
-                        project_url + "/api/memory", method="POST", json=entity_data
+                    response = await call_post(
+                        client, project_url + "/api/memory", json=entity_data
                     )
 
                     if response.status_code == 200:
@@ -249,7 +203,7 @@ async def _process_enex_file(
 
 
 def _parse_enex_note(
-    note_elem: ET.Element,
+    note_elem: Element,
     base_folder: str,
     preserve_notebooks: bool,
     include_attachments: bool,
@@ -327,7 +281,7 @@ def _parse_enex_note(
 
     # Add tags if any
     if tags:
-        entity_data["tags"] = tags
+        entity_data["tags"] = tags  # type: ignore[assignment]
 
     # Add creation date as frontmatter if available
     if created_date:
@@ -411,7 +365,7 @@ def _convert_ordered_list_items(match):
 
 
 def _process_enex_attachments(
-    note_elem: ET.Element, attachments_dir: Path, note_title: str
+    note_elem: Element, attachments_dir: Path, note_title: str
 ) -> tuple[str, list[dict[str, str]]]:
     """Process attachments in ENEX note."""
 

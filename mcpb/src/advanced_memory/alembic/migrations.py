@@ -17,7 +17,7 @@ def get_alembic_config() -> Config:  # pragma: no cover
     return config
 
 
-def reset_database():  # pragma: no cover
+def reset_database() -> None:  # pragma: no cover
     """Drop and recreate all tables."""
     logger.info("Resetting database...")
     config = get_alembic_config()

@@ -23,41 +23,11 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.read_note import read_note
-from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.mcp.tools import read_note as mcp_read_note
+from advanced_memory.mcp.tools import write_note as mcp_write_note
 
 
-@mcp.tool(
-    description="""[UNICODE] FREE & Open Source Markdown Editing with Notepad++
-Export Advanced Memory notes to Notepad++ for professional code-style editing.
-
-This tool provides a FREE alternative to paid editors like Typora, using Notepad++
-(a powerful, lightweight code editor) with excellent markdown support.
-
-NOTEPAD++ FEATURES (All FREE):
-- Syntax highlighting for Markdown
-- Plugin ecosystem (MarkdownViewer, PreviewHTML, etc.)
-- Lightweight and fast startup
-- Professional code editing features
-- Completely open source (GPL)
-
-WORKFLOW:
-1. Export note from Advanced Memory to Notepad++ workspace
-2. Edit with full markdown syntax highlighting and features
-3. Import edited content back to Advanced Memory
-4. Preserve all metadata and relationships
-
-PARAMETERS:
-- note_identifier (str, REQUIRED): Note title or permalink to edit
-- workspace_path (str, optional): Custom workspace directory (defaults to "notepadpp-workspace")
-- create_backup (bool, optional): Create backup of original content (default: True)
-
-RETURNS:
-Confirmation with workspace location and editing instructions.
-
-NOTE: This is for EDITING only. For exporting documents to PDF/HTML/DOCX, use export_pandoc (FREE).
-"""
-)
+@mcp.tool
 async def edit_in_notepadpp(
     note_identifier: str, workspace_path: str | None = None, create_backup: bool = True
 ) -> str:
@@ -77,7 +47,7 @@ async def edit_in_notepadpp(
     """
     try:
         # Get the note content
-        original_content = await read_note(note_identifier)
+        original_content = await mcp_read_note.fn(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 
@@ -137,22 +107,7 @@ async def edit_in_notepadpp(
         return f"[UNICODE] Error exporting note to Notepad++: {str(e)}"
 
 
-@mcp.tool(
-    description="""[UNICODE] Import edited note back from Notepad++ workspace
-Complete the round-trip editing workflow by importing your edited markdown back into Advanced Memory.
-
-This tool reads the edited content from the Notepad++ workspace and updates the original note,
-preserving all metadata and relationships.
-
-PARAMETERS:
-- note_identifier (str, REQUIRED): Original note title or permalink
-- workspace_path (str, optional): Workspace directory (defaults to "notepadpp-workspace")
-- keep_workspace (bool, optional): Keep workspace files after import (default: False)
-
-RETURNS:
-Confirmation of successful import with change summary.
-"""
-)
+@mcp.tool
 async def import_from_notepadpp(
     note_identifier: str, workspace_path: str | None = None, keep_workspace: bool = False
 ) -> str:
@@ -187,7 +142,7 @@ async def import_from_notepadpp(
         edited_content = md_file.read_text(encoding="utf-8")
 
         # Get original content for comparison
-        original_content = await read_note(note_identifier)
+        original_content = await mcp_read_note.fn(note_identifier)
         if not original_content:
             return f"[UNICODE] Original note '{note_identifier}' not found."
 
@@ -203,7 +158,9 @@ The content in Notepad++ workspace is identical to the original note.
 {f"Workspace preserved at: {workspace_dir}" if keep_workspace else "Workspace cleaned up."}"""
 
         # Update the note
-        success = await write_note(note_identifier, edited_content)
+        success = await mcp_write_note.fn(
+            title=note_identifier, content=edited_content, folder="", tags=None, entity_type="note"
+        )
         if not success:
             return "[UNICODE] Failed to update the note with edited content."
 

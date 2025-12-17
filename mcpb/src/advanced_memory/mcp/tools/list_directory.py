@@ -8,62 +8,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_get
 
 
-@mcp.tool(
-    description="""Browse and explore Advanced Memory directory structure with powerful filtering and navigation capabilities.
-
-This essential navigation tool provides filesystem-like directory listing functionality for the knowledge base,
-enabling exploration of folder hierarchies, file discovery, and content organization overview.
-
-LISTING FEATURES:
-- Hierarchical directory structure display
-- Recursive depth control (1-10 levels)
-- File type filtering and glob pattern matching
-- Project-specific directory isolation
-- Visual organization with icons and metadata
-
-OUTPUT FORMAT:
-- [FOLDER] **Directories**: Folder names with expansion indicators
-- [DOC] **Markdown files**: Note titles with metadata
-- [LINK] **Links**: Memory URLs and permalinks
-- [CHART] **Statistics**: File counts and size information
-
-PARAMETERS:
-- dir_name (str, default="/"): Directory path to list (root "/" for all content)
-- depth (int, default=1): Recursion depth (1 = immediate children, higher = subdirectories)
-- file_name_glob (str, optional): Glob pattern for file filtering ("*.md", "*meeting*", "project_*")
-- project (str, optional): Specific project to list (defaults to active project)
-
-PATH EXAMPLES:
-- "/": Root directory (all top-level folders)
-- "/projects": Projects folder contents
-- "/research/ml": Machine learning research subfolder
-- "/meetings/2024": Specific year folder
-
-GLOB PATTERNS:
-- "*.md": All markdown files
-- "*meeting*": Files containing "meeting"
-- "project_*.md": Project files with underscore naming
-- "*2024*": Files with year references
-
-USAGE EXAMPLES:
-Basic listing: list_directory("/")
-Deep exploration: list_directory("/projects", depth=3)
-File filtering: list_directory("/documents", file_name_glob="*.md")
-Specific project: list_directory("/", project="work-project")
-Meeting files: list_directory("/meetings", file_name_glob="*meeting*")
-
-RETURNS:
-Formatted directory tree with file counts, sizes, and navigation paths.
-
-NAVIGATION TIPS:
-- Start with root ("/") to understand overall structure
-- Use depth=1 for overview, increase for detailed exploration
-- Combine with search_notes() for content-based discovery
-- Use file_name_glob for targeted file finding
-
-NOTE: This tool shows the knowledge base organization. Use read_note() to access content,
-search_notes() for content discovery, and write_note() for adding new content.""",
-)
+@mcp.tool
 async def list_directory(
     dir_name: str = "/",
     depth: int = 1,

@@ -6,49 +6,14 @@ from typing import Any
 from loguru import logger
 
 from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE][UNICODE] Knowledge Operations - Swiss Army Knife for Bulk Operations
-
-Comprehensive tool for bulk content management, tag operations, and knowledge base maintenance.
-Handles multiple operations in one tool to reduce complexity and improve efficiency.
-
-OPERATIONS:
-[UNICODE] bulk_update: Batch update multiple notes (tags, content, metadata)
-[UNICODE] bulk_move: Move multiple notes between folders
-[UNICODE] bulk_delete: Delete multiple notes with confirmation
-[UNICODE] tag_analytics: Analyze tag usage and statistics
-[UNICODE] consolidate_tags: Merge similar tags (including semantic similarity)
-[UNICODE] tag_maintenance: Clean up tags (remove duplicates, standardize case)
-[UNICODE] validate_content: Check note quality and fix issues
-[UNICODE] project_stats: Analyze project content and activity
-[UNICODE] find_duplicates: Identify duplicate or similar content
-
-FILTERING:
-[UNICODE] folder: Limit to specific folder
-[UNICODE] tags: Filter by existing tags
-[UNICODE] created_after/before: Date range filtering
-[UNICODE] content_match: Text search in content
-[UNICODE] limit: Maximum items to process
-
-EXAMPLES:
-# Bulk tag management
-knowledge_operations("tag_analytics", action="analyze_usage")
-knowledge_operations("consolidate_tags", semantic_groups=[["mcp", "mcp-server"]])
-
-# Bulk content operations
-knowledge_operations("bulk_update", filters={"tags": ["draft"]}, action={"add_tags": ["reviewed"]})
-knowledge_operations("validate_content", checks=["broken_links", "formatting"])
-
-# Project analysis
-knowledge_operations("project_stats", project="work")
-"""
-)
+@mcp.tool
 async def knowledge_operations(
     operation: str,
     filters: dict[str, Any] | None = None,
@@ -110,21 +75,28 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
         search_query = SearchQuery(
             text="*",  # Get all content
             types=["note"],
-            page=1,
-            page_size=1000,
         )
 
-        response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+        response = await call_post(
+            client,
+            "/api/search",
+            params={"page": 1, "page_size": 1000},
+            json=search_query.model_dump(),
+        )
 
-        if not response or not hasattr(response, "results"):
+        if not response:
+            return "[UNICODE] No results found for tag analysis"
+
+        response_data = response.json()
+        if not hasattr(response_data, "results") or not response_data.results:
             return "[UNICODE] No results found for tag analysis"
 
         # Extract tags from all entities
-        tag_counter = Counter()
+        tag_counter: Counter[str] = Counter()
         entities_with_tags = 0
-        total_entities = len(response.results)
+        total_entities = len(response_data.results)
 
-        for result in response.results:
+        for result in response_data.results:
             # Extract tags from entity metadata (if available in result)
             # Note: This assumes tags are included in search results
             entity_tags = getattr(result, "tags", []) or []
@@ -210,9 +182,8 @@ async def _handle_tag_consolidation(
                 continue
             primary_tag = group[0]
             aliases = group[1:]
-            results.append(
-                f"  [UNICODE] '{primary_tag}' [UNICODE] {', '.join(f'"{tag}"' for tag in aliases)}"
-            )
+            alias_list = ", ".join(f'"{tag}"' for tag in aliases)
+            results.append(f"  [UNICODE] '{primary_tag}' [UNICODE] {alias_list}")
 
     if auto_detect:
         results.append("[UNICODE][UNICODE] **AI-Powered Tag Similarity Detection**")
@@ -383,27 +354,31 @@ async def _handle_content_validation(
 
 async def _handle_project_stats(action: dict[str, Any], project: str | None) -> str:
     """Generate comprehensive project statistics."""
-    target_project = project or (await get_active_project())
+    target_project = project or get_active_project().name
 
     # Get project data
     search_query = SearchQuery(
         text="*",  # All content
         types=["note"],
-        page=1,
-        page_size=1000,
     )
 
-    response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+    response = await call_post(
+        client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump()
+    )
 
-    if not response or not hasattr(response, "results"):
+    if not response:
+        return "[UNICODE] Could not retrieve project statistics"
+
+    response_data = response.json()
+    if not hasattr(response_data, "results") or not response_data.results:
         return "[UNICODE] Could not retrieve project statistics"
 
     # Analyze results
-    total_notes = len(response.results)
-    tag_counter = Counter()
-    folder_counter = Counter()
+    total_notes = len(response_data.results)
+    tag_counter: Counter[str] = Counter()
+    folder_counter: Counter[str] = Counter()
 
-    for result in response.results:
+    for result in response_data.results:
         # Extract tags and folders (placeholder logic)
         result_tags = getattr(result, "tags", []) or []
         tag_counter.update(result_tags)
@@ -590,18 +565,25 @@ async def _find_notes_with_filters(
         if "content_match" in filters:
             search_text = filters["content_match"]
 
-        search_query = SearchQuery(
-            text=search_text, types=["note"], page=1, page_size=min(limit, 1000)
+        search_query = SearchQuery(text=search_text, types=["note"])
+
+        response = await call_post(
+            client,
+            "/api/search",
+            params={"page": 1, "page_size": min(limit, 1000)},
+            json=search_query.model_dump(),
         )
 
-        response = await call_post("/api/search", search_query.model_dump(), SearchResponse)
+        if not response:
+            return []
 
-        if not response or not hasattr(response, "results"):
+        response_data = response.json()
+        if not hasattr(response_data, "results") or not response_data.results:
             return []
 
         # Apply additional filters
         filtered_results = []
-        for result in response.results:
+        for result in response_data.results:
             if _matches_filters(result, filters):
                 filtered_results.append(
                     {

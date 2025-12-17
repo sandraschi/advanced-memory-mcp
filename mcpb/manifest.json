@@ -66,9 +66,5 @@
       "sensitive": false,
       "default": true
     }
-  },
-  "compatibility": {
-    "platforms": ["win32", "darwin", "linux"],
-    "python_version": ">=3.11"
   }
 }

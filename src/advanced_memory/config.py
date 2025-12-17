@@ -2,16 +2,26 @@
 
 import json
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from dotenv import load_dotenv
 from loguru import logger
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import advanced_memory
 from advanced_memory.utils import generate_permalink, setup_logging
+
+# Load .env file if it exists
+env_path = Path(__file__).parent.parent.parent / ".env"
+if env_path.exists():
+    load_dotenv(env_path)
+else:
+    # Also try loading from current directory
+    load_dotenv()
 
 DATABASE_NAME = "memory.db"
 APP_DATABASE_NAME = "memory.db"  # Using the same name but in the app directory
@@ -93,6 +103,20 @@ class AdvancedMemoryConfig(BaseSettings):
     api_url: str | None = Field(
         default=None,
         description="URL of remote Advanced Memory API. If set, MCP will connect to this API instead of using local ASGI transport.",
+    )
+
+    # LLM configuration
+    llm_provider: str | None = Field(
+        default=None,
+        description="Default LLM provider (ollama, lmstudio, openai). If None, auto-detects on first use.",
+    )
+    llm_model: str | None = Field(
+        default=None,
+        description="Default LLM model name. If None, uses provider default.",
+    )
+    llm_base_url: str | None = Field(
+        default=None,
+        description="Custom base URL for local LLM providers (Ollama/LM Studio).",
     )
 
     model_config = SettingsConfigDict(
@@ -381,9 +405,14 @@ def setup_advanced_memory_logging() -> None:  # pragma: no cover
         console=console_logging,
     )
 
-    logger.info(f"Advanced Memory {advanced_memory.__version__} (Project: {config.project})")
+    # Suppress startup message in MCP stdio mode to avoid protocol interference
+    # Note: MCP clients may not support cwd field, so we avoid depending on it
+    if sys.stdout.isatty():  # Only log if we're in interactive mode
+        logger.info(f"Advanced Memory {advanced_memory.__version__} (Project: {config.project})")
     _LOGGING_SETUP = True
 
 
-# Set up logging
-setup_advanced_memory_logging()
+# NOTE: setup_advanced_memory_logging() is no longer called at module level
+# to prevent conflicts with MCP server logging configuration.
+# Entry points (CLI, API) should call setup_advanced_memory_logging() explicitly.
+# MCP server entry points configure logging separately to prevent stdout pollution.

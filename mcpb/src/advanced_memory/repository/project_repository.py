@@ -1,17 +1,17 @@
-"""Repository for managing projects in Basic Memory."""
+"""Repository for managing projects in Advanced Memory."""
 
 from collections.abc import Sequence
 from pathlib import Path
 
-from basic_memory import db
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from advanced_memory import db
 from advanced_memory.models.project import Project
 from advanced_memory.repository.repository import Repository
 
 
-class ProjectRepository(Repository[Project]):
+class ProjectRepository(Repository):
     """Repository for Project model.
 
     Projects represent collections of knowledge entities grouped together.
@@ -46,7 +46,10 @@ class ProjectRepository(Repository[Project]):
         Args:
             path: Path to the project directory (will be converted to string internally)
         """
-        query = self.select().where(Project.path == str(path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+
+        normalized_path = normalize_file_path(str(path))
+        query = self.select().where(Project.path == normalized_path)
         return await self.find_one(query)
 
     async def get_default_project(self) -> Project | None:

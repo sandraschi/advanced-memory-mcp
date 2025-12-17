@@ -41,6 +41,11 @@ def app_callback(
 
     # Run initialization for every command unless --version was specified
     if not version and ctx.invoked_subcommand is not None:
+        # Setup logging for CLI commands (but NOT for MCP server which has its own config)
+        # MCP command handles logging separately to prevent stdout pollution
+        if ctx.invoked_subcommand != "mcp":
+            from advanced_memory.config import setup_advanced_memory_logging
+            setup_advanced_memory_logging()
         from advanced_memory.services.initialization import ensure_initialization
 
         app_config = ConfigManager().config

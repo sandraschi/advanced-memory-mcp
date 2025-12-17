@@ -38,6 +38,7 @@ def check_imports():
     """Check that all critical imports work."""
     try:
         from advanced_memory.mcp.server import mcp
+
         print(f"[OK] MCP server imports successfully ({mcp.__class__.__name__})")
         return True
     except Exception as e:

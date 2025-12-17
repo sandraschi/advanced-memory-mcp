@@ -1,4 +1,4 @@
-"""ChatGPT import service for Basic Memory."""
+"""ChatGPT import service for Advanced Memory."""
 
 import logging
 from datetime import datetime
@@ -12,11 +12,11 @@ from advanced_memory.schemas.importer import ChatImportResult
 logger = logging.getLogger(__name__)
 
 
-class ChatGPTImporter(Importer[ChatImportResult]):
+class ChatGPTImporter(Importer):
     """Service for importing ChatGPT conversations."""
 
     async def import_data(
-        self, source_data, destination_folder: str, **kwargs: Any
+        self, source_data: Any, destination_folder: str, **kwargs: Any
     ) -> ChatImportResult:
         """Import conversations from ChatGPT JSON export.
 
@@ -72,7 +72,7 @@ class ChatGPTImporter(Importer[ChatImportResult]):
     def _format_chat_content(
         self, folder: str, conversation: dict[str, Any]
     ) -> EntityMarkdown:  # pragma: no cover
-        """Convert chat conversation to Basic Memory entity.
+        """Convert chat conversation to Advanced Memory entity.
 
         Args:
             folder: Destination folder name.

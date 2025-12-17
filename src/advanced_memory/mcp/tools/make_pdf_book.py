@@ -137,43 +137,52 @@ async def _get_notes_from_folder(
     Retrieve all notes from the specified folder using the search API.
     """
     try:
-        # Use search API to find notes (exclude entities for book chapters)
+        # Use same working pattern as export_html_notes
+        from advanced_memory.mcp.project_session import get_active_project
+        from advanced_memory.schemas.search import SearchResponse
+
+        active_project = get_active_project(project)
+        project_url = active_project.project_url
+
+        # Use wildcard search to get all notes (same as HTML export)
         if tag_filter:
             # Search for notes with specific tag
-            query = SearchQuery(
-                text=f"tag:{tag_filter}",  # Search for notes tagged with the specified tag
-                types=["note"],  # Only notes, not entities
-            )
+            query = SearchQuery(text=f"tag:{tag_filter}")
         else:
-            # Search all notes (will be filtered by folder below)
-            query = SearchQuery(
-                text="",  # Empty query to get all notes
-                types=["note"],  # Only notes, not entities
-            )
+            query = SearchQuery(text="*")  # Use wildcard instead of empty string
 
         response = await call_post(
-            client, "/api/search", params={"page": 1, "page_size": 1000}, json=query.model_dump()
+            client,
+            f"{project_url}/search/",  # Use project URL endpoint
+            params={"page": 1, "page_size": 1000},
+            json=query.model_dump(),
         )
 
         if not response:
             return []
 
-        response_data = response.json()
-        if not hasattr(response_data, "results") or not response_data.results:
-            return []
+        search_result = SearchResponse.model_validate(response.json())
 
         notes_data = []
-        for note in response_data.results:
+        for note in search_result.results:
             # Filter by folder path
-            note_path = getattr(note, "file_path", "")
-            if source_folder == "/" or note_path.startswith(source_folder.lstrip("/")):
+            note_path = note.file_path
+
+            # Check if note is in the requested folder
+            if include_subfolders:
+                folder_matches = note_path.startswith(source_folder.lstrip("/"))
+            else:
+                note_folder = "/".join(note_path.split("/")[:-1])
+                folder_matches = note_folder == source_folder.lstrip("/")
+
+            if folder_matches and note_path.endswith(".md"):
                 # Get full note content
                 content = await _get_note_content(note)
                 if content:
                     notes_data.append(
                         {
-                            "id": getattr(note, "id", ""),
-                            "title": getattr(note, "title", ""),
+                            "id": note.id if hasattr(note, "id") else "",
+                            "title": note.title,
                             "file_path": note_path,
                             "content": content,
                         }
@@ -192,7 +201,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools import read_note as mcp_read_note
+        from advanced_memory.mcp.tools.read_note import read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, "permalink", None) or getattr(note, "title", "")
@@ -200,7 +209,7 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await mcp_read_note.fn(identifier)
+        content = await read_note.fn(identifier)
         return content if content else None
 
     except Exception as e:

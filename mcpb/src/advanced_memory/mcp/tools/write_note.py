@@ -1,7 +1,5 @@
 """Write note tool for Advanced Memory MCP server."""
 
-from typing import Union
-
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -13,56 +11,13 @@ from advanced_memory.schemas.base import Entity
 from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[list[str], str, None]
+TagType = list[str] | str | None
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = Union[list[str], str, None]
+TagType = list[str] | str | None
 
 
-@mcp.tool(
-    description="""Create new notes or update existing ones in the Advanced Memory knowledge base with automatic semantic processing.
-
-This core tool handles all note creation and updates, automatically processing content for entities,
-relationships, and semantic connections while maintaining full markdown support.
-
-CONTENT PROCESSING:
-- Automatic entity recognition and linking ([[Entity Name]] syntax)
-- Relationship extraction and graph building
-- Tag processing and categorization
-- Folder organization and hierarchy
-- Markdown rendering and syntax validation
-
-PARAMETERS:
-- title (str, REQUIRED): Note title (auto-sanitized for filesystem safety)
-- content (str, REQUIRED): Full markdown content with formatting, links, and structure
-- folder (str, REQUIRED): Target folder path within Advanced Memory
-- tags (optional): Tags as string, list of strings, or None for categorization
-- entity_type (str, default="note"): Content type (note, entity, observation, etc.)
-- project (str, optional): Specific Advanced Memory project to write to
-
-SEMANTIC FEATURES:
-- Entity extraction from [[Entity Name]] syntax
-- Bidirectional relationship creation
-- Knowledge graph integration
-- Automatic content indexing
-- Full-text search preparation
-
-FILESYSTEM INTEGRATION:
-- Automatic filename sanitization (Windows-compatible)
-- Folder structure creation
-- File conflict resolution
-- Backup and versioning support
-
-USAGE EXAMPLES:
-Basic note: write_note("Meeting Notes", "# Meeting Summary\\n\\nDiscussed project timeline...", "meetings")
-With tags: write_note("Project Plan", content, "projects", tags=["urgent", "planning"])
-Entity creation: write_note("John Smith", "# John Smith\\n\\nSenior Developer...", "people", entity_type="person")
-
-RETURNS:
-Detailed summary with created/updated file paths, extracted entities, relationships formed, and any processing notes.
-
-NOTE: Content is automatically processed for semantic relationships. Use [[Entity Name]] syntax for linking.""",
-)
+@mcp.tool
 async def write_note(
     title: str,
     content: str,
@@ -163,10 +118,11 @@ async def write_note(
     ]
 
     # Count observations by category
-    categories = {}
+    categories: dict[str, int] = {}
     if result.observations:
         for obs in result.observations:
-            categories[obs.category] = categories.get(obs.category, 0) + 1
+            if obs.category:  # Only count observations with categories
+                categories[obs.category] = categories.get(obs.category, 0) + 1
 
         summary.append("\n## Observations")
         for category, count in sorted(categories.items()):

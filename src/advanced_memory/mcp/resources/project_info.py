@@ -3,8 +3,8 @@
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.server import mcp
 from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas import ProjectInfoResponse
 

@@ -65,11 +65,22 @@ class EditEntityRequest(BaseModel):
     Supports various operation types for different editing scenarios.
     """
 
-    operation: Literal["append", "prepend", "find_replace", "replace_section"]
+    operation: Literal[
+        "append",
+        "prepend",
+        "find_replace",
+        "replace_section",
+        "insert_mermaid",
+        "insert_ascii_art",
+        "insert_kilroy",
+        "insert_kanban",
+        "insert_changelog",
+    ]
     content: str
     section: str | None = None
     find_text: str | None = None
     expected_replacements: int = 1
+    use_regex: bool = False  # Optional: Use regex pattern matching for find_replace
 
     @field_validator("section")
     @classmethod

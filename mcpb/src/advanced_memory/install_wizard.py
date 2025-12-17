@@ -1,7 +1,7 @@
 """
-Basic Memory Installation Wizard
+Advanced Memory Installation Wizard
 
-This module provides an interactive setup for configuring Basic Memory
+This module provides an interactive setup for configuring Advanced Memory
 with various IDEs and tools.
 """
 
@@ -13,12 +13,18 @@ import sys
 from pathlib import Path
 
 
-def clear_screen():
+def clear_screen() -> None:
     """Clear the terminal screen."""
-    os.system("cls" if os.name == "nt" else "clear")
+    # Use subprocess instead of os.system for safety
+    import subprocess
+
+    if os.name == "nt":
+        subprocess.run(["cmd", "/c", "cls"], check=False)
+    else:
+        subprocess.run(["clear"], check=False)
 
 
-def print_banner():
+def print_banner() -> None:
     """Display the ASCII banner."""
     banner = r"""
      ____        _      _____
@@ -34,7 +40,7 @@ def print_banner():
     print(banner)
 
 
-def get_config_path(app_name):
+def get_config_path(app_name: str) -> Path:
     """Get the configuration file path for the given application."""
     system = platform.system()
     if system == "Windows":
@@ -45,7 +51,7 @@ def get_config_path(app_name):
         return Path.home() / ".config" / app_name / "config.json"
 
 
-def backup_file(file_path):
+def backup_file(file_path: Path) -> Path:
     """Create a backup of the file if it exists."""
     if not file_path.exists():
         return file_path
@@ -54,8 +60,8 @@ def backup_file(file_path):
     return backup_path
 
 
-def configure_windsurf():
-    """Configure Windsurf to use Basic Memory as an MCP client."""
+def configure_windsurf() -> tuple[Path, Path]:
+    """Configure Windsurf to use Advanced Memory as an MCP client."""
     config_path = get_config_path("windsurf")
     backup_path = backup_file(config_path)
 
@@ -74,7 +80,7 @@ def configure_windsurf():
     if "clients" not in config["mcp"]:
         config["mcp"]["clients"] = {}
 
-    config["mcp"]["clients"]["basic-memory"] = {
+    config["mcp"]["clients"]["advanced-memory"] = {
         "enabled": True,
         "transport": "stdio",
         "command": os.path.abspath(sys.executable),
@@ -90,12 +96,12 @@ def configure_windsurf():
     return config_path, backup_path
 
 
-def show_help():
+def show_help() -> None:
     """Display the help information."""
     help_text = """
-    ===== Basic Memory - Quick Start Guide =====
+    ===== Advanced Memory - Quick Start Guide =====
 
-    Basic Memory is now installed and running as an MCP server.
+    Advanced Memory is now installed and running as an MCP server.
 
     Key Features:
     - Store and retrieve notes with rich markdown support
@@ -103,19 +109,19 @@ def show_help():
     - Tag and categorize your knowledge
 
     Quick Commands:
-    - Start the MCP server: basic-memory mcp
-    - List all notes: basic-memory list
-    - Create a note: basic-memory new "Note Title"
+    - Start the MCP server: advanced-memory mcp
+    - List all notes: advanced-memory list
+    - Create a note: advanced-memory new "Note Title"
 
     For more help, visit:
-    https://github.com/sandraschi/basic-memory
+    https://github.com/sandraschi/advanced-memory
 
     Press Enter to exit...
     """
     input(help_text)
 
 
-def main():
+def main() -> None:
     """Main entry point for the installation wizard."""
     clear_screen()
     print_banner()
@@ -132,7 +138,7 @@ def main():
     elif choice == "2":
         try:
             config_path, backup_path = configure_windsurf()
-            print("\n✓ Windsurf configuration updated!")
+            print("\nOK Windsurf configuration updated!")
             print(f"  Config file: {config_path}")
             if backup_path != config_path:
                 print(f"  Backup saved to: {backup_path}")

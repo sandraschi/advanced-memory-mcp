@@ -16,6 +16,7 @@ from advanced_memory.mcp.prompts.utils import (
 from advanced_memory.mcp.server import mcp
 from advanced_memory.mcp.tools.recent_activity import recent_activity
 from advanced_memory.schemas.base import TimeFrame
+from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
 
 
@@ -42,7 +43,10 @@ async def recent_activity_prompt(
     """
     logger.info(f"Getting recent activity, timeframe: {timeframe}")
 
-    recent = await recent_activity.fn(timeframe=timeframe, type=[SearchItemType.ENTITY])
+    raw_recent = await recent_activity.fn(
+        timeframe=timeframe, type_filter=[SearchItemType.ENTITY.value]
+    )
+    recent = GraphContext.model_validate(raw_recent)
 
     # Extract primary results from the hierarchical structure
     primary_results = []

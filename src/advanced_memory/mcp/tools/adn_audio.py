@@ -4,6 +4,7 @@ This tool consolidates voice operations: dictate (speech-to-text) and speak (tex
 Extracted from content_manager.py for better separation of concerns and optional dependencies.
 """
 
+import threading
 from typing import Literal
 
 from loguru import logger
@@ -15,26 +16,48 @@ from advanced_memory.utils import parse_tags
 # Define TagType
 TagType = list[str] | str | None
 
+# Global state for wake word listener
+_wake_listener_thread: threading.Thread | None = None
+_wake_listener_stop_event = threading.Event()
+_wake_listener_running = False
+
+# Global state for alarms and timers
+_alarms: dict[str, dict] = {}  # alarm_id -> {time, message, thread}
+_timers: dict[str, dict] = {}  # timer_id -> {duration, message, thread}
+_alarm_counter = 0
+_timer_counter = 0
+
 
 @mcp.tool
 async def adn_audio(
-    operation: Literal["dictate", "speak"],
+    operation: Literal[
+        "dictate", "speak", "listen", "wake", "wake_start", "wake_stop", "wake_status"
+    ],
     identifier: str | None = None,
     audio_path: str | None = None,
     record_duration: int | None = None,
     voice: str | None = None,
     speed: float = 1.0,
+    volume: int = 5,
     save_audio: bool = False,
     tags: TagType | None = None,
+    wake_word: str = "memorizer",
     project: str | None = None,
 ) -> str:
     """Voice operations for Advanced Memory knowledge base.
+
+    PORTMANTEAU PATTERN: Consolidates 7 audio/voice operations into one tool.
 
     Audio and voice operations with optional dependencies (Whisper, pyttsx3).
 
     OPERATIONS:
     - dictate: Speech-to-text note creation (audio file or live recording)
     - speak: Text-to-speech note reading (play audio or save to file)
+    - listen: Voice command input - listens for voice, transcribes, and executes commands
+    - wake: Continuous wake word listening - monitors for wake word (default: "memorizer"), then records and executes command (DEPRECATED: use wake_start/wake_stop)
+    - wake_start: Start wake word listener in background (runs until wake_stop is called)
+    - wake_stop: Stop the running wake word listener
+    - wake_status: Check if wake word listener is currently running
 
     INSTALLATION:
     These operations require optional voice dependencies:
@@ -47,15 +70,39 @@ async def adn_audio(
     - soundfile (audio file handling)
 
     Args:
-        operation: Operation type (dictate, speak)
-        identifier: Note title/permalink for speak operation
-        audio_path: Path to audio file for dictate operation
-        record_duration: Duration in seconds for live recording (dictate)
+        operation: Operation type (dictate, speak, listen, wake, wake_start, wake_stop, wake_status)
+        identifier: Note title/permalink
+                    * speak operation: REQUIRED - Note to read aloud
+                    * Other operations: NOT USED
+        audio_path: Path to audio file
+                    * dictate operation: Optional - Path to audio file (if not provided, records live)
+                    * listen operation: Optional - Path to audio file (if not provided, records live)
+                    * Other operations: NOT USED
+        record_duration: Duration in seconds for live recording (default: 5)
+                    * dictate operation: Optional - Recording duration if audio_path not provided
+                    * listen operation: Optional - Recording duration if audio_path not provided
+                    * wake, wake_start operations: Optional - Command recording duration after wake word (default: 5)
+                    * Other operations: NOT USED
         voice: Voice ID for speak operation (OS-dependent)
+                    * speak operation: Optional - Voice ID (OS-specific, e.g., "com.apple.speech.synthesis.voice.Alex" on macOS)
+                    * Other operations: NOT USED
         speed: Playback speed for speak operation (0.5 to 2.0, default 1.0)
-        save_audio: Save audio to file instead of playing (speak operation)
-        tags: Tags for categorization (dictate operation)
+                    * speak operation: Optional - Playback speed multiplier
+                    * Other operations: NOT USED
+        volume: Volume level for speak operation (1 to 10, default 5)
+                    * speak operation: Optional - Volume level (1=quiet, 10=loud)
+                    * Other operations: NOT USED
+        save_audio: Save audio to file instead of playing
+                    * speak operation: Optional - If True, saves audio to file instead of playing (default: False)
+                    * Other operations: NOT USED
+        tags: Tags for categorization
+                    * dictate operation: Optional - Tags to add to created note
+                    * Other operations: NOT USED
+        wake_word: Wake word to listen for (default: "memorizer")
+                    * wake, wake_start operations: Optional - Wake word to trigger recording (default: "memorizer")
+                    * Other operations: NOT USED
         project: Optional project name (defaults to active project)
+                    * All operations: Optional - Process in specific project
 
     Returns:
         Operation-specific result with audio processing details
@@ -68,10 +115,25 @@ async def adn_audio(
         adn_audio("dictate", record_duration=30, tags="quick-thought")
 
         # Speak (read note aloud)
-        adn_audio("speak", identifier="Python Basics", speed=1.5)
+        adn_audio("speak", identifier="Python Basics", speed=1.5, volume=7)
 
         # Speak and save to audio file
-        adn_audio("speak", identifier="Study Notes", save_audio=True)
+        adn_audio("speak", identifier="Study Notes", save_audio=True, volume=5)
+
+        # Listen for voice command (records 5 seconds by default)
+        adn_audio("listen", record_duration=5)
+
+        # Listen from audio file
+        adn_audio("listen", audio_path="command.wav")
+
+        # Start wake word listener in background
+        adn_audio("wake_start", wake_word="memorizer", record_duration=5)
+
+        # Check if wake word listener is running
+        adn_audio("wake_status")
+
+        # Stop wake word listener
+        adn_audio("wake_stop")
     """
     logger.info(f"MCP tool call tool=adn_audio operation={operation}")
 
@@ -86,9 +148,32 @@ async def adn_audio(
     elif operation == "speak":
         if not identifier:
             return "# Error\n\nSpeak operation requires: identifier parameter"
-        return await _speak_operation(active_project, identifier, voice, speed, save_audio)
+        # Validate volume range
+        if volume < 1 or volume > 10:
+            return "# Error\n\nVolume must be between 1 and 10 (default: 5)"
+        return await _speak_operation(active_project, identifier, voice, speed, volume, save_audio)
+    elif operation == "listen":
+        # Default to 5 seconds if not specified
+        if not record_duration and not audio_path:
+            record_duration = 5
+        return await _listen_command_operation(active_project, audio_path, record_duration)
+    elif operation == "wake":
+        # DEPRECATED: Use wake_start instead
+        # Default to 5 seconds for command recording after wake word
+        if not record_duration:
+            record_duration = 5
+        return await _wake_word_operation(active_project, wake_word, record_duration)
+    elif operation == "wake_start":
+        # Default to 5 seconds for command recording after wake word
+        if not record_duration:
+            record_duration = 5
+        return await _wake_start_operation(active_project, wake_word, record_duration)
+    elif operation == "wake_stop":
+        return await _wake_stop_operation()
+    elif operation == "wake_status":
+        return await _wake_status_operation()
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen, wake, wake_start, wake_stop, wake_status"
 
 
 async def _dictate_operation(
@@ -217,6 +302,7 @@ async def _speak_operation(
     identifier: str,
     voice: str | None,
     speed: float,
+    volume: int,
     save_audio: bool,
 ) -> str:
     """Handle speak operation - text-to-speech note reading."""
@@ -283,6 +369,10 @@ Then restart and try again!"""
         current_rate = engine.getProperty("rate")
         engine.setProperty("rate", int(current_rate * speed))
 
+        # Set volume (0.0 to 1.0, map from 1-10 range)
+        volume_normalized = volume / 10.0
+        engine.setProperty("volume", volume_normalized)
+
         # Set voice if specified
         if voice:
             voices = engine.getProperty("voices")
@@ -310,6 +400,7 @@ Then restart and try again!"""
 **Audio file:** {audio_file}
 **Duration:** ~{len(text_to_speak.split()) // 150} minutes
 **Speed:** {speed}x
+**Volume:** {volume}/10
 
 ✅ Text-to-speech conversion complete!"""
 
@@ -324,9 +415,1390 @@ Then restart and try again!"""
 **Word count:** {len(text_to_speak.split())}
 **Duration:** ~{len(text_to_speak.split()) // 150} minutes
 **Speed:** {speed}x
+**Volume:** {volume}/10
 
 ✅ Text-to-speech playback complete!"""
 
     except Exception as e:
         logger.error(f"TTS error: {e}")
         return f"# Text-to-Speech Failed\n\nError: {str(e)}\n\nCheck pyttsx3 installation and audio drivers."
+
+
+async def _listen_command_operation(
+    active_project, audio_path: str | None, record_duration: int | None
+) -> str:
+    """Handle listen operation - voice command input with intelligent parsing.
+
+    Records voice, transcribes it, parses the command intent, and executes it.
+    Uses rule-based parsing for common commands, with LLM fallback for complex ones.
+    """
+    try:
+        import whisper
+    except ImportError:
+        return """# Voice Features Not Available
+
+Voice command (listen) requires optional voice dependencies.
+
+INSTALL:
+pip install advanced-memory[voice]
+
+This installs:
+- openai-whisper (speech-to-text)
+- pyttsx3 (text-to-speech)
+- sounddevice (audio recording)
+- soundfile (audio file handling)
+
+Or install manually:
+pip install openai-whisper pyttsx3 sounddevice soundfile
+
+Then restart and try again!"""
+
+    from pathlib import Path
+
+    # Handle live recording
+    if record_duration:
+        try:
+            import sounddevice as sd
+            import soundfile as sf
+
+            # Record audio
+            sample_rate = 16000  # Whisper works best at 16kHz
+            logger.info(f"Recording voice command for {record_duration} seconds...")
+
+            audio_data = sd.rec(
+                int(record_duration * sample_rate),
+                samplerate=sample_rate,
+                channels=1,
+                dtype="float32",
+            )
+            sd.wait()
+
+            # Save to temp file
+            temp_audio = Path.home() / ".advanced-memory" / "temp_command.wav"
+            temp_audio.parent.mkdir(parents=True, exist_ok=True)
+            sf.write(temp_audio, audio_data, sample_rate)
+
+            audio_path = str(temp_audio)
+            logger.info(f"Recording saved to: {audio_path}")
+
+        except Exception as e:
+            return f"# Recording Failed\n\nError: {str(e)}\n\nEnsure sounddevice and soundfile are installed."
+
+    # Check if audio file exists
+    if not audio_path or not Path(audio_path).exists():
+        return "# Error\n\nListen requires either audio_path (to existing file) or record_duration (to record live)"
+
+    # Transcribe audio using Whisper
+    try:
+        logger.info(f"Transcribing voice command: {audio_path}")
+        model = whisper.load_model("base")
+        result = model.transcribe(audio_path)
+        command_text = result["text"].strip().lower()
+
+        if not command_text:
+            return "# Transcription Failed\n\nNo speech detected in audio. Please try again with clearer audio."
+
+        logger.info(f"Transcribed command: {command_text}")
+
+        # Parse and execute command
+        return await _parse_and_execute_command(active_project, command_text)
+
+    except Exception as e:
+        logger.error(f"Voice command error: {e}", exc_info=True)
+        return f"# Voice Command Failed\n\nError: {str(e)}\n\nTry again or check your audio setup."
+
+
+async def _parse_and_execute_command(active_project, command_text: str) -> str:
+    """Parse voice command and execute appropriate action.
+
+    Uses intelligent rule-based parsing with LLM fallback for complex commands.
+    """
+    import re
+
+    command_lower = command_text.lower().strip()
+
+    # Pattern matching for common commands
+    # Create note commands
+    create_patterns = [
+        r"(?:create|make|new|add)\s+(?:a\s+)?(?:note|quick\s+note)\s+(?:about|on|for)\s+(.+)",
+        r"(?:create|make|new|add)\s+(?:a\s+)?note\s+(.+)",
+        r"note\s+(?:about|on)\s+(.+)",
+        r"quick\s+note\s+(?:about|on)\s+(.+)",
+    ]
+
+    for pattern in create_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            topic = match.group(1).strip()
+            logger.info(f"Detected create note command: {topic}")
+            # Use adn_content quick operation
+            from advanced_memory.mcp.tools.content_manager import adn_content
+
+            return await adn_content.fn(
+                operation="quick",
+                content=f"# {topic.title()}\n\nVoice command: {command_text}",
+                project=active_project.name,
+            )
+
+    # Read note commands
+    read_patterns = [
+        r"(?:read|show|open|get)\s+(?:my\s+)?(?:latest|last|recent)\s+note",
+        r"(?:read|show|open|get)\s+(?:the\s+)?(?:latest|last|recent)\s+note",
+        r"latest\s+note",
+        r"last\s+note",
+        r"recent\s+note",
+    ]
+
+    for pattern in read_patterns:
+        if re.search(pattern, command_lower):
+            logger.info("Detected read latest note command")
+            from advanced_memory.mcp.tools.content_manager import adn_content
+
+            return await adn_content.fn(operation="read_latest", project=active_project.name)
+
+    # Read specific note
+    read_specific_patterns = [
+        r"(?:read|show|open|get)\s+(?:note\s+)?(?:called|named|titled)?\s+(.+)",
+        r"read\s+(.+)",
+    ]
+
+    for pattern in read_specific_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            note_title = match.group(1).strip()
+            logger.info(f"Detected read note command: {note_title}")
+            from advanced_memory.mcp.tools.content_manager import adn_content
+
+            return await adn_content.fn(
+                operation="read", identifier=note_title, project=active_project.name
+            )
+
+    # Search commands
+    search_patterns = [
+        r"(?:search|find|look\s+for)\s+(?:notes?\s+)?(?:about|on|for)?\s+(.+)",
+        r"search\s+(.+)",
+        r"find\s+(.+)",
+    ]
+
+    for pattern in search_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            query = match.group(1).strip()
+            logger.info(f"Detected search command: {query}")
+            from advanced_memory.mcp.tools.adn_search import adn_search
+
+            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+
+    # Weather commands
+    weather_patterns = [
+        r"(?:what'?s|what\s+is)\s+(?:the\s+)?weather\s+(?:like\s+)?(?:in|at|for)?\s*(.+)",
+        r"weather\s+(?:in|at|for)?\s*(.+)",
+        r"(?:tell\s+me|show\s+me|get)\s+(?:the\s+)?weather\s+(?:in|at|for)?\s*(.+)",
+        r"(?:what'?s|what\s+is)\s+(?:the\s+)?weather",
+        r"weather",
+    ]
+
+    for pattern in weather_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            location = match.group(1).strip() if match.groups() and match.group(1) else None
+            logger.info(f"Detected weather command: location={location}")
+            return await _get_weather(location)
+
+    # Alarm commands
+    alarm_patterns = [
+        r"(?:set|create|add)\s+(?:an?\s+)?alarm\s+(?:for|at)?\s*(.+)",
+        r"alarm\s+(?:for|at)?\s*(.+)",
+        r"wake\s+me\s+up\s+(?:at|for)?\s*(.+)",
+        r"remind\s+me\s+(?:at|in)?\s*(.+)",
+    ]
+
+    for pattern in alarm_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            time_str = match.group(1).strip()
+            logger.info(f"Detected alarm command: {time_str}")
+            return await _set_alarm(time_str)
+
+    # Timer commands
+    timer_patterns = [
+        r"(?:set|create|start)\s+(?:a\s+)?timer\s+(?:for)?\s*(.+)",
+        r"timer\s+(?:for)?\s*(.+)",
+        r"countdown\s+(?:for)?\s*(.+)",
+    ]
+
+    for pattern in timer_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            duration_str = match.group(1).strip()
+            logger.info(f"Detected timer command: {duration_str}")
+            return await _set_timer(duration_str)
+
+    # Music control commands
+    music_patterns = [
+        r"(?:play|start)\s+(?:music|song|track)?\s*(?:by|from)?\s*(.+)",
+        r"play\s+(.+)",
+        r"(?:pause|stop)\s+(?:music|song|track)?",
+        r"(?:resume|continue)\s+(?:music|song|track)?",
+        r"(?:next|skip)\s+(?:song|track)?",
+        r"(?:previous|back)\s+(?:song|track)?",
+        r"(?:volume|set\s+volume)\s+(?:to|at)?\s*(\d+)",
+        r"music\s+(?:on|off|play|pause|stop)",
+    ]
+
+    for pattern in music_patterns:
+        match = re.search(pattern, command_lower)
+        if match:
+            query = match.group(1).strip() if match.groups() and match.group(1) else None
+            logger.info(f"Detected music command: {command_lower}, query={query}")
+            return await _control_music(command_lower, query)
+
+    # If no pattern matches, try LLM fallback
+    try:
+        return await _parse_command_with_llm(active_project, command_text)
+    except Exception as e:
+        logger.debug(f"LLM command parsing failed: {e}, falling back to suggestions")
+        return f"""# Voice Command Recognized
+
+**Transcribed:** "{command_text}"
+
+**Status:** Command not recognized
+
+**Available Commands:**
+- "Create a note about [topic]" - Create a new note
+- "Read my latest note" - Read most recent note
+- "Read [note title]" - Read specific note
+- "Search for [query]" - Search notes
+- "Find [query]" - Search notes
+- "What's the weather" - Get current weather
+- "Weather in [city]" - Get weather for specific location
+- "Set alarm for 7 AM" - Set an alarm
+- "Set timer for 5 minutes" - Set a timer
+- "Play music" - Start playing music
+- "Play [song/artist]" - Play specific music
+- "Pause music" - Pause playback
+- "Next song" - Skip to next track
+
+**What you said:** {command_text}
+
+**Suggestions:**
+Try rephrasing your command using one of the patterns above, or use the `dictate` operation to create a note from your speech.
+
+**Example commands:**
+- "Create a note about butterflies"
+- "Read my latest note"
+- "Search for epstein scandal"
+- "What's the weather in Vienna"
+- "Set alarm for 8:30 AM"
+- "Set timer for 10 minutes"
+- "Play music"
+- "Play Pink Floyd"
+- "Pause music"
+"""
+
+
+async def _parse_command_with_llm(active_project, command_text: str) -> str:
+    """Parse voice command using LLM when rule-based parsing fails.
+
+    Uses the selected LLM provider to understand complex or ambiguous commands.
+    """
+    try:
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+
+        system_prompt = """You are a voice command parser for Advanced Memory, a knowledge management system.
+
+Available operations:
+1. Create note: "create note about X", "make a note about X"
+2. Read note: "read my latest note", "read [note title]"
+3. Search: "search for X", "find notes about X"
+4. Weather: "what's the weather", "weather in [city]"
+5. Alarm: "set alarm for [time]", "wake me up at [time]"
+6. Timer: "set timer for [duration]", "timer for 5 minutes"
+7. Music: "play music", "play [artist]", "pause music", "next song"
+
+Parse the user's voice command and respond with JSON:
+{
+  "operation": "create_note|read_note|search|weather|alarm|timer|music|unknown",
+  "parameters": {
+    "topic": "...",  // for create_note
+    "note_title": "...",  // for read_note
+    "query": "...",  // for search
+    "location": "...",  // for weather
+    "time": "...",  // for alarm
+    "duration": "...",  // for timer
+    "action": "play|pause|next|previous",  // for music
+    "query": "..."  // for music play
+  }
+}
+
+If the command is unclear or doesn't match any operation, use "unknown"."""
+
+        prompt = f'Parse this voice command: "{command_text}"'
+
+        result = await llm.generate_json(prompt, system_prompt, max_tokens=500, temperature=0.3)
+
+        operation = result.get("operation", "unknown")
+        params = result.get("parameters", {})
+
+        if operation == "create_note":
+            topic = params.get("topic", command_text)
+            from advanced_memory.mcp.tools.content_manager import adn_content
+
+            return await adn_content.fn(
+                operation="quick",
+                content=f"# {topic}\n\nVoice command: {command_text}",
+                project=active_project.name,
+            )
+
+        elif operation == "read_note":
+            note_title = params.get("note_title")
+            if note_title:
+                from advanced_memory.mcp.tools.content_manager import adn_content
+
+                return await adn_content.fn(
+                    operation="read", identifier=note_title, project=active_project.name
+                )
+            else:
+                from advanced_memory.mcp.tools.content_manager import adn_content
+
+                return await adn_content.fn(operation="read_latest", project=active_project.name)
+
+        elif operation == "search":
+            query = params.get("query", command_text)
+            from advanced_memory.mcp.tools.adn_search import adn_search
+
+            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+
+        elif operation == "weather":
+            location = params.get("location")
+            return await _get_weather(location)
+
+        elif operation == "alarm":
+            time_str = params.get("time", command_text)
+            return await _set_alarm(time_str)
+
+        elif operation == "timer":
+            duration_str = params.get("duration", command_text)
+            return await _set_timer(duration_str)
+
+        elif operation == "music":
+            action = params.get("action", "play")
+            query = params.get("query")
+            return await _control_music(f"{action} music", query)
+
+        else:
+            # Unknown command, return suggestions
+            raise ValueError("Command not recognized by LLM")
+
+    except Exception as e:
+        logger.debug(f"LLM parsing failed: {e}")
+        raise
+
+
+async def _get_weather(location: str | None = None) -> str:
+    """Get weather information for a location.
+
+    Uses wttr.in API (free, no API key required) to fetch weather data.
+
+    Args:
+        location: City name or location (e.g., "Vienna", "New York", "London").
+                 If None, uses IP-based location detection.
+
+    Returns:
+        Formatted weather report as markdown string.
+    """
+    import re
+
+    try:
+        import httpx
+
+        # Use wttr.in API (free, no API key needed)
+        if location:
+            # Clean up location string (remove common words)
+            location_clean = location.strip()
+            # Remove trailing words like "please", "now", etc.
+            location_clean = re.sub(
+                r"\s+(please|now|today|right\s+now)$", "", location_clean, flags=re.IGNORECASE
+            )
+            url = f"https://wttr.in/{location_clean}?format=j1"
+            logger.info(f"Fetching weather for: {location_clean}")
+        else:
+            url = "https://wttr.in/?format=j1"
+            logger.info("Fetching weather for: current location")
+
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(url)
+            if response.status_code == 200:
+                data = response.json()
+
+                # Parse wttr.in JSON format
+                current = data.get("current_condition", [{}])[0]
+                location_info = data.get("nearest_area", [{}])[0]
+                area_name = location_info.get("areaName", [{}])[0].get("value", "Unknown")
+                country = location_info.get("country", [{}])[0].get("value", "")
+
+                temp_c = current.get("temp_C", "N/A")
+                temp_f = current.get("temp_F", "N/A")
+                condition = current.get("weatherDesc", [{}])[0].get("value", "Unknown")
+                humidity = current.get("humidity", "N/A")
+                wind_speed = current.get("windspeedKmph", "N/A")
+                wind_dir = current.get("winddir16Point", "N/A")
+                feels_like_c = current.get("FeelsLikeC", "N/A")
+                feels_like_f = current.get("FeelsLikeF", "N/A")
+
+                # Get today's forecast
+                today = data.get("weather", [{}])[0]
+                max_temp_c = today.get("maxtempC", "N/A")
+                min_temp_c = today.get("mintempC", "N/A")
+                max_temp_f = today.get("maxtempF", "N/A")
+                min_temp_f = today.get("mintempF", "N/A")
+
+                location_str = f"{area_name}, {country}" if country else area_name
+
+                return f"""# Weather Report
+
+**Location:** {location_str}
+**Time:** {current.get("localObsDateTime", "N/A")}
+
+## Current Conditions
+
+**Temperature:** {temp_c}°C ({temp_f}°F)
+**Feels Like:** {feels_like_c}°C ({feels_like_f}°F)
+**Condition:** {condition}
+**Humidity:** {humidity}%
+**Wind:** {wind_speed} km/h {wind_dir}
+
+## Today's Forecast
+
+**High:** {max_temp_c}°C ({max_temp_f}°F)
+**Low:** {min_temp_c}°C ({min_temp_f}°F)
+
+---
+*Weather data from wttr.in*
+"""
+            else:
+                return f"# Weather Error\n\nCould not fetch weather data. Status: {response.status_code}\n\nTry again or specify a different location."
+
+    except httpx.RequestError as e:
+        logger.error(f"Weather API error: {e}", exc_info=True)
+        return f"# Weather Error\n\nFailed to connect to weather service: {str(e)}\n\nPlease check your internet connection and try again."
+    except Exception as e:
+        logger.error(f"Weather error: {e}", exc_info=True)
+        return (
+            f"# Weather Error\n\nUnexpected error fetching weather: {str(e)}\n\nPlease try again."
+        )
+
+
+async def _set_alarm(time_str: str) -> str:
+    """Set an alarm for a specific time.
+
+    Parses time strings like "7 AM", "8:30 PM", "14:00", etc. and sets an alarm.
+
+    Args:
+        time_str: Time string to parse (e.g., "7 AM", "8:30 PM", "14:00")
+
+    Returns:
+        Confirmation message with alarm details.
+    """
+    import re
+    from datetime import datetime, timedelta
+
+    global _alarms, _alarm_counter
+
+    try:
+        # Parse time string
+        time_str_clean = time_str.strip().lower()
+
+        # Try to parse various time formats
+        alarm_time = None
+        now = datetime.now()
+
+        # Pattern: "7 AM", "8 PM", "7:30 AM", "8:45 PM"
+        time_pattern = r"(\d{1,2})(?::(\d{2}))?\s*(am|pm)?"
+        match = re.search(time_pattern, time_str_clean)
+
+        if match:
+            hour = int(match.group(1))
+            minute = int(match.group(2)) if match.group(2) else 0
+            am_pm = match.group(3)
+
+            # Convert to 24-hour format
+            if am_pm:
+                if am_pm == "pm" and hour != 12:
+                    hour += 12
+                elif am_pm == "am" and hour == 12:
+                    hour = 0
+
+            # Set alarm time for today
+            alarm_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+
+            # If time has passed today, set for tomorrow
+            if alarm_time <= now:
+                alarm_time += timedelta(days=1)
+        else:
+            # Try parsing as 24-hour format "14:00", "8:30"
+            time_pattern_24 = r"(\d{1,2}):(\d{2})"
+            match_24 = re.search(time_pattern_24, time_str_clean)
+            if match_24:
+                hour = int(match_24.group(1))
+                minute = int(match_24.group(2))
+                alarm_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                if alarm_time <= now:
+                    alarm_time += timedelta(days=1)
+
+        if not alarm_time:
+            return f"""# Alarm Error
+
+Could not parse time: "{time_str}"
+
+**Supported formats:**
+- "7 AM" or "7:00 AM"
+- "8:30 PM" or "8:30 PM"
+- "14:00" (24-hour format)
+- "8:30" (24-hour format)
+
+**Examples:**
+- "Set alarm for 7 AM"
+- "Set alarm for 8:30 PM"
+- "Wake me up at 14:00"
+"""
+
+        # Calculate seconds until alarm
+        seconds_until = (alarm_time - now).total_seconds()
+
+        if seconds_until < 0:
+            return "# Alarm Error\n\nTime has already passed today. Please specify a future time."
+
+        # Create alarm ID
+        _alarm_counter += 1
+        alarm_id = f"alarm_{_alarm_counter}"
+
+        # Format alarm message
+        time_display = alarm_time.strftime("%I:%M %p")
+        hours_until = int(seconds_until // 3600)
+        minutes_until = int((seconds_until % 3600) // 60)
+
+        # Create background thread for alarm
+        def alarm_thread():
+            import time
+
+            try:
+                time.sleep(seconds_until)
+                # Alarm triggered!
+                logger.info(f"Alarm {alarm_id} triggered at {alarm_time}")
+
+                # Try to speak the alarm
+                try:
+                    import pyttsx3
+
+                    engine = pyttsx3.init()
+                    engine.say(f"Alarm! It's {time_display}")
+                    engine.runAndWait()
+                except Exception as e:
+                    logger.warning(f"Could not speak alarm: {e}")
+
+                # Remove from active alarms
+                if alarm_id in _alarms:
+                    del _alarms[alarm_id]
+            except Exception as e:
+                logger.error(f"Alarm thread error: {e}", exc_info=True)
+                if alarm_id in _alarms:
+                    del _alarms[alarm_id]
+
+        thread = threading.Thread(target=alarm_thread, daemon=True)
+        thread.start()
+
+        # Store alarm
+        _alarms[alarm_id] = {
+            "time": alarm_time,
+            "message": f"Alarm for {time_display}",
+            "thread": thread,
+        }
+
+        return f"""# Alarm Set
+
+**Alarm ID:** {alarm_id}
+**Time:** {time_display}
+**Time until:** {hours_until} hours, {minutes_until} minutes
+
+The alarm will sound at {time_display} and announce the time.
+"""
+
+    except Exception as e:
+        logger.error(f"Alarm error: {e}", exc_info=True)
+        return f"# Alarm Error\n\nFailed to set alarm: {str(e)}\n\nPlease try again with a valid time format."
+
+
+async def _set_timer(duration_str: str) -> str:
+    """Set a timer for a specific duration.
+
+    Parses duration strings like "5 minutes", "30 seconds", "1 hour", etc. and sets a timer.
+
+    Args:
+        duration_str: Duration string to parse (e.g., "5 minutes", "30 seconds", "1 hour")
+
+    Returns:
+        Confirmation message with timer details.
+    """
+    import re
+
+    global _timers, _timer_counter
+
+    try:
+        # Parse duration string
+        duration_str_clean = duration_str.strip().lower()
+
+        # Pattern: "5 minutes", "30 seconds", "1 hour", "2 hours", etc.
+        duration_pattern = r"(\d+)\s*(second|minute|hour|sec|min|hr)s?"
+        match = re.search(duration_pattern, duration_str_clean)
+
+        if not match:
+            return f"""# Timer Error
+
+Could not parse duration: "{duration_str}"
+
+**Supported formats:**
+- "5 minutes" or "5 mins"
+- "30 seconds" or "30 secs"
+- "1 hour" or "1 hr"
+- "2 hours" or "2 hrs"
+
+**Examples:**
+- "Set timer for 5 minutes"
+- "Timer for 30 seconds"
+- "Countdown for 1 hour"
+"""
+
+        value = int(match.group(1))
+        unit = match.group(2).lower()
+
+        # Convert to seconds
+        if unit in ["second", "sec"]:
+            seconds = value
+        elif unit in ["minute", "min"]:
+            seconds = value * 60
+        elif unit in ["hour", "hr"]:
+            seconds = value * 3600
+        else:
+            return f"# Timer Error\n\nUnknown time unit: {unit}"
+
+        if seconds <= 0:
+            return "# Timer Error\n\nDuration must be greater than 0."
+
+        # Create timer ID
+        _timer_counter += 1
+        timer_id = f"timer_{_timer_counter}"
+
+        # Format duration display
+        if seconds < 60:
+            display = f"{seconds} second{'s' if seconds != 1 else ''}"
+        elif seconds < 3600:
+            minutes = seconds // 60
+            display = f"{minutes} minute{'s' if minutes != 1 else ''}"
+        else:
+            hours = seconds // 3600
+            minutes = (seconds % 3600) // 60
+            if minutes > 0:
+                display = f"{hours} hour{'s' if hours != 1 else ''} and {minutes} minute{'s' if minutes != 1 else ''}"
+            else:
+                display = f"{hours} hour{'s' if hours != 1 else ''}"
+
+        # Create background thread for timer
+        def timer_thread():
+            import time
+
+            try:
+                time.sleep(seconds)
+                # Timer triggered!
+                logger.info(f"Timer {timer_id} triggered after {display}")
+
+                # Try to speak the timer
+                try:
+                    import pyttsx3
+
+                    engine = pyttsx3.init()
+                    engine.say(f"Timer complete! {display} have passed.")
+                    engine.runAndWait()
+                except Exception as e:
+                    logger.warning(f"Could not speak timer: {e}")
+
+                # Remove from active timers
+                if timer_id in _timers:
+                    del _timers[timer_id]
+            except Exception as e:
+                logger.error(f"Timer thread error: {e}", exc_info=True)
+                if timer_id in _timers:
+                    del _timers[timer_id]
+
+        thread = threading.Thread(target=timer_thread, daemon=True)
+        thread.start()
+
+        # Store timer
+        _timers[timer_id] = {
+            "duration": seconds,
+            "message": f"Timer for {display}",
+            "thread": thread,
+        }
+
+        return f"""# Timer Set
+
+**Timer ID:** {timer_id}
+**Duration:** {display}
+**Status:** Running
+
+The timer will sound after {display} and announce completion.
+"""
+
+    except Exception as e:
+        logger.error(f"Timer error: {e}", exc_info=True)
+        return f"# Timer Error\n\nFailed to set timer: {str(e)}\n\nPlease try again with a valid duration format."
+
+
+async def _control_music(command: str, query: str | None = None) -> str:
+    """Control music playback using available music player.
+
+    Supports multiple backends:
+    - Plex Media Server API (via python-plexapi) - controls Plexamp and other Plex clients
+    - Windows Media Player (via COM) - Windows only
+    - Generic system audio controls
+
+    Args:
+        command: The voice command (e.g., "play music", "pause", "next")
+        query: Optional query for play commands (e.g., artist name, song title)
+
+    Returns:
+        Status message about the music control action.
+    """
+    import platform
+
+    command_lower = command.lower().strip()
+
+    try:
+        # Try Plex Media Server API first (controls Plexamp and other Plex clients)
+        try:
+            return await _control_music_plex(command_lower, query)
+        except ImportError:
+            # python-plexapi not installed, continue to other backends
+            pass
+        except Exception as e:
+            # Plex API failed, log and try other backends
+            logger.debug(f"Plex API not available: {e}")
+
+        # Try Windows Media Player (Windows only)
+        if platform.system() == "Windows":
+            return await _control_music_windows(command_lower, query)
+
+        # Fallback: Generic message
+        return f"""# Music Control
+
+**Status:** Music player not configured
+
+**Available Options:**
+1. **Plex Media Server API**: Install `plexapi` to control Plexamp/Plex clients
+   - `pip install plexapi`
+   - Requires Plex Media Server running and configured
+   - Can control Plexamp and other Plex clients
+2. **Windows Media Player**: Available on Windows (automatic)
+3. **Other Players**: Configure your preferred music player
+
+**Command:** {command}
+**Query:** {query if query else "None"}
+
+**To use Plex:**
+- Install: `pip install plexapi`
+- Configure Plex server connection (auto-detected if on same network)
+- Plexamp or other Plex clients will be controlled via the server
+
+**Supported Commands:**
+- "Play music" - Start playback
+- "Play [artist/song]" - Play specific music
+- "Pause music" - Pause playback
+- "Resume music" - Resume playback
+- "Next song" - Skip to next track
+- "Previous song" - Go to previous track
+"""
+
+    except Exception as e:
+        logger.error(f"Music control error: {e}", exc_info=True)
+        return f"# Music Control Error\n\nFailed to control music: {str(e)}\n\nPlease check your music player configuration."
+
+
+async def _control_music_plex(command: str, query: str | None) -> str:
+    """Control music using Plex Media Server API (controls Plexamp and other Plex clients)."""
+    try:
+        from plexapi.server import PlexServer
+
+        # Try to connect to Plex server
+        # First, try to discover server on local network
+        try:
+            # Try to find server automatically (requires server name or baseurl)
+            # For now, we'll need user to configure this, but we can try common defaults
+            server = None
+
+            # Try localhost first (most common)
+            try:
+                server = PlexServer("http://localhost:32400")
+            except Exception:
+                pass
+
+            # If that fails, try to discover
+            if not server:
+                # Note: This requires additional configuration
+                # User would need to provide server URL and token
+                return """# Plex Configuration Needed
+
+**Status:** Plex server connection not configured
+
+**Setup Required:**
+1. Install: `pip install plexapi`
+2. Configure Plex server connection:
+   - Server URL (e.g., http://localhost:32400)
+   - Authentication token (get from Plex web interface)
+
+**Quick Setup:**
+- Get token from: https://www.plex.tv/desktop/
+- Or use environment variables: PLEX_SERVER_URL, PLEX_TOKEN
+
+**Note:** Plexamp and other Plex clients are controlled via the Plex Media Server API.
+"""
+
+            # Find music clients (Plexamp, Plex clients, etc.)
+            clients = server.clients()
+            music_clients = [
+                c for c in clients if c.product in ["Plexamp", "Plex Web", "Plex Media Player"]
+            ]
+
+            if not music_clients:
+                return """# No Plex Clients Found
+
+**Status:** No Plex music clients available
+
+**To use:**
+1. Open Plexamp or another Plex client
+2. Make sure it's connected to your Plex server
+3. Try the command again
+
+**Supported Clients:**
+- Plexamp
+- Plex Web
+- Plex Media Player
+"""
+
+            # Use first available client (or could let user choose)
+            client = music_clients[0]
+
+            if "play" in command:
+                if query:
+                    # Search for music and play
+                    results = server.search(query, mediatype="track", limit=10)
+                    if not results:
+                        # Try artist search
+                        artists = server.search(query, mediatype="artist", limit=5)
+                        if artists:
+                            # Play artist's music
+                            client.playMedia(artists[0])
+                            return f"""# Music Playing
+
+**Player:** {client.product} ({client.title})
+**Action:** Playing "{artists[0].title}"
+
+Started playing music by {artists[0].title}.
+"""
+                        return f"""# Music Not Found
+
+Could not find music matching "{query}".
+
+**Try:**
+- Artist name
+- Song title
+- Album name
+"""
+                    # Play first result
+                    client.playMedia(results[0])
+                    return f"""# Music Playing
+
+**Player:** {client.product} ({client.title})
+**Action:** Playing "{results[0].title}" by {results[0].artist().title if hasattr(results[0], "artist") else "Unknown"}
+
+Started playing: {results[0].title}
+"""
+                else:
+                    # Resume playback
+                    client.play()
+                    return f"""# Music Playing
+
+**Player:** {client.product} ({client.title})
+**Action:** Resumed playback
+
+Playback resumed.
+"""
+
+            elif "pause" in command or "stop" in command:
+                client.pause()
+                return f"""# Music Paused
+
+**Player:** {client.product} ({client.title})
+**Action:** Paused playback
+
+Playback paused.
+"""
+
+            elif "resume" in command or "continue" in command:
+                client.play()
+                return f"""# Music Resumed
+
+**Player:** {client.product} ({client.title})
+**Action:** Resumed playback
+
+Playback resumed.
+"""
+
+            elif "next" in command or "skip" in command:
+                client.skipNext()
+                return f"""# Music Skipped
+
+**Player:** {client.product} ({client.title})
+**Action:** Skipped to next track
+
+Skipped to next track.
+"""
+
+            elif "previous" in command or "back" in command:
+                client.skipPrevious()
+                return f"""# Music Previous
+
+**Player:** {client.product} ({client.title})
+**Action:** Previous track
+
+Went to previous track.
+"""
+
+            else:
+                return f"# Music Command Not Recognized\n\nCommand: {command}\n\nSupported: play, pause, resume, next, previous"
+
+        except ImportError:
+            raise ImportError("plexapi not installed")
+        except Exception as e:
+            logger.error(f"Plex API error: {e}", exc_info=True)
+            raise
+
+    except ImportError:
+        raise  # Re-raise to be caught by caller
+    except Exception as e:
+        logger.error(f"Plex control error: {e}", exc_info=True)
+        return f"# Music Error\n\nFailed to control Plex: {str(e)}\n\nMake sure Plex Media Server is running and accessible."
+
+
+async def _control_music_windows(command: str, query: str | None) -> str:
+    """Control music using Windows Media Player COM interface."""
+    try:
+        import win32com.client
+
+        # Try to get Windows Media Player
+        try:
+            wmp = win32com.client.Dispatch("WMPlayer.OCX")
+        except Exception:
+            return """# Music Control
+
+**Status:** Windows Media Player not available
+
+**Options:**
+1. Install Windows Media Player (usually pre-installed)
+2. Use Plexamp CLI instead
+3. Configure another music player
+
+**Note:** This feature requires Windows Media Player COM interface.
+"""
+
+        if "play" in command:
+            if query:
+                # Try to play specific media (this is limited with WMP)
+                return f"""# Music Control
+
+**Player:** Windows Media Player
+**Action:** Play "{query}"
+
+**Note:** Windows Media Player COM doesn't support direct search/play by query.
+Please use Plexamp CLI for better control, or manually select the media in WMP.
+
+**Alternative:** Use "Play music" to resume current playlist.
+"""
+            else:
+                # Play/resume
+                wmp.controls.play()
+                return """# Music Playing
+
+**Player:** Windows Media Player
+**Action:** Resumed playback
+
+Playback has been resumed.
+"""
+
+        elif "pause" in command or "stop" in command:
+            wmp.controls.pause()
+            return """# Music Paused
+
+**Player:** Windows Media Player
+**Action:** Paused playback
+
+Playback has been paused.
+"""
+
+        elif "resume" in command or "continue" in command:
+            wmp.controls.play()
+            return """# Music Resumed
+
+**Player:** Windows Media Player
+**Action:** Resumed playback
+
+Playback has been resumed.
+"""
+
+        elif "next" in command or "skip" in command:
+            wmp.controls.next()
+            return """# Music Skipped
+
+**Player:** Windows Media Player
+**Action:** Skipped to next track
+
+Skipped to next track.
+"""
+
+        elif "previous" in command or "back" in command:
+            wmp.controls.previous()
+            return """# Music Previous
+
+**Player:** Windows Media Player
+**Action:** Previous track
+
+Went to previous track.
+"""
+
+        else:
+            return f"# Music Command Not Recognized\n\nCommand: {command}\n\nSupported: play, pause, resume, next, previous"
+
+    except ImportError:
+        return """# Music Control
+
+**Status:** Windows Media Player control requires pywin32
+
+**Install:**
+pip install pywin32
+
+**Or use Plexamp CLI instead** (recommended for better control).
+"""
+    except Exception as e:
+        logger.error(f"Windows Media Player control error: {e}", exc_info=True)
+        return f"# Music Error\n\nFailed to control Windows Media Player: {str(e)}\n\nTry using Plexamp CLI instead."
+
+
+async def _wake_word_operation(active_project, wake_word: str, record_duration: int) -> str:
+    """Handle wake word operation - continuously listens for wake word, then records and executes command.
+
+    Monitors audio input for the wake word (e.g., "memorizer"), and when detected,
+    records the following command and executes it.
+    """
+    try:
+        import numpy as np
+        import sounddevice as sd
+        import soundfile as sf
+        import whisper
+    except ImportError:
+        return """# Voice Features Not Available
+
+Wake word listening requires optional voice dependencies.
+
+INSTALL:
+pip install advanced-memory[voice]
+
+This installs:
+- openai-whisper (speech-to-text)
+- pyttsx3 (text-to-speech)
+- sounddevice (audio recording)
+- soundfile (audio file handling)
+- numpy (audio processing)
+
+Or install manually:
+pip install openai-whisper pyttsx3 sounddevice soundfile numpy
+
+Then restart and try again!"""
+
+    from pathlib import Path
+
+    wake_word_lower = wake_word.lower().strip()
+    sample_rate = 16000  # Whisper works best at 16kHz
+    chunk_duration = 1.0  # Check for wake word every 1 second
+    chunk_samples = int(chunk_duration * sample_rate)
+
+    logger.info(f"Starting wake word listener for '{wake_word}'...")
+    logger.info("Listening... (say the wake word followed by your command)")
+
+    try:
+        # Load Whisper model once
+        model = whisper.load_model("base")
+
+        # Continuous listening loop
+        wake_word_detected = False
+        command_audio_chunks = []
+
+        while True:
+            # Record a small chunk
+            chunk = sd.rec(chunk_samples, samplerate=sample_rate, channels=1, dtype="float32")
+            sd.wait()
+
+            if wake_word_detected:
+                # We're recording the command
+                command_audio_chunks.append(chunk)
+                logger.debug(f"Recording command chunk {len(command_audio_chunks)}...")
+
+                # Check if we should stop recording (after record_duration)
+                if len(command_audio_chunks) * chunk_duration >= record_duration:
+                    # Process the command
+                    logger.info("Wake word detected, processing command...")
+
+                    # Combine all chunks
+                    command_audio = np.concatenate(command_audio_chunks, axis=0)
+
+                    # Save to temp file
+                    temp_audio = Path.home() / ".advanced-memory" / "temp_wake_command.wav"
+                    temp_audio.parent.mkdir(parents=True, exist_ok=True)
+                    sf.write(temp_audio, command_audio, sample_rate)
+
+                    # Transcribe and execute
+                    result = model.transcribe(str(temp_audio))
+                    command_text = result["text"].strip().lower()
+
+                    if command_text:
+                        logger.info(f"Transcribed command: {command_text}")
+                        return await _parse_and_execute_command(active_project, command_text)
+                    else:
+                        return "# No Command Detected\n\nWake word detected but no command was heard. Try again."
+
+            else:
+                # Check for wake word in this chunk
+                temp_chunk_file = Path.home() / ".advanced-memory" / "temp_wake_check.wav"
+                temp_chunk_file.parent.mkdir(parents=True, exist_ok=True)
+                sf.write(temp_chunk_file, chunk, sample_rate)
+
+                # Quick transcription to check for wake word
+                result = model.transcribe(str(temp_chunk_file))
+                transcribed = result["text"].strip().lower()
+
+                if wake_word_lower in transcribed:
+                    logger.info(f"Wake word '{wake_word}' detected!")
+                    wake_word_detected = True
+                    command_audio_chunks = []  # Start fresh recording
+                    # Continue to next iteration to start recording command
+
+    except KeyboardInterrupt:
+        return "# Wake Word Listener Stopped\n\nWake word listening was interrupted."
+    except Exception as e:
+        logger.error(f"Wake word error: {e}", exc_info=True)
+        return f"# Wake Word Error\n\nError: {str(e)}\n\nCheck your audio setup and try again."
+
+
+async def _wake_start_operation(active_project, wake_word: str, record_duration: int) -> str:
+    """Start wake word listener in background thread."""
+    global _wake_listener_thread, _wake_listener_stop_event, _wake_listener_running
+
+    if _wake_listener_running:
+        return f"""# Wake Word Listener Already Running
+
+The wake word listener is already running.
+
+**Status:**
+- Wake word: {wake_word}
+- Running: Yes
+
+**To stop:** Use `adn_audio("wake_stop")`
+**To check status:** Use `adn_audio("wake_status")`
+"""
+
+    # Reset stop event
+    _wake_listener_stop_event.clear()
+
+    # Start listener in background thread
+    def run_listener():
+        global _wake_listener_running
+        _wake_listener_running = True
+        try:
+            import asyncio
+
+            # Create new event loop for this thread
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                # Run the wake word operation with stop event
+                loop.run_until_complete(
+                    _wake_word_operation_background(
+                        active_project, wake_word, record_duration, _wake_listener_stop_event
+                    )
+                )
+            finally:
+                loop.close()
+        finally:
+            _wake_listener_running = False
+
+    _wake_listener_thread = threading.Thread(target=run_listener, daemon=True)
+    _wake_listener_thread.start()
+
+    return f"""# Wake Word Listener Started
+
+**Status:** Running in background
+**Wake word:** "{wake_word}"
+**Command duration:** {record_duration} seconds
+
+**Usage:**
+1. Say "{wake_word}" followed by your command
+2. Example: "{wake_word} create a note about butterflies"
+
+**To stop:** `adn_audio("wake_stop")`
+**To check status:** `adn_audio("wake_status")`
+
+The listener will continue running until you stop it.
+"""
+
+
+async def _wake_stop_operation() -> str:
+    """Stop the running wake word listener."""
+    global _wake_listener_thread, _wake_listener_stop_event, _wake_listener_running
+
+    if not _wake_listener_running:
+        return """# Wake Word Listener Not Running
+
+No wake word listener is currently running.
+
+**To start:** Use `adn_audio("wake_start", wake_word="memorizer")`
+"""
+
+    # Signal stop
+    _wake_listener_stop_event.set()
+
+    # Wait for thread to finish (with timeout)
+    if _wake_listener_thread and _wake_listener_thread.is_alive():
+        _wake_listener_thread.join(timeout=2.0)
+
+    _wake_listener_running = False
+    _wake_listener_thread = None
+
+    return """# Wake Word Listener Stopped
+
+The wake word listener has been stopped.
+
+**To start again:** Use `adn_audio("wake_start", wake_word="memorizer")`
+"""
+
+
+async def _wake_status_operation() -> str:
+    """Check wake word listener status."""
+    global _wake_listener_running, _wake_listener_thread
+
+    if _wake_listener_running:
+        thread_status = (
+            "alive" if (_wake_listener_thread and _wake_listener_thread.is_alive()) else "dead"
+        )
+        return f"""# Wake Word Listener Status
+
+**Status:** Running
+**Thread:** {thread_status}
+
+**To stop:** Use `adn_audio("wake_stop")`
+"""
+    else:
+        return """# Wake Word Listener Status
+
+**Status:** Not running
+
+**To start:** Use `adn_audio("wake_start", wake_word="memorizer")`
+"""
+
+
+async def _wake_word_operation_background(
+    active_project, wake_word: str, record_duration: int, stop_event: threading.Event
+) -> None:
+    """Background wake word listener that respects stop event."""
+    try:
+        import numpy as np
+        import sounddevice as sd
+        import soundfile as sf
+        import whisper
+    except ImportError:
+        logger.error("Voice dependencies not available for wake word listener")
+        return
+
+    from pathlib import Path
+
+    wake_word_lower = wake_word.lower().strip()
+    sample_rate = 16000
+    chunk_duration = 1.0
+    chunk_samples = int(chunk_duration * sample_rate)
+
+    logger.info(f"Starting wake word listener for '{wake_word}' in background...")
+
+    try:
+        # Load Whisper model once
+        model = whisper.load_model("base")
+
+        wake_word_detected = False
+        command_audio_chunks = []
+
+        while not stop_event.is_set():
+            # Record a small chunk
+            chunk = sd.rec(chunk_samples, samplerate=sample_rate, channels=1, dtype="float32")
+            sd.wait()
+
+            # Check if we should stop
+            if stop_event.is_set():
+                logger.info("Wake word listener stopped by user")
+                break
+
+            if wake_word_detected:
+                # We're recording the command
+                command_audio_chunks.append(chunk)
+                logger.debug(f"Recording command chunk {len(command_audio_chunks)}...")
+
+                # Check if we should stop recording (after record_duration)
+                if len(command_audio_chunks) * chunk_duration >= record_duration:
+                    # Process the command
+                    logger.info("Wake word detected, processing command...")
+
+                    # Combine all chunks
+                    command_audio = np.concatenate(command_audio_chunks, axis=0)
+
+                    # Save to temp file
+                    temp_audio = Path.home() / ".advanced-memory" / "temp_wake_command.wav"
+                    temp_audio.parent.mkdir(parents=True, exist_ok=True)
+                    sf.write(temp_audio, command_audio, sample_rate)
+
+                    # Transcribe and execute
+                    result = model.transcribe(str(temp_audio))
+                    command_text = result["text"].strip().lower()
+
+                    if command_text:
+                        logger.info(f"Transcribed command: {command_text}")
+                        # Execute command (this will run in the background thread's event loop)
+                        await _parse_and_execute_command(active_project, command_text)
+
+                    # Reset for next wake word
+                    wake_word_detected = False
+                    command_audio_chunks = []
+
+            else:
+                # Check for wake word in this chunk
+                temp_chunk_file = Path.home() / ".advanced-memory" / "temp_wake_check.wav"
+                temp_chunk_file.parent.mkdir(parents=True, exist_ok=True)
+                sf.write(temp_chunk_file, chunk, sample_rate)
+
+                # Quick transcription to check for wake word
+                result = model.transcribe(str(temp_chunk_file))
+                transcribed = result["text"].strip().lower()
+
+                if wake_word_lower in transcribed:
+                    logger.info(f"Wake word '{wake_word}' detected!")
+                    wake_word_detected = True
+                    command_audio_chunks = []
+
+    except Exception as e:
+        logger.error(f"Wake word listener error: {e}", exc_info=True)

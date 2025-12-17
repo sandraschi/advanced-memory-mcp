@@ -3,7 +3,9 @@
 import fnmatch
 import logging
 import os
+from collections.abc import Sequence
 
+from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.schemas.directory import DirectoryNode
 
@@ -25,7 +27,7 @@ class DirectoryService:
         """Build a hierarchical directory tree from indexed files."""
 
         # Get all files from DB (flat list)
-        entity_rows = await self.entity_repository.find_all()
+        entity_rows: Sequence[Entity] = await self.entity_repository.find_all()
 
         # Create a root directory node
         root_node = DirectoryNode(name="Root", directory_path="/", type="directory")
@@ -119,7 +121,7 @@ class DirectoryService:
             return []
 
         # Collect nodes with depth and glob filtering
-        result = []
+        result: list[DirectoryNode] = []
         self._collect_nodes_recursive(target_node, result, depth, file_name_glob, 0)
 
         return result

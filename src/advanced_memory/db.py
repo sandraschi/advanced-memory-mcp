@@ -85,13 +85,11 @@ def _create_engine_and_session(
         "timeout": 30.0,  # 30 second timeout prevents indefinite hanging
     }
 
-    # Add connection pooling for better concurrency (not for in-memory databases)
+    # Add connection pooling for better concurrency (not for SQLite databases)
     engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
-    if db_type != DatabaseType.MEMORY:
-        # Only add pool settings for file-based databases
-        # In-memory databases use StaticPool which doesn't support these parameters
-        engine_kwargs["pool_size"] = 5  # Keep 5 connections ready
-        engine_kwargs["max_overflow"] = 10  # Allow 10 extra connections under load
+    # SQLite (both MEMORY and FILESYSTEM) doesn't support pooling parameters
+    # These parameters are only valid for PostgreSQL, MySQL, etc.
+    # SQLite uses aiosqlite with NullPool which doesn't support pool_size/max_overflow
 
     engine = create_async_engine(db_url, **engine_kwargs)
 

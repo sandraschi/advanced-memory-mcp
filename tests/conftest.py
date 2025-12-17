@@ -10,7 +10,8 @@ from textwrap import dedent
 try:
     from datetime import UTC
 except ImportError:
-    UTC = UTC
+    from datetime import timezone
+    UTC = timezone.utc
 
 import pytest
 import pytest_asyncio

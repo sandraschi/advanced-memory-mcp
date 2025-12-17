@@ -35,7 +35,7 @@ target_metadata = Base.metadata
 
 
 # Add this function to tell Alembic what to include/exclude
-def include_object(object, name, type_, reflected, compare_to):
+def include_object(object, name: str, type_: str, reflected, compare_to) -> bool:  # type: ignore[no-untyped-def,misc]
     # Ignore SQLite FTS tables
     if type_ == "table" and name.startswith("search_index"):
         return False
@@ -59,7 +59,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        include_object=include_object,
+        include_object=include_object,  # type: ignore[arg-type]
         render_as_batch=True,
     )
 
@@ -83,7 +83,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            include_object=include_object,
+            include_object=include_object,  # type: ignore[arg-type]
             render_as_batch=True,
         )
 

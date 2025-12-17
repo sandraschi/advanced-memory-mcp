@@ -23,7 +23,7 @@ async def get_project_info(
     project_service: ProjectServiceDep,
     project: ProjectPathDep,
 ) -> ProjectInfoResponse:
-    """Get comprehensive information about the specified Basic Memory project."""
+    """Get comprehensive information about the specified Advanced Memory project."""
     return await project_service.get_project_info(project)
 
 
@@ -65,7 +65,7 @@ async def update_project(
             new_project=ProjectItem(name=project_name, path=updated_path),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # List all available projects
@@ -124,7 +124,7 @@ async def add_project(
             ),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Remove a project
@@ -158,7 +158,7 @@ async def remove_project(
             new_project=None,
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Set a project as default
@@ -205,7 +205,54 @@ async def set_default_project(
             ),
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+# Sync a specific project's files
+@project_resource_router.post("/{name}/sync")
+async def sync_project(
+    project_service: ProjectServiceDep,
+    name: str = Path(..., description="Name of the project to sync"),
+):
+    """Sync a specific project's markdown files to the database.
+
+    Indexes all markdown files in the project directory without changing
+    the default project setting.
+
+    Args:
+        name: The name of the project to sync
+
+    Returns:
+        Sync results with file counts
+    """
+    try:  # pragma: no cover
+        # Import here to avoid circular dependencies
+        from advanced_memory.cli.commands.sync import get_sync_service
+        from advanced_memory.repository import ProjectRepository
+
+        # Get the project
+        project_repo = ProjectRepository(project_service.repository.session_maker)
+        project = await project_repo.get_by_name(name)
+
+        if not project:
+            raise HTTPException(status_code=404, detail=f"Project '{name}' not found")
+
+        # Get sync service and run sync
+        from pathlib import Path as PathLib
+
+        sync_service = await get_sync_service(project)
+        report = await sync_service.sync(PathLib(project.path), project_name=project.name)
+
+        return {
+            "new": len(report.new),
+            "modified": len(report.modified),
+            "deleted": len(report.deleted),
+            "moves": len(report.moves),
+            "total": report.total,
+        }
+
+    except ValueError as e:  # pragma: no cover
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 # Synchronize projects between config and database
@@ -230,4 +277,4 @@ async def synchronize_projects(
             default=False,
         )
     except ValueError as e:  # pragma: no cover
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

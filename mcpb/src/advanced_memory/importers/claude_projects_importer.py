@@ -1,4 +1,4 @@
-"""Claude projects import service for Basic Memory."""
+"""Claude projects import service for Advanced Memory."""
 
 import logging
 from typing import Any
@@ -11,11 +11,11 @@ from advanced_memory.schemas.importer import ProjectImportResult
 logger = logging.getLogger(__name__)
 
 
-class ClaudeProjectsImporter(Importer[ProjectImportResult]):
+class ClaudeProjectsImporter(Importer):
     """Service for importing Claude projects."""
 
     async def import_data(
-        self, source_data, destination_folder: str, **kwargs: Any
+        self, source_data: Any, destination_folder: str, **kwargs: Any
     ) -> ProjectImportResult:
         """Import projects from Claude JSON export.
 
@@ -73,7 +73,7 @@ class ClaudeProjectsImporter(Importer[ProjectImportResult]):
     def _format_project_markdown(
         self, project: dict[str, Any], doc: dict[str, Any]
     ) -> EntityMarkdown:
-        """Format a project document as a Basic Memory entity.
+        """Format a project document as an Advanced Memory entity.
 
         Args:
             project: Project data.
@@ -110,7 +110,7 @@ class ClaudeProjectsImporter(Importer[ProjectImportResult]):
         return entity
 
     def _format_prompt_markdown(self, project: dict[str, Any]) -> EntityMarkdown | None:
-        """Format project prompt template as a Basic Memory entity.
+        """Format project prompt template as an Advanced Memory entity.
 
         Args:
             project: Project data.

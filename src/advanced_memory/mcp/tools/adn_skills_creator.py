@@ -46,6 +46,8 @@ async def adn_skills_creator(
 ) -> dict[str, Any]:
     """Create, validate, and package Claude skills using the gold-standard workflow.
 
+    PORTMANTEAU PATTERN: Consolidates 5 skill creation operations into one tool.
+
     This portmanteau tool mirrors Anthropic's skill-creator methodology while enforcing
     Advanced Memory's modular requirements (modules, research checklist, metadata).
     It can scaffold new skills, validate existing ones, package them for distribution,
@@ -197,4 +199,3 @@ async def adn_skills_creator(
                 "Use hyphen-case skill names when scaffolding.",
             ],
         }
-

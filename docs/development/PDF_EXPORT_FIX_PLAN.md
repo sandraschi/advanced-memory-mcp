@@ -16,8 +16,8 @@
 # Line 278 in export_pandoc.py
 cmd = ["C:\\Program Files\\Pandoc\\pandoc.exe", input_path, "-o", output_path]
 ```
-❌ Breaks on non-Windows  
-❌ Breaks if Pandoc not installed  
+❌ Breaks on non-Windows
+❌ Breaks if Pandoc not installed
 ❌ Breaks if Pandoc installed elsewhere
 
 ### Issue 2: No Error Handling
@@ -57,14 +57,14 @@ from weasyprint import HTML, CSS
 def markdown_to_pdf(md_content: str, output_path: str):
     # Convert markdown → HTML
     html_content = markdown.markdown(md_content, extensions=['extra', 'toc'])
-    
+
     # Add CSS styling
     css = CSS(string='''
         @page { size: A4; margin: 2cm; }
         body { font-family: Arial; line-height: 1.6; }
         h1 { color: #333; border-bottom: 2px solid #ccc; }
     ''')
-    
+
     # Generate PDF
     HTML(string=html_content).write_pdf(output_path, stylesheets=[css])
 ```
@@ -126,7 +126,7 @@ async def export_pdf_native(
 ) -> str:
     """
     Export notes to PDF using pure Python (no Pandoc/LaTeX needed).
-    
+
     Features:
     - Zero external dependencies
     - Professional styling
@@ -136,13 +136,13 @@ async def export_pdf_native(
     """
     export_dir = Path(export_path)
     export_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Get notes
     notes = await _get_notes_from_folder(source_folder, include_subfolders, project)
-    
+
     exported = []
     errors = []
-    
+
     for note in notes:
         try:
             # Convert markdown → HTML
@@ -150,22 +150,22 @@ async def export_pdf_native(
                 note["content"],
                 extensions=['extra', 'codehilite', 'toc', 'tables', 'fenced_code']
             )
-            
+
             # Add professional CSS
             css = _get_pdf_stylesheet(css_theme)
-            
+
             # Generate PDF
             output_file = export_dir / f"{_sanitize(note['title'])}.pdf"
             HTML(string=_wrap_html(html, note['title'])).write_pdf(
                 output_file,
                 stylesheets=[CSS(string=css)]
             )
-            
+
             exported.append(str(output_file))
-            
+
         except Exception as e:
             errors.append(f"{note['title']}: {e}")
-    
+
     return _generate_summary(exported, errors)
 
 
@@ -196,33 +196,33 @@ def _get_pdf_stylesheet(theme: str = "default") -> str:
             color: #666;
         }
     }
-    
+
     body {
         font-family: 'Segoe UI', Arial, sans-serif;
         font-size: 11pt;
         line-height: 1.6;
         color: #333;
     }
-    
+
     h1, h2, h3 {
         color: #2c3e50;
         margin-top: 1.5em;
         margin-bottom: 0.5em;
         page-break-after: avoid;
     }
-    
+
     h1 {
         font-size: 24pt;
         border-bottom: 3px solid #3498db;
         padding-bottom: 0.3em;
     }
-    
+
     h2 {
         font-size: 18pt;
         border-bottom: 1px solid #bdc3c7;
         padding-bottom: 0.2em;
     }
-    
+
     code {
         background: #f4f4f4;
         padding: 2px 6px;
@@ -230,7 +230,7 @@ def _get_pdf_stylesheet(theme: str = "default") -> str:
         font-family: 'Consolas', 'Monaco', monospace;
         font-size: 10pt;
     }
-    
+
     pre {
         background: #2c3e50;
         color: #ecf0f1;
@@ -239,31 +239,31 @@ def _get_pdf_stylesheet(theme: str = "default") -> str:
         overflow-x: auto;
         page-break-inside: avoid;
     }
-    
+
     pre code {
         background: transparent;
         color: inherit;
     }
-    
+
     table {
         width: 100%;
         border-collapse: collapse;
         margin: 1em 0;
         page-break-inside: avoid;
     }
-    
+
     table th {
         background: #3498db;
         color: white;
         padding: 10px;
         text-align: left;
     }
-    
+
     table td {
         border: 1px solid #bdc3c7;
         padding: 8px;
     }
-    
+
     blockquote {
         border-left: 4px solid #3498db;
         margin: 1em 0;
@@ -271,19 +271,19 @@ def _get_pdf_stylesheet(theme: str = "default") -> str:
         color: #555;
         font-style: italic;
     }
-    
+
     img {
         max-width: 100%;
         height: auto;
         display: block;
         margin: 1em auto;
     }
-    
+
     a {
         color: #3498db;
         text-decoration: none;
     }
-    
+
     .document-title {
         text-align: center;
         margin-bottom: 2em;
@@ -329,10 +329,10 @@ Or use Python-only export (works now):
     - HTML: adn_export("html", ...)
     - DOCX: Coming soon with python-docx
 """
-        
+
         # Proceed with pandoc if installed
         return await export_pandoc.fn(...)
-        
+
     except Exception as e:
         return f"Pandoc export failed: {e}\n\nTry native PDF: adn_export('pdf', ...)"
 ```
@@ -461,30 +461,3 @@ Want me to implement this Python-only PDF export solution?
 **Time**: 2 hours
 
 **Result**: PDF export that "just works" out of the box!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

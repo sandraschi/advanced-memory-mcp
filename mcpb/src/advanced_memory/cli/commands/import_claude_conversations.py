@@ -1,4 +1,4 @@
-"""Import command for basic-memory CLI to import chat data from conversations2.json format."""
+"""Import command for advanced-memory CLI to import chat data from conversations2.json format."""
 
 import asyncio
 import json
@@ -41,7 +41,7 @@ def import_claude(
     2. Create markdown files for each conversation
     3. Format content in clean, readable markdown
 
-    After importing, run 'basic-memory sync' to index the new files.
+    After importing, run 'advanced-memory sync' to index the new files.
     """
 
     config = get_project_config()
@@ -79,9 +79,9 @@ def import_claude(
             )
         )
 
-        console.print("\nRun 'basic-memory sync' to index the new files.")
+        console.print("\nRun 'advanced-memory sync' to index the new files.")
 
     except Exception as e:
         logger.error("Import failed")
         typer.echo(f"Error during import: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e

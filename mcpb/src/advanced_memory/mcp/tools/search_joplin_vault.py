@@ -5,7 +5,6 @@ search patterns and metadata.
 """
 
 import json
-import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -16,56 +15,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Joplin exports without importing them into Advanced Memory.
-
-This tool enables querying Joplin export directories directly from the filesystem,
-providing search capabilities across markdown notes, JSON metadata, and notebook structures.
-
-SEARCH CAPABILITIES:
-- Full-text search across markdown note content
-- Metadata search in JSON files (titles, tags, notebooks)
-- Combined content and metadata queries
-- File type filtering (markdown, JSON, all files)
-- Case-sensitive or case-insensitive matching
-- Structured results with notebook organization
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Path to Joplin export directory (containing .md and .json files)
-- query (str, REQUIRED): Search term or phrase to find
-- search_type (str, default="text"): Search scope (text, metadata, combined)
-- max_results (int, default=20): Maximum number of results to return
-- include_content (bool, default=False): Include note content previews in results
-
-SEARCH TYPES:
-- "text": Search within markdown note content only
-- "metadata": Search in JSON metadata (titles, tags, notebooks)
-- "combined": Search both content and metadata
-
-JOPLIN EXPORT STRUCTURE:
-- .md files: Note content in markdown format
-- .json files: Metadata including title, tags, notebook, timestamps
-- Organized by notebook hierarchy
-
-RESULT FORMAT:
-Returns structured results showing:
-- Note titles and content snippets
-- Notebook and tag information
-- File paths and modification dates
-- Match counts and relevance scores
-
-USAGE EXAMPLES:
-Content search: search_joplin_vault("/export/path", "meeting notes")
-Metadata search: search_joplin_vault("/export", "important", search_type="metadata")
-Combined: search_joplin_vault("/export", "project", search_type="combined")
-With previews: search_joplin_vault("/joplin-export", "meeting notes", include_content=True)
-
-RETURNS:
-Formatted search results with note details, notebook organization, and optional content previews.
-
-NOTE: This searches external Joplin exports without importing them. For permanent access
-and enhanced search capabilities, use load_joplin_vault() to import into Advanced Memory.""",
-)
+@mcp.tool
 async def search_joplin_vault(
     vault_path: str,
     query: str,
@@ -164,7 +114,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
     try:
         # Use MCP filesystem if available, otherwise direct access
         try:
-            from mcp_filesystem import list_directory
+            from mcp_filesystem import list_directory  # type: ignore
 
             async def scan_recursive(current_path: str) -> list[dict[str, str]]:
                 files = []
@@ -172,13 +122,13 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
                     dir_contents = await list_directory(current_path)
 
                     # Group files by base name (without extension)
-                    file_groups = {}
+                    file_groups: dict[str, dict[str, str]] = {}
                     for line in dir_contents.split("\n"):
                         if "[DOC]" in line:
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                                file_path = str(Path(current_path) / filename)
 
                                 if filename.endswith(".md"):
                                     base_name = filename[:-3]  # Remove .md
@@ -196,7 +146,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
+                                subdir_path = str(Path(current_path) / dirname)
                                 subfiles = await scan_recursive(subdir_path)
                                 files.extend(subfiles)
 
@@ -226,7 +176,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
             # Fallback to direct filesystem access
             logger.warning("MCP filesystem not available, using direct access")
 
-            file_groups = {}
+            file_groups: dict[str, dict[str, Path]] = {}
             for file_path in vault_path.rglob("*"):
                 if file_path.is_file():
                     if file_path.suffix.lower() == ".md":
@@ -553,14 +503,14 @@ def _format_search_results(
             try:
                 created_dt = datetime.fromtimestamp(metadata["created_time"] / 1000)
                 output_lines.append(f"**Created:** {created_dt.strftime('%Y-%m-%d %H:%M')}")
-            except:
+            except Exception:
                 pass
 
         if "updated_time" in metadata:
             try:
                 updated_dt = datetime.fromtimestamp(metadata["updated_time"] / 1000)
                 output_lines.append(f"**Updated:** {updated_dt.strftime('%Y-%m-%d %H:%M')}")
-            except:
+            except Exception:
                 pass
 
         # Add notebook info

@@ -158,7 +158,7 @@ Each export type gets its own subfolder:
 
 ### ✅ Discoverable
 
-**User asks**: "Where did my export go?"  
+**User asks**: "Where did my export go?"
 **Answer**: "Check your Desktop → `advanced-memory-exports` folder!"
 
 Easy to remember, easy to find!
@@ -299,30 +299,3 @@ adn_export("pdf")
 User: "It's on my Desktop!" 😊
 
 🎉 **Smart defaults make exports effortless!**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

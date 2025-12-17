@@ -89,25 +89,49 @@ winget install --source winget --exact --id JohnMacFarlane.Pandoc
 conda install -c conda-forge pandoc
 ```
 
-### Required Dependencies for PDF
+### PDF Export Dependencies
 
-#### LaTeX (for PDF output)
-```powershell
-# Install MiKTeX (recommended)
-choco install miktex
+#### weasyprint (Default - Pure Python)
 
-# Or TinyTeX (lighter)
-choco install tinytex
+**weasyprint is the default PDF engine** - pure Python, no external install needed!
+
+```
+# Already installed as part of advanced-memory-mcp
+# No additional installation required!
 ```
 
-#### Alternative PDF Engines
-```powershell
-# For HTML-based PDF generation
-choco install wkhtmltopdf
+**Benefits of weasyprint:**
+- ✅ Pure Python - no external dependencies
+- ✅ Already installed with Advanced Memory
+- ✅ CSS-based styling support
+- ✅ Good quality HTML-to-PDF rendering
+- ✅ Cross-platform (Windows, macOS, Linux)
 
-# For Prince (commercial)
-# Download from https://www.princexml.com/
+#### wkhtmltopdf (Alternative)
+
+If weasyprint has issues, wkhtmltopdf is a solid alternative:
+
+```powershell
+# Windows
+winget install wkhtmltopdf
+
+# macOS
+brew install wkhtmltopdf
+
+# Linux (Debian/Ubuntu)
+sudo apt install wkhtmltopdf
 ```
+
+Then use: `export_pandoc(..., pdf_engine="wkhtmltopdf")`
+
+#### LaTeX (For advanced typography)
+```powershell
+# Only if you need advanced LaTeX features
+choco install miktex    # Full installation (~2GB)
+choco install tinytex   # Lighter option (~400MB)
+```
+
+Then use: `export_pandoc(..., pdf_engine="xelatex")`
 
 ## CLI Usage
 
@@ -214,9 +238,11 @@ The current `export_typora` tool has limitations:
 **Status: ✅ WORKING** - Tool created and integrated into Basic Memory MCP.
 
 #### ✅ **Tested Formats**
-- **HTML**: ✅ Working (tested)
+- **HTML**: ✅ Working (tested, dark mode CSS by default)
 - **DOCX**: ✅ Working (tested)
-- **PDF**: ⚠️ Requires LaTeX installation
+- **PDF**: ✅ Working with weasyprint (default, pure Python!)
+- **PDF (wkhtmltopdf)**: ⚠️ Alternative - requires separate install
+- **PDF (LaTeX)**: ⚠️ Alternative - requires MiKTeX/TinyTeX installation
 
 #### Complete Implementation
 
@@ -227,20 +253,23 @@ async def export_pandoc(
     format_type: str = "pdf",  # pdf, html, docx, odt, etc.
     source_folder: str = "/",
     include_subfolders: bool = True,
-    pdf_engine: str = "pdflatex",
+    pdf_engine: str = "weasyprint",  # Default: weasyprint (pure Python!)
     template_path: Optional[str] = None,
-    css_path: Optional[str] = None,
+    css_path: Optional[str] = None,  # Defaults to water.css dark mode
     toc: bool = False,
     highlight_style: str = "tango",
     standalone: bool = True,
-    self_contained: bool = False,
+    self_contained: bool = True,  # Embed resources by default
     project: Optional[str] = None
 ) -> str:
     """
-    Export Basic Memory notes to various formats using Pandoc.
+    Export Advanced Memory notes to various formats using Pandoc.
 
     This tool provides automated, batch document export capabilities
     that surpass Typora's GUI-only limitations with full CLI automation.
+
+    PDF Export: Uses weasyprint by default (pure Python, no external deps!)
+    HTML Export: Self-contained with water.css dark mode styling
 
     Supported Formats: pdf, html, docx, odt, rtf, tex, epub, txt, etc.
     """
@@ -362,9 +391,11 @@ end
 ## Installation for Basic Memory
 
 #### ✅ **Current Status**
-- **Pandoc**: ✅ Installed (v3.8)
-- **LaTeX**: ❌ Not installed (needed for PDF)
-- **Testing**: ✅ HTML and DOCX working
+- **Pandoc**: ✅ Auto-installed on first use
+- **weasyprint**: ✅ Default PDF engine (pure Python, already installed!)
+- **wkhtmltopdf**: ⚠️ Optional alternative (needs separate install)
+- **LaTeX**: ⚠️ Optional (only for advanced typography)
+- **Testing**: ✅ HTML, DOCX, and PDF working
 
 ### Automated Setup
 
@@ -385,21 +416,28 @@ choco install python        # For filters
 
 #### Test Results
 ```bash
-# Pandoc version (installed)
-pandoc 3.8
-Features: +server +lua
+# Pandoc version (auto-installed)
+pandoc --version
 
 # HTML export: ✅ WORKING
 pandoc test-note.md -s -o test-note.html
-# Result: 5.1KB HTML file created successfully
+# Result: HTML file with dark mode CSS
 
 # DOCX export: ✅ WORKING
 pandoc test-note.md -s -o test-note.docx
-# Result: 11.4KB Word document created successfully
+# Result: Word document created
 
-# PDF export: ❌ NEEDS LATEX
-pandoc test-note.md -o test-note.pdf
-# Error: pdflatex not found. Please select a different --pdf-engine or install pdflatex
+# PDF export with weasyprint (DEFAULT): ✅ WORKING
+pandoc test-note.md --pdf-engine=weasyprint -o test-note.pdf
+# Result: PDF created via pure Python (no external deps!)
+
+# PDF export with wkhtmltopdf: ⚠️ ALTERNATIVE
+pandoc test-note.md --pdf-engine=wkhtmltopdf -o test-note.pdf
+# Requires: wkhtmltopdf installation
+
+# PDF export with LaTeX: ⚠️ ALTERNATIVE
+pandoc test-note.md --pdf-engine=pdflatex -o test-note.pdf
+# Requires: MiKTeX or TinyTeX installation
 ```
 
 #### Manual Testing Commands

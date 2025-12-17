@@ -3,7 +3,6 @@
 from collections.abc import Sequence
 from typing import Any, TypeVar
 
-from basic_memory import db
 from loguru import logger
 from sqlalchemy import (
     Column,
@@ -20,12 +19,13 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm.interfaces import LoaderOption
 
+from advanced_memory import db
 from advanced_memory.models import Base
 
 T = TypeVar("T", bound=Base)
 
 
-class Repository[T: Base]:
+class Repository:
     """Base repository implementation with generic CRUD operations."""
 
     def __init__(
@@ -50,10 +50,11 @@ class Repository[T: Base]:
             self.has_project_id
             and self.project_id is not None
             and getattr(model, "project_id", None) is None
+            and hasattr(model, "project_id")
         ):
-            model.project_id = self.project_id
+            model.project_id = self.project_id  # type: ignore[attr-defined]
 
-    def get_model_data(self, entity_data):
+    def get_model_data(self, entity_data: dict[str, Any]) -> dict[str, Any]:
         model_data = {
             k: v for k, v in entity_data.items() if k in self.valid_columns and v is not None
         }
@@ -68,8 +69,12 @@ class Repository[T: Base]:
         Returns:
             Updated query with project filter if applicable
         """
-        if self.has_project_id and self.project_id is not None:
-            query = query.filter(self.Model.project_id == self.project_id)
+        if (
+            self.has_project_id
+            and self.project_id is not None
+            and hasattr(self.Model, "project_id")
+        ):
+            query = query.filter(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
         return query
 
     async def select_by_id(self, session: AsyncSession, entity_id: int) -> T | None:
@@ -307,8 +312,12 @@ class Repository[T: Base]:
             conditions = [self.primary_key.in_(ids)]
 
             # Add project_id filter if applicable
-            if self.has_project_id and self.project_id is not None:  # pragma: no cover
-                conditions.append(self.Model.project_id == self.project_id)
+            if (
+                self.has_project_id
+                and self.project_id is not None
+                and hasattr(self.Model, "project_id")
+            ):  # pragma: no cover
+                conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -322,8 +331,12 @@ class Repository[T: Base]:
             conditions = [getattr(self.Model, field) == value for field, value in filters.items()]
 
             # Add project_id filter if applicable
-            if self.has_project_id and self.project_id is not None:
-                conditions.append(self.Model.project_id == self.project_id)
+            if (
+                self.has_project_id
+                and self.project_id is not None
+                and hasattr(self.Model, "project_id")
+            ):
+                conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
             query = delete(self.Model).where(and_(*conditions))
             result = await session.execute(query)
@@ -341,9 +354,10 @@ class Repository[T: Base]:
                     isinstance(query, Select)
                     and self.has_project_id
                     and self.project_id is not None
+                    and hasattr(self.Model, "project_id")
                 ):
                     query = query.where(
-                        self.Model.project_id == self.project_id
+                        self.Model.project_id == self.project_id  # type: ignore[attr-defined]
                     )  # pragma: no cover
 
             result = await session.execute(query)

@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 from os import stat_result
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 from loguru import logger
 
@@ -19,7 +19,7 @@ from advanced_memory.services.exceptions import FileOperationError
 from advanced_memory.utils import file_safety
 
 # Type alias for file paths that can be either a string or a Path object
-FilePath = Union[str, Path]
+FilePath = str | Path
 
 
 class FileService:
@@ -111,9 +111,9 @@ class FileService:
                 return path_obj.exists()
             else:
                 return (self.base_path / path_obj).exists()
-        except Exception as e:
+        except (OSError, PermissionError, ValueError) as e:
             logger.error("Failed to check file existence", path=str(path), error=str(e))
-            raise FileOperationError(f"Failed to check file existence: {e}")
+            raise FileOperationError(f"Failed to check file existence: {e}") from e
 
     async def write_file(self, path: FilePath, content: str, overwrite: bool = True) -> str:
         """Safely write content to file and return checksum.
@@ -172,12 +172,12 @@ class FileService:
             logger.debug(f"File write completed: {full_path}, checksum={checksum}")
             return checksum
 
-        except Exception as e:
+        except (OSError, PermissionError, ValueError, UnicodeEncodeError) as e:
             error_msg = f"Failed to write file {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 
-    # TODO remove read_file
+    # Note: read_file method is deprecated, use read_content instead
     async def read_file(self, path: FilePath) -> tuple[str, str]:
         """Safely read file and compute checksum.
 
@@ -223,7 +223,7 @@ class FileService:
                 try:
                     content = full_path.read_text(encoding="latin-1")
                     logger.warning(f"Read file with latin-1 encoding: {full_path}")
-                except Exception as e:
+                except (UnicodeDecodeError, OSError) as e:
                     raise FileOperationError(
                         f"Failed to decode file {full_path}: {str(e)}"
                     ) from ude
@@ -240,7 +240,7 @@ class FileService:
         except FileOperationError:
             raise  # Re-raise our own exceptions
 
-        except Exception as e:
+        except (OSError, PermissionError, ValueError, UnicodeDecodeError) as e:
             error_msg = f"Failed to read file {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
@@ -292,7 +292,7 @@ class FileService:
 
             return True
 
-        except Exception as e:
+        except (OSError, PermissionError, ValueError) as e:
             error_msg = f"Failed to delete {full_path}: {str(e)}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
@@ -338,9 +338,9 @@ class FileService:
                 content = full_path.read_bytes()
             return await file_utils.compute_checksum(content)
 
-        except Exception as e:  # pragma: no cover
+        except (OSError, PermissionError, ValueError) as e:  # pragma: no cover
             logger.error("Failed to compute checksum", path=str(full_path), error=str(e))
-            raise file_utils.FileError(f"Failed to compute checksum for {path}: {e}")
+            raise file_utils.FileError(f"Failed to compute checksum for {path}: {e}") from e
 
     def file_stats(self, path: FilePath) -> stat_result:
         """Return file stats for a given path.

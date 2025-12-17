@@ -54,7 +54,7 @@ async def adn_export(
     - Complete archive creation for backup/migration
 
     Args:
-        operation: The export operation to perform
+        operation: The export operation to perform (pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills)
         export_path: Path where exported files will be saved
                     **IMPORTANT: Leave this None/omit parameter to use smart default!**
                     Default behavior (when omitted):
@@ -62,12 +62,23 @@ async def adn_export(
                     - macOS: ~/Desktop/advanced-memory-exports/{operation}/
                     - Linux: ~/Desktop/advanced-memory-exports/{operation}/
                     **Only provide export_path when user explicitly specifies a custom location!**
+                    * All operations: Optional (has smart default)
         format_type: Output format for pandoc operations
+                    * pandoc operation: Optional (default: "pdf")
+                    * Other operations: NOT USED
         source_folder: Source folder to export from
+                    * All operations: Optional (default: "/" - root folder)
         include_subfolders: Include subfolders recursively
+                    * All operations: Optional (default: True)
         site_title: Title for docsify/html exports
+                    * docsify, html operations: Optional
+                    * Other operations: NOT USED
         site_description: Description for docsify/html exports
+                    * docsify, html operations: Optional
+                    * Other operations: NOT USED
         book_title: Title for PDF book exports
+                    * pdf_book operation: REQUIRED - Title for the generated PDF book
+                    * Other operations: NOT USED
         tag_filter: Filter notes by tag for exports
         pdf_engine: PDF generation engine
         project: Optional project specification. Supports:
@@ -345,7 +356,7 @@ async def _pdf_book_export(
 ) -> str:
     """Handle PDF book export operation."""
     if not book_title:
-        return "# Error\n\nPDF book export requires: book_title parameter"
+        return '# Error\n\nPDF book export requires: book_title parameter\n\n**Example:**\n```python\nadn_export("pdf_book", book_title="Research Papers")\n```'
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
 
@@ -366,7 +377,7 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
-    return await export_to_archive(
+    return await export_to_archive.fn(
         export_path, None, None, None, None, True, project, show_after_export
     )  # type: ignore[operator,no-any-return]
 

@@ -1,5 +1,6 @@
 import typer
 
+from advanced_memory import __version__
 from advanced_memory.config import ConfigManager, get_project_config
 from advanced_memory.mcp.project_session import session
 
@@ -8,13 +9,13 @@ def version_callback(value: bool) -> None:
     """Show version and exit."""
     if value:  # pragma: no cover
         config = get_project_config()
-        typer.echo(f"Basic Memory version: {basic_memory.__version__}")
+        typer.echo(f"Advanced Memory version: {__version__}")
         typer.echo(f"Current project: {config.project}")
         typer.echo(f"Project path: {config.home}")
         raise typer.Exit()
 
 
-app = typer.Typer(name="basic-memory")
+app = typer.Typer(name="advanced-memory")
 
 
 @app.callback()
@@ -25,7 +26,7 @@ def app_callback(
         "--project",
         "-p",
         help="Specify which project to use 1",
-        envvar="BASIC_MEMORY_PROJECT",
+        envvar="ADVANCED_MEMORY_PROJECT",
     ),
     version: bool | None = typer.Option(
         None,
@@ -36,7 +37,7 @@ def app_callback(
         is_eager=True,
     ),
 ) -> None:
-    """Basic Memory - Local-first personal knowledge management."""
+    """Advanced Memory - Local-first personal knowledge management."""
 
     # Run initialization for every command unless --version was specified
     if not version and ctx.invoked_subcommand is not None:

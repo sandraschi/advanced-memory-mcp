@@ -24,6 +24,7 @@ from typing import Any
 from loguru import logger
 
 from advanced_memory.mcp.tools import adn_export, adn_import
+from advanced_memory.mcp.tools.export_pandoc import export_pandoc
 
 ToolCallable = Callable[..., Awaitable[Any]]
 
@@ -90,6 +91,18 @@ def build_tests(include_heavy: bool) -> tuple[Iterable[ToolTest], list[Path]]:
             {"operation": "explode", "source_path": "dummy"},
         ),
     ]
+
+    # Test export_pandoc default pdf_engine is weasyprint
+    import inspect
+
+    sig = inspect.signature(export_pandoc.fn)
+    pdf_engine_default = sig.parameters.get("pdf_engine")
+    if pdf_engine_default and pdf_engine_default.default == "weasyprint":
+        logger.info("✅ export_pandoc pdf_engine default is 'weasyprint' (pure Python)")
+    else:
+        logger.warning(
+            f"⚠️ export_pandoc pdf_engine default is NOT 'weasyprint': {pdf_engine_default}"
+        )
 
     if include_heavy:
         export_dir = Path(tempfile.mkdtemp(prefix="am-export-"))
@@ -173,4 +186,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-

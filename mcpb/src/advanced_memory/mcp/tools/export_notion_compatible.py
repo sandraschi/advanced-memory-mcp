@@ -4,66 +4,14 @@ import re
 from pathlib import Path
 from typing import Any
 
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.tools.utils import call_get, call_post
+from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(
-    description="""Export Advanced Memory content to Notion-compatible markdown for team collaboration.
-
-This tool converts Advanced Memory knowledge base content into clean markdown format
-optimized for Notion import, enabling enhanced team collaboration and database features.
-
-EXPORT FEATURES:
-- Generates Notion-importable markdown files with proper formatting
-- Preserves content structure and relationships as standard links
-- Includes frontmatter metadata for Notion properties
-- Supports selective export by search query or folder
-- Handles rich content including Mermaid diagrams and complex formatting
-- Maintains folder hierarchy as importable structure
-
-PARAMETERS:
-- output_path (str, REQUIRED): Filesystem path where Notion-compatible files will be created
-- query (str, optional): Search query to filter notes (exports matching notes)
-- folder_filter (str, optional): Folder path to limit export scope
-- include_observations (bool, default=True): Include observation metadata in frontmatter
-- include_relations (bool, default=True): Include relationship links in content
-- project (str, optional): Specific Advanced Memory project to export from
-
-CONTENT CONVERSION:
-- Advanced Memory markdown [UNICODE] Notion-compatible markdown
-- Entity relationships [UNICODE] Standard markdown links with context
-- Observations [UNICODE] YAML frontmatter for Notion properties
-- Mermaid diagrams [UNICODE] Preserved as code blocks (Notion renders some diagram types)
-- Rich formatting [UNICODE] Standard markdown formatting
-
-OUTPUT STRUCTURE:
-Creates import-ready files with:
-- Clean markdown content optimized for Notion
-- YAML frontmatter with metadata and properties
-- Folder structure preserved for logical organization
-- Relationship links as standard markdown references
-
-NOTION IMPORT PROCESS:
-1. Export using this tool: export_notion_compatible("notion-ready/")
-2. Open Notion workspace
-3. Click "Import" [UNICODE] "Markdown & CSV"
-4. Select the exported directory
-5. Choose import settings and complete
-
-USAGE EXAMPLES:
-All content: export_notion_compatible("notion-export/")
-Search filter: export_notion_compatible("export/", query="project alpha")
-Folder filter: export_notion_compatible("export/", folder_filter="docs/")
-Minimal export: export_notion_compatible("export/", include_observations=False, include_relations=False)
-
-RETURNS:
-Export summary with file counts, content statistics, and Notion import instructions.
-
-NOTE: Notion's import capabilities may vary by plan type. Some advanced formatting
-may be simplified. For best results, use Notion's "Markdown & CSV" import option.""",
-)
+@mcp.tool
 async def export_notion_compatible(
     output_path: str,
     query: str | None = None,
@@ -109,30 +57,22 @@ async def export_notion_compatible(
         export_notion_compatible("export", include_observations=False)
     """
 
-    # Get the active project
-    active_project = get_active_project(project)
-    project_url = active_project.project_url
-
     # Create output directory
     output_dir = Path(output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Get the active project
+    active_project = get_active_project(project)
+    project_url = active_project.project_url
+
     # Search for notes to export
     if query:
         # Make HTTP call to search API to find matching notes
-        from advanced_memory.mcp.async_client import client
-        from advanced_memory.mcp.project_session import get_active_project
-        from advanced_memory.mcp.tools.utils import call_post
-        from advanced_memory.schemas.search import SearchQuery
-
-        active_project = get_active_project(project)
-        project_url = active_project.project_url
-
         # Create search query
         search_query = SearchQuery(text=query)
 
         search_response_raw = await call_post(
-            client,
+            client,  # type: ignore[possibly-unbound]
             f"{project_url}/search/",
             json=search_query.model_dump(),
             params={"page": 1, "page_size": 1000},
@@ -145,7 +85,8 @@ async def export_notion_compatible(
         if not search_response or not hasattr(search_response, "results"):
             return f"No notes found matching query: {query}"
 
-        entities = search_response.results
+        # Convert SearchResult objects to dicts
+        entities = [result.model_dump() for result in search_response.results]
     else:
         # Get all entities (this is a simplified approach - in practice you'd want pagination)
         entities_url = f"{project_url}/api/memory"
@@ -153,12 +94,21 @@ async def export_notion_compatible(
         if folder_filter:
             params["folder"] = folder_filter
 
-        response = await call_get(client, entities_url, params=params)
+        response = await call_get(client, entities_url, params=params)  # type: ignore[possibly-unbound]
         if response.status_code != 200:
             return f"Failed to retrieve entities: {response.status_code} - {response.text}"
 
         entities_data = response.json()
-        entities = entities_data.get("results", [])
+        entities_raw = entities_data.get("results", [])
+        # Convert SearchResult objects to dicts
+        entities = [
+            entity.model_dump()
+            if hasattr(entity, "model_dump")
+            else dict(entity)
+            if hasattr(entity, "__dict__")
+            else entity
+            for entity in entities_raw
+        ]
 
     if not entities:
         return "No entities found to export"

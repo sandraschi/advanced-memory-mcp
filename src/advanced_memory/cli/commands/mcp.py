@@ -53,19 +53,44 @@ def mcp(
         finally:
             loop.close()
 
-    logger.info(f"Sync changes enabled: {app_config.sync_changes}")
+    # Configure logging based on transport mode
+    import sys
+    if transport == "stdio":
+        # In stdio mode, suppress all logging to stdout to prevent JSON-RPC interference
+        # Only critical errors go to stderr
+        from loguru import logger as loguru_logger
+        loguru_logger.remove()
+        loguru_logger.add(sys.stderr, level="ERROR", format="{message}")
+    else:
+        # For HTTP transports, normal logging is fine
+        logger.info(f"Sync changes enabled: {app_config.sync_changes}")
+    
     if app_config.sync_changes:
         # Start the sync thread
         sync_thread = threading.Thread(target=run_file_sync, daemon=True)
         sync_thread.start()
-        logger.info("Started file sync in background")
+        if transport != "stdio":
+            logger.info("Started file sync in background")
 
     # Now run the MCP server (blocks)
-    logger.info(f"Starting MCP server with {transport.upper()} transport")
-
     if transport == "stdio":
+        # Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
+        # The stdout was patched in mcp_instance.py/server.py during imports
+        import sys
+        import os
+        if hasattr(sys, '_original_stdout'):
+            # Flush any buffered output from the null device
+            sys.stdout.flush()
+            # Restore original stdout
+            sys.stdout = sys._original_stdout
+            # Ensure stdout is clean and unbuffered for JSON-RPC
+            sys.stdout.flush()
+            # Set unbuffered mode to prevent any buffering issues
+            os.environ.setdefault('PYTHONUNBUFFERED', '1')
+        
         mcp_server.run(
             transport=transport,
+            show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution
         )
     elif transport == "streamable-http" or transport == "sse":
         mcp_server.run(

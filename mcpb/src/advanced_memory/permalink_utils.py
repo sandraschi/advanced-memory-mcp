@@ -1,4 +1,4 @@
-"""Permalink generation utilities for basic-memory."""
+"""Permalink generation utilities for advanced-memory."""
 
 import os
 import re
@@ -120,9 +120,20 @@ def sanitize_filename(title: str) -> str:
     # Replace dots with underscores (to prevent filename issues)
     title = title.replace(".", "_")
 
-    # Replace unsafe characters with underscores
-    # Keep alphanumeric and dashes, replace spaces and other unsafe chars
-    title = re.sub(r"[^\w\-]", "_", title)
+    # Replace filesystem-unsafe characters with underscores
+    # < > : " / \ | ? * &
+    unsafe_chars = r'[<>:"/\\|?*&]'
+    title = re.sub(unsafe_chars, "_", title)
+
+    # Remove ASCII special characters (but preserve Unicode)
+    # Remove: @ # $ % ^ ( ) ! ~ ` , ; ' [ ] { } = +
+    # But keep: alphanumeric, hyphens, underscores, and any non-ASCII (Unicode)
+    # Note: & is handled above (replaced with _), not removed
+    ascii_special = r"[@#$%^()!~`,;\'\[\]{}=+]"
+    title = re.sub(ascii_special, "", title)
+
+    # Replace spaces with underscores (do this after removing special chars)
+    title = title.replace(" ", "_")
 
     # Replace multiple underscores with single ones
     title = re.sub(r"_+", "_", title)

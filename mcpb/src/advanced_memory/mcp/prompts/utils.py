@@ -95,8 +95,8 @@ def format_prompt_context(context: PromptContext) -> str:
     sections = []
 
     # Process each context
-    for context in context.results:  # pyright: ignore
-        for primary in context.primary_results:  # pyright: ignore
+    for context_item in context.results:  # pyright: ignore
+        for primary in context_item.primary_results:  # pyright: ignore
             if primary.permalink not in added_permalinks:
                 primary_permalink = primary.permalink
 
@@ -119,13 +119,20 @@ def format_prompt_context(context: PromptContext) -> str:
                     if content:
                         section += f"\n**Excerpt**:\n{content}\n"
 
-                section += dedent(f"""
+                # Use file_path if permalink is None
+                if primary_permalink:
+                    section += dedent(f"""
 
-                    You can read this document with: `read_note("{primary_permalink}")`
-                    """)
+                        You can read this document with: `read_note("{primary_permalink}")`
+                        """)
+                else:
+                    section += dedent(f"""
+
+                        You can read this file with: `read_file("{primary.file_path}")`
+                        """)
                 sections.append(section)
 
-        if context.related_results:  # pyright: ignore
+        if hasattr(context, "related_results") and context.related_results:  # pyright: ignore
             section += dedent(  # pyright: ignore
                 """
                 ## Related Context

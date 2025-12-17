@@ -12,12 +12,11 @@ import os
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Union
 
 from loguru import logger
 
 # Type aliases
-FilePath = Union[str, Path]
+FilePath = str | Path
 
 
 class FileSafetyError(Exception):
@@ -88,7 +87,7 @@ class FileSafety:
 
                 ctypes.windll.kernel32.SetFileAttributesW(str(self.trash_dir), 0x02)
         except Exception as e:
-            raise FileSafetyError(f"Failed to create trash directory: {e}")
+            raise FileSafetyError(f"Failed to create trash directory: {e}") from e
 
     def _log_operation(self, operation: str, path: FilePath, **kwargs) -> None:
         """Log a file operation."""
@@ -137,7 +136,7 @@ class FileSafety:
 
         # Generate unique name in trash with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        name_hash = hashlib.md5(str(path).encode()).hexdigest()[:8]
+        name_hash = hashlib.md5(str(path).encode(), usedforsecurity=False).hexdigest()[:8]
         trash_name = f"{timestamp}_{name_hash}_{path.name}"
         trash_path = self.trash_dir / trash_name
 
@@ -158,7 +157,7 @@ class FileSafety:
             return trash_path
         except Exception as e:
             logger.error(f"Failed to move {path} to trash: {e}")
-            raise FileSafetyError(f"Failed to move to trash: {e}")
+            raise FileSafetyError(f"Failed to move to trash: {e}") from e
 
     def safe_delete(self, path: FilePath) -> bool:
         """Safely delete a file or directory by moving it to trash."""
@@ -184,7 +183,7 @@ class FileSafety:
 
         except Exception as e:
             logger.error(f"Failed to safely delete {path}: {e}")
-            raise FileSafetyError(f"Failed to delete {path}: {e}")
+            raise FileSafetyError(f"Failed to delete {path}: {e}") from e
 
     def safe_rename(self, src: FilePath, dst: FilePath) -> bool:
         """Safely rename/move a file or directory."""
@@ -208,7 +207,7 @@ class FileSafety:
 
         except Exception as e:
             logger.error(f"Failed to rename {src} to {dst}: {e}")
-            raise FileSafetyError(f"Failed to rename: {e}")
+            raise FileSafetyError(f"Failed to rename: {e}") from e
 
     def list_trash(self) -> list[dict]:
         """List all files in trash with metadata."""

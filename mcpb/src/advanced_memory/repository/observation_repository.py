@@ -9,7 +9,7 @@ from advanced_memory.models import Observation
 from advanced_memory.repository.repository import Repository
 
 
-class ObservationRepository(Repository[Observation]):
+class ObservationRepository(Repository):
     """Repository for Observation model with memory-specific operations."""
 
     def __init__(self, session_maker: async_sessionmaker, project_id: int):
@@ -63,7 +63,7 @@ class ObservationRepository(Repository[Observation]):
         observations = result.scalars().all()
 
         # Group observations by entity_id
-        observations_by_entity = {}
+        observations_by_entity: dict[int, list[Observation]] = {}
         for obs in observations:
             if obs.entity_id not in observations_by_entity:
                 observations_by_entity[obs.entity_id] = []

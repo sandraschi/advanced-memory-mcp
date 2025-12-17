@@ -1,5 +1,6 @@
 """Skills Manager portmanteau tool for Claude Skills integration."""
 
+from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -17,6 +18,10 @@ from advanced_memory.mcp.tools.adn_skills_operations_new import (
     _import_from_github_operation,
 )
 from advanced_memory.utils import generate_permalink
+
+# Session state for active skills (module-level tracking)
+# Structure: {skill_identifier: {"content": str, "activated_at": datetime, "scope": str}}
+_active_skills: dict[str, dict] = {}
 
 
 @mcp.tool
@@ -39,6 +44,12 @@ async def adn_skills(
         "distill_from_textbook",
         "distill_from_text",
         "distill_from_expert",
+        # THE DOOR - Activation operations (staged loading)
+        "activate",
+        "deactivate",
+        "active",
+        "load_section",
+        "load_resource",
     ],
     identifier: str | None = None,
     skill_name: str | None = None,
@@ -74,13 +85,24 @@ async def adn_skills(
     level: Literal["beginner", "intermediate", "advanced"] | None = None,
     focus: Literal["principles", "examples", "methodology", "all"] | None = None,
     context_level: Literal["basic", "comprehensive", "detailed"] | None = None,
+    # Activation parameters (THE DOOR - staged loading)
+    scope: Literal["message", "session", "persistent"] | None = "session",
+    deactivate_all: bool = False,
+    verbose: bool = False,
+    # Staged loading parameters
+    section: str | None = None,  # Section header to load (e.g., "## Decorators")
+    resource: str | None = None,  # Resource path to load (e.g., "scripts/linter.py")
 ) -> str:
     """Claude Skills management portmanteau for Advanced Memory.
 
-    This portmanteau tool provides complete CRUD operations and bidirectional exchange
-    with Claude Skills format, integrating skill-creator patterns from Anthropic.
+    PORTMANTEAU PATTERN: Consolidates 20+ Claude Skills operations into one tool.
+
+    This portmanteau tool provides complete CRUD operations, bidirectional exchange
+    with Claude Skills format, AND skill activation (THE DOOR that was missing!).
 
     SUPPORTED OPERATIONS:
+
+    CRUD & Management:
     - create: Create new skill with template (init pattern from skill-creator)
     - read: Read skill in SKILL.md format
     - update: Update skill metadata or content
@@ -92,12 +114,21 @@ async def adn_skills(
     - package: Create distributable .zip (package pattern from skill-creator)
     - from_zettel: Convert zettelkasten note to Claude Skill
     - to_zettel: Convert Claude Skill back to regular note
+
+    Import & Distillation:
     - import_from_github: Import skill from GitHub repository (SkillsMP compatible)
     - distill_from_wikipedia: Create skill from Wikipedia article
     - distill_from_arxiv: Create skill from arXiv research papers
     - distill_from_textbook: Create skill from textbook PDF
     - distill_from_text: Create skill from famous text/document
     - distill_from_expert: Create skill from SOTA thinker's work
+
+    🚪 THE DOOR - Activation (NEW!):
+    - activate: Load skill TOC into context (staged loading - saves tokens!)
+    - deactivate: Remove skill from active context
+    - active: List currently active skills
+    - load_section: Load specific section from active skill (on-demand)
+    - load_resource: Load specific resource file from active skill (scripts/, references/, assets/)
 
     CLAUDE SKILLS FORMAT:
     Skills are folders containing SKILL.md with YAML frontmatter:
@@ -207,28 +238,129 @@ async def adn_skills(
             - "package": Create distributable .zip
             - "from_zettel": Convert zettelkasten note to Claude Skill
             - "to_zettel": Convert Claude Skill back to regular note
-        identifier: Skill name or note identifier (required for read/update/delete/validate/package/from_zettel/to_zettel)
-        skill_name: Name for new skill - must be hyphen-case, lowercase (required for create operation)
-        description: When Claude should use the skill (required for create/from_zettel operations)
+        identifier: Skill name or note identifier
+                    * read, update, delete, validate, package, from_zettel, to_zettel, activate, deactivate, load_section, load_resource: REQUIRED
+                    * Other operations: NOT USED
+        skill_name: Name for new skill - must be hyphen-case, lowercase
+                    * create operation: REQUIRED - Skill name (e.g., "python-expert")
+                    * read operation: Optional - Alternative to identifier
+                    * activate, load_section, load_resource: Optional - Alternative to identifier
+                    * Other operations: NOT USED
+        description: When Claude should use the skill
+                    * create, from_zettel operations: REQUIRED - Description of when to use this skill
+                    * update operation: Optional - Update the description
+                    * Other operations: NOT USED
         content: Skill instructions (markdown body)
-        source_path: Path to import from - folder or .zip (required for import operation)
-        export_path: Path to export to (optional, defaults to Desktop)
-        category: Skill category (e.g., developer, researcher, writer, creative)
-        difficulty: Difficulty level. MUST be one of:
-            - "beginner": Basic concepts
-            - "intermediate": Standard usage
-            - "advanced": Complex scenarios
-            - "expert": Deep expertise
-            Default: None (not specified)
+                    * update operation: Optional - New content to replace skill body
+                    * Other operations: NOT USED
+        source_path: Path to import from - folder or .zip
+                    * import operation: REQUIRED - Path to Claude Skills directory or ZIP file
+                    * import_from_github operation: Optional - Subdirectory within repository
+                    * Other operations: NOT USED
+        export_path: Path to export to
+                    * export operation: Optional - Defaults to Desktop/advanced-memory-exports/skills/
+                    * package operation: Optional - Defaults to Desktop/advanced-memory-exports/skills/
+                    * Other operations: NOT USED
+        category: Skill category
+                    * create, from_zettel, import_from_github, distill operations: Optional - Category (e.g., "developer", "researcher", "writer", "creative")
+                    * update operation: Optional - Update the category
+                    * Other operations: NOT USED
+        difficulty: Difficulty level. MUST be one of: "beginner", "intermediate", "advanced", "expert"
+                    * create operation: Optional - Difficulty level for the skill
+                    * update operation: Optional - Update the difficulty
+                    * Other operations: NOT USED
         metadata: Custom metadata dictionary
+                    * create, from_zettel operations: Optional - Additional metadata key-value pairs
+                    * update operation: Optional - Update metadata
+                    * Other operations: NOT USED
         filters: Filtering criteria for list operation
-        package_format: Export/package format. MUST be one of:
-            - "folder": Export as folder structure (default)
-            - "zip": Export as .zip archive
-            Default: "folder"
+                    * list operation: Optional - Dict with filter criteria (e.g., {"category": "developer", "difficulty": "advanced"})
+                    * export operation: Optional - Filter skills to export
+                    * Other operations: NOT USED
+        package_format: Export/package format. MUST be one of: "folder", "zip"
+                    * export operation: Optional - Format for export (default: "folder")
+                    * Other operations: NOT USED
         page: Pagination page for list operation (default: 1)
+                    * list operation: Optional - Page number for paginated results
+                    * Other operations: NOT USED
         page_size: Results per page (default: 20)
+                    * list operation: Optional - Number of results per page
+                    * Other operations: NOT USED
         project: Optional project name
+                    * All operations: Optional - Process skills in specific project (default: current active project)
+        # GitHub import parameters
+        repository: GitHub repository URL or path
+                    * import_from_github operation: REQUIRED - Repository URL (e.g., "owner/repo" or "https://github.com/owner/repo")
+                    * Other operations: NOT USED
+        branch: Git branch name
+                    * import_from_github operation: Optional - Branch to import from (default: "main")
+                    * Other operations: NOT USED
+        # Distillation parameters
+        topic: Topic for distillation
+                    * distill_from_wikipedia operation: REQUIRED - Wikipedia article title or topic
+                    * Other operations: NOT USED
+        query: Search query for distillation
+                    * distill_from_arxiv operation: REQUIRED - Search query for arXiv papers
+                    * Other operations: NOT USED
+        max_papers: Maximum number of papers to process
+                    * distill_from_arxiv operation: Optional - Maximum papers to include (default: 5)
+                    * Other operations: NOT USED
+        chapters: Chapter numbers to extract
+                    * distill_from_textbook operation: Optional - List of chapter numbers (e.g., [1, 2, 3])
+                    * Other operations: NOT USED
+        pdf_path: Path to PDF file
+                    * distill_from_textbook operation: REQUIRED - Path to textbook PDF file
+                    * Other operations: NOT USED
+        text_path: Path to text file
+                    * distill_from_text operation: REQUIRED - Path to text file or document
+                    * Other operations: NOT USED
+        expert_name: Name of expert/thinker
+                    * distill_from_expert operation: REQUIRED - Name of expert (e.g., "Richard Feynman", "Alan Kay")
+                    * Other operations: NOT USED
+        focus_area: Specific area to focus on
+                    * distill_from_expert operation: Optional - Specific area of expertise to focus on
+                    * Other operations: NOT USED
+        source_types: Types of sources to use
+                    * distill_from_expert operation: Optional - List of source types (e.g., ["books", "papers", "interviews"])
+                    * Other operations: NOT USED
+        depth: Depth of analysis
+                    * distill_from_wikipedia operation: Optional - Analysis depth (0-5, default: 0)
+                    * Other operations: NOT USED
+        include_related: Include related topics
+                    * distill_from_wikipedia operation: Optional - If True, includes related Wikipedia articles (default: False)
+                    * Other operations: NOT USED
+        quality: Quality level for distillation
+                    * distill_from_wikipedia operation: Optional - "basic", "comprehensive", or "expert" (default: "comprehensive")
+                    * Other operations: NOT USED
+        synthesis_level: Level of synthesis
+                    * distill_from_arxiv operation: Optional - "summary", "synthesis", or "comprehensive" (default: "synthesis")
+                    * Other operations: NOT USED
+        level: Difficulty/level for distillation
+                    * distill_from_textbook operation: Optional - "beginner", "intermediate", or "advanced" (default: "intermediate")
+                    * Other operations: NOT USED
+        focus: Focus area for distillation
+                    * distill_from_text operation: Optional - "principles", "examples", "methodology", or "all" (default: "all")
+                    * Other operations: NOT USED
+        context_level: Level of context to include
+                    * distill_from_text operation: Optional - "basic", "comprehensive", or "detailed" (default: "comprehensive")
+                    * Other operations: NOT USED
+        # Activation parameters (THE DOOR - staged loading)
+        scope: Activation scope
+                    * activate operation: Optional - "message" (current message), "session" (current session), or "persistent" (default: "session")
+                    * Other operations: NOT USED
+        deactivate_all: Deactivate all active skills
+                    * deactivate operation: Optional - If True, deactivates all active skills (default: False)
+                    * Other operations: NOT USED
+        verbose: Verbose output
+                    * active operation: Optional - If True, shows detailed information about active skills (default: False)
+                    * Other operations: NOT USED
+        # Staged loading parameters
+        section: Section header to load
+                    * load_section operation: REQUIRED - Section header to load (e.g., "## Decorators", "## Async/Await")
+                    * Other operations: NOT USED
+        resource: Resource path to load
+                    * load_resource operation: REQUIRED - Resource path relative to skill root (e.g., "scripts/linter.py", "references/api.md")
+                    * Other operations: NOT USED
 
     Returns:
         Operation-specific result with skill details and status
@@ -320,12 +452,25 @@ async def adn_skills(
         return await _distill_from_expert_operation(
             expert_name, source_types, focus_area, category, project
         )
+    # THE DOOR - Activation operations (staged loading)
+    elif operation == "activate":
+        return await _activate_operation(identifier or skill_name, scope, project)
+    elif operation == "deactivate":
+        return await _deactivate_operation(identifier or skill_name, deactivate_all, project)
+    elif operation == "active":
+        return await _active_operation(verbose, project)
+    elif operation == "load_section":
+        return await _load_section_operation(identifier or skill_name, section, project)
+    elif operation == "load_resource":
+        return await _load_resource_operation(identifier or skill_name, resource, project)
     else:
         return f"""# Error: Invalid Skills Operation
 
 **You provided:** operation="{operation}"
 
 **Valid skills operations are:**
+
+**CRUD & Management:**
 - "create" - Create new skill with template (requires: skill_name, description)
 - "read" - Read skill in SKILL.md format (requires: identifier)
 - "update" - Update skill metadata or content (requires: identifier, content)
@@ -337,6 +482,8 @@ async def adn_skills(
 - "package" - Create distributable .zip (requires: identifier)
 - "from_zettel" - Convert note to Claude Skill (requires: identifier, description)
 - "to_zettel" - Convert skill back to regular note (requires: identifier)
+
+**Import & Distillation:**
 - "import_from_github" - Import skill from GitHub repository (requires: repository)
 - "distill_from_wikipedia" - Create skill from Wikipedia article (requires: topic)
 - "distill_from_arxiv" - Create skill from arXiv papers (requires: query)
@@ -344,14 +491,23 @@ async def adn_skills(
 - "distill_from_text" - Create skill from famous text (requires: text_path)
 - "distill_from_expert" - Create skill from SOTA thinker (requires: expert_name)
 
-**Example for creating a skill:**
+**🚪 THE DOOR - Activation (Staged Loading):**
+- "activate" - Load skill TOC into context (requires: identifier)
+- "deactivate" - Remove skill from context (requires: identifier or deactivate_all=True)
+- "active" - List currently active skills (optional: verbose=True)
+- "load_section" - Load specific section (requires: identifier, section)
+- "load_resource" - Load resource file (requires: identifier, resource)
+
+**Example - Staged Loading Workflow:**
 ```
-adn_skills(
-    operation="create",
-    skill_name="my-skill",
-    description="When to use this skill",
-    category="developer"
-)
+# Step 1: Activate loads TOC only (small footprint)
+adn_skills("activate", identifier="python-expert")
+
+# Step 2: Load specific section when needed
+adn_skills("load_section", identifier="python-expert", section="Decorators")
+
+# Step 3: Load a resource file
+adn_skills("load_resource", identifier="python-expert", resource="scripts/linter.py")
 ```
 
 **Check your operation parameter spelling and required parameters.**"""
@@ -514,7 +670,7 @@ Files used in output (templates, boilerplate, etc.).
     )
 
     # Create bundled resource directories (Anthropic skill-creator pattern)
-    project_path = Path(active_project.path)
+    project_path = Path(active_project.home)
     skill_dir = project_path / skill_folder / skill_name
     skill_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1482,3 +1638,678 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
 {"⚠️ Warnings:" + chr(10) + chr(10).join(f"• {warning}" for warning in warnings) if warnings else ""}
 
 **Ready for Claude.ai upload!**"""
+
+
+# =============================================================================
+# 🚪 THE DOOR - Skill Activation Operations
+# =============================================================================
+# These operations were the missing piece that made Skills unusable.
+# You can create, store, validate, export skills - but without activation,
+# they just sit in the warehouse. These operations open the door.
+# =============================================================================
+
+
+async def _activate_operation(
+    identifier: str | None,
+    scope: str | None,
+    project: str | None,
+) -> str:
+    """Activate a skill - load TOC into context (staged loading).
+
+    THE DOOR: This is what was missing from the entire Skills ecosystem.
+    Now with STAGED LOADING for skills with hundreds of pages.
+    """
+    global _active_skills
+
+    if not identifier:
+        return """# Error: Missing Required Parameter
+
+**Operation:** activate
+
+**Missing:** identifier parameter
+
+The activate operation requires the skill's name or identifier.
+
+**Example:**
+```
+adn_skills(
+    operation="activate",
+    identifier="python-expert"
+)
+```
+
+**Why activate?** Loading a skill makes Claude aware of and apply its instructions.
+Without activation, skills just sit unused in your knowledge base.
+
+**Staged Loading:** Activate loads TOC only. Use load_section for details.
+
+**Provide the skill identifier and try again.**"""
+
+    # Read the skill content
+    from advanced_memory.mcp.tools.read_note import read_note
+
+    content = await read_note.fn(identifier=identifier, project=project)
+
+    if "# Note Not Found:" in content:
+        return f"""# Skill Not Found
+
+**Operation:** activate
+**Identifier:** {identifier}
+
+Could not find this skill. Make sure the skill exists.
+
+**To see available skills:**
+```
+adn_skills("list")
+```
+
+**To create a skill:**
+```
+adn_skills("create", skill_name="my-skill", description="When to use this skill")
+```"""
+
+    # Parse the skill to extract key info and sections
+    import re
+
+    import yaml
+
+    skill_name = identifier
+    skill_description = ""
+    sections = []
+    resources = []
+
+    match = re.match(r"^---\n(.*?)\n---\n(.*)$", content, re.DOTALL)
+    if match:
+        try:
+            fm = yaml.safe_load(match.group(1))
+            skill_name = fm.get("name", identifier)
+            skill_description = fm.get("description", "")
+            body = match.group(2)
+        except Exception:
+            body = content
+    else:
+        body = content
+
+    # Extract section headers (## and ### level)
+    section_pattern = r"^(#{2,3})\s+(.+)$"
+    for line in body.split("\n"):
+        section_match = re.match(section_pattern, line)
+        if section_match:
+            level = len(section_match.group(1))
+            title = section_match.group(2).strip()
+            indent = "  " if level == 3 else ""
+            sections.append(f"{indent}- {title}")
+
+    # Check for resource directories
+    active_project = get_active_project(project)
+    project_path = Path(active_project.home)
+
+    # Try to find skill directory
+    skill_dirs = list(project_path.glob(f"**/skills/**/{identifier}"))
+    if not skill_dirs:
+        # Try by skill name
+        skill_dirs = list(project_path.glob(f"**/skills/**/{skill_name}"))
+
+    if skill_dirs:
+        skill_dir = skill_dirs[0]
+        # List resources
+        for subdir in ["scripts", "references", "assets"]:
+            subdir_path = skill_dir / subdir
+            if subdir_path.exists():
+                files = list(subdir_path.glob("*"))
+                if files:
+                    resources.append(f"**{subdir}/**: {len(files)} file(s)")
+                    for f in files[:5]:  # Show first 5
+                        resources.append(f"  - {f.name}")
+                    if len(files) > 5:
+                        resources.append(f"  - ... and {len(files) - 5} more")
+
+    # Store FULL content in active skills (for load_section to access)
+    _active_skills[identifier] = {
+        "content": content,
+        "body": body,
+        "activated_at": datetime.now(),
+        "scope": scope or "session",
+        "name": skill_name,
+        "description": skill_description,
+        "sections": sections,
+        "skill_dir": str(skill_dirs[0]) if skill_dirs else None,
+    }
+
+    # Build the TOC response (NOT full content!)
+    scope_desc = {
+        "message": "this message only",
+        "session": "until deactivated or session ends",
+        "persistent": "persists across sessions",
+    }.get(scope or "session", "session")
+
+    sections_list = "\n".join(sections) if sections else "No sections found"
+    resources_list = "\n".join(resources) if resources else "No resource directories found"
+
+    return f"""# 🚪 Skill Activated: {skill_name}
+
+**Scope:** {scope} ({scope_desc})
+**Active skills count:** {len(_active_skills)}
+
+---
+
+## Description
+
+{skill_description}
+
+---
+
+## Table of Contents
+
+{sections_list}
+
+---
+
+## Available Resources
+
+{resources_list}
+
+---
+
+## How to Use (Staged Loading)
+
+**Load a section when needed:**
+```python
+adn_skills("load_section", identifier="{identifier}", section="Section Name")
+```
+
+**Load a resource file:**
+```python
+adn_skills("load_resource", identifier="{identifier}", resource="scripts/example.py")
+```
+
+**See all active skills:**
+```python
+adn_skills("active")
+```
+
+---
+
+✅ **Skill TOC loaded.** Request specific sections as needed to save context space.
+
+*Claude: I have the "{skill_name}" skill TOC. I will request specific sections
+when relevant to your questions.*"""
+
+
+async def _deactivate_operation(
+    identifier: str | None,
+    deactivate_all: bool,
+    project: str | None,
+) -> str:
+    """Deactivate a skill - remove it from active context."""
+    global _active_skills
+
+    if deactivate_all:
+        count = len(_active_skills)
+        _active_skills.clear()
+        return f"""# All Skills Deactivated
+
+**Deactivated:** {count} skill(s)
+**Active skills:** 0
+
+All skill instructions have been removed from context."""
+
+    if not identifier:
+        return """# Error: Missing Required Parameter
+
+**Operation:** deactivate
+
+**Missing:** identifier parameter (or use deactivate_all=True)
+
+The deactivate operation requires either:
+- `identifier`: The skill to deactivate
+- `deactivate_all=True`: Deactivate all skills
+
+**Examples:**
+```
+# Deactivate one skill
+adn_skills("deactivate", identifier="python-expert")
+
+# Deactivate all skills
+adn_skills("deactivate", deactivate_all=True)
+```
+
+**Provide identifier or deactivate_all and try again.**"""
+
+    if identifier not in _active_skills:
+        active_list = ", ".join(_active_skills.keys()) if _active_skills else "none"
+        return f"""# Skill Not Active
+
+**Operation:** deactivate
+**Identifier:** {identifier}
+
+This skill is not currently active.
+
+**Currently active skills:** {active_list}
+
+**To see all active skills:**
+```
+adn_skills("active")
+```"""
+
+    # Remove from active skills
+    skill_info = _active_skills.pop(identifier)
+    skill_name = skill_info.get("name", identifier)
+
+    return f"""# Skill Deactivated: {skill_name}
+
+**Removed:** {skill_name}
+**Was active for:** {_format_duration(skill_info.get("activated_at"))}
+**Remaining active skills:** {len(_active_skills)}
+
+{f"Still active: {', '.join(_active_skills.keys())}" if _active_skills else "No skills currently active."}"""
+
+
+async def _active_operation(
+    verbose: bool,
+    project: str | None,
+) -> str:
+    """List currently active skills."""
+    global _active_skills
+
+    if not _active_skills:
+        return """# Active Skills
+
+**No skills currently active.**
+
+## Why Activate Skills?
+
+Skills are instructions that Claude applies to your tasks. Without activation,
+skills just sit in your knowledge base unused.
+
+**To activate a skill:**
+```
+adn_skills("activate", identifier="python-expert")
+```
+
+**To see available skills:**
+```
+adn_skills("list")
+```
+
+**The warehouse has skills. Use `activate` to open the door!** 🚪"""
+
+    # Build active skills list
+    lines = [
+        "# Active Skills",
+        "",
+        f"**Currently active:** {len(_active_skills)} skill(s)",
+        "",
+        "| Skill | Scope | Active For |",
+        "|-------|-------|------------|",
+    ]
+
+    for identifier, info in _active_skills.items():
+        name = info.get("name", identifier)
+        scope = info.get("scope", "session")
+        duration = _format_duration(info.get("activated_at"))
+        lines.append(f"| {name} | {scope} | {duration} |")
+
+    lines.append("")
+
+    if verbose:
+        lines.append("---")
+        lines.append("")
+        lines.append("## Full Instructions")
+        lines.append("")
+        for identifier, info in _active_skills.items():
+            name = info.get("name", identifier)
+            lines.append(f"### {name}")
+            lines.append("")
+            lines.append(info.get("content", "*No content*"))
+            lines.append("")
+            lines.append("---")
+            lines.append("")
+
+    lines.extend(
+        [
+            "## Commands",
+            "",
+            "```python",
+            "# Deactivate a skill",
+            'adn_skills("deactivate", identifier="skill-name")',
+            "",
+            "# Deactivate all skills",
+            'adn_skills("deactivate", deactivate_all=True)',
+            "",
+            "# Activate another skill",
+            'adn_skills("activate", identifier="another-skill")',
+            "```",
+        ]
+    )
+
+    return "\n".join(lines)
+
+
+def _format_duration(activated_at: datetime | None) -> str:
+    """Format duration since activation."""
+    if not activated_at:
+        return "unknown"
+
+    delta = datetime.now() - activated_at
+    seconds = int(delta.total_seconds())
+
+    if seconds < 60:
+        return f"{seconds}s"
+    elif seconds < 3600:
+        return f"{seconds // 60}m"
+    else:
+        return f"{seconds // 3600}h {(seconds % 3600) // 60}m"
+
+
+async def _load_section_operation(
+    identifier: str | None,
+    section: str | None,
+    project: str | None,
+) -> str:
+    """Load a specific section from an active skill (staged loading)."""
+    global _active_skills
+
+    if not identifier:
+        return """# Error: Missing Required Parameter
+
+**Operation:** load_section
+
+**Missing:** identifier parameter
+
+**Example:**
+```
+adn_skills("load_section", identifier="python-expert", section="Decorators")
+```
+
+**Provide the skill identifier and try again.**"""
+
+    if not section:
+        return """# Error: Missing Required Parameter
+
+**Operation:** load_section
+
+**Missing:** section parameter
+
+Specify which section to load. Check the skill's TOC for available sections.
+
+**Example:**
+```
+adn_skills("load_section", identifier="python-expert", section="Decorators")
+```
+
+**To see available sections:**
+```
+adn_skills("active", verbose=True)
+```"""
+
+    # Check if skill is active
+    if identifier not in _active_skills:
+        return f"""# Skill Not Active
+
+**Operation:** load_section
+**Identifier:** {identifier}
+
+This skill is not currently active. Activate it first.
+
+**To activate:**
+```
+adn_skills("activate", identifier="{identifier}")
+```
+
+**Currently active skills:** {", ".join(_active_skills.keys()) if _active_skills else "none"}"""
+
+    skill_info = _active_skills[identifier]
+    body = skill_info.get("body", skill_info.get("content", ""))
+    skill_name = skill_info.get("name", identifier)
+
+    # Find the section in the body
+    import re
+
+    # Try to find section with ## or ### prefix
+    section_patterns = [
+        rf"^##\s+{re.escape(section)}\s*$",  # Exact match with ##
+        rf"^###\s+{re.escape(section)}\s*$",  # Exact match with ###
+        rf"^##\s+.*{re.escape(section)}.*$",  # Partial match with ##
+        rf"^###\s+.*{re.escape(section)}.*$",  # Partial match with ###
+    ]
+
+    lines = body.split("\n")
+    section_start = None
+    section_level = None
+
+    for i, line in enumerate(lines):
+        for pattern in section_patterns:
+            if re.match(pattern, line, re.IGNORECASE):
+                section_start = i
+                section_level = line.count("#", 0, 4)  # Count leading #s
+                break
+        if section_start is not None:
+            break
+
+    if section_start is None:
+        # List available sections
+        available = []
+        for line in lines:
+            if re.match(r"^#{2,3}\s+", line):
+                available.append(line.strip())
+
+        return f"""# Section Not Found
+
+**Operation:** load_section
+**Skill:** {skill_name}
+**Requested section:** {section}
+
+Could not find this section in the skill.
+
+**Available sections:**
+{chr(10).join(available[:20]) if available else "No sections found"}
+{f"... and {len(available) - 20} more" if len(available) > 20 else ""}
+
+**Try again with an exact section name.**"""
+
+    # Extract section content (until next section of same or higher level)
+    section_end = len(lines)
+    for i in range(section_start + 1, len(lines)):
+        line = lines[i]
+        if re.match(r"^#{2,3}\s+", line):
+            line_level = line.count("#", 0, 4)
+            if line_level <= section_level:
+                section_end = i
+                break
+
+    section_content = "\n".join(lines[section_start:section_end]).strip()
+
+    return f"""# 📖 Section Loaded: {section}
+
+**Skill:** {skill_name}
+**Lines:** {section_end - section_start}
+
+---
+
+{section_content}
+
+---
+
+*Section loaded from active skill "{skill_name}".
+Load more sections with: `adn_skills("load_section", identifier="{identifier}", section="...")`*"""
+
+
+async def _load_resource_operation(
+    identifier: str | None,
+    resource: str | None,
+    project: str | None,
+) -> str:
+    """Load a resource file from an active skill's directories (scripts/, references/, assets/)."""
+    global _active_skills
+
+    if not identifier:
+        return """# Error: Missing Required Parameter
+
+**Operation:** load_resource
+
+**Missing:** identifier parameter
+
+**Example:**
+```
+adn_skills("load_resource", identifier="python-expert", resource="scripts/linter.py")
+```
+
+**Provide the skill identifier and try again.**"""
+
+    if not resource:
+        return """# Error: Missing Required Parameter
+
+**Operation:** load_resource
+
+**Missing:** resource parameter
+
+Specify which resource to load (from scripts/, references/, or assets/).
+
+**Example:**
+```
+adn_skills("load_resource", identifier="python-expert", resource="scripts/linter.py")
+```
+
+**Resource paths are relative to skill directory.**"""
+
+    # Check if skill is active
+    if identifier not in _active_skills:
+        return f"""# Skill Not Active
+
+**Operation:** load_resource
+**Identifier:** {identifier}
+
+This skill is not currently active. Activate it first.
+
+**To activate:**
+```
+adn_skills("activate", identifier="{identifier}")
+```"""
+
+    skill_info = _active_skills[identifier]
+    skill_name = skill_info.get("name", identifier)
+    skill_dir = skill_info.get("skill_dir")
+
+    if not skill_dir:
+        return f"""# No Resource Directory
+
+**Operation:** load_resource
+**Skill:** {skill_name}
+
+Could not find the skill's resource directory.
+This skill may not have scripts/, references/, or assets/ folders.
+
+**To create resource directories, recreate the skill:**
+```
+adn_skills("create", skill_name="{identifier}", description="...")
+```"""
+
+    # Construct resource path
+    resource_path = Path(skill_dir) / resource
+
+    # Security check: ensure path is within skill directory
+    try:
+        resource_path = resource_path.resolve()
+        skill_dir_resolved = Path(skill_dir).resolve()
+        if not str(resource_path).startswith(str(skill_dir_resolved)):
+            return """# Security Error
+
+**Operation:** load_resource
+
+Resource path must be within the skill directory.
+Path traversal (../) is not allowed."""
+    except Exception:
+        pass
+
+    if not resource_path.exists():
+        # List available resources
+        available = []
+        skill_dir_path = Path(skill_dir)
+        for subdir in ["scripts", "references", "assets"]:
+            subdir_path = skill_dir_path / subdir
+            if subdir_path.exists():
+                for f in subdir_path.glob("*"):
+                    if f.is_file():
+                        available.append(f"{subdir}/{f.name}")
+
+        return f"""# Resource Not Found
+
+**Operation:** load_resource
+**Skill:** {skill_name}
+**Requested:** {resource}
+
+Could not find this resource file.
+
+**Available resources:**
+{chr(10).join(available) if available else "No resources found"}
+
+**Try again with a valid resource path.**"""
+
+    # Read and return the resource
+    try:
+        # Detect if binary
+        if resource_path.suffix.lower() in [
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".gif",
+            ".pdf",
+            ".zip",
+            ".exe",
+        ]:
+            return f"""# Binary Resource
+
+**Skill:** {skill_name}
+**Resource:** {resource}
+**Type:** Binary file ({resource_path.suffix})
+**Size:** {resource_path.stat().st_size} bytes
+
+Binary files cannot be displayed as text.
+The file exists at: `{resource_path}`"""
+
+        content = resource_path.read_text(encoding="utf-8")
+
+        # Detect language for syntax highlighting
+        ext_to_lang = {
+            ".py": "python",
+            ".js": "javascript",
+            ".ts": "typescript",
+            ".sh": "bash",
+            ".bash": "bash",
+            ".ps1": "powershell",
+            ".json": "json",
+            ".yaml": "yaml",
+            ".yml": "yaml",
+            ".md": "markdown",
+            ".sql": "sql",
+            ".html": "html",
+            ".css": "css",
+        }
+        lang = ext_to_lang.get(resource_path.suffix.lower(), "")
+
+        return f"""# 📁 Resource Loaded: {resource}
+
+**Skill:** {skill_name}
+**File:** {resource_path.name}
+**Size:** {len(content)} characters, {len(content.splitlines())} lines
+
+---
+
+```{lang}
+{content}
+```
+
+---
+
+*Resource loaded from skill "{skill_name}".
+Use this code/reference as needed for your task.*"""
+
+    except Exception as e:
+        return f"""# Error Reading Resource
+
+**Skill:** {skill_name}
+**Resource:** {resource}
+**Error:** {str(e)}
+
+Could not read the resource file. It may be corrupted or have encoding issues."""

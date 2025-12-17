@@ -1,6 +1,6 @@
 # Continuing conversation on: {{topic}}
 
-This is a memory retrieval session. 
+This is a memory retrieval session.
 
 Please use the available advanced-memory tools to gather relevant context before responding. Start by executing one of the suggested commands below to retrieve content.
 
@@ -33,7 +33,7 @@ Here's what I found from previous conversations:
 {{/each}}
 {{/if}}
 
-Read this with `adn_content`: operation="read", identifier="{{ primary_result.permalink }}"
+You can read this document with: `read_note("{{ primary_result.permalink }}")` or `adn_content("read", identifier="{{ primary_result.permalink }}")`
 
 {{#if related_results}}
 ## Related Context
@@ -44,9 +44,9 @@ Read this with `adn_content`: operation="read", identifier="{{ primary_result.pe
 - title: {{ title }}
 
 {{#if permalink}}
-View with `adn_content`: operation="read", identifier="{{ permalink }}"
+You can view this document with: `read_note("{{ permalink }}")` or `adn_content("read", identifier="{{ permalink }}")`
 {{else}}
-View with `adn_content`: operation="read", identifier="{{ file_path }}"
+You can view this file with: `read_file("{{ file_path }}")`
 {{/if}}
 </related>
 {{/each}}
@@ -59,32 +59,53 @@ The supplied query did not return any information specifically on this topic.
 
 ## Opportunity to Capture New Knowledge!
 
-This is an excellent chance to start documenting this topic using the `adn_content` tool:
-- **operation**: "write"
-- **identifier**: "{{ topic }}"
-- **folder**: "topics"
-- **tags**: "{{ topic }}"
-- **content**: Include ## Overview, ## Key Points, ## Observations (with categories), and ## Relations sections
+This is an excellent chance to start documenting this topic:
+
+```python
+# Using standalone tool:
+await write_note(
+    title="{{ topic }}",
+    content=f'''
+# {{ topic }}
+
+## Overview
+[Summary of what we know about {{ topic }}]
+
+## Key Points
+[Main aspects or components of {{ topic }}]
+
+## Observations
+- [category] [First important observation about {{ topic }}]
+- [category] [Second observation about {{ topic }}]
+
+## Relations
+- relates_to [[Related Topic]]
+- part_of [[Broader Context]]
+'''
+)
+```
 
 ## Other Options
 
 Please use the available advanced-memory tools to gather relevant context before responding.
 You can also:
 - Try a different search term
-- Check recent activity: Use `adn_navigation` with operation="recent_activity" and timeframe="30d"
+- Check recent activity with `recent_activity(timeframe="1w")`
 {{/if}}
 ## Next Steps
 <instructions>
 You can:
-- Explore more: Use `adn_search` with operation="notes" and query="{{ topic }}"
-- See what's changed: Use `adn_navigation` with operation="recent_activity" and timeframe="{{default timeframe "30d"}}"
-- **Record new learnings or decisions**: Use `adn_content` with operation="write", a meaningful identifier/title, appropriate folder, and content with observations and relations
+- Explore more with: `search_notes("{{ topic }}")` or `adn_search("notes", query="{{ topic }}")`
+- See what's changed: `recent_activity(timeframe="{{default timeframe "7d"}}")` or `adn_navigation("recent_activity", timeframe="{{default timeframe "7d"}}")`
+- **Record new learnings or decisions from this conversation:**
+  * Standalone tool: `write_note(title="[Note Title]", content="[Content]", folder="[folder]")`
+  * Portmanteau tool: `adn_content("write", identifier="[Note Title]", content="[Content]", folder="[folder]")`
 
 ## Knowledge Capture Recommendation
 
 As you continue this conversation, **actively look for opportunities to:**
 1. Record key information, decisions, or insights that emerge
-2. Link new knowledge to existing topics 
+2. Link new knowledge to existing topics
 3. Suggest capturing important context when appropriate
 4. Create forward references to topics that might be created later
 

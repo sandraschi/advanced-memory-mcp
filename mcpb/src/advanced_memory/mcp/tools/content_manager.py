@@ -4,6 +4,9 @@ This tool consolidates all content operations: write, read, view, edit, edit_tag
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import re
+from typing import Literal
+
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -12,6 +15,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_get, call_put
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
+from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
@@ -20,26 +24,68 @@ TagType = list[str] | str | None
 
 @mcp.tool
 async def adn_content(
-    operation: str,
+    operation: Literal[
+        "write",
+        "read",
+        "read_latest",
+        "view",
+        "view_rendered",
+        "edit",
+        "edit_tags",
+        "quick",
+        "daily",
+        "move",
+        "delete",
+    ],
     identifier: str | None = None,
     content: str | None = None,
     folder: str | None = None,
     tags: TagType | None = None,
     entity_type: str = "note",
     destination_path: str | None = None,
-    edit_operation: str | None = None,
-    tag_operation: str | None = None,
+    edit_operation: Literal[
+        "append",
+        "prepend",
+        "find_replace",
+        "replace_section",
+        "insert_mermaid",
+        "insert_ascii_art",
+        "insert_kilroy",
+        "insert_kanban",
+        "insert_changelog",
+    ]
+    | None = None,
+    tag_operation: Literal["add", "remove", "replace", "clear"] | None = None,
     find_text: str | None = None,
     expected_replacements: int = 1,
+    use_regex: bool = False,
     section: str | None = None,
     page: int = 1,
     page_size: int = 10,
+    results_per_page: int
+    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
 
     This portmanteau tool consolidates all content operations into a single interface,
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+
+    WHY PORTMANTEAU TOOLS?
+    Claude Desktop has a limit on the number of available tools. Portmanteau tools like adn_content
+    combine multiple related operations (write, read, edit, delete, etc.) into a single tool interface,
+    dramatically reducing the tool count while maintaining full functionality.
+
+    PARAMETER DESIGN:
+    The 'identifier' parameter is intentionally flexible:
+    - For write operations: Pass the note title (e.g., "My Meeting Notes")
+      Advanced Memory will automatically generate the permalink from the title.
+    - For read/view operations: Can pass title, permalink, or memory:// URL
+      This flexibility allows reading notes in multiple ways.
+
+    TIP FOR CLAUDE:
+    When using this tool, always specify the operation first (write, read, edit, etc.),
+    then provide the required parameters. The documentation below shows what each operation needs.
 
     SUPPORTED OPERATIONS:
     - write: Create new notes or update existing ones with semantic processing
@@ -82,19 +128,87 @@ async def adn_content(
 
     Args:
         operation: Operation type (write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete)
-        identifier: Note title, permalink, or memory:// URL
-        content: Full markdown content for write/edit/quick/daily operations
-        folder: Target folder path for write/move operations
-        tags: Tags for categorization (string, list, or None)
-        entity_type: Content type (default: "note")
+        identifier: Note identifier - REQUIRED for most operations. What you pass depends on the operation:
+                    * Write operations: REQUIRED - The note title as a string (e.g., "My Meeting Notes")
+                      Advanced Memory will automatically create the permalink from the title.
+                    * Read/View operations: REQUIRED - Can be any of:
+                      - Note title (e.g., "My Meeting Notes")
+                      - Permalink (e.g., "meetings/my-meeting-notes")
+                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
+                    * Edit/Move/Delete/Edit_tags operations: REQUIRED - Can be any of:
+                      - Note title (e.g., "My Meeting Notes")
+                      - Permalink (e.g., "meetings/my-meeting-notes")
+                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
+                    * Quick/Daily operations: NOT USED - These operations don't require identifier
+        content: Markdown content
+                    * Write operations: REQUIRED - Full note content
+                    * Edit operations: REQUIRED - Content to add/replace (depends on edit_operation)
+                      - For find_replace: REPLACEMENT text (find_text is what to find)
+                      - For append: Content to add at the end of the note
+                      - For prepend: Content to add at the beginning of the note
+                      - For replace_section: New content to replace the entire section
+                      - For insert_mermaid: Diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
+                      - For insert_kanban: Comma-separated column names (e.g., "To Do,In Progress,Done")
+                      - For insert_changelog: Version string (e.g., "1.0.0" or "Unreleased")
+                      - For insert_ascii_art: Art type ("cat", "dog", "robot", "heart", "star", "tree")
+                      - For insert_kilroy: Optional custom message (or leave empty for default)
+                    * Quick/Daily operations: REQUIRED - Content to capture
+                    * Other operations: NOT USED
+        folder: Target folder path
+                    * Write operations: Optional - Destination folder for new note (defaults to "inbox" if not specified)
+                    * Move operations: NOT USED - Use destination_path instead
+                    * Other operations: NOT USED
         destination_path: New path for move operations
-        edit_operation: Edit type for edit operations (append, prepend, find_replace, replace_section)
-        tag_operation: Tag operation for edit_tags (add, remove, replace, clear)
-        find_text: Text to find for find_replace operations
-        expected_replacements: Expected replacement count for validation
-        section: Target section for replace_section operations
-        page: Pagination page for read operations
-        page_size: Items per page for paginated content
+                    * Move operations: REQUIRED - Full destination path
+                    * Other operations: NOT USED
+        edit_operation: Edit type for edit operations
+                    * Edit operations: REQUIRED - One of: "append", "prepend", "find_replace", "replace_section", "insert_mermaid", "insert_ascii_art", "insert_kilroy", "insert_kanban", "insert_changelog"
+                    * For insert_mermaid: content can be diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
+                    * For insert_kanban: content is comma-separated column names (e.g., "To Do,In Progress,Done"), section is optional title
+                    * For insert_changelog: content is version (e.g., "1.0.0" or "Unreleased"), section is optional project name
+                    * See edit_note tool documentation for comprehensive Mermaid syntax guide
+                    * Other operations: NOT USED
+        tag_operation: Tag operation for edit_tags
+                    * Edit_tags operations: REQUIRED - One of: "add", "remove", "replace", "clear"
+                    * Other operations: NOT USED
+        tags: Tags for categorization (string, list, or None)
+                    * Write operations: Optional - Tags for categorization
+                    * Edit_tags operations:
+                      - For "add": REQUIRED - Tags to add to existing tags
+                      - For "remove": REQUIRED - Tags to remove from existing tags
+                      - For "replace": REQUIRED - Tags to replace all existing tags with
+                      - For "clear": NOT USED (tags parameter ignored, all tags cleared)
+                    * Quick/Daily operations: Optional - Additional tags to include
+                    * Other operations: NOT USED
+        entity_type: Content type (default: "note")
+                    * Write operations: Optional (default: "note")
+                    * Other operations: NOT USED
+        find_text: Text to find for find_replace operation
+                    * Edit with find_replace: REQUIRED - The exact text to search for
+                    * Other operations: NOT USED
+        expected_replacements: Expected replacement count for find_replace validation (default: 1)
+                    * Edit with find_replace: Optional - Validates that exactly this many replacements occurred
+                    * Other operations: NOT USED
+        use_regex: Enable regex pattern matching for find_replace (default: False)
+                    * Edit with find_replace: Optional - When True, find_text is treated as a regex pattern
+                      - Content can use backreferences like \\1, \\2 for captured groups
+                      - Includes security safeguards (pattern length limits, ReDoS protection)
+                    * Other operations: NOT USED
+        section: Section header or title for various edit operations
+                    * Edit with replace_section: REQUIRED - Section header to replace (e.g., "## Summary")
+                    * Edit with insert_mermaid: Optional - Title for the diagram section
+                    * Edit with insert_kanban: Optional - Title for the Kanban board section
+                    * Edit with insert_changelog: Optional - Project name for the changelog entry
+                    * Other operations: NOT USED
+        page: Pagination page number (default: 1)
+                    * Read/View/View_rendered operations: Optional - Page number for paginated results
+                    * Other operations: NOT USED
+        page_size: Items per page for paginated content (default: 10)
+                    * Read/View/View_rendered operations: Optional - Number of items per page
+                    * Other operations: NOT USED
+        results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
+                    * Read/View/View_rendered operations: Optional - Same as page_size
+                    * Other operations: NOT USED
         project: Optional project name. Supports:
             - None (default): uses current active project
             - "project-name": uses specific project
@@ -104,11 +218,14 @@ async def adn_content(
         Operation-specific result with semantic content summary and project context
 
     Examples:
-        # Write a new note
+        # Write a new note - identifier is REQUIRED and must be the note title
+        # Advanced Memory will auto-generate the permalink from the title
         adn_content("write", identifier="Project Plan", content="# Project Overview...", folder="projects")
 
-        # Read a note
-        adn_content("read", identifier="Project Plan")
+        # Read a note - can use title, permalink, or URL
+        adn_content("read", identifier="Project Plan")  # By title
+        adn_content("read", identifier="projects/project-plan")  # By permalink
+        adn_content("read", identifier="memory://projects/project-plan")  # By URL
 
         # Edit a note (append content)
         adn_content("edit", identifier="Project Plan", edit_operation="append", content="\\n## Updates...")
@@ -121,6 +238,10 @@ async def adn_content(
 
         # Edit tags (replace all)
         adn_content("edit_tags", identifier="Project Plan", tag_operation="replace", tags="final, approved")
+
+        # Find and replace text
+        adn_content("edit", identifier="My Note", edit_operation="find_replace",
+                    find_text="old text", content="new text", expected_replacements=1)
 
         # Quick capture (ultra-fast note creation)
         adn_content("quick", content="Great insight: use AI for code reviews")
@@ -137,7 +258,53 @@ async def adn_content(
         # View note with rendered Mermaid diagrams
         adn_content("view_rendered", identifier="System Architecture")
     """
+    # Parameter aliasing for compatibility with standalone tools
+    # results_per_page → page_size (for compatibility with search_notes tool)
+    if results_per_page is not None and page_size == 10:  # Only if default value
+        page_size = results_per_page
+        logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
+
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
+
+    original_operation = operation
+    normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
+    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    alias_map: dict[
+        str,
+        Literal[
+            "write",
+            "read",
+            "read_latest",
+            "view",
+            "view_rendered",
+            "edit",
+            "edit_tags",
+            "quick",
+            "daily",
+            "move",
+            "delete",
+        ],
+    ] = {
+        "createnote": "write",
+        "newnote": "write",
+        "appendnote": "edit",
+        "modifytags": "edit_tags",
+        "readnote": "read",
+        "readlatest": "read_latest",
+        "latest": "read_latest",
+        "last": "read_latest",
+        "lastnote": "read_latest",
+        "latestnote": "read_latest",
+        "showlatest": "read_latest",
+        "viewnote": "view",
+        "previewnote": "view",
+        "viewlatest": "view",
+        "previewlatest": "view",
+    }
+    # Type-safe operation mapping with fallback to original
+    mapped_operation = alias_map.get(normalized_operation)
+    if mapped_operation:
+        operation = mapped_operation  # type: ignore[assignment]
 
     # Get the active project
     active_project = get_active_project(project)
@@ -146,30 +313,72 @@ async def adn_content(
 
     # Route to appropriate operation handler
     if operation == "write":
-        if not identifier or not content or not folder:
-            return "# Error\n\nWrite operation requires: identifier, content, and folder parameters"
+        missing = []
+        if not identifier:
+            missing.append("identifier (note title)")
+        if not content:
+            missing.append("content")
+        if not folder:
+            missing.append("folder")
+        if missing:
+            return f'# Error\n\nWrite operation requires the following parameters:\n- {", ".join(missing)}\n\n**Example:**\n```python\nadn_content("write",\n    identifier="My Note Title",\n    content="# My Note\\n\\nContent here...",\n    folder="notes")\n```'
+        # Type narrowing: we've validated these are not None above
+        assert identifier is not None
+        assert content is not None
+        assert folder is not None
         return await _write_operation(
             active_project, identifier, content, folder, tags, entity_type
         )
 
     elif operation == "read":
-        if identifier is None:
-            return "# Error\n\nRead operation requires: identifier"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            logger.info(
+                "adn_content_auto_read_latest",
+                original_operation=original_operation,
+                identifier=identifier,
+            )
+            return await _read_latest_operation(active_project)
+
         return await _read_operation(active_project, identifier, page, page_size)
 
+    elif operation == "read_latest":
+        # Get and read the single most recent note (regardless of date)
+        return await _read_latest_operation(active_project)
+
     elif operation == "view":
-        if identifier is None:
-            return "# Error\n\nView operation requires: identifier"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            if not latest_identifier:
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
+            identifier = latest_identifier
+
         return await _view_operation(active_project, identifier)
 
     elif operation == "view_rendered":
-        if identifier is None:
-            return "# Error\n\nView rendered operation requires: identifier"
+        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        identifier_key = (identifier or "").strip().lower().replace(" ", "_")
+
+        if not identifier or identifier_key in latest_aliases:
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            if not latest_identifier:
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
+            identifier = latest_identifier
+
         return await _view_rendered_operation(active_project, identifier)
 
     elif operation == "edit":
         if identifier is None:
-            return "# Error\n\nEdit operation requires: identifier"
+            return '# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="\\n## New Section")\n```'
+        if not edit_operation:
+            return '# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="New content")\n```'
+        if not content and edit_operation in ["append", "prepend", "replace_section"]:
+            return f'# Error\n\nEdit operation \'{edit_operation}\' requires: content parameter\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="{edit_operation}",\n    content="Content to {edit_operation}")\n```'
         return await _edit_operation(
             active_project,
             identifier,
@@ -178,11 +387,14 @@ async def adn_content(
             section,
             find_text,
             expected_replacements,
+            use_regex,
         )
 
     elif operation == "edit_tags":
         if identifier is None:
-            return "# Error\n\nEdit tags operation requires: identifier"
+            return '# Error\n\nEdit_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="tag1, tag2")\n```'
+        if not tag_operation:
+            return '# Error\n\nEdit_tags operation requires: tag_operation parameter\n\n**Valid operations:** add, remove, replace, clear\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="important")\n```'
         return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
     elif operation == "quick":
@@ -248,7 +460,9 @@ async def _write_operation(
     )
 
     if detect_skill_path(folder):
-        logger.info(f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed.")
+        logger.info(
+            f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed."
+        )
 
         # Check if content already has frontmatter
         fm, body, errors = parse_skill_frontmatter(content)
@@ -263,8 +477,8 @@ async def _write_operation(
             difficulty = None
 
             # Try to extract category from folder path (skills/developer -> developer)
-            if '/' in folder:
-                parts = folder.split('/')
+            if "/" in folder:
+                parts = folder.split("/")
                 if len(parts) >= 2:
                     category = parts[1]
 
@@ -284,7 +498,7 @@ async def _write_operation(
                 )
 
                 # Prepend frontmatter to content
-                content = frontmatter_yaml + '\n' + content
+                content = frontmatter_yaml + "\n" + content
 
                 logger.info(f"Auto-generated skill frontmatter for '{skill_name}'")
 
@@ -293,8 +507,8 @@ async def _write_operation(
                 # Continue without frontmatter - will be caught by validation later
 
         # Ensure entity_type is 'skill' when writing to skills/ folder
-        if entity_type == 'note':
-            entity_type = 'skill'
+        if entity_type == "note":
+            entity_type = "skill"
             logger.info("Changed entity_type from 'note' to 'skill' for skills folder")
 
     # Process tags using the helper function
@@ -377,6 +591,70 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     )
 
 
+async def _get_latest_identifier(active_project) -> tuple[str | None, str | None]:
+    from loguru import logger
+
+    try:
+        from advanced_memory.mcp.tools.recent_activity import recent_activity
+
+        raw_context = await recent_activity.fn(
+            type_filter=["entity", "observation"],
+            depth=1,
+            timeframe="365d",
+            page=1,
+            page_size=1,
+            max_related=0,
+            project=active_project.name,
+        )
+
+        if isinstance(raw_context, GraphContext):
+            result = raw_context
+        else:
+            result = GraphContext.model_validate(raw_context)
+
+    except Exception as exc:  # pragma: no cover
+        logger.error("adn_content_latest_identifier_error", exc_info=True)
+        return None, (
+            "# Error\n\n"
+            "Unable to load recent activity to determine the latest note.\n"
+            f"Details: {exc}"
+        )
+
+    context_results = getattr(result, "results", [])
+    if not context_results:
+        return None, "# No Recent Activity\n\nNo notes found in the past year."
+
+    ctx_result = context_results[0]
+    if getattr(ctx_result, "primary_result", None):
+        item = ctx_result.primary_result
+    elif getattr(ctx_result, "observations", None):
+        item = ctx_result.observations[0]
+    else:
+        item = ctx_result
+
+    identifier = getattr(item, "permalink", None) or getattr(item, "file_path", None)
+    if not identifier:
+        return None, (
+            "# Error\n\n"
+            "Could not determine identifier for most recent note.\n"
+            f"Item attributes: {dir(item)}"
+        )
+
+    logger.debug(f"Extracted latest identifier: {identifier}")
+    return identifier, None
+
+
+async def _read_latest_operation(active_project) -> str:
+    """Handle read_latest operation - read the single most recent note."""
+    identifier, error_message = await _get_latest_identifier(active_project)
+    if not identifier:
+        return error_message or "# No Recent Activity\n\nNo notes found in the past year."
+
+    from advanced_memory.mcp.tools.read_note import read_note
+
+    return await read_note.fn(identifier=identifier, project=active_project.name)
+
+
 async def _view_operation(active_project, identifier: str) -> str:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
@@ -399,6 +677,7 @@ async def _edit_operation(
     section: str | None,
     find_text: str | None,
     expected_replacements: int,
+    use_regex: bool,
 ) -> str:
     """Handle edit operation."""
     from advanced_memory.mcp.tools.edit_note import edit_note
@@ -410,6 +689,7 @@ async def _edit_operation(
         section=section,
         find_text=find_text,
         expected_replacements=expected_replacements,
+        use_regex=use_regex,
         project=active_project.name,
     )
 
@@ -426,16 +706,35 @@ async def _edit_tags_operation(
 
     # Get current note to read existing tags
     project_url = active_project.project_url
-    url = f"{project_url}/knowledge/entities/resolve/{identifier}"
+    url = f"{project_url}/knowledge/entities/{identifier}"
 
     response = await call_get(client, url)
     if response.status_code == 404:
         return f"# Error\n\nNote not found: {identifier}\n\nPlease provide exact note title or permalink."
 
     current_entity = EntityResponse.model_validate(response.json())
-    current_tags = (
+
+    # Normalize current tags to a list[str]
+    existing_tags_raw = (
         current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     )
+    if isinstance(existing_tags_raw, str):
+        # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
+        import ast
+
+        try:
+            parsed = ast.literal_eval(existing_tags_raw)
+            if isinstance(parsed, list):
+                current_tags = [str(tag) for tag in parsed]
+            else:
+                current_tags = [existing_tags_raw]
+        except (ValueError, SyntaxError):
+            # Not a list representation, treat as single tag
+            current_tags = [existing_tags_raw]
+    elif isinstance(existing_tags_raw, list):
+        current_tags = [str(tag) for tag in existing_tags_raw]
+    else:
+        current_tags = []
 
     # Parse input tags (unless clear operation)
     if tag_operation != "clear":
@@ -446,6 +745,8 @@ async def _edit_tags_operation(
 
         if not new_tags and tag_operation != "clear":
             return f"# Error\n\nNo valid tags provided.\n\nTags: {tags}"
+    else:
+        new_tags = []
 
     # Perform the operation
     if tag_operation == "add":
@@ -485,12 +786,39 @@ async def _edit_tags_operation(
     metadata = current_entity.entity_metadata or {}
     metadata["tags"] = updated_tags
 
+    # Fetch the existing note content so we don't overwrite it with None
+    resource_url = f"{project_url}/resource/{current_entity.permalink}"
+    resource_response = await call_get(client, resource_url)
+    if resource_response.status_code != 200:
+        return (
+            "# Error\n\n"
+            f"Failed to retrieve current note content for '{identifier}'.\n"
+            "Tag update aborted to avoid overwriting content.\n"
+            f"Details: HTTP {resource_response.status_code}"
+        )
+
+    current_content = resource_response.text
+
+    # Validate permalink exists
+    if not current_entity.permalink:
+        return (
+            "# Error\n\n"
+            f"Entity '{identifier}' has no permalink.\n"
+            "Cannot update tags without a valid permalink.\n"
+            "This may indicate a corrupted entity in the database."
+        )
+
+    # Extract folder from permalink (everything except the last part)
+    permalink_parts = current_entity.permalink.split("/")
+    folder = "/".join(permalink_parts[:-1]) if len(permalink_parts) > 1 else ""
+
     update_url = f"{project_url}/knowledge/entities/{current_entity.permalink}"
     update_data = {
         "title": current_entity.title,
         "entity_type": current_entity.entity_type,
         "content_type": current_entity.content_type,
-        "content": current_entity.content,
+        "content": current_content,
+        "folder": folder,
         "entity_metadata": metadata,
     }
 
@@ -630,4 +958,14 @@ async def _delete_operation(active_project, identifier: str) -> str:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    return await delete_note.fn(identifier=identifier, project=active_project.name)
+    result = await delete_note.fn(identifier=identifier, project=active_project.name)
+
+    # delete_note returns bool | str, convert to string for consistency
+    if isinstance(result, bool):
+        if result:
+            return f"# Delete Complete\n\n**Note deleted:** {identifier}\n\nSuccessfully removed from project '{active_project.name}'."
+        else:
+            return f"# Delete Failed\n\n**Note not deleted:** {identifier}\n\nThe delete operation completed but the note was not removed."
+    else:
+        # Already a formatted error string
+        return result

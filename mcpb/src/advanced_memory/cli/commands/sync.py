@@ -1,4 +1,4 @@
-"""Command module for basic-memory sync operations."""
+"""Command module for advanced-memory sync operations."""
 
 import asyncio
 from collections import defaultdict
@@ -6,11 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import typer
-from basic_memory import db
 from loguru import logger
 from rich.console import Console
 from rich.tree import Tree
 
+from advanced_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager, get_project_config
 from advanced_memory.markdown import EntityParser
@@ -94,7 +94,7 @@ def group_issues_by_directory(issues: list[ValidationIssue]) -> dict[str, list[V
     return dict(grouped)
 
 
-def display_sync_summary(knowledge: SyncReport):
+def display_sync_summary(knowledge: SyncReport) -> None:
     """Display a one-line summary of sync changes."""
     config = get_project_config()
     total_changes = knowledge.total
@@ -123,7 +123,7 @@ def display_sync_summary(knowledge: SyncReport):
     console.print(f"Project '{project_name}': Synced {total_changes} files ({', '.join(changes)})")
 
 
-def display_detailed_sync_results(knowledge: SyncReport):
+def display_detailed_sync_results(knowledge: SyncReport) -> None:
     """Display detailed sync results with trees."""
     config = get_project_config()
     project_name = config.project
@@ -150,7 +150,7 @@ def display_detailed_sync_results(knowledge: SyncReport):
             moved = knowledge_tree.add("[blue]Moved[/blue]")
             for old_path, new_path in sorted(knowledge.moves.items()):
                 checksum = knowledge.checksums.get(new_path, "")
-                moved.add(f"[blue]{old_path}[/blue] → [blue]{new_path}[/blue] ({checksum[:8]})")
+                moved.add(f"[blue]{old_path}[/blue] -> [blue]{new_path}[/blue] ({checksum[:8]})")
         if knowledge.deleted:
             deleted = knowledge_tree.add("[red]Deleted[/red]")
             for path in sorted(knowledge.deleted):
@@ -158,7 +158,7 @@ def display_detailed_sync_results(knowledge: SyncReport):
         console.print(knowledge_tree)
 
 
-async def run_sync(verbose: bool = False):
+async def run_sync(verbose: bool = False) -> None:
     """Run sync operation."""
     app_config = ConfigManager().config
     config = get_project_config()
@@ -306,5 +306,5 @@ def sync(
                 f"directory={str(config.home)}",
             )
             typer.echo(f"Error during sync: {e}", err=True)
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
         raise

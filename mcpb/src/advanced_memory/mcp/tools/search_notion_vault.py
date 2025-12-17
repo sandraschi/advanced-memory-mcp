@@ -9,60 +9,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Notion HTML/Markdown exports without importing them.
-
-This tool enables querying Notion export directories directly from the filesystem,
-providing search capabilities across HTML pages, markdown files, and structured content.
-
-SEARCH CAPABILITIES:
-- Full-text search across HTML and markdown content
-- Case-sensitive or case-insensitive matching
-- File type filtering (HTML, Markdown, or all files)
-- Content extraction from complex HTML structures
-- Support for large export directories with result limiting
-- Structured results with page hierarchy information
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Path to Notion export directory (ZIP extracted or HTML folder)
-- query (str, REQUIRED): Search term or phrase to find
-- case_sensitive (bool, default=False): Whether search should be case-sensitive
-- file_type (str, optional): Filter by file type ("html", "markdown", or None for all)
-- max_results (int, default=20): Maximum number of results to return
-
-NOTION EXPORT FORMATS:
-- HTML exports: Complex structured pages with Notion styling
-- Markdown exports: Simplified text format (limited formatting)
-- ZIP files: Complete exports that should be extracted first
-- Directory structures: Organized by page hierarchy
-
-CONTENT PROCESSING:
-- HTML parsing: Extracts text content from Notion's block structure
-- Markdown parsing: Standard text search with formatting preservation
-- Link resolution: Handles internal Notion page references
-- Metadata extraction: Page titles, creation dates, hierarchy
-
-RESULT FORMAT:
-Returns structured results showing:
-- Page/file names and paths
-- Content snippets with search term highlighting
-- File types and sizes
-- Match locations and context
-- Page hierarchy information
-
-USAGE EXAMPLES:
-Basic search: search_notion_vault("/export/path", "meeting notes")
-Case sensitive: search_notion_vault("/export", "API", case_sensitive=True)
-HTML only: search_notion_vault("/export", "database", file_type="html")
-Markdown only: search_notion_vault("/export", "todo", file_type="markdown")
-Limited results: search_notion_vault("/export", "project", max_results=50)
-
-RETURNS:
-Formatted search results with file details, content previews, and match statistics.
-
-NOTE: This searches external Notion exports without importing them. For enhanced search
-and AI-powered analysis, use load_notion_export() to import into Advanced Memory.""",
-)
+@mcp.tool
 async def search_notion_vault(
     vault_path: str,
     query: str,
@@ -112,7 +59,7 @@ async def search_notion_vault(
         return f"Error: Vault path '{vault_path}' is not a directory"
 
     # Find all relevant files
-    files_to_search = []
+    files_to_search: list[Path] = []
 
     if file_type == "html" or file_type is None:
         files_to_search.extend(vault_dir.rglob("*.html"))

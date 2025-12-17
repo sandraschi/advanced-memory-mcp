@@ -2,7 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 
 
 @mcp.resource(

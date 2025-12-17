@@ -7,29 +7,29 @@
 ## External Dependencies Found
 
 ### 1. ✅ Pandoc (FIXED)
-**Used for**: Multi-format export (PDF, DOCX, HTML, EPUB, etc.)  
-**Status**: ✅ Auto-installs via `pypandoc`  
-**Size**: ~100MB  
+**Used for**: Multi-format export (PDF, DOCX, HTML, EPUB, etc.)
+**Status**: ✅ Auto-installs via `pypandoc`
+**Size**: ~100MB
 **Solution**: Auto-download on first use
 
 ### 2. ❌ LaTeX (PROBLEM)
-**Used for**: PDF generation via Pandoc  
-**Size**: 2GB+ (MiKTeX/TinyTeX)  
-**Status**: ❌ Required manual install  
+**Used for**: PDF generation via Pandoc
+**Size**: 2GB+ (MiKTeX/TinyTeX)
+**Status**: ❌ Required manual install
 **Problem**: USERS DON'T KNOW WHAT LATEX IS!
 
 **Solution**: Use `weasyprint` (pure Python, already added!)
 
 ### 3. ✅ Obsidian/Notion/Joplin/Evernote (NOT OUR PROBLEM)
-**Used for**: Importing FROM those apps  
-**Status**: ✅ Optional - user already has them if importing  
-**Our job**: Just parse their export files  
+**Used for**: Importing FROM those apps
+**Status**: ✅ Optional - user already has them if importing
+**Our job**: Just parse their export files
 **No action needed**: These are SOURCE apps, not dependencies
 
 ### 4. ✅ Typora/Notepad++ (OPTIONAL)
-**Used for**: External editor integration  
-**Status**: ✅ Optional features  
-**Our job**: Provide integration IF user has them  
+**Used for**: External editor integration
+**Status**: ✅ Optional features
+**Our job**: Provide integration IF user has them
 **No action needed**: Clearly documented as optional
 
 ---
@@ -96,12 +96,12 @@ async def export_pdf_native(
 ) -> str:
     """
     Export notes to PDF using pure Python (no Pandoc/LaTeX needed).
-    
+
     Works immediately after pip install - no external tools!
     """
     # Get notes
     notes = await _get_notes(source_folder, include_subfolders, project)
-    
+
     exported = []
     for note in notes:
         # Markdown → HTML
@@ -109,16 +109,16 @@ async def export_pdf_native(
             note["content"],
             extensions=['extra', 'codehilite', 'toc', 'tables', 'fenced_code']
         )
-        
+
         # HTML → PDF
         output = Path(export_path) / f"{_sanitize(note['title'])}.pdf"
         HTML(string=_wrap_html(html, note['title'])).write_pdf(
             output,
             stylesheets=[CSS(string=_get_stylesheet())]
         )
-        
+
         exported.append(str(output))
-    
+
     return f"✅ Exported {len(exported)} PDFs (pure Python, no LaTeX!)"
 ```
 
@@ -214,7 +214,7 @@ adn_export("pandoc", export_path="output/", format_type="pdf")
 
 **Time**: 1 hour
 
-**Result**: 
+**Result**:
 - ✅ PDF export works immediately
 - ✅ No LaTeX needed
 - ✅ No "what's LaTeX?" confusion
@@ -231,30 +231,3 @@ adn_export("pandoc", export_path="output/", format_type="pdf")
 4. Test it works
 
 **Result**: Users can export PDFs immediately after `pip install`!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

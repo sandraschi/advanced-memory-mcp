@@ -38,9 +38,20 @@ class ProjectSession:
         """Get the currently active project name.
 
         Returns:
-            The current project name, falling back to default, then 'main'
+            The current project name, falling back to default
         """
-        return self.current_project or self.default_project or "main"
+        result = self.current_project or self.default_project
+        if not result:
+            # Fallback to first available project from config
+            config_manager = ConfigManager()
+            projects = config_manager.projects
+            if projects:
+                result = list(projects.keys())[0]
+                logger.warning(f"No current/default project set, using first available: {result}")
+            else:
+                logger.error("No projects configured!")
+                result = "main"  # Last resort fallback
+        return result
 
     def set_current_project(self, project_name: str) -> None:
         """Set the current project context.
@@ -56,9 +67,18 @@ class ProjectSession:
         """Get the default project name from startup.
 
         Returns:
-            The default project name, or 'main' if not set
+            The default project name, or first available project
         """
-        return self.default_project or "main"  # pragma: no cover
+        if self.default_project:
+            return self.default_project
+
+        # Fallback to first available project from config
+        config_manager = ConfigManager()
+        projects = config_manager.projects
+        if projects:
+            return list(projects.keys())[0]
+
+        return "main"  # Last resort fallback
 
     def reset_to_default(self) -> None:  # pragma: no cover
         """Reset current project back to the default project."""

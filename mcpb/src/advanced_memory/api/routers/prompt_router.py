@@ -188,7 +188,7 @@ async def continue_conversation(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error rendering prompt template: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/search", response_model=PromptResponse)
@@ -258,4 +258,4 @@ async def search_prompt(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error rendering prompt template: {str(e)}",
-        )
+        ) from e

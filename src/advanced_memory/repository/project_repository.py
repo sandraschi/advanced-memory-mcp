@@ -63,6 +63,12 @@ class ProjectRepository(Repository):
         result = await self.execute_query(query)
         return list(result.scalars().all())
 
+    async def get_all_projects(self) -> Sequence[Project]:
+        """Get all projects (both active and inactive)."""
+        query = self.select()
+        result = await self.execute_query(query)
+        return list(result.scalars().all())
+
     async def set_as_default(self, project_id: int) -> Project | None:
         """Set a project as the default and unset previous default.
 

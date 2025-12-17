@@ -120,7 +120,7 @@ class ProjectService:
             # Don't set is_default=False to avoid UNIQUE constraint issues
             # Let it default to NULL, only set to True when explicitly making default
         }
-        created_project = await self.repository.create(project_data)
+        created_project: Project = await self.repository.create(project_data)
 
         # If this should be the default project, ensure only one default exists
         if set_default:
@@ -197,7 +197,7 @@ class ProjectService:
             )  # pragma: no cover
 
         # Get all projects with is_default=True
-        db_projects = await self.repository.find_all()
+        db_projects: Sequence[Project] = await self.repository.find_all()
         default_projects = [p for p in db_projects if p.is_default is True]
 
         if len(default_projects) > 1:  # pragma: no cover
@@ -280,11 +280,15 @@ class ProjectService:
                 }
                 await self.repository.create(project_data)
 
-        # Add projects that exist in DB but not in config to config
+        # Don't automatically add database projects back to config
+        # This allows users to remove projects from config without them being re-added
+        # Projects in DB but not in config will be marked as inactive instead
         for name, project in db_projects_by_permalink.items():
             if name not in config_projects:
-                logger.info(f"Adding project '{name}' to configuration")
-                self.config_manager.add_project(name, project.path)
+                logger.info(
+                    f"Project '{name}' exists in database but not in config - marking inactive"
+                )
+                await self.repository.update(project.id, {"is_active": False})
 
         # Ensure database default project state is consistent
         await self._ensure_single_default_project()

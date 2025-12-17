@@ -12,6 +12,7 @@ from typing import Any
 from fastmcp import FastMCP
 
 from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.initialization import initialize_app
 
 
@@ -23,7 +24,7 @@ class AppContext:
 
 @asynccontextmanager
 async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma: no cover
-    """ """
+    """MCP server lifespan - handles initialization and cleanup including file watching."""
     # defer import so tests can monkeypatch
     from advanced_memory.mcp.project_session import session
 
@@ -34,11 +35,24 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
     # Initialize project session with default project
     session.initialize(app_config.default_project)
 
+    # Start file watcher if sync_changes is enabled
+    watch_task = None
+    if app_config.sync_changes:
+        from advanced_memory.services.initialization import initialize_file_sync
+
+        # Start watch service as a background task
+        watch_task = asyncio.create_task(initialize_file_sync(app_config))
+
     try:
-        yield AppContext(watch_task=None, migration_manager=migration_manager)
+        yield AppContext(watch_task=watch_task, migration_manager=migration_manager)
     finally:
-        # Cleanup on shutdown - migration tasks will be cancelled automatically
-        pass
+        # Cleanup on shutdown
+        if watch_task and not watch_task.done():
+            watch_task.cancel()
+            try:
+                await watch_task
+            except asyncio.CancelledError:
+                pass
 
 
 # Configure logging to suppress non-JSON output in MCP stdio mode
@@ -59,11 +73,9 @@ def configure_mcp_logging():
 # Apply logging configuration
 configure_mcp_logging()
 
-# Import the shared MCP instance
-from advanced_memory.mcp.mcp_instance import mcp
-
-# Import and register all tools
-from advanced_memory.mcp.tools import *
+# CRITICAL: Import tools to register them with the MCP instance
+# This must happen after mcp instance is created but before running server
+from advanced_memory.mcp import tools  # noqa: E402, F401
 
 # Use the shared MCP instance as the server
 server = mcp

@@ -1,1 +1,1 @@
-"""MCP server for basic-memory."""
+"""MCP server for advanced-memory."""

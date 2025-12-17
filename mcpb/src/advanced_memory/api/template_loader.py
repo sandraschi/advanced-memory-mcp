@@ -1,4 +1,4 @@
-"""Template loading and rendering utilities for the Basic Memory API.
+"""Template loading and rendering utilities for the Advanced Memory API.
 
 This module handles the loading and rendering of Handlebars templates from the
 templates directory, providing a consistent interface for all prompt-related
@@ -20,10 +20,10 @@ TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 
 
 # Custom helpers for Handlebars
-def _date_helper(this, *args):
+def _date_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Format a date using the given format string."""
     if len(args) < 1:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     timestamp = args[0]
     format_str = args[1] if len(args) > 1 else "%Y-%m-%d %H:%M"
@@ -42,10 +42,10 @@ def _date_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _default_helper(this, *args):
+def _default_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Return a default value if the given value is None or empty."""
     if len(args) < 2:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     value = args[0]
     default_value = args[1]
@@ -55,10 +55,10 @@ def _default_helper(this, *args):
     return pybars.strlist([str(result)])
 
 
-def _capitalize_helper(this, *args):
+def _capitalize_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Capitalize the first letter of a string."""
     if len(args) < 1:  # pragma: no cover
-        return ""
+        return pybars.strlist([""])
 
     text = args[0]
     if not text or not isinstance(text, str):  # pragma: no cover
@@ -69,10 +69,10 @@ def _capitalize_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _round_helper(this, *args):
+def _round_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Round a number to the specified number of decimal places."""
     if len(args) < 1:
-        return ""
+        return pybars.strlist([""])
 
     value = args[0]
     decimal_places = args[1] if len(args) > 1 else 2
@@ -85,10 +85,10 @@ def _round_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _size_helper(this, *args):
+def _size_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Return the size/length of a collection."""
     if len(args) < 1:
-        return 0
+        return pybars.strlist(["0"])
 
     value = args[0]
     if value is None:
@@ -101,10 +101,10 @@ def _size_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _json_helper(this, *args):
+def _json_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Convert a value to a JSON string."""
     if len(args) < 1:  # pragma: no cover
-        return "{}"
+        return pybars.strlist(["{}"])
 
     value = args[0]
     # For pybars, we need to return a SafeString to prevent HTML escaping
@@ -113,7 +113,7 @@ def _json_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _math_helper(this, *args):
+def _math_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
     """Perform basic math operations."""
     if len(args) < 3:
         return pybars.strlist(["Math error: Insufficient arguments"])
@@ -141,7 +141,7 @@ def _math_helper(this, *args):
     return pybars.strlist([result])
 
 
-def _lt_helper(this, *args):
+def _lt_helper(this, *args) -> bool:  # type: ignore[no-untyped-def]
     """Check if left hand side is less than right hand side."""
     if len(args) < 2:
         return False
@@ -156,7 +156,7 @@ def _lt_helper(this, *args):
         return str(lhs) < str(rhs)
 
 
-def _if_cond_helper(this, options, condition):
+def _if_cond_helper(this, options: dict[str, Any], condition: Any) -> str:
     """Block helper for custom if conditionals."""
     if condition:
         return options["fn"](this)
@@ -165,7 +165,7 @@ def _if_cond_helper(this, options, condition):
     return ""  # pragma: no cover
 
 
-def _dedent_helper(this, options):
+def _dedent_helper(this, options: dict[str, Any]) -> str:
     """Dedent a block of text to remove common leading whitespace.
 
     Usage:
@@ -198,8 +198,8 @@ def _dedent_helper(this, options):
     # Use textwrap to dedent the content and remove the extra newlines we added
     dedented = textwrap.dedent(content_str)[1:-1]
 
-    # Return as a SafeString to prevent HTML escaping
-    return pybars.strlist([dedented])  # pragma: no cover
+    # Return as a string
+    return dedented  # pragma: no cover
 
 
 class TemplateLoader:

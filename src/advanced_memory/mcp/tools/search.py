@@ -28,11 +28,7 @@ def _extract_tags_from_query_string(query: str) -> tuple[str, list[str]]:
         raw_value = match.group("value") or ""
         tag_value = raw_value.strip().strip(",;")
 
-        if (
-            len(tag_value) >= 2
-            and tag_value[0] in ("'", '"')
-            and tag_value[-1] == tag_value[0]
-        ):
+        if len(tag_value) >= 2 and tag_value[0] in ("'", '"') and tag_value[-1] == tag_value[0]:
             tag_value = tag_value[1:-1]
 
         tag_value = tag_value.strip().strip(",;")
@@ -53,7 +49,7 @@ def _format_search_results_as_markdown(
     search_response: SearchResponse, query: str, projects: list[str]
 ) -> str:
     """Convert SearchResponse to formatted markdown string for MCP compliance."""
-    output = [f"# Search Results for: \"{query}\"\n"]
+    output = [f'# Search Results for: "{query}"\n']
 
     if not search_response.results:
         output.append("No results found for your query.\n")
@@ -64,7 +60,9 @@ def _format_search_results_as_markdown(
         output.append("- Try recent_activity() to see latest notes")
         return "\n".join(output)
 
-    output.append(f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n")
+    output.append(
+        f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n"
+    )
 
     for idx, item in enumerate(search_response.results, 1):
         title = item.title or "Untitled"
@@ -83,7 +81,11 @@ def _format_search_results_as_markdown(
         output.append("")
 
     # Add pagination info
-    total_pages = (len(search_response.results) // search_response.page_size) + 1 if search_response.results else 1
+    total_pages = (
+        (len(search_response.results) // search_response.page_size) + 1
+        if search_response.results
+        else 1
+    )
     output.append(f"**Page:** {search_response.current_page} of {total_pages}")
 
     return "\n".join(output)
@@ -508,7 +510,9 @@ async def search_notes(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_entity_types.append(t)
-                logger.warning(f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types.")
+                logger.warning(
+                    f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types."
+                )
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_entity_types:

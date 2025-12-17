@@ -131,6 +131,7 @@ async def edit_entity(
             section=data.section,
             find_text=data.find_text,
             expected_replacements=data.expected_replacements,
+            use_regex=data.use_regex,
         )
 
         # Reindex the updated entity
@@ -152,7 +153,7 @@ async def edit_entity(
 
     except Exception as e:
         logger.error(f"Error editing entity: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.post("/move")
@@ -199,7 +200,7 @@ async def move_entity(
 
     except Exception as e:
         logger.error(f"Error moving entity: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 ## Read endpoints

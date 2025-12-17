@@ -17,7 +17,7 @@ def ai_assistant_guide() -> str:
         focus: Optional area to focus on ("writing", "context", "search", etc.)
 
     Returns:
-        A focused guide on Basic Memory usage.
+        A focused guide on Advanced Memory usage.
     """
     logger.info("Loading AI assistant guide resource")
     guide_doc = Path(__file__).parent.parent / "resources" / "ai_assistant_guide.md"

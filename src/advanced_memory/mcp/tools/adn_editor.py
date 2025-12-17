@@ -43,8 +43,7 @@ async def adn_editor(
 ) -> str:
     """Comprehensive editor management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all editor operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+    PORTMANTEAU PATTERN: Consolidates 5 editor operations into one tool.
 
     SUPPORTED OPERATIONS:
     - notepadpp_edit: Export notes to Notepad++ for professional markdown editing

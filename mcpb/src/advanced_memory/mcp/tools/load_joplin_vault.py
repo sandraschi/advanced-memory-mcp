@@ -5,7 +5,6 @@ folder structure, metadata, and relationships.
 """
 
 import json
-import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -18,46 +17,7 @@ from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
 
-@mcp.tool(
-    description="""Import Joplin knowledge bases into Advanced Memory with full metadata preservation.
-
-This tool migrates Joplin exports into Advanced Memory, converting Joplin's note organization
-into Advanced Memory's entity-relationship model while preserving all metadata and structure.
-
-JOPLIN FEATURES SUPPORTED:
-- Markdown notes with full formatting support
-- Notebook hierarchy (folders become Advanced Memory folders)
-- Tags and categorization systems
-- Note metadata (creation dates, modification dates, author info)
-- Rich content (tables, code blocks, lists, links)
-- Attachment references and media links
-
-PARAMETERS:
-- export_path (str, REQUIRED): Path to Joplin export directory (containing .md and .json files)
-- destination_folder (str, default="imported/joplin"): Advanced Memory folder for imported content
-- preserve_structure (bool, default=True): Maintain Joplin notebook hierarchy
-- convert_links (bool, default=True): Convert Joplin links to Advanced Memory entity references
-- skip_existing (bool, default=True): Skip notes that already exist in Advanced Memory
-- project (str, optional): Target Advanced Memory project
-
-JOPLIN EXPORT STRUCTURE:
-Joplin exports create pairs of files:
-- .md files: Note content in markdown format
-- .json files: Metadata including title, tags, notebook, timestamps
-- _resources/ folder: Attachments and media files
-
-USAGE EXAMPLES:
-Basic import: load_joplin_vault("/path/to/joplin-export")
-Custom folder: load_joplin_vault("/export", destination_folder="research/joplin-notes")
-Preserve links: load_joplin_vault("/export", convert_links=True)
-Incremental: load_joplin_vault("/export", skip_existing=True)
-
-RETURNS:
-Detailed import report with note counts, tag conversions, notebook mappings, and any issues.
-
-NOTE: Joplin's end-to-end encryption must be disabled before export. Large knowledge bases
-may take time to process. Use skip_existing=True for incremental synchronization.""",
-)
+@mcp.tool
 async def load_joplin_vault(
     export_path: str,
     destination_folder: str = "imported/joplin",
@@ -156,63 +116,54 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
     joplin_files = []
 
     try:
-        # Use MCP filesystem if available, otherwise direct access
-        try:
-            from mcp_filesystem import list_directory
+        # Direct filesystem access
+        def scan_recursive(current_path: str) -> list[dict[str, str]]:
+            files = []
+            try:
+                path_obj = Path(current_path)
 
-            async def scan_recursive(current_path: str) -> list[dict[str, str]]:
-                files = []
-                try:
-                    dir_contents = await list_directory(current_path)
+                # Group files by base name (without extension)
+                file_groups: dict[str, dict[str, str]] = {}
 
-                    # Group files by base name (without extension)
-                    file_groups = {}
-                    for line in dir_contents.split("\n"):
-                        if "[DOC]" in line:
-                            parts = line.split()
-                            if len(parts) >= 2:
-                                filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                for item in path_obj.iterdir():
+                    if item.is_file():
+                        filename = item.name
+                        file_path = str(item)
 
-                                if filename.endswith(".md"):
-                                    base_name = filename[:-3]  # Remove .md
-                                    if base_name not in file_groups:
-                                        file_groups[base_name] = {}
-                                    file_groups[base_name]["md"] = file_path
-                                elif filename.endswith(".json"):
-                                    base_name = filename[:-5]  # Remove .json
-                                    if base_name not in file_groups:
-                                        file_groups[base_name] = {}
-                                    file_groups[base_name]["json"] = file_path
+                        if filename.endswith(".md"):
+                            base_name = filename[:-3]  # Remove .md
+                            if base_name not in file_groups:
+                                file_groups[base_name] = {}
+                            file_groups[base_name]["md"] = file_path
+                        elif filename.endswith(".json"):
+                            base_name = filename[:-5]  # Remove .json
+                            if base_name not in file_groups:
+                                file_groups[base_name] = {}
+                            file_groups[base_name]["json"] = file_path
+                    elif item.is_dir():
+                        # Directory - recurse
+                        subfiles = scan_recursive(str(item))
+                        files.extend(subfiles)
 
-                        elif "[FOLDER]" in line and not line.strip().endswith("."):
-                            # Directory - recurse
-                            parts = line.split()
-                            if len(parts) >= 2:
-                                dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
-                                subfiles = await scan_recursive(subdir_path)
-                                files.extend(subfiles)
+                # Only include complete pairs (both .md and .json)
+                for base_name, file_dict in file_groups.items():
+                    if "md" in file_dict and "json" in file_dict:
+                        files.append(
+                            {
+                                "md": file_dict["md"],
+                                "json": file_dict["json"],
+                                "base_name": base_name,
+                                "directory": current_path,
+                            }
+                        )
 
-                    # Only include complete pairs (both .md and .json)
-                    for base_name, file_dict in file_groups.items():
-                        if "md" in file_dict and "json" in file_dict:
-                            files.append(
-                                {
-                                    "md": file_dict["md"],
-                                    "json": file_dict["json"],
-                                    "base_name": base_name,
-                                    "directory": current_path,
-                                }
-                            )
+            except Exception as e:
+                logger.warning(f"Error scanning directory {current_path}: {e}")
 
-                except Exception as e:
-                    logger.warning(f"Error scanning directory {current_path}: {e}")
+            return files
 
-                return files
-
-            joplin_files_raw = await scan_recursive(str(export_path))
-            joplin_files = [
+            joplin_files_raw = scan_recursive(str(export_path))
+            [
                 {
                     "md": Path(f["md"]),
                     "json": Path(f["json"]),
@@ -221,41 +172,6 @@ async def _find_joplin_files_recursive(export_path: Path) -> list[dict[str, Path
                 }
                 for f in joplin_files_raw
             ]
-
-        except ImportError:
-            # Fallback to direct filesystem access
-            logger.warning("MCP filesystem not available, using direct access")
-
-            file_groups = {}
-            for file_path in export_path.rglob("*"):
-                if file_path.is_file():
-                    if file_path.suffix.lower() == ".md":
-                        base_name = file_path.stem
-                        dir_path = str(file_path.parent)
-                        key = f"{dir_path}/{base_name}"
-                        if key not in file_groups:
-                            file_groups[key] = {}
-                        file_groups[key]["md"] = file_path
-                    elif file_path.suffix.lower() == ".json":
-                        base_name = file_path.stem
-                        dir_path = str(file_path.parent)
-                        key = f"{dir_path}/{base_name}"
-                        if key not in file_groups:
-                            file_groups[key] = {}
-                        file_groups[key]["json"] = file_path
-
-            # Only include complete pairs
-            for key, file_dict in file_groups.items():
-                if "md" in file_dict and "json" in file_dict:
-                    md_path = file_dict["md"]
-                    joplin_files.append(
-                        {
-                            "md": md_path,
-                            "json": file_dict["json"],
-                            "base_name": md_path.stem,
-                            "directory": str(md_path.parent),
-                        }
-                    )
 
     except Exception as e:
         logger.error(f"Error finding Joplin files: {e}")
@@ -300,7 +216,7 @@ async def _process_joplin_import(
     """Process the Joplin export import with all files."""
 
     # Track import statistics
-    stats = {
+    stats: dict[str, Any] = {
         "total_files": len(joplin_files),
         "imported_files": 0,
         "skipped_files": 0,
@@ -380,7 +296,7 @@ async def _process_joplin_import(
             )
 
     # Generate summary report
-    return _generate_import_report(stats, processed_files, export_path, destination_folder)
+    return _generate_import_report(stats, processed_files, str(export_path), destination_folder)
 
 
 def _read_joplin_metadata(json_path: Path) -> dict[str, Any]:

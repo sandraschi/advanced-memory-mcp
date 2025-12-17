@@ -4,7 +4,6 @@ This tool imports entire Obsidian vaults into Advanced Memory, preserving
 folder structure, wikilinks, frontmatter, and other Obsidian-specific features.
 """
 
-import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -18,48 +17,7 @@ from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
 
-@mcp.tool(
-    description="""Import complete Obsidian vaults into Advanced Memory with full feature preservation.
-
-This tool migrates entire Obsidian knowledge bases into Advanced Memory, converting
-Obsidian-specific features into Advanced Memory equivalents while preserving content integrity.
-
-FEATURES:
-- Imports all markdown files from vault structure
-- Converts [[WikiLinks]] to Advanced Memory entity references
-- Preserves frontmatter metadata and YAML properties
-- Handles folder hierarchies and nested structures
-- Supports selective import with filtering options
-- Processes attachments and media files (optional)
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Filesystem path to Obsidian vault root directory
-- destination_folder (str, default="imported/obsidian"): Advanced Memory folder for imported content
-- preserve_structure (bool, default=True): Maintain original folder hierarchy
-- convert_links (bool, default=True): Convert [[WikiLinks]] to entity references
-- include_attachments (bool, default=False): Import images and media files
-- skip_existing (bool, default=True): Skip notes that already exist
-- project (str, optional): Target Advanced Memory project
-
-SUPPORTED OBSIDIAN FEATURES:
-- Standard markdown with extensions
-- Wikilink syntax: [[Note Title]] and [[Note Title|Display Text]]
-- Frontmatter YAML metadata
-- Folder-based organization
-- Image and attachment references
-- Internal linking structures
-
-USAGE EXAMPLES:
-Basic import: load_obsidian_vault("/path/to/vault")
-Custom folder: load_obsidian_vault("/vault", destination_folder="research/notes")
-Link conversion: load_obsidian_vault("/vault", convert_links=False)
-With attachments: load_obsidian_vault("/vault", include_attachments=True)
-
-RETURNS:
-Detailed import report with success/failure counts, converted links, and next steps.
-
-NOTE: Large vaults may take time to process. Use skip_existing=True for incremental imports.""",
-)
+@mcp.tool
 async def load_obsidian_vault(
     vault_path: str,
     destination_folder: str = "imported/obsidian",
@@ -180,7 +138,7 @@ async def _scan_vault_files(
     try:
         # Use MCP filesystem if available, otherwise direct access
         try:
-            from mcp_filesystem import list_directory
+            from mcp_filesystem import list_directory  # type: ignore
 
             async def scan_recursive(current_path: str) -> tuple[list[str], list[str]]:
                 md_files = []
@@ -195,7 +153,7 @@ async def _scan_vault_files(
                             parts = line.split()
                             if len(parts) >= 2:
                                 filename = parts[1].strip()
-                                file_path = os.path.join(current_path, filename)
+                                file_path = str(Path(current_path) / filename)
 
                                 if filename.endswith(".md"):
                                     md_files.append(file_path)
@@ -208,7 +166,7 @@ async def _scan_vault_files(
                             parts = line.split()
                             if len(parts) >= 2:
                                 dirname = parts[1].strip()
-                                subdir_path = os.path.join(current_path, dirname)
+                                subdir_path = str(Path(current_path) / dirname)
                                 sub_md, sub_att = await scan_recursive(subdir_path)
                                 md_files.extend(sub_md)
                                 att_files.extend(sub_att)
@@ -253,7 +211,7 @@ async def _process_vault_import(
     """Process the vault import with all files."""
 
     # Track import statistics
-    stats = {
+    stats: dict[str, Any] = {
         "total_files": len(markdown_files),
         "imported_files": 0,
         "skipped_files": 0,
@@ -298,6 +256,7 @@ async def _process_vault_import(
             frontmatter, body = _parse_frontmatter(content)
 
             # Convert wikilinks if requested
+            link_conversions = 0
             if convert_links:
                 body, link_conversions = _convert_wikilinks(
                     body, file_mapping, vault_path, file_path
@@ -350,7 +309,7 @@ async def _process_vault_import(
                 logger.error(f"Failed to copy attachment {att_path}: {e}")
 
     # Generate summary report
-    return _generate_import_report(stats, processed_files, vault_path, destination_folder)
+    return _generate_import_report(stats, processed_files, str(vault_path), destination_folder)
 
 
 def _parse_frontmatter(content: str) -> tuple[dict[str, Any], str]:

@@ -1,84 +1,170 @@
 # AI Assistant Guide for Advanced Memory
 
-This guide helps AIs use Advanced Memory tools effectively when working with users. It covers reading, writing, and
-navigating knowledge through the Model Context Protocol (MCP).
+_Last updated: 2025-11-09 — aligns with FastMCP 2.13 toolset, portmanteau alias handling, and skill-creator workflows._
 
-## Overview
+This guide keeps Claude (and other MCP-aware assistants) aligned with the current Advanced Memory feature set. Follow it to read, write, and navigate knowledge safely while taking advantage of the portmanteau tooling and alias normalization that prevent common AI mis-calls.
 
-Advanced Memory allows you and users to record context in local Markdown files, building a rich knowledge base through
-natural conversations. The system automatically creates a semantic knowledge graph from simple text patterns.
+---
 
-- **Local-First**: All data is stored in plain text files on the user's computer
-- **Real-Time**: Users see content updates immediately
-- **Bi-Directional**: Both you and users can read and edit notes
-- **Semantic**: Simple patterns create a structured knowledge graph
-- **Persistent**: Knowledge persists across sessions and conversations
+## 1. Core Principles
 
-## The Importance of the Knowledge Graph
+- **Local-first knowledge graph**: Everything lives in Markdown inside the user’s repo. Files are the source of truth.
+- **Semantic Markdown** creates the graph. Observations and relations power the retrieval experience.
+- **Structured tagging**: Every new note must carry meaningful tags in its frontmatter (`tags: ["topic", "error-pattern", ...]`). Untagged notes drown in the archive.
+- **Context freshness matters**: Use `adn_navigation` → `recent_activity` or `adn_content` → `read_latest` to confirm you are working with the newest material before acting.
 
-**Advanced Memory's value comes from connections between notes, not just the notes themselves.**
+Remember: 10 highly connected notes beat 20 isolated ones. Every action should either add useful connections or surface the right existing context quickly.
 
-When writing notes, your primary goal should be creating a rich, interconnected knowledge graph:
+---
 
-1. **Increase Semantic Density**: Add multiple observations and relations to each note
-2. **Use Accurate References**: Aim to reference existing entities by their exact titles
-3. **Create Forward References**: Feel free to reference entities that don't exist yet - Advanced Memory will resolve these
-   when they're created later
-4. **Create Bidirectional Links**: When appropriate, connect entities from both directions
-5. **Use Meaningful Categories**: Add semantic context with appropriate observation categories
-6. **Choose Precise Relations**: Use specific relation types that convey meaning
+## 2. Portmanteau Tool Quick Reference
 
-Remember: A knowledge graph with 10 heavily connected notes is more valuable than 20 isolated notes. Your job is to help
-build these connections!
+Advanced Memory exposes 15 consolidated tools by default. Each accepts an `operation` string that is normalized (spaces, hyphens, camelCase, and most typos map to the right entry). Friendly error messages tell you when an alias fails.
 
-## Core Tools Reference
+| Tool | Primary Use | Common Operations (canonical ➜ helpful aliases) |
+| --- | --- | --- |
+| `adn_content` | CRUD on notes | `write`, `read`, `read_latest`, `view`, `view_rendered`, `edit`, `edit_tags`, `move`, `delete`, `quick`, `daily` ➜ accepts `"create note"`, `"latest"`, `"modify tags"`, etc. |
+| `adn_search` | Search notes & external vaults | `notes`, `obsidian`, `joplin`, `notion`, `evernote` ➜ `"text"`, `"title"`, `"searchnotes"` auto-map. `notes` sets sensible defaults (`entity_types=["entity","observation"]`). |
+| `adn_navigation` | Recent activity, directories, backlinks | `recent_activity`, `list_directory`, `backlinks`, `build_context`, `status`, `sync_status` ➜ `"last activity"`, `"ListDirectory"`, etc. |
+| `adn_project` | Project lifecycle | `list`, `get_current`, `switch`, `create`, `delete`, `status`, `sync` with case-agnostic aliases. |
+| `adn_export` | Export flows | `pandoc`, `docsify`, `html`, `claude_skills`, `pdf_book`, `archive`, `notion`, `evernote`. |
+| `adn_import` | Import flows | `obsidian`, `joplin`, `notion`, `evernote`, `archive`. |
+| `adn_knowledge` | Bulk note ops, analytics | `tag_analytics`, `bulk_update`, `bulk_move`, `find_duplicates`, `validate_content`, etc. |
+| `adn_skills` | Skill management | `create`, `list`, `read`, `update`, `delete`, `validate`, `export`, `import`, `package`, `import_from_github`, `distill_from_wikipedia/arxiv/textbook/text/expert`. |
+| `adn_skills_creator` | Gold-standard skill scaffolding | `scaffold`, `validate`, `package`, `upgrade`, `inspect`. |
+| `adn_zettelmaker` | Zettelkasten automation | `generate`, `customize`, `expand`, `suggest`, `connect`, `analyze`. |
+| `adn_inbox` | File-drop inbox | `status`, `process`, `info`, `watch`. |
+| `adn_audio` | Voice I/O | `dictate`, `speak`. |
+| `canvas` | Visual graph | Create `.canvas` layouts for Obsidian. |
+| `typora_control` | Typora automation | Interact with Typora (open files, apply templates) |
+| `view_note_rendered` | Rendered HTML view | Use when users want a pretty read-only artifact. |
+
+**Alias Safety Tips**
+- Operation names ignore case and punctuation (`"ReadLatest"`, `"read latest"`, `"read-latest"` all land on `read_latest`).
+- Unknown aliases trigger errors like `invalid operation parameter 'play the clarinet'` with suggestions. Act on the hints rather than guessing.
+- Parameters such as `search_type`, `entity_types`, and `tag_operation` also allow underscore variants as a fallback (`"searchType"`, `"search_type"`, `"search type"` all work).
+
+---
+
+## 3. Example Workflows (Current API)
 
 ```python
-# Writing knowledge - THE MOST IMPORTANT TOOL!
-response = await write_note(
-    title="Search Design",  # Required: Note title
-    content="# Search Design\n...",  # Required: Note content
-    folder="specs",  # Optional: Folder to save in
-    tags=["search", "design"],  # Optional: Tags for categorization
-    verbose=True  # Optional: Get parsing details
+# Create or append to a note (tags required – keep them meaningful)
+await adn_content(
+    operation="write",
+    identifier="Search Architecture Plan",
+    folder="specs/search",
+    tags=["search", "architecture", "2025-release"],
+    content="""# Search Architecture Plan
+- [decision] Adopt hybrid BM25 + embedding rerank #retrieval
+- [risk] Embedding index refresh takes >4h #ops
+- influences [[Search Scalability OKR]]
+""",
 )
 
-# Reading knowledge
-content = await read_note("Search Design")  # By title
-content = await read_note("specs/search-design")  # By path
-content = await read_note("memory://specs/search")  # By memory URL
+# Grab the latest activity intelligently (automatic fallback handles 'latest')
+latest = await adn_content(operation="read_latest")
 
-# Searching for knowledge
-results = await search_notes(
-    query="authentication system",  # Text to search for
-    page=1,  # Optional: Pagination
-    page_size=10  # Optional: Results per page
+# Search across notes by content with relation filtering handled for you
+results = await adn_search(operation="text", query="vector database rollout", page=1, page_size=5)
+
+# Find what changed this week, including linked context
+activity = await adn_navigation(operation="recent_activity", timeframe="7d", depth=2)
+
+# Scaffold a Claude skill using the modular architecture
+await adn_skills_creator(
+    operation="scaffold",
+    skill_name="vector-database-operations",
+    category="developer",
+    confidence="low",
 )
 
-# Building context from the knowledge graph
-context = await build_context(
-    url="memory://specs/search",  # Starting point
-    depth=2,  # Optional: How many hops to follow
-    timeframe="1 month"  # Optional: Recent timeframe
-)
+# Package the skill (validates and emits a zip manifest)
+await adn_skills_creator(operation="package", skill_path="skills/developer/vector-database-operations")
 
-# Checking recent changes
-activity = await recent_activity(
-    type="all",  # Optional: Entity types to include
-    depth=1,  # Optional: Related items to include
-    timeframe="1 week"  # Optional: Time window
-)
-
-# Creating a knowledge visualization
-canvas_result = await canvas(
-    nodes=[{"id": "note1", "label": "Search Design"}],  # Nodes to display
-    edges=[{"from": "note1", "to": "note2"}],  # Connections
-    title="Project Overview",  # Canvas title
-    folder="diagrams"  # Storage location
-)
+# Create an export for doc review
+await adn_export(operation="pandoc", format_type="pdf", source_folder="docs/architecture")
 ```
 
-## memory:// URLs Explained
+---
+
+## 4. Knowledge Graph Essentials
+
+1. **Observations** (`- [category] fact #tag`) encode domain knowledge. Use categories like `[decision]`, `[issue]`, `[experiment]`, `[fact]`, `[recipe]`.
+2. **Relations** (`- implements [[Entity]]`) connect entities. Prefer precise verbs (`implements`, `blocks`, `depends_on`, `pairs_with`) over generic `relates_to`.
+3. **Forward references** are expected. If a relation targets a note that does not exist yet, Advanced Memory stores it for later resolution—mention this instead of treating it as an error.
+4. **Always tag the note** in frontmatter. Use combinations that help future retrieval (`tags: ["search", "architecture", "mitigation"]`).
+
+### memory:// URLs (still essential)
+- `memory://title` – reference by title.
+- `memory://folder/title` – reference with folder hint.
+- `memory://permalink` – exact link.
+- `memory://permalink/*/target` – follow relations.
+- `memory://permalink/relation_type/*` – follow a specific relation type.
+
+---
+
+## 5. Keeping Context Fresh
+
+- Use `adn_navigation(operation="recent_activity")` before editing to confirm the latest writes.
+- `adn_content(operation="read_latest")` now uses direct GraphContext data and falls back elegantly if recent activity is empty.
+- If `recent_activity` returns nothing but you expect changes, suggest running the repo sync (`scripts/restart_claude_and_check_mcp.ps1`) or a manual `basic-memory sync`.
+
+---
+
+## 6. Skills Workflow Highlights
+
+- Skills use the **modular three-layer architecture** (Anthropic-aligned):
+  1. `SKILL.md` (brief status banner + module overview)
+  2. `_toc.md`
+  3. `modules/` sub-files (core guidance, known gaps, research checklist, plus domain-specific modules)
+- Use `adn_skills` for reading or validating existing skills.
+- Use `adn_skills_creator` for new scaffolds, packaging with checksums, and upgrading legacy skills.
+- `adn_skills` distillation operations (e.g., `distill_from_wikipedia`, `distill_from_arxiv`) bring in authoritative content—perfect for the “science track” skills or refreshing stale ones.
+
+---
+
+## 7. Error Handling Patterns
+
+- Portmanteau tools never throw raw exceptions. You will always receive structured payloads with `success`, `error_code`, and `suggestions`.
+- If an alias fails, read the error message (e.g., `invalid operation parameter 'listdirectory' — try one of ['list_directory', 'recent_activity', ...]`).
+- Missing note? Use `adn_search(operation="text", query="...")` or the alias fallback rather than repeating the same call.
+- Tagging operations in `adn_content` automatically normalize existing tag metadata (string or list). If tagging still fails, suggest running `adn_content(operation="read", identifier=...)` to inspect the current metadata first.
+
+---
+
+## 8. Best Practices & Reminders
+
+- **Ask before writing**: “Should I capture our decision on vector search now?” Respect “no”.
+- **Confirm after writing**: “Recorded our vector search rollout plan with tags `['search','architecture','2025-release']`.”
+- **Keep titles stable**: Re-using `(folder, title)` overwrites the note; only do this intentionally.
+- **Use aliases deliberately**: They exist to keep Claude friendly, but don’t rely on fuzzy matches when the canonical term is known.
+- **Surface gaps**: When reading a skill, highlight items listed under `known-gaps.md` so the user knows what remains.
+- **Cross-check scientific content**: For high-risk topics (APIs, fast-moving tech, regulations) run a web search before trusting existing guidance—then update the skill modules and note the source in the `Source Log`.
+
+---
+
+## 9. Quick Reference Snippets
+
+```markdown
+- [decision] Adopt Claude alias normalization in `adn_content` #tooling
+- relates_to [[Portmanteau Normalization Plan 2025-11-09]]
+- tagged_with [[Tag Discipline Policy]]
+```
+
+```python
+# Friendly alias call (works)
+await adn_content(operation="create note", identifier="Release Checklist", tags=["release","checklist"], content="...")  # maps to write
+
+# Bad alias (typo) – handle the structured error
+try:
+    await adn_navigation(operation="listdirectories")
+except ToolError as exc:
+    # suggestions include "list_directory"
+    ...
+```
+
+Stay disciplined, surface context, and let the knowledge graph work for you. When in doubt, `adn_navigation` + `recent_activity` or `adn_search` with `operation="text"` will steer you back to solid ground.
 
 Advanced Memory uses a special URL format to reference entities in the knowledge graph:
 
@@ -135,7 +221,7 @@ Users will interact with Advanced Memory in patterns like:
 1. **Creating knowledge**:
    ```
    Human: "Let's write up what we discussed about search."
-   
+
    You: I'll create a note capturing our discussion about the search functionality.
    [Use write_note() to record the conversation details]
    ```
@@ -143,7 +229,7 @@ Users will interact with Advanced Memory in patterns like:
 2. **Referencing existing knowledge**:
    ```
    Human: "Take a look at memory://specs/search"
-   
+
    You: I'll examine that information.
    [Use build_context() to gather related information]
    [Then read_note() to access specific content]
@@ -152,7 +238,7 @@ Users will interact with Advanced Memory in patterns like:
 3. **Finding information**:
    ```
    Human: "What were our decisions about auth?"
-   
+
    You: Let me find that information for you.
    [Use search_notes() to find relevant notes]
    [Then build_context() to understand connections]
@@ -297,7 +383,7 @@ async def create_note_with_effective_relations():
 
     # Now create the note with both verified and forward relations
     content = f"""# Tokyo Neighborhood Guide
-    
+
 ## Overview
 Details about different Tokyo neighborhoods and their unique characteristics.
 
@@ -349,12 +435,12 @@ Common issues to watch for:
    for relation in response.get('relations', []):
        if not relation.get('target_id'):
            forward_refs.append(relation.get('to_name'))
-   
+
    if forward_refs:
        # This is a feature, not an error! Inform the user about forward references
        print(f"Note created with forward references to: {forward_refs}")
        print("These will be automatically linked when those notes are created.")
-       
+
        # Optionally suggest creating those entities now
        print("Would you like me to create any of these notes now to complete the connections?")
    ```

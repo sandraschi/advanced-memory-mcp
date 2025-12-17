@@ -14,70 +14,7 @@ from advanced_memory.schemas.memory import (
 )
 
 
-@mcp.tool(
-    description="""Build comprehensive context from knowledge base content for AI conversations.
-
-This advanced context-building tool retrieves and organizes relevant information from your knowledge base
-to provide rich context for AI assistants, enabling natural conversation continuation and topic exploration.
-
-CONTEXT BUILDING FEATURES:
-- Retrieves full note content with relationships
-- Explores connected topics and related information
-- Provides temporal context with activity history
-- Supports pattern matching for topic discovery
-- Builds conversation continuity across sessions
-
-MEMORY URL SYNTAX:
-- Direct notes: "folder/note" or "memory://folder/note"
-- Folder patterns: "folder/*" (all notes in folder)
-- Topic exploration: "projects/ai/*" (AI project notes)
-- Valid characters: letters, numbers, hyphens, underscores, forward slashes
-
-TIMEFRAME FILTERING:
-- Natural language: "2 days ago", "last week", "today", "3 months ago"
-- Standard formats: "7d" (7 days), "24h" (24 hours), "30d" (30 days)
-- Recent activity: "today", "yesterday", "this week"
-- Historical context: "6 months ago", "1 year ago"
-
-PARAMETERS:
-- url (str, REQUIRED): Memory URL or pattern for context building
-- depth (int, default=1): Relationship exploration depth (1-5)
-- timeframe (str, default="7d"): Time window for activity filtering
-- page (int, default=1): Pagination for large result sets
-- page_size (int, default=10): Results per page
-- max_related (int, default=10): Maximum related items to include
-
-CONTEXT ORGANIZATION:
-- Primary content with full details
-- Related notes and connections
-- Recent activity and updates
-- Temporal relationships and history
-- Semantic connections and references
-
-USAGE EXAMPLES:
-Specific note: build_context("projects/alpha/meeting-notes")
-Folder pattern: build_context("research/*")
-Recent activity: build_context("projects/current", timeframe="today")
-Deep exploration: build_context("concepts/ai", depth=3)
-Historical context: build_context("meetings/strategy", timeframe="3 months ago")
-
-RETURNS:
-Structured context information including:
-- Primary content and metadata
-- Related notes and relationships
-- Activity timeline and changes
-- Connection network and references
-- Conversation continuity hints
-
-CONVERSATION CONTINUITY:
-- Preserves discussion context across sessions
-- Maintains topic relationships and threads
-- Provides historical conversation background
-- Enables natural follow-up discussions
-
-NOTE: This tool provides rich context for AI conversations. Use specific URLs for focused context,
-or patterns for broader topic exploration within timeframes.""",
-)
+@mcp.tool
 async def build_context(
     url: MemoryUrl,
     depth: int | None = 1,

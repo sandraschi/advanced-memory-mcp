@@ -16,7 +16,7 @@ A Model Context Protocol server that integrates personal knowledge management wi
 
 ## ✨ Tool Modes
 
-**PORTMANTEAU MODE (Default):** 15 clean, organized tools - Perfect for Claude Desktop  
+**PORTMANTEAU MODE (Default):** 15 clean, organized tools - Perfect for Claude Desktop
 **FULL MODE (Opt-in):** 56 individual tools - For testing/development only
 
 **Result:** No tool explosion! Clean, usable interface.
@@ -53,7 +53,7 @@ Bidirectional format conversion between zettelkasten notes and Anthropic's Claud
 
 ### 3. Cursor IDE Compatible - Tool Mode Selection
 
-**Problem**: Most MCPs have 40+ tools → breaks Cursor's 50-tool limit  
+**Problem**: Most MCPs have 40+ tools → breaks Cursor's 50-tool limit
 **Solution**: Choose between 11 portmanteau tools or full 50+ tools
 
 #### Portmanteau Mode (11 tools - Cursor compatible)
@@ -85,7 +85,7 @@ help           → documentation
 }
 ```
 
-**11 tools total** = fully compatible with Cursor IDE  
+**11 tools total** = fully compatible with Cursor IDE
 **Zero functionality loss** - all features available through portmanteau tools
 
 See [Tool Mode Selection](docs/user-guide/tool-mode-selection.md) for details.
@@ -195,7 +195,7 @@ Claude: Exported 30 skills to ~/claude-skills/
 
 ## Testing & Diagnostics
 
-- `pwsh ./scripts/testing/run-all-tool-exercisers.ps1`  
+- `pwsh ./scripts/testing/run-all-tool-exercisers.ps1`
   Runs the four portmanteau exerciser suites (core tools, import/export, skills, health/status) and stops at the first failure.
 - Flags: `-SkipHeavy` (skip archive export/import), `-SkipNetwork` (skip Wikipedia/arXiv calls), `-SkipPackaging` (skip skills ZIP packaging). Combine flags as needed.
 - Individual Python scripts live in `scripts/testing/` if you need to probe a single tool group.
@@ -214,7 +214,7 @@ adn_export("claude_skills", export_path="~/claude-skills/")
 
 **Import from Skills format**:
 ```python
-adn_import("claude_skills", source_path="~/anthropic-skills/", 
+adn_import("claude_skills", source_path="~/anthropic-skills/",
            destination_folder="skills/anthropic")
 # Imports community skills into your knowledge base
 ```
@@ -256,9 +256,9 @@ adn_export("claude_skills")          # → Desktop/advanced-memory-exports/claud
 adn_export("html")                   # → Desktop/advanced-memory-exports/html/
 ```
 
-**Smart defaults**: Exports go to your Desktop (or specify custom path)  
-**Zero setup**: Everything auto-installs on first use  
-**PDF**: Pure Python (weasyprint) - no LaTeX needed! ⚡  
+**Smart defaults**: Exports go to your Desktop (or specify custom path)
+**Zero setup**: Everything auto-installs on first use
+**PDF**: Pure Python (weasyprint) - no LaTeX needed! ⚡
 **DOCX/EPUB**: Pandoc auto-downloads (~100MB, one-time)
 
 **Documentation**: [Export Guide](docs/user-guide/import-export.md)
@@ -486,7 +486,7 @@ Template quality and coverage vary. Consider them starting points for customizat
 
 ```python
 # 1. Document team standards in Advanced Memory
-adn_content("write", identifier="Python Standards", 
+adn_content("write", identifier="Python Standards",
             content="# Our Python Standards\n\n...", folder="team/standards")
 
 # 2. Export as Claude Skills (experimental)
@@ -591,6 +591,13 @@ advanced-memory mcp  # Verify installation
 - **Mermaid.js**: Loaded from CDN for diagram rendering
 - **weasyprint**: Pure-Python PDF generation (no LaTeX needed!)
 
+**Optional Dependencies** 🔧:
+- **wkhtmltopdf**: Alternative PDF engine (if weasyprint has issues)
+  - Windows: `winget install wkhtmltopdf`
+  - macOS: `brew install wkhtmltopdf`
+  - Linux: `sudo apt install wkhtmltopdf`
+- **LaTeX** (MiKTeX/TinyTeX): For advanced PDF typography
+
 **External Tools** (optional for specific imports) 🔧:
 - **Obsidian/Notion/Joplin/Evernote**: Only needed if importing FROM those platforms (we just read their export files)
 
@@ -636,7 +643,7 @@ This ensures:
 
 Built with inspiration from:
 - [Anthropic Claude Skills](https://github.com/anthropics/anthropic-skills) - Agent skills framework
-- [Zettelkasten Method](https://zettelkasten.de/) - Knowledge management methodology  
+- [Zettelkasten Method](https://zettelkasten.de/) - Knowledge management methodology
 - [Model Context Protocol](https://modelcontextprotocol.io/) - LLM integration standard
 - [FastMCP](https://github.com/jlowin/fastmcp) - High-performance MCP framework
 
@@ -659,7 +666,7 @@ adn_content("write", identifier="Title", content="...", folder="notes")
 adn_content("read", identifier="Title")
 adn_content("edit", identifier="Title", operation="append", content="...")
 
-# Project Management  
+# Project Management
 adn_project("create", project_name="research", project_path="~/Documents/research")
 adn_project("switch", project_name="research")
 adn_project("list")

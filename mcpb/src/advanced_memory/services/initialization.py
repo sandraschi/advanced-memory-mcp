@@ -1,4 +1,4 @@
-"""Shared initialization service for Basic Memory.
+"""Shared initialization service for Advanced Memory.
 
 This module provides shared initialization functions used by both CLI and API
 to ensure consistent application startup across all entry points.
@@ -7,9 +7,9 @@ to ensure consistent application startup across all entry points.
 import asyncio
 from pathlib import Path
 
-from basic_memory import db
 from loguru import logger
 
+from advanced_memory import db
 from advanced_memory.config import AdvancedMemoryConfig
 from advanced_memory.repository import ProjectRepository
 
@@ -18,7 +18,7 @@ async def initialize_database(app_config: AdvancedMemoryConfig) -> None:
     """Initialize database with migrations handled automatically by get_or_create_db.
 
     Args:
-        app_config: The Basic Memory project configuration
+        app_config: The Advanced Memory project configuration
 
     Note:
         Database migrations are now handled automatically when the database
@@ -35,14 +35,14 @@ async def initialize_database(app_config: AdvancedMemoryConfig) -> None:
         # more specific error if the database is actually unusable
 
 
-async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig):
+async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> None:
     """Ensure all projects in config.json exist in the projects table and vice versa.
 
     This uses the ProjectService's synchronize_projects method to ensure bidirectional
     synchronization between the configuration file and the database.
 
     Args:
-        app_config: The Basic Memory application configuration
+        app_config: The Advanced Memory application configuration
     """
     logger.info("Reconciling projects from config with database...")
 
@@ -70,11 +70,11 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig):
 
 async def initialize_file_sync(
     app_config: AdvancedMemoryConfig,
-):
+) -> None:
     """Initialize file synchronization services. This function starts the watch service and does not return
 
     Args:
-        app_config: The Basic Memory project configuration
+        app_config: The Advanced Memory project configuration
 
     Returns:
         The watch service task that's monitoring file changes
@@ -141,8 +141,8 @@ async def initialize_file_sync(
 
 async def initialize_app(
     app_config: AdvancedMemoryConfig,
-):
-    """Initialize the Basic Memory application.
+) -> None:
+    """Initialize the Advanced Memory application.
 
     This function handles all initialization steps:
     - Running database migrations
@@ -151,7 +151,7 @@ async def initialize_app(
     - Starting background migration for legacy project data
 
     Args:
-        app_config: The Basic Memory project configuration
+        app_config: The Advanced Memory project configuration
     """
     logger.info("Initializing app...")
     # Initialize database first
@@ -170,7 +170,7 @@ def ensure_initialization(app_config: AdvancedMemoryConfig) -> None:
     called from synchronous code like CLI entry points.
 
     Args:
-        app_config: The Basic Memory project configuration
+        app_config: The Advanced Memory project configuration
     """
     try:
         result = asyncio.run(initialize_app(app_config))

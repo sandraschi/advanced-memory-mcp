@@ -15,7 +15,9 @@ from advanced_memory.schemas.memory import GraphContext
 
 @mcp.tool
 async def adn_navigation(
-    operation: Literal["build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"],
+    operation: Literal[
+        "build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"
+    ],
     identifier: str | None = None,
     url: str | None = None,
     dir_name: str = "/",
@@ -32,8 +34,7 @@ async def adn_navigation(
 ) -> str:
     """Comprehensive navigation management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all navigation operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+    PORTMANTEAU PATTERN: Consolidates 6 navigation operations into one tool.
 
     SUPPORTED OPERATIONS:
     - build_context: Navigate the knowledge graph via memory:// URLs for conversation continuity
@@ -80,7 +81,9 @@ async def adn_navigation(
             - "intermediate": Detailed stats
             - "advanced": Full diagnostics
             Default: "basic"
-        focus: Specific area to focus on (optional, operation-specific)
+        focus: Specific area to focus on for status operation
+                    * status operation: Optional - Focus on specific area (e.g., "sync", "database", "files")
+                    * Other operations: NOT USED
         project: Optional project name. Supports:
             - None (default): uses current active project
             - "project-name": uses specific project
@@ -219,31 +222,35 @@ async def _build_context_operation(
     # Convert GraphContext to markdown string
     output = [f"# Context: {url}\n"]
 
-    if hasattr(result, 'results') and result.results:
+    if hasattr(result, "results") and result.results:
         output.append(f"**Found {len(result.results)} matching items**\n")
         for ctx_result in result.results:
             # Each result has a primary_result nested inside
-            item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
-            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
-            item_type = getattr(item, 'type', 'item')
-            permalink = getattr(item, 'permalink', '')
+            item = (
+                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
+            )
+            title = getattr(item, "title", getattr(item, "name", "Unknown"))
+            item_type = getattr(item, "type", "item")
+            permalink = getattr(item, "permalink", "")
             output.append(f"- **{title}** ({item_type}) - `{permalink}`")
 
             # Show related results if any
-            if hasattr(ctx_result, 'related_results') and ctx_result.related_results:
+            if hasattr(ctx_result, "related_results") and ctx_result.related_results:
                 for related in ctx_result.related_results[:3]:
-                    rel_item = related.primary_result if hasattr(related, 'primary_result') else related
-                    rel_title = getattr(rel_item, 'title', 'Unknown')
+                    rel_item = (
+                        related.primary_result if hasattr(related, "primary_result") else related
+                    )
+                    rel_title = getattr(rel_item, "title", "Unknown")
                     output.append(f"  - Related: {rel_title}")
     else:
         output.append("No matching items found.\n")
 
-    if hasattr(result, 'metadata'):
+    if hasattr(result, "metadata"):
         metadata = result.metadata
-        if hasattr(metadata, 'total_results'):
+        if hasattr(metadata, "total_results"):
             output.append(f"\n**Total results**: {metadata.total_results}")
 
-    return '\n'.join(output)
+    return "\n".join(output)
 
 
 async def _recent_activity_operation(
@@ -284,25 +291,27 @@ async def _recent_activity_operation(
     # Convert GraphContext to markdown string
     output = ["# Recent Activity\n"]
 
-    if hasattr(result, 'results') and result.results:
+    if hasattr(result, "results") and result.results:
         output.append(f"**Found {len(result.results)} recent items**\n")
         for ctx_result in result.results:
             # Each result has a primary_result nested inside
-            item = ctx_result.primary_result if hasattr(ctx_result, 'primary_result') else ctx_result
-            title = getattr(item, 'title', getattr(item, 'name', 'Unknown'))
-            item_type = getattr(item, 'type', 'item')
-            permalink = getattr(item, 'permalink', '')
+            item = (
+                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
+            )
+            title = getattr(item, "title", getattr(item, "name", "Unknown"))
+            item_type = getattr(item, "type", "item")
+            permalink = getattr(item, "permalink", "")
             output.append(f"- **{title}** ({item_type}) - `{permalink}`")
     else:
         output.append("No recent activity found.\n")
 
-    if hasattr(result, 'metadata'):
+    if hasattr(result, "metadata"):
         metadata = result.metadata
         output.append(f"\n**Timeframe**: {getattr(metadata, 'timeframe', 'N/A')}")
-        if hasattr(metadata, 'total_results'):
+        if hasattr(metadata, "total_results"):
             output.append(f"**Total results**: {metadata.total_results}")
 
-    return '\n'.join(output)
+    return "\n".join(output)
 
 
 async def _list_directory_operation(

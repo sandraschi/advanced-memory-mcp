@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../beyondcompare-mcp"
+		},
+		{
+			"path": "../../immichmcp"
+		},
+		{
+			"path": "../../tailscale-mcp"
+		},
+		{
+			"path": "../../mcp-central-docs"
+		},
+		{
+			"path": "../../tapo-camera-mcp"
+		},
+		{
+			"path": "../../local-llm-mcp"
+		},
+		{
+			"path": "../../onenote-mcp"
+		}
+	],
+	"settings": {}
+}

@@ -58,6 +58,7 @@ The text '{find_text}' was not found in the note '{identifier}'.
             match = re.search(r"found (\d+)", error_message)
             actual_count = match.group(1) if match else "a different number of"
 
+            # nosec B608 - This is markdown help text, not SQL
             return f"""# Edit Failed - Wrong Replacement Count
 
 Expected {expected_replacements} occurrences of '{find_text}' but found {actual_count}.
@@ -122,74 +123,7 @@ Error editing note '{identifier}': {error_message}
 - Check that identifiers, section headers, and find_text match exactly"""
 
 
-@mcp.tool(
-    description="""Perform targeted edits to existing notes with surgical precision and comprehensive operation support.
-
-This powerful editing tool enables precise content modifications without requiring full note rewrites,
-supporting multiple editing operations for different scenarios while maintaining semantic integrity.
-
-SUPPORTED OPERATIONS:
-- **replace**: Replace entire note content (full rewrite)
-- **append**: Add content to the end of the note
-- **prepend**: Add content to the beginning of the note
-- **find_replace**: Replace specific text occurrences with validation
-- **replace_section**: Replace content within specific markdown sections
-
-EDITING FEATURES:
-- Exact match requirements (no fuzzy matching for safety)
-- Replacement validation and confirmation
-- Section-aware editing for structured content
-- Semantic relationship preservation
-- Automatic backup and versioning
-
-PARAMETERS:
-- identifier (str, REQUIRED): Exact note title or permalink (no fuzzy matching)
-- operation (str, REQUIRED): Edit operation type (replace, append, prepend, find_replace, replace_section)
-- content (str, REQUIRED): New content or replacement text
-- section (str, optional): Target section for replace_section operation (e.g., "## Summary")
-- find_text (str, optional): Text to find for find_replace operation
-- expected_replacements (int, default=1): Expected number of replacements for validation
-- project (str, optional): Specific project to edit in (defaults to active project)
-
-OPERATION DETAILS:
-
-**replace**: Complete content replacement
-- Replaces entire note content
-- Use for major rewrites
-
-**append/prepend**: Content addition
-- Adds content to end/beginning
-- Preserves existing content
-- Useful for adding notes or headers
-
-**find_replace**: Targeted replacement
-- Replaces specific text occurrences
-- Validates expected replacement count
-- Prevents unintended changes
-
-**replace_section**: Section editing
-- Replaces content within specific sections
-- Preserves document structure
-- Ideal for updating specific parts
-
-USAGE EXAMPLES:
-Full replace: edit_note("Meeting Notes", "replace", "# Updated Meeting\\n\\nNew content...")
-Append content: edit_note("Project Plan", "append", "\\n\\n## New Section\\n\\nAdditional content...")
-Find and replace: edit_note("Document", "find_replace", "old text", find_text="new text")
-Section replace: edit_note("Report", "replace_section", "## Summary\\n\\nUpdated summary...", section="## Summary")
-
-RETURNS:
-Edit confirmation with changes made, validation results, and any warnings or errors.
-
-SAFETY FEATURES:
-- Exact identifier matching required
-- Replacement count validation
-- Automatic content backup
-- Semantic relationship preservation
-- Error recovery with detailed guidance
-
-NOTE: Requires exact note identifier. Use read_note() first if unsure of the exact title/permalink.""",
-)
+@mcp.tool
 async def edit_note(
     identifier: str,
     operation: str,
@@ -197,6 +131,7 @@ async def edit_note(
     section: str | None = None,
     find_text: str | None = None,
     expected_replacements: int = 1,
+    use_regex: bool = False,
     project: str | None = None,
 ) -> str:
     """Edit an existing markdown note in the knowledge base.
@@ -213,10 +148,16 @@ async def edit_note(
                   - "prepend": Add content to the beginning of the note
                   - "find_replace": Replace occurrences of find_text with content
                   - "replace_section": Replace content under a specific markdown header
+                  - "insert_mermaid": Insert a Mermaid diagram (content: diagram type "flowchart"/"sequence"/"gantt"/"mindmap"/"er" OR custom Mermaid code, section: optional title)
+                  - "insert_ascii_art": Insert ASCII art (content: art type: "cat", "dog", "robot", "heart", "star", "tree")
+                  - "insert_kilroy": Insert classic Kilroy ASCII art (content: optional custom message)
+                  - "insert_kanban": Insert Kanban board (content: comma-separated column names like "To Do,In Progress,Done", section: optional board title)
+                  - "insert_changelog": Insert changelog entry following Keep a Changelog standard (content: version like "1.0.0" or "Unreleased", section: optional project name)
         content: The content to add or use for replacement
         section: For replace_section operation - the markdown header to replace content under (e.g., "## Notes", "### Implementation")
-        find_text: For find_replace operation - the text to find and replace
+        find_text: For find_replace operation - the text to find (replacement text goes in 'content' parameter)
         expected_replacements: For find_replace operation - the expected number of replacements (validation will fail if actual doesn't match)
+        use_regex: Optional flag to use regex pattern matching for find_replace (default: False). When True, find_text is treated as a regex pattern and content can use backreferences like \\1, \\2. Includes security safeguards (pattern length limits, ReDoS protection).
         project: Optional project name to delete from. If not provided, uses current active project.
 
     Returns:
@@ -260,7 +201,156 @@ async def edit_note(
         edit_note("status-report", "find_replace", "In Progress", find_text="Not Started", expected_replacements=2)
 
         # Replace text in a file, specifying project name
-        edit_note("docs/guide", "find_replace", "new-api", find_text="old-api", project="my-project"))
+        edit_note("docs/guide", "find_replace", "new-api", find_text="old-api", project="my-project")
+
+        # Use regex pattern matching (optional)
+        edit_note("config", "find_replace", "v2.0", find_text="v\\d+\\.\\d+", use_regex=True, expected_replacements=1)
+
+        # Regex with backreferences
+        edit_note("notes", "find_replace", "Date: \\\\1", find_text="(\\d{4}-\\d{2}-\\d{2})", use_regex=True)
+
+        # Insert Mermaid diagram (using built-in template)
+        edit_note("project-plan", "insert_mermaid", "flowchart", section="System Architecture")
+
+        # Insert custom Mermaid diagram (provide full Mermaid code in content)
+        edit_note("api-docs", "insert_mermaid",
+                  "sequenceDiagram\n    participant U as User\n    participant A as API\n    U->>A: Request\n    A-->>U: Response",
+                  section="API Flow")
+
+    MERMAID SYNTAX GUIDE FOR AI ASSISTANTS:
+    =======================================
+    When generating Mermaid diagrams, use these syntax patterns:
+
+    FLOWCHARTS:
+    -----------
+    Basic: graph TD
+        A[Label] --> B[Label]
+        B --> C{Decision?}
+        C -->|Yes| D[Action]
+        C -->|No| E[Other]
+
+    Directions: TD (top-down), LR (left-right), BT (bottom-top), RL (right-left)
+    Node shapes: [Rectangle], (Round), {Diamond}, ([Stadium]), [[Subroutine]], [(Cylinder)]
+
+    Example:
+        graph TD
+            Start([Start]) --> Process[Process Data]
+            Process --> Decision{Valid?}
+            Decision -->|Yes| Success[Success]
+            Decision -->|No| Error[Error]
+            Success --> End([End])
+            Error --> End
+
+    SEQUENCE DIAGRAMS:
+    ------------------
+    Basic: sequenceDiagram
+        participant A as Alice
+        participant B as Bob
+        A->>B: Message
+        B-->>A: Response
+
+    Arrow types: -> (solid), --> (dashed), ->> (solid with arrow), -->> (dashed with arrow)
+    Activation: activate/deactivate
+    Notes: Note over A: Text
+    Loops: loop Condition\n    A->>B: Message\nend
+
+    Example:
+        sequenceDiagram
+            participant U as User
+            participant S as Server
+            participant D as Database
+            U->>S: Login Request
+            S->>D: Validate User
+            D-->>S: User Data
+            S-->>U: JWT Token
+
+    GANTT CHARTS:
+    -------------
+    Basic: gantt
+        title Project Timeline
+        dateFormat YYYY-MM-DD
+        section Section Name
+        Task Name :done, id, 2024-01-01, 2024-01-15
+        Task 2 :active, id2, 2024-01-16, 2024-02-01
+
+    Status: done, active, crit (critical), milestone
+    Format: Task :status, id, start, end
+
+    Example:
+        gantt
+            title Development Timeline
+            dateFormat YYYY-MM-DD
+            section Phase 1
+            Design :done, d1, 2024-01-01, 2024-01-15
+            Implementation :active, i1, 2024-01-16, 2024-02-01
+            section Phase 2
+            Testing :t1, 2024-02-02, 2024-02-15
+
+    MIND MAPS:
+    ----------
+    Basic: mindmap
+        root((Root Topic))
+            Branch 1
+                Leaf 1.1
+                Leaf 1.2
+            Branch 2
+                Leaf 2.1
+
+    Example:
+        mindmap
+            root((Knowledge Base))
+                Notes
+                    Personal
+                    Work
+                Tools
+                    Advanced Memory
+                    Claude AI
+
+    ER DIAGRAMS:
+    ------------
+    Basic: erDiagram
+        ENTITY1 ||--o{ ENTITY2 : "relationship"
+        ENTITY1 {
+            string field PK
+            int other_field
+        }
+
+    Relationships: ||--|| (one-to-one), ||--o{ (one-to-many), }o--o{ (many-to-many)
+    Field types: string, int, float, date, etc.
+    Constraints: PK (primary key), FK (foreign key)
+
+    Example:
+        erDiagram
+            USER ||--o{ PROJECT : owns
+            PROJECT ||--o{ TASK : contains
+            USER {
+                string id PK
+                string name
+            }
+            PROJECT {
+                string id PK
+                string user_id FK
+            }
+
+    COMMON PATTERNS:
+    ----------------
+    - Use descriptive node labels: [User Login] not [A]
+    - Keep diagrams focused: 5-10 nodes for clarity
+    - Use subgraphs for grouping: subgraph "Group Name"\n    A --> B\nend
+    - Add styling: style Node fill:#color,stroke:#color
+    - Use meaningful edge labels: A -->|"Label"| B
+
+        # Insert ASCII art
+        edit_note("fun-notes", "insert_ascii_art", "cat")
+
+        # Insert Kilroy with custom message
+        edit_note("mystery-note", "insert_kilroy", "I WAS HERE FIRST!")
+
+        # Insert Kanban board with custom columns
+        edit_note("project-board", "insert_kanban", "Backlog,In Progress,Review,Done", section="Sprint Tasks")
+
+        # Insert changelog entry (Keep a Changelog format)
+        edit_note("CHANGELOG", "insert_changelog", "1.2.0", section="My Project")
 
     """
     active_project = get_active_project(project)
@@ -268,23 +358,75 @@ async def edit_note(
 
     logger.info("MCP tool call", tool="edit_note", identifier=identifier, operation=operation)
 
-    # Validate operation
+    # Validate operation with helpful error message
     valid_operations = ["append", "prepend", "find_replace", "replace_section"]
     if operation not in valid_operations:
-        raise ValueError(
-            f"Invalid operation '{operation}'. Must be one of: {', '.join(valid_operations)}"
-        )
+        return f"""# Edit Failed - Invalid Operation
 
-    # Validate required parameters for specific operations
+**You provided:** `operation="{operation}"`
+
+**Valid edit operations:**
+- `append` - Add content to the end of the note
+- `prepend` - Add content to the beginning of the note
+- `find_replace` - Find and replace specific text
+- `replace_section` - Replace an entire markdown section
+- `insert_mermaid` - Insert a Mermaid diagram
+- `insert_ascii_art` - Insert ASCII art
+- `insert_kilroy` - Insert classic Kilroy ASCII art
+- `insert_kanban` - Insert Kanban board (markdown table format)
+- `insert_changelog` - Insert changelog entry (Keep a Changelog format)
+
+**Example (append):**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="append",
+    content="\\n## Additional Notes\\nNew content here"
+)
+```
+
+**Try again with a valid operation.**"""
+
+    # Validate required parameters for specific operations with helpful error messages
     if operation == "find_replace" and not find_text:
-        raise ValueError("find_text parameter is required for find_replace operation")
+        return f"""# Edit Failed - Missing Parameter
+
+**Operation:** `find_replace`
+**Missing:** `find_text` parameter
+
+The find_replace operation requires both `find_text` and `content` parameters.
+
+**Example:**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="find_replace",
+    find_text="old text",
+    content="new text"
+)
+```"""
     if operation == "replace_section" and not section:
-        raise ValueError("section parameter is required for replace_section operation")
+        return f"""# Edit Failed - Missing Parameter
+
+**Operation:** `replace_section`
+**Missing:** `section` parameter
+
+The replace_section operation requires a `section` name (the markdown heading to replace).
+
+**Example:**
+```
+edit_note(
+    identifier="{identifier}",
+    operation="replace_section",
+    section="## Introduction",
+    content="New introduction content"
+)
+```"""
 
     # Use the PATCH endpoint to edit the entity
     try:
         # Prepare the edit request data
-        edit_data = {
+        edit_data: dict[str, str | int | bool] = {
             "operation": operation,
             "content": content,
         }
@@ -295,7 +437,9 @@ async def edit_note(
         if find_text:
             edit_data["find_text"] = find_text
         if expected_replacements != 1:  # Only send if different from default
-            edit_data["expected_replacements"] = str(expected_replacements)
+            edit_data["expected_replacements"] = expected_replacements
+        if use_regex:
+            edit_data["use_regex"] = True
 
         # Call the PATCH endpoint
         url = f"{project_url}/knowledge/entities/{identifier}"
@@ -324,12 +468,30 @@ async def edit_note(
             summary.append("operation: Find and replace operation completed")
         elif operation == "replace_section":
             summary.append(f"operation: Replaced content under section '{section}'")
+        elif operation == "insert_mermaid":
+            diagram_type = content if content else "flowchart"
+            summary.append(f"operation: Inserted Mermaid {diagram_type} diagram")
+        elif operation == "insert_ascii_art":
+            art_type = content if content else "cat"
+            summary.append(f"operation: Inserted {art_type} ASCII art")
+        elif operation == "insert_kilroy":
+            message = content if content else "KILROY WAS HERE"
+            summary.append(f"operation: Inserted Kilroy ASCII art with message: {message}")
+        elif operation == "insert_kanban":
+            columns = content if content else "To Do,In Progress,Done"
+            title = section if section else "Kanban Board"
+            summary.append(f"operation: Inserted Kanban board '{title}' with columns: {columns}")
+        elif operation == "insert_changelog":
+            version = content if content else "Unreleased"
+            project = section if section else "Project"
+            summary.append(f"operation: Inserted changelog entry for {project} version {version}")
 
         # Count observations by category (reuse logic from write_note)
-        categories = {}
+        categories: dict[str, int] = {}
         if result.observations:
             for obs in result.observations:
-                categories[obs.category] = categories.get(obs.category, 0) + 1
+                if obs.category:  # Only count observations with categories
+                    categories[obs.category] = categories.get(obs.category, 0) + 1
 
             summary.append("\\n## Observations")
             for category, count in sorted(categories.items()):

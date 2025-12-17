@@ -3,18 +3,18 @@
 from collections.abc import Sequence
 from pathlib import Path
 
-from basic_memory import db
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.interfaces import LoaderOption
 
+from advanced_memory import db
 from advanced_memory.models.knowledge import Entity, Observation, Relation
 from advanced_memory.repository.repository import Repository
 
 
-class EntityRepository(Repository[Entity]):
+class EntityRepository(Repository):
     """Repository for Entity model.
 
     Note: All file paths are stored as strings in the database. Convert Path objects
@@ -55,9 +55,11 @@ class EntityRepository(Repository[Entity]):
         Args:
             file_path: Path to the entity file (will be converted to string internally)
         """
+        from advanced_memory.sync.sync_service import normalize_file_path
+
         query = (
             self.select()
-            .where(Entity.file_path == str(file_path))
+            .where(Entity.file_path == normalize_file_path(str(file_path)))
             .options(*self.get_load_options())
         )
         return await self.find_one(query)
@@ -68,7 +70,9 @@ class EntityRepository(Repository[Entity]):
         Args:
             file_path: Path to the entity file (will be converted to string internally)
         """
-        return await self.delete_by_fields(file_path=str(file_path))
+        from advanced_memory.sync.sync_service import normalize_file_path
+
+        return await self.delete_by_fields(file_path=normalize_file_path(str(file_path)))
 
     def get_load_options(self) -> list[LoaderOption]:
         """Get SQLAlchemy loader options for eager loading relationships."""
@@ -212,7 +216,7 @@ class EntityRepository(Repository[Entity]):
                     if not found:  # pragma: no cover
                         raise RuntimeError(
                             f"Failed to retrieve entity after race condition update: {entity.file_path}"
-                        )
+                        ) from None
                     return found
                 else:
                     # Must be permalink conflict - generate unique permalink

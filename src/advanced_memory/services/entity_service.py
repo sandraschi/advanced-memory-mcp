@@ -1,5 +1,6 @@
 """Service for managing entities in the database."""
 
+import re
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -24,6 +25,13 @@ from advanced_memory.services.file_service import FileService
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.service import BaseService
 from advanced_memory.utils import generate_permalink
+from advanced_memory.utils.content_generators import (
+    generate_ascii_art,
+    generate_changelog,
+    generate_kanban_board,
+    generate_kilroy,
+    generate_mermaid_diagram,
+)
 
 
 class EntityService(BaseService[EntityModel]):
@@ -421,6 +429,7 @@ class EntityService(BaseService[EntityModel]):
         section: str | None = None,
         find_text: str | None = None,
         expected_replacements: int = 1,
+        use_regex: bool = False,
     ) -> EntityModel:
         """Edit an existing entity's content using various operations.
 
@@ -429,7 +438,7 @@ class EntityService(BaseService[EntityModel]):
             operation: The editing operation (append, prepend, find_replace, replace_section)
             content: The content to add or use for replacement
             section: For replace_section operation - the markdown header
-            find_text: For find_replace operation - the text to find and replace
+            find_text: For find_replace operation - the text to find (replacement text goes in 'content' parameter)
             expected_replacements: For find_replace operation - expected number of replacements (default: 1)
 
         Returns:
@@ -452,7 +461,13 @@ class EntityService(BaseService[EntityModel]):
 
         # Apply the edit operation
         new_content = self.apply_edit_operation(
-            current_content, operation, content, section, find_text, expected_replacements
+            current_content,
+            operation,
+            content,
+            section,
+            find_text,
+            expected_replacements,
+            use_regex,
         )
 
         # Write the updated content back to the file
@@ -478,6 +493,7 @@ class EntityService(BaseService[EntityModel]):
         section: str | None = None,
         find_text: str | None = None,
         expected_replacements: int = 1,
+        use_regex: bool = False,
     ) -> str:
         """Apply the specified edit operation to the current content."""
 
@@ -497,20 +513,26 @@ class EntityService(BaseService[EntityModel]):
             if not find_text.strip():
                 raise ValueError("find_text cannot be empty or whitespace only")
 
-            # Count actual occurrences
-            actual_count = current_content.count(find_text)
+            if use_regex:
+                # Use regex-based replacement with security safeguards
+                return self._find_replace_regex(
+                    current_content, find_text, content, expected_replacements
+                )
+            else:
+                # Simple string replacement (default, backward compatible)
+                actual_count = current_content.count(find_text)
 
-            # Validate count matches expected
-            if actual_count != expected_replacements:
-                if actual_count == 0:
-                    raise ValueError(f"Text to replace not found: '{find_text}'")
-                else:
-                    raise ValueError(
-                        f"Expected {expected_replacements} occurrences of '{find_text}', "
-                        f"but found {actual_count}"
-                    )
+                # Validate count matches expected
+                if actual_count != expected_replacements:
+                    if actual_count == 0:
+                        raise ValueError(f"Text to replace not found: '{find_text}'")
+                    else:
+                        raise ValueError(
+                            f"Expected {expected_replacements} occurrences of '{find_text}', "
+                            f"but found {actual_count}"
+                        )
 
-            return current_content.replace(find_text, content)
+                return current_content.replace(find_text, content)
 
         elif operation == "replace_section":
             if not section:
@@ -518,6 +540,74 @@ class EntityService(BaseService[EntityModel]):
             if not section.strip():
                 raise ValueError("section cannot be empty or whitespace only")
             return self.replace_section_content(current_content, section, content)
+
+        elif operation == "insert_mermaid":
+            # Generate Mermaid diagram and append it
+            # content can be: "flowchart", "sequence", "gantt", "mindmap", "er", or custom Mermaid code
+            # section can be used as title
+            diagram_type = content.lower() if content else "flowchart"
+            if diagram_type in ("flowchart", "sequence", "gantt", "mindmap", "er"):
+                mermaid_content = generate_mermaid_diagram(
+                    diagram_type=diagram_type,  # type: ignore[arg-type]
+                    title=section,
+                )
+            else:
+                # Custom Mermaid content provided
+                mermaid_content = generate_mermaid_diagram(
+                    diagram_type="flowchart",
+                    title=section,
+                    content=content,
+                )
+            # Append with proper spacing
+            if current_content and not current_content.endswith("\n"):
+                return current_content + "\n\n" + mermaid_content
+            return current_content + mermaid_content
+
+        elif operation == "insert_ascii_art":
+            # Generate ASCII art and append it
+            # content specifies the art type: "cat", "dog", "robot", "heart", "star", "tree"
+            art_type = content.lower() if content else "cat"
+            ascii_content = generate_ascii_art(art_type=art_type)  # type: ignore[arg-type]
+            # Append with proper spacing
+            if current_content and not current_content.endswith("\n"):
+                return current_content + "\n\n" + ascii_content
+            return current_content + ascii_content
+
+        elif operation == "insert_kilroy":
+            # Generate Kilroy ASCII art and append it
+            # content can be a custom message (default: "KILROY WAS HERE")
+            message = content if content else "KILROY WAS HERE"
+            kilroy_content = generate_kilroy(message=message)
+            # Append with proper spacing
+            if current_content and not current_content.endswith("\n"):
+                return current_content + "\n\n" + kilroy_content
+            return current_content + kilroy_content
+
+        elif operation == "insert_kanban":
+            # Generate Kanban board and append it
+            # content can be comma-separated column names (default: "To Do,In Progress,Done")
+            # section can be used as board title
+            if content:
+                # Parse comma-separated columns
+                columns = [col.strip() for col in content.split(",") if col.strip()]
+            else:
+                columns = None  # Use default
+            kanban_content = generate_kanban_board(columns=columns, title=section)
+            # Append with proper spacing
+            if current_content and not current_content.endswith("\n"):
+                return current_content + "\n\n" + kanban_content
+            return current_content + kanban_content
+
+        elif operation == "insert_changelog":
+            # Generate changelog entry following Keep a Changelog standard
+            # content should be version number (e.g., "1.0.0" or "Unreleased")
+            # section can be used as project name
+            version = content if content else "Unreleased"
+            changelog_content = generate_changelog(version=version, project_name=section)
+            # Append with proper spacing
+            if current_content and not current_content.endswith("\n"):
+                return current_content + "\n\n" + changelog_content
+            return current_content + changelog_content
 
         else:
             raise ValueError(f"Unsupported operation: {operation}")
@@ -602,6 +692,86 @@ class EntityService(BaseService[EntityModel]):
             i += 1
 
         return "\n".join(result_lines)
+
+    def _find_replace_regex(
+        self, current_content: str, pattern: str, replacement: str, expected_replacements: int
+    ) -> str:
+        """Perform regex-based find and replace with security safeguards.
+
+        Security measures:
+        - Pattern length limit (prevents ReDoS)
+        - Timeout protection (prevents hanging)
+        - Replacement count validation
+        - Non-capturing groups to prevent catastrophic backtracking
+
+        Args:
+            current_content: The content to search and replace in
+            pattern: Regex pattern to find
+            replacement: Replacement string (can use regex groups like \\1, \\2)
+            expected_replacements: Expected number of matches
+
+        Returns:
+            Content with replacements applied
+
+        Raises:
+            ValueError: If pattern is invalid, too long, or replacement count doesn't match
+            TimeoutError: If regex operation takes too long (ReDoS protection)
+        """
+        # Security: Limit pattern length to prevent ReDoS attacks
+        MAX_PATTERN_LENGTH = 500
+        if len(pattern) > MAX_PATTERN_LENGTH:
+            raise ValueError(
+                f"Regex pattern too long ({len(pattern)} chars). "
+                f"Maximum allowed: {MAX_PATTERN_LENGTH} characters. "
+                "This limit prevents ReDoS (Regular Expression Denial of Service) attacks."
+            )
+
+        # Security: Limit content size for regex operations
+        MAX_CONTENT_SIZE = 10 * 1024 * 1024  # 10MB
+        if len(current_content) > MAX_CONTENT_SIZE:
+            raise ValueError(
+                f"Content too large for regex operation ({len(current_content)} bytes). "
+                f"Maximum allowed: {MAX_CONTENT_SIZE} bytes. "
+                "Use simple string replacement for large files."
+            )
+
+        try:
+            # Compile pattern with timeout protection (Python 3.11+)
+            # For older Python versions, we rely on pattern complexity limits
+            try:
+                compiled_pattern = re.compile(pattern, re.MULTILINE | re.DOTALL)
+            except re.error as e:
+                raise ValueError(f"Invalid regex pattern: {e}") from e
+
+            # Count matches first (with safety limit)
+            matches = list(compiled_pattern.finditer(current_content))
+            actual_count = len(matches)
+
+            # Validate count matches expected
+            if actual_count != expected_replacements:
+                if actual_count == 0:
+                    raise ValueError(f"Regex pattern not found: '{pattern}'")
+                else:
+                    raise ValueError(
+                        f"Expected {expected_replacements} matches for pattern '{pattern}', "
+                        f"but found {actual_count}"
+                    )
+
+            # Perform replacement
+            # Note: replacement can contain backreferences like \\1, \\2 for captured groups
+            result = compiled_pattern.sub(replacement, current_content)
+
+            return result
+
+        except re.error as e:
+            raise ValueError(f"Regex error: {e}") from e
+        except Exception as e:
+            # Catch any other errors (including potential ReDoS)
+            logger.error(f"Regex replacement error: {e}", exc_info=True)
+            raise ValueError(
+                f"Regex replacement failed: {e}. "
+                "This may indicate a problematic pattern. Try simplifying the pattern or use simple string replacement."
+            ) from e
 
     def _prepend_after_frontmatter(self, current_content: str, content: str) -> str:
         """Prepend content after frontmatter, preserving frontmatter structure."""

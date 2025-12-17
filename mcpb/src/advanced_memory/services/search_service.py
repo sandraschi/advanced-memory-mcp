@@ -1,6 +1,7 @@
 """Service for search operations."""
 
 import ast
+from collections.abc import Sequence
 from datetime import datetime
 
 from dateparser import parse
@@ -12,7 +13,7 @@ from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.repository.search_repository import SearchIndexRow, SearchRepository
 from advanced_memory.schemas.search import SearchItemType, SearchQuery
-from advanced_memory.services import FileService
+from advanced_memory.services.file_service import FileService
 
 
 class SearchService:
@@ -34,7 +35,7 @@ class SearchService:
         self.entity_repository = entity_repository
         self.file_service = file_service
 
-    async def init_search_index(self):
+    async def init_search_index(self) -> None:
         """Create FTS5 virtual table if it doesn't exist."""
         await self.repository.init_search_index()
 
@@ -48,13 +49,15 @@ class SearchService:
 
         # Reindex all entities
         logger.debug("Indexing entities")
-        entities = await self.entity_repository.find_all()
+        entities: Sequence[Entity] = await self.entity_repository.find_all()
         for entity in entities:
             await self.index_entity(entity, background_tasks)
 
         logger.info("Reindex complete")
 
-    async def search(self, query: SearchQuery, limit=10, offset=0) -> list[SearchIndexRow]:
+    async def search(
+        self, query: SearchQuery, limit: int = 10, offset: int = 0
+    ) -> list[SearchIndexRow]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -78,6 +81,16 @@ class SearchService:
             else None
         )
 
+        before_date = (
+            (
+                query.before_date
+                if isinstance(query.before_date, datetime)
+                else parse(query.before_date)
+            )
+            if query.before_date
+            else None
+        )
+
         # search
         results = await self.repository.search(
             search_text=query.text,
@@ -87,6 +100,8 @@ class SearchService:
             types=query.types,
             search_item_types=query.entity_types,
             after_date=after_date,
+            before_date=before_date,
+            tags=query.tags,
             limit=limit,
             offset=offset,
         )
@@ -218,7 +233,7 @@ class SearchService:
         The project_id is automatically added by the repository when indexing.
         """
 
-        content_stems = []
+        content_stems: list[str] = []
         content_snippet = ""
         title_variants = self._generate_variants(entity.title)
         content_stems.extend(title_variants)
@@ -240,6 +255,14 @@ class SearchService:
 
         entity_content_stems = "\n".join(p for p in content_stems if p and p.strip())
 
+        # Build metadata including tags for tag-based search filtering
+        metadata: dict[str, str | list[str]] = {
+            "entity_type": entity.entity_type,
+        }
+
+        if entity_tags:
+            metadata["tags"] = entity_tags
+
         # Index entity
         await self.repository.index_item(
             SearchIndexRow(
@@ -251,9 +274,7 @@ class SearchService:
                 permalink=entity.permalink,
                 file_path=entity.file_path,
                 entity_id=entity.id,
-                metadata={
-                    "entity_type": entity.entity_type,
-                },
+                metadata=metadata,
                 created_at=entity.created_at,
                 updated_at=entity.updated_at,
                 project_id=entity.project_id,
@@ -290,7 +311,7 @@ class SearchService:
         for rel in entity.outgoing_relations:
             # Create descriptive title showing the relationship
             relation_title = (
-                f"{rel.from_entity.title} → {rel.to_entity.title}"
+                f"{rel.from_entity.title} -> {rel.to_entity.title}"
                 if rel.to_entity
                 else f"{rel.from_entity.title}"
             )
@@ -316,15 +337,15 @@ class SearchService:
                 )
             )
 
-    async def delete_by_permalink(self, permalink: str):
+    async def delete_by_permalink(self, permalink: str) -> None:
         """Delete an item from the search index."""
         await self.repository.delete_by_permalink(permalink)
 
-    async def delete_by_entity_id(self, entity_id: int):
+    async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index."""
         await self.repository.delete_by_entity_id(entity_id)
 
-    async def handle_delete(self, entity: Entity):
+    async def handle_delete(self, entity: Entity) -> None:
         """Handle complete entity deletion from search index including observations and relations.
 
         This replicates the logic from sync_service.handle_delete() to properly clean up

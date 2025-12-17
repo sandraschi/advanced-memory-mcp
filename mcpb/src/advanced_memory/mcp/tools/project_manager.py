@@ -5,6 +5,7 @@ It reduces the number of MCP tools while maintaining full functionality.
 """
 
 from textwrap import dedent
+from typing import Literal
 
 from fastmcp import Context
 from loguru import logger
@@ -24,7 +25,9 @@ from advanced_memory.utils import generate_permalink
 
 @mcp.tool
 async def adn_project(
-    operation: str,
+    operation: Literal[
+        "create", "switch", "delete", "set_default", "get_current", "list", "sync", "status"
+    ],
     project_name: str | None = None,
     project_path: str | None = None,
     set_default: bool = False,
@@ -58,10 +61,17 @@ async def adn_project(
     - Sync status reflects the active project's state
 
     Args:
-        operation: The operation to perform (create, switch, delete, set_default, get_current, list)
-        project_name: Name of the project for most operations
-        project_path: File system path for create operations
-        set_default: Whether to set new project as default for create operations
+        operation: The operation to perform (create, switch, delete, set_default, get_current, list, sync, status)
+        project_name: Project name
+                    * create, switch, delete, sync, status operations: REQUIRED
+                    * set_default operation: REQUIRED (project to set as default)
+                    * get_current, list operations: NOT USED
+        project_path: File system path for new project
+                    * create operation: REQUIRED - Path where project files will be stored
+                    * Other operations: NOT USED
+        set_default: Whether to set new project as default (for create operation only)
+                    * create operation: Optional (default: False)
+                    * Other operations: NOT USED
         ctx: Optional MCP context for progress reporting
 
     Returns:
@@ -113,8 +123,13 @@ async def _create_operation(
     project_name: str | None, project_path: str | None, set_default: bool, ctx: Context | None
 ) -> str:
     """Handle create operation."""
-    if not project_name or not project_path:
-        return "# Error\n\nCreate operation requires: project_name and project_path parameters"
+    missing = []
+    if not project_name:
+        missing.append("project_name")
+    if not project_path:
+        missing.append("project_path")
+    if missing:
+        return f'# Error\n\nCreate operation requires the following parameters:\n- {", ".join(missing)}\n\n**Example:**\n```python\nadn_project("create",\n    project_name="my-research",\n    project_path="~/Documents/research")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Creating project: {project_name} at {project_path}")
@@ -150,7 +165,7 @@ async def _create_operation(
 async def _switch_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle switch operation."""
     if not project_name:
-        return "# Error\n\nSwitch operation requires: project_name parameter"
+        return '# Error\n\nSwitch operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("switch", project_name="work-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Switching to project: {project_name}")
@@ -240,7 +255,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
 async def _delete_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle delete operation."""
     if not project_name:
-        return "# Error\n\nDelete operation requires: project_name parameter"
+        return '# Error\n\nDelete operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("delete", project_name="old-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Deleting project: {project_name}")
@@ -282,7 +297,7 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> st
 async def _set_default_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle set_default operation."""
     if not project_name:
-        return "# Error\n\nSet_default operation requires: project_name parameter"
+        return '# Error\n\nSet_default operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("set_default", project_name="personal-notes")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Setting default project to: {project_name}")
@@ -360,7 +375,7 @@ async def _list_operation(ctx: Context | None) -> str:
 async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle sync operation - sync a specific project without changing default."""
     if not project_name:
-        return "# Error\n\nSync operation requires: project_name parameter"
+        return '# Error\n\nSync operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("sync", project_name="my-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Syncing project: {project_name}")
@@ -384,7 +399,7 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
 async def _status_operation(project_name: str | None, ctx: Context | None) -> str:
     """Handle status operation - get detailed statistics for a specific project."""
     if not project_name:
-        return "# Error\n\nStatus operation requires: project_name parameter"
+        return '# Error\n\nStatus operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("status", project_name="my-project")\n```'
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Getting status for project: {project_name}")

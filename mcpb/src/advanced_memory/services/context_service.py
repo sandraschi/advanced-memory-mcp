@@ -89,8 +89,8 @@ class ContextService:
         types: list[SearchItemType] | None = None,
         depth: int = 1,
         since: datetime | None = None,
-        limit=10,
-        offset=0,
+        limit: int = 10,
+        offset: int = 0,
         max_related: int = 10,
         include_observations: bool = True,
     ) -> ContextResult:
@@ -260,6 +260,7 @@ class ContextService:
 
         # Use a CTE that operates directly on entity and relation tables
         # This avoids the overhead of the search_index virtual table
+        # nosec B608 - uses parameterized query with :max_depth and :max_results params
         query = text(f"""
         WITH RECURSIVE entity_graph AS (
             -- Base case: seed entities

@@ -88,9 +88,15 @@ async def main() -> None:
     tests: Iterable[ToolTest] = [
         ToolTest("adn_content/read_latest", adn_content.fn, {"operation": "read_latest"}),
         ToolTest("adn_content/invalid", adn_content.fn, {"operation": "explode"}),
-        ToolTest("adn_search/notes", adn_search.fn, {"operation": "notes", "query": "advanced memory"}),
-        ToolTest("adn_search/invalid", adn_search.fn, {"operation": "explode", "query": "advanced"}),
-        ToolTest("adn_navigation/status", adn_navigation.fn, {"operation": "status", "level": "basic"}),
+        ToolTest(
+            "adn_search/notes", adn_search.fn, {"operation": "notes", "query": "advanced memory"}
+        ),
+        ToolTest(
+            "adn_search/invalid", adn_search.fn, {"operation": "explode", "query": "advanced"}
+        ),
+        ToolTest(
+            "adn_navigation/status", adn_navigation.fn, {"operation": "status", "level": "basic"}
+        ),
         ToolTest("adn_navigation/invalid", adn_navigation.fn, {"operation": "explode"}),
         ToolTest("adn_project/status", adn_project.fn, {"operation": "status"}),
         ToolTest("adn_project/invalid", adn_project.fn, {"operation": "explode"}),
@@ -142,7 +148,9 @@ async def main() -> None:
             adn_export.fn,
             {
                 "operation": "archive",
-                "export_path": str(Path(tempfile.gettempdir()) / "advanced-memory-test-archive.zip"),
+                "export_path": str(
+                    Path(tempfile.gettempdir()) / "advanced-memory-test-archive.zip"
+                ),
                 "show_after_export": False,
             },
         ),
@@ -169,11 +177,12 @@ async def main() -> None:
     successes = sum(1 for _, _, ok in results if ok)
     failures = len(results) - successes
     print("-" * 120)
-    print(f"Completed {len(results)} tool calls — {successes} succeeded, {failures} raised exceptions.")
+    print(
+        f"Completed {len(results)} tool calls — {successes} succeeded, {failures} raised exceptions."
+    )
     if failures > 0:
         raise SystemExit(1)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
-

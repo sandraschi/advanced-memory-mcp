@@ -1,4 +1,4 @@
-"""Base import service for Basic Memory."""
+"""Base import service for Advanced Memory."""
 
 import logging
 from abc import abstractmethod
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T", bound=ImportResult)
 
 
-class Importer[T: ImportResult]:
+class Importer:
     """Base class for all import services."""
 
     def __init__(self, base_path: Path, markdown_processor: MarkdownProcessor):
@@ -27,7 +27,7 @@ class Importer[T: ImportResult]:
         self.markdown_processor = markdown_processor
 
     @abstractmethod
-    async def import_data(self, source_data, destination_folder: str, **kwargs: Any) -> T:
+    async def import_data(self, source_data: Any, destination_folder: str, **kwargs: Any) -> T:
         """Import data from source file to destination folder.
 
         Args:

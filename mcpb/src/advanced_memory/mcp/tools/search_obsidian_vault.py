@@ -4,7 +4,6 @@ This tool searches through external Obsidian vaults using Obsidian-specific
 search patterns and syntax.
 """
 
-import os
 import re
 from pathlib import Path
 from typing import Any
@@ -14,53 +13,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Search through external Obsidian vaults without importing them into Advanced Memory.
-
-This tool allows you to query Obsidian vaults directly from the filesystem, providing
-search capabilities across markdown files, canvas files, and other Obsidian content types.
-
-SEARCH CAPABILITIES:
-- Full-text search across all vault markdown files
-- File type filtering (markdown, canvas, all files)
-- Case-sensitive or case-insensitive matching
-- Content preview with surrounding context
-- File path and metadata information
-- Support for large vaults with result limiting
-
-PARAMETERS:
-- vault_path (str, REQUIRED): Filesystem path to Obsidian vault root directory
-- query (str, REQUIRED): Search term or phrase to find
-- search_type (str, default="text"): Search scope (text, file, path, content)
-- max_results (int, default=20): Maximum number of results to return
-- include_content (bool, default=False): Include file content previews in results
-
-SEARCH TYPES:
-- "text": Search within file contents (default)
-- "file": Search in filenames only
-- "path": Search in file paths
-- "content": Full content search with context
-
-RESULT FORMAT:
-Returns structured results showing:
-- File paths and names
-- Match locations within files
-- Content snippets (if enabled)
-- File modification dates
-- Match counts and statistics
-
-USAGE EXAMPLES:
-Basic search: search_obsidian_vault("/vault/path", "machine learning")
-File names: search_obsidian_vault("/vault", "meeting notes", search_type="file")
-With content: search_obsidian_vault("/obsidian-vault", "project plan", include_content=True)
-Limited results: search_obsidian_vault("/vault", "project", max_results=50)
-
-RETURNS:
-Formatted search results with file paths, match counts, and optional content previews.
-
-NOTE: This searches external vaults without importing them. For permanent access,
-use load_obsidian_vault() to import the content into Advanced Memory.""",
-)
+@mcp.tool
 async def search_obsidian_vault(
     vault_path: str,
     query: str,
@@ -157,49 +110,25 @@ async def _find_markdown_files(vault_path: Path) -> list[Path]:
     """Find all markdown files in the vault."""
     markdown_files = []
 
-    # Use MCP filesystem to list directory recursively
-    try:
-        from mcp_filesystem import list_directory
+    # Direct filesystem access
+    def find_recursive(current_path: str) -> list[str]:
+        """Recursively find markdown files."""
+        files = []
+        try:
+            path_obj = Path(current_path)
 
-        async def find_recursive(current_path: str) -> list[str]:
-            """Recursively find markdown files."""
-            files = []
-            try:
-                # List current directory
-                dir_contents = await list_directory(current_path)
+            for item in path_obj.rglob("*.md"):
+                if item.is_file():
+                    files.append(str(item))
 
-                # Parse the directory listing (it's returned as formatted text)
-                lines = dir_contents.split("\n")
-                for line in lines:
-                    if "[DOC]" in line and ".md" in line:
-                        # Extract filename from the formatted line
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            filename = parts[1].strip()
-                            if filename.endswith(".md"):
-                                files.append(os.path.join(current_path, filename))
-                    elif "[FOLDER]" in line and not line.strip().endswith("."):
-                        # Directory - recurse
-                        parts = line.split()
-                        if len(parts) >= 2:
-                            dirname = parts[1].strip()
-                            subdir_path = os.path.join(current_path, dirname)
-                            subfiles = await find_recursive(subdir_path)
-                            files.extend(subfiles)
+        except Exception as e:
+            logger.warning(f"Error listing directory {current_path}: {e}")
 
-            except Exception as e:
-                logger.warning(f"Error listing directory {current_path}: {e}")
+        return files
 
-            return files
-
-        # Start recursive search from vault root
-        markdown_files_str = await find_recursive(str(vault_path))
-        markdown_files = [Path(f) for f in markdown_files_str]
-
-    except ImportError:
-        # Fallback to direct filesystem access if MCP filesystem not available
-        logger.warning("MCP filesystem not available, using direct access")
-        markdown_files = list(vault_path.rglob("*.md"))
+    # Start recursive search from vault root
+    markdown_files_str = find_recursive(str(vault_path))
+    markdown_files = [Path(f) for f in markdown_files_str]
 
     return markdown_files
 
@@ -334,7 +263,7 @@ async def _search_files(markdown_files: list[Path], query: str) -> list[dict[str
 
 async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search for wikilinks in markdown files."""
-    results = []
+    results: list[dict[str, Any]] = []
 
     # Extract link target from [[link]]
     link_match = re.search(r"\[\[([^\]]+)\]\]", query)
@@ -373,7 +302,7 @@ async def _search_links(markdown_files: list[Path], query: str) -> list[dict[str
 
 async def _search_frontmatter(markdown_files: list[Path], query: str) -> list[dict[str, Any]]:
     """Search in YAML frontmatter of markdown files."""
-    results = []
+    results: list[dict[str, Any]] = []
 
     # Parse query like "field: value"
     if ":" not in query:

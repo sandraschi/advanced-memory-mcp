@@ -8,62 +8,12 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.search import search_notes
-from advanced_memory.mcp.tools.utils import call_get, sanitize_unicode_content
+from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.memory import memory_url_path
 from advanced_memory.utils import sanitize_filename, validate_project_path
 
 
-@mcp.tool(
-    description="""Retrieve complete note content from Advanced Memory with intelligent lookup and fallback strategies.
-
-This essential tool provides flexible access to notes using multiple identification methods,
-with automatic fallback to search when direct lookup fails, ensuring content accessibility.
-
-LOOKUP STRATEGIES (tried in order):
-1. Exact permalink match (memory:// URLs)
-2. Direct title match in current project
-3. Sanitized filename match (handles special characters)
-4. Full-text search fallback with scoring
-5. Partial title matching
-
-CONTENT RETURNED:
-- Full markdown content with formatting
-- Frontmatter metadata (YAML headers)
-- Semantic relationships and observations
-- Creation/modification timestamps
-- Author and project information
-
-PARAMETERS:
-- identifier (str, REQUIRED): Note identification (title, permalink, memory:// URL, or search terms)
-- page (int, default=1): Pagination page for search results
-- page_size (int, default=10): Items per page for paginated content
-- project (str, optional): Specific project to search in (defaults to active project)
-
-INTELLIGENT FEATURES:
-- Automatic content sanitization handling
-- Path traversal attack prevention
-- Project boundary validation
-- Relationship context inclusion
-- Content preview generation
-
-USAGE EXAMPLES:
-By title: read_note("Meeting Notes")
-By permalink: read_note("notes/meeting-notes")
-Memory URL: read_note("memory://notes/meeting-notes")
-Search fallback: read_note("urgent meeting about budget")
-With pagination: read_note("long-document", page=2, page_size=50)
-
-RETURNS:
-Complete note content as formatted markdown, or error message if not found.
-
-SECURITY:
-- Path traversal attacks blocked
-- Project boundary enforcement
-- Input validation and sanitization
-- Safe file access with permissions checking
-
-NOTE: This tool uses intelligent lookup strategies to find content even with partial information or special characters in titles.""",
-)
+@mcp.tool
 async def read_note(
     identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
 ) -> str:
@@ -135,7 +85,7 @@ async def read_note(
         response = await call_get(client, path, params={"page": page, "page_size": page_size})
         if response.status_code == 200:
             logger.info("Returning read_note result from resource: {path}", path=entity_path)
-            return sanitize_unicode_content(response.text)
+            return response.text
     except Exception as e:  # pragma: no cover
         logger.info(f"Direct lookup failed for '{path}': {e}")
         # Continue to try sanitized version
@@ -157,7 +107,7 @@ async def read_note(
                 )
                 if response.status_code == 200:
                     logger.info(f"Found note using sanitized path: {sanitized_full_path}")
-                    return sanitize_unicode_content(response.text)
+                    return response.text
             except Exception as e:  # pragma: no cover
                 logger.info(f"Sanitized path lookup also failed for '{sanitized_full_path}': {e}")
                 # Continue to fallback methods
@@ -178,7 +128,7 @@ async def read_note(
 
                 if response.status_code == 200:
                     logger.info(f"Found note by title search: {result.permalink}")
-                    return sanitize_unicode_content(response.text)
+                    return response.text
             except Exception as e:  # pragma: no cover
                 logger.info(
                     f"Failed to fetch content for found title match {result.permalink}: {e}"

@@ -3,67 +3,51 @@
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""Comprehensive help system for Advanced Memory with multiple knowledge levels.
-
-This tool provides contextual assistance and documentation for Advanced Memory features,
-organized by knowledge levels from basic usage to advanced technical details.
-
-LEVELS:
-- basic: Quick start guide and essential commands
-- intermediate: Detailed tool descriptions and workflows
-- advanced: Technical architecture and implementation details
-- expert: Development troubleshooting and system internals
-
-TOPICS:
-- semantic-net: Knowledge graph and entity relationships
-- claude: AI integration patterns and best practices
-- tools: Complete command reference with examples
-- import: Data migration from external applications
-- export: Content publishing and sharing options
-- typora: Rich text editing workflows
-- obsidian: Obsidian vault integration guide
-- joplin: Joplin export compatibility
-- notion: Notion HTML/Markdown import strategies
-- evernote: Evernote ENEX file processing
-- mermaid: Diagram creation and rendering
-
-PARAMETERS:
-- level (str, default="basic"): Help detail level (basic/intermediate/advanced/expert)
-- topic (str, optional): Specific topic to focus on (see list above)
-
-USAGE EXAMPLES:
-Basic overview: help()
-Tool reference: help("intermediate")
-Semantic networks: help("advanced", "semantic-net")
-Claude integration: help("intermediate", "claude")
-Troubleshooting: help("expert")
-
-RETURNS:
-Contextual help content formatted for easy reading with examples and guidance.""",
-)
+@mcp.tool
 async def help(level: str = "basic", topic: str | None = None) -> str:
-    """Get help and information about Advanced Memory and its capabilities.
+    """Comprehensive help system for Advanced Memory with multiple knowledge levels.
 
-    This is a multilevel help system providing different depths of information:
+    This tool provides contextual assistance and documentation for Advanced Memory features,
+    organized by knowledge levels from basic usage to advanced technical details.
 
-    **Level 1 - "basic"**: Quick overview and getting started
-    **Level 2 - "intermediate"**: Detailed tool descriptions and workflows
-    **Level 3 - "advanced"**: Technical details and architecture
-    **Level 4 - "expert"**: Development and troubleshooting
+    LEVELS:
+    - basic: Quick start guide and essential commands
+    - intermediate: Detailed tool descriptions and workflows
+    - advanced: Technical architecture and implementation details
+    - expert: Development troubleshooting and system internals
+
+    TOPICS:
+    - semantic-net: Knowledge graph and entity relationships
+    - claude: AI integration patterns and best practices
+    - tools: Complete command reference with examples
+    - import: Data migration from external applications
+    - export: Content publishing and sharing options
+    - typora: Rich text editing workflows
+    - obsidian: Obsidian vault integration guide
+    - joplin: Joplin export compatibility
+    - notion: Notion HTML/Markdown import strategies
+    - evernote: Evernote ENEX file processing
+    - mermaid: Diagram creation and rendering
 
     Args:
-        level: Help level (basic, intermediate, advanced, expert)
-        topic: Optional specific topic to focus on
+        level (str, default="basic"): Help detail level (basic/intermediate/advanced/expert)
+        topic (str, optional): Specific topic to focus on (see list above)
 
     Returns:
-        Comprehensive help information at the requested level
+        Contextual help content formatted for easy reading with examples and guidance
 
     Examples:
-        help() - Basic overview
-        help("intermediate") - Detailed tool descriptions
-        help("advanced", "semantic-net") - Advanced semantic net info
-        help("expert") - Technical troubleshooting
+        Basic overview: help()
+        Tool reference: help("intermediate")
+        Semantic networks: help("advanced", "semantic-net")
+        Claude integration: help("intermediate", "claude")
+        Troubleshooting: help("expert")
+
+    NOTE: This is a multilevel help system providing different depths of information:
+    - Level 1 (basic): Quick overview and getting started
+    - Level 2 (intermediate): Detailed tool descriptions and workflows
+    - Level 3 (advanced): Technical details and architecture
+    - Level 4 (expert): Development and troubleshooting
     """
 
     if topic:
@@ -600,19 +584,19 @@ def _get_expert_help() -> str:
 
 ### Core Components
 
-#### MCP Server (`basic_memory/mcp/`)
+#### MCP Server (`advanced_memory/mcp/`)
 - **server.py**: FastMCP server initialization and configuration
 - **async_client.py**: HTTP client for API communication
 - **tools/**: Individual tool implementations
 - **project_session.py**: Multi-project context management
 
-#### Data Layer (`basic_memory/`)
+#### Data Layer (`advanced_memory/`)
 - **db.py**: SQLite database connection and session management
 - **models/**: SQLAlchemy ORM models
 - **schemas/**: Pydantic data validation models
 - **repository/**: Database access layer
 
-#### Service Layer (`basic_memory/services/`)
+#### Service Layer (`advanced_memory/services/`)
 - **sync_status_service.py**: Background synchronization tracking
 - **Knowledge graph processing**: Entity relationship management
 - **Search indexing**: Full-text search implementation
@@ -621,7 +605,7 @@ def _get_expert_help() -> str:
 
 #### ConfigManager
 ```python
-# Located in basic_memory/config.py
+# Located in advanced_memory/config.py
 class ConfigManager:
     def __init__(self):
         self.config = AdvancedMemoryConfig(
@@ -634,8 +618,8 @@ class ConfigManager:
 
 #### Project Structure
 ```
-basic-memory/
-[UNICODE][UNICODE][UNICODE] src/basic_memory/
+advanced-memory/
+[UNICODE][UNICODE][UNICODE] src/advanced_memory/
 [UNICODE]   [UNICODE][UNICODE][UNICODE] cli/commands/mcp.py      # MCP server entry point
 [UNICODE]   [UNICODE][UNICODE][UNICODE] mcp/tools/               # Tool implementations
 [UNICODE]   [UNICODE][UNICODE][UNICODE] models/                  # Database models
@@ -651,7 +635,7 @@ basic-memory/
 
 ### Adding New Tools
 
-1. **Create tool file** in `src/basic_memory/mcp/tools/`
+1. **Create tool file** in `src/advanced_memory/mcp/tools/`
 ```python
 @mcp.tool
 async def my_tool(param: Type) -> Result:
@@ -678,7 +662,7 @@ pytest tests/mcp/test_tool_my_tool.py -v
 pytest tests/mcp/ -v
 
 # Run with coverage
-pytest --cov=basic_memory tests/
+pytest --cov=advanced_memory tests/
 ```
 
 #### Integration Tests
@@ -691,7 +675,7 @@ pytest --cov=basic_memory tests/
 #### Logging Levels
 ```python
 import logging
-logging.getLogger('basic_memory').setLevel(logging.DEBUG)
+logging.getLogger('advanced_memory').setLevel(logging.DEBUG)
 ```
 
 #### MCP Debug Mode
@@ -775,7 +759,7 @@ async def tool_function(param: Type) -> ReturnType:
 
 ### Configuration Options
 ```toml
-[tool.basic-memory]
+[tool.advanced-memory]
 sync_delay = 1000          # File watch debounce (ms)
 max_file_size = 10485760   # 10MB limit
 sync_batch_size = 100      # Files per batch
@@ -787,13 +771,13 @@ search_index_memory = 256  # MB for index
 # Check memory usage
 import psutil
 process = psutil.Process()
-print(f"Memory: {process.memory_info().rss / 1024 / 1024:.1f} MB")
+logger.info(f"Memory: {process.memory_info().rss / 1024 / 1024:.1f} MB")
 
 # Check database size
 import os
-db_path = "path/to/basic_memory.db"
-size_mb = os.path.getsize(db_path) / 1024 / 1024
-print(f"Database: {size_mb:.1f} MB")
+db_path = os.getenv("BASIC_MEMORY_DB_PATH", "path/to/advanced_memory.db")
+size_mb = Path(db_path).stat().st_size / 1024 / 1024
+logger.info(f"Database: {size_mb:.1f} MB")
 ```
 
 ## Troubleshooting Guide
@@ -806,7 +790,7 @@ print(f"Database: {size_mb:.1f} MB")
 # The parameter was deprecated in newer FastMCP versions
 ```
 
-**"No module named basic_memory"**
+**"No module named advanced_memory"**
 ```bash
 # Fix: Check Python path and virtual environment
 pip install -e .
@@ -1419,7 +1403,7 @@ The combination of Advanced Memory's structured knowledge base with Claude's nat
 
 #### Dynamic Tool Loading
 ```python
-# In basic_memory/mcp/tools/__init__.py
+# In advanced_memory/mcp/tools/__init__.py
 @mcp.tool
 async def tool_name(params) -> Result:
     # Tool implementation

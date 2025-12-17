@@ -6,7 +6,7 @@
 
 Created comprehensive test coverage for all export functionality with focus on new features:
 - `show_after_export` - Auto-open exported files/folders
-- `export_all` - Control ambiguous folder matching  
+- `export_all` - Control ambiguous folder matching
 - `serve` - Local HTTP server for Docsify/HTML exports
 - Port 3211 default - Avoid commonly-used port 3000
 
@@ -132,7 +132,7 @@ tests/mcp/test_export_docsify.py .......... 13 passed (10 existing + 3 new)
 
 **Additional tests ready (not yet run due to import issues):**
 - `tests/mcp/test_export_pdf_native.py` (8 tests)
-- `tests/mcp/test_export_pandoc.py` (7 tests)  
+- `tests/mcp/test_export_pandoc.py` (7 tests)
 - `tests/mcp/test_export_html.py` (6 tests)
 - `tests/mcp/test_export_archive.py` (5 tests)
 
@@ -188,7 +188,7 @@ Mocks focus on:
 
 1. **✅ `tests/markdown/__init__.py`** - Empty file was shadowing real `markdown` package
    - **Solution:** Deleted the empty `__init__.py`
-   
+
 2. **✅ Missing `patch` import** - New docsify tests missing unittest.mock import
    - **Solution:** Added `from unittest.mock import patch`
 
@@ -217,7 +217,7 @@ uv run pytest tests/utils/test_file_opener.py -v
 
 ## Coverage Improvements
 
-**Before:** Limited docsify coverage only  
+**Before:** Limited docsify coverage only
 **After:** Comprehensive coverage across:
 - ✅ PDF native (8 tests)
 - ✅ Pandoc/EPUB (7 tests)
@@ -263,29 +263,3 @@ uv run pytest tests/utils/test_file_opener.py -v
 ---
 
 *Tests created to verify docsify export improvements: server auto-start, file auto-open, ambiguous folder handling, and smart default export paths.*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

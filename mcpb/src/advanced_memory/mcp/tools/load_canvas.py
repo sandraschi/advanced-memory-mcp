@@ -10,47 +10,12 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.read_content import read_content
+from advanced_memory.mcp.tools import read_content as mcp_read_content
 from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
 
-@mcp.tool(
-    description="""Import Obsidian Canvas visual mind maps into Advanced Memory as structured knowledge.
-
-This tool converts Obsidian's visual canvas files (.canvas) into Advanced Memory entities and relationships,
-transforming visual thinking into structured, searchable knowledge.
-
-CANVAS FEATURES SUPPORTED:
-- Text nodes: Converted to individual notes with full content
-- File nodes: Create references to existing or external files
-- Link nodes: Establish relationships between entities
-- Group nodes: Organize content into folder structures
-- Edge connections: Become semantic relationships
-
-PARAMETERS:
-- canvas_path (str, REQUIRED): Filesystem path to .canvas JSON file
-- destination_folder (str, default="imported/canvases"): Advanced Memory folder for imported content
-- create_missing_files (bool, default=False): Create placeholder notes for missing file references
-- project (str, optional): Target Advanced Memory project
-
-NODE TYPE CONVERSION:
-- Text nodes [UNICODE] Markdown notes with canvas content
-- File nodes [UNICODE] Reference links to existing files
-- Link nodes [UNICODE] Entity relationship mappings
-- Groups [UNICODE] Folder organization structures
-
-USAGE EXAMPLES:
-Basic canvas: load_obsidian_canvas("mindmap.canvas")
-Custom folder: load_obsidian_canvas("project.canvas", destination_folder="projects/visual")
-With placeholders: load_obsidian_canvas("overview.canvas", create_missing_files=True)
-
-RETURNS:
-Import summary showing nodes processed, relationships created, and any issues encountered.
-
-NOTE: Canvas files are JSON-based visual layouts. This tool extracts the structured content
-and relationships, converting visual thinking into Advanced Memory's entity-relationship model.""",
-)
+@mcp.tool
 async def load_obsidian_canvas(
     canvas_path: str,
     destination_folder: str = "imported/canvases",
@@ -98,7 +63,7 @@ async def load_obsidian_canvas(
         logger.info(f"Starting canvas import: {canvas_path}")
 
         # Read the canvas file
-        canvas_content = await read_content(canvas_path, project)
+        canvas_content = await mcp_read_content.fn(canvas_path, project)
         if canvas_content.get("type") == "error":
             return f"# Canvas Import Failed\n\nError reading canvas file '{canvas_path}': {canvas_content['error']}"
 
@@ -245,7 +210,7 @@ async def _process_canvas(
 async def _process_canvas_node(
     node: dict, destination_folder: str, create_missing_files: bool, project: str | None
 ) -> str | None:
-    """Process a single canvas node and create an Advanced Memory entity."""
+    """Process a single canvas node and create a Advanced Memory entity."""
     node_type = node.get("type")
     node_id = node.get("id")
 
@@ -333,7 +298,7 @@ async def _process_canvas_node(
 
 
 async def _process_canvas_edge(edge: dict, node_map: dict, project: str | None) -> str | None:
-    """Process a canvas edge and create an Advanced Memory relation."""
+    """Process a canvas edge and create a Advanced Memory relation."""
     from_node = edge.get("fromNode")
     to_node = edge.get("toNode")
     label = edge.get("label", "connects to")

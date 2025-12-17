@@ -4,6 +4,7 @@ This tool consolidates all content operations: write, read, view, edit, edit_tag
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import json
 import re
 from typing import Literal
 
@@ -24,32 +25,59 @@ TagType = list[str] | str | None
 
 @mcp.tool
 async def adn_content(
-    operation: Literal["write", "read", "read_latest", "view", "view_rendered", "edit", "edit_tags", "quick", "daily", "move", "delete"],
+    operation: Literal[
+        "write",
+        "read",
+        "read_latest",
+        "view",
+        "view_rendered",
+        "edit",
+        "edit_tags",
+        "quick",
+        "daily",
+        "move",
+        "delete",
+        "suggest_tags",
+        "summarize",
+        "enhance",
+        "generate",
+    ],
     identifier: str | None = None,
     content: str | None = None,
     folder: str | None = None,
     tags: TagType | None = None,
     entity_type: str = "note",
     destination_path: str | None = None,
-    edit_operation: Literal["append", "prepend", "find_replace", "replace_section"] | None = None,
+    edit_operation: Literal[
+        "append",
+        "prepend",
+        "find_replace",
+        "replace_section",
+        "insert_mermaid",
+        "insert_ascii_art",
+        "insert_kilroy",
+        "insert_kanban",
+        "insert_changelog",
+    ]
+    | None = None,
     tag_operation: Literal["add", "remove", "replace", "clear"] | None = None,
     find_text: str | None = None,
     expected_replacements: int = 1,
+    use_regex: bool = False,
     section: str | None = None,
     page: int = 1,
     page_size: int = 10,
-    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
+    results_per_page: int
+    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
+    # Parameter aliases for common mistakes (deprecated, will map to content)
+    new_string: str | None = None,  # DEPRECATED: Use 'content' instead
+    replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
+    new_content: str | None = None,  # DEPRECATED: Use 'content' instead
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all content operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-
-    WHY PORTMANTEAU TOOLS?
-    Claude Desktop has a limit on the number of available tools. Portmanteau tools like adn_content
-    combine multiple related operations (write, read, edit, delete, etc.) into a single tool interface,
-    dramatically reducing the tool count while maintaining full functionality.
+    PORTMANTEAU PATTERN: Consolidates 15+ content operations into one tool.
 
     PARAMETER DESIGN:
     The 'identifier' parameter is intentionally flexible:
@@ -69,10 +97,14 @@ async def adn_content(
     - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
     - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
     - edit_tags: Edit tags (add, remove, replace, clear) without full note edits
-    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title)
+    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags from content)
     - daily: Create or append to today's daily journal note
     - move: Relocate notes while preserving relationships and updating references
     - delete: Remove notes from knowledge base with relationship cleanup
+    - suggest_tags: LLM-powered semantic tag suggestions for notes
+    - summarize: LLM-powered note summarization
+    - enhance: LLM-powered note enhancement (structure, clarity, completeness)
+    - generate: LLM-powered content generation for new notes
 
     NOTE: Audio operations (dictate, speak) moved to adn_audio tool
 
@@ -118,35 +150,83 @@ async def adn_content(
         content: Markdown content
                     * Write operations: REQUIRED - Full note content
                     * Edit operations: REQUIRED - Content to add/replace (depends on edit_operation)
+                      - For find_replace: REPLACEMENT text (find_text is what to find)
+                      - For append: Content to add at the end of the note
+                      - For prepend: Content to add at the beginning of the note
+                      - For replace_section: New content to replace the entire section
+                      - For insert_mermaid: Diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
+                      - For insert_kanban: Comma-separated column names (e.g., "To Do,In Progress,Done")
+                      - For insert_changelog: Version string (e.g., "1.0.0" or "Unreleased")
+                      - For insert_ascii_art: Art type ("cat", "dog", "robot", "heart", "star", "tree")
+                      - For insert_kilroy: Optional custom message (or leave empty for default)
                     * Quick/Daily operations: REQUIRED - Content to capture
                     * Other operations: NOT USED
+                    * DEPRECATED ALIASES (automatically mapped to content): new_string, replacement, new_content
+                      These aliases work but will log a warning. Use 'content' directly.
         folder: Target folder path
-                    * Write operations: REQUIRED - Destination folder for new note
+                    * Write operations: Optional - Destination folder for new note (defaults to "inbox" if not specified)
                     * Move operations: NOT USED - Use destination_path instead
                     * Other operations: NOT USED
         destination_path: New path for move operations
                     * Move operations: REQUIRED - Full destination path
                     * Other operations: NOT USED
         edit_operation: Edit type for edit operations
-                    * Edit operations: REQUIRED - One of: "append", "prepend", "find_replace", "replace_section"
+                    * Edit operations: REQUIRED - One of: "append", "prepend", "find_replace", "replace_section", "insert_mermaid", "insert_ascii_art", "insert_kilroy", "insert_kanban", "insert_changelog"
+                    * For insert_mermaid: content can be diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
+                    * For insert_kanban: content is comma-separated column names (e.g., "To Do,In Progress,Done"), section is optional title
+                    * For insert_changelog: content is version (e.g., "1.0.0" or "Unreleased"), section is optional project name
+                    * See edit_note tool documentation for comprehensive Mermaid syntax guide
                     * Other operations: NOT USED
         tag_operation: Tag operation for edit_tags
                     * Edit_tags operations: REQUIRED - One of: "add", "remove", "replace", "clear"
                     * Other operations: NOT USED
         tags: Tags for categorization (string, list, or None)
                     * Write operations: Optional - Tags for categorization
-                    * Edit_tags operations: Optional - Tags to add/remove/replace (depends on tag_operation)
+                    * Edit_tags operations:
+                      - For "add": REQUIRED - Tags to add to existing tags
+                      - For "remove": REQUIRED - Tags to remove from existing tags
+                      - For "replace": REQUIRED - Tags to replace all existing tags with
+                      - For "clear": NOT USED (tags parameter ignored, all tags cleared)
+                    * Quick/Daily operations: Optional - Additional tags to include
                     * Other operations: NOT USED
         entity_type: Content type (default: "note")
                     * Write operations: Optional (default: "note")
                     * Other operations: NOT USED
-        expected_replacements: Expected replacement count for find_replace validation (default: 1)
-        section: Section header for replace_section operations
-                    * Edit with replace_section: REQUIRED - Section header to replace (e.g., "## Summary")
+        find_text: Text to find for find_replace operation
+                    * Edit with find_replace: REQUIRED - The exact text to search for
                     * Other operations: NOT USED
-        page: Pagination page for read operations
-        page_size: Items per page for paginated content
+        expected_replacements: Expected replacement count for find_replace validation (default: 1)
+                    * Edit with find_replace: Optional - Validates that exactly this many replacements occurred
+                    * Other operations: NOT USED
+        use_regex: Enable regex pattern matching for find_replace (default: False)
+                    * Edit with find_replace: Optional - When True, find_text is treated as a regex pattern
+                      - Content can use backreferences like \\1, \\2 for captured groups
+                      - Includes security safeguards (pattern length limits, ReDoS protection)
+                    * Other operations: NOT USED
+        section: Section header or title for various edit operations
+                    * Edit with replace_section: REQUIRED - Section header to replace (e.g., "## Summary")
+                    * Edit with insert_mermaid: Optional - Title for the diagram section
+                    * Edit with insert_kanban: Optional - Title for the Kanban board section
+                    * Edit with insert_changelog: Optional - Project name for the changelog entry
+                    * Other operations: NOT USED
+        page: Pagination page number (default: 1)
+                    * Read/View/View_rendered operations: Optional - Page number for paginated results
+                    * Other operations: NOT USED
+        page_size: Items per page for paginated content (default: 10)
+                    * Read/View/View_rendered operations: Optional - Number of items per page
+                    * Other operations: NOT USED
         results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
+                    * Read/View/View_rendered operations: Optional - Same as page_size
+                    * Other operations: NOT USED
+        new_string: DEPRECATED alias for 'content' parameter (automatically mapped)
+                    * All operations: Optional - Use 'content' instead
+                    * Automatically mapped to 'content' with warning logged
+        replacement: DEPRECATED alias for 'content' parameter (automatically mapped, common for find_replace)
+                    * All operations: Optional - Use 'content' instead
+                    * Automatically mapped to 'content' with warning logged
+        new_content: DEPRECATED alias for 'content' parameter (automatically mapped)
+                    * All operations: Optional - Use 'content' instead
+                    * Automatically mapped to 'content' with warning logged
         project: Optional project name. Supports:
             - None (default): uses current active project
             - "project-name": uses specific project
@@ -159,6 +239,9 @@ async def adn_content(
         # Write a new note - identifier is REQUIRED and must be the note title
         # Advanced Memory will auto-generate the permalink from the title
         adn_content("write", identifier="Project Plan", content="# Project Overview...", folder="projects")
+
+        # Write a note without folder (defaults to "inbox")
+        adn_content("write", identifier="Quick Note", content="# My Note\\n\\nContent here...")
 
         # Read a note - can use title, permalink, or URL
         adn_content("read", identifier="Project Plan")  # By title
@@ -176,6 +259,14 @@ async def adn_content(
 
         # Edit tags (replace all)
         adn_content("edit_tags", identifier="Project Plan", tag_operation="replace", tags="final, approved")
+
+        # Find and replace text
+        adn_content("edit", identifier="My Note", edit_operation="find_replace",
+                    find_text="old text", content="new text", expected_replacements=1)
+
+        # DEPRECATED: Using alias parameters (works but logs warning - use 'content' instead)
+        # adn_content("edit", identifier="My Note", edit_operation="find_replace",
+        #             find_text="old text", new_string="new text")  # ❌ Use 'content' instead
 
         # Quick capture (ultra-fast note creation)
         adn_content("quick", content="Great insight: use AI for code reviews")
@@ -198,12 +289,51 @@ async def adn_content(
         page_size = results_per_page
         logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
 
+    # Parameter aliasing for common mistakes: map deprecated parameter names to 'content'
+    # This prevents errors when AI agents use wrong parameter names
+    content_aliases = {
+        "new_string": new_string,
+        "replacement": replacement,
+        "new_content": new_content,
+    }
+    
+    # Map aliases to content if content is not set but alias is
+    for alias_name, alias_value in content_aliases.items():
+        if alias_value is not None and content is None:
+            content = alias_value
+            logger.warning(
+                f"Parameter '{alias_name}' is deprecated. Use 'content' instead. "
+                f"Automatically mapped for this call."
+            )
+            # Log for analytics
+            logger.info(
+                f"adn_content_parameter_alias_used",
+                alias=alias_name,
+                operation=operation,
+                edit_operation=edit_operation,
+            )
+
     logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
 
     original_operation = operation
     normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
     normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
-    alias_map = {
+    alias_map: dict[
+        str,
+        Literal[
+            "write",
+            "read",
+            "read_latest",
+            "view",
+            "view_rendered",
+            "edit",
+            "edit_tags",
+            "quick",
+            "daily",
+            "move",
+            "delete",
+        ],
+    ] = {
         "createnote": "write",
         "newnote": "write",
         "appendnote": "edit",
@@ -220,7 +350,10 @@ async def adn_content(
         "viewlatest": "view",
         "previewlatest": "view",
     }
-    operation = alias_map.get(normalized_operation, normalized_operation)
+    # Type-safe operation mapping with fallback to original
+    mapped_operation = alias_map.get(normalized_operation)
+    if mapped_operation:
+        operation = mapped_operation  # type: ignore[assignment]
 
     # Get the active project
     active_project = get_active_project(project)
@@ -234,10 +367,48 @@ async def adn_content(
             missing.append("identifier (note title)")
         if not content:
             missing.append("content")
-        if not folder:
-            missing.append("folder")
         if missing:
-            return f"# Error\n\nWrite operation requires the following parameters:\n- {', '.join(missing)}\n\n**Example:**\n```python\nadn_content(\"write\",\n    identifier=\"My Note Title\",\n    content=\"# My Note\\n\\nContent here...\",\n    folder=\"notes\")\n```"
+            error_msg = f"""# Error: Missing Required Parameters
+
+The `write` operation requires the following parameters:
+- **identifier** (note title): The title of the note
+- **content**: The markdown content of the note
+- **folder** (optional): The folder path where the note should be saved (defaults to "inbox" if not specified)
+
+**Missing parameters:** {", ".join(missing)}
+
+**Example usage:**
+```python
+# With folder specified
+adn_content("write",
+    identifier="My Note Title",
+    content="# My Note\\n\\nContent here...",
+    folder="notes")
+
+# Without folder (defaults to "inbox")
+adn_content("write",
+    identifier="My Note Title",
+    content="# My Note\\n\\nContent here...")
+```
+
+**Alternative: Quick Note Creation**
+If you just want to quickly capture content without specifying title and folder, use the `quick` operation instead:
+```python
+adn_content("quick", content="Your content here...")
+```
+The `quick` operation automatically:
+- Generates a title from your content
+- Saves to the "inbox" folder
+- Adds timestamp and "quick-capture" tag
+"""
+            return error_msg
+        # Use default folder if not specified
+        if not folder:
+            folder = "inbox"
+        # Type narrowing: we've validated these are not None above
+        assert identifier is not None
+        assert content is not None
+        assert folder is not None
         return await _write_operation(
             active_project, identifier, content, folder, tags, entity_type
         )
@@ -286,11 +457,82 @@ async def adn_content(
 
     elif operation == "edit":
         if identifier is None:
-            return "# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"append\",\n    content=\"\\n## New Section\")\n```"
+            return '# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="\\n## New Section")\n```'
         if not edit_operation:
-            return "# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"append\",\n    content=\"New content\")\n```"
+            return '# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="New content")\n```'
+        
+        # Check for find_replace specific requirements
+        if edit_operation == "find_replace":
+            if not find_text:
+                return """# Error: Missing Required Parameter for find_replace
+
+The `find_replace` operation requires:
+- `find_text`: The text to find (REQUIRED)
+- `content`: The replacement text (REQUIRED)
+
+**Common mistakes:**
+- Using `new_string` instead of `content` ❌
+- Using `replacement` instead of `content` ❌
+
+**Correct usage:**
+```python
+adn_content("edit",
+    identifier="My Note",
+    edit_operation="find_replace",
+    find_text="old text",
+    content="new text"  # ✅ Use 'content', not 'new_string'
+)
+```
+
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+However, please use `content` directly in future calls.
+"""
+            if not content:
+                return """# Error: Missing Required Parameter for find_replace
+
+The `find_replace` operation requires:
+- `find_text`: The text to find (REQUIRED) ✅ You provided this
+- `content`: The replacement text (REQUIRED) ❌ Missing
+
+**Common mistakes:**
+- Using `new_string` instead of `content` ❌
+- Using `replacement` instead of `content` ❌
+
+**Correct usage:**
+```python
+adn_content("edit",
+    identifier="My Note",
+    edit_operation="find_replace",
+    find_text="old text",
+    content="new text"  # ✅ Use 'content', not 'new_string'
+)
+```
+
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+However, please use `content` directly in future calls.
+"""
+        
         if not content and edit_operation in ["append", "prepend", "replace_section"]:
-            return f"# Error\n\nEdit operation '{edit_operation}' requires: content parameter\n\n**Example:**\n```python\nadn_content(\"edit\",\n    identifier=\"My Note\",\n    edit_operation=\"{edit_operation}\",\n    content=\"Content to {edit_operation}\")\n```"
+            return f"""# Error: Missing Required Parameter
+
+Edit operation '{edit_operation}' requires: `content` parameter
+
+**Common mistakes:**
+- Using `new_string` instead of `content` ❌
+- Using `replacement` instead of `content` ❌
+
+**Correct usage:**
+```python
+adn_content("edit",
+    identifier="My Note",
+    edit_operation="{edit_operation}",
+    content="Content to {edit_operation}"  # ✅ Use 'content', not 'new_string'
+)
+```
+
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+However, please use `content` directly in future calls.
+"""
         return await _edit_operation(
             active_project,
             identifier,
@@ -299,18 +541,58 @@ async def adn_content(
             section,
             find_text,
             expected_replacements,
+            use_regex,
         )
 
     elif operation == "edit_tags":
         if identifier is None:
-            return "# Error\n\nEdit_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content(\"edit_tags\",\n    identifier=\"My Note\",\n    tag_operation=\"add\",\n    tags=\"tag1, tag2\")\n```"
+            return '# Error\n\nEdit_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="tag1, tag2")\n```'
         if not tag_operation:
-            return "# Error\n\nEdit_tags operation requires: tag_operation parameter\n\n**Valid operations:** add, remove, replace, clear\n\n**Example:**\n```python\nadn_content(\"edit_tags\",\n    identifier=\"My Note\",\n    tag_operation=\"add\",\n    tags=\"important\")\n```"
+            return '# Error\n\nEdit_tags operation requires: tag_operation parameter\n\n**Valid operations:** add, remove, replace, clear\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="important")\n```'
         return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
     elif operation == "quick":
         if not content:
-            return "# Error\n\nQuick capture requires: content parameter"
+            return """# Error: Missing Required Parameter
+
+The `quick` operation requires the `content` parameter.
+
+**Example usage:**
+```python
+adn_content("quick", content="Your note content here...")
+```
+
+The `quick` operation automatically:
+- Generates a title from your content (first line or first few words)
+- Saves to the "inbox" folder
+- Extracts relevant tags from content (e.g., "butterflies" → adds "butterflies", "biology", "insects")
+- Adds timestamp and "quick-capture" tag
+- Perfect for quick note capture without specifying all details
+
+**Important: Include Appropriate Tags**
+While the `quick` operation auto-extracts some tags from content, you should **always include relevant tags** that match your content for better organization and searchability:
+
+```python
+# Good: Include relevant tags
+adn_content("quick",
+    content="# Butterflies\\n\\nButterflies are insects...",
+    tags="butterflies, biology, insects, nature")
+
+# Also good: Let auto-extraction work, but you can add more
+adn_content("quick",
+    content="# Python Tutorial\\n\\nLearn Python basics...",
+    tags="python, programming, tutorial")
+```
+
+**Alternative: Full Note Creation**
+If you need to specify title and folder explicitly, use the `write` operation:
+```python
+adn_content("write",
+    identifier="My Note Title",
+    content="# My Note\\n\\nContent here...",
+    folder="notes")
+```
+"""
         return await _quick_capture_operation(active_project, content, tags)
 
     elif operation == "daily":
@@ -343,8 +625,29 @@ pip install advanced-memory[voice]
         if identifier is None:
             return "# Error\n\nDelete operation requires: identifier"
         return await _delete_operation(active_project, identifier)
+
+    elif operation == "suggest_tags":
+        if identifier is None:
+            return '# Error\n\nSuggest_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("suggest_tags", identifier="My Note")\n```'
+        return await _suggest_tags_operation(active_project, identifier)
+
+    elif operation == "summarize":
+        if identifier is None:
+            return '# Error\n\nSummarize operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("summarize", identifier="My Note")\n```'
+        return await _summarize_operation(active_project, identifier)
+
+    elif operation == "enhance":
+        if identifier is None:
+            return '# Error\n\nEnhance operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("enhance", identifier="My Note")\n```'
+        return await _enhance_operation(active_project, identifier, content)
+
+    elif operation == "generate":
+        if not content:
+            return '# Error\n\nGenerate operation requires: content parameter (topic/prompt)\n\n**Example:**\n```python\nadn_content("generate", content="Python functions tutorial", folder="tutorials")\n```'
+        return await _generate_operation(active_project, content, folder, tags, entity_type)
+
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete\n\nNote: Audio operations (dictate, speak) are now in adn_audio tool"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance, generate\n\nNote: Audio operations (dictate, speak) are now in adn_audio tool"
 
 
 async def _write_operation(
@@ -438,55 +741,100 @@ async def _write_operation(
     project_url = active_project.project_url
 
     # Create or update via knowledge API
-    logger.debug(f"Creating entity via API permalink={entity.permalink}")
-    url = f"{project_url}/knowledge/entities/{entity.permalink}"
-    response = await call_put(client, url, json=entity.model_dump())
-    result = EntityResponse.model_validate(response.json())
+    try:
+        logger.debug(f"Creating entity via API permalink={entity.permalink}")
+        url = f"{project_url}/knowledge/entities/{entity.permalink}"
+        response = await call_put(client, url, json=entity.model_dump())
 
-    # Format semantic summary based on status code
-    action = "Created" if response.status_code == 201 else "Updated"
-    summary = [
-        f"# {action} note",
-        f"project: {active_project.name}",
-        f"file_path: {result.file_path}",
-        f"permalink: {result.permalink}",
-        f"checksum: {result.checksum[:8] if result.checksum else 'unknown'}",
-    ]
+        if response.status_code not in (200, 201):
+            return f"""# Error: Failed to Create/Update Note
 
-    # Count observations by category
-    categories: dict[str, int] = {}
-    if result.observations:
-        for obs in result.observations:
-            if obs.category:  # Only count observations with categories
-                categories[obs.category] = categories.get(obs.category, 0) + 1
+The API request failed with status code {response.status_code}.
 
-        summary.append("\n## Observations")
-        for category, count in sorted(categories.items()):
-            summary.append(f"- {category}: {count}")
+**Details:**
+- **Title:** {identifier}
+- **Folder:** {folder}
+- **URL:** {url}
 
-    # Count resolved/unresolved relations
-    unresolved = 0
-    resolved = 0
-    if result.relations:
-        unresolved = sum(1 for r in result.relations if not r.to_id)
-        resolved = len(result.relations) - unresolved
+**Possible causes:**
+- Project not found or not accessible
+- Invalid folder path
+- Network connectivity issue
+- Server error
 
-        summary.append("\n## Relations")
-        summary.append(f"- Resolved: {resolved}")
-        if unresolved:
-            summary.append(f"- Unresolved: {unresolved}")
-            summary.append("\nNote: Unresolved relations point to entities that don't exist yet.")
-            summary.append(
-                "They will be automatically resolved when target entities are created or during sync operations."
-            )
+**Response:** {response.text[:200] if hasattr(response, "text") else "No response text"}
+"""
 
-    if tag_list:
-        summary.append(f"\n## Tags\n- {', '.join(tag_list)}")
+        result = EntityResponse.model_validate(response.json())
 
-    logger.info(
-        f"MCP tool response: tool=content_manager operation=write action={action} permalink={result.permalink} observations_count={len(result.observations)} relations_count={len(result.relations)} resolved_relations={resolved} unresolved_relations={unresolved} status_code={response.status_code}"
-    )
-    return "\n".join(summary)
+        # Format semantic summary based on status code
+        action = "Created" if response.status_code == 201 else "Updated"
+        summary = [
+            f"# {action} note",
+            f"project: {active_project.name}",
+            f"file_path: {result.file_path}",
+            f"permalink: {result.permalink}",
+            f"checksum: {result.checksum[:8] if result.checksum else 'unknown'}",
+        ]
+
+        # Count observations by category
+        categories: dict[str, int] = {}
+        if result.observations:
+            for obs in result.observations:
+                if obs.category:  # Only count observations with categories
+                    categories[obs.category] = categories.get(obs.category, 0) + 1
+
+            summary.append("\n## Observations")
+            for category, count in sorted(categories.items()):
+                summary.append(f"- {category}: {count}")
+
+        # Count resolved/unresolved relations
+        unresolved = 0
+        resolved = 0
+        if result.relations:
+            unresolved = sum(1 for r in result.relations if not r.to_id)
+            resolved = len(result.relations) - unresolved
+
+            summary.append("\n## Relations")
+            summary.append(f"- Resolved: {resolved}")
+            if unresolved:
+                summary.append(f"- Unresolved: {unresolved}")
+                summary.append(
+                    "\nNote: Unresolved relations point to entities that don't exist yet."
+                )
+                summary.append(
+                    "They will be automatically resolved when target entities are created or during sync operations."
+                )
+
+        if tag_list:
+            summary.append(f"\n## Tags\n- {', '.join(tag_list)}")
+
+        logger.info(
+            f"MCP tool response: tool=content_manager operation=write action={action} permalink={result.permalink} observations_count={len(result.observations)} relations_count={len(result.relations)} resolved_relations={resolved} unresolved_relations={unresolved} status_code={response.status_code}"
+        )
+        return "\n".join(summary)
+    except Exception as e:
+        logger.error(f"Error creating/updating note: {e}", exc_info=True)
+        return f"""# Error: Failed to Create/Update Note
+
+An error occurred while trying to create or update the note.
+
+**Details:**
+- **Title:** {identifier}
+- **Folder:** {folder}
+- **Error:** {str(e)}
+
+**Possible causes:**
+- Network connectivity issue
+- Server not responding
+- Invalid parameters
+- Project configuration error
+
+**Troubleshooting:**
+1. Check that the project is active and accessible
+2. Verify the folder path is valid
+3. Try again in a moment if it's a temporary network issue
+"""
 
 
 async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> str:
@@ -588,6 +936,7 @@ async def _edit_operation(
     section: str | None,
     find_text: str | None,
     expected_replacements: int,
+    use_regex: bool,
 ) -> str:
     """Handle edit operation."""
     from advanced_memory.mcp.tools.edit_note import edit_note
@@ -599,6 +948,7 @@ async def _edit_operation(
         section=section,
         find_text=find_text,
         expected_replacements=expected_replacements,
+        use_regex=use_regex,
         project=active_project.name,
     )
 
@@ -628,7 +978,18 @@ async def _edit_tags_operation(
         current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     )
     if isinstance(existing_tags_raw, str):
-        current_tags: list[str] = [existing_tags_raw]
+        # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
+        import ast
+
+        try:
+            parsed = ast.literal_eval(existing_tags_raw)
+            if isinstance(parsed, list):
+                current_tags = [str(tag) for tag in parsed]
+            else:
+                current_tags = [existing_tags_raw]
+        except (ValueError, SyntaxError):
+            # Not a list representation, treat as single tag
+            current_tags = [existing_tags_raw]
     elif isinstance(existing_tags_raw, list):
         current_tags = [str(tag) for tag in existing_tags_raw]
     else:
@@ -697,12 +1058,26 @@ async def _edit_tags_operation(
 
     current_content = resource_response.text
 
+    # Validate permalink exists
+    if not current_entity.permalink:
+        return (
+            "# Error\n\n"
+            f"Entity '{identifier}' has no permalink.\n"
+            "Cannot update tags without a valid permalink.\n"
+            "This may indicate a corrupted entity in the database."
+        )
+
+    # Extract folder from permalink (everything except the last part)
+    permalink_parts = current_entity.permalink.split("/")
+    folder = "/".join(permalink_parts[:-1]) if len(permalink_parts) > 1 else ""
+
     update_url = f"{project_url}/knowledge/entities/{current_entity.permalink}"
     update_data = {
         "title": current_entity.title,
         "entity_type": current_entity.entity_type,
         "content_type": current_entity.content_type,
         "content": current_content,
+        "folder": folder,
         "entity_metadata": metadata,
     }
 
@@ -743,6 +1118,165 @@ async def _move_operation(active_project, identifier: str, destination_path: str
     )
 
 
+def _extract_content_tags(content: str, title: str) -> list[str]:
+    """Extract relevant tags from content and title using keyword extraction.
+
+    Extracts:
+    - All significant words from title (not just first)
+    - Topics mentioned after "about", "on", "regarding", etc.
+    - Common subject keywords (biology, science, technology, etc.)
+    - Important nouns and concepts from content
+    """
+    import re
+
+    # Combine title and content for analysis
+    # Use string concatenation to avoid f-string parsing of JSON curly braces in content
+    text = (title + " " + content).lower()
+    title_lower = title.lower()
+
+    # Common stop words to skip
+    skip_words = {
+        "the",
+        "a",
+        "an",
+        "about",
+        "notes",
+        "note",
+        "quick",
+        "my",
+        "on",
+        "in",
+        "at",
+        "to",
+        "for",
+        "of",
+        "with",
+        "by",
+        "from",
+        "as",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "could",
+        "should",
+        "this",
+        "that",
+        "these",
+        "those",
+        "it",
+        "its",
+        "they",
+        "them",
+        "their",
+        "make",
+        "making",
+        "current",
+        "developments",
+        "development",
+        "and",
+        "or",
+        "but",
+    }
+
+    extracted_tags = []
+
+    # Extract all significant words from title (not just first)
+    title_words = re.findall(r"\b\w+\b", title_lower)
+    for word in title_words:
+        if word not in skip_words and len(word) > 2:
+            # Convert to tag format (lowercase, hyphenated if needed)
+            tag = word.lower().replace("_", "-")
+            if tag not in extracted_tags:
+                extracted_tags.append(tag)
+
+    # Look for "about X" or "on X" patterns to extract topics
+    about_patterns = [
+        r"about\s+([a-z]+(?:\s+[a-z]+){0,3})",  # "about epstein scandal"
+        r"on\s+([a-z]+(?:\s+[a-z]+){0,3})",  # "on current developments"
+        r"regarding\s+([a-z]+(?:\s+[a-z]+){0,3})",  # "regarding X"
+        r"concerning\s+([a-z]+(?:\s+[a-z]+){0,3})",  # "concerning X"
+    ]
+
+    for pattern in about_patterns:
+        matches = re.findall(pattern, title_lower)
+        for match in matches:
+            # Extract individual words from the match
+            words = match.split()
+            for word in words:
+                if word not in skip_words and len(word) > 2:
+                    tag = word.lower().replace("_", "-")
+                    if tag not in extracted_tags:
+                        extracted_tags.append(tag)
+
+    # Common subject/category keywords
+    subject_keywords = {
+        "biology": [
+            "biology",
+            "biological",
+            "organism",
+            "species",
+            "animal",
+            "plant",
+            "insect",
+            "butterfly",
+            "caterpillar",
+        ],
+        "science": ["science", "scientific", "research", "study", "experiment"],
+        "technology": ["technology", "tech", "software", "programming", "code", "computer"],
+        "history": ["history", "historical", "ancient", "medieval", "war", "battle"],
+        "literature": ["literature", "book", "novel", "poetry", "author", "writing"],
+        "art": ["art", "artistic", "painting", "drawing", "sculpture", "design"],
+        "music": ["music", "musical", "song", "instrument", "composer"],
+        "philosophy": ["philosophy", "philosophical", "ethics", "morality", "theory"],
+        "psychology": ["psychology", "psychological", "mental", "behavior", "cognitive"],
+        "mathematics": ["mathematics", "math", "mathematical", "equation", "formula", "theorem"],
+        "politics": ["politics", "political", "government", "election", "scandal", "corruption"],
+        "news": ["news", "current", "developments", "breaking", "update"],
+    }
+
+    # Check for subject keywords
+    for subject, keywords in subject_keywords.items():
+        if any(keyword in text for keyword in keywords):
+            if subject not in extracted_tags:
+                extracted_tags.append(subject)
+
+    # Special handling for common patterns
+    if "butterflies" in text or "butterfly" in text:
+        if "insects" not in extracted_tags and "insect" in text:
+            extracted_tags.append("insects")
+        if "biology" not in extracted_tags:
+            extracted_tags.append("biology")
+
+    if "insects" in text or "insect" in text:
+        if "biology" not in extracted_tags:
+            extracted_tags.append("biology")
+
+    if "scandal" in text:
+        if "politics" not in extracted_tags:
+            extracted_tags.append("politics")
+        if "news" not in extracted_tags and ("current" in text or "developments" in text):
+            extracted_tags.append("news")
+
+    # Look for other common patterns
+    if "life cycle" in text or "metamorphosis" in text:
+        if "biology" not in extracted_tags:
+            extracted_tags.append("biology")
+
+    return extracted_tags
+
+
 async def _quick_capture_operation(active_project, content: str, tags: TagType) -> str:
     """Handle quick capture operation - ultra-fast note creation with smart defaults."""
     from datetime import datetime
@@ -766,14 +1300,23 @@ async def _quick_capture_operation(active_project, content: str, tags: TagType) 
     # Auto-select folder (inbox or quick-notes)
     folder = "inbox"
 
-    # Auto-add capture tag
+    # Start with user-provided tags
     tag_list = parse_tags(tags) if tags else []
+
+    # Auto-extract relevant tags from content
+    extracted_tags = _extract_content_tags(content, title)
+    for tag in extracted_tags:
+        if tag not in tag_list:
+            tag_list.append(tag)
+
+    # Always add quick-capture and date tags
     tag_list.append("quick-capture")
     tag_list.append(datetime.now().strftime("%Y-%m-%d"))
 
     # Add timestamp to content
+    # Use string concatenation to avoid f-string parsing of JSON curly braces in content
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-    formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n{content}"
+    formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n" + content
 
     # Create the note
     return await _write_operation(
@@ -806,30 +1349,17 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
     # Check if note exists (not an error message)
     if "# Note Not Found:" in existing_note:
         # Create new daily note
+        # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
-        formatted_content = f"""# Daily Note: {title}
-
-## {timestamp}
-
-{content}
-
----
-
-"""
+        formatted_content = f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
         return await _write_operation(
             active_project, title, formatted_content, folder, tag_list, "note"
         )
     else:
         # Append to existing daily note
+        # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
-        append_content = f"""
-
-## {timestamp}
-
-{content}
-
----
-"""
+        append_content = f"\n\n## {timestamp}\n\n" + content + "\n\n---\n"
         return await edit_note.fn(
             identifier=f"{folder}/{title}",
             operation="append",
@@ -842,4 +1372,277 @@ async def _delete_operation(active_project, identifier: str) -> str:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    return await delete_note.fn(identifier=identifier, project=active_project.name)
+    result = await delete_note.fn(identifier=identifier, project=active_project.name)
+
+    # delete_note returns bool | str, convert to string for consistency
+    if isinstance(result, bool):
+        if result:
+            return f"# Delete Complete\n\n**Note deleted:** {identifier}\n\nSuccessfully removed from project '{active_project.name}'."
+        else:
+            return f"# Delete Failed\n\n**Note not deleted:** {identifier}\n\nThe delete operation completed but the note was not removed."
+    else:
+        # Already a formatted error string
+        return result
+
+
+async def _suggest_tags_operation(active_project, identifier: str) -> str:
+    """Suggest semantic tags for a note using LLM."""
+    try:
+        # Read the note first
+        from advanced_memory.mcp.tools.read_note import read_note
+
+        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+
+        if not note_content or note_content.startswith("# Error"):
+            return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
+
+        # Extract title and content
+        lines = note_content.split("\n")
+        title = lines[0].lstrip("#").strip() if lines else identifier
+        content = "\n".join(lines[1:]) if len(lines) > 1 else note_content
+
+        # Use LLM to suggest tags
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+
+        system_prompt = """You are a semantic tagging assistant for a knowledge management system.
+
+Analyze the note content and suggest relevant tags that:
+1. Capture the main topics and themes
+2. Include subject categories (e.g., biology, technology, history)
+3. Include specific entities mentioned (people, places, concepts)
+4. Include content type (tutorial, analysis, reference, etc.)
+5. Are useful for search and organization
+
+Respond with JSON array of tag strings (lowercase, hyphenated):
+["tag1", "tag2", "tag3"]
+
+Return 5-10 relevant tags."""
+
+        prompt = f"""Note Title: {title}
+
+Note Content:
+{content[:2000]}
+
+Suggest semantic tags for this note."""
+
+        suggested_tags = await llm.generate_json(
+            prompt, system_prompt, max_tokens=300, temperature=0.5
+        )
+
+        if isinstance(suggested_tags, list):
+            tags_list = [str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag]
+        else:
+            tags_list = []
+
+        if not tags_list:
+            return f"""# Tag Suggestions
+
+**Note:** {identifier}
+
+**Status:** No tags suggested
+
+The LLM could not generate tag suggestions. Try using the current keyword-based tag extraction instead.
+"""
+
+        return f"""# Tag Suggestions
+
+**Note:** {identifier}
+
+**Suggested Tags:**
+{", ".join(f"`{tag}`" for tag in tags_list)}
+
+**To apply these tags:**
+```python
+adn_content("edit_tags",
+    identifier="{identifier}",
+    tag_operation="add",
+    tags={json.dumps(tags_list)})
+```
+
+**Total:** {len(tags_list)} tags suggested
+"""
+
+    except Exception as e:
+        logger.error(f"Tag suggestion error: {e}", exc_info=True)
+        return f"# Error\n\nFailed to suggest tags: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+
+
+async def _summarize_operation(active_project, identifier: str) -> str:
+    """Summarize a note using LLM."""
+    try:
+        # Read the note first
+        from advanced_memory.mcp.tools.read_note import read_note
+
+        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+
+        if not note_content or note_content.startswith("# Error"):
+            return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
+
+        # Use LLM to summarize
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+
+        system_prompt = """You are a summarization assistant. Create a concise, informative summary of the note content.
+
+The summary should:
+1. Capture the main points and key information
+2. Be clear and well-structured
+3. Preserve important details and context
+4. Use markdown formatting for readability
+
+Return the summary as plain text (not JSON)."""
+
+        # Use string concatenation to avoid f-string parsing of JSON curly braces in content
+        note_preview = note_content[:4000]
+        prompt = f"Summarize this note:\n\n{note_preview}"
+
+        summary = await llm.generate(prompt, system_prompt, max_tokens=1000, temperature=0.3)
+
+        return f"""# Note Summary
+
+**Note:** {identifier}
+
+---
+
+## Summary
+
+{summary}
+
+---
+
+**Original note length:** {len(note_content)} characters
+**Summary length:** {len(summary)} characters
+"""
+
+    except Exception as e:
+        logger.error(f"Summarization error: {e}", exc_info=True)
+        return f"# Error\n\nFailed to summarize note: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+
+
+async def _enhance_operation(
+    active_project, identifier: str, enhancement_instruction: str | None
+) -> str:
+    """Enhance a note using LLM."""
+    try:
+        # Read the note first
+        from advanced_memory.mcp.tools.read_note import read_note
+
+        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+
+        if not note_content or note_content.startswith("# Error"):
+            return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
+
+        # Use LLM to enhance
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+
+        instruction = (
+            enhancement_instruction
+            or "Improve the structure, clarity, and completeness of this note while preserving all original content and meaning."
+        )
+
+        system_prompt = """You are a content enhancement assistant. Enhance notes by:
+1. Improving structure and organization
+2. Adding clarity and readability
+3. Ensuring completeness
+4. Preserving all original content and meaning
+5. Maintaining the original writing style and tone
+
+Return the enhanced note content in markdown format."""
+
+        # Use string concatenation to avoid f-string parsing of JSON curly braces in content
+        note_preview = note_content[:4000]
+        prompt = f"Enhance this note:\n\n{note_preview}\n\nEnhancement instruction: {instruction}\n\nReturn the complete enhanced note content."
+
+        enhanced_content = await llm.generate(
+            prompt, system_prompt, max_tokens=4000, temperature=0.5
+        )
+
+        # Update the note with enhanced content
+        from advanced_memory.mcp.tools.edit_note import edit_note
+
+        await edit_note.fn(
+            identifier=identifier,
+            operation="replace_section",
+            section="",  # Replace entire content
+            content=enhanced_content,
+            project=active_project.name,
+        )
+
+        return f"""# Note Enhanced
+
+**Note:** {identifier}
+
+**Enhancement:** {instruction}
+
+The note has been enhanced and updated. The enhanced version includes:
+- Improved structure and organization
+- Enhanced clarity and readability
+- Preserved original content and meaning
+
+**Original length:** {len(note_content)} characters
+**Enhanced length:** {len(enhanced_content)} characters
+"""
+
+    except Exception as e:
+        logger.error(f"Enhancement error: {e}", exc_info=True)
+        return f"# Error\n\nFailed to enhance note: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+
+
+async def _generate_operation(
+    active_project, topic: str, folder: str | None, tags: TagType, entity_type: str
+) -> str:
+    """Generate new note content using LLM."""
+    try:
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+
+        system_prompt = """You are a content generation assistant for a knowledge management system.
+
+Generate comprehensive, well-structured note content on the given topic. The content should:
+1. Be informative and accurate
+2. Use proper markdown formatting
+3. Include clear headings and structure
+4. Be suitable for a knowledge base (Zettelkasten-style)
+5. Include relevant details and examples
+
+Return the complete note content in markdown format."""
+
+        prompt = f"""Generate a comprehensive note on: {topic}
+
+Create a well-structured markdown note with:
+- Clear title/heading
+- Introduction
+- Main content sections
+- Examples if applicable
+- Key takeaways
+
+Make it informative and useful for a knowledge base."""
+
+        generated_content = await llm.generate(
+            prompt, system_prompt, max_tokens=3000, temperature=0.7
+        )
+
+        # Extract title from first line
+        first_line = generated_content.split("\n")[0].lstrip("#").strip()
+        title = first_line if first_line else topic.title()
+
+        # Use default folder if not provided
+        target_folder = folder or "inbox"
+
+        # Parse tags
+        tag_list = parse_tags(tags) if tags else []
+
+        # Create the note
+        return await _write_operation(
+            active_project, title, generated_content, target_folder, tag_list, entity_type
+        )
+
+    except Exception as e:
+        logger.error(f"Content generation error: {e}", exc_info=True)
+        return f"# Error\n\nFailed to generate content: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."

@@ -1,13 +1,13 @@
-"""Type definitions for Basic Memory.
+"""Type definitions for Advanced Memory.
 
 This module contains type definitions used throughout the application to avoid circular imports.
 """
 
 from pathlib import Path
-from typing import TypeVar, Union
+from typing import TypeVar
 
 # Define PathLike and FilePath types
-PathLike = Union[str, Path]
+PathLike = str | Path
 FilePath = TypeVar("FilePath", str, Path)
 
 __all__ = [

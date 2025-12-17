@@ -1,1 +1,1 @@
-"""CLI tools for basic-memory"""
+"""CLI tools for advanced-memory"""

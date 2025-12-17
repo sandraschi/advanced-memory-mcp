@@ -1,5 +1,8 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
+from datetime import UTC, datetime
+from typing import Any
+
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
@@ -11,31 +14,20 @@ from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
 
 
-@mcp.tool(
-    description="""Get recent activity from across the knowledge base.
-
-    Timeframe supports natural language formats like:
-    - "2 days ago"
-    - "last week"
-    - "yesterday"
-    - "today"
-    - "3 weeks ago"
-    Or standard formats like "7d"
-    """,
-)
+@mcp.tool
 async def recent_activity(
-    type: str | list[str] = "",
+    type_filter: str | list[str] = "",
     depth: int = 1,
     timeframe: TimeFrame = "7d",
     page: int = 1,
     page_size: int = 10,
     max_related: int = 10,
     project: str | None = None,
-) -> GraphContext:
+) -> dict[str, Any]:
     """Get recent activity across the knowledge base.
 
     Args:
-        type: Filter by content type(s). Can be a string or list of strings.
+        type_filter: Filter by content type(s). Can be a string or list of strings.
             Valid options:
             - "entity" or ["entity"] for knowledge entities
             - "relation" or ["relation"] for connections between entities
@@ -43,6 +35,7 @@ async def recent_activity(
             Multiple types can be combined: ["entity", "relation"]
             Case-insensitive: "ENTITY" and "entity" are treated the same.
             Default is an empty string, which returns all types.
+            Fallback: Invalid types are ignored. If all types are invalid, falls back to all types with a warning.
         depth: How many relation hops to traverse (1-3 recommended)
         timeframe: Time window to search. Supports natural language:
             - Relative: "2 days ago", "last week", "yesterday"
@@ -54,29 +47,29 @@ async def recent_activity(
         project: Optional project name to get activity from. If not provided, uses current active project.
 
     Returns:
-        GraphContext containing:
-            - primary_results: Latest activities matching the filters
-            - related_results: Connected content via relations
+        Dictionary containing:
+            - results: Latest activities matching the filters
             - metadata: Query details and statistics
+            - page/page_size: Pagination info (when available)
 
     Examples:
         # Get all entities for the last 10 days (default)
         recent_activity()
 
         # Get all entities from yesterday (string format)
-        recent_activity(type="entity", timeframe="yesterday")
+        recent_activity(type_filter="entity", timeframe="yesterday")
 
         # Get all entities from yesterday (list format)
-        recent_activity(type=["entity"], timeframe="yesterday")
+        recent_activity(type_filter=["entity"], timeframe="yesterday")
 
         # Get recent relations and observations
-        recent_activity(type=["relation", "observation"], timeframe="today")
+        recent_activity(type_filter=["relation", "observation"], timeframe="today")
 
         # Look back further with more context
-        recent_activity(type="entity", depth=2, timeframe="2 weeks ago")
+        recent_activity(type_filter="entity", depth=2, timeframe="2 weeks ago")
 
         # Get activity from specific project
-        recent_activity(type="entity", project="work-project")
+        recent_activity(type_filter="entity", project="work-project")
 
     Notes:
         - Higher depth values (>3) may impact performance with large result sets
@@ -84,7 +77,7 @@ async def recent_activity(
         - Max timeframe is 1 year in the past
     """
     logger.info(
-        f"Getting recent activity from type={type}, depth={depth}, timeframe={timeframe}, page={page}, page_size={page_size}, max_related={max_related}"
+        f"Getting recent activity from type_filter={type_filter}, depth={depth}, timeframe={timeframe}, page={page}, page_size={page_size}, max_related={max_related}"
     )
     params = {
         "page": page,
@@ -96,13 +89,14 @@ async def recent_activity(
     if timeframe:
         params["timeframe"] = timeframe  # pyright: ignore
 
-    # Validate and convert type parameter
-    if type:
+    # Validate and convert type_filter parameter
+    invalid_types = []
+    if type_filter:
         # Convert single string to list
-        if isinstance(type, str):
-            type_list = [type]
+        if isinstance(type_filter, str):
+            type_list = [type_filter]
         else:
-            type_list = type
+            type_list = type_filter
 
         # Validate each type against SearchItemType enum
         validated_types = []
@@ -112,11 +106,22 @@ async def recent_activity(
                 if isinstance(t, str):
                     validated_types.append(SearchItemType(t.lower()))
             except ValueError:
-                valid_types = [t.value for t in SearchItemType]
-                raise ValueError(f"Invalid type: {t}. Valid types are: {valid_types}")
+                # Track invalid types but don't fail
+                invalid_types.append(t)
+                logger.warning(
+                    f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types."
+                )
 
-        # Add validated types to params
-        params["type"] = [t.value for t in validated_types]  # pyright: ignore
+        # If we have valid types, use them. If all were invalid, fall back to all types
+        if validated_types:
+            params["type"] = [t.value for t in validated_types]  # pyright: ignore
+        elif invalid_types:
+            # All types were invalid - fallback to all types with warning
+            valid_types = [t.value for t in SearchItemType]
+            logger.warning(
+                f"All provided types were invalid: {invalid_types}. "
+                f"Falling back to all types. Valid options: {valid_types}"
+            )
 
     active_project = get_active_project(project)
     project_url = active_project.project_url
@@ -126,4 +131,61 @@ async def recent_activity(
         f"{project_url}/memory/recent",
         params=params,
     )
-    return GraphContext.model_validate(response.json())
+    raw_data = response.json()
+
+    def normalize_timestamp(value: Any) -> str | None:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            try:
+                # Handle timestamps with or without timezone info
+                ts = value.replace("Z", "+00:00")
+                dt = datetime.fromisoformat(ts)
+            except ValueError:
+                return value
+        elif isinstance(value, datetime):
+            dt = value
+        else:
+            return str(value)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=UTC)
+        return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+
+    def normalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
+        summary_type = summary.get("type")
+
+        if summary_type == "relation":
+            summary["relation_type"] = summary.get("relation_type") or "related_to"
+            summary["from_entity"] = summary.get("from_entity")
+            summary["to_entity"] = summary.get("to_entity")
+        elif summary_type == "observation":
+            summary["category"] = summary.get("category") or "general"
+            summary["content"] = summary.get("content") or ""
+
+        summary["created_at"] = normalize_timestamp(summary.get("created_at"))
+        return summary
+
+    results = raw_data.get("results", [])
+    for item in results:
+        if "primary_result" in item and isinstance(item["primary_result"], dict):
+            item["primary_result"] = normalize_summary(item["primary_result"])
+
+        observations = item.get("observations", [])
+        item["observations"] = [
+            normalize_summary(obs) for obs in observations if isinstance(obs, dict)
+        ]
+
+        related = item.get("related_results", [])
+        item["related_results"] = [
+            normalize_summary(rel) for rel in related if isinstance(rel, dict)
+        ]
+
+    metadata = raw_data.get("metadata", {})
+    metadata["generated_at"] = normalize_timestamp(metadata.get("generated_at"))
+    metadata["timeframe"] = metadata.get("timeframe")
+    raw_data["metadata"] = metadata
+
+    raw_data["results"] = results
+
+    context = GraphContext.model_validate(raw_data)
+    return context.model_dump(mode="json")

@@ -113,6 +113,7 @@ async def test_search_tag_parameter_filter(client):
     assert isinstance(response, SearchResponse)
     assert any(r.permalink == "search-tags/priority-review-note" for r in response.results)
 
+
 @pytest.mark.asyncio
 async def test_search_title(client):
     """Test basic search functionality."""
@@ -385,9 +386,13 @@ async def test_search_e2e_write_search_delete(client):
     assert delete_result is True
 
     # Confirm no results
-    post_delete_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
+    post_delete_response = await search_notes.fn(
+        query="Butterfly Lifecycle Notes", search_type="title"
+    )
     assert isinstance(post_delete_response, SearchResponse)
-    assert not any(r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results)
+    assert not any(
+        r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results
+    )
 
 
 @pytest.mark.asyncio

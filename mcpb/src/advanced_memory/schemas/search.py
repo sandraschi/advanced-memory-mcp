@@ -51,9 +51,11 @@ class SearchQuery(BaseModel):
     # Optional filters
     types: list[str] | None = None  # Filter by type
     entity_types: list[SearchItemType] | None = None  # Filter by entity type
-    after_date: datetime | str | None = None  # Time-based filter
+    after_date: datetime | str | None = None  # Time-based filter (from this date/time)
+    before_date: datetime | str | None = None  # Time-based filter (until this date/time)
+    tags: list[str] | None = None  # Filter by tags (notes must have ALL specified tags)
 
-    @field_validator("after_date")
+    @field_validator("after_date", "before_date")
     @classmethod
     def validate_date(cls, v: datetime | str | None) -> str | None:
         """Convert datetime to ISO format if needed."""
@@ -68,8 +70,10 @@ class SearchQuery(BaseModel):
             and self.title is None
             and self.text is None
             and self.after_date is None
+            and self.before_date is None
             and self.types is None
             and self.entity_types is None
+            and self.tags is None
         )
 
     def has_boolean_operators(self) -> bool:

@@ -23,18 +23,29 @@ async def export_html_notes(
     include_index: bool = True,
     show_after_export: bool = True,
     project: str | None = None,
+    search_query: str | None = None,
+    combine_into_one: bool = False,
+    html_title: str | None = None,
+    make_toc: bool = True,
 ) -> str:
     """Export Advanced Memory notes to clean HTML format.
 
     This tool converts markdown notes to HTML files with a simple, clean design.
     It preserves folder structure and creates an index page for easy navigation.
 
+    Supports combining multiple notes into a single HTML file with clickable TOC.
+
     Args:
-        export_path: Path where to create the HTML export
+        export_path: Path where to create the HTML export (or file path if combine_into_one=True)
         source_folder: Folder in Advanced Memory to export from (default: root "/")
         include_subfolders: Whether to include subfolders recursively (default: True)
-        include_index: Whether to create an index page (default: True)
+        include_index: Whether to create an index page (default: True, only for individual files)
+        show_after_export: Whether to open the export after completion (default: True)
         project: Optional project name to export from. If not provided, uses current active project.
+        search_query: Optional search query to find notes (e.g., "docker", "python")
+        combine_into_one: If True, combine all notes into a single HTML file with TOC
+        html_title: Title for combined HTML (only used when combine_into_one=True)
+        make_toc: If True, add clickable table of contents to combined HTML (default: True)
 
     Returns:
         Detailed export summary with statistics and file locations.
@@ -49,10 +60,13 @@ async def export_html_notes(
             source_folder="/research"
         )
 
-        # Export without index page
+        # Search and combine notes into one HTML with TOC
         result = await export_html_notes.fn(
-            export_path="/path/to/export",
-            include_index=False
+            export_path="/path/to/combined.html",
+            search_query="docker",
+            combine_into_one=True,
+            make_toc=True,
+            html_title="Docker Notes Collection"
         )
     """
 
@@ -64,13 +78,40 @@ async def export_html_notes(
 
         logger.info(f"Starting HTML export: {source_folder} -> {export_path}")
 
-        # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
+        # Get notes based on search query or folder
+        if search_query:
+            notes_data = await _search_notes(search_query, project)
+        else:
+            notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project)
 
         if not notes_data:
-            return f"# HTML Export Complete\n\nNo notes found in folder: {source_folder}"
+            query_desc = f"query '{search_query}'" if search_query else f"folder '{source_folder}'"
+            return f"# HTML Export Complete\n\nNo notes found matching {query_desc}"
 
-        # Process the export
+        # Combine into one HTML file with TOC if requested
+        if combine_into_one:
+            result = await _export_combined_html(
+                notes_data, export_path_obj, html_title or "Combined Notes", make_toc
+            )
+            if show_after_export:
+                from advanced_memory.utils.file_opener import (
+                    format_open_result,
+                    open_file_or_folder,
+                )
+
+                combined_file = (
+                    export_path_obj
+                    if export_path_obj.suffix == ".html"
+                    else export_path_obj.with_suffix(".html")
+                )
+                if combined_file.exists():
+                    success, msg = open_file_or_folder(combined_file)
+                    result += "\n\n" + format_open_result(success, msg, combined_file)
+            return result
+
+        # Process the export (individual files)
+        # Create export directory if it doesn't exist
+        export_path_obj.mkdir(parents=True, exist_ok=True)
         result = await _process_html_export(notes_data, export_path_obj, include_index)
 
         # Open the index.html file if requested
@@ -197,6 +238,544 @@ async def _get_notes_from_folder(
         return []
 
     return notes_data
+
+
+async def _search_notes(query: str, project: str | None = None) -> list[dict[str, Any]]:
+    """Search for notes by query."""
+    try:
+        from advanced_memory.mcp.async_client import client
+        from advanced_memory.mcp.project_session import get_active_project
+        from advanced_memory.mcp.tools.utils import call_post
+        from advanced_memory.schemas.search import SearchQuery
+
+        active_project = get_active_project(project)
+        project_url = active_project.project_url
+
+        search_query = SearchQuery(
+            text=query,
+            search_type="text",
+            page=1,
+            page_size=1000,  # Large limit
+        )
+
+        search_response = await call_post(
+            client,
+            f"{project_url}/search/",
+            json=search_query.model_dump(),
+            params={"page": 1, "page_size": 1000},
+        )
+
+        from advanced_memory.schemas.search import SearchResponse
+
+        search_result = SearchResponse.model_validate(search_response.json())
+
+        notes_data = []
+
+        # Get content for each matching note
+        for note in search_result.results:
+            note_title = note.title
+            note_path = note.file_path
+
+            try:
+                note_content = await read_note.fn(identifier=note_title, project=project)
+
+                # Extract just the markdown content
+                content = note_content
+                if content.startswith("# "):
+                    lines = content.split("\n")
+                    filtered_lines = []
+                    skip_until_content = False
+                    for line in lines:
+                        if line.startswith("*Original path:*") or line.startswith("*Exported:*"):
+                            continue
+                        if line.strip() == "---" and not skip_until_content:
+                            continue
+                        if line.startswith("## Content") or line.startswith(
+                            "This note has been exported"
+                        ):
+                            skip_until_content = True
+                            continue
+                        if skip_until_content or not line.startswith("*Generated by"):
+                            filtered_lines.append(line)
+
+                    content = "\n".join(filtered_lines).strip()
+
+                notes_data.append(
+                    {
+                        "filename": f"{note_title}.md",
+                        "path": note_path,
+                        "title": note_title,
+                        "folder": "",
+                        "content": content,
+                    }
+                )
+
+            except Exception as e:
+                logger.warning(f"Could not read content for note {note_title}: {e}")
+                notes_data.append(
+                    {
+                        "filename": f"{note_title}.md",
+                        "path": note_path or "",
+                        "title": note_title,
+                        "folder": "",
+                        "content": f"# {note_title}\n\n*Content could not be read*",
+                    }
+                )
+
+        return notes_data
+
+    except Exception as e:
+        logger.error(f"Error searching notes: {e}")
+        return []
+
+
+async def _export_combined_html(
+    notes_data: list[dict[str, Any]],
+    export_path: Path,
+    html_title: str,
+    make_toc: bool = True,
+) -> str:
+    """Export multiple notes into a single HTML file with clickable TOC."""
+    try:
+        # Generate HTML title if not provided
+        if not html_title:
+            html_title = "Combined Notes"
+
+        # Collect all headings for TOC
+        toc_items = []
+        combined_content = []
+        note_sections = []
+
+        for idx, note_info in enumerate(notes_data):
+            note_title = note_info.get("title", "Untitled")
+            note_content = note_info.get("content", "")
+
+            # Create anchor for note section
+            note_anchor = _slugify(note_title)
+
+            # Add note as section
+            note_sections.append(
+                {
+                    "anchor": note_anchor,
+                    "title": note_title,
+                    "content": note_content,
+                }
+            )
+
+            # Extract headings for TOC
+            if make_toc:
+                # Add note title as top-level TOC item
+                toc_items.append(
+                    {
+                        "level": 1,
+                        "title": note_title,
+                        "anchor": note_anchor,
+                    }
+                )
+                # Add sub-headings from note content
+                headings = _extract_headings(note_content, note_anchor)
+                toc_items.extend(headings)
+
+        # Build combined HTML
+        html_parts = []
+
+        # Start HTML document
+        html_parts.append(f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{html_title}</title>
+    <style>
+        {_get_combined_css()}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="combined-header">
+            <h1>{html_title}</h1>
+            <p class="header-meta">Generated from {len(notes_data)} notes on {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+        </header>
+""")
+
+        # Add TOC if requested
+        if make_toc and toc_items:
+            html_parts.append('        <nav class="toc-nav">')
+            html_parts.append("            <h2>Table of Contents</h2>")
+            html_parts.append('            <ul class="toc-list">')
+
+            for item in toc_items:
+                html_parts.append(f'                <li class="toc-level-{item["level"]}">')
+                html_parts.append(
+                    f'                    <a href="#{item["anchor"]}">{item["title"]}</a>'
+                )
+                html_parts.append("                </li>")
+
+            html_parts.append("            </ul>")
+            html_parts.append("        </nav>")
+
+        # Add note sections
+        html_parts.append('        <main class="combined-content">')
+
+        for section in note_sections:
+            # Convert markdown to HTML
+            html_content = markdown.markdown(
+                section["content"],
+                extensions=["extra", "codehilite", "meta", "tables"],
+                extension_configs={
+                    "codehilite": {
+                        "linenums": False,
+                        "guess_lang": True,
+                    }
+                },
+            )
+
+            # Add anchor IDs to headings
+            html_content = _add_heading_anchors(html_content, section["anchor"])
+
+            html_parts.append(
+                f'            <section id="{section["anchor"]}" class="note-section">'
+            )
+            html_parts.append(f'                <h1 class="section-title">{section["title"]}</h1>')
+            html_parts.append(f'                <div class="section-content">{html_content}</div>')
+            html_parts.append("            </section>")
+
+        html_parts.append("        </main>")
+
+        # Check for Mermaid diagrams
+        full_content = "\n".join(html_parts)
+        if _contains_mermaid(full_content):
+            full_content = _inject_mermaid_support(full_content)
+
+        # Close HTML
+        full_content += """
+    </div>
+</body>
+</html>"""
+
+        # Ensure .html extension
+        if export_path.suffix.lower() != ".html":
+            export_path = export_path.with_suffix(".html")
+
+        # Write combined HTML file
+        export_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(export_path, "w", encoding="utf-8") as f:
+            f.write(full_content)
+
+        if export_path.exists():
+            file_size = export_path.stat().st_size
+            toc_status = "✅ Clickable table of contents\n" if make_toc else ""
+            return f"""# Combined HTML Export Complete ✅
+
+**HTML Created:** `{export_path}`
+**Title:** {html_title}
+**Notes Combined:** {len(notes_data)}
+**File Size:** {file_size:,} bytes ({file_size / 1024:.1f} KB)
+
+## Features:
+{toc_status}- ✅ All notes in single HTML file
+- ✅ Professional formatting
+- ✅ Clickable navigation links
+- ✅ Mermaid diagram support (if present)
+
+**Ready to use!** Open the HTML file in your browser."""
+        else:
+            return f"Error: HTML file was not created at {export_path}"
+
+    except Exception as e:
+        logger.error(f"Combined HTML export failed: {e}")
+        import traceback
+
+        logger.error(traceback.format_exc())
+        return f"Combined HTML export failed: {str(e)}"
+
+
+def _slugify(text: str) -> str:
+    """Convert text to URL-friendly anchor."""
+    import re
+
+    # Convert to lowercase and replace spaces/special chars with hyphens
+    slug = re.sub(r"[^\w\s-]", "", text.lower())
+    slug = re.sub(r"[-\s]+", "-", slug)
+    return slug.strip("-")
+
+
+def _extract_headings(content: str, base_anchor: str) -> list[dict[str, Any]]:
+    """Extract headings from markdown content for TOC (nested under note title)."""
+    import re
+
+    headings = []
+    lines = content.split("\n")
+
+    for line in lines:
+        match = re.match(r"^(#{1,6})\s+(.+)$", line)
+        if match:
+            original_level = len(match.group(1))
+            title = match.group(2).strip()
+            anchor = f"{base_anchor}-{_slugify(title)}"
+            # Increment level by 1 to nest under note title (level 1)
+            # Max level is 6, so cap at 6
+            level = min(original_level + 1, 6)
+            headings.append(
+                {
+                    "level": level,
+                    "title": title,
+                    "anchor": anchor,
+                }
+            )
+
+    return headings
+
+
+def _add_heading_anchors(html_content: str, base_anchor: str) -> str:
+    """Add anchor IDs to headings in HTML."""
+    import re
+
+    def add_anchor(match):
+        tag = match.group(1)  # h1, h2, etc.
+        content = match.group(2)
+        anchor = f"{base_anchor}-{_slugify(content)}"
+        return f'<{tag} id="{anchor}">{content}</{tag}>'
+
+    # Replace headings with anchors
+    html_content = re.sub(r"<h([1-6])>(.+?)</h[1-6]>", add_anchor, html_content)
+    return html_content
+
+
+def _get_combined_css() -> str:
+    """Get CSS styles for combined HTML export."""
+    return """/* Combined HTML Export Styles */
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --text-color: #333;
+    --light-bg: #f8f9fa;
+    --border-color: #e9ecef;
+    --toc-bg: #ffffff;
+    --toc-border: #e9ecef;
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-bg);
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+}
+
+.combined-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.combined-header h1 {
+    color: var(--primary-color);
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.header-meta {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.toc-nav {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: var(--toc-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid var(--toc-border);
+}
+
+.toc-nav h2 {
+    color: var(--primary-color);
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-list li {
+    margin: 5px 0;
+}
+
+.toc-list a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+    transition: all 0.2s;
+}
+
+.toc-list a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+.toc-level-1 { padding-left: 0; }
+.toc-level-2 { padding-left: 15px; }
+.toc-level-3 { padding-left: 30px; }
+.toc-level-4 { padding-left: 45px; }
+
+.combined-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 40px;
+}
+
+.note-section {
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.note-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-size: 2em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+.section-content {
+    line-height: 1.8;
+}
+
+.section-content h1,
+.section-content h2,
+.section-content h3,
+.section-content h4,
+.section-content h5,
+.section-content h6 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.section-content h2 {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.section-content h3 {
+    color: var(--primary-color);
+    font-size: 1.5em;
+}
+
+.section-content p {
+    margin-bottom: 15px;
+}
+
+.section-content ul,
+.section-content ol {
+    margin-bottom: 15px;
+    padding-left: 30px;
+}
+
+.section-content code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9em;
+}
+
+.section-content pre {
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.section-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.section-content blockquote {
+    border-left: 4px solid var(--secondary-color);
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #666;
+}
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .toc-nav {
+        position: static;
+        max-height: none;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .combined-content {
+        padding: 20px;
+    }
+
+    .combined-header h1 {
+        font-size: 1.8em;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+    }
+}"""
 
 
 async def _process_html_export(

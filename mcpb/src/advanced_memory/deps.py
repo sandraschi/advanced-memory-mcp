@@ -1,9 +1,8 @@
-"""Dependency injection functions for basic-memory services."""
+"""Dependency injection functions for advanced-memory services."""
 
 import pathlib
 from typing import Annotated
 
-from basic_memory import db
 from fastapi import Depends, HTTPException, Path, status
 from loguru import logger
 from sqlalchemy.ext.asyncio import (
@@ -12,6 +11,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 
+from advanced_memory import db
 from advanced_memory.config import AdvancedMemoryConfig, ConfigManager, ProjectConfig
 from advanced_memory.importers import (
     ChatGPTImporter,

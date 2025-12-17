@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../beyondcompare-mcp"
+		},
+		{
+			"path": "../../immichmcp"
+		},
+		{
+			"path": "../../tailscale-mcp"
+		}
+	],
+	"settings": {}
+}

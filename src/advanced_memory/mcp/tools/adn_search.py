@@ -10,6 +10,7 @@ from typing import Literal
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.utils import parse_tags
 
 
 @mcp.tool
@@ -17,10 +18,12 @@ async def adn_search(
     operation: Literal["notes", "obsidian", "joplin", "notion", "evernote"],
     query: str,
     source_path: str | None = None,
-    search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"] | None = "text",
+    search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"]
+    | None = "text",
     page: int = 1,
     page_size: int = 10,
-    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
+    results_per_page: int
+    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     max_results: int = 20,
     case_sensitive: bool = False,
     include_content: bool = False,
@@ -28,7 +31,7 @@ async def adn_search(
     entity_types: list[str] | None = None,
     after_date: str | None = None,
     before_date: str | None = None,
-    tags: list[str] | None = None,
+    tags: list[str] | str | None = None,
     file_type: str | None = None,
     notebook_filter: str | None = None,
     tag_filter: str | None = None,
@@ -36,8 +39,7 @@ async def adn_search(
 ) -> str:
     """Comprehensive search management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all search operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+    PORTMANTEAU PATTERN: Consolidates 5 search operations into one tool.
 
     ⚠️ IMPORTANT: The "notes" operation searches CONTENT (text within notes), not by date/recency.
 
@@ -63,39 +65,38 @@ async def adn_search(
     - Content previews and context highlighting
 
     Args:
-        operation: The search operation to perform. MUST be one of:
-            - "notes": Search Advanced Memory knowledge base (use this for most searches)
-            - "obsidian": Search external Obsidian vault
-            - "joplin": Search external Joplin export
-            - "notion": Search external Notion export
-            - "evernote": Search external Evernote export
-        query: Search terms with boolean operators and phrases (required)
-        source_path: Path to external vault/export (required for obsidian/joplin/notion/evernote operations)
-        search_type: Type of search. MUST be one of:
-            - "text": Full-text search (default)
-            - "title": Search titles only
-            - "permalink": Search by path/permalink
-            - "tag": Search by tag (external vaults)
-            - "file": Search by filename (external vaults)
-            - "link": Search by wikilinks (external vaults)
-            - "frontmatter": Search YAML frontmatter (external vaults)
-            Default: "text"
-        page: Result page for pagination (default: 1)
-        page_size: Results per page (default: 10)
-        results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
-                          Note: Use this to maintain compatibility with standalone tools. The 'page_size' parameter is preferred.
-        max_results: Maximum number of results to return (default: 20)
-        case_sensitive: Whether search should be case-sensitive (default: False)
-        include_content: Include content previews in results (default: False)
-        types: Content type filters for notes search (e.g., ["note", "person"])
-        entity_types: Entity category filters for notes search (e.g., ["entity", "observation"])
-        after_date: Date filter - content FROM this date (e.g., "1 week", "spring 2024", "2024-01-01"). Default: None (all time)
-        before_date: Date filter - content UNTIL this date (e.g., "summer 2024", "2024-12-31"). Default: None (all time)
-        tags: Tag filter for notes search - notes must have ALL specified tags (e.g., ["dog", "training"])
-        file_type: File type filter for external searches
-        notebook_filter: Filter results to specific notebook
-        tag_filter: Filter results by tag name
-        project: Optional project name
+        operation (str): The search operation to perform. Required. MUST be one of:
+            "notes" (Advanced Memory knowledge base), "obsidian" (external vault),
+            "joplin" (external export), "notion" (external export), "evernote" (external export)
+        query (str): Search terms with boolean operators and phrases. Required.
+        source_path (str | None): Path to external vault/export. Required for: obsidian, joplin, notion, evernote operations
+        search_type (str | None): Type of search. Default: "text". Valid: "text", "title", "permalink", "tag", "file", "link", "frontmatter"
+        page (int): Result page for pagination. Default: 1
+        page_size (int): Results per page. Default: 10
+        results_per_page (int | None): Alias for page_size (compatibility). Default: None
+        max_results (int): Maximum number of results to return. Default: 20
+        case_sensitive (bool): Whether search should be case-sensitive. Default: False
+        include_content (bool): Include content previews in results. Default: False
+        types (list[str] | None): Content type filters for notes search. Example: ["note", "person"]
+        entity_types (list[str] | None): Entity category filters. Example: ["entity", "observation"]
+        after_date (str | None): Date filter - content FROM this date. Example: "1 week", "2024-01-01". Default: None
+        before_date (str | None): Date filter - content UNTIL this date. Example: "2024-12-31". Default: None
+        tags (list[str] | str | None): Tag filter - notes must have ALL specified tags
+                    * notes operation: Optional - Can be list, comma-separated string, or single tag
+                    * Other operations: NOT USED
+        file_type (str | None): File type filter for external searches
+                    * notion operation: Optional - Filter by file extension (e.g., "md", "html")
+                    * evernote operation: Optional - Filter by file type
+                    * Other operations: NOT USED
+        notebook_filter (str | None): Filter results to specific notebook
+                    * evernote operation: Optional - Filter results to specific Evernote notebook name
+                    * Other operations: NOT USED
+        tag_filter (str | None): Filter results by tag name
+                    * evernote operation: Optional - Filter results by Evernote tag name
+                    * Other operations: NOT USED
+        project (str | None): Optional project name
+                    * notes operation: Optional - Search within specific project (default: current active project)
+                    * Other operations: NOT USED
 
     Returns:
         Operation-specific result with search details and match counts
@@ -119,6 +120,32 @@ async def adn_search(
         # Search with tags and date range
         adn_search("notes", query="german shepherd", tags=["dog", "training"], after_date="spring 2024", before_date="summer 2024")
     """
+
+    # Normalize list parameters to handle both list and string formats (including JSON strings)
+    # This fixes schema validation issues where FastMCP might not properly handle list[str] | None
+    # Uses parse_tags for tags to handle JSON array strings properly
+    def _normalize_list_param(value: list[str] | str | None) -> list[str] | None:
+        """Normalize list parameter from various input formats."""
+        if value is None:
+            return None
+        if isinstance(value, list):
+            return [str(item).strip() for item in value if item]
+        if isinstance(value, str):
+            # Handle comma-separated string format
+            if "," in value:
+                return [item.strip() for item in value.split(",") if item.strip()]
+            # Single string value
+            return [value.strip()] if value.strip() else None
+        # Fallback: convert to string and create list
+        return [str(value).strip()] if value else None
+
+    # Normalize list-based filter parameters
+    types = _normalize_list_param(types)
+    entity_types = _normalize_list_param(entity_types)
+    # Use parse_tags for tags to properly handle JSON array strings and prevent YAML corruption
+    tags_parsed = parse_tags(tags) if tags is not None else None
+    tags = tags_parsed if tags_parsed else None
+
     # Parameter aliasing for compatibility with standalone search_notes tool
     # results_per_page → page_size
     if results_per_page is not None and page_size == 10:  # Only if default value
@@ -128,7 +155,7 @@ async def adn_search(
     original_operation = operation
     normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
     normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
-    alias_map = {
+    alias_map: dict[str, Literal["notes", "obsidian", "joplin", "notion", "evernote"]] = {
         "note": "notes",
         "notesearch": "notes",
         "searchnotes": "notes",
@@ -145,7 +172,10 @@ async def adn_search(
         "links": "notes",
         "frontmatter": "notes",
     }
-    operation = alias_map.get(normalized_operation, normalized_operation)
+    # Type-safe operation mapping
+    mapped_operation = alias_map.get(normalized_operation, normalized_operation)
+    if mapped_operation in ("notes", "obsidian", "joplin", "notion", "evernote"):
+        operation = mapped_operation  # type: ignore[assignment]
 
     search_type_overrides = {
         "title": "title",
@@ -174,7 +204,17 @@ async def adn_search(
                 requested_search_type=search_type,
             )
         else:
-            search_type = override_type
+            # Type-safe search_type assignment
+            if override_type in (
+                "text",
+                "title",
+                "permalink",
+                "tag",
+                "file",
+                "link",
+                "frontmatter",
+            ):
+                search_type = override_type  # type: ignore[assignment]
             applied = True
 
         if applied:
@@ -195,11 +235,28 @@ async def adn_search(
 
     # Route to appropriate operation
     if operation == "notes":
-        return await _notes_search(query, page, page_size, types, entity_types, after_date, before_date, tags, project)
+        return await _notes_search(
+            query,
+            page,
+            page_size,
+            search_type,
+            types,
+            entity_types,
+            after_date,
+            before_date,
+            tags,
+            project,
+        )
     elif operation == "obsidian":
-        return await _obsidian_search(query, source_path, search_type, max_results, include_content)
+        actual_search_type = search_type if search_type else "text"
+        return await _obsidian_search(
+            query, source_path, actual_search_type, max_results, include_content
+        )
     elif operation == "joplin":
-        return await _joplin_search(query, source_path, search_type, max_results, include_content)
+        actual_search_type = search_type if search_type else "text"
+        return await _joplin_search(
+            query, source_path, actual_search_type, max_results, include_content
+        )
     elif operation == "notion":
         return await _notion_search(query, source_path, case_sensitive, file_type, max_results)
     elif operation == "evernote":
@@ -235,6 +292,7 @@ async def _notes_search(
     query: str,
     page: int,
     page_size: int,
+    search_type: str | None,
     types: list[str] | None,
     entity_types: list[str] | None,
     after_date: str | None,
@@ -245,8 +303,20 @@ async def _notes_search(
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search import search_notes
 
+    # Use provided search_type or default to "text"
+    actual_search_type = search_type if search_type else "text"
+
     result = await search_notes.fn(
-        query, page, page_size, "text", types, entity_types, after_date, before_date, tags, project
+        query,
+        page,
+        page_size,
+        actual_search_type,
+        types,
+        entity_types,
+        after_date,
+        before_date,
+        tags,
+        project,
     )
 
     # Convert SearchResponse to string if needed
@@ -267,7 +337,7 @@ async def _notes_search(
     for idx, item in enumerate(result.results, 1):
         title = item.title or "Untitled"
         permalink = item.permalink or ""
-        item_type = item.type.value if hasattr(item.type, 'value') else str(item.type)
+        item_type = item.type.value if hasattr(item.type, "value") else str(item.type)
 
         output.append(f"## {idx}. {title}")
         output.append(f"**Type:** {item_type}")
@@ -282,7 +352,9 @@ async def _notes_search(
         output.append("")
 
     # Add pagination info
-    output.append(f"**Page:** {result.current_page} of {((len(result.results) // result.page_size) + 1 if result.results else 1)}")
+    output.append(
+        f"**Page:** {result.current_page} of {((len(result.results) // result.page_size) + 1 if result.results else 1)}"
+    )
 
     return "\n".join(output)
 

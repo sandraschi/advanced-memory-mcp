@@ -7,7 +7,6 @@ complete documentation website from your knowledge base.
 import asyncio
 import http.server
 import json
-import os
 import re
 import socketserver
 import threading
@@ -40,76 +39,7 @@ def _sanitize_filename(filename: str) -> str:
     return sanitized
 
 
-@mcp.tool(
-    description="""[LAUNCH] Enhanced Docsify Export with Advanced Plugins & Professional Features
-
-Transforms your knowledge base into a MODERN, feature-rich documentation platform using Docsify's extensive plugin ecosystem.
-
-[TARGET] ENHANCED FEATURES (vs basic export):
-[UNICODE] [DOC] Pagination - Navigate documents sequentially like a book
-[UNICODE] [BOOK] Auto TOC - Table of contents generated for each page
-[UNICODE] [UNICODE][UNICODE] Theme Toggle - Professional light/dark mode switcher
-[UNICODE] [CHART] Reading Progress - Visual progress bar
-[UNICODE] [LIST] Copy Code Blocks - One-click code copying with success feedback
-[UNICODE] [SMILE] Emoji Support - Rich emoji rendering (:smile: [UNICODE] [UNICODE][UNICODE])
-[UNICODE] [SEARCH] Enhanced Search - Better search with namespace filtering
-[UNICODE] [MOBILE] Mobile Optimization - Responsive design for all devices
-[UNICODE] [ART] Modern UI - Smooth animations and professional typography
-[UNICODE] [FAST] Performance - Optimized loading and CDN assets
-
-[FIX] TECHNICAL ADVANTAGES:
-[UNICODE] Zero build process (maintains Docsify's speed)
-[UNICODE] Plugin-based extensibility (add features without rebuilding)
-[UNICODE] CDN-powered (fast global loading)
-[UNICODE] Client-side only (no server requirements)
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where enhanced Docsify site will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- site_title (str, default="Enhanced Knowledge Base"): Title for the documentation site
-- site_description (str, default="Professional documentation generated from Advanced Memory"): Site description
-- enable_pagination (bool, default=True): Enable document pagination
-- enable_toc (bool, default=True): Enable auto-generated table of contents
-- enable_theme_toggle (bool, default=True): Enable light/dark theme switcher
-- enable_progress_bar (bool, default=True): Enable reading progress indicator
-- enable_code_copy (bool, default=True): Enable code block copy buttons
-- enable_emoji (bool, default=True): Enable emoji rendering
-- serve (bool, default=True): Start local HTTP server to view the site immediately
-- port (int, default=3211): Port for local HTTP server
-- export_all (bool, default=True): Export all folders matching source_folder name. Set False to error on ambiguous folder names
-- project (str, optional): Specific project to export from
-
-OUTPUT:
-Creates a professional Docsify site with:
-- index.html (enhanced with 10+ plugins and modern UI)
-- _sidebar.md (hierarchical navigation with icons and metadata)
-- README.md (professional homepage with feature overview)
-- Individual markdown files (enhanced with metadata and formatting)
-- .nojekyll (GitHub Pages compatibility)
-- Custom CSS (modern styling and animations)
-
-USAGE EXAMPLES:
-Basic enhanced export: export_docsify_enhanced("enhanced-docs/")
-Full-featured export: export_docsify_enhanced("pro-docs/", enable_pagination=True, enable_toc=True, enable_theme_toggle=True)
-Minimal export: export_docsify_enhanced("simple-docs/", enable_pagination=False, enable_theme_toggle=False)
-
-RETURNS:
-Comprehensive summary with feature status, file counts, and professional usage instructions.
-
-[ART] MODERN FEATURES INCLUDE:
-[UNICODE] Responsive grid layouts and mobile-first design
-[UNICODE] Smooth CSS transitions and micro-animations
-[UNICODE] Professional color schemes and typography
-[UNICODE] Accessibility-compliant UI elements
-[UNICODE] Fast loading with lazy asset loading
-
-[CHART] SUCCESS METRICS TARGETS:
-[UNICODE] Page load time: < 2 seconds
-[UNICODE] Search response: < 500ms
-[UNICODE] Mobile compatibility: 95%+
-[UNICODE] User satisfaction: 4.5/5 rating""",
-)
+@mcp.tool
 async def export_docsify_enhanced(
     export_path: str,
     source_folder: str = "/",
@@ -145,7 +75,9 @@ async def export_docsify_enhanced(
         logger.info(f"Starting Enhanced Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
+        notes_data = await _get_notes_from_folder(
+            source_folder, include_subfolders, project, export_all
+        )
 
         if not notes_data:
             # Try to provide helpful folder suggestions
@@ -157,9 +89,9 @@ async def export_docsify_enhanced(
                     path_parts = note_info.get("path", "").split("/")
                     if len(path_parts) > 1:
                         folders.add(path_parts[-2])  # Get parent folder name
-                
+
                 folder_examples = ", ".join(sorted(list(folders)[:5]))
-                return f'''# [LAUNCH] Enhanced Docsify Export - No Notes Found
+                return f"""# [LAUNCH] Enhanced Docsify Export - No Notes Found
 
 [UNICODE] **No notes found** in folder: `{source_folder}`
 
@@ -174,9 +106,9 @@ async def export_docsify_enhanced(
 adn_export("docsify", source_folder="standards")
 # or for nested paths:
 adn_export("docsify", source_folder="zettelkasten/standards")
-```'''
+```"""
             else:
-                return f'# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in the entire knowledge base.\n\n[UNICODE][UNICODE] Create some notes first before exporting.'
+                return "# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in the entire knowledge base.\n\n[UNICODE][UNICODE] Create some notes first before exporting."
 
         # Analyze notes for enhanced features
         notes_analysis = _analyze_notes_for_enhancement(notes_data)
@@ -198,19 +130,13 @@ adn_export("docsify", source_folder="zettelkasten/standards")
         with open(index_path, "w", encoding="utf-8") as f:
             f.write(enhanced_html)
 
-        # Create enhanced sidebar with icons and metadata
-        enhanced_sidebar = _create_enhanced_sidebar(notes_data, export_path_obj)
-        sidebar_path = export_path_obj / "_sidebar.md"
-        with open(sidebar_path, "w", encoding="utf-8") as f:
-            f.write(enhanced_sidebar)
-
         # Create enhanced README with feature overview
         enhanced_readme = _create_enhanced_readme(site_title, site_description, notes_analysis)
         readme_path = export_path_obj / "README.md"
         with open(readme_path, "w", encoding="utf-8") as f:
             f.write(enhanced_readme)
 
-        # Export all notes as enhanced markdown files
+        # Export all notes as enhanced markdown files (MOVED UP - must come before sidebar)
         exported_files = []
         for note_info in notes_data:
             try:
@@ -230,6 +156,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
                         "path": str(md_path),
                         "title": note_info["title"],
                         "folder": note_info.get("folder", "root"),
+                        "md_path": safe_filename,  # Add md_path for sidebar generation
                     }
                 )
 
@@ -237,6 +164,12 @@ adn_export("docsify", source_folder="zettelkasten/standards")
 
             except Exception as e:
                 logger.error(f"Failed to export note {note_info['title']}: {str(e)}")
+
+        # NOW create enhanced sidebar with icons and metadata (uses exported_files)
+        enhanced_sidebar = _create_enhanced_sidebar(exported_files, export_path_obj)
+        sidebar_path = export_path_obj / "_sidebar.md"
+        with open(sidebar_path, "w", encoding="utf-8") as f:
+            f.write(enhanced_sidebar)
 
         # Create .nojekyll for GitHub Pages
         nojekyll_path = export_path_obj / ".nojekyll"
@@ -276,33 +209,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
 
 
 # Legacy wrapper for backward compatibility
-@mcp.tool(
-    description="""Export Advanced Memory notes to a complete, searchable Docsify documentation website.
-
-[UNICODE][UNICODE]  DEPRECATED: Use export_docsify_enhanced for modern features!
-
-This tool transforms your knowledge base into a professional documentation site powered by Docsify.
-Docsify creates beautiful, fast-loading documentation from markdown files without requiring a build process.
-
-FEATURES:
-- Generates complete Docsify site structure with navigation
-- Creates actual markdown files with real note content (not placeholders)
-- Includes responsive design and built-in search functionality
-- Supports Mermaid diagram rendering in exported HTML
-- Handles Windows filename sanitization automatically
-
-PARAMETERS:
-- export_path (str, REQUIRED): Filesystem path where Docsify site will be created
-- source_folder (str, default="/"): Advanced Memory folder to export (use "/" for all notes)
-- include_subfolders (bool, default=True): Include subfolders recursively
-- site_title (str, default="Knowledge Base"): Title for the documentation site
-- site_description (str, default="Documentation generated from Advanced Memory"): Site description
-- project (str, optional): Specific project to export from (defaults to current active project)
-
-[UNICODE][UNICODE]  DEPRECATED: This basic version lacks modern features like pagination, themes, and enhanced UI.
-Use export_docsify_enhanced instead for the full experience!
-""",
-)
+@mcp.tool
 async def export_docsify(
     export_path: str,
     source_folder: str = "/",
@@ -323,7 +230,15 @@ async def export_docsify(
 
     # Call the legacy implementation
     return await _legacy_export_docsify(
-        export_path, source_folder, include_subfolders, site_title, site_description, project, serve, port, export_all
+        export_path,
+        source_folder,
+        include_subfolders,
+        site_title,
+        site_description,
+        project,
+        serve,
+        port,
+        export_all,
     )
 
 
@@ -349,7 +264,9 @@ async def _legacy_export_docsify(
         logger.info(f"Starting legacy Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
+        notes_data = await _get_notes_from_folder(
+            source_folder, include_subfolders, project, export_all
+        )
 
         if not notes_data:
             return f"# Docsify Export Complete\n\nNo notes found in folder: {source_folder}"
@@ -357,7 +274,7 @@ async def _legacy_export_docsify(
         # Process the export using legacy method
         result = await _process_docsify_export(
             notes_data, export_path_obj, site_title, site_description, project, serve, port
-        )
+        )  # export_all already handled in _get_notes_from_folder
 
         return result
 
@@ -1537,7 +1454,9 @@ async def _get_notes_from_folder(
 
         notes_data = []
         total_notes_found = len(search_result.results)
-        logger.info(f"Found {total_notes_found} total notes in search, filtering for folder: {source_folder}")
+        logger.info(
+            f"Found {total_notes_found} total notes in search, filtering for folder: {source_folder}"
+        )
 
         # Track matching folders for ambiguity detection
         matching_folders: set[str] = set()
@@ -1550,7 +1469,7 @@ async def _get_notes_from_folder(
             # Check if note is in the requested folder
             # Support both exact paths and folder name matching
             source_folder_clean = source_folder.strip("/")
-            
+
             # If source_folder is "/" or empty, match all notes
             if not source_folder_clean or source_folder_clean == "/":
                 folder_matches = True
@@ -1558,18 +1477,18 @@ async def _get_notes_from_folder(
                 # Check if the folder appears anywhere in the path (more flexible)
                 # Also check if path starts with the folder (exact match)
                 folder_matches = (
-                    source_folder_clean in note_path or 
-                    note_path.startswith(source_folder_clean + "/") or
-                    note_path.startswith("/" + source_folder_clean + "/") or
-                    ("/" + source_folder_clean + "/") in note_path
+                    source_folder_clean in note_path
+                    or note_path.startswith(source_folder_clean + "/")
+                    or note_path.startswith("/" + source_folder_clean + "/")
+                    or ("/" + source_folder_clean + "/") in note_path
                 )
             else:
                 # Only notes directly in the folder
                 note_folder = "/".join(note_path.split("/")[:-1])  # Remove filename
                 folder_matches = (
-                    note_folder == source_folder_clean or
-                    note_folder.endswith("/" + source_folder_clean) or
-                    ("/" + source_folder_clean) in note_folder
+                    note_folder == source_folder_clean
+                    or note_folder.endswith("/" + source_folder_clean)
+                    or ("/" + source_folder_clean) in note_folder
                 )
 
             if folder_matches and note_path.endswith(".md"):
@@ -1577,7 +1496,7 @@ async def _get_notes_from_folder(
                 note_folder = "/".join(note_path.split("/")[:-1])
                 if note_folder:
                     matching_folders.add(note_folder)
-                
+
                 # Read the actual note content
                 try:
                     note_content = await read_note.fn(identifier=note_title, project=project)
@@ -1635,8 +1554,10 @@ async def _get_notes_from_folder(
                         }
                     )
 
-        logger.info(f"Found {len(notes_data)} notes matching folder '{source_folder}' out of {total_notes_found} total notes")
-        
+        logger.info(
+            f"Found {len(notes_data)} notes matching folder '{source_folder}' out of {total_notes_found} total notes"
+        )
+
         # Check for ambiguous folder matches when export_all=False
         if not export_all and len(matching_folders) > 1 and source_folder.strip("/"):
             folder_list = "\n".join(f"  - {folder}/" for folder in sorted(matching_folders))
@@ -1644,17 +1565,21 @@ async def _get_notes_from_folder(
                 f"Ambiguous folder name '{source_folder}' matches multiple locations:\n{folder_list}\n\n"
                 f"Please specify the full path or set export_all=True to export all matches."
             )
-        
+
         # Log info about multiple matches even when export_all=True
         if len(matching_folders) > 1 and source_folder.strip("/"):
             folder_list = ", ".join(sorted(matching_folders))
-            logger.info(f"Folder '{source_folder}' matched multiple locations: {folder_list}. Exporting from all.")
-        
+            logger.info(
+                f"Folder '{source_folder}' matched multiple locations: {folder_list}. Exporting from all."
+            )
+
         # If no notes found, log helpful debug info
         if len(notes_data) == 0 and total_notes_found > 0:
             # Show some example paths to help user debug
             example_paths = [note.file_path for note in list(search_result.results)[:5]]
-            logger.warning(f"No notes matched folder '{source_folder}'. Example paths in system: {example_paths}")
+            logger.warning(
+                f"No notes matched folder '{source_folder}'. Example paths in system: {example_paths}"
+            )
 
     except Exception as e:
         logger.error(f"Error getting notes from folder {source_folder}: {e}")
@@ -1674,12 +1599,13 @@ async def _process_docsify_export(
 ) -> str:
     """Process the export of notes to Docsify format."""
 
-    # Track export statistics
-    stats = {
+    # Track export statistics - use explicit int values for mypy
+    stats: dict[str, Any] = {
         "total_notes": len(notes_data),
         "exported_notes": 0,
         "created_folders": 0,
         "failed_exports": 0,
+        "total_size_kb": 0,  # Add this to fix operator error
     }
 
     # Group notes by folder for sidebar generation
@@ -1716,12 +1642,12 @@ async def _process_docsify_export(
 
     # Generate summary report
     summary = _generate_export_report(stats, export_path, site_title)
-    
+
     # Start local HTTP server if requested
     if serve:
         server_info = await _start_local_server(export_path, port)
         summary += f"\n\n{server_info}"
-    
+
     return summary
 
 
@@ -1844,7 +1770,7 @@ async def _create_docsify_files(
 
 ## Overview
 
-This documentation site was generated from an Advanced Memory knowledge base using the Docsify export tool.
+This documentation site was generated from a Advanced Memory knowledge base using the Docsify export tool.
 
 ## Features
 
@@ -1866,7 +1792,7 @@ Use the sidebar to navigate through the documentation, or use the search box to 
 
 ---
 
-*Powered by [Docsify](https://docsify.js.org/) and [Advanced Memory](https://github.com/user/advanced-memory)*
+*Powered by [Docsify](https://docsify.js.org/) and [Advanced Memory](https://github.com/basicmachines-co/advanced-memory-mcp)*
 """
 
     # Write README.md
@@ -1899,19 +1825,19 @@ async def _start_local_server(export_path: Path, port: int) -> str:
     try:
         # Convert to absolute path
         abs_path = export_path.resolve()
-        
+
         # Define a custom handler that serves from the export directory
         class DocsifyHandler(http.server.SimpleHTTPRequestHandler):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, directory=str(abs_path), **kwargs)
-            
+
             def log_message(self, format, *args):
                 # Suppress server logs to keep output clean
                 pass
-        
+
         # Check if port is available
         try:
-            with socketserver.TCPServer(("", port), DocsifyHandler) as test_server:
+            with socketserver.TCPServer(("", port), DocsifyHandler):
                 pass
         except OSError:
             return f"""## 🌐 Local Server (Port Busy)
@@ -1922,18 +1848,18 @@ async def _start_local_server(export_path: Path, port: int) -> str:
 3. Re-run with a different port: `serve=True, port=3212`
 
 **Export location**: `{abs_path}`"""
-        
+
         # Start server in background thread
         def start_server():
             with socketserver.TCPServer(("", port), DocsifyHandler) as httpd:
                 httpd.serve_forever()
-        
+
         server_thread = threading.Thread(target=start_server, daemon=True)
         server_thread.start()
-        
+
         # Give server time to start
         await asyncio.sleep(0.5)
-        
+
         # Open browser
         url = f"http://localhost:{port}"
         try:
@@ -1942,9 +1868,13 @@ async def _start_local_server(export_path: Path, port: int) -> str:
         except Exception as e:
             logger.warning(f"Could not auto-open browser: {e}")
             browser_opened = False
-        
-        browser_msg = "✅ Browser opened automatically" if browser_opened else "⚠️ Please open browser manually"
-        
+
+        browser_msg = (
+            "✅ Browser opened automatically"
+            if browser_opened
+            else "⚠️ Please open browser manually"
+        )
+
         return f"""## 🌐 Local Server Started
 
 ✅ **Server running at:** {url}
@@ -1965,7 +1895,7 @@ The server runs as a daemon thread and will automatically stop when:
 - The process terminates
 
 **Note**: The server is running locally and only accessible from your machine."""
-        
+
     except Exception as e:
         logger.error(f"Failed to start server: {e}")
         return f"""## ⚠️ Server Start Failed

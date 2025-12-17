@@ -131,6 +131,7 @@ async def edit_note(
     section: str | None = None,
     find_text: str | None = None,
     expected_replacements: int = 1,
+    use_regex: bool = False,
     project: str | None = None,
 ) -> str:
     """Edit an existing markdown note in the knowledge base.
@@ -147,10 +148,16 @@ async def edit_note(
                   - "prepend": Add content to the beginning of the note
                   - "find_replace": Replace occurrences of find_text with content
                   - "replace_section": Replace content under a specific markdown header
+                  - "insert_mermaid": Insert a Mermaid diagram (content: diagram type "flowchart"/"sequence"/"gantt"/"mindmap"/"er" OR custom Mermaid code, section: optional title)
+                  - "insert_ascii_art": Insert ASCII art (content: art type: "cat", "dog", "robot", "heart", "star", "tree")
+                  - "insert_kilroy": Insert classic Kilroy ASCII art (content: optional custom message)
+                  - "insert_kanban": Insert Kanban board (content: comma-separated column names like "To Do,In Progress,Done", section: optional board title)
+                  - "insert_changelog": Insert changelog entry following Keep a Changelog standard (content: version like "1.0.0" or "Unreleased", section: optional project name)
         content: The content to add or use for replacement
         section: For replace_section operation - the markdown header to replace content under (e.g., "## Notes", "### Implementation")
-        find_text: For find_replace operation - the text to find and replace
+        find_text: For find_replace operation - the text to find (replacement text goes in 'content' parameter)
         expected_replacements: For find_replace operation - the expected number of replacements (validation will fail if actual doesn't match)
+        use_regex: Optional flag to use regex pattern matching for find_replace (default: False). When True, find_text is treated as a regex pattern and content can use backreferences like \\1, \\2. Includes security safeguards (pattern length limits, ReDoS protection).
         project: Optional project name to delete from. If not provided, uses current active project.
 
     Returns:
@@ -194,7 +201,156 @@ async def edit_note(
         edit_note("status-report", "find_replace", "In Progress", find_text="Not Started", expected_replacements=2)
 
         # Replace text in a file, specifying project name
-        edit_note("docs/guide", "find_replace", "new-api", find_text="old-api", project="my-project"))
+        edit_note("docs/guide", "find_replace", "new-api", find_text="old-api", project="my-project")
+
+        # Use regex pattern matching (optional)
+        edit_note("config", "find_replace", "v2.0", find_text="v\\d+\\.\\d+", use_regex=True, expected_replacements=1)
+
+        # Regex with backreferences
+        edit_note("notes", "find_replace", "Date: \\\\1", find_text="(\\d{4}-\\d{2}-\\d{2})", use_regex=True)
+
+        # Insert Mermaid diagram (using built-in template)
+        edit_note("project-plan", "insert_mermaid", "flowchart", section="System Architecture")
+
+        # Insert custom Mermaid diagram (provide full Mermaid code in content)
+        edit_note("api-docs", "insert_mermaid",
+                  "sequenceDiagram\n    participant U as User\n    participant A as API\n    U->>A: Request\n    A-->>U: Response",
+                  section="API Flow")
+
+    MERMAID SYNTAX GUIDE FOR AI ASSISTANTS:
+    =======================================
+    When generating Mermaid diagrams, use these syntax patterns:
+
+    FLOWCHARTS:
+    -----------
+    Basic: graph TD
+        A[Label] --> B[Label]
+        B --> C{Decision?}
+        C -->|Yes| D[Action]
+        C -->|No| E[Other]
+
+    Directions: TD (top-down), LR (left-right), BT (bottom-top), RL (right-left)
+    Node shapes: [Rectangle], (Round), {Diamond}, ([Stadium]), [[Subroutine]], [(Cylinder)]
+
+    Example:
+        graph TD
+            Start([Start]) --> Process[Process Data]
+            Process --> Decision{Valid?}
+            Decision -->|Yes| Success[Success]
+            Decision -->|No| Error[Error]
+            Success --> End([End])
+            Error --> End
+
+    SEQUENCE DIAGRAMS:
+    ------------------
+    Basic: sequenceDiagram
+        participant A as Alice
+        participant B as Bob
+        A->>B: Message
+        B-->>A: Response
+
+    Arrow types: -> (solid), --> (dashed), ->> (solid with arrow), -->> (dashed with arrow)
+    Activation: activate/deactivate
+    Notes: Note over A: Text
+    Loops: loop Condition\n    A->>B: Message\nend
+
+    Example:
+        sequenceDiagram
+            participant U as User
+            participant S as Server
+            participant D as Database
+            U->>S: Login Request
+            S->>D: Validate User
+            D-->>S: User Data
+            S-->>U: JWT Token
+
+    GANTT CHARTS:
+    -------------
+    Basic: gantt
+        title Project Timeline
+        dateFormat YYYY-MM-DD
+        section Section Name
+        Task Name :done, id, 2024-01-01, 2024-01-15
+        Task 2 :active, id2, 2024-01-16, 2024-02-01
+
+    Status: done, active, crit (critical), milestone
+    Format: Task :status, id, start, end
+
+    Example:
+        gantt
+            title Development Timeline
+            dateFormat YYYY-MM-DD
+            section Phase 1
+            Design :done, d1, 2024-01-01, 2024-01-15
+            Implementation :active, i1, 2024-01-16, 2024-02-01
+            section Phase 2
+            Testing :t1, 2024-02-02, 2024-02-15
+
+    MIND MAPS:
+    ----------
+    Basic: mindmap
+        root((Root Topic))
+            Branch 1
+                Leaf 1.1
+                Leaf 1.2
+            Branch 2
+                Leaf 2.1
+
+    Example:
+        mindmap
+            root((Knowledge Base))
+                Notes
+                    Personal
+                    Work
+                Tools
+                    Advanced Memory
+                    Claude AI
+
+    ER DIAGRAMS:
+    ------------
+    Basic: erDiagram
+        ENTITY1 ||--o{ ENTITY2 : "relationship"
+        ENTITY1 {
+            string field PK
+            int other_field
+        }
+
+    Relationships: ||--|| (one-to-one), ||--o{ (one-to-many), }o--o{ (many-to-many)
+    Field types: string, int, float, date, etc.
+    Constraints: PK (primary key), FK (foreign key)
+
+    Example:
+        erDiagram
+            USER ||--o{ PROJECT : owns
+            PROJECT ||--o{ TASK : contains
+            USER {
+                string id PK
+                string name
+            }
+            PROJECT {
+                string id PK
+                string user_id FK
+            }
+
+    COMMON PATTERNS:
+    ----------------
+    - Use descriptive node labels: [User Login] not [A]
+    - Keep diagrams focused: 5-10 nodes for clarity
+    - Use subgraphs for grouping: subgraph "Group Name"\n    A --> B\nend
+    - Add styling: style Node fill:#color,stroke:#color
+    - Use meaningful edge labels: A -->|"Label"| B
+
+        # Insert ASCII art
+        edit_note("fun-notes", "insert_ascii_art", "cat")
+
+        # Insert Kilroy with custom message
+        edit_note("mystery-note", "insert_kilroy", "I WAS HERE FIRST!")
+
+        # Insert Kanban board with custom columns
+        edit_note("project-board", "insert_kanban", "Backlog,In Progress,Review,Done", section="Sprint Tasks")
+
+        # Insert changelog entry (Keep a Changelog format)
+        edit_note("CHANGELOG", "insert_changelog", "1.2.0", section="My Project")
 
     """
     active_project = get_active_project(project)
@@ -214,6 +370,11 @@ async def edit_note(
 - `prepend` - Add content to the beginning of the note
 - `find_replace` - Find and replace specific text
 - `replace_section` - Replace an entire markdown section
+- `insert_mermaid` - Insert a Mermaid diagram
+- `insert_ascii_art` - Insert ASCII art
+- `insert_kilroy` - Insert classic Kilroy ASCII art
+- `insert_kanban` - Insert Kanban board (markdown table format)
+- `insert_changelog` - Insert changelog entry (Keep a Changelog format)
 
 **Example (append):**
 ```
@@ -265,7 +426,7 @@ edit_note(
     # Use the PATCH endpoint to edit the entity
     try:
         # Prepare the edit request data
-        edit_data = {
+        edit_data: dict[str, str | int | bool] = {
             "operation": operation,
             "content": content,
         }
@@ -276,7 +437,9 @@ edit_note(
         if find_text:
             edit_data["find_text"] = find_text
         if expected_replacements != 1:  # Only send if different from default
-            edit_data["expected_replacements"] = str(expected_replacements)
+            edit_data["expected_replacements"] = expected_replacements
+        if use_regex:
+            edit_data["use_regex"] = True
 
         # Call the PATCH endpoint
         url = f"{project_url}/knowledge/entities/{identifier}"
@@ -305,6 +468,23 @@ edit_note(
             summary.append("operation: Find and replace operation completed")
         elif operation == "replace_section":
             summary.append(f"operation: Replaced content under section '{section}'")
+        elif operation == "insert_mermaid":
+            diagram_type = content if content else "flowchart"
+            summary.append(f"operation: Inserted Mermaid {diagram_type} diagram")
+        elif operation == "insert_ascii_art":
+            art_type = content if content else "cat"
+            summary.append(f"operation: Inserted {art_type} ASCII art")
+        elif operation == "insert_kilroy":
+            message = content if content else "KILROY WAS HERE"
+            summary.append(f"operation: Inserted Kilroy ASCII art with message: {message}")
+        elif operation == "insert_kanban":
+            columns = content if content else "To Do,In Progress,Done"
+            title = section if section else "Kanban Board"
+            summary.append(f"operation: Inserted Kanban board '{title}' with columns: {columns}")
+        elif operation == "insert_changelog":
+            version = content if content else "Unreleased"
+            project = section if section else "Project"
+            summary.append(f"operation: Inserted changelog entry for {project} version {version}")
 
         # Count observations by category (reuse logic from write_note)
         categories: dict[str, int] = {}

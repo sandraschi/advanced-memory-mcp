@@ -8,12 +8,12 @@ from typing import Annotated
 from loguru import logger
 from pydantic import Field
 
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.prompts.utils import (
     PromptContext,
     PromptContextItem,
     format_prompt_context,
 )
-from advanced_memory.mcp.server import mcp
 from advanced_memory.mcp.tools.recent_activity import recent_activity
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import GraphContext

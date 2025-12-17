@@ -127,7 +127,7 @@ async def _knowledge_operations(
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import knowledge_operations
 
-    return await knowledge_operations(operation, filters, action, dry_run, limit, project)
+    return await knowledge_operations.fn(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(
@@ -143,4 +143,4 @@ async def _research_orchestrator(
 
     return await research_orchestrator(
         operation, topic, topic_type, research_type, step, parameters
-    )
+    )  # type: ignore[operator,no-any-return]

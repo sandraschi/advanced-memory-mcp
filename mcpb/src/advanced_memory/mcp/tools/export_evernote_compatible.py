@@ -4,71 +4,18 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from xml.dom import minidom
-from xml.etree.ElementTree import Element, SubElement, tostring
 
+import defusedxml.minidom as minidom
+from defusedxml.ElementTree import Element, SubElement, tostring
+
+from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_get
+from advanced_memory.mcp.tools.utils import call_get, call_post
+from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(
-    description="""Export Advanced Memory content to Evernote-compatible ENEX XML format for mobile access.
-
-This tool converts Advanced Memory knowledge base content into Evernote's ENEX (Evernote XML) format,
-enabling access through Evernote's mobile apps and cross-platform synchronization.
-
-EXPORT FEATURES:
-- Generates valid ENEX XML files compatible with Evernote import
-- Converts markdown content to rich HTML with Evernote styling
-- Preserves folder structure as Evernote notebook hierarchy
-- Includes creation/modification timestamps and metadata
-- Supports selective export by search query or folder
-- Handles rich content including Mermaid diagrams and complex formatting
-
-PARAMETERS:
-- output_path (str, REQUIRED): Filesystem path where ENEX files will be created
-- query (str, optional): Search query to filter notes (exports matching notes)
-- folder_filter (str, optional): Folder path to limit export scope
-- notebook_name (str, default="Advanced Memory Export"): Evernote notebook name for imported notes
-- include_observations (bool, default=True): Include observation metadata as note content
-- include_relations (bool, default=True): Include relationship links in content
-- project (str, optional): Specific Advanced Memory project to export from
-
-CONTENT CONVERSION:
-- Advanced Memory markdown [UNICODE] Rich HTML with Evernote-compatible formatting
-- Entity relationships [UNICODE] Standard HTML links with context
-- Observations [UNICODE] Structured HTML content blocks
-- Mermaid diagrams [UNICODE] Preserved as formatted code blocks
-- Tags and metadata [UNICODE] ENEX XML attributes and elements
-
-OUTPUT STRUCTURE:
-Creates ENEX files containing:
-- Valid XML structure following Evernote ENEX specification
-- Rich HTML content with proper Evernote styling
-- Complete metadata including timestamps, tags, and notebook assignments
-- Embedded resources and attachments where applicable
-
-EVERNOTE IMPORT PROCESS:
-1. Export using this tool: export_evernote_compatible("evernote-ready/")
-2. Open Evernote application (desktop or web)
-3. Go to File [UNICODE] Import Notes [UNICODE] Evernote XML (.enex)
-4. Select the exported .enex file
-5. Choose target notebook and complete import
-
-USAGE EXAMPLES:
-All content: export_evernote_compatible("evernote-export/")
-Search filter: export_evernote_compatible("export/", query="meeting notes")
-Folder filter: export_evernote_compatible("export/", folder_filter="projects/")
-Custom notebook: export_evernote_compatible("export/", notebook_name="Work Notes")
-Minimal export: export_evernote_compatible("export/", include_observations=False, include_relations=False)
-
-RETURNS:
-Export summary with file counts, ENEX validation status, and Evernote import instructions.
-
-NOTE: Evernote's free tier has upload limits. Large exports may need to be split into multiple ENEX files.
-Some advanced formatting may be simplified for Evernote compatibility.""",
-)
+@mcp.tool
 async def export_evernote_compatible(
     output_path: str,
     query: str | None = None,
@@ -114,7 +61,7 @@ async def export_evernote_compatible(
         export_evernote_compatible("export", folder_filter="notes/project", notebook_name="Project Notes")
     """
 
-    # Get the active project
+    # Get the active project (imported at module level)
     active_project = get_active_project(project)
     project_url = active_project.project_url
 
@@ -125,14 +72,6 @@ async def export_evernote_compatible(
     # Search for notes to export
     if query:
         # Make HTTP call to search API to find matching notes
-        from advanced_memory.mcp.async_client import client
-        from advanced_memory.mcp.project_session import get_active_project
-        from advanced_memory.mcp.tools.utils import call_post
-        from advanced_memory.schemas.search import SearchQuery
-
-        active_project = get_active_project(project)
-        project_url = active_project.project_url
-
         # Create search query
         search_query = SearchQuery(text=query)
 
@@ -158,12 +97,21 @@ async def export_evernote_compatible(
         if folder_filter:
             params["folder"] = folder_filter
 
-        response = await call_get(client, entities_url, params=params)
+        response = await call_get(client, entities_url, params=params)  # type: ignore[possibly-unbound]
         if response.status_code != 200:
             return f"Failed to retrieve entities: {response.status_code} - {response.text}"
 
         entities_data = response.json()
-        entities = entities_data.get("results", [])
+        entities_raw = entities_data.get("results", [])
+        # Convert SearchResult objects to dicts
+        entities = [
+            entity.model_dump()
+            if hasattr(entity, "model_dump")
+            else dict(entity)
+            if hasattr(entity, "__dict__")
+            else entity
+            for entity in entities_raw
+        ]
 
     if not entities:
         return "No entities found to export"

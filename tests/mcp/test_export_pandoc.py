@@ -1,10 +1,11 @@
 """Tests for Pandoc export functionality."""
 
+import inspect
 from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from advanced_memory.mcp.tools.export_pandoc import export_pandoc
+from advanced_memory.mcp.tools.export_pandoc import _build_pandoc_command, export_pandoc
 
 
 @pytest.fixture
@@ -225,3 +226,94 @@ async def test_export_pandoc_error_handling(tmp_path, mock_notes_data):
 
     # Should report errors
     assert "export" in result.lower()
+
+
+class TestPdfEngineDefaults:
+    """Test PDF engine configuration and defaults."""
+
+    def test_default_pdf_engine_is_weasyprint(self):
+        """Test that the default pdf_engine is weasyprint (pure Python, no external deps)."""
+        sig = inspect.signature(export_pandoc.fn)
+        pdf_engine_param = sig.parameters.get("pdf_engine")
+
+        assert pdf_engine_param is not None, "pdf_engine parameter not found"
+        assert pdf_engine_param.default == "weasyprint", (
+            f"Expected default pdf_engine to be 'weasyprint' (pure Python), "
+            f"but got '{pdf_engine_param.default}'"
+        )
+
+    def test_default_self_contained_is_true(self):
+        """Test that self_contained defaults to True for embedded resources."""
+        sig = inspect.signature(export_pandoc.fn)
+        self_contained_param = sig.parameters.get("self_contained")
+
+        assert self_contained_param is not None
+        assert self_contained_param.default is True
+
+    def test_build_pandoc_command_weasyprint(self):
+        """Test that _build_pandoc_command correctly handles weasyprint engine."""
+        with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
+            mock_pandoc.return_value = ["pandoc"]
+
+            cmd = _build_pandoc_command(
+                input_path="input.md",
+                output_path="output.pdf",
+                format_type="pdf",
+                pdf_engine="weasyprint",
+                template_path=None,
+                css_path=None,
+                toc=False,
+                highlight_style="tango",
+                standalone=True,
+                self_contained=False,
+            )
+
+            assert "--pdf-engine" in cmd
+            assert "weasyprint" in cmd
+            # Should include CSS for weasyprint
+            assert "--css" in cmd
+
+    def test_build_pandoc_command_html_embed_resources(self):
+        """Test that HTML export uses --embed-resources for self-contained output."""
+        with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
+            mock_pandoc.return_value = ["pandoc"]
+
+            cmd = _build_pandoc_command(
+                input_path="input.md",
+                output_path="output.html",
+                format_type="html",
+                pdf_engine="weasyprint",  # Ignored for HTML
+                template_path=None,
+                css_path=None,
+                toc=False,
+                highlight_style="tango",
+                standalone=True,
+                self_contained=True,
+            )
+
+            assert "--embed-resources" in cmd
+            # Should include default CSS
+            assert "--css" in cmd
+            assert "water.css" in " ".join(cmd)
+
+    def test_build_pandoc_command_with_toc(self):
+        """Test that TOC options are correctly added."""
+        with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
+            mock_pandoc.return_value = ["pandoc"]
+
+            cmd = _build_pandoc_command(
+                input_path="input.md",
+                output_path="output.html",
+                format_type="html",
+                pdf_engine="weasyprint",
+                template_path=None,
+                css_path=None,
+                toc=True,
+                highlight_style="tango",
+                standalone=True,
+                self_contained=False,
+            )
+
+            assert "--toc" in cmd
+            assert "--toc-depth" in cmd
+            assert "3" in cmd

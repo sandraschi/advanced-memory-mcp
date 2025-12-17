@@ -11,46 +11,9 @@ from advanced_memory.config import CONFIG_FILE_NAME, DATABASE_NAME, ConfigManage
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE] Import Complete Advanced Memory Archive from Migration/Backup
-
-Restores a complete Advanced Memory system from an archive created with export_to_archive.
-Includes database, all projects, and configuration for full system restoration.
-
-ARCHIVE CONTENTS EXPECTED:
-- SQLite database with all knowledge, entities, and relationships
-- All project directories with markdown files
-- Global configuration files
-- Project-specific settings
-
-RESTORATION PROCESS:
-1. Extract archive to temporary location
-2. Validate archive contents and metadata
-3. Backup existing data (optional)
-4. Restore database, projects, and configuration
-5. Update project registry
-
-SAFETY FEATURES:
-- Validates archive integrity before restoration
-- Optional backup of existing data
-- Conflict detection and resolution options
-- Dry-run mode for previewing changes
-
-PARAMETERS:
-- archive_path (str, REQUIRED): Path to archive file created by export_to_archive
-- restore_mode (str, optional): "overwrite" (default), "merge", or "skip_existing"
-- backup_existing (bool, optional): Backup current data before restore (default: True)
-- dry_run (bool, optional): Preview changes without applying them (default: False)
-- project (str, optional): Active project context (default: current)
-
-RETURNS:
-Detailed restoration report with success/failure status
-
-NOTE: Can restore archives created with export_to_archive tool
-"""
-)
+@mcp.tool
 async def import_from_archive(
-    archive_path: str,
+    archive_path: str | Path,
     restore_mode: str = "overwrite",
     backup_existing: bool = True,
     dry_run: bool = False,
@@ -90,9 +53,9 @@ async def import_from_archive(
                 shutil.unpack_archive(archive_path, extract_path, "tar")
 
             # Validate archive structure
-            archive_root = extract_path / "advanced-memory-backup"
+            archive_root = extract_path / "basic-memory-backup"
             if not archive_root.exists():
-                return "[UNICODE] **Invalid Archive**\n\nArchive root directory not found. Expected: advanced-memory-backup/"
+                return "[UNICODE] **Invalid Archive**\n\nArchive root directory not found. Expected: basic-memory-backup/"
 
             # Read metadata
             metadata_file = archive_root / "metadata.json"
@@ -109,6 +72,7 @@ async def import_from_archive(
 
             # Create backup if requested
             backup_info = ""
+            backup_path = None
             if backup_existing:
                 backup_path = await _create_backup(config_manager)
                 backup_info = f"\n\n[UNICODE][UNICODE] **Backup Created:** {backup_path}"
@@ -131,7 +95,7 @@ async def import_from_archive(
 - [UNICODE][UNICODE][UNICODE] Projects: {len(metadata.get("projects_exported", []))}
 
 **Restoration Results:**
-{"\n".join(results)}
+{chr(10).join(results)}
 
 **Summary:**
 [UNICODE] Successful: {success_count}/{total_count}
@@ -190,7 +154,7 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
     return f"""[SEARCH] **Archive Import Preview** (DRY RUN)
 
 **Archive Contents:**
-{"\n".join(preview_lines)}
+{chr(10).join(preview_lines)}
 
 **This is a preview only - no changes will be made.**
 Remove `dry_run=True` to perform the actual import."""
@@ -199,8 +163,8 @@ Remove `dry_run=True` to perform the actual import."""
 async def _create_backup(config_manager: ConfigManager) -> str:
     """Create backup of existing data."""
     timestamp = Path(__file__).stat().st_mtime
-    backup_name = f"advanced-memory-backup-pre-import-{int(timestamp)}"
-    backup_path = Path.home() / "advanced-memory-backups" / backup_name
+    backup_name = f"basic-memory-backup-pre-import-{int(timestamp)}"
+    backup_path = Path.home() / "basic-memory-backups" / backup_name
     backup_path.mkdir(parents=True, exist_ok=True)
 
     # This is a simplified backup - in practice, we'd want to backup the database and config
@@ -269,7 +233,7 @@ async def _update_project_registry(archive_root: Path, config_manager: ConfigMan
         logger.info(f"Projects to register: {[d.name for d in project_dirs]}")
 
 
-def _format_size(bytes_size: int) -> str:
+def _format_size(bytes_size: float) -> str:
     """Format bytes to human readable size."""
     for _unit in ["B", "KB", "MB", "GB"]:
         if bytes_size < 1024.0:

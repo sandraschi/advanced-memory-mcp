@@ -5,6 +5,6 @@ from advanced_memory.repository.repository import Repository
 class ProjectInfoRepository(Repository):
     """Repository for statistics queries."""
 
-    def __init__(self, session_maker):
+    def __init__(self, session_maker) -> None:  # type: ignore[no-untyped-def]
         # Initialize with Project model as a reference
         super().__init__(session_maker, Project)

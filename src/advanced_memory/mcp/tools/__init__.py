@@ -40,6 +40,7 @@ if _FULL_TOOLS_MODE:
     from .adn_import import adn_import
     from .adn_inbox import adn_inbox
     from .adn_knowledge import adn_knowledge
+    from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
     from .adn_search import adn_search
     from .adn_skills import adn_skills
@@ -98,6 +99,7 @@ else:
     from .adn_import import adn_import
     from .adn_inbox import adn_inbox
     from .adn_knowledge import adn_knowledge
+    from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
     from .adn_search import adn_search
     from .adn_skills import adn_skills
@@ -122,6 +124,7 @@ __all__ = [
     "adn_import",
     "adn_audio",
     "adn_knowledge",
+    "adn_llm",
     "adn_zettelmaker",
     "adn_skills",
     "adn_skills_creator",

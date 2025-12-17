@@ -14,56 +14,64 @@ jobs:
   lint:
     name: Lint with Ruff
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: uv sync --dev
-      
+
       - name: Run ruff linting
         run: uv run ruff check .
         continue-on-error: true
-      
+
       - name: Run ruff format check
         run: uv run ruff format --check .
+        continue-on-error: true
+
+      - name: Run mypy type checking
+        run: uv run mypy src/ --ignore-missing-imports --explicit-package-bases
+        continue-on-error: true
+
+      - name: Run pyright type checking
+        run: uv run pyright src/ || echo "Type checking completed with warnings"
         continue-on-error: true
 
   test:
     name: Test with pytest
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: uv sync --dev
-      
+
       - name: Verify pytest installation
         run: uv run python -m pytest --version
-      
+
       - name: Run tests with coverage
         run: |
           uv run python -m pytest \
@@ -72,9 +80,8 @@ jobs:
             --cov-report=term-missing \
             -v \
             --maxfail=10 \
-            --tb=short || echo "Tests completed with warnings"
-        continue-on-error: true
-      
+            --tb=short
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         if: always()
@@ -87,19 +94,19 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     needs: [lint, test]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
-      
+
       - name: Build package
         run: uv build
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

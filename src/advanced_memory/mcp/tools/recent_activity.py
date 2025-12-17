@@ -1,6 +1,6 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from loguru import logger
@@ -108,7 +108,9 @@ async def recent_activity(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_types.append(t)
-                logger.warning(f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types.")
+                logger.warning(
+                    f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types."
+                )
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_types:
@@ -146,8 +148,8 @@ async def recent_activity(
         else:
             return str(value)
         if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=UTC)
-        return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
     def normalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
         summary_type = summary.get("type")

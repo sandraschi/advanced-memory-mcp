@@ -1,4 +1,4 @@
-"""Logging configuration for basic-memory."""
+"""Logging configuration for advanced-memory."""
 
 import logging
 import sys

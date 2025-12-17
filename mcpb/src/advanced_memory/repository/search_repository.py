@@ -47,8 +47,8 @@ class SearchIndexRow:
     relation_type: str | None = None  # relations
 
     @property
-    def content(self):
-        return self.content_snippet
+    def content(self) -> str:
+        return self.content_snippet or ""  # type: ignore[return-value]
 
     @property
     def directory(self) -> str:
@@ -71,7 +71,7 @@ class SearchIndexRow:
         directory_path = "/".join(parts[:-1])
         return f"/{directory_path}"
 
-    def to_insert(self):
+    def to_insert(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "title": self.title,
@@ -111,7 +111,7 @@ class SearchRepository:
         self.session_maker = session_maker
         self.project_id = project_id
 
-    async def init_search_index(self):
+    async def init_search_index(self) -> None:
         """Create or recreate the search index."""
         logger.info("Initializing search index")
         try:
@@ -366,6 +366,8 @@ class SearchRepository:
         title: str | None = None,
         types: list[str] | None = None,
         after_date: datetime | None = None,
+        before_date: datetime | None = None,
+        tags: list[str] | None = None,
         search_item_types: list[SearchItemType] | None = None,
         limit: int = 10,
         offset: int = 0,
@@ -394,11 +396,18 @@ class SearchRepository:
             conditions.append("title MATCH :title_text")
 
             # Also search for sanitized version of the title (for markdown files)
-            sanitized_title = sanitize_filename(title.strip())
-            if sanitized_title != title.strip():  # Only add if different
-                sanitized_title_text = self._prepare_search_term(sanitized_title, is_prefix=False)
-                params["sanitized_title_text"] = sanitized_title_text
-                conditions.append("title MATCH :sanitized_title_text")
+            # But skip sanitization for boolean queries as they would become invalid
+            boolean_operators = [" AND ", " OR ", " NOT "]
+            is_boolean_query = any(op in f" {title.strip()} " for op in boolean_operators)
+
+            if not is_boolean_query:
+                sanitized_title = sanitize_filename(title.strip())
+                if sanitized_title != title.strip():  # Only add if different
+                    sanitized_title_text = self._prepare_search_term(
+                        sanitized_title, is_prefix=False
+                    )
+                    params["sanitized_title_text"] = sanitized_title_text
+                    conditions.append("title MATCH :sanitized_title_text")
 
         # Handle permalink exact search
         if permalink:
@@ -433,13 +442,49 @@ class SearchRepository:
             type_list = ", ".join(f"'{t}'" for t in types)
             conditions.append(f"json_extract(metadata, '$.entity_type') IN ({type_list})")
 
-        # Handle date filter using datetime() for proper comparison
+        # Handle date filters using datetime() for proper comparison
         if after_date:
             params["after_date"] = after_date
             conditions.append("datetime(created_at) > datetime(:after_date)")
 
             # order by most recent first
             order_by_clause = ", updated_at DESC"
+
+        if before_date:
+            params["before_date"] = before_date
+            conditions.append("datetime(created_at) < datetime(:before_date)")
+
+        # Handle tag filter (notes must have ALL specified tags)
+        if tags:
+            seen_tag_keys: set[str] = set()
+            for idx, tag in enumerate(tags):
+                normalized_tag = str(tag).strip()
+                if not normalized_tag:
+                    continue
+
+                normalized_tag = normalized_tag.lstrip("#")
+                tag_key = normalized_tag.lower()
+
+                if tag_key in seen_tag_keys:
+                    continue
+                seen_tag_keys.add(tag_key)
+
+                tag_param = f"tag_{idx}"
+                tag_like_param = f"tag_like_{idx}"
+
+                params[tag_param] = normalized_tag
+                params[tag_like_param] = f"%{normalized_tag}%"
+
+                conditions.append(
+                    f"""(
+                        EXISTS (
+                            SELECT 1
+                            FROM json_each(search_index.metadata, '$.tags')
+                            WHERE lower(json_each.value) = lower(:{tag_param})
+                        )
+                        OR content_stems LIKE :{tag_like_param}
+                    )"""
+                )
 
         # Always filter by project_id
         params["project_id"] = self.project_id
@@ -452,6 +497,7 @@ class SearchRepository:
         # Build WHERE clause
         where_clause = " AND ".join(conditions) if conditions else "1=1"
 
+        # nosec B608 - uses parameterized query with :limit and :offset params
         sql = f"""
             SELECT
                 project_id,
@@ -526,7 +572,7 @@ class SearchRepository:
     async def index_item(
         self,
         search_index_row: SearchIndexRow,
-    ):
+    ) -> None:
         """Index or update a single item."""
         async with db.scoped_session(self.session_maker) as session:
             # Delete existing record if any
@@ -561,7 +607,7 @@ class SearchRepository:
             logger.debug(f"indexed row {search_index_row}")
             await session.commit()
 
-    async def delete_by_entity_id(self, entity_id: int):
+    async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index by entity_id."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(
@@ -572,7 +618,7 @@ class SearchRepository:
             )
             await session.commit()
 
-    async def delete_by_permalink(self, permalink: str):
+    async def delete_by_permalink(self, permalink: str) -> None:
         """Delete an item from the search index."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(

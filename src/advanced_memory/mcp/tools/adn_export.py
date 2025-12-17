@@ -1,12 +1,12 @@
 """Export Manager portmanteau tool for Advanced Memory MCP server.
 
-This tool consolidates all export operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion.
+This tool consolidates all export operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion.
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
 from pathlib import Path
 
-from loguru import logger
+from loguru import logger  # pyright: ignore[reportMissingImports]
 
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.utils.export_paths import format_export_path
@@ -29,19 +29,30 @@ async def adn_export(
     export_all: bool = True,
     show_after_export: bool = True,
     project: str | None = None,
+    search_query: str | None = None,
+    combine_into_one: bool = False,
+    make_toc: bool = True,
 ) -> str:
     """Comprehensive export management tool for Advanced Memory knowledge base.
 
-    This portmanteau tool consolidates all export operations into a single interface,
-    reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
+    PORTMANTEAU PATTERN: Consolidates 10 export operations into one tool.
 
     SUPPORTED OPERATIONS:
-    - pandoc: Export to PDF, Word, HTML, and 40+ formats using Pandoc (auto-installs!)
+    - pdf: Export to PDF using fpdf2 (pure Python, no LaTeX, no weasyprint!)
+      * Supports search_query to find notes (e.g., "docker")
+      * Supports combine_into_one to create single PDF with clickable TOC
+    - pandoc: Export to Word, HTML, and 40+ formats using Pandoc (auto-installs! No PDF support)
     - docsify: Export to Docsify documentation website with navigation
     - html: Export to standalone HTML website with Mermaid diagram rendering
+      * Supports search_query to find notes (e.g., "docker")
+      * Supports combine_into_one to create single HTML with clickable TOC
     - joplin: Export to Joplin-compatible format for cross-platform access
     - pdf_book: Create professional PDF books with title pages and chapters
     - archive: Export complete Advanced Memory archive for migration/backup
+    - repo: Export repository folder tree as ZIP, respecting .gitignore patterns
+      * Uses source_folder as repo_path (path to repository root)
+      * Excludes files/directories matching .gitignore patterns
+      * Creates Windows Explorer-compatible ZIP archive
     - evernote: Export to Evernote-compatible format
     - notion: Export to Notion-compatible format
     - claude_skills: Export zettelkasten to Claude Skills format (Anthropic agent skills)
@@ -54,7 +65,7 @@ async def adn_export(
     - Complete archive creation for backup/migration
 
     Args:
-        operation: The export operation to perform (pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills)
+        operation: The export operation to perform (pdf, pandoc, docsify, html, joplin, pdf_book, archive, repo, evernote, notion, claude_skills)
         export_path: Path where exported files will be saved
                     **IMPORTANT: Leave this None/omit parameter to use smart default!**
                     Default behavior (when omitted):
@@ -68,19 +79,53 @@ async def adn_export(
                     * Other operations: NOT USED
         source_folder: Source folder to export from
                     * All operations: Optional (default: "/" - root folder)
+                    * repo operation: Path to repository root directory (default: current working directory)
         include_subfolders: Include subfolders recursively
                     * All operations: Optional (default: True)
         site_title: Title for docsify/html exports
-                    * docsify, html operations: Optional
+                    * docsify operation: Optional - Site title
+                    * html operation (with combine_into_one=True): Title for combined HTML
                     * Other operations: NOT USED
         site_description: Description for docsify/html exports
                     * docsify, html operations: Optional
                     * Other operations: NOT USED
         book_title: Title for PDF book exports
                     * pdf_book operation: REQUIRED - Title for the generated PDF book
+                    * pdf operation (with combine_into_one=True): Title for combined PDF
+                    * Other operations: NOT USED
+        search_query: Search query to find notes (for pdf/html operations)
+                    * pdf/html operations: Optional - Search for notes by keyword (e.g., "docker")
+                    * Other operations: NOT USED
+        combine_into_one: Combine multiple notes into single file with TOC (for pdf/html operations)
+                    * pdf/html operations: Optional - If True, creates one file with clickable TOC
+                    * Other operations: NOT USED
+        make_toc: Add clickable table of contents (for pdf/html operations)
+                    * pdf operation: Optional - If True, adds TOC page to combined PDF (default: True).
+                                     Bookmarks are always added for navigation regardless of this setting.
+                    * html operation: Optional - If True, adds clickable TOC sidebar to combined HTML (default: True)
                     * Other operations: NOT USED
         tag_filter: Filter notes by tag for exports
-        pdf_engine: PDF generation engine
+                    * pdf_book operation: Optional - Only export notes with these tags (comma-separated or list)
+                    * Other operations: NOT USED
+        pdf_engine: PDF generation engine for Pandoc
+                    * pandoc operation: Optional - Engine to use (default: "pdflatex")
+                      Valid options: "pdflatex", "xelatex", "lualatex"
+                      Note: Pandoc PDF export is deprecated - use "pdf" operation instead
+                    * Other operations: NOT USED
+        serve: Start local web server after export
+                    * docsify operation: Optional - If True, starts local server to preview docsify site (default: True)
+                    * Other operations: NOT USED
+        port: Port number for local web server
+                    * docsify operation: Optional - Port for preview server (default: 3211)
+                    * Other operations: NOT USED
+        export_all: Export all content regardless of filters
+                    * docsify operation: Optional - If True, exports all notes ignoring source_folder filters (default: True)
+                    * Other operations: NOT USED
+        show_after_export: Open export location after completion
+                    * pandoc operation: Optional - If True, opens file explorer to export location (default: True)
+                    * html operation: Optional - If True, opens browser to HTML index page (default: True)
+                    * archive operation: Optional - If True, opens file explorer to archive location (default: True)
+                    * Other operations: NOT USED
         project: Optional project specification. Supports:
             - None (default): exports current active project
             - "project-name": exports specific project
@@ -186,7 +231,11 @@ async def adn_export(
                     )
                 elif operation == "html":
                     result = await _html_export(
-                        proj_export_path, source_folder, include_subfolders, proj_name
+                        proj_export_path,
+                        source_folder,
+                        include_subfolders,
+                        show_after_export,
+                        proj_name,
                     )
                 elif operation == "claude_skills":
                     result = await _claude_skills_export(
@@ -194,6 +243,8 @@ async def adn_export(
                     )
                 elif operation == "archive":
                     result = await _archive_export(proj_export_path, show_after_export, proj_name)
+                elif operation == "repo":
+                    result = await _repo_export(proj_export_path, source_folder, show_after_export)
                 else:
                     result = f"Skipped {operation} for project {proj_name} (not supported for multi-project)"
 
@@ -220,7 +271,18 @@ async def adn_export(
 
     # Single-project export (original behavior)
     # Route to appropriate operation
-    if operation == "pandoc":
+    if operation == "pdf":
+        return await _pdf_export(
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            project,
+            search_query=search_query,
+            combine_into_one=combine_into_one,
+            book_title=book_title,
+            make_toc=make_toc,
+        )
+    elif operation == "pandoc":
         return await _pandoc_export(
             resolved_export_path,
             format_type,
@@ -244,7 +306,15 @@ async def adn_export(
         )
     elif operation == "html":
         return await _html_export(
-            resolved_export_path, source_folder, include_subfolders, show_after_export, project
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            show_after_export,
+            project,
+            search_query=search_query,
+            combine_into_one=combine_into_one,
+            html_title=site_title,
+            make_toc=make_toc,
         )
     elif operation == "joplin":
         return await _joplin_export(
@@ -256,6 +326,8 @@ async def adn_export(
         )
     elif operation == "archive":
         return await _archive_export(resolved_export_path, show_after_export, project)
+    elif operation == "repo":
+        return await _repo_export(resolved_export_path, source_folder, show_after_export)
     elif operation == "evernote":
         return await _evernote_export(
             resolved_export_path, source_folder, include_subfolders, project
@@ -269,7 +341,32 @@ async def adn_export(
             resolved_export_path, source_folder, include_subfolders, project
         )
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
+
+
+async def _pdf_export(
+    export_path: str,
+    source_folder: str,
+    include_subfolders: bool,
+    project: str | None,
+    search_query: str | None = None,
+    combine_into_one: bool = False,
+    book_title: str | None = None,
+    make_toc: bool = True,
+) -> str:
+    """Handle native PDF export using fpdf2 (no LaTeX, no weasyprint!)."""
+    from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
+
+    return await export_pdf_native(
+        export_path,
+        source_folder,
+        include_subfolders,
+        project,
+        search_query=search_query,
+        combine_into_one=combine_into_one,
+        pdf_title=book_title,
+        make_toc=make_toc,
+    )
 
 
 async def _pandoc_export(
@@ -282,9 +379,28 @@ async def _pandoc_export(
     project: str | None,
 ) -> str:
     """Handle Pandoc export operation."""
+    # Reject PDF format - use native PDF export instead
+    if format_type == "pdf":
+        return """# PDF Export Moved to Native Tool
+
+PDF export is now handled by the native PDF export tool (fpdf2) - no LaTeX needed!
+
+**Use this instead:**
+```python
+adn_export("pdf", export_path="...")
+```
+
+Or specify a different format for Pandoc:
+- docx: Word documents
+- html: HTML pages
+- epub: eBooks
+- odt: OpenDocument Text
+- rtf: Rich Text Format
+"""
+
     from advanced_memory.mcp.tools.export_pandoc import export_pandoc
 
-    return await export_pandoc(
+    return await export_pandoc.fn(
         export_path,
         format_type,
         source_folder,
@@ -315,7 +431,7 @@ async def _docsify_export(
     """Handle Docsify export operation."""
     from advanced_memory.mcp.tools.export_docsify import export_docsify
 
-    return await export_docsify(
+    return await export_docsify.fn(
         export_path,
         source_folder,
         include_subfolders,
@@ -329,12 +445,31 @@ async def _docsify_export(
 
 
 async def _html_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+    export_path: str,
+    source_folder: str,
+    include_subfolders: bool,
+    show_after_export: bool,
+    project: str | None,
+    search_query: str | None = None,
+    combine_into_one: bool = False,
+    html_title: str | None = None,
+    make_toc: bool = True,
 ) -> str:
     """Handle HTML export operation."""
     from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 
-    return await export_html_notes(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
+    return await export_html_notes.fn(
+        export_path=export_path,
+        source_folder=source_folder,
+        include_subfolders=include_subfolders,
+        include_index=True,
+        show_after_export=show_after_export,
+        project=project,
+        search_query=search_query,
+        combine_into_one=combine_into_one,
+        html_title=html_title,
+        make_toc=make_toc,
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _joplin_export(
@@ -343,7 +478,9 @@ async def _joplin_export(
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
 
-    return await export_joplin_notes(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
+    return await export_joplin_notes.fn(
+        export_path, source_folder, include_subfolders, True, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _pdf_book_export(
@@ -356,11 +493,11 @@ async def _pdf_book_export(
 ) -> str:
     """Handle PDF book export operation."""
     if not book_title:
-        return "# Error\n\nPDF book export requires: book_title parameter\n\n**Example:**\n```python\nadn_export(\"pdf_book\", book_title=\"Research Papers\")\n```"
+        return '# Error\n\nPDF book export requires: book_title parameter\n\n**Example:**\n```python\nadn_export("pdf_book", book_title="Research Papers")\n```'
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
 
-    return await make_pdf_book(
+    return await make_pdf_book.fn(
         book_title,
         source_folder,
         tag_filter,
@@ -380,6 +517,256 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     return await export_to_archive.fn(
         export_path, None, None, None, None, True, project, show_after_export
     )  # type: ignore[operator,no-any-return]
+
+
+async def _repo_export(
+    export_path: str, repo_path: str | None, show_after_export: bool
+) -> str:
+    """Export repository folder tree as ZIP, respecting .gitignore patterns.
+
+    Args:
+        export_path: Path where ZIP archive will be saved
+        repo_path: Path to repository root directory (default: current working directory)
+        show_after_export: Whether to open file explorer after export
+
+    Returns:
+        Export summary with file counts and archive location
+    """
+    import os
+    import zipfile
+    from pathlib import Path
+
+    try:
+        from pathspec import PathSpec  # pyright: ignore[reportMissingImports]
+        from pathspec.patterns import GitWildMatchPattern  # pyright: ignore[reportMissingImports]
+    except ImportError:
+        return (
+            "[UNICODE] **Error: pathspec not installed**\n\n"
+            "Repository export requires the `pathspec` package.\n"
+            "Install it with: `pip install pathspec>=0.12.0`\n"
+            "Or install Advanced Memory with all dependencies."
+        )
+
+    # Determine repository root
+    if repo_path and repo_path != "/":
+        repo_root = Path(repo_path).resolve()
+    else:
+        repo_root = Path.cwd()
+
+    if not repo_root.exists():
+        return f"[UNICODE] **Error: Repository path not found**\n\nPath: {repo_root}"
+
+    if not repo_root.is_dir():
+        return f"[UNICODE] **Error: Repository path is not a directory**\n\nPath: {repo_root}"
+
+    logger.info(f"Exporting repository: {repo_root} → {export_path}")
+
+    # Ensure export path is a ZIP file
+    export_path_obj = Path(export_path)
+    if export_path_obj.suffix.lower() != ".zip":
+        export_path_obj = export_path_obj.with_suffix(".zip")
+
+    # Collect all .gitignore files (including nested ones)
+    gitignore_files = []
+    for gitignore_path in repo_root.rglob(".gitignore"):
+        gitignore_files.append(gitignore_path)
+
+    # Build a map of directory -> patterns for nested .gitignore files
+    # Root .gitignore patterns apply to entire repo
+    # Nested .gitignore patterns apply only to their directory and subdirectories
+    ignore_specs = {}  # Maps directory (relative to repo_root) -> PathSpec
+    
+    # First, parse root .gitignore (applies to entire repo)
+    root_gitignore = repo_root / ".gitignore"
+    root_patterns = []
+    if root_gitignore.exists():
+        try:
+            with open(root_gitignore, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        root_patterns.append(line)
+        except Exception as e:
+            logger.warning(f"Failed to read root .gitignore: {e}")
+    
+    if root_patterns:
+        ignore_specs[Path(".")] = PathSpec.from_lines(GitWildMatchPattern, root_patterns)
+        logger.debug(f"Loaded {len(root_patterns)} patterns from root .gitignore")
+    
+    # Then parse nested .gitignore files (patterns apply only within their directory)
+    for gitignore_file in gitignore_files:
+        if gitignore_file == root_gitignore:
+            continue  # Already processed
+        
+        # Get directory relative to repo root
+        gitignore_dir = gitignore_file.parent.relative_to(repo_root)
+        
+        try:
+            with open(gitignore_file, "r", encoding="utf-8") as f:
+                patterns = []
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        patterns.append(line)
+                if patterns:
+                    ignore_specs[gitignore_dir] = PathSpec.from_lines(GitWildMatchPattern, patterns)
+                    logger.debug(f"Loaded {len(patterns)} patterns from nested .gitignore at {gitignore_dir}")
+        except Exception as e:
+            logger.warning(f"Failed to read .gitignore at {gitignore_file}: {e}")
+
+    # Check if ZIP64 is needed
+    needs_zip64 = False
+    total_size_check = 0
+    files_to_include = []
+
+    # Walk repository and collect files (respecting .gitignore)
+    for file_path in repo_root.rglob("*"):
+        if not file_path.is_file():
+            continue
+
+        # Calculate relative path from repo root
+        rel_path = file_path.relative_to(repo_root)
+        rel_path_str = str(rel_path).replace("\\", "/")
+        rel_path_obj = Path(rel_path_str)
+
+        # Check if file matches any .gitignore pattern
+        # Check root patterns first, then check nested patterns for each parent directory
+        should_ignore = False
+        
+        # Check root .gitignore patterns (apply to entire repo)
+        if Path(".") in ignore_specs:
+            if ignore_specs[Path(".")].match_file(rel_path_str):
+                should_ignore = True
+                logger.debug(f"Ignoring (root .gitignore): {rel_path_str}")
+        
+        # Check nested .gitignore patterns (check each parent directory up to repo root)
+        # Nested .gitignore files only apply to files within their directory tree
+        if not should_ignore:
+            # Check if file is within any directory that has a nested .gitignore
+            for gitignore_dir, spec in ignore_specs.items():
+                if gitignore_dir == Path("."):
+                    continue  # Already checked root
+                
+                # Check if file is within this .gitignore's directory
+                try:
+                    # Check if rel_path is within gitignore_dir
+                    if rel_path_obj.is_relative_to(gitignore_dir) or gitignore_dir in rel_path_obj.parents:
+                        # Get path relative to the .gitignore directory
+                        rel_to_gitignore = rel_path_obj.relative_to(gitignore_dir)
+                        rel_to_gitignore_str = str(rel_to_gitignore).replace("\\", "/")
+                        if spec.match_file(rel_to_gitignore_str):
+                            should_ignore = True
+                            logger.debug(f"Ignoring (nested .gitignore in {gitignore_dir}): {rel_path_str}")
+                            break
+                except ValueError:
+                    # File is not within this directory, skip
+                    continue
+        
+        if should_ignore:
+            continue
+
+        # Check file size for ZIP64 determination
+        file_size = file_path.stat().st_size
+        total_size_check += file_size
+        if file_size > 4 * 1024 * 1024 * 1024:
+            needs_zip64 = True
+
+        files_to_include.append((file_path, rel_path_str))
+
+    # Check if total size exceeds ZIP32 limit
+    if not needs_zip64 and total_size_check > 4 * 1024 * 1024 * 1024:
+        needs_zip64 = True
+
+    if needs_zip64:
+        logger.warning(
+            f"Archive requires ZIP64 format (total: {total_size_check / (1024**3):.2f} GB). "
+            "Windows Explorer may have issues opening this archive."
+        )
+
+    # Create ZIP archive
+    file_count = 0
+    total_size = 0
+
+    export_path_obj.parent.mkdir(parents=True, exist_ok=True)
+
+    # Create ZIP file with explicit Windows Explorer compatibility settings
+    # Use explicit open/close instead of context manager to ensure proper finalization
+    zipf = zipfile.ZipFile(
+        export_path_obj,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=6,
+        allowZip64=needs_zip64,
+    )
+    
+    try:
+        for file_path, rel_path_str in files_to_include:
+            try:
+                zipf.write(file_path, rel_path_str)
+                file_count += 1
+                total_size += file_path.stat().st_size
+                logger.debug(f"Added to ZIP: {rel_path_str}")
+            except Exception as e:
+                logger.warning(f"Failed to add {rel_path_str} to ZIP: {e}")
+    finally:
+        # Explicitly close and finalize the ZIP file
+        # This ensures proper ZIP structure that Windows Explorer expects
+        zipf.close()
+    
+    # Verify the ZIP file is valid
+    try:
+        test_zip = zipfile.ZipFile(export_path_obj, "r")
+        test_zip.close()
+        logger.info(f"ZIP archive created and verified: {export_path_obj} (ZIP64: {needs_zip64})")
+    except zipfile.BadZipFile as e:
+        logger.error(f"Created ZIP file is invalid: {e}")
+        raise
+
+    final_size = export_path_obj.stat().st_size
+
+    # Format results
+    def _format_size(size_bytes: int) -> str:
+        """Format file size in human-readable format."""
+        for unit in ["B", "KB", "MB", "GB", "TB"]:
+            if size_bytes < 1024.0:
+                return f"{size_bytes:.1f} {unit}"
+            size_bytes /= 1024.0
+        return f"{size_bytes:.1f} PB"
+
+    result = f"""[UNICODE][UNICODE] **Repository Export Complete!**
+
+**Archive Details:**
+- [FOLDER] Location: {export_path_obj}
+- [CHART] Size: {_format_size(final_size)}
+- [DOC] Files: {file_count}
+- [UNICODE] Repository: {repo_root}
+- [UNICODE] .gitignore files parsed: {len(gitignore_files)}
+- [UNICODE] ZIP64 format: {needs_zip64}
+
+**Contents:**
+- All files from repository root
+- Excluded files matching .gitignore patterns
+- Windows Explorer compatible (ZIP32) unless ZIP64 required
+
+**To extract:**
+Right-click the ZIP file and select "Extract All" (Windows Explorer)
+Or use: `unzip {export_path_obj.name}` (Linux/macOS)
+"""
+
+    if show_after_export:
+        try:
+            import platform
+
+            if platform.system() == "Windows":
+                os.startfile(export_path_obj.parent)  # type: ignore[attr-defined]
+            elif platform.system() == "Darwin":
+                os.system(f'open "{export_path_obj.parent}"')
+            else:
+                os.system(f'xdg-open "{export_path_obj.parent}"')
+        except Exception as e:
+            logger.warning(f"Failed to open file explorer: {e}")
+
+    return result
 
 
 async def _evernote_export(

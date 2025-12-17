@@ -139,9 +139,7 @@ def normalize_skill(skill_path: Path, dry_run: bool = False) -> bool:
         status_line = base_status
         confidence_note = status_note or "Legacy content pending validation"
 
-    confidence_label = CONFIDENCE_LABELS.get(
-        confidence_value, CONFIDENCE_LABELS["medium"]
-    )
+    confidence_label = CONFIDENCE_LABELS.get(confidence_value, CONFIDENCE_LABELS["medium"])
     confidence_line = (
         f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
     )
@@ -211,9 +209,7 @@ def main() -> None:
             updated += 1
 
     action = "would update" if args.dry_run else "updated"
-    print(
-        f"[normalize_skill_frontmatter] Scanned {scanned} SKILL.md files — {action} {updated}."
-    )
+    print(f"[normalize_skill_frontmatter] Scanned {scanned} SKILL.md files — {action} {updated}.")
 
 
 if __name__ == "__main__":

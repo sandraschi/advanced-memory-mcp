@@ -10,7 +10,7 @@ from pydantic import Field
 
 from advanced_memory.config import get_project_config
 from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.server import mcp
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.prompt import SearchPromptRequest

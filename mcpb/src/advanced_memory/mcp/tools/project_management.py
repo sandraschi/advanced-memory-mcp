@@ -63,47 +63,7 @@ async def list_memory_projects(
     return add_project_metadata(result, current)
 
 
-@mcp.tool(
-    description="""Change the active project context for all subsequent Advanced Memory operations.
-
-This essential project management tool switches the current working context to a different project,
-affecting all subsequent tool calls and operations until changed again.
-
-PROJECT CONTEXT IMPACT:
-- All file operations (read, write, edit, delete) target the new project
-- Search operations are scoped to the active project
-- Directory listings show the active project's structure
-- New notes are created in the active project
-- Sync status reflects the active project's state
-
-PARAMETERS:
-- project_name (str, REQUIRED): Name of the project to switch to (must exist in configuration)
-
-VALIDATION:
-- Project must exist in Advanced Memory configuration
-- Project path must be accessible
-- Automatic project initialization if needed
-
-USAGE EXAMPLES:
-Switch to work: switch_project("work-project")
-Switch to personal: switch_project("personal-notes")
-Switch to research: switch_project("research-papers")
-
-RETURNS:
-Confirmation message with project summary including:
-- Project name and display status
-- Home directory path
-- File count and recent activity
-- Sync status and configuration details
-
-PROJECT PERSISTENCE:
-- Project context persists for the current session
-- All tools automatically use the active project
-- No need to specify project parameter repeatedly
-
-NOTE: This changes the global context for all operations. Use project-specific parameters
-in individual tools if you need to work across multiple projects simultaneously.""",
-)
+@mcp.tool
 async def switch_project(project_name: str, ctx: Context | None = None) -> str:
     """Switch to a different project context.
 
@@ -161,16 +121,16 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
             )
             project_info = ProjectInfoResponse.model_validate(response.json())
 
-            result = f"[UNICODE] Switched to {canonical_name} project\n\n"
+            result = f"✓ Switched to {canonical_name} project\n\n"
             result += "Project Summary:\n"
-            result += f"[UNICODE] {project_info.statistics.total_entities} entities\n"
-            result += f"[UNICODE] {project_info.statistics.total_observations} observations\n"
-            result += f"[UNICODE] {project_info.statistics.total_relations} relations\n"
+            result += f"📊 {project_info.statistics.total_entities} entities\n"
+            result += f"📊 {project_info.statistics.total_observations} observations\n"
+            result += f"📊 {project_info.statistics.total_relations} relations\n"
 
         except Exception as e:
             # If we can't get project info, still confirm the switch
             logger.warning(f"Could not get project info for {canonical_name}: {e}")
-            result = f"[UNICODE] Switched to {canonical_name} project\n\n"
+            result = f"✓ Switched to {canonical_name} project\n\n"
             result += "Project summary unavailable.\n"
 
         return add_project_metadata(result, canonical_name)
@@ -204,48 +164,7 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
             """).strip()
 
 
-@mcp.tool(
-    description="""Display the currently active project and comprehensive project statistics.
-
-This information tool shows which project is currently active in the session and provides
-detailed statistics about the project's knowledge base content and structure.
-
-DISPLAYED INFORMATION:
-- **Current Project**: Active project name and status indicators
-- **Content Statistics**: Entity count, observation count, relationship count
-- **Project Path**: Filesystem location of the project
-- **Recent Activity**: Last modification timestamps
-- **Configuration Status**: Sync status and project settings
-
-STATISTICS INCLUDED:
-- Total entities (notes, documents, etc.)
-- Total observations (metadata and properties)
-- Total relations (semantic connections and links)
-- File counts and size information
-- Recent activity indicators
-
-USAGE EXAMPLES:
-Check current: get_current_project()
-Monitor progress: get_current_project()  # After adding content
-Verify context: get_current_project()  # Before operations
-
-RETURNS:
-Formatted project information including:
-- Active project name with status
-- Comprehensive content statistics
-- Project path and configuration details
-- Recent activity summary
-- Performance and health indicators
-
-DIFFERENCE FROM LIST_PROJECTS:
-- Shows only the currently active project
-- Provides detailed statistics and metrics
-- Includes real-time status information
-- Focuses on current working context
-
-NOTE: This tool shows the active project context that affects all operations.
-Use list_memory_projects() to see all available projects.""",
-)
+@mcp.tool
 async def get_current_project(ctx: Context | None = None, _compatibility: str | None = None) -> str:
     """Show the currently active project and basic stats.
 
@@ -284,46 +203,7 @@ async def get_current_project(ctx: Context | None = None, _compatibility: str | 
     return add_project_metadata(result, current_project)
 
 
-@mcp.tool(
-    description="""Configure which project loads by default when Advanced Memory starts.
-
-This configuration tool sets the default project that will be automatically activated
-when the Advanced Memory server starts, eliminating the need to manually switch projects.
-
-CONFIGURATION IMPACT:
-- Default project loads automatically on startup
-- Affects all new sessions and connections
-- Persists across server restarts
-- Can be overridden by explicit project switching
-
-PARAMETERS:
-- project_name (str, REQUIRED): Name of the project to set as default (must exist)
-
-VALIDATION:
-- Project must exist in configuration
-- Project path must be accessible
-- Configuration file must be writable
-
-USAGE EXAMPLES:
-Set work default: set_default_project("work-project")
-Set personal default: set_default_project("personal-notes")
-Set research default: set_default_project("research-papers")
-
-RETURNS:
-Confirmation message with configuration update status and restart requirement.
-
-CONFIGURATION PERSISTENCE:
-- Saved to Advanced Memory configuration file
-- Takes effect on next server restart
-- Current session continues with active project unchanged
-
-RESTART REQUIREMENT:
-This change requires an Advanced Memory server restart to take effect.
-The configuration is updated immediately, but the default behavior changes on restart.
-
-NOTE: This only affects the default project on startup. Use switch_project() to change
-the active project in the current session without restarting.""",
-)
+@mcp.tool
 async def set_default_project(project_name: str, ctx: Context | None = None) -> str:
     """Set default project in config. Requires restart to take effect.
 
@@ -346,9 +226,9 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
     response = await call_put(client, f"/projects/{project_name}/default")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
     result += "Restart Advanced Memory for this change to take effect:\n"
-    result += "advanced-memory mcp\n"
+    result += "basic-memory mcp\n"
 
     if status_response.old_project:
         result += f"\nPrevious default: {status_response.old_project.name}\n"
@@ -389,15 +269,15 @@ async def create_memory_project(
     response = await call_post(client, "/projects/projects", json=project_request.model_dump())
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
 
     if status_response.new_project:
         result += "Project Details:\n"
-        result += f"[UNICODE] Name: {status_response.new_project.name}\n"
-        result += f"[UNICODE] Path: {status_response.new_project.path}\n"
+        result += f"📁 Name: {status_response.new_project.name}\n"
+        result += f"📁 Path: {status_response.new_project.path}\n"
 
         if set_default:
-            result += "[UNICODE] Set as default project\n"
+            result += "⭐ Set as default project\n"
 
     result += "\nProject is now available for use.\n"
 
@@ -408,58 +288,9 @@ async def create_memory_project(
     return add_project_metadata(result, session.get_current_project())
 
 
-@mcp.tool(
-    description="""Remove a project from Advanced Memory configuration and database.
-
-This destructive operation removes a project from Advanced Memory's management while preserving
-the actual files on disk. Use this when you want to stop managing a project with Advanced Memory.
-
-DELETION SCOPE:
-- Removes project from configuration
-- Deletes project records from database
-- Clears project-specific metadata and relationships
-- Removes project from available project list
-- **PRESERVES ALL FILES ON DISK**
-
-PARAMETERS:
-- project_name (str, REQUIRED): Name of the project to remove from management
-
-VALIDATION:
-- Project must exist in configuration
-- Cannot delete the currently active project (switch first)
-- Confirms project exists before deletion
-
-USAGE EXAMPLES:
-Remove old project: delete_project("old-research")
-Clean up archive: delete_project("completed-project")
-Remove test project: delete_project("experimental")
-
-RETURNS:
-Confirmation message with deletion details and file preservation notice.
-
-FILE PRESERVATION:
-- All markdown files remain on disk
-- File structure is unchanged
-- Content is fully preserved
-- Can be re-added later with create_memory_project()
-
-RE-ADDITION PROCESS:
-To re-add a deleted project:
-1. Use create_memory_project() with the same path
-2. Files will be re-indexed automatically
-3. Semantic relationships will be rebuilt
-
-SAFETY MEASURES:
-- Cannot delete active project (switch first)
-- Confirmation required before deletion
-- Detailed warnings about permanent metadata loss
-- File preservation guarantee
-
-NOTE: This removes Advanced Memory's management of the project but keeps all your files safe.
-Use this for project cleanup, not for deleting content.""",
-)
+@mcp.tool
 async def delete_project(project_name: str, ctx: Context | None = None) -> str:
-    """Delete an Advanced Memory project.
+    """Delete a Advanced Memory project.
 
     Removes a project from the configuration and database. This does NOT delete
     the actual files on disk - only removes the project from Advanced Memory's
@@ -505,13 +336,13 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
     response = await call_delete(client, f"/projects/{project_name}")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"[UNICODE] {status_response.message}\n\n"
+    result = f"✓ {status_response.message}\n\n"
 
     if status_response.old_project:
         result += "Removed project details:\n"
-        result += f"[UNICODE] Name: {status_response.old_project.name}\n"
+        result += f"📁 Name: {status_response.old_project.name}\n"
         if hasattr(status_response.old_project, "path"):
-            result += f"[UNICODE] Path: {status_response.old_project.path}\n"
+            result += f"📁 Path: {status_response.old_project.path}\n"
 
     result += "Files remain on disk but project is no longer tracked by Advanced Memory.\n"
     result += "Re-add the project to access its content again.\n"

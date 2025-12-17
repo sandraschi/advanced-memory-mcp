@@ -1,0 +1,41 @@
+# advanced-memory-mcp
+> This directory contains documentation related to achieving GLAMA AI Gold standard status for the Advanced Memory MCP project. GLAMA AI is a quality assurance platform that evaluates MCP servers agains...
+
+This project includes automated llms.txt generation for AI accessibility.
+
+## Docs
+- [Readme](docs\glama\README.md): This directory contains documentation related to achieving GLAMA AI Gold standard status for the Adv...
+- [Readme](docs\zettelkasten\README.md): This directory contains documentation for Advanced Memory's revolutionary Zettelkasten features.
+- [Readme Restructuring Plan](docs\README_RESTRUCTURING_PLAN.md): **Current README.md**: 857 lines - way too long!
+- [Readme](docs\tools\README.md): **Purpose**: Comprehensive documentation for all tools used in Advanced Memory MCP
+- [Readme](docs\github\README.md): > **Purpose**: Comprehensive GitHub configuration guide to avoid hours of trial-and-error setup.
+- [Readme](docs\integrations\README.md): **Purpose**: Documentation for all import/export integrations and third-party tool support
+- [Readme](docs\mcpb-packaging\README.md): **Complete guide to packaging and distributing MCP servers with MCPB**
+- [Readme](README.md): [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/lic...
+- [Readme](docs\README.md): This directory contains all documentation for the Basic Memory project, organized by topic and audie...
+- [Readme](docs\user-guide\README.md): Welcome to Advanced Memory! This guide covers everything you need to know to build and maintain your...
+
+## Api
+- [Memory Router](src\advanced_memory\api\routers\memory_router.py): Api definitions and implementations
+- [Search Router](src\advanced_memory\api\routers\search_router.py): Api definitions and implementations
+- [Directory Router](src\advanced_memory\api\routers\directory_router.py): Api definitions and implementations
+- [  Init  ](src\advanced_memory\models\__init__.py): Models definitions and implementations
+- [Base](src\advanced_memory\models\base.py): Models definitions and implementations
+- [Knowledge](src\advanced_memory\models\knowledge.py): Models definitions and implementations
+- [Response](src\advanced_memory\schemas\response.py): Schemas definitions and implementations
+- [Memory](src\advanced_memory\schemas\memory.py): Schemas definitions and implementations
+- [Directory](src\advanced_memory\schemas\directory.py): Schemas definitions and implementations
+
+## Examples
+- [Skill Creation Examples](docs\Skills\SKILL_CREATION_EXAMPLES.md): Example usage and code samples
+
+## Configuration
+- [Pyproject](pyproject.toml): Python project configuration and dependencies
+- [Package](temp-anthropic-courses\prompt_evaluations\05_prompt_foo_code_graded_animals\package.json): Node.js project configuration and dependencies
+- [Config](.git\config): Application configuration files
+
+## Optional
+- [Changelog](CHANGELOG.md): Project changelog information
+- [Contributing](CONTRIBUTING.md): Project contributing information
+- [License](LICENSE): Project license information
+- [Cli Tools Roadmap](docs\development\CLI_TOOLS_ROADMAP.md): Project roadmap information

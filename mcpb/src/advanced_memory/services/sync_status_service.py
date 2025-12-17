@@ -158,16 +158,16 @@ class SyncStatusTracker:
     def get_summary(self) -> str:  # pragma: no cover
         """Get a user-friendly summary of sync status."""
         if self._global_status == SyncStatus.IDLE:
-            return "✅ System ready"
+            return "OK System ready"
         elif self._global_status == SyncStatus.COMPLETED:
-            return "✅ All projects synced successfully"
+            return "OK All projects synced successfully"
         elif self._global_status == SyncStatus.FAILED:
             failed_projects = [
                 p.project_name
                 for p in self._project_statuses.values()
                 if p.status == SyncStatus.FAILED
             ]
-            return f"❌ Sync failed for: {', '.join(failed_projects)}"
+            return f"ERROR Sync failed for: {', '.join(failed_projects)}"
         else:
             active_projects = [
                 p.project_name
@@ -179,9 +179,9 @@ class SyncStatusTracker:
 
             if total_files > 0:
                 progress_pct = (processed_files / total_files) * 100
-                return f"🔄 Syncing {len(active_projects)} projects ({processed_files}/{total_files} files, {progress_pct:.0f}%)"
+                return f"SYNCING {len(active_projects)} projects ({processed_files}/{total_files} files, {progress_pct:.0f}%)"
             else:
-                return f"🔄 Syncing {len(active_projects)} projects"
+                return f"SYNCING {len(active_projects)} projects"
 
     def clear_completed(self) -> None:
         """Remove completed project statuses to clean up memory."""

@@ -3,13 +3,18 @@ Typora Control via json_rpc Plugin
 
 Swiss Army Knife tool for full Typora automation using the obgnail/typora_plugin json_rpc plugin.
 
+PRIMARY USE CASE: Manual editing of long skill markdown files in a rich editor.
+
 REQUIRES: obgnail/typora_plugin with json_rpc enabled on port 8888
 
 Provides direct API control of Typora without GUI automation brittleness.
+
+NOTE: For quick note editing, use adn_content. For Notepad++ workflows, use notepadpp-mcp server.
 """
 
 import asyncio
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -22,10 +27,13 @@ from advanced_memory.mcp.mcp_instance import mcp
 class TyporaRPCClient:
     """WebSocket client for Typora json_rpc communication."""
 
-    def __init__(self, host: str = "localhost", port: int = 8888):
-        self.uri = f"ws://{host}:{port}"
-        self.connection_timeout = 5.0
-        self.request_timeout = 10.0
+    def __init__(self, host: str | None = None, port: int | None = None):
+        # Use environment variables or defaults
+        self.host = host or os.getenv("TYPORA_HOST", "localhost")
+        self.port = port or int(os.getenv("TYPORA_PORT", "8888"))
+        self.uri = f"ws://{self.host}:{self.port}"
+        self.connection_timeout = float(os.getenv("TYPORA_CONNECTION_TIMEOUT", "5.0"))
+        self.request_timeout = float(os.getenv("TYPORA_REQUEST_TIMEOUT", "10.0"))
 
     async def call(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """Make a JSON-RPC call to Typora."""
@@ -74,44 +82,7 @@ class TyporaRPCClient:
 typora_client = TyporaRPCClient()
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE][UNICODE] Swiss Army Knife for Typora Control via json_rpc Plugin
-
-REQUIRES: obgnail/typora_plugin with json_rpc enabled (default port 8888)
-
-FULL TYPORA API CONTROL - No more GUI automation brittleness!
-
-CORE OPERATIONS:
-[UNICODE] export - Export current document (pdf, html, docx, etc.)
-[UNICODE] get_content - Get current document content
-[UNICODE] set_content - Replace entire document content
-[UNICODE] insert_text - Insert text at cursor position
-[UNICODE] get_cursor - Get cursor position and selection
-[UNICODE] open_file - Open a file in Typora
-[UNICODE] save_file - Save current file
-[UNICODE] new_file - Create new document
-[UNICODE] get_metadata - Get document metadata
-[UNICODE] set_metadata - Set document metadata
-[UNICODE] search_replace - Find and replace text
-[UNICODE] get_themes - List available themes
-[UNICODE] set_theme - Change theme
-[UNICODE] toggle_sidebar - Show/hide sidebar
-[UNICODE] toggle_toolbar - Show/hide toolbar
-
-ADVANCED OPERATIONS:
-[UNICODE] batch_export - Export multiple files
-[UNICODE] content_analysis - Analyze document structure
-[UNICODE] link_validation - Check and fix links
-[UNICODE] template_apply - Apply Advanced Memory templates
-[UNICODE] sync_to_advanced_memory - Sync content to Advanced Memory
-
-EXAMPLES:
-typora_control("export", format="pdf", output_path="/exports/doc.pdf")
-typora_control("get_content")
-typora_control("insert_text", text="## New Section\\n\\nContent here")
-typora_control("batch_export", files=["/docs/1.md", "/docs/2.md"], format="html")
-"""
-)
+@mcp.tool
 async def typora_control(
     operation: str,
     # Common parameters
@@ -299,7 +270,7 @@ async def _handle_set_content(content: str | None) -> str:
     return f"""[UNICODE] **Document Content Updated**
 
 **New Content Length**: {len(content)} characters
-**Lines**: {len(content.split("\\n"))}
+**Lines**: {len(content.split(chr(10)))}
 
 **Note**: Previous content has been replaced. Use `save_file` to persist changes."""
 
@@ -565,8 +536,9 @@ async def _handle_batch_export(
                 )
                 continue
 
-            # Brief pause for loading
-            await asyncio.sleep(0.5)
+            # Brief pause for loading - configurable via environment
+            sleep_duration = float(os.getenv("TYPORA_LOAD_DELAY", "0.5"))
+            await asyncio.sleep(sleep_duration)
 
             # Export file
             export_filename = Path(file_path).stem + f".{format}"
@@ -628,7 +600,7 @@ async def _handle_content_analysis() -> str:
     char_count = len(content)
 
     # Heading structure
-    heading_levels = {}
+    heading_levels: dict[int, int] = {}
     for heading in headings:
         level = len(heading) - len(heading.lstrip("#"))
         heading_levels[level] = heading_levels.get(level, 0) + 1
@@ -1025,13 +997,18 @@ async def check_typora_connection() -> bool:
     try:
         result = await typora_client.call("status")
         return result["success"]
-    except:
+    except Exception:
         return False
 
 
 async def get_typora_status() -> dict[str, Any]:
     """Get comprehensive Typora status."""
-    status = {"connection": False, "current_file": None, "theme": None, "ui_state": {}}
+    status: dict[str, Any] = {
+        "connection": False,
+        "current_file": None,
+        "theme": None,
+        "ui_state": {},
+    }
 
     # Check connection
     status["connection"] = await check_typora_connection()
@@ -1043,7 +1020,7 @@ async def get_typora_status() -> dict[str, Any]:
             if metadata_result["success"]:
                 metadata = metadata_result["result"]
                 status["current_file"] = metadata.get("filePath")
-        except:
+        except Exception:
             pass
 
         # Get theme
@@ -1051,7 +1028,7 @@ async def get_typora_status() -> dict[str, Any]:
             theme_result = await typora_client.call("getThemes")
             if theme_result["success"]:
                 status["theme"] = theme_result["result"].get("current")
-        except:
+        except Exception:
             pass
 
     return status

@@ -116,11 +116,11 @@ async def export_pandoc(
 
         # Generate summary
         summary = _generate_export_summary(exported_files, errors, format_type, export_path)
-        
+
         # Open exported files if requested
         if show_after_export and exported_files:
-            from advanced_memory.utils.file_opener import open_file_or_folder, format_open_result
-            
+            from advanced_memory.utils.file_opener import format_open_result, open_file_or_folder
+
             export_dir = Path(export_path)
             # Open the first file (or the folder if multiple)
             if len(exported_files) == 1:
@@ -292,7 +292,7 @@ def _build_pandoc_command(
 ) -> list[str]:
     """
     Build the Pandoc command with all specified options.
-    
+
     Pandoc is auto-installed on first use if not found.
     """
     # Get pandoc executable (auto-installs if needed)

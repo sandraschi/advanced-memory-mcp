@@ -30,6 +30,8 @@
 
 Consolidated tools that combine multiple related operations into a single powerful interface. Perfect for Cursor IDE (50-tool limit) while maintaining full functionality.
 
+**Documentation Quality**: All portmanteau tools have comprehensive, unambiguous docstrings that clearly specify which operations use which parameters. Each parameter is documented with operation-specific details (REQUIRED/Optional/NOT USED) to prevent confusion.
+
 **Enable portmanteau-only mode**:
 ```json
 {

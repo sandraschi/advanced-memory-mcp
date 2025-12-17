@@ -1,11 +1,11 @@
-"""Utility functions for basic-memory."""
+"""Utility functions for advanced-memory."""
 
 import logging
 import os
 import re
 import unicodedata
 from pathlib import Path
-from typing import Any, Protocol, Union, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 from loguru import logger
 
@@ -19,7 +19,7 @@ class PathLike(Protocol):
 
 # In type annotations, use Union[Path, str] instead of FilePath for now
 # This preserves compatibility with existing code while we migrate
-FilePath = Union[Path, str]
+FilePath = Path | str
 
 # Disable the "Queue is full" warning
 logging.getLogger("opentelemetry.sdk.metrics._internal.instrument").setLevel(logging.ERROR)
@@ -89,15 +89,6 @@ def generate_permalink(file_path: Path | str | Any) -> str:
     # Handle special punctuation cases for apostrophes
     result = result.replace("'", "")
 
-    # Insert dash between camelCase
-    # This regex finds boundaries between lowercase and uppercase letters
-    result = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", result)
-
-    # Insert dash between Chinese and Latin character boundaries
-    # This is needed for cases like "中文English" -> "中文-english"
-    result = re.sub(r"([\u4e00-\u9fff])([a-zA-Z])", r"\1-\2", result)
-    result = re.sub(r"([a-zA-Z])([\u4e00-\u9fff])", r"\1-\2", result)
-
     # Convert ASCII letters to lowercase, preserve non-ASCII characters
     lower_text = "".join(c.lower() if c.isascii() and c.isalpha() else c for c in result)
 
@@ -106,9 +97,7 @@ def generate_permalink(file_path: Path | str | Any) -> str:
 
     # Replace spaces and unsafe ASCII characters with hyphens, but preserve non-ASCII characters
     # Include common Chinese character ranges and other non-ASCII characters
-    clean_text = re.sub(
-        r"[^a-z0-9\u4e00-\u9fff\u3000-\u303f\u3400-\u4dbf/\-]", "-", text_with_hyphens
-    )
+    clean_text = re.sub(r"[^a-z0-9\u4e00-\u9fff/\-]", "-", text_with_hyphens)
 
     # Collapse multiple hyphens
     clean_text = re.sub(r"-+", "-", clean_text)
@@ -116,6 +105,15 @@ def generate_permalink(file_path: Path | str | Any) -> str:
     # Remove hyphens between adjacent Chinese characters only
     # This handles cases like "你好-世界" -> "你好世界"
     clean_text = re.sub(r"([\u4e00-\u9fff])-([\u4e00-\u9fff])", r"\1\2", clean_text)
+
+    # NOW insert dash between Chinese and Latin character boundaries (after cleanup)
+    # This handles cases like "中文english" -> "中文-english" and "english中文" -> "english-中文"
+    clean_text = re.sub(
+        r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
+    )
+    clean_text = re.sub(
+        r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
+    )
 
     # Clean each path segment
     segments = clean_text.split("/")

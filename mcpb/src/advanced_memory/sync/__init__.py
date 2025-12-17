@@ -1,4 +1,4 @@
-"""Basic Memory sync services."""
+"""Advanced Memory sync services."""
 
 from .sync_service import SyncService
 from .watch_service import WatchService

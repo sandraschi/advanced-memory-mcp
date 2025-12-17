@@ -2,6 +2,7 @@
 
 import os
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -178,15 +179,21 @@ class SyncService:
 
         # sync moves first
         for old_path, new_path in report.moves.items():
-            # in the case where a file has been deleted and replaced by another file
-            # it will show up in the move and modified lists, so handle it in modified
-            if new_path in report.modified:
-                report.modified.remove(new_path)
-                logger.debug(
-                    f"File marked as moved and modified: old_path={old_path}, new_path={new_path}"
+            try:
+                # in the case where a file has been deleted and replaced by another file
+                # it will show up in the move and modified lists, so handle it in modified
+                if new_path in report.modified:
+                    report.modified.remove(new_path)
+                    logger.debug(
+                        f"File marked as moved and modified: old_path={old_path}, new_path={new_path}"
+                    )
+                else:
+                    await self.handle_move(old_path, new_path)
+            except Exception as e:  # pragma: no cover
+                logger.error(
+                    f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}"
                 )
-            else:
-                await self.handle_move(old_path, new_path)
+                # Continue with other files
 
             files_processed += 1
             if project_name:
@@ -199,7 +206,11 @@ class SyncService:
 
         # deleted next
         for path in report.deleted:
-            await self.handle_delete(path)
+            try:
+                await self.handle_delete(path)
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error deleting file {path}: {type(e).__name__}: {e}")
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(  # pragma: no cover
@@ -211,7 +222,13 @@ class SyncService:
 
         # then new and modified
         for path in report.new:
-            await self.sync_file(path, new=True)
+            try:
+                entity, checksum = await self.sync_file(path, new=True)
+                if entity is None:
+                    logger.warning(f"Skipped new file due to errors: {path}")
+            except Exception as e:  # pragma: no cover
+                logger.error(f"Unexpected error syncing new file {path}: {type(e).__name__}: {e}")
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(
@@ -222,7 +239,15 @@ class SyncService:
                 )
 
         for path in report.modified:
-            await self.sync_file(path, new=False)
+            try:
+                entity, checksum = await self.sync_file(path, new=False)
+                if entity is None:
+                    logger.warning(f"Skipped modified file due to errors: {path}")
+            except Exception as e:  # pragma: no cover
+                logger.error(
+                    f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}"
+                )
+                # Continue with other files
             files_processed += 1
             if project_name:
                 sync_status_tracker.update_project_progress(  # pragma: no cover
@@ -245,7 +270,7 @@ class SyncService:
 
         return report
 
-    async def scan(self, directory):
+    async def scan(self, directory: Path) -> SyncReport:
         """Scan directory for changes compared to database state."""
 
         db_paths = await self.get_db_file_state()
@@ -300,7 +325,7 @@ class SyncService:
             Dict mapping file paths to FileState
             :param db_records: the data from the db
         """
-        db_records = await self.entity_repository.find_all()
+        db_records: Sequence[Entity] = await self.entity_repository.find_all()
         logger.info(f"Found {len(db_records)} db records")
         return {r.file_path: r.checksum or "" for r in db_records}
 
@@ -377,7 +402,16 @@ class SyncService:
             if not absolute_path.exists():
                 return False, f"File does not exist: {path}"
 
-            content = absolute_path.read_text(encoding="utf-8")
+            # Check file size before reading
+            file_size = absolute_path.stat().st_size
+            if file_size > 10 * 1024 * 1024:  # 10MB limit
+                return False, f"File too large ({file_size / 1024 / 1024:.2f} MB)"
+
+            # Try to read file with encoding error handling
+            try:
+                content = absolute_path.read_text(encoding="utf-8")
+            except UnicodeDecodeError as e:
+                return False, f"Invalid UTF-8 encoding: {e}"
 
             if not has_frontmatter(content):
                 return True, None  # No frontmatter to validate
@@ -442,11 +476,37 @@ class SyncService:
         logger.debug(f"Parsing markdown file, path: {path}, new: {new}")
 
         file_path = self.entity_parser.base_path / path
-        file_content = file_path.read_text(encoding="utf-8")
+
+        # Check file size before reading to prevent hanging on huge files
+        try:
+            file_size = file_path.stat().st_size
+            if file_size > 10 * 1024 * 1024:  # 10MB limit
+                logger.warning(f"File too large to sync: {path} ({file_size / 1024 / 1024:.2f} MB)")
+                raise ValueError(f"File exceeds 10MB limit: {path}")
+        except OSError as e:
+            logger.error(f"Cannot access file: {path}, error: {e}")
+            raise
+
+        # Read file with encoding error handling
+        try:
+            file_content = file_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            logger.warning(f"UTF-8 decode failed for {path}, trying with error handling")
+            try:
+                file_content = file_path.read_text(encoding="utf-8", errors="replace")
+            except Exception as e:
+                logger.error(f"Cannot read file {path}: {e}")
+                raise ValueError(f"File is unreadable: {path}") from e
+
         file_contains_frontmatter = has_frontmatter(file_content)
 
         # entity markdown will always contain front matter, so it can be used up create/update the entity
-        entity_markdown = await self.entity_parser.parse_file(path)
+        # Wrap parser in try/except to handle corrupt markdown
+        try:
+            entity_markdown = await self.entity_parser.parse_file(path)
+        except Exception as e:
+            logger.error(f"Failed to parse markdown file {path}: {type(e).__name__}: {e}")
+            raise ValueError(f"Markdown parsing failed for {path}: {e}") from e
 
         # if the file contains frontmatter, resolve a permalink
         if file_contains_frontmatter:
@@ -541,7 +601,9 @@ class SyncService:
                     entity = await self.entity_repository.get_by_file_path(path)
                     if entity is None:  # pragma: no cover
                         logger.error(f"Entity not found after constraint violation, path={path}")
-                        raise ValueError(f"Entity not found after constraint violation: {path}")
+                        raise ValueError(
+                            f"Entity not found after constraint violation: {path}"
+                        ) from e
 
                     updated = await self.entity_repository.update(
                         entity.id, {"file_path": path, "checksum": checksum}
@@ -549,14 +611,14 @@ class SyncService:
 
                     if updated is None:  # pragma: no cover
                         logger.error(f"Failed to update entity, entity_id={entity.id}, path={path}")
-                        raise ValueError(f"Failed to update entity with ID {entity.id}")
+                        raise ValueError(f"Failed to update entity with ID {entity.id}") from e
 
                     return updated, checksum
                 else:
                     # Re-raise if it's a different integrity error
                     raise
         else:
-            entity = await self.entity_repository.get_by_file_path(path)
+            entity: Entity | None = await self.entity_repository.get_by_file_path(path)
             if entity is None:  # pragma: no cover
                 logger.error(f"Entity not found for existing file, path={path}")
                 raise ValueError(f"Entity not found for existing file: {path}")
@@ -592,7 +654,7 @@ class SyncService:
 
             return updated, checksum
 
-    async def handle_delete(self, file_path: str):
+    async def handle_delete(self, file_path: str) -> None:
         """Handle complete entity deletion including search index cleanup."""
 
         # First get entity to get permalink before deletion
@@ -623,7 +685,7 @@ class SyncService:
                 else:
                     await self.search_service.delete_by_entity_id(entity.id)
 
-    async def handle_move(self, old_path, new_path):
+    async def handle_move(self, old_path: str, new_path: str) -> None:
         logger.debug("Moving entity", old_path=old_path, new_path=new_path)
 
         entity = await self.entity_repository.get_by_file_path(old_path)
@@ -687,7 +749,7 @@ class SyncService:
             # update search index
             await self.search_service.index_entity(updated)
 
-    async def resolve_relations(self):
+    async def resolve_relations(self) -> None:
         """Try to resolve any unresolved relations"""
 
         unresolved_relations = await self.relation_repository.find_unresolved_relations()

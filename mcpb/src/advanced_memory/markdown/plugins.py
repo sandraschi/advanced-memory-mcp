@@ -1,4 +1,4 @@
-"""Markdown-it plugins for Basic Memory markdown parsing."""
+"""Markdown-it plugins for Advanced Memory markdown parsing."""
 
 from typing import Any
 
@@ -111,45 +111,91 @@ def parse_relation(token: Token) -> dict[str, Any] | None:
 
 
 def parse_inline_relations(content: str) -> list[dict[str, Any]]:
-    """Find wiki-style links in regular content."""
-    relations = []
-    start = 0
+    """Find wiki-style links in regular content (ROBUST VERSION with mcp-commons)."""
 
-    while True:
-        # Find next outer-most [[
-        start = content.find("[[", start)
-        if start == -1:  # pragma: no cover
-            break
+    # Use robust link parser from mcp-commons
+    try:
+        from advanced_memory.utils.mcp_commons import parse_links_safe
 
-        # Find matching ]]
-        depth = 1
-        pos = start + 2
-        end = -1
+        # Parse links safely (handles large files, timeouts, limits)
+        result = parse_links_safe(content)
 
-        while pos < len(content):
-            if content[pos : pos + 2] == "[[":
-                depth += 1
-                pos += 2
-            elif content[pos : pos + 2] == "]]":
-                depth -= 1
-                if depth == 0:
-                    end = pos
-                    break
-                pos += 2
-            else:
-                pos += 1
+        if not result.is_valid:
+            # Parsing failed - log and return empty
+            from loguru import logger
 
-        if end == -1:
-            # No matching ]] found
-            break
+            logger.warning("link_parsing_failed", content_size=len(content), errors=result.errors)
+            return []  # Graceful degradation
 
-        target = content[start + 2 : end].strip()
-        if target:
-            relations.append({"type": "links to", "target": target, "context": None})
+        # Convert wikilinks to expected format
+        relations = []
+        for link in result.links:
+            if link.type == "wikilink":
+                relations.append({"type": "links to", "target": link.target, "context": None})
 
-        start = end + 2
+        # Log warnings if any
+        if result.warnings:
+            from loguru import logger
 
-    return relations
+            for warning in result.warnings:
+                logger.info("link_warning", warning=warning)
+
+        return relations
+
+    except ImportError:
+        # Fallback to original implementation if mcp-commons not available
+        from loguru import logger
+
+        logger.warning("mcp_commons_not_available_using_fallback")
+
+        # ORIGINAL IMPLEMENTATION (FALLBACK) with safety limits
+        relations = []
+        start = 0
+        MAX_LINKS = 5000
+        MAX_LINK_LENGTH = 500
+
+        while len(relations) < MAX_LINKS:
+            start = content.find("[[", start)
+            if start == -1:
+                break
+
+            depth = 1
+            pos = start + 2
+            end = -1
+
+            # Limit search range to prevent hanging
+            max_search = min(pos + MAX_LINK_LENGTH, len(content))
+
+            while pos < max_search:
+                if content[pos : pos + 2] == "[[":
+                    depth += 1
+                    pos += 2
+                elif content[pos : pos + 2] == "]]":
+                    depth -= 1
+                    if depth == 0:
+                        end = pos
+                        break
+                    pos += 2
+                else:
+                    pos += 1
+
+            if end == -1:
+                # Malformed link - skip to next
+                start = start + 2
+                continue
+
+            target = content[start + 2 : end].strip()
+            if target and len(target) < MAX_LINK_LENGTH:
+                relations.append({"type": "links to", "target": target, "context": None})
+
+            start = end + 2
+
+        if len(relations) >= MAX_LINKS:
+            logger.warning(
+                f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links"
+            )
+
+        return relations
 
 
 def observation_plugin(md: MarkdownIt) -> None:

@@ -28,6 +28,10 @@ from advanced_memory.services.initialization import initialize_app, initialize_f
 async def lifespan(app: FastAPI):  # pragma: no cover
     """Lifecycle manager for the FastAPI app."""
 
+    # Setup logging for API (explicit call since config.py no longer does it automatically)
+    from advanced_memory.config import setup_advanced_memory_logging
+    setup_advanced_memory_logging()
+
     app_config = ConfigManager().config
     # Initialize app and database
     logger.info("Starting Advanced Memory API")

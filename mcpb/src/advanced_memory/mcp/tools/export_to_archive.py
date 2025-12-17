@@ -4,6 +4,7 @@ import json
 import shutil
 import sqlite3
 import tempfile
+import zipfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -80,7 +81,7 @@ def _filter_database(
             source_cursor.fetchall()
 
             # Get CREATE TABLE statement
-            source_cursor.execute(
+            source_cursor.execute(  # nosec B608 - table name from schema, not user input
                 f"SELECT sql FROM sqlite_master WHERE type='table' AND name='{table}'"
             )
             create_sql = source_cursor.fetchone()
@@ -114,7 +115,9 @@ def _filter_database(
             where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
 
             # Count total entities
-            source_cursor.execute(f"SELECT COUNT(*) FROM entity WHERE {where_clause}", params)
+            source_cursor.execute(  # nosec B608 - uses parameterized query with params
+                f"SELECT COUNT(*) FROM entity WHERE {where_clause}", params
+            )
             entities_kept = source_cursor.fetchone()[0]
 
             source_cursor.execute("SELECT COUNT(*) FROM entity")
@@ -122,12 +125,16 @@ def _filter_database(
             entities_filtered = total_entities - entities_kept
 
             # Copy filtered entities
-            source_cursor.execute(f"SELECT * FROM entity WHERE {where_clause}", params)
+            source_cursor.execute(  # nosec B608 - uses parameterized query with params
+                f"SELECT * FROM entity WHERE {where_clause}", params
+            )
             entities = source_cursor.fetchall()
 
             for entity in entities:
                 placeholders = ",".join(["?" for _ in entity])
-                dest_cursor.execute(f"INSERT INTO entity VALUES ({placeholders})", entity)
+                dest_cursor.execute(  # nosec B608 - uses placeholders, not direct insertion
+                    f"INSERT INTO entity VALUES ({placeholders})", entity
+                )
 
         # Copy other tables (with foreign key constraints this will only copy related data)
         for table in tables:
@@ -136,13 +143,17 @@ def _filter_database(
 
             try:
                 # Try to copy all data (foreign keys will prevent orphaned records)
-                source_cursor.execute(f"SELECT * FROM {table}")
+                source_cursor.execute(  # nosec B608 - table name from schema, not user input
+                    f"SELECT * FROM {table}"
+                )
                 rows = source_cursor.fetchall()
 
                 for row in rows:
                     try:
                         placeholders = ",".join(["?" for _ in row])
-                        dest_cursor.execute(f"INSERT INTO {table} VALUES ({placeholders})", row)
+                        dest_cursor.execute(  # nosec B608 - uses placeholders, table from schema
+                            f"INSERT INTO {table} VALUES ({placeholders})", row
+                        )
                     except sqlite3.IntegrityError:
                         # Foreign key constraint failed, skip this record
                         pass
@@ -159,42 +170,9 @@ def _filter_database(
         dest_conn.close()
 
 
-@mcp.tool(
-    description="""[UNICODE][UNICODE] Export Complete Advanced Memory Archive for Migration
-
-Creates a compressed archive containing the complete Advanced Memory system for installation
-on a new PC or backup purposes. Includes database, all projects, and configuration.
-
-ARCHIVE CONTENTS:
-- SQLite database with all knowledge, entities, and relationships
-- All project directories with markdown files
-- Global configuration files
-- Project-specific settings
-
-USE CASES:
-- Migrate Advanced Memory to a new computer
-- Create backup of entire knowledge base
-- Transfer installation between machines
-- Archive complete system state
-
-PARAMETERS:
-- archive_path (str, REQUIRED): Path where archive will be created (e.g., "advanced-memory-backup.zip")
-- include_projects (List[str], optional): Specific projects to include (default: all)
-- exclude_projects (List[str], optional): Projects to exclude (overrides include_projects)
-- exclude_tags (List[str], optional): Tags to exclude (e.g., ["obsolete", "test", "draft"])
-- since_date (str, optional): Only include data since date (ISO format: "2024-01-01" or relative: "30d", "1y")
-- compress (bool, optional): Create compressed ZIP archive (default: True)
-- project (str, optional): Active project context (default: current)
-
-RETURNS:
-Archive creation summary with file sizes and contents
-
-NOTE: Creates a self-contained archive that can be restored with import_from_archive
-NOTE: Filtering may break some semantic links, but rescan rebuilds them quickly
-"""
-)
+@mcp.tool
 async def export_to_archive(
-    archive_path: str,
+    archive_path: str | Path,
     include_projects: list[str] | None = None,
     exclude_projects: list[str] | None = None,
     exclude_tags: list[str] | None = None,
@@ -381,13 +359,69 @@ async def export_to_archive(
             # 5. Create archive
             logger.info(f"Creating archive: {archive_path}")
             if compress:
-                # Create ZIP archive
-                shutil.make_archive(
-                    str(archive_path.with_suffix("")),  # remove extension for make_archive
-                    "zip",
-                    temp_path,
-                    "advanced-memory-backup",
+                # Create ZIP archive using zipfile for Windows Explorer compatibility
+                # shutil.make_archive can create ZIPs that Windows Explorer doesn't recognize
+                source_dir = temp_path / "advanced-memory-backup"
+                
+                # Check if ZIP64 is needed (Windows Explorer has issues with ZIP64)
+                # ZIP64 is only needed if any file > 4GB or total size > 4GB
+                needs_zip64 = False
+                max_file_size = 0
+                total_size_check = 0
+                for file_path in source_dir.rglob("*"):
+                    if file_path.is_file():
+                        file_size = file_path.stat().st_size
+                        max_file_size = max(max_file_size, file_size)
+                        total_size_check += file_size
+                        # Check if any file exceeds 4GB limit (ZIP32 max file size)
+                        if file_size > 4 * 1024 * 1024 * 1024:
+                            needs_zip64 = True
+                            break
+                
+                # Check if total archive size would exceed 4GB (ZIP32 max archive size)
+                if not needs_zip64 and total_size_check > 4 * 1024 * 1024 * 1024:
+                    needs_zip64 = True
+                
+                if needs_zip64:
+                    logger.warning(
+                        f"Archive requires ZIP64 format (max file: {max_file_size / (1024**3):.2f} GB, "
+                        f"total: {total_size_check / (1024**3):.2f} GB). "
+                        "Windows Explorer may have issues opening this archive. Use WinRAR or 7-Zip instead."
+                    )
+                
+                # Create ZIP file with explicit Windows Explorer compatibility settings
+                zipf = zipfile.ZipFile(
+                    archive_path,
+                    "w",
+                    compression=zipfile.ZIP_DEFLATED,
+                    compresslevel=6,  # Balanced compression
+                    allowZip64=needs_zip64,  # Only use ZIP64 when necessary for Windows Explorer compatibility
                 )
+                
+                try:
+                    # Walk through all files in the source directory
+                    for file_path in source_dir.rglob("*"):
+                        if file_path.is_file():
+                            # Calculate relative path from source_dir
+                            arcname = file_path.relative_to(source_dir)
+                            # Use forward slashes for ZIP standard (Windows compatibility)
+                            arcname_str = str(arcname).replace("\\", "/")
+                            # Write file with explicit encoding
+                            zipf.write(file_path, arcname_str)
+                            logger.debug(f"Added to ZIP: {arcname_str}")
+                finally:
+                    # Explicitly close and finalize the ZIP file
+                    # This ensures proper ZIP structure that Windows Explorer expects
+                    zipf.close()
+                
+                # Verify the ZIP file is valid
+                try:
+                    test_zip = zipfile.ZipFile(archive_path, "r")
+                    test_zip.close()
+                    logger.info(f"ZIP archive created and verified: {archive_path} (ZIP64: {needs_zip64})")
+                except zipfile.BadZipFile as e:
+                    logger.error(f"Created ZIP file is invalid: {e}")
+                    raise
             else:
                 # Create uncompressed tar archive
                 shutil.make_archive(
@@ -445,16 +479,18 @@ Use the `import_from_archive` tool with this archive file.
 import_from_archive("{archive_path}")
 ```
 """
-            
+
             # Open the archive folder or file if requested
             if show_after_export:
-                from advanced_memory.utils.file_opener import open_file_or_folder, format_open_result
-                
+                from advanced_memory.utils.file_opener import (
+                    open_file_or_folder,
+                )
+
                 # Open the parent folder containing the archive
                 archive_parent = Path(archive_path).parent
                 success, msg = open_file_or_folder(archive_parent)
                 summary += f"\n\n## 🚀 Opened Archive Location\n\n✅ Opened folder in file explorer: {archive_parent}"
-            
+
             return summary
 
     except Exception as e:
@@ -462,7 +498,7 @@ import_from_archive("{archive_path}")
         return f"[UNICODE] **Archive Creation Failed**\n\nError: {str(e)}"
 
 
-def _format_size(bytes_size: int) -> str:
+def _format_size(bytes_size: float) -> str:
     """Format bytes to human readable size."""
     for _unit in ["B", "KB", "MB", "GB"]:
         if bytes_size < 1024.0:

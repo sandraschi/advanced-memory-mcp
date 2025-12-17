@@ -1,4 +1,4 @@
-"""Command module for basic-memory project management."""
+"""Command module for advanced-memory project management."""
 
 import asyncio
 import json
@@ -23,7 +23,7 @@ from advanced_memory.utils import generate_permalink
 console = Console()
 
 # Create a project subcommand
-project_app = typer.Typer(help="Manage multiple Basic Memory projects")
+project_app = typer.Typer(help="Manage multiple Advanced Memory projects")
 app.add_typer(project_app, name="project")
 
 
@@ -43,21 +43,21 @@ def list_projects() -> None:
         response = asyncio.run(call_get(client, "/projects/projects"))
         result = ProjectList.model_validate(response.json())
 
-        table = Table(title="Basic Memory Projects")
+        table = Table(title="Advanced Memory Projects")
         table.add_column("Name", style="cyan")
         table.add_column("Path", style="green")
         table.add_column("Default", style="yellow")
         table.add_column("Active", style="magenta")
 
         for project in result.projects:
-            is_default = "✓" if project.is_default else ""
-            is_active = "✓" if session.get_current_project() == project.name else ""
+            is_default = "YES" if project.is_default else ""
+            is_active = "YES" if session.get_current_project() == project.name else ""
             table.add_row(project.name, format_path(project.path), is_default, is_active)
 
         console.print(table)
     except Exception as e:
         console.print(f"[red]Error listing projects: {str(e)}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @project_app.command("add")
@@ -79,13 +79,13 @@ def add_project(
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
         console.print(f"[red]Error adding project: {str(e)}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Display usage hint
     console.print("\nTo use this project:")
-    console.print(f"  basic-memory --project={name} <command>")
+    console.print(f"  advanced-memory --project={name} <command>")
     console.print("  # or")
-    console.print(f"  basic-memory project default {name}")
+    console.print(f"  advanced-memory project default {name}")
 
 
 @project_app.command("remove")
@@ -101,7 +101,7 @@ def remove_project(
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
         console.print(f"[red]Error removing project: {str(e)}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Show this message regardless of method used
     console.print("[yellow]Note: The project files have not been deleted from disk.[/yellow]")
@@ -121,7 +121,7 @@ def set_default_project(
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
         console.print(f"[red]Error setting default project: {str(e)}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # The API call above should have updated both config and MCP session
     # No need for manual reload - the project service handles this automatically
@@ -140,7 +140,7 @@ def synchronize_projects() -> None:
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:  # pragma: no cover
         console.print(f"[red]Error synchronizing projects: {str(e)}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @project_app.command("info")
@@ -156,22 +156,20 @@ def display_project_info(
             # Convert to JSON and print
             print(json.dumps(info.model_dump(), indent=2, default=str))
         else:
-            # Create rich display
-            console = Console()
-
+            # Use existing console (defined at module level)
             # Project configuration section
             console.print(
                 Panel(
                     f"[bold]Project:[/bold] {info.project_name}\n"
                     f"[bold]Path:[/bold] {info.project_path}\n"
                     f"[bold]Default Project:[/bold] {info.default_project}\n",
-                    title="📊 Basic Memory Project Info",
+                    title="Advanced Memory Project Info",
                     expand=False,
                 )
             )
 
             # Statistics section
-            stats_table = Table(title="📈 Statistics")
+            stats_table = Table(title="Statistics")
             stats_table.add_column("Metric", style="cyan")
             stats_table.add_column("Count", style="green")
 
@@ -187,7 +185,7 @@ def display_project_info(
 
             # Entity types
             if info.statistics.entity_types:
-                entity_types_table = Table(title="📑 Entity Types")
+                entity_types_table = Table(title="Entity Types")
                 entity_types_table.add_column("Type", style="blue")
                 entity_types_table.add_column("Count", style="green")
 
@@ -198,7 +196,7 @@ def display_project_info(
 
             # Most connected entities
             if info.statistics.most_connected_entities:  # pragma: no cover
-                connected_table = Table(title="🔗 Most Connected Entities")
+                connected_table = Table(title="Most Connected Entities")
                 connected_table.add_column("Title", style="blue")
                 connected_table.add_column("Permalink", style="cyan")
                 connected_table.add_column("Relations", style="green")
@@ -212,7 +210,7 @@ def display_project_info(
 
             # Recent activity
             if info.activity.recently_updated:  # pragma: no cover
-                recent_table = Table(title="🕒 Recent Activity")
+                recent_table = Table(title="Recent Activity")
                 recent_table.add_column("Title", style="blue")
                 recent_table.add_column("Type", style="cyan")
                 recent_table.add_column("Last Updated", style="green")
@@ -232,8 +230,10 @@ def display_project_info(
                 console.print(recent_table)
 
             # System status
-            system_tree = Tree("🖥️ System Status")
-            system_tree.add(f"Basic Memory version: [bold green]{info.system.version}[/bold green]")
+            system_tree = Tree("System Status")
+            system_tree.add(
+                f"Advanced Memory version: [bold green]{info.system.version}[/bold green]"
+            )
             system_tree.add(
                 f"Database: [cyan]{info.system.database_path}[/cyan] ([green]{info.system.database_size}[/green])"
             )
@@ -268,7 +268,7 @@ def display_project_info(
             console.print(system_tree)
 
             # Available projects
-            projects_table = Table(title="📁 Available Projects")
+            projects_table = Table(title="Available Projects")
             projects_table.add_column("Name", style="blue")
             projects_table.add_column("Path", style="cyan")
             projects_table.add_column("Default", style="green")
@@ -276,7 +276,7 @@ def display_project_info(
             for name, proj_info in info.available_projects.items():
                 is_default = name == info.default_project
                 project_path = proj_info["path"]
-                projects_table.add_row(name, project_path, "✓" if is_default else "")
+                projects_table.add_row(name, project_path, "YES" if is_default else "")
 
             console.print(projects_table)
 
@@ -290,4 +290,4 @@ def display_project_info(
 
     except Exception as e:  # pragma: no cover
         typer.echo(f"Error getting project info: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e

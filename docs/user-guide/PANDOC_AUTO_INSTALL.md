@@ -141,10 +141,10 @@ adn_export("pandoc", export_path="doc.tex", format_type="tex")
 **Possible causes**:
 1. **No internet connection**
    - Solution: Connect to internet, try again
-   
+
 2. **Firewall/proxy blocking**
    - Solution: Configure proxy or download manually
-   
+
 3. **Disk full**
    - Solution: Free up ~500MB space
 
@@ -212,8 +212,8 @@ except OSError:
 
 ### Security
 
-**Download source**: Official Pandoc GitHub releases  
-**Verification**: pypandoc handles integrity checks  
+**Download source**: Official Pandoc GitHub releases
+**Verification**: pypandoc handles integrity checks
 **Installation**: User directory only (no admin needed)
 
 ---
@@ -277,30 +277,3 @@ except OSError:
 1. Run export → **it works!** (after ~30s first-time download)
 
 🎉 **Zero-config exports - just as you expected!**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

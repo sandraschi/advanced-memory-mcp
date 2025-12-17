@@ -23,6 +23,8 @@ async def adn_inbox(
 ) -> str:
     """Manage the zettelkasten inbox for file drops and automatic processing.
 
+    PORTMANTEAU PATTERN: Consolidates 4 inbox operations into one tool.
+
     The inbox allows you to drop files (markdown, Word docs, PDFs, HTML, text) into a
     watched directory. Files are automatically converted to markdown and added to your
     knowledge base.
@@ -43,7 +45,10 @@ async def adn_inbox(
     Args:
         operation: The operation to perform (status, process, info, watch)
         file_name: Optional specific file to process
+                    * process operation: Optional - Specific file name to process (if not provided, processes all files)
+                    * Other operations: NOT USED
         ctx: Optional MCP context for progress reporting
+                    * All operations: Optional - MCP context for progress updates
 
     Returns:
         Operation result with status, file counts, processing results

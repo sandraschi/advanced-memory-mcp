@@ -382,7 +382,9 @@ async def call_post(
     logger.debug(f"Calling POST '{url}'")
     error_message = None
     try:
-        follow_redirects_value = True if isinstance(follow_redirects, UseClientDefault) else follow_redirects
+        follow_redirects_value = (
+            True if isinstance(follow_redirects, UseClientDefault) else follow_redirects
+        )
         response = await client.post(
             url=url,
             content=content,

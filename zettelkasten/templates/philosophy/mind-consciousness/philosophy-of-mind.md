@@ -12,15 +12,15 @@ graph TB
     A --> C[Physicalism]
     A --> D[Property Dualism]
     A --> E[Idealism]
-    
+
     B --> B1[Substance Dualism<br/>Descartes]
     B --> B2[Interactionism]
-    
+
     C --> C1[Reductive Physicalism]
     C --> C2[Eliminative Materialism]
     C --> C3[Functionalism]
     C --> C4[Identity Theory]
-    
+
     D --> D1[Emergentism]
     D --> D2[Panpsychism]
 ```
@@ -32,7 +32,7 @@ graph TB
 ```python
 class Dualism:
     """Mind and matter are separate"""
-    
+
     def substance_dualism(self):
         """Descartes' classical dualism"""
         return {
@@ -48,7 +48,7 @@ class Dualism:
             "interaction": "Through pineal gland (Descartes' speculation)",
             "famous_quote": "Cogito, ergo sum" ("I think, therefore I am")
         }
-    
+
     def problems_with_dualism(self):
         """Why most philosophers reject it"""
         return {
@@ -81,7 +81,7 @@ class Dualism:
 ```python
 class Physicalism:
     """Mind is physical"""
-    
+
     def identity_theory(self):
         """Mental states = Brain states"""
         return {
@@ -91,7 +91,7 @@ class Physicalism:
             "problem": "Multiple realizability (same mental state, different brain states)",
             "counterexample": "Octopus pain probably different brain states, but still pain"
         }
-    
+
     def functionalism(self):
         """Mental states defined by functional role"""
         return {
@@ -108,7 +108,7 @@ class Physicalism:
                 "qualia": "Doesn't explain WHAT IT'S LIKE to experience something"
             }
         }
-    
+
     def eliminative_materialism(self):
         """Folk psychology is wrong - eliminate mental states"""
         return {
@@ -128,7 +128,7 @@ class Physicalism:
 ```python
 class PropertyDualism:
     """Mental properties emerge from physical"""
-    
+
     def emergentism(self):
         """Mental properties emerge from complex physical organization"""
         return {
@@ -144,7 +144,7 @@ class PropertyDualism:
                 "explanatory_gap": "Still mysterious"
             }
         }
-    
+
     def panpsychism(self):
         """Consciousness is fundamental, everywhere"""
         return {
@@ -164,7 +164,7 @@ class PropertyDualism:
 ```python
 class HardProblem:
     """Why consciousness is special"""
-    
+
     def easy_problems(self):
         """Functional/mechanistic questions"""
         return {
@@ -179,7 +179,7 @@ class HardProblem:
             "status": "Hard, but in principle solvable by neuroscience",
             "note": "'Easy' doesn't mean simple - just tractable"
         }
-    
+
     def hard_problem(self):
         """The real mystery"""
         return {
@@ -194,7 +194,7 @@ class HardProblem:
             "challenge": "Even complete neural explanation doesn't explain qualia",
             "status": "Unsolved, maybe unsolvable"
         }
-    
+
     def explanatory_gap(self):
         """Why physical explanations seem insufficient"""
         return {
@@ -220,7 +220,7 @@ class HardProblem:
 ```python
 class Qualia:
     """The 'what it's like' of experience"""
-    
+
     def marys_room(self):
         """Frank Jackson's thought experiment"""
         return {
@@ -242,7 +242,7 @@ class Qualia:
             },
             "debate": "Still hotly contested"
         }
-    
+
     def inverted_spectrum(self):
         """Could your red be my green?"""
         return {
@@ -256,7 +256,7 @@ class Qualia:
             "empirical_question": "Could neuroscience settle this?",
             "philosophical_question": "Even if brains identical, could qualia differ?"
         }
-    
+
     def what_is_it_like_to_be_bat(self):
         """Thomas Nagel's famous paper (1974)"""
         return {
@@ -280,7 +280,7 @@ class Qualia:
 ```python
 class GlobalWorkspaceTheory:
     """Consciousness as broadcast mechanism"""
-    
+
     def model(self):
         return {
             "metaphor": "Consciousness like theater spotlight",
@@ -302,7 +302,7 @@ class GlobalWorkspaceTheory:
 ```python
 class IntegratedInformationTheory:
     """Consciousness as integrated information (Φ - phi)"""
-    
+
     def core_idea(self):
         return {
             "claim": "Consciousness = Integrated information",
@@ -311,7 +311,7 @@ class IntegratedInformationTheory:
             "low_phi": "Low consciousness (photodiode, thermostat)",
             "zero_phi": "No consciousness (collection of independent parts)"
         }
-    
+
     def implications(self):
         return {
             "surprising_results": [
@@ -324,7 +324,7 @@ class IntegratedInformationTheory:
             "testable": "Φ can be measured (in principle)",
             "problem": "Computationally intractable for large systems"
         }
-    
+
     def phi_calculation(self):
         """How to calculate Φ (simplified)"""
         return {
@@ -342,7 +342,7 @@ class IntegratedInformationTheory:
 ```python
 class HigherOrderThought:
     """Consciousness requires thought about thought"""
-    
+
     def theory(self):
         return {
             "claim": "Mental state is conscious when you have thought ABOUT that state",
@@ -364,7 +364,7 @@ class HigherOrderThought:
 ```python
 class AttentionSchemaTheory:
     """Consciousness as brain's model of attention"""
-    
+
     def theory(self):
         return {
             "claim": "Consciousness is brain's simplified model of its own attention",
@@ -386,7 +386,7 @@ class AttentionSchemaTheory:
 ```python
 class BindingProblem:
     """Unity of consciousness"""
-    
+
     def the_problem(self):
         return {
             "observation": [
@@ -413,7 +413,7 @@ class BindingProblem:
 ```python
 class MachineConsciousness:
     """The AI consciousness question"""
-    
+
     def positions(self):
         return {
             "strong_ai": {
@@ -429,7 +429,7 @@ class MachineConsciousness:
                 "appeal": "Preserves human uniqueness"
             }
         }
-    
+
     def chinese_room(self):
         """John Searle's famous argument (1980)"""
         return {
@@ -450,7 +450,7 @@ class MachineConsciousness:
             },
             "debate": "50 years later, still no consensus"
         }
-    
+
     def integrated_information_perspective(self):
         """IIT on machine consciousness"""
         return {
@@ -471,7 +471,7 @@ class MachineConsciousness:
 ```python
 class NeuralCorrelates:
     """What brain activity correlates with consciousness?"""
-    
+
     def nccs_discovered(self):
         return {
             "thalamocortical_loops": "Connections between thalamus and cortex",
@@ -481,7 +481,7 @@ class NeuralCorrelates:
             "posterior_hot_zone": "Posterior cortex activity (Koch & Tononi)",
             "status": "Correlations found, causation unclear"
         }
-    
+
     def experiments(self):
         """How we study consciousness"""
         return {
@@ -513,7 +513,7 @@ class NeuralCorrelates:
 ```python
 class ConsciousnessStates:
     """Different levels and types"""
-    
+
     def arousal_vs_awareness(self):
         """Two dimensions"""
         return {
@@ -526,7 +526,7 @@ class ConsciousnessStates:
                 "anesthesia": "No arousal, no awareness"
             }
         }
-    
+
     def altered_states(self):
         return {
             "meditation": "Altered awareness, meta-awareness",
@@ -544,7 +544,7 @@ class ConsciousnessStates:
 ```python
 class PhilosophicalZombies:
     """The zombie argument"""
-    
+
     def zombie_concept(self):
         return {
             "definition": "Physically identical to human, but no subjective experience",
@@ -552,7 +552,7 @@ class PhilosophicalZombies:
             "difference": "Nothing it's LIKE to be zombie (lights aren't on)",
             "function": "Philosophical tool, not claiming zombies exist"
         }
-    
+
     def chalmers_argument(self):
         """Against physicalism"""
         return {
@@ -576,7 +576,7 @@ class PhilosophicalZombies:
 ```python
 class FreeWill:
     """Do we have it?"""
-    
+
     def incompatibilism(self):
         """Free will incompatible with determinism"""
         return {
@@ -594,7 +594,7 @@ class FreeWill:
                 "controversial": "Denies basic intuition"
             }
         }
-    
+
     def compatibilism(self):
         """Free will compatible with determinism (most popular view)"""
         return {
@@ -606,7 +606,7 @@ class FreeWill:
             "advantage": "Preserves moral responsibility without metaphysical magic",
             "criticism": "Redefines free will rather than defending it"
         }
-    
+
     def libet_experiments(self):
         """Benjamin Libet's neuroscience challenge"""
         return {
@@ -627,7 +627,7 @@ class FreeWill:
 ```python
 class PersonalIdentity:
     """What are you?"""
-    
+
     def psychological_continuity(self):
         """You are your memories and psychology"""
         return {
@@ -641,7 +641,7 @@ class PersonalIdentity:
                 "biological_theory": "Different person (body destroyed)"
             }
         }
-    
+
     def fission_problem(self):
         """Split brain thought experiment"""
         return {
@@ -651,7 +651,7 @@ class PersonalIdentity:
             "parfit_solution": "Identity doesn't matter; what matters is survival/continuity",
             "radical_claim": "Personal identity is not what matters in survival"
         }
-    
+
     def bundle_theory(self):
         """David Hume: No self, just bundle of experiences"""
         return {
@@ -671,7 +671,7 @@ class PersonalIdentity:
 ```python
 class Intentionality:
     """Aboutness of mental states"""
-    
+
     def the_problem(self):
         return {
             "observation": "Thoughts are ABOUT things (belief about Paris, desire for coffee)",
@@ -682,7 +682,7 @@ class Intentionality:
                 "question": "How does brain create original intentionality?"
             }
         }
-    
+
     def theories(self):
         return {
             "causal_theory": "Thought about X caused by X",
@@ -698,7 +698,7 @@ class Intentionality:
 ```python
 class AIConsciousness:
     """Could AI be conscious?"""
-    
+
     def arguments_for(self):
         """AI could be conscious"""
         return {
@@ -708,7 +708,7 @@ class AIConsciousness:
             "computationalism": "Mind is software, can run on any hardware",
             "conclusion": "In principle possible, implementation-dependent"
         }
-    
+
     def arguments_against(self):
         """AI cannot be conscious"""
         return {
@@ -718,7 +718,7 @@ class AIConsciousness:
             "emergence": "Consciousness emerges from organic complexity (can't be replicated)",
             "conclusion": "Impossible in silicon"
         }
-    
+
     def the_hard_question(self):
         """Even if behaviorally identical..."""
         return {
@@ -765,34 +765,3 @@ class AIConsciousness:
 *"Consciousness is the biggest mystery in science and philosophy. We don't even know if it's a solvable problem."*
 
 *"Every theory of consciousness either ignores the hard problem or embraces something deeply counterintuitive."*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

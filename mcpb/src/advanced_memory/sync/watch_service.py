@@ -1,4 +1,4 @@
-"""Watch service for Basic Memory."""
+"""Watch service for Advanced Memory."""
 
 import asyncio
 import os
@@ -93,7 +93,7 @@ class WatchServiceState(BaseModel):
         self.recent_events = self.recent_events[:100]  # Keep last 100
         return event
 
-    def record_error(self, error: str):
+    def record_error(self, error: str) -> None:
         self.error_count += 1
         self.add_event(path="", action="sync", status="error", error=error)
         self.last_error = datetime.now()
@@ -109,13 +109,13 @@ class WatchService:
         self.app_config = app_config
         self.project_repository = project_repository
         self.state = WatchServiceState()
-        self.status_path = Path.home() / ".basic-memory" / WATCH_STATUS_JSON
+        self.status_path = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON
         self.status_path.parent.mkdir(parents=True, exist_ok=True)
 
         # quiet mode for mcp so it doesn't mess up stdout
         self.console = Console(quiet=quiet)
 
-    async def run(self):  # pragma: no cover
+    async def run(self) -> None:  # pragma: no cover
         """Watch for file changes and sync them"""
 
         projects = await self.project_repository.get_active_projects()
@@ -156,7 +156,7 @@ class WatchService:
                 # process changes
                 await asyncio.gather(*change_handlers)
 
-        except Exception as e:
+        except (OSError, PermissionError, asyncio.CancelledError) as e:
             logger.exception("Watch service error", error=str(e))
 
             self.state.record_error(str(e))
@@ -195,11 +195,11 @@ class WatchService:
 
         return True
 
-    async def write_status(self):
+    async def write_status(self) -> None:
         """Write current state to status file"""
         self.status_path.write_text(WatchServiceState.model_dump_json(self.state, indent=2))
 
-    def is_project_path(self, project: Project, path):
+    def is_project_path(self, project: Project, path: str) -> bool:
         """
         Checks if path is a subdirectory or file within a project
         """
@@ -248,7 +248,7 @@ class WatchService:
         )
 
         # because of our atomic writes on updates, an add may be an existing file
-        for added_path in adds:  # pragma: no cover TODO add test
+        for added_path in adds:  # pragma: no cover
             entity = await sync_service.entity_repository.get_by_file_path(added_path)
             if entity is not None:
                 logger.debug(f"Existing file will be processed as modified, path={added_path}")
@@ -295,7 +295,7 @@ class WatchService:
                                 action="moved",
                                 status="success",
                             )
-                            self.console.print(f"[blue]→[/blue] {deleted_path} → {added_path}")
+                            self.console.print(f"[blue]->[/blue] {deleted_path} -> {added_path}")
                             logger.info(f"move: {deleted_path} -> {added_path}")
                             processed.add(added_path)
                             processed.add(deleted_path)
@@ -320,7 +320,7 @@ class WatchService:
                 logger.debug("Processing deleted file", path=path)
                 await sync_service.handle_delete(path)
                 self.state.add_event(path=path, action="deleted", status="success")
-                self.console.print(f"[red]✕[/red] {path}")
+                self.console.print(f"[red]X[/red] {path}")
                 logger.info(f"deleted: {path}")
                 processed.add(path)
                 delete_count += 1
@@ -343,7 +343,7 @@ class WatchService:
                     self.state.add_event(
                         path=path, action="new", status="success", checksum=checksum
                     )
-                    self.console.print(f"[green]✓[/green] {path}")
+                    self.console.print(f"[green]OK[/green] {path}")
                     logger.info(
                         "new file processed",
                         f"path={path}",
@@ -386,7 +386,7 @@ class WatchService:
                         )  # pragma: no cover
                 else:
                     # haven't processed this file
-                    self.console.print(f"[yellow]✎[/yellow] {path}")
+                    self.console.print(f"[yellow]EDIT[/yellow] {path}")
                     logger.info(f"modified: {path}")
                     last_modified_path = path
                     repeat_count = 0

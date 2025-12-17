@@ -182,7 +182,7 @@ def parse_tags(tags: list[str] | str | None) -> list[str]:
     """Parse tags from various input formats into a consistent list.
 
     Args:
-        tags: Can be a list of strings, a comma-separated string, or None
+        tags: Can be a list of strings, a comma-separated string, a JSON array string, or None
 
     Returns:
         A list of tag strings, or an empty list if no tags
@@ -190,6 +190,7 @@ def parse_tags(tags: list[str] | str | None) -> list[str]:
     Note:
         This function strips leading '#' characters from tags to prevent
         their accumulation when tags are processed multiple times.
+        Also handles JSON array strings to prevent JSON syntax leaking into YAML.
     """
     if tags is None:
         return []
@@ -199,10 +200,27 @@ def parse_tags(tags: list[str] | str | None) -> list[str]:
         # First strip whitespace, then strip leading '#' characters to prevent accumulation
         return [tag.strip().lstrip("#") for tag in tags if tag and tag.strip()]
 
-    # Process comma-separated string of tags
+    # Process string of tags
     if isinstance(tags, str):
+        tags_stripped = tags.strip()
+
+        # Check if it's a JSON array string (starts with '[' and ends with ']')
+        if tags_stripped.startswith("[") and tags_stripped.endswith("]"):
+            try:
+                import json
+
+                # Parse JSON array string
+                parsed = json.loads(tags_stripped)
+                if isinstance(parsed, list):
+                    # Recursively parse to handle nested cases and normalize
+                    return [tag.strip().lstrip("#") for tag in parsed if tag and str(tag).strip()]
+            except (json.JSONDecodeError, ValueError, TypeError):
+                # If JSON parsing fails, fall through to comma-separated parsing
+                pass
+
+        # Process comma-separated string of tags
         # Split by comma, strip whitespace, then strip leading '#' characters
-        return [tag.strip().lstrip("#") for tag in tags.split(",") if tag and tag.strip()]
+        return [tag.strip().lstrip("#") for tag in tags_stripped.split(",") if tag and tag.strip()]
 
     # For any other type, try to convert to string and parse
     try:  # pragma: no cover

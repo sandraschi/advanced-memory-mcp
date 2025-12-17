@@ -1,4 +1,4 @@
-"""Memory JSON import service for Basic Memory."""
+"""Memory JSON import service for Advanced Memory."""
 
 import logging
 from typing import Any
@@ -16,11 +16,11 @@ from advanced_memory.schemas.importer import EntityImportResult
 logger = logging.getLogger(__name__)
 
 
-class MemoryJsonImporter(Importer[EntityImportResult]):
+class MemoryJsonImporter(Importer):
     """Service for importing memory.json format data."""
 
     async def import_data(
-        self, source_data, destination_folder: str = "", **kwargs: Any
+        self, source_data: Any, destination_folder: str = "", **kwargs: Any
     ) -> EntityImportResult:
         """Import entities and relations from a memory.json file.
 

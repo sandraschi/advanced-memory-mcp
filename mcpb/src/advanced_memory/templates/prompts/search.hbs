@@ -23,10 +23,10 @@ Here are the most relevant results:
             {{/if}}
 
             {{#if permalink}}
-            View this with `adn_content`: operation="read", identifier="{{ permalink }}"
-            Or explore context with `adn_navigation`: operation="build_context", url="memory://{{ permalink }}", depth=2
+            You can view this content with: `read_note("{{ permalink }}")` or `adn_content("read", identifier="{{ permalink }}")`
+            Or explore its context with: `build_context("memory://{{ permalink }}")` or `adn_navigation("build_context", url="memory://{{ permalink }}")`
             {{else}}
-            View this with `adn_content`: operation="read", identifier="{{ file_path }}"
+            You can view this file with: `read_file("{{ file_path }}")`
             {{/if}}
         {{/dedent}}
         {{/if_cond}}
@@ -35,19 +35,41 @@ Here are the most relevant results:
 ## Next Steps
 
 You can:
-- Refine your search: Use `adn_search` with operation="notes" and query="{{ query }} AND additional_term"
-- Exclude terms: Use `adn_search` with operation="notes" and query="{{ query }} NOT exclude_term"
-- View more results: Use `adn_search` with operation="notes", query="{{ query }}", and page=2
-- Check recent activity: Use `adn_navigation` with operation="recent_activity" and timeframe="30d"
+- Refine your search: `search_notes("{{ query }} AND additional_term")` or `adn_search("notes", query="{{ query }} AND additional_term")`
+- Exclude terms: `search_notes("{{ query }} NOT exclude_term")` or `adn_search("notes", query="{{ query }} NOT exclude_term")`
+- View more results: `search_notes("{{ query }}", after_date=None)` or `adn_search("notes", query="{{ query }}", after_date=None)`
+- Check recent activity: `recent_activity()` or `adn_navigation("recent_activity")`
 
 ## Synthesize and Capture Knowledge
 
-Consider creating a new note that synthesizes what you've learned using the `adn_content` tool with these parameters:
-- **operation**: "write"
-- **identifier**: "Synthesis of {{capitalize query}} Information"
-- **folder**: "synthesis"
-- **tags**: "search, synthesis"
-- **content**: A markdown document with ## Overview, ## Key Insights, ## Observations, and ## Relations sections
+Consider creating a new note that synthesizes what you've learned:
+
+```python
+# Using portmanteau tool (adn_content is the recommended approach):
+await adn_content("write", identifier="Synthesis of {{capitalize query}} Information", ...)
+
+# Or using standalone tool:
+await write_note(
+    title="Synthesis of {{capitalize query}} Information",
+    content='''
+    # Synthesis of {{capitalize query}} Information
+
+    ## Overview
+    [Synthesis of the search results and your conversation]
+
+    ## Key Insights
+    [Summary of main points learned from these results]
+
+    ## Observations
+    - [insight] [Important observation from search results]
+    - [connection] [How this connects to other topics]
+
+    ## Relations
+    - relates_to [[{{#if results.length}}{{#if results.0.title}}{{results.0.title}}{{else}}Related Topic{{/if}}{{else}}Related Topic{{/if}}]]
+    - extends [[Another Relevant Topic]]
+    '''
+)
+```
 
 Remember that capturing synthesized knowledge is one of the most valuable features of Advanced Memory.
 {{else}}
@@ -55,15 +77,33 @@ Remember that capturing synthesized knowledge is one of the most valuable featur
 
     ## Opportunity to Capture Knowledge!
 
-    This is an excellent opportunity to create new knowledge on this topic using the `adn_content` tool:
-    - **operation**: "write"
-    - **identifier**: "{{capitalize query}}"
-    - **folder**: "new-topics"
-    - **tags**: "{{query}}"
-    - **content**: Include ## Overview, ## Observations (with categories), and ## Relations sections
+    This is an excellent opportunity to create new knowledge on this topic. Consider:
+
+```python
+# Using portmanteau tool (adn_content is recommended):
+await adn_content("write", identifier="{{capitalize query}}", ...)
+
+# Or using standalone tool:
+await write_note(
+    title="{{capitalize query}}",
+        content='''
+        # {{capitalize query}}
+
+        ## Overview
+        [Summary of what we've discussed about {{ query }}]
+
+        ## Observations
+        - [category] [First observation about {{ query }}]
+        - [category] [Second observation about {{ query }}]
+
+        ## Relations
+        - relates_to [[Other Relevant Topic]]
+        '''
+    )
+    ```
 
     ## Other Suggestions
     - Try a different search term
     - Broaden your search criteria
-    - Check recent activity with `adn_navigation("recent_activity", timeframe="30d")`
+    - Check recent activity with `recent_activity(timeframe="1w")` or `adn_navigation("recent_activity", timeframe="1w")`
 {{/if}}
