@@ -5,6 +5,53 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0b9] - 2025-12-17
+
+### 🎉 MCP Studio ADN Documentation & System Updates
+
+**Major release** with comprehensive MCP Studio knowledge base and critical system improvements.
+
+#### Added
+- **Complete MCP Studio ADN knowledge base** with 10 detailed ADN notes covering:
+  - Architecture overview and service layer design
+  - API design with 15+ REST endpoints and OpenAPI specs
+  - Frontend architecture with Alpine.js and responsive design
+  - Testing strategy with 70%+ coverage targets
+  - Security implementation with RBAC and encryption
+  - DevOps pipeline with Docker/K8s and CI/CD
+  - Performance optimization and monitoring
+  - Future roadmap with AI-native evolution plans
+  - Troubleshooting guide and maintenance procedures
+
+- **New MCP tools and integrations**:
+  - ADN LLM integration (`adn_llm.py`) with provider switching
+  - Native PDF export capabilities with FPDF2 integration
+  - OneNote HTML import support for Microsoft ecosystem
+  - Enhanced project detection with AI context analysis
+  - Skill creator service improvements and validation
+
+#### Fixed
+- **Critical MCP stdio mode stability** - Complete stdout/stderr management:
+  - Windows binary mode setup for Antigravity IDE compatibility
+  - DevNullStdout patching to prevent JSON-RPC stream pollution
+  - Nuclear option logging disable for stdio mode
+  - Asyncio import order fixes
+
+- **Portmanteau routing fixes** - Resolved tool registration conflicts
+- **Export search logic corrections** - Fixed HTML export functionality
+- **Backup system enhancements** - Improved reliability and error handling
+
+#### Infrastructure
+- **PowerShell backup and maintenance scripts** for Windows environments
+- **Testing automation improvements** with comprehensive test suite expansion
+- **CI/CD workflow enhancements** with automated deployment
+- **Development environment optimizations** for better DX
+
+### Changed
+- **MCP instance architecture** - Complete rewrite for stdio mode compatibility
+- **Logger management** - Nuclear option disable for JSON-RPC compliance
+- **Prompt/resource registration** - FastMCP 2.12+ best practices implementation
+
 ## [Unreleased]
 
 ### Added
@@ -147,14 +194,14 @@ This release achieves **complete code quality** with **zero type errors**, **zer
   - `adn_content`, `adn_project`, `adn_export`, `adn_import`, `adn_search`, `adn_knowledge`, `adn_navigation`, `adn_editor`
   - Solves tool-number explosion problem for MCP clients (Cursor IDE 50-tool limit)
   - Zero feature loss through operation-based parameter routing
-  
+
 - **Knowledge Management**
   - Multi-project support with project isolation
   - Full-text search with FTS5 indexing
   - Entity relationships and knowledge graphs
   - Semantic search capabilities
   - Tag-based organization
-  
+
 - **Import/Export Capabilities**
   - Obsidian vault import
   - Joplin export import
@@ -164,39 +211,39 @@ This release achieves **complete code quality** with **zero type errors**, **zer
   - Docsify website export
   - HTML notes export
   - Pandoc multi-format export (PDF, DOCX, HTML, etc.)
-  
+
 - **Editor Integrations**
   - Typora control via json_rpc plugin
   - Notepad++ workspace export/import
   - Pandoc batch export automation
-  
+
 - **Advanced Features**
   - PDF book creation from notes
   - Knowledge operations (bulk update, consolidate tags)
   - Research orchestrator for guided research
   - Archive export/import for migration
   - Context building for conversation continuity
-  
+
 - **MCP Server**
   - FastMCP 2.12+ implementation
   - Stdio transport support
   - Proper tool registration with decorators
   - MCP compliance and best practices
-  
+
 - **API**
   - FastAPI REST endpoints
   - Project management API
   - Search API with pagination
   - Import/export API
   - Knowledge graph API
-  
+
 - **CLI**
   - Comprehensive command-line interface
   - Project management commands
   - Sync service with watch mode
   - Status monitoring
   - Tool access via CLI
-  
+
 - **Documentation**
   - Comprehensive README
   - Architecture documentation
@@ -204,7 +251,7 @@ This release achieves **complete code quality** with **zero type errors**, **zer
   - Integration guides (Typora, Notepad++, Pandoc)
   - API documentation
   - Development guides
-  
+
 - **Infrastructure**
   - GitHub Actions CI/CD
   - Multi-version Python testing

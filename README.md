@@ -8,7 +8,7 @@
 
 A Model Context Protocol server that integrates personal knowledge management with Claude Desktop. Features include knowledge graphs, zettelkasten note-taking, and experimental Claude Skills integration.
 
-**New in v1.0.0b3**: Experimental Claude Skills export and unified database architecture.
+**New in v1.0.0b9**: Complete MCP Studio ADN documentation, ADN LLM integration, native PDF export, OneNote import, and critical stdio mode stability fixes.
 
 [Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
 
@@ -27,7 +27,11 @@ See [docs/TOOL_MODES.md](docs/TOOL_MODES.md) for details.
 
 ## Features
 
-### 1. Claude Skills Format Conversion (Experimental)
+### 1. MCP Studio ADN Documentation (New!)
+
+Complete knowledge base with 10 detailed ADN notes covering architecture, API design, frontend implementation, testing strategies, security, DevOps, performance monitoring, and future roadmap. Built for enterprise-scale MCP server development.
+
+### 2. Claude Skills Format Conversion (Experimental)
 
 ```python
 # Export zettelkasten → Claude Skills format
@@ -39,7 +43,17 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")
 
 Bidirectional format conversion between zettelkasten notes and Anthropic's Claude Skills format. Conversion tools are functional. Deployment to Claude interfaces varies (claude.ai/API verified, Claude Desktop pending verification). Part of the emerging Claude Skills ecosystem with growing community repositories.
 
-### 2. Reference Library (Experimental)
+### 3. ADN LLM Integration (New!)
+
+Multi-provider LLM support with intelligent provider switching:
+```python
+# Switch between providers dynamically
+adn_llm("select_model", provider="openai", model="gpt-4")
+adn_llm("select_model", provider="anthropic", model="claude-3-sonnet")
+adn_llm("select_model", provider="ollama", model="llama3.2:3b")
+```
+
+### 4. Reference Library (Experimental)
 
 87+ curated reference templates across 12 categories for systematic learning:
 - **Developer**: Python, Git, Docker, CI/CD, Clean Code (30+ templates)
