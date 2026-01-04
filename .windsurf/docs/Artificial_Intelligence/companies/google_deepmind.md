@@ -1,4 +1,4 @@
-﻿# Google DeepMind
+# Google DeepMind
 
 ## Overview
 Google DeepMind is the consolidated, state-of-the-art AI research unit of Alphabet. Formed by merging the legendary **Google Brain** team and the pioneering research lab **DeepMind**, this entity represents one of the most significant concentrations of AI talent and resources in the world. Led by DeepMind co-founder Demis Hassabis, its mission is to build AI responsibly to benefit humanity, combining DeepMind's ambitious research agenda with Google's world-class infrastructure and engineering expertise.

@@ -1,9 +1,9 @@
-﻿# Media Generation Integration with Gemini CLI
+# Media Generation Integration with Gemini CLI
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-07-04  
-**Author**: [Your Name]  
-**Status**: Draft  
+**Document Version**: 1.0
+**Last Updated**: 2025-07-04
+**Author**: [Your Name]
+**Status**: Draft
 
 ## Table of Contents
 1. [Executive Summary](#executive-summary)
@@ -101,7 +101,7 @@ const image generationModel = 'imagegeneration@003';
 app.post('/generate/video', async (req, res) => {
   try {
     const { prompt, duration = 10, resolution = '1080p', style } = req.body;
-    
+
     const videoResponse = await vertexAI.preview.getGenerativeModel({
       model: veoModel,
       generationConfig: {

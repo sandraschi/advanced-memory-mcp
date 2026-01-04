@@ -203,8 +203,3 @@ advanced-memory export --format html --output my-notes-website/
 **Next**: [Memory Writing Guide](memory-writing.md) - Learn to create and organize content
 
 *Your knowledge, always at your fingertips!*
-
-
-
-
-

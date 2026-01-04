@@ -1,10 +1,10 @@
-﻿# Windsurf IDE: Tips and Tricks
+# Windsurf IDE: Tips and Tricks
 
 ## Mastering the Agentic Workflow
 
 Transitioning to the Windsurf Agentic AIDE involves more than just learning new keyboard shortcuts; it requires adopting a new mental model for software development. The following tips and tricks are designed to help you move beyond simple commands and truly harness the power of the AI Flow paradigm. These techniques will help you work moreffectively with Cascade, your agentic pair programmer.
 
---- 
+---
 
 ### 1. Think in Objectives, Not Just Commands
 

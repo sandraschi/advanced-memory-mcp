@@ -30,6 +30,6 @@ cp zettelkasten/templates/data-scientist/<topic>/<note>.md \
 
 ---
 
-**Category**: Data Scientist  
-**Templates**: 2  
+**Category**: Data Scientist
+**Templates**: 2
 **Updated**: October 17, 2025

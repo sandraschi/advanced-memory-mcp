@@ -26,7 +26,7 @@ $pdfUrl = "https://arxiv.org/pdf/$arxivId.pdf"
 try {
     $webClient = New-Object System.Net.WebClient
     $webClient.DownloadFile($pdfUrl, $outputPath)
-    
+
     # Create metadata
     $metadata = @{
         title = $paperTitle
@@ -37,10 +37,10 @@ try {
         arxivId = $arxivId
         downloaded = (Get-Date -Format "yyyy-MM-dd")
     } | ConvertTo-Json
-    
+
     $metadataPath = $outputPath -replace '\.pdf$', '.json'
     $metadata | Out-File -FilePath $metadataPath -Encoding utf8
-    
+
     Write-Host "Successfully downloaded: $paperTitle" -ForegroundColor Green
     Write-Host "Saved to: $outputPath" -ForegroundColor Green
 } catch {

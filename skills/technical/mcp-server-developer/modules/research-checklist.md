@@ -3,27 +3,27 @@
 Review quarterly or when Anthropic releases new FastMCP versions, marketplace policies change, or distribution tooling shifts.
 
 ## 1. Source Refresh
-- [ ] FastMCP repo releases & migration guides (check for >=2.14 updates).  
-- [ ] Anthropic documentation (MCP overview, MCPB packaging, developer announcements).  
-- [ ] Advanced Memory `.cursorrules` and internal standards.  
-- [ ] Marketplace requirements (skillsmp.com, mcp.cool, new directories).  
+- [ ] FastMCP repo releases & migration guides (check for >=2.14 updates).
+- [ ] Anthropic documentation (MCP overview, MCPB packaging, developer announcements).
+- [ ] Advanced Memory `.cursorrules` and internal standards.
+- [ ] Marketplace requirements (skillsmp.com, mcp.cool, new directories).
 - [ ] Node/npm ecosystem changes impacting bootstrapper scripts.
 
 ## 2. Control Review
-- [ ] Verify portmanteau inventory accuracy; update docs if tool counts change.  
-- [ ] Ensure error-handling helpers still meet standards.  
-- [ ] Re-run tool exercisers to confirm structured errors unaffected by updates.  
+- [ ] Verify portmanteau inventory accuracy; update docs if tool counts change.
+- [ ] Ensure error-handling helpers still meet standards.
+- [ ] Re-run tool exercisers to confirm structured errors unaffected by updates.
 - [ ] Confirm CI pipeline covers Windows/macOS/Linux targets.
 
 ## 3. Distribution Audit
-- [ ] Test MCPB package install/remove paths.  
-- [ ] Validate npx/npm scripts on clean Windows + macOS images.  
-- [ ] Update config template outputs if client formats change.  
+- [ ] Test MCPB package install/remove paths.
+- [ ] Validate npx/npm scripts on clean Windows + macOS images.
+- [ ] Update config template outputs if client formats change.
 - [ ] Refresh release notes template with new sections if needed.
 
 ## 4. Ecosystem Pulse
-- [ ] Check marketplace listings for accuracy (versions, screenshots).  
-- [ ] Survey community forums for new submission channels or spotlight opportunities.  
+- [ ] Check marketplace listings for accuracy (versions, screenshots).
+- [ ] Survey community forums for new submission channels or spotlight opportunities.
 - [ ] Capture success stories or user testimonials for marketing.
 
 ## 5. Source Log
@@ -40,4 +40,3 @@ Review quarterly or when Anthropic releases new FastMCP versions, marketplace po
 | 2025-11-11 | GitHub `awesome-mcp-servers` index | Snapshotted ~180 maintained servers for history module adoption data |
 
 > Tip: use `adn_skills("import_from_github", repository="anthropic/fastmcp")` to scan release notes quickly, and `adn_skills("distill_from_wikipedia", topic="Model Context Protocol")` or `adn_skills("distill_from_arxiv", query="context protocol automation")` to summarize emerging guidance before updating architecture and ecosystem modules.***
-

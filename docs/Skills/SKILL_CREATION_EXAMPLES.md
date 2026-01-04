@@ -1,6 +1,6 @@
 # Skill Creation Examples - Improvements Showcase
 
-**Date:** 2025-10-27  
+**Date:** 2025-10-27
 **Purpose:** Demonstrate improved skill creation workflow with auto-detection and validation
 
 ---
@@ -698,7 +698,6 @@ Make them more detailed for better discoverability.
 
 ---
 
-**Last Updated:** 2025-10-27  
-**Author:** Sandra Schipal  
+**Last Updated:** 2025-10-27
+**Author:** Sandra Schipal
 **Version:** 1.0.0
-

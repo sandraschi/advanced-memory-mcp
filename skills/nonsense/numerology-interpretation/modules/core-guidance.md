@@ -1,6 +1,6 @@
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -31,7 +31,7 @@ Birth date: Month + Day + Year reduced to single digit
 
 Example: 10/21/1985
 - Month: 10 → 1+0 = 1
-- Day: 21 → 2+1 = 3  
+- Day: 21 → 2+1 = 3
 - Year: 1985 → 1+9+8+5 = 23 → 2+3 = 5
 - Life Path: 1+3+5 = 9
 
@@ -75,6 +75,6 @@ Example: 10/21/1985
 
 ---
 
-**Category:** nonsense  
-**Version:** 1.0.0  
+**Category:** nonsense
+**Version:** 1.0.0
 **Created:** 2025-10-21

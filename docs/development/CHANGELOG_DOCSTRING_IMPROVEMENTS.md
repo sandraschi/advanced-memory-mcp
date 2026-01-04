@@ -54,4 +54,3 @@
 ---
 
 **Note**: This is a documentation-only change. No functional changes to tool behavior.
-

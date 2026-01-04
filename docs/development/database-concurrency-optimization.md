@@ -39,7 +39,7 @@ Operation B: Get from pool → Write (in parallel if using different connection)
 engine = create_async_engine(
     db_url,
     pool_size=5,          # Keep 5 connections ready
-    max_overflow=10,      # Allow 10 extra under load  
+    max_overflow=10,      # Allow 10 extra under load
     pool_pre_ping=True,   # Verify before use
 )
 ```
@@ -155,15 +155,15 @@ Throughput:
 ```python
 class WriteQueue:
     """Queue all writes to single thread, eliminating lock contention."""
-    
+
     def __init__(self):
         self.queue = asyncio.Queue()
         self.writer_task = None
-    
+
     async def start(self):
         """Start the writer thread."""
         self.writer_task = asyncio.create_task(self._writer_loop())
-    
+
     async def _writer_loop(self):
         """Process writes serially in single thread."""
         while True:
@@ -173,7 +173,7 @@ class WriteQueue:
                 result_future.set_result(result)
             except Exception as e:
                 result_future.set_exception(e)
-    
+
     async def submit(self, write_op):
         """Submit write to queue."""
         future = asyncio.Future()
@@ -208,7 +208,7 @@ async def batch_sync_files(files: list[str]) -> list[Entity]:
         for file_path in files:
             entity = await create_entity_from_file(file_path)
             entities.append(entity)
-        
+
         # Single commit for all writes
         await session.commit()
         return entities
@@ -239,13 +239,13 @@ class MultiDBEngine:
             for i in range(replica_count)
         ]
         self.current_replica = 0
-    
+
     def get_read_engine(self):
         """Round-robin across replicas."""
         engine = self.replicas[self.current_replica]
         self.current_replica = (self.current_replica + 1) % len(self.replicas)
         return engine
-    
+
     def get_write_engine(self):
         """All writes go to primary."""
         return self.primary
@@ -270,10 +270,10 @@ class MultiDBEngine:
 ```python
 class WriteClassifier:
     """Classify and prioritize writes."""
-    
+
     CRITICAL = ["entity", "relation", "observation"]
     DEFERRED = ["search_index", "stats", "metadata"]
-    
+
     async def write(self, operation_type: str, write_fn):
         if operation_type in self.CRITICAL:
             # Write immediately
@@ -431,4 +431,3 @@ If you encounter database locking issues:
 - [ ] Create read replica support for extreme concurrency
 - [ ] Add metrics dashboard for monitoring lock waits
 - [ ] Implement adaptive timeout based on load
-

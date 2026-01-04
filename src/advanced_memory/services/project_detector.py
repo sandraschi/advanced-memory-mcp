@@ -80,7 +80,9 @@ class ProjectDetector:
             # Exact name match (high confidence)
             if project_name_lower in query_lower or project_permalink in query_lower:
                 scores[project["name"]] = scores.get(project["name"], 0.0) + 0.8
-                reasons[project["name"]].append(f"Project name '{project['name']}' mentioned in query")
+                reasons[project["name"]].append(
+                    f"Project name '{project['name']}' mentioned in query"
+                )
 
             # Partial name match (medium confidence)
             words = query_lower.split()
@@ -92,9 +94,25 @@ class ProjectDetector:
         # 2. Context-based detection for common project types
         # Personal/private context indicators
         personal_indicators = [
-            "meet", "meeting", "tomorrow", "today", "family", "friend", "friends",
-            "personal", "private", "vacation", "trip", "birthday", "anniversary",
-            "home", "house", "apartment", "dinner", "lunch", "coffee"
+            "meet",
+            "meeting",
+            "tomorrow",
+            "today",
+            "family",
+            "friend",
+            "friends",
+            "personal",
+            "private",
+            "vacation",
+            "trip",
+            "birthday",
+            "anniversary",
+            "home",
+            "house",
+            "apartment",
+            "dinner",
+            "lunch",
+            "coffee",
         ]
         if any(indicator in query_lower for indicator in personal_indicators):
             # Look for private/personal project
@@ -102,12 +120,25 @@ class ProjectDetector:
                 project_name_lower = project["name"].lower()
                 if project_name_lower in ["private", "personal", "daily", "life"]:
                     scores[project["name"]] = scores.get(project["name"], 0.0) + 0.5
-                    reasons[project["name"]].append("Personal context detected (meeting, family, etc.)")
+                    reasons[project["name"]].append(
+                        "Personal context detected (meeting, family, etc.)"
+                    )
 
         # Work context indicators
         work_indicators = [
-            "work", "client", "project", "meeting", "deadline", "task", "todo",
-            "business", "professional", "office", "colleague", "team", "manager"
+            "work",
+            "client",
+            "project",
+            "meeting",
+            "deadline",
+            "task",
+            "todo",
+            "business",
+            "professional",
+            "office",
+            "colleague",
+            "team",
+            "manager",
         ]
         if any(indicator in query_lower for indicator in work_indicators):
             # Look for work project
@@ -119,8 +150,17 @@ class ProjectDetector:
 
         # Research context indicators
         research_indicators = [
-            "research", "paper", "study", "academic", "learn", "learning",
-            "deep dive", "analysis", "investigate", "explore", "theory"
+            "research",
+            "paper",
+            "study",
+            "academic",
+            "learn",
+            "learning",
+            "deep dive",
+            "analysis",
+            "investigate",
+            "explore",
+            "theory",
         ]
         if any(indicator in query_lower for indicator in research_indicators):
             # Look for research project
@@ -157,7 +197,9 @@ class ProjectDetector:
                 # This is a simplified check - could be enhanced with actual folder scanning
                 if folder_match.lower() in project["name"].lower():
                     scores[project["name"]] = scores.get(project["name"], 0.0) + 0.4
-                    reasons[project["name"]].append(f"Folder mention matches project: {folder_match}")
+                    reasons[project["name"]].append(
+                        f"Folder mention matches project: {folder_match}"
+                    )
 
         # 6. If current project has any score, give it a small boost (inertia)
         if current_project and current_project in scores:
@@ -222,7 +264,9 @@ class ProjectDetector:
         return {
             "query": query,
             "project_scores": project_scores,
-            "suggested_project": max(project_scores.items(), key=lambda x: x[1])[0] if project_scores else None,
+            "suggested_project": max(project_scores.items(), key=lambda x: x[1])[0]
+            if project_scores
+            else None,
         }
 
     async def _get_all_projects(self) -> list[dict[str, Any]]:
@@ -240,12 +284,14 @@ class ProjectDetector:
 
             projects = []
             for project in project_list.projects:
-                projects.append({
-                    "name": project.name,
-                    "path": project.path,
-                    "permalink": project.permalink,
-                    "is_default": project.is_default,
-                })
+                projects.append(
+                    {
+                        "name": project.name,
+                        "path": project.path,
+                        "permalink": project.permalink,
+                        "is_default": project.is_default,
+                    }
+                )
 
             self._project_cache = projects
             return projects
@@ -255,7 +301,12 @@ class ProjectDetector:
             # Fallback to config manager
             config_projects = self.config_manager.projects
             return [
-                {"name": name, "path": str(config.path), "permalink": generate_permalink(name), "is_default": False}
+                {
+                    "name": name,
+                    "path": str(config.path),
+                    "permalink": generate_permalink(name),
+                    "is_default": False,
+                }
                 for name, config in config_projects.items()
             ]
 
@@ -274,4 +325,3 @@ def get_project_detector() -> ProjectDetector:
     if _detector is None:
         _detector = ProjectDetector()
     return _detector
-

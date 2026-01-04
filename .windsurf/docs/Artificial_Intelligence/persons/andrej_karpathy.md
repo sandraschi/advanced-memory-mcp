@@ -1,4 +1,4 @@
-﻿# Andrej Karpathy
+# Andrej Karpathy
 
 ## Overview
 Andrej Karpathy is a renowned computer scientist and AI researcher, best known for his work in deep learning, computer vision, and autonomous vehicles. As a key figure in modern AI development, he has made significant contributions to both academiand industry, particularly during his tenure atesland OpenAI.

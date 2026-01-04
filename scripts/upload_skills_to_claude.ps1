@@ -2,11 +2,11 @@
 <#
 .SYNOPSIS
     Automate uploading skills to Claude.ai capabilities page
-    
+
 .DESCRIPTION
     Uses browser automation to upload all skill ZIPs to Claude.ai
     Requires: Chrome browser, user must be logged into Claude.ai
-    
+
 .EXAMPLE
     .\scripts\upload_skills_to_claude.ps1
 #>
@@ -69,4 +69,3 @@ Write-Host "   - Claude.ai web interface" -ForegroundColor White
 Write-Host "   - Claude Desktop app" -ForegroundColor White
 Write-Host "   - Claude mobile (if available)" -ForegroundColor White
 Write-Host ""
-

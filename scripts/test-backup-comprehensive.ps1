@@ -19,7 +19,7 @@ function Write-TestLog {
         [string]$Level = "INFO",
         [string]$TestName = ""
     )
-    
+
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $color = switch ($Level) {
         "PASS" { "Green" }
@@ -28,20 +28,20 @@ function Write-TestLog {
         "INFO" { "Cyan" }
         default { "White" }
     }
-    
+
     $prefix = switch ($Level) {
         "PASS" { "[✓]" }
         "FAIL" { "[✗]" }
         "WARN" { "[!]" }
         default { "[i]" }
     }
-    
+
     if ($TestName) {
         Write-Host "$prefix [$timestamp] [$TestName] $Message" -ForegroundColor $color
     } else {
         Write-Host "$prefix [$timestamp] $Message" -ForegroundColor $color
     }
-    
+
     # Also log to file
     $logFile = Join-Path $PSScriptRoot "backup-test-results.log"
     "$prefix [$timestamp] [$TestName] $Message" | Out-File -FilePath $logFile -Append -Encoding UTF8
@@ -53,14 +53,14 @@ function Test-BackupComponent {
         [scriptblock]$TestBlock,
         [string]$Description = ""
     )
-    
+
     $script:TestCount++
     Write-TestLog "Starting test: $TestName" "INFO" $TestName
-    
+
     if ($Description) {
         Write-TestLog "  Description: $Description" "INFO" $TestName
     }
-    
+
     try {
         $result = & $TestBlock
         if ($result -or $result -eq $null) {
@@ -154,13 +154,13 @@ Test-BackupComponent -TestName "RepoRootDetection" -Description "Can detect repo
 Test-BackupComponent -TestName "BackupTargetAccess" -Description "Backup target directories are accessible" {
     $desktop = [Environment]::GetFolderPath("Desktop")
     $repoName = (Get-Item .).Name
-    
+
     $targets = @(
         @{ Path = Join-Path (Join-Path $desktop "repo backup") $repoName; Name = "Desktop" },
         @{ Path = "N:\backup\dev\repo-backups\$repoName"; Name = "N: Drive" },
         @{ Path = Join-Path $env:OneDrive "repo backup\$repoName"; Name = "OneDrive" }
     )
-    
+
     $accessible = 0
     foreach ($target in $targets) {
         if ($target.Path) {
@@ -173,7 +173,7 @@ Test-BackupComponent -TestName "BackupTargetAccess" -Description "Backup target 
             }
         }
     }
-    
+
     Write-TestLog "  Accessible targets: $accessible of $($targets.Count)" "INFO" "BackupTargetAccess"
     return $accessible -gt 0
 }
@@ -190,28 +190,28 @@ Test-BackupComponent -TestName "FileScanning" -Description "Can scan repository 
 Test-BackupComponent -TestName "ZipCreation" -Description "Can create ZIP files" {
     try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction Stop
-        
+
         $testDir = Join-Path $env:TEMP "backup-test-$(Get-Random)"
         $null = New-Item -ItemType Directory -Path $testDir -Force -ErrorAction Stop
-        
+
         $testZipPath = Join-Path $testDir "test-backup.zip"
-        
+
         # Create a test file
         $testFile = Join-Path $testDir "test.txt"
         "Test content" | Out-File -FilePath $testFile -Encoding UTF8
-        
+
         # Create ZIP
         $zip = [System.IO.Compression.ZipFile]::Open($testZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $testFile, "test.txt", [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
         $zip.Dispose()
-        
+
         $created = Test-Path $testZipPath
         if ($created) {
             $size = (Get-Item $testZipPath).Length
             Write-TestLog "  Test ZIP created: $size bytes" "INFO" "ZipCreation"
             Remove-Item $testDir -Recurse -Force -ErrorAction SilentlyContinue
         }
-        
+
         return $created
     }
     catch {
@@ -227,26 +227,26 @@ Test-BackupComponent -TestName "ZipCreation" -Description "Can create ZIP files"
 Test-BackupComponent -TestName "RequiredFunctions" -Description "All required functions are defined" {
     $scriptPath = Join-Path $PSScriptRoot "backup-repo.ps1"
     $scriptContent = Get-Content $scriptPath -Raw
-    
+
     $requiredFunctions = @(
         "Write-Log",
         "New-BackupZip",
         "Test-BackupDuplicate",
         "Get-RepoName"
     )
-    
+
     $missing = @()
     foreach ($func in $requiredFunctions) {
         if ($scriptContent -notmatch "function\s+$func") {
             $missing += $func
         }
     }
-    
+
     if ($missing.Count -gt 0) {
         Write-TestLog "  Missing functions: $($missing -join ', ')" "FAIL" "RequiredFunctions"
         return $false
     }
-    
+
     Write-TestLog "  All required functions present" "INFO" "RequiredFunctions"
     return $true
 }
@@ -263,7 +263,7 @@ Test-BackupComponent -TestName "LogFileCreation" -Description "Can create log fi
             return $false
         }
     }
-    
+
     $testLogFile = Join-Path $logDir "test-$(Get-Date -Format 'yyyyMMddHHmmss').log"
     try {
         "Test log entry" | Out-File -FilePath $testLogFile -Encoding UTF8 -ErrorAction Stop
@@ -283,25 +283,25 @@ Test-BackupComponent -TestName "LogFileCreation" -Description "Can create log fi
 Test-BackupComponent -TestName "VariableInitialization" -Description "Required variables are initialized" {
     $scriptPath = Join-Path $PSScriptRoot "backup-repo.ps1"
     $scriptContent = Get-Content $scriptPath -Raw
-    
+
     $requiredVars = @(
         "\$ErrorActionPreference",
         "\$created",
         "\$skipped",
         "\$failed"
     )
-    
+
     $missing = @()
     foreach ($var in $requiredVars) {
         if ($scriptContent -notmatch $var) {
             $missing += $var
         }
     }
-    
+
     if ($missing.Count -gt 0) {
         Write-TestLog "  Missing variables: $($missing -join ', ')" "WARN" "VariableInitialization"
     }
-    
+
     return $true  # Non-critical, just warn
 }
 
@@ -309,18 +309,18 @@ Test-BackupComponent -TestName "VariableInitialization" -Description "Required v
 Test-BackupComponent -TestName "ErrorHandling" -Description "Script has proper error handling" {
     $scriptPath = Join-Path $PSScriptRoot "backup-repo.ps1"
     $scriptContent = Get-Content $scriptPath -Raw
-    
+
     $hasTryCatch = $scriptContent -match "try\s*\{" -and $scriptContent -match "catch\s*\{"
     $hasErrorAction = $scriptContent -match "ErrorActionPreference"
-    
+
     if (-not $hasTryCatch) {
         Write-TestLog "  Missing try-catch blocks" "WARN" "ErrorHandling"
     }
-    
+
     if (-not $hasErrorAction) {
         Write-TestLog "  Missing ErrorActionPreference" "WARN" "ErrorHandling"
     }
-    
+
     return $hasTryCatch -and $hasErrorAction
 }
 
@@ -329,27 +329,27 @@ if ($RunFullBackup) {
     Write-TestLog "" "INFO"
     Write-TestLog "=== RUNNING FULL BACKUP TEST ===" "INFO"
     Write-TestLog ""
-    
+
     Test-BackupComponent -TestName "FullBackupRun" -Description "Running actual backup script" {
         $scriptPath = Join-Path $PSScriptRoot "backup-repo.ps1"
-        
+
         $backupStart = Get-Date
         $output = @()
-        
+
         try {
             & $scriptPath *>&1 | ForEach-Object {
                 $output += $_
                 Write-TestLog "  $_" "INFO" "FullBackupRun"
             }
-            
+
             $backupDuration = (Get-Date) - $backupStart
             Write-TestLog "Backup completed in $([math]::Round($backupDuration.TotalSeconds, 1)) seconds" "INFO" "FullBackupRun"
-            
+
             # Check if backups were created
             $desktop = [Environment]::GetFolderPath("Desktop")
             $repoName = (Get-Item .).Name
             $backupDir = Join-Path (Join-Path $desktop "repo backup") $repoName
-            
+
             if (Test-Path $backupDir) {
                 $zips = Get-ChildItem -Path $backupDir -Filter "*.zip" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
                 if ($zips) {
@@ -358,7 +358,7 @@ if ($RunFullBackup) {
                     return $true
                 }
             }
-            
+
             Write-TestLog "No backup files found after execution" "FAIL" "FullBackupRun"
             return $false
         }

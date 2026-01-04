@@ -1,4 +1,4 @@
-﻿# Seminal Papers in AI and Machine Learning
+# Seminal Papers in AI and Machine Learning
 
 ## Foundational Works
 

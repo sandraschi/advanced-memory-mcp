@@ -1,6 +1,6 @@
 # Tag Tools Test Results
 
-**Date:** 2025-10-29  
+**Date:** 2025-10-29
 **Issue Found:** Entity resolution failing for edit_tags operations
 
 ## Tests Attempted
@@ -9,7 +9,7 @@
 - Can read notes by title, permalink successfully
 - Tags are displayed correctly
 
-### ✅ Write Note: Works  
+### ✅ Write Note: Works
 - Created test notes with initial tags
 - Tags are saved correctly
 
@@ -51,4 +51,3 @@ The `/knowledge/entities/resolve/` endpoint may not exist or may require differe
 1. Using existing `/knowledge/entities/{identifier}` endpoint instead
 2. Checking if resolve endpoint exists in API router
 3. Using same resolution logic as read_note tool
-

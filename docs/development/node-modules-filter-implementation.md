@@ -113,7 +113,7 @@ def filter_changes(self, change: Change, path: str) -> bool:
     for part in path_parts:
         if part.startswith("."):
             return False
-        
+
         # Skip common ignore patterns (node_modules, build dirs, etc.)
         if part in IGNORE_PATTERNS:
             return False

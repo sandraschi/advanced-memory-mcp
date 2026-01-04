@@ -2,8 +2,8 @@
 
 **Complete guide to bulletproof CI/CD workflows with automated pre-push validation and post-push monitoring**
 
-**Date**: October 17, 2025  
-**Status**: Production-ready workflow automation  
+**Date**: October 17, 2025
+**Status**: Production-ready workflow automation
 **Goal**: Zero CI failures through automation
 
 ---
@@ -82,7 +82,7 @@ repos:
     hooks:
       - id: mypy
         args: [--ignore-missing-imports, --explicit-package-bases]
-        additional_dependencies: 
+        additional_dependencies:
           - types-setuptools
           - sqlalchemy[mypy]
         pass_filenames: false
@@ -363,7 +363,7 @@ function Get-LatestWorkflowRun {
     # Get latest workflow run status from GitHub API
     $repo = "sandraschi/advanced-memory-mcp"
     $apiUrl = "https://api.github.com/repos/$repo/actions/runs?branch=$Branch&per_page=1"
-    
+
     try {
         $response = Invoke-RestMethod -Uri $apiUrl -Headers @{
             "Accept" = "application/vnd.github+json"
@@ -377,10 +377,10 @@ function Get-LatestWorkflowRun {
 
 function Get-WorkflowDetails {
     param($RunId)
-    
+
     $repo = "sandraschi/advanced-memory-mcp"
     $apiUrl = "https://api.github.com/repos/$repo/actions/runs/$RunId/jobs"
-    
+
     try {
         $response = Invoke-RestMethod -Uri $apiUrl -Headers @{
             "Accept" = "application/vnd.github+json"
@@ -394,7 +394,7 @@ function Get-WorkflowDetails {
 
 function Analyze-Failures {
     param($Jobs)
-    
+
     $failures = @{
         lint = $false
         format = $false
@@ -402,11 +402,11 @@ function Analyze-Failures {
         build = $false
         security = $false
     }
-    
+
     foreach ($job in $Jobs) {
         if ($job.conclusion -eq "failure") {
             $jobName = $job.name.ToLower()
-            
+
             if ($jobName -match "lint") { $failures.lint = $true }
             if ($jobName -match "format") { $failures.format = $true }
             if ($jobName -match "test") { $failures.tests = $true }
@@ -414,31 +414,31 @@ function Analyze-Failures {
             if ($jobName -match "security") { $failures.security = $true }
         }
     }
-    
+
     return $failures
 }
 
 function Auto-Fix-Issues {
     param($Failures)
-    
+
     $fixed = $false
-    
+
     Write-Host "`n🔧 AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
-    
+
     # Fix format issues
     if ($Failures.format) {
         Write-Host "Fixing format issues..." -ForegroundColor Cyan
         ruff format . | Out-Null
         $fixed = $true
     }
-    
+
     # Fix lint issues
     if ($Failures.lint) {
         Write-Host "Fixing lint issues..." -ForegroundColor Cyan
         ruff check . --fix | Out-Null
         $fixed = $true
     }
-    
+
     # Tests can't be auto-fixed, but we can run them to see the error
     if ($Failures.tests) {
         Write-Host "`n⚠️  Test failures detected - cannot auto-fix" -ForegroundColor Yellow
@@ -446,7 +446,7 @@ function Auto-Fix-Issues {
         uv run pytest --maxfail=1 -x --tb=short 2>&1 | Select-Object -Last 30
         return $false
     }
-    
+
     return $fixed
 }
 
@@ -465,34 +465,34 @@ $success = $false
 
 do {
     $attempt++
-    
+
     Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
     Write-Host "🔄 Attempt $attempt of $MaxAttempts`n" -ForegroundColor Yellow
-    
+
     # Get latest workflow run
     Write-Host "Fetching latest workflow status..." -ForegroundColor Cyan
     $workflow = Get-LatestWorkflowRun
-    
+
     if (-not $workflow) {
         Write-Host "❌ Could not fetch workflow status`n" -ForegroundColor Red
         exit 1
     }
-    
+
     $status = $workflow.status
     $conclusion = $workflow.conclusion
     $runUrl = $workflow.html_url
-    
+
     Write-Host "Status: $status" -ForegroundColor White
     Write-Host "Conclusion: $conclusion" -ForegroundColor White
     Write-Host "URL: $runUrl`n" -ForegroundColor Cyan
-    
+
     # Wait if still running
     if ($status -eq "in_progress" -or $status -eq "queued") {
         Write-Host "⏳ Workflow still running... waiting 30 seconds`n" -ForegroundColor Yellow
         Start-Sleep -Seconds 30
         continue
     }
-    
+
     # Check conclusion
     if ($conclusion -eq "success") {
         Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
@@ -501,14 +501,14 @@ do {
         $success = $true
         break
     }
-    
+
     if ($conclusion -eq "failure") {
         Write-Host "❌ WORKFLOW FAILED`n" -ForegroundColor Red
-        
+
         # Get job details
         Write-Host "Fetching failure details..." -ForegroundColor Cyan
         $jobs = Get-WorkflowDetails -RunId $workflow.id
-        
+
         if ($jobs) {
             Write-Host "`nFailed jobs:" -ForegroundColor Yellow
             foreach ($job in $jobs) {
@@ -517,14 +517,14 @@ do {
                     Write-Host "     URL: $($job.html_url)" -ForegroundColor Gray
                 }
             }
-            
+
             # Analyze failures
             $failures = Analyze-Failures -Jobs $jobs
-            
+
             # Auto-fix if enabled
             if ($AutoFix) {
                 $fixed = Auto-Fix-Issues -Failures $failures
-                
+
                 if ($fixed) {
                     Write-Host "`n✅ Auto-fixes applied!`n" -ForegroundColor Green
                     Write-Host "Committing fixes..." -ForegroundColor Cyan
@@ -534,10 +534,10 @@ do {
 Auto-fixed by monitor-ci.ps1 script after workflow failure.
 
 Signed-off-by: CI Monitor <ci@advanced-memory.com>"
-                    
+
                     Write-Host "Pushing fixes..." -ForegroundColor Cyan
                     git push origin $Branch
-                    
+
                     Write-Host "`n⏳ Waiting 120 seconds for new workflow...`n" -ForegroundColor Yellow
                     Start-Sleep -Seconds 120
                 } else {
@@ -552,7 +552,7 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
             }
         }
     }
-    
+
 } while ($Continuous -and $attempt -lt $MaxAttempts -and -not $success)
 
 # Final status
@@ -629,7 +629,7 @@ if ($Message) {
     Write-Host "`nSTEP 2: Committing Changes`n" -ForegroundColor Yellow
     git add -A
     git commit -m "$Message"
-    
+
     if ($LASTEXITCODE -ne 0) {
         Write-Host "❌ Commit failed`n" -ForegroundColor Red
         exit 1
@@ -1163,9 +1163,8 @@ You'll achieve:
 
 ---
 
-**Created**: October 17, 2025  
-**For**: Advanced Memory MCP + all repositories  
+**Created**: October 17, 2025
+**For**: Advanced Memory MCP + all repositories
 **Status**: Ready to implement
 
 **Happy pushing!** 🎉✨
-

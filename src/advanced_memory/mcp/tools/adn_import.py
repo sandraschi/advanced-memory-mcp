@@ -25,101 +25,84 @@ async def adn_import(
 ) -> str:
     """Comprehensive import management for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 10 import operations into one tool.
+    This point-of-entry tool provides a unified interface for importing content
+    from various external sources into the Advanced Memory ecosystem.
 
-    SUPPORTED OPERATIONS:
-    - obsidian: Import complete Obsidian vaults
-    - joplin: Import Joplin knowledge bases
-    - notion: Import Notion workspaces
-    - evernote: Import Evernote ENEX files
-    - onenote: Import OneNote pages from HTML content (from office-365-mcp or other sources)
-    - archive: Import complete system archive
-    - canvas: Import Obsidian Canvas files
-    - claude_skills: Import Claude Skills (Anthropic agent skills)
-    - claude_conversations: Import Claude.ai conversation exports (JSON file)
-    - claude_projects: Import Claude.ai project exports (JSON file)
-    - chatgpt: Import ChatGPT conversation exports (JSON file)
-    - gemini: Import Google Gemini conversation exports (JSON file)
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 10+ import operations into one tool to:
+    - Prevent tool explosion (10+ tools -> 1 tool) while maintaining deep functionality.
+    - Improve discoverability by grouping related data ingestion tasks.
+    - Centralize import logic, error handling, and project routing.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
 
-    Args:
-        operation: The import operation to perform (obsidian, joplin, notion, evernote, onenote, archive, canvas, claude_skills, claude_conversations, claude_projects, chatgpt, gemini)
-        source_path: Path to source files
-                    * All operations: REQUIRED - Path to source directory/file
-                    * obsidian: Path to Obsidian vault directory
-                    * joplin: Path to Joplin export directory
-                    * notion: Path to Notion export ZIP file or directory
-                    * evernote: Path to Evernote .enex file or directory
-                    * onenote: Path to OneNote HTML JSON file
-                    * archive: Path to Advanced Memory archive ZIP file
-                    * canvas: Path to Obsidian Canvas .canvas file
-                    * claude_skills: Path to Claude Skills directory (containing SKILL.md files)
-                    * claude_conversations: Path to Claude.ai conversations.json export file
-                    * claude_projects: Path to Claude.ai projects.json export file
-                    * chatgpt: Path to ChatGPT conversations.json export file
-                    * gemini: Path to Google Gemini conversations.json export file
-        destination_folder: Advanced Memory folder for imported content
-                    * obsidian, joplin, notion, evernote, onenote, canvas, claude_skills, claude_conversations, claude_projects, chatgpt, gemini: Optional - Defaults to "imported/{operation}"
-                    * archive operation: NOT USED (archive restores to original locations)
-        preserve_structure: Maintain original folder hierarchy
-                    * obsidian, joplin, notion, evernote, claude_skills: Optional - If True, preserves folder structure (default: True)
-                    * claude_conversations, claude_projects, chatgpt, gemini: NOT USED (flat structure)
-                    * onenote, canvas, archive: NOT USED
-        convert_links: Convert internal links to entity references
-                    * obsidian, joplin: Optional - If True, converts [[wikilinks]] to entity references (default: True)
-                    * Other operations: NOT USED
-        include_attachments: Import images and media files
-                    * obsidian, evernote: Optional - If True, imports images and attachments (default: True)
-                    * Other operations: NOT USED
-        skip_existing: Skip notes that already exist
-                    * obsidian, joplin: Optional - If True, skips notes that already exist (default: True)
-                    * Other operations: NOT USED
-        create_missing_files: Create placeholder notes for missing references
-                    * canvas operation: Optional - If True, creates placeholder notes for missing file references (default: False)
-                    * Other operations: NOT USED
-        restore_mode: Archive restore mode
-                    * archive operation: Optional - "overwrite" (replace existing) or "merge" (combine with existing) (default: "overwrite")
-                    * Other operations: NOT USED
-        backup_existing: Backup current data before restore
-                    * archive operation: Optional - If True, creates backup before restoring (default: True)
-                    * Other operations: NOT USED
-        project: Optional project name. Supports:
-            - None (default): imports to current active project
-            - "project-name": imports to specific project
-            For archive operations, auto-detects project structure from archive metadata
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
+    The parameters are categorized by source type and import requirements:
+    - Source (source_path): The common input for all operations.
+    - Destination (destination_folder, project): Where the content goes.
+    - Options (preserve_structure, convert_links, include_attachments): Modification flags.
+    - Behavior (skip_existing, create_missing_files, restore_mode): functional switches.
 
-    Returns:
-        Operation-specific result with import details and file counts
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
 
-    Examples:
-        # Import Obsidian vault
-        adn_import("obsidian", source_path="/path/to/vault", destination_folder="imported/obsidian")
+    Note-Taking Apps:
+    - obsidian: Import complete Obsidian vaults (preserves links/attachments).
+    - joplin: Import Joplin export directories.
+    - notion: Import Notion export (ZIP or directory).
+    - evernote: Import Evernote ENEX files.
+    - onenote: Import OneNote pages from HTML JSON.
 
-        # Import Joplin export
-        adn_import("joplin", source_path="/path/to/export", destination_folder="imported/joplin")
+    AI Assistants:
+    - claude_skills: Import Anthropic agent skills (SKILL.md).
+    - claude_conversations: Import Claude.ai data export.
+    - claude_projects: Import Claude.ai project artifacts.
+    - chatgpt: Import ChatGPT data export.
+    - gemini: Import Google Gemini data export.
 
-        # Import Notion workspace
-        adn_import("notion", source_path="Notion-Export.zip", destination_folder="imported/notion")
+    System:
+    - archive: Restore complete system backups.
+    - canvas: Import Obsidian Canvas files.
 
-        # Import OneNote pages from HTML (from office-365-mcp)
-        adn_import("onenote", source_path="onenote-pages.json", destination_folder="imported/onenote")
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - 'source_path' must be a valid file or directory depending on the operation.
+    - Valid exports from respective services (e.g., JSON export for Claude).
 
-        # Import from archive (auto-detects project structure)
-        adn_import("archive", source_path="backup.zip", restore_mode="merge")
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The import source/type to process (Required).
+    - source_path (str): File system path to import from (Required).
+    - destination_folder (str): Target folder in Advanced Memory (Optional).
+    - preserve_structure (bool): Maintain folder hierarchy where applicable (Default: True).
+    - convert_links (bool): Transform wiki-links to entity references (Default: True).
+    - include_attachments (bool): Import media files (Default: True).
+    - skip_existing (bool): Prevent overwriting existing notes (Default: True).
+    - project (str): Target project context (Optional).
 
-        # Import Claude conversations (requires exported JSON file)
-        adn_import("claude_conversations", source_path="conversations.json", destination_folder="imported/claude")
+    ---------------------------------------------------------------------------
+    [USAGE]
+    Use this tool to migrate data from other tools or restore backups.
+    It automatically handles format conversion and metadata preservation.
 
-        # Import Claude projects (requires exported JSON file)
-        adn_import("claude_projects", source_path="projects.json", destination_folder="imported/claude-projects")
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
 
-        # Import ChatGPT conversations (requires exported JSON file)
-        adn_import("chatgpt", source_path="chatgpt_conversations.json", destination_folder="imported/chatgpt")
+    - Import an Obsidian vault:
+      adn_import(operation="obsidian", source_path="/path/to/vault", destination_folder="imported/obsidian")
 
-        # Import Google Gemini conversations (requires exported JSON file)
-        adn_import("gemini", source_path="gemini_conversations.json", destination_folder="imported/gemini")
+    - Import Claude conversations:
+      adn_import(operation="claude_conversations", source_path="conversations.json")
 
-        # Import to specific project
-        adn_import("obsidian", source_path="/path/to/vault", destination_folder="imported", project="work-notes")
+    - Restore from backup:
+      adn_import(operation="archive", source_path="backup.zip", restore_mode="merge")
+
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Source not found: The provided path does not exist.
+    - Invalid format: The source file is not in the expected format (e.g., bad JSON).
+    - Import failed: General failure during the import process.
     """
     logger.info(f"MCP tool call tool=adn_import operation={operation} source_path={source_path}")
 
@@ -151,7 +134,11 @@ async def adn_import(
         return await _notion_import(source_path, destination_folder, preserve_structure, project)
     elif operation == "evernote":
         return await _evernote_import(
-            source_path, destination_folder, preserve_structure, include_attachments, project
+            source_path,
+            destination_folder,
+            preserve_structure,
+            include_attachments,
+            project,
         )
     elif operation == "onenote":
         return await _onenote_import(source_path, destination_folder, project)
@@ -210,12 +197,20 @@ async def _joplin_import(
     from advanced_memory.mcp.tools.load_joplin_vault import load_joplin_vault
 
     return await load_joplin_vault(
-        source_path, destination_folder, preserve_structure, convert_links, skip_existing, project
+        source_path,
+        destination_folder,
+        preserve_structure,
+        convert_links,
+        skip_existing,
+        project,
     )  # type: ignore[operator,no-any-return]
 
 
 async def _notion_import(
-    source_path: str, destination_folder: str, preserve_structure: bool, project: str | None
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    project: str | None,
 ) -> str:
     """Handle Notion import operation."""
     from advanced_memory.mcp.tools.load_notion_export import load_notion_export
@@ -234,7 +229,11 @@ async def _evernote_import(
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
 
     return await load_evernote_export(
-        source_path, destination_folder, preserve_structure, include_attachments, project
+        source_path,
+        destination_folder,
+        preserve_structure,
+        include_attachments,
+        project,
     )  # type: ignore[operator,no-any-return]
 
 
@@ -263,14 +262,20 @@ async def _archive_import(
 
 
 async def _canvas_import(
-    source_path: str, destination_folder: str, create_missing_files: bool, project: str | None
+    source_path: str,
+    destination_folder: str,
+    create_missing_files: bool,
+    project: str | None,
 ) -> str:
     """Handle Canvas import operation."""
     return f"[UNICODE] **Canvas Import**\n\nCanvas import functionality requires the full load_canvas tool.\n\n**Requested**: {source_path} → {destination_folder}\n**Create missing files**: {create_missing_files}\n\nUse the individual load_canvas tool for complete functionality."
 
 
 async def _claude_skills_import(
-    source_path: str, destination_folder: str, preserve_structure: bool, project: str | None
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    project: str | None,
 ) -> str:
     """Import Claude Skills into Advanced Memory.
 
@@ -482,7 +487,9 @@ async def _claude_projects_import(
     from pathlib import Path
 
     from advanced_memory.config import get_project_config
-    from advanced_memory.importers.claude_projects_importer import ClaudeProjectsImporter
+    from advanced_memory.importers.claude_projects_importer import (
+        ClaudeProjectsImporter,
+    )
     from advanced_memory.markdown import EntityParser, MarkdownProcessor
 
     logger.info(f"Starting Claude projects import: {source_path} → {destination_folder}")

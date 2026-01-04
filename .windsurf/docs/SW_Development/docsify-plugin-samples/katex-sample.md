@@ -146,7 +146,7 @@ window.$docsify = {
       {left: '$', right: '$', display: false},
       {left: '\\(', right: '\\)', display: false},
       {left: '\\[', right: '\\]', display: true},
-      
+
       // Additional custom delimiters
       {left: '\\begin{equation}', right: '\\end{equation}', display: true},
       {left: '\\begin{align}', right: '\\end{align}', display: true},

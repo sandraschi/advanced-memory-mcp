@@ -113,7 +113,7 @@ def listen():
     with sr.Microphone() asource:
         print("Listening...")
         audio = r.listen(source)
-        
+
         try:
             text = r.recognize_google(audio)
             print(f"You said: {text}")
@@ -143,41 +143,41 @@ classimpleAvatar:
         # Load face cascade
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         self.eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-        
+
     def speak(self, text):
         # Convertexto speech
         tts = gTTS(text=text, lang='en')
         tts.save("output.mp3")
         os.system("start output.mp3")
-        
+
     def show_avatar(self):
         # Create a simple animated face
         cap = cv2.VideoCapture(0)
-        
+
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
-                
+
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
-            
+
             for (x,y,w,h) in faces:
                 # Draw face
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
                 roi_gray = gray[y:y+h, x:x+w]
                 roi_color = frame[y:y+h, x:x+w]
-                
+
                 # Draw eyes = self.eye_cascade.detectMultiScale(roi_gray)
                 for (ex,ey,ew,eh) in eyes:
                     cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-            
+
             # Display the resulting frame
             cv2.imshow('Simple Avatar', frame)
-            
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-                
+
         cap.release()
         cv2.destroyAllWindows()
 
@@ -202,12 +202,12 @@ class VoiceAssistant:
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
-        
+
     def listen(self):
         with self.microphone asource:
             print("Listening...")
             audio = self.recognizer.listen(source)
-            
+
             try:
                 text = self.recognizer.recognize_google(audio)
                 print(f"You said: {text}")
@@ -215,13 +215,13 @@ class VoiceAssistant:
             exception as e:
                 print("Sorry, I didn't catch that")
                 return ""
-    
+
     def speak(self, text):
         print(f"Assistant: {text}")
         tts = gTTS(text=text, lang='en')
         tts.save("response.mp3")
         os.system("start response.mp3")
-    
+
     def get_ai_response(self, prompt):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -231,7 +231,7 @@ class VoiceAssistant:
             ]
         )
         return response.choices[0].message['content']
-    
+
     def run(self):
         print("Voice Assistant started. Say 'exit' to quit.")
         while True:
@@ -239,7 +239,7 @@ class VoiceAssistant:
             if user_input.lower() == 'exit':
                 self.speak("Goodbye!")
                 break
-                
+
             if user_input:
                 response = self.get_ai_response(user_input)
                 self.speak(response)

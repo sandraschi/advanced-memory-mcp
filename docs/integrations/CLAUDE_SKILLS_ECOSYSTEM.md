@@ -1,6 +1,6 @@
 # Claude Skills Ecosystem - Complete Overview
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Status**: Living document tracking the emerging Claude Skills ecosystem
 
 ---
@@ -22,8 +22,8 @@ Claude Skills were released by Anthropic on October 15, 2024. This document trac
 
 ### Official Information
 
-**Release Date**: October 15, 2024  
-**Official Repo**: https://github.com/anthropics/anthropic-skills  
+**Release Date**: October 15, 2024
+**Official Repo**: https://github.com/anthropics/anthropic-skills
 **Spec**: https://github.com/anthropics/anthropic-skills/blob/main/agent_skills_spec.md
 
 ### Format (Confirmed)
@@ -443,4 +443,3 @@ adn_import("claude_skills", source_path="~/anthropic-skills/")
 **Next review**: When Claude Desktop skills deployment is verified.
 
 **Contributions welcome**: GitHub issues and PRs encouraged for corrections and additions.
-

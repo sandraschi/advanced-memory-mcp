@@ -128,10 +128,17 @@ class GeminiImporter(Importer):
 
         # Extract timestamps
         created_at = self._extract_timestamp(conversation, "created_at", "created", "create_time")
-        modified_at = self._extract_timestamp(conversation, "updated_at", "updated", "update_time") or created_at
+        modified_at = (
+            self._extract_timestamp(conversation, "updated_at", "updated", "update_time")
+            or created_at
+        )
 
         # Generate permalink
-        date_prefix = datetime.fromtimestamp(created_at).strftime("%Y%m%d") if created_at else datetime.now().strftime("%Y%m%d")
+        date_prefix = (
+            datetime.fromtimestamp(created_at).strftime("%Y%m%d")
+            if created_at
+            else datetime.now().strftime("%Y%m%d")
+        )
         clean_title = clean_filename(title)
 
         # Format content
@@ -148,8 +155,12 @@ class GeminiImporter(Importer):
                 metadata={
                     "type": "conversation",
                     "title": title,
-                    "created": format_timestamp(created_at) if created_at else format_timestamp(datetime.now().timestamp()),
-                    "modified": format_timestamp(modified_at) if modified_at else format_timestamp(datetime.now().timestamp()),
+                    "created": format_timestamp(created_at)
+                    if created_at
+                    else format_timestamp(datetime.now().timestamp()),
+                    "modified": format_timestamp(modified_at)
+                    if modified_at
+                    else format_timestamp(datetime.now().timestamp()),
                     "permalink": f"{folder}/{date_prefix}-{clean_title}",
                 }
             ),
@@ -214,7 +225,11 @@ class GeminiImporter(Importer):
         for msg in messages:
             # Get author/role
             author = self._get_message_author(msg)
-            ts = format_timestamp(msg.get("timestamp") or msg.get("created_at") or created_at) if msg.get("timestamp") or msg.get("created_at") or created_at else ""
+            ts = (
+                format_timestamp(msg.get("timestamp") or msg.get("created_at") or created_at)
+                if msg.get("timestamp") or msg.get("created_at") or created_at
+                else ""
+            )
 
             # Add message header
             if ts:
@@ -334,4 +349,3 @@ class GeminiImporter(Importer):
             conversations=0,
             messages=0,
         )
-

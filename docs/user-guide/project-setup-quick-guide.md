@@ -309,23 +309,23 @@ advanced-memory project add notes ~/Documents/Notes
 
 ### Included
 
-✅ `.md` files (markdown)  
-✅ Nested directories (recursive)  
-✅ YAML frontmatter  
-✅ Wikilinks `[[Note Name]]`  
-✅ Observations `- [category] content`  
+✅ `.md` files (markdown)
+✅ Nested directories (recursive)
+✅ YAML frontmatter
+✅ Wikilinks `[[Note Name]]`
+✅ Observations `- [category] content`
 ✅ Relations `- relation_type [[Target]]`
 
 ---
 
 ### Excluded (Automatically)
 
-❌ `.git/` directory  
-❌ `node_modules/` directory  
-❌ `.vscode/`, `.idea/` (IDE files)  
-❌ `__pycache__/` (Python cache)  
-❌ `.DS_Store`, `Thumbs.db` (OS files)  
-❌ Hidden files (starting with `.`)  
+❌ `.git/` directory
+❌ `node_modules/` directory
+❌ `.vscode/`, `.idea/` (IDE files)
+❌ `__pycache__/` (Python cache)
+❌ `.DS_Store`, `Thumbs.db` (OS files)
+❌ Hidden files (starting with `.`)
 ❌ Non-markdown files (`.txt`, `.pdf`, etc.)
 
 **Full list**: See `IGNORE_PATTERNS` in `src/advanced_memory/sync/watch_service.py`
@@ -471,7 +471,7 @@ advanced-memory mcp
 
 ### "Project not found"
 
-**Problem**: 
+**Problem**:
 ```bash
 advanced-memory sync
 Error: Project 'my-project' not found
@@ -511,7 +511,7 @@ advanced-memory sync --verbose
 
 ### "Database is locked"
 
-**Problem**: 
+**Problem**:
 ```bash
 Error: database is locked
 ```
@@ -649,6 +649,5 @@ advanced-memory project add personal ~/personal/notes
 
 ---
 
-*Created: 2025-10-17*  
+*Created: 2025-10-17*
 *Purpose: Simple guide for project setup*
-

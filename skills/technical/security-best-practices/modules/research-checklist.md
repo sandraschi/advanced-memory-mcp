@@ -3,25 +3,25 @@
 Review quarterly or after major framework/security advisories.
 
 ## 1. Source Refresh
-- [ ] OWASP updates (Top 10, ASVS, API Security Top 10).  
-- [ ] NIST publications (SSDF, CSF, SP 800 series).  
-- [ ] CIS Benchmarks updates for cloud providers.  
+- [ ] OWASP updates (Top 10, ASVS, API Security Top 10).
+- [ ] NIST publications (SSDF, CSF, SP 800 series).
+- [ ] CIS Benchmarks updates for cloud providers.
 - [ ] CNCF Security SIG releases and threat reports.
 
 ## 2. Control Review
-- [ ] Audit SAST/DAST/secret scanning coverage.  
-- [ ] Verify SBOM/signing pipeline remains operational.  
-- [ ] Review vulnerability backlog and SLA compliance.  
+- [ ] Audit SAST/DAST/secret scanning coverage.
+- [ ] Verify SBOM/signing pipeline remains operational.
+- [ ] Review vulnerability backlog and SLA compliance.
 - [ ] Validate incident response drills executed and documented.
 
 ## 3. Compliance
-- [ ] Check regulatory changes (e.g., PCI DSS, GDPR guidance).  
-- [ ] Update policy library and control matrix accordingly.  
+- [ ] Check regulatory changes (e.g., PCI DSS, GDPR guidance).
+- [ ] Update policy library and control matrix accordingly.
 - [ ] Ensure audit evidence retained and accessible.
 
 ## 4. Training & Awareness
-- [ ] Refresh security champion program curricula.  
-- [ ] Review phishing simulation metrics; adjust training.  
+- [ ] Refresh security champion program curricula.
+- [ ] Review phishing simulation metrics; adjust training.
 - [ ] Communicate new threats to engineering teams.
 
 ## 5. Source Log

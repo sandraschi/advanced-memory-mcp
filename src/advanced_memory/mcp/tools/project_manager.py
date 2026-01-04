@@ -26,86 +26,106 @@ from advanced_memory.utils import generate_permalink
 @mcp.tool
 async def adn_project(
     operation: Literal[
-        "create", "switch", "delete", "set_default", "get_current", "list", "sync", "status", "detect"
+        "create",
+        "switch",
+        "delete",
+        "set_default",
+        "get_current",
+        "list",
+        "sync",
+        "status",
+        "detect",
     ],
     project_name: str | None = None,
     project_path: str | None = None,
     set_default: bool = False,
     ctx: Context | None = None,
 ) -> str:
-    """Comprehensive project management tool for Advanced Memory knowledge base.
+    """
+    Comprehensive project management tool for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 8 project management operations into one tool.
+    This point-of-entry tool provides a unified interface for project operations,
+    context switching, and AI-managed project detection.
 
-    SUPPORTED OPERATIONS:
-    - create: Create new projects with specified name and path
-    - switch: Change active project context for all subsequent operations
-    - delete: Remove projects from configuration while preserving files on disk
-    - set_default: Configure which project loads by default on startup
-    - get_current: Display currently active project with comprehensive statistics
-    - list: List all available projects with status indicators and entity counts
-    - sync: Sync specific project without changing default (requires project_name)
-    - status: Get detailed statistics for a specific project (requires project_name)
-    - detect: AI-managed project detection from conversation context (auto-switches if confident ≥ 60%)
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 8 project management operations into one tool to:
+    - Prevent tool explosion (8 tools -> 1 tool) while maintaining deep functionality.
+    - Improve discoverability by grouping related project lifecycle tasks.
+    - Centralize context switching and AI-powered project detection.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
 
-    FUTURE ENHANCEMENTS (Planned):
-    - list_cross_project_refs: Show which projects link to each other
-    - get_all_projects: List all projects with enhanced metadata
-    - get_project_info: Get detailed stats for multiple projects
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
+    The parameters are categorized by operation type:
+    - Lifecycle (create, delete): Handles project creation and removal.
+    - Context (switch, detect, get_*): Manages the active project session.
+    - Configuration (set_default): Persists preferences across restarts.
+    - Sync (sync, status): Manages file system synchronization.
 
-    PROJECT CONTEXT IMPACT:
-    - All file operations target the active project
-    - Search operations are scoped to the active project
-    - Directory listings show the active project's structure
-    - New notes are created in the active project
-    - Sync status reflects the active project's state
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
 
-    AI-MANAGED PROJECT DETECTION:
-    - Use "detect" operation to automatically detect relevant project from user queries
-    - Analyzes query for project names, context keywords (personal/work/research), folder mentions
-    - Auto-switches when confidence ≥ 60%
-    - Helps avoid ambiguity (e.g., "Steve" in private project vs "Steve Jobs" in research)
-    - Example: User says "Tomorrow I meet Steve" → detects "private" project (personal context)
+    Lifecycle Operations:
+    - create: Initialize a new project with specified name and path.
+    - delete: Remove a project configuration (files preserved).
+    - set_default: Set the project to load automatically on startup.
 
-    Args:
-        operation: The operation to perform (create, switch, delete, set_default, get_current, list, sync, status, detect)
-        project_name: Project name
-                    * create, switch, delete, sync, status, set_default operations: REQUIRED
-                    * detect operation: Optional - If provided, used as additional context hint
-                    * get_current, list operations: NOT USED
-        project_path: File system path for new project
-                    * create operation: REQUIRED - Path where project files will be stored
-                    * Other operations: NOT USED
-        set_default: Whether to set new project as default
-                    * create operation: Optional - If True, sets new project as default (default: False)
-                    * Other operations: NOT USED
-        ctx: Optional MCP context for progress reporting
-                    * All operations: Optional - MCP context for progress updates
+    Context Management:
+    - switch: Activate a different project context.
+    - list: Display all available projects with health status.
+    - get_current: Get statistics for the active project.
+    - detect: AI-powered auto-switching based on conversation context.
 
-    Returns:
-        Operation-specific result with project details and statistics
+    Synchronization:
+    - sync: Force synchronization for a specific project.
+    - status: Get detailed sync status and file counts.
 
-    Examples:
-        # Create a new project
-        adn_project("create", project_name="my-research", project_path="~/Documents/research")
+    ---------------------------------------------------------------------------
+    [PROJECT CONTEXT IMPACT]
+    - All file operations target the active project.
+    - Search operations are scoped to the active project by default.
+    - Directory listings show the active project's structure.
+    - New notes are created in the active project unless specified otherwise.
 
-        # Switch to a different project
-        adn_project("switch", project_name="work-project")
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - 'project_path' must be a valid directory for 'create'.
+    - 'project_name' is required for most operations except 'list', 'get_current', 'detect'.
 
-        # List all available projects
-        adn_project("list")
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation: The project operation to perform (Required).
+    - project_name: Project identifier (Required for create/switch/delete/sync/status).
+    - project_path: File system path (Required for create).
+    - set_default: Set as default project on creation (Default: False).
+    - ctx: MCP context for progress reporting (Optional).
 
-        # Get current project information
-        adn_project("get_current")
+    ---------------------------------------------------------------------------
+    [USAGE]
+    Use this tool to manage the project lifecycle and active context.
+    The 'detect' operation is particularly useful for AI agents to auto-switch contexts.
 
-        # Set default project
-        adn_project("set_default", project_name="personal-notes")
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
 
-        # Delete a project
-        adn_project("delete", project_name="old-project")
+    - Create a new research project:
+      adn_project("create", project_name="quantum-research", project_path="~/research/quantum")
 
-        # AI-managed project detection (auto-switches if confident)
-        adn_project("detect")  # AI analyzes conversation context to detect relevant project
+    - Switch to work context:
+      adn_project("switch", project_name="work")
+
+    - List all projects:
+      adn_project("list")
+
+    - Auto-detect context from conversation:
+      adn_project("detect")
+
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - "Project not found": The specified project does not exist.
+    - "Path invalid": The provided project path is not accessible.
+    - "Project already exists": Attempted to create a duplicate project.
     """
     logger.info(f"MCP tool call tool=adn_project operation={operation} project_name={project_name}")
 
@@ -133,7 +153,10 @@ async def adn_project(
 
 
 async def _create_operation(
-    project_name: str | None, project_path: str | None, set_default: bool, ctx: Context | None
+    project_name: str | None,
+    project_path: str | None,
+    set_default: bool,
+    ctx: Context | None,
 ) -> str:
     """Handle create operation."""
     missing = []
@@ -491,72 +514,88 @@ async def _detect_operation(ctx: Context | None) -> str:
     ]
 
     if suggested_project:
-        result_lines.extend([
-            f"**Suggested Project**: {suggested_project}",
-            f"**Confidence**: {confidence:.0%}",
-            f"**Reason**: {reason}",
-            "",
-        ])
+        result_lines.extend(
+            [
+                f"**Suggested Project**: {suggested_project}",
+                f"**Confidence**: {confidence:.0%}",
+                f"**Reason**: {reason}",
+                "",
+            ]
+        )
 
         if should_switch and suggested_project != current_project:
             # Auto-switch if confidence is high enough
             try:
                 switch_result = await _switch_operation(suggested_project, ctx)
-                result_lines.extend([
-                    "## ✅ Auto-Switched Project",
-                    "",
-                    f"I've automatically switched to **{suggested_project}** project based on context.",
-                    "",
-                    switch_result.split("\n\n")[-1] if "\n\n" in switch_result else switch_result,
-                ])
+                result_lines.extend(
+                    [
+                        "## ✅ Auto-Switched Project",
+                        "",
+                        f"I've automatically switched to **{suggested_project}** project based on context.",
+                        "",
+                        switch_result.split("\n\n")[-1]
+                        if "\n\n" in switch_result
+                        else switch_result,
+                    ]
+                )
             except Exception as e:
-                result_lines.extend([
-                    "## ⚠️ Auto-Switch Failed",
-                    "",
-                    f"Could not automatically switch: {e}",
-                    "",
-                    f"You can manually switch: `adn_project('switch', project_name='{suggested_project}')`",
-                ])
+                result_lines.extend(
+                    [
+                        "## ⚠️ Auto-Switch Failed",
+                        "",
+                        f"Could not automatically switch: {e}",
+                        "",
+                        f"You can manually switch: `adn_project('switch', project_name='{suggested_project}')`",
+                    ]
+                )
         elif suggested_project == current_project:
-            result_lines.extend([
-                "## ✓ Already on Correct Project",
-                "",
-                f"You're already on the **{suggested_project}** project. No switch needed.",
-            ])
+            result_lines.extend(
+                [
+                    "## ✓ Already on Correct Project",
+                    "",
+                    f"You're already on the **{suggested_project}** project. No switch needed.",
+                ]
+            )
         else:
-            result_lines.extend([
-                "## 💡 Project Suggestion",
-                "",
-                f"Based on context, you might want to switch to **{suggested_project}** project.",
-                "",
-                f"**Confidence**: {confidence:.0%} (threshold: 60% for auto-switch)",
-                "",
-                f"To switch manually: `adn_project('switch', project_name='{suggested_project}')`",
-            ])
+            result_lines.extend(
+                [
+                    "## 💡 Project Suggestion",
+                    "",
+                    f"Based on context, you might want to switch to **{suggested_project}** project.",
+                    "",
+                    f"**Confidence**: {confidence:.0%} (threshold: 60% for auto-switch)",
+                    "",
+                    f"To switch manually: `adn_project('switch', project_name='{suggested_project}')`",
+                ]
+            )
     else:
-        result_lines.extend([
-            "## ℹ️ No Clear Project Detected",
-            "",
-            "Could not detect a specific project from the context.",
-            "",
-            "**Available projects**:",
-        ])
+        result_lines.extend(
+            [
+                "## ℹ️ No Clear Project Detected",
+                "",
+                "Could not detect a specific project from the context.",
+                "",
+                "**Available projects**:",
+            ]
+        )
         projects = await detector._get_all_projects()
         for proj in projects:
             marker = "⭐ " if proj["name"] == current_project else "  "
             result_lines.append(f"{marker}- {proj['name']}")
 
-    result_lines.extend([
-        "",
-        "## How It Works",
-        "",
-        "The AI analyzes your queries for:",
-        "- Explicit project name mentions (e.g., 'work project', 'private notes')",
-        "- Folder/path references that match project names",
-        "- Search results that contain project metadata",
-        "- File paths that belong to specific projects",
-        "",
-        "**Auto-switch happens when confidence ≥ 60%**",
-    ])
+    result_lines.extend(
+        [
+            "",
+            "## How It Works",
+            "",
+            "The AI analyzes your queries for:",
+            "- Explicit project name mentions (e.g., 'work project', 'private notes')",
+            "- Folder/path references that match project names",
+            "- Search results that contain project metadata",
+            "- File paths that belong to specific projects",
+            "",
+            "**Auto-switch happens when confidence ≥ 60%**",
+        ]
+    )
 
     return add_project_metadata("\n".join(result_lines), current_project)

@@ -29,7 +29,7 @@ foreach ($dir in $directories) {
         New-Item -ItemType Directory -Path $fullPath -Force | Out-Null
         Write-Host "Created directory: $fullPath"
     }
-    
+
     # Create README.md if it doesn't exist
     $readmePath = Join-Path -Path $fullPath -ChildPath "README.md"
     if (-not (Test-Path -Path $readmePath)) {

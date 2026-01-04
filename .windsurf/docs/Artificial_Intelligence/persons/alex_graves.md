@@ -67,4 +67,3 @@ Born in the United Kingdom, Graves earned his BA in Mathematics from the Univers
 - [Long Short-Termemory](https://www.bioinf.jku.at/publications/older/2604.pdf) - OriginalSTM paper
 - [Connectionistemporal Classification](https://www.cs.toronto.edu/~graves/icml_2006.pdf) - Original CTC paper
 - [Neural Turing Machines](https://arxiv.org/abs/1410.5401) - Original NTM paper
-

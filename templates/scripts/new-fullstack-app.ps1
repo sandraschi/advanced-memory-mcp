@@ -17,28 +17,28 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$AppName,
-    
+
     [Parameter(Mandatory = $false)]
     [string]$Description = "A modern fullstack application",
-    
+
     [Parameter(Mandatory = $false)]
     [string]$Author = "SOTA Builder",
-    
+
     [Parameter(Mandatory = $false)]
     [string]$OutputPath = ".",
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$IncludeMonitoring = $true,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$IncludeAuth = $true,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$IncludeMicroservices = $true,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$IncludeTesting = $true,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$IncludeCI = $true
 )
@@ -496,7 +496,7 @@ $dockerCompose | Out-File -FilePath $dockerComposePath -Encoding UTF8
 
 if ($IncludeCI) {
     Write-Host "🔄 Setting up CI/CD pipelines..." -ForegroundColor Cyan
-    
+
     # GitHub Actions workflow
     $workflow = @"
 name: CI/CD Pipeline
@@ -510,7 +510,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -527,22 +527,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
       run: |
         cd backend
         pip install -r requirements.txt
-    
+
     - name: Run tests
       run: |
         cd backend
         pytest tests/ -v --cov=app --cov-report=xml
-    
+
     - name: Upload coverage
       uses: codecov/codecov-action@v3
       with:
@@ -551,15 +551,15 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Build Docker images
       run: |
         docker build -t $($AppName.ToLower())-frontend ./frontend
         docker build -t $($AppName.ToLower())-backend ./backend
-    
+
     - name: Push to registry
       if: github.ref == 'refs/heads/main'
       run: |

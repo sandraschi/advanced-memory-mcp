@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Start here to classify the workload, identify performance symptoms, and focus the tuning effort.
@@ -23,21 +23,21 @@ Capture answers in a remediation brief before touching configuration.
 
 ## 2. Diagnostic Flow
 
-1. **Baseline** – gather current metrics (CPU, IO, wait events, query latencies).  
-2. **Identify hotspots** – slow query logs, performance schema, pg_stat_statements, DMVs.  
-3. **Validate environment** – ensure vacuum/maintenance jobs, replication health, storage throughput.  
-4. **Hypothesis** – decide whether to focus on schema, indexes, queries, or configuration.  
-5. **Experiment** – apply changes in staging, benchmark (pgBench, sysbench, HammerDB), observe results.  
+1. **Baseline** – gather current metrics (CPU, IO, wait events, query latencies).
+2. **Identify hotspots** – slow query logs, performance schema, pg_stat_statements, DMVs.
+3. **Validate environment** – ensure vacuum/maintenance jobs, replication health, storage throughput.
+4. **Hypothesis** – decide whether to focus on schema, indexes, queries, or configuration.
+5. **Experiment** – apply changes in staging, benchmark (pgBench, sysbench, HammerDB), observe results.
 6. **Rollout** – promote validated changes with change control and monitoring.
 
 ---
 
 ## 3. Optimization Priority Ladder
 
-1. **Correctness & stability** – fix blocking locks, deadlocks, corrupted stats.  
-2. **Schema/index design** – ensure proper normalization/denormalization and indexing.  
-3. **Query tuning** – rewrite queries, adjust plans, add hints when necessary.  
-4. **Configuration & hardware** – adjust memory buffers, connection limits, storage.  
+1. **Correctness & stability** – fix blocking locks, deadlocks, corrupted stats.
+2. **Schema/index design** – ensure proper normalization/denormalization and indexing.
+3. **Query tuning** – rewrite queries, adjust plans, add hints when necessary.
+4. **Configuration & hardware** – adjust memory buffers, connection limits, storage.
 5. **Caching/layering** – introduce read replicas, caching tiers, materialized views.
 
 Work top-down; hardware upgrades are last resort after software-level tuning.
@@ -46,9 +46,9 @@ Work top-down; hardware upgrades are last resort after software-level tuning.
 
 ## 4. Stakeholder Alignment
 
-- **Application teams** – coordinate deployment windows, regression tests, feature flags.  
-- **Ops/SRE** – align on monitoring thresholds and rollback plan.  
-- **Security/compliance** – review changes impacting encryption, auditing, retention.  
+- **Application teams** – coordinate deployment windows, regression tests, feature flags.
+- **Ops/SRE** – align on monitoring thresholds and rollback plan.
+- **Security/compliance** – review changes impacting encryption, auditing, retention.
 - **Management** – communicate expected gains (latency, cost savings).
 
 Ensure change tickets include owner, validation plan, and rollback procedure.
@@ -57,10 +57,10 @@ Ensure change tickets include owner, validation plan, and rollback procedure.
 
 ## 5. Escalation Triggers
 
-- Unexplained latency spikes > 30% lasting more than 10 minutes.  
-- Replication lag or failover risk increasing beyond SLA.  
-- Storage nearing capacity threshold (< 15% free).  
-- Query plan instability after statistics update.  
+- Unexplained latency spikes > 30% lasting more than 10 minutes.
+- Replication lag or failover risk increasing beyond SLA.
+- Storage nearing capacity threshold (< 15% free).
+- Query plan instability after statistics update.
 - Hotspot workloads requiring cross-team architecture review.
 
 Escalate via incident management channel and document findings in postmortem.
@@ -68,16 +68,16 @@ Escalate via incident management channel and document findings in postmortem.
 ---
 
 ### Module Map
-- Profiling: [modules/workload-profiling.md](modules/workload-profiling.md)  
-- Schema/index design: [modules/indexing-and-schema-design.md](modules/indexing-and-schema-design.md)  
-- Query tuning: [modules/query-tuning.md](modules/query-tuning.md)  
-- Operations & monitoring: [modules/operations-and-observability.md](modules/operations-and-observability.md)  
+- Profiling: [modules/workload-profiling.md](modules/workload-profiling.md)
+- Schema/index design: [modules/indexing-and-schema-design.md](modules/indexing-and-schema-design.md)
+- Query tuning: [modules/query-tuning.md](modules/query-tuning.md)
+- Operations & monitoring: [modules/operations-and-observability.md](modules/operations-and-observability.md)
 - Remaining work: [modules/known-gaps.md](modules/known-gaps.md)
 
 Review this guidance semi-annually to align with evolving platform workflows.
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -121,7 +121,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** technical
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

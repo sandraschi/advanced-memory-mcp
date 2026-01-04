@@ -1,4 +1,4 @@
-﻿# Agentic AI-Based "Vibe Coding" (Karpathy): Concepts and Technical Foundations
+# Agentic AI-Based "Vibe Coding" (Karpathy): Concepts and Technical Foundations
 
 ## 1. Introduction
 Andrej Karpathy, a prominent AI researcher, has popularized the concept of "vibe coding" in the context of agentic AI systems—AI agents that can autonomously generate, modify, andeploy code based on high-level intent or "vibes" communicated by the user. This research flow explores the technical underpinnings, tools, and philosophical implications of agentic AI-based vibe coding as described by Karpathy and in related literature.

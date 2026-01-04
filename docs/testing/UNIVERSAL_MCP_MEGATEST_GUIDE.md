@@ -32,19 +32,19 @@ This framework works for:
                     LEVEL 5: FULL BLAST
                     All tools + Real output validation
                     Time: 60-120 min
-                    
+
                LEVEL 4: INTEGRATION
                Multi-tool workflows + Real data
                Time: 30-60 min
-               
+
           LEVEL 3: ADVANCED
           All tools individually
           Time: 15-30 min
-          
-     LEVEL 2: STANDARD  
+
+     LEVEL 2: STANDARD
      Core tools only
      Time: 5-15 min
-     
+
 LEVEL 1: SMOKE
 Quick sanity check
 Time: 1-3 min
@@ -266,15 +266,15 @@ def get_production_paths():
         # Example for Advanced Memory:
         # Path.home() / ".advanced-memory",
         # Path.home() / "Documents" / "claude-depot",
-        
+
         # Example for Virtualization MCP:
         # Path.home() / ".virtualization-mcp",
         # Path.home() / "VirtualMachines",
-        
+
         # Example for Database MCP:
         # Path.home() / ".database-mcp",
         # Path("/var/lib/postgresql"),
-        
+
         # ADD YOUR PRODUCTION PATHS HERE:
         # Path.home() / ".your-mcp-server",
     ]
@@ -315,15 +315,15 @@ def verify_not_production():
 def isolated_test_env():
     """Create isolated temp environment."""
     temp_base = Path(tempfile.mkdtemp(prefix="megatest_mcp_"))
-    
+
     # CRITICAL: Verify safe
     assert is_safe_test_path(temp_base)
     assert not is_production_path(temp_base)
-    
+
     print(f"\n✅ Test environment: {temp_base}")
-    
+
     yield {"test_dir": temp_base}
-    
+
     # Cleanup
     shutil.rmtree(temp_base)
     print(f"✅ Cleaned up: {temp_base}")
@@ -362,11 +362,11 @@ async def test_server_initializes(isolated_test_env, assert_production_safe):
     """Test: MCP server can initialize."""
     test_dir = isolated_test_env["test_dir"]
     assert_production_safe(test_dir)
-    
+
     # Initialize your MCP server
     # server = await initialize_mcp_server(test_dir)
     # assert server.is_ready
-    
+
     pass  # Implement based on your server
 
 
@@ -378,11 +378,11 @@ async def test_list_operation_works(isolated_test_env):
     # - Virtualization: list_vms()
     # - Avatar: list_avatars()
     # - Database: list_databases()
-    
+
     # result = await your_list_tool()
     # assert result is not None
     # assert len(result) >= 0  # Can be empty, that's OK
-    
+
     pass  # Implement based on your tools
 
 
@@ -394,10 +394,10 @@ async def test_basic_read_works(isolated_test_env):
     # - Virtualization: get_vm_status()
     # - Avatar: get_avatar_info()
     # - Database: get_table_schema()
-    
+
     # result = await your_read_tool()
     # assert result is not None
-    
+
     pass  # Implement based on your tools
 
 
@@ -406,16 +406,16 @@ async def test_basic_create_works(isolated_test_env, assert_production_safe):
     """Test: Basic create operation works."""
     test_dir = isolated_test_env["test_dir"]
     assert_production_safe(test_dir)
-    
+
     # Example for ANY MCP server:
     # - Advanced Memory: write_note()
     # - Virtualization: create_vm()
     # - Avatar: create_avatar()
     # - Database: create_table()
-    
+
     # result = await your_create_tool(test_data)
     # assert result.success
-    
+
     pass  # Implement based on your tools
 
 
@@ -744,7 +744,7 @@ testpaths = tests
 python_files = test_*.py
 
 # CRITICAL: Megatest excluded by default
-addopts = 
+addopts =
     -m "not megatest"
     --strict-markers
     -v
@@ -1186,4 +1186,3 @@ Refer to Advanced Memory MCP as reference implementation:
 *ROI: Positive within first month*
 
 🎯 **Copy this guide to your MCP repos and start building safe, comprehensive tests!** 🎯
-

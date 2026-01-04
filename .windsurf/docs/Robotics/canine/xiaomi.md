@@ -1,4 +1,4 @@
-﻿# Xiaomi CyberDog
+# Xiaomi CyberDog
 
 ## Overview
 Xiaomi's CyberDog is a series of bio-inspired quadruped robots created to foster a global open-source community of developers, engineers, and robotics enthusiasts. Rather than positioning it as a direct consumer or industrial product, Xiaomi has presented CyberDog as an advanced, accessible platform for exploring the future of robotics. Its primary goal is to spur innovation by providing powerful hardware and a customizable software stack to the community.
@@ -25,7 +25,7 @@ The second generation marked a significant leap forward in design, intelligence,
 ## Technology Stack
 CyberDog is built on a foundation of cutting-edge robotics technology, with a strong emphasis on perception and AI.
 
-- **AI Processing**: 
+- **AI Processing**:
   - **Gen 1**: NVIDIA Jetson Xavier NX
   - **Gen 2**: Xiaomi-developed NX chip + 2 co-processors
 - **Perception System**: The robot is equipped with a sophisticated sensor suite for comprehensivenvironmental awareness:

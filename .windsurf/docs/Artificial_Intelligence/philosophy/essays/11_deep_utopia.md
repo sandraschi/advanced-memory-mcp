@@ -1,4 +1,4 @@
-﻿# Deep Utopia: Life and Meaning in a Solved World
+# Deep Utopia: Life and Meaning in a Solved World
 
 ## Introduction: The Post-Scarcity Horizon
 

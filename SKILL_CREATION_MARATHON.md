@@ -1,7 +1,7 @@
 # 🚀 Skill Creation Marathon - 36 Skills Before Dinner!
 
-**Date:** 2025-10-21  
-**Goal:** Create 3 dozen expert skills for Claude Desktop  
+**Date:** 2025-10-21
+**Goal:** Create 3 dozen expert skills for Claude Desktop
 **Progress:** 1/36 ✅
 
 ---
@@ -91,7 +91,7 @@ C:\Users\sandr\.config\claude\skills\
 for topic in ["italian", "french-pastry", "mexican", "bbq", "asian-fusion"]:
     adn_content("write", identifier=f"{topic} Cooking Masterclass", ...)
     adn_skills("from_zettel", note_identifier=f"{topic} Cooking", ...)
-    
+
 # Copy all to Claude Desktop
 ```
 
@@ -110,14 +110,13 @@ for topic in ["italian", "french-pastry", "mexican", "bbq", "asian-fusion"]:
 
 Which category interests you most?
 
-**A. More Cooking** (italian, french, mexican, bbq, asian)  
-**B. Technical** (python, git, docker, api, database)  
-**C. Creative** (writing, design, photography, video)  
-**D. Mix** (2 cooking, 2 technical, 1 creative)  
+**A. More Cooking** (italian, french, mexican, bbq, asian)
+**B. Technical** (python, git, docker, api, database)
+**C. Creative** (writing, design, photography, video)
+**D. Mix** (2 cooking, 2 technical, 1 creative)
 
 **Just say "A", "B", "C", or "D" and I'll build the next 5!**
 
 ---
 
 **Status:** 1/36 complete - Let's go! 🚀
-

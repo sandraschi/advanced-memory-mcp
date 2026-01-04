@@ -30,6 +30,6 @@ cp zettelkasten/templates/knowledge-worker/<topic>/<note>.md \
 
 ---
 
-**Category**: Knowledge Worker  
-**Templates**: 2  
+**Category**: Knowledge Worker
+**Templates**: 2
 **Updated**: October 17, 2025

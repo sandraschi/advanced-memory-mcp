@@ -21,11 +21,11 @@ Obsidian is a powerful knowledge base that works on top of a local folder of pla
 - **Multi-Project Support** - Organize separate knowledge bases
 
 ### Combined Benefits
-✅ **Best of Both Worlds** - Visual editing (Obsidian) + AI assistance (Advanced Memory)  
-✅ **Bidirectional Sync** - Changes in either tool reflect in the other  
-✅ **Canvas Visualization** - Create mind maps, view in Obsidian  
-✅ **Import/Export** - Seamlessly move between tools  
-✅ **Wikilink Compatibility** - Both support `[[wikilinks]]`  
+✅ **Best of Both Worlds** - Visual editing (Obsidian) + AI assistance (Advanced Memory)
+✅ **Bidirectional Sync** - Changes in either tool reflect in the other
+✅ **Canvas Visualization** - Create mind maps, view in Obsidian
+✅ **Import/Export** - Seamlessly move between tools
+✅ **Wikilink Compatibility** - Both support `[[wikilinks]]`
 
 ## Table of Contents
 
@@ -47,13 +47,13 @@ Obsidian is a powerful knowledge base that works on top of a local folder of pla
    ```bash
    # Download from https://obsidian.md
    # Or use package managers:
-   
+
    # macOS
    brew install --cask obsidian
-   
+
    # Windows
    winget install Obsidian.Obsidian
-   
+
    # Linux
    flatpak install flathub md.obsidian.Obsidian
    ```
@@ -62,10 +62,10 @@ Obsidian is a powerful knowledge base that works on top of a local folder of pla
    ```bash
    # Install with uv (recommended)
    uv tool install advanced-memory
-   
+
    # Or with pip
    pip install advanced-memory
-   
+
    # Or with Homebrew
    brew install advanced-memory
    ```
@@ -735,4 +735,3 @@ advanced-memory sync --watch
 ```
 
 Happy knowledge building! 🚀
-

@@ -66,4 +66,3 @@ Born inizhny Novgorod, Russia (then Gorky, USSR), Sutskever moved to Israel as a
 - [The Bitter Lesson](http://www.incompleteideas.net/IncIdeas/BitterLesson.html) - Influential essay on scaling in AI
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformers paper that influenced GPT models
 - [Deep Learning Book](https://www.deeplearningbook.org/) - Comprehensive resource on deep learning
-

@@ -5,8 +5,8 @@ license: Proprietary
 ---
 
 # Differential Equations Solver
-> **Status**: ⚠️ Legacy template awaiting research upgrade  
-> **Last validated**: 2025-11-08  
+> **Status**: ⚠️ Legacy template awaiting research upgrade
+> **Last validated**: 2025-11-08
 > **Confidence**: 🔴 Low — Legacy template awaiting research upgrade
 
 ## How to use this skill

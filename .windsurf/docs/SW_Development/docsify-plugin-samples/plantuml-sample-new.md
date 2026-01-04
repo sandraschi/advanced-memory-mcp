@@ -124,7 +124,7 @@ rectangle "My Application" {
   usecase "Write Code" as UC1
   usecase "Commit Changes" as UC2
   usecase "Deploy" as UC3
-  
+
   dev --> UC1
   dev --> UC2
   admin --> UC3
@@ -167,35 +167,35 @@ window.$docsify = {
   plantuml: {
     // Enable/disable the plugin
     enable: true,
-    
+
     // Base URL for the PlantUML server
     // Default: 'https://www.plantuml.com/plantuml/svg/'
     server: 'https://www.plantuml.com/plantuml/svg/',
-    
+
     // Custom CSS class for the container
     class: 'plantuml-diagram',
-    
+
     // Defaultheme (light/dark/auto)
     theme: 'auto',
-    
+
     // Enable/disable zoom functionality
     zoom: true,
-    
+
     // Enable/disable copy to clipboard button
     copy: true,
-    
+
     // Enable/disable download button
     download: true,
-    
+
     // Enable/disablerror messageshowErrors: true,
-    
+
     // Custom error messagerrorMessage: 'Failed to loadiagram',
-    
+
     // Callback when diagram is loaded
     onLoad: function(diagram) {
       console.log('Diagram loaded:', diagram);
     },
-    
+
     // Callback when error occurs
     onError: function(error) {
       console.error('Diagram error:', error);
@@ -212,7 +212,7 @@ You can use a self-hosted PlantUML server for better privacy and performance:
 window.$docsify = {
   plantuml: {
     // Self-hosted PlantUML server: 'https://your-plantuml-server.com/plantuml/svg/',
-    
+
     // Optional: Add authentication headers if needed
     requestConfig: {
       headers: {
@@ -310,7 +310,7 @@ window.$docsify = {
           <pre>${error.message}</pre>
         </details>
       `;
-      
+
       // Replace the container content
       container.innerHTML = '';
       container.appendChild(errorDiv);

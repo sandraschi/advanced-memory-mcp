@@ -115,8 +115,8 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 **Problem:** SKILL.md frontmatter missing required fields
 
 **Required fields:**
-- name: {skill_name if skill_name else "❌ MISSING"}
-- description: {"✅ Present" if description else "❌ MISSING"}
+- name: {skill_name if skill_name else "[MISSING]"}
+- description: {"[OK] Present" if description else "[MISSING]"}
 
 **Add the missing fields to SKILL.md in the repository.**"""
 
@@ -137,7 +137,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
             project=active_project.name,
         )
 
-        return f"""# Skill Imported from GitHub ✅
+        return f"""# Skill Imported from GitHub [OK]
 
 {result}
 
@@ -146,7 +146,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 **Category:** {skill_category}
 **Branch:** {branch}
 
-✅ Successfully imported skill from GitHub! This is compatible with SkillsMP.com repositories.
+[OK] Successfully imported skill from GitHub! This is compatible with SkillsMP.com repositories.
 """
 
     except Exception as e:
@@ -226,7 +226,10 @@ adn_skills(
 
         # Distill skill
         skill_data = distiller.distill_from_wikipedia(
-            topic=topic, depth=depth, include_related=include_related, quality=quality_level
+            topic=topic,
+            depth=depth,
+            include_related=include_related,
+            quality=quality_level,
         )
 
         # Create skill in Advanced Memory
@@ -243,7 +246,10 @@ adn_skills(
             "name": skill_name,
             "description": description,
             "type": "skill",
-            "metadata": {"category": skill_category, "source": skill_data.get("source", "")},
+            "metadata": {
+                "category": skill_category,
+                "source": skill_data.get("source", ""),
+            },
         }
 
         yaml_str = yaml.dump(frontmatter, default_flow_style=False, allow_unicode=True)
@@ -264,7 +270,7 @@ adn_skills(
             project=active_project.name,
         )
 
-        return f"""# Skill Distilled from Wikipedia ✅
+        return f"""# Skill Distilled from Wikipedia [OK]
 
 {result}
 
@@ -273,7 +279,7 @@ adn_skills(
 **Category:** {skill_category}
 **Source:** {skill_data.get("source", "Wikipedia")}
 
-✅ Successfully created skill from Wikipedia article!
+[OK] Successfully created skill from Wikipedia article!
 """
 
     except Exception as e:
@@ -365,7 +371,10 @@ adn_skills(
             "name": skill_name,
             "description": description,
             "type": "skill",
-            "metadata": {"category": skill_category, "source": skill_data.get("source", "")},
+            "metadata": {
+                "category": skill_category,
+                "source": skill_data.get("source", ""),
+            },
         }
 
         yaml_str = yaml.dump(frontmatter, default_flow_style=False, allow_unicode=True)
@@ -386,7 +395,7 @@ adn_skills(
             project=active_project.name,
         )
 
-        return f"""# Skill Distilled from arXiv ✅
+        return f"""# Skill Distilled from arXiv [OK]
 
 {result}
 
@@ -395,7 +404,7 @@ adn_skills(
 **Synthesis Level:** {synthesis}
 **Category:** {skill_category}
 
-✅ Successfully created skill from arXiv research papers!
+[OK] Successfully created skill from arXiv research papers!
 """
 
     except Exception as e:
@@ -513,7 +522,7 @@ adn_skills(
             project=active_project.name,
         )
 
-        return f"""# Skill Distilled from Textbook ✅
+        return f"""# Skill Distilled from Textbook [OK]
 
 {result}
 
@@ -522,7 +531,7 @@ adn_skills(
 **Chapters:** {chapters or "All"}
 **Category:** {skill_category}
 
-✅ Successfully created skill from textbook!
+[OK] Successfully created skill from textbook!
 """
 
     except Exception as e:
@@ -642,7 +651,7 @@ adn_skills(
             project=active_project.name,
         )
 
-        return f"""# Skill Distilled from Text ✅
+        return f"""# Skill Distilled from Text [OK]
 
 {result}
 
@@ -651,7 +660,7 @@ adn_skills(
 **Context Level:** {context}
 **Category:** {skill_category}
 
-✅ Successfully created skill from text!
+[OK] Successfully created skill from text!
 """
 
     except Exception as e:
@@ -770,7 +779,7 @@ adn_skills(
             project=active_project.name,
         )
 
-        return f"""# Skill Distilled from Expert ✅
+        return f"""# Skill Distilled from Expert [OK]
 
 {result}
 
@@ -779,7 +788,7 @@ adn_skills(
 **Sources:** {", ".join(source_types) if source_types else "arxiv"}
 **Category:** {skill_category}
 
-✅ Successfully created skill from expert's work!
+[OK] Successfully created skill from expert's work!
 """
 
     except Exception as e:

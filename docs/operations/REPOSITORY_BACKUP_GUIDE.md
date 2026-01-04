@@ -1,7 +1,7 @@
 # Repository Backup System Guide
 
-**Purpose**: Automated repository backups excluding build artifacts and caches  
-**Problem Solved**: 200+ MB repository → 30-40 MB backup (85-90% reduction)  
+**Purpose**: Automated repository backups excluding build artifacts and caches
+**Problem Solved**: 200+ MB repository → 30-40 MB backup (85-90% reduction)
 **Created**: October 17, 2025
 
 ---
@@ -306,7 +306,7 @@ Excluded: 300 MB
 Backup size: 30 MB
 
 # 3. Create backup with exclusions
-Exclude: .venv, .mypy_cache, htmlcov, __pycache__, 
+Exclude: .venv, .mypy_cache, htmlcov, __pycache__,
          .ruff_cache, .pytest_cache, node_modules, dist (optional)
 
 # 4. Show statistics
@@ -474,7 +474,7 @@ release version:
     #!/usr/bin/env bash
     # Create backup before release
     pwsh ./scripts/backup-repo.ps1 -OutputPath "../release-backups" -IncludeDist
-    
+
     # Continue with release...
     just check
     git tag "{{version}}"
@@ -697,7 +697,7 @@ $exclusions = @(
     ".venv",
     ".mypy_cache",
     # ... existing exclusions ...
-    
+
     # Add custom exclusions here
     "test-data",          # Your test data folder
     "*.sqlite",           # Database files
@@ -919,10 +919,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Create backup
         run: pwsh ./scripts/backup-repo.ps1 -OutputPath "backups"
-      
+
       - name: Upload backup artifact
         uses: actions/upload-artifact@v4
         with:
@@ -1012,7 +1012,7 @@ jobs:
 ```powershell
 $exclusions = @(
     # Existing exclusions...
-    
+
     # Add your custom exclusions
     "data/cache",         # Your cache folder
     "temp",               # Temporary files
@@ -1082,8 +1082,8 @@ just test      # Verify
 
 ---
 
-**Time investment**: 1 minute to backup, 3 minutes to restore  
-**Space saved**: 185-190 MB per backup  
+**Time investment**: 1 minute to backup, 3 minutes to restore
+**Space saved**: 185-190 MB per backup
 **Peace of mind**: Priceless! 🎉
 
 ---
@@ -1096,8 +1096,7 @@ just test      # Verify
 
 ---
 
-**Created**: October 17, 2025  
-**Maintainer**: Advanced Memory MCP Team  
-**Version**: 1.0  
+**Created**: October 17, 2025
+**Maintainer**: Advanced Memory MCP Team
+**Version**: 1.0
 **Last Updated**: October 17, 2025
-

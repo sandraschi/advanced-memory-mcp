@@ -336,7 +336,7 @@ describe('Button', () => {
   it('calls onClick prop when clicked', () => {
     const handleClick = jest.fn();
     render(<ButtonClick={handleClick}>Click me</Button>);
-    
+
     fireEvent.click(screen.getByText(/click me/i));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -359,7 +359,7 @@ interface UserCardProps {
 
 const UserCard: React.FC<UserCardProps> = memo(({ id, name, email, onEdit }) => {
   console.log(`Rendering UserCard ${id}`);
-  
+
   return (
     <div className="user-card">
       <h3>{name}</h3>

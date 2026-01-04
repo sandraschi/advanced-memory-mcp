@@ -31,6 +31,6 @@ cp zettelkasten/templates/writer/<topic>/<note>.md \
 
 ---
 
-**Category**: Writer  
-**Templates**: 3  
+**Category**: Writer
+**Templates**: 3
 **Updated**: October 17, 2025

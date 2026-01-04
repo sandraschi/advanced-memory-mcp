@@ -103,18 +103,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
-      
+
       - name: Install dependencies
         run: uv sync --dev
-      
+
       - name: Calculate mypy metrics
         id: mypy
         run: |
@@ -122,12 +122,12 @@ jobs:
           CURRENT=$(uv run mypy src/ --strict --no-error-summary 2>&1 | grep -c "error:" || echo "0")
           FIXED=$((INITIAL - CURRENT))
           PERCENTAGE=$((100 * FIXED / INITIAL))
-          
+
           echo "initial=$INITIAL" >> $GITHUB_OUTPUT
           echo "current=$CURRENT" >> $GITHUB_OUTPUT
           echo "fixed=$FIXED" >> $GITHUB_OUTPUT
           echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
-      
+
       - name: Create type coverage badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
@@ -160,7 +160,7 @@ Add to `README.md`:
 - name: Upload type coverage
   run: |
     echo "Type coverage: $((100 * (587 - $ERROR_COUNT) / 587))%" > type-coverage.txt
-  
+
 - name: Comment PR with metrics
   uses: actions/github-script@v6
   with:
@@ -195,7 +195,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -395,4 +395,3 @@ Our **180 error fixes (31% improvement)** represent substantial code quality enh
 *Guide created: October 15, 2025*
 *Current status: 407 errors remaining (31% complete)*
 *Target: 0 errors (100% type safe)*
-

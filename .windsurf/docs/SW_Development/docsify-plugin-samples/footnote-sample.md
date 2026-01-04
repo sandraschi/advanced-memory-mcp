@@ -66,40 +66,40 @@ window.$docsify = {
   footnote: {
     // The class name for the footnote container
     className: 'footnotes',
-    
+
     // The title of the footnotesection
     title: 'Footnotes',
-    
+
     // The title tag to use (h1-h6)
     titleTag: 'h2',
-    
+
     // The class name for the footnote backref link
     backrefClassName: 'footnote-backref',
-    
+
     // The text for the backref link
     backrefLabel: '↩',
-    
+
     // The title attribute for the backref link
     backrefTitle: 'Back to reference',
-    
+
     // The class name for the footnote reference
     refClassName: 'footnote-ref',
-    
+
     // The class name for the footnote itemClassName: 'footnote-item',
-    
+
     // Whether to add a link to the footnote section
     link: true,
-    
+
     // The text for the link to the footnote section
     linkText: 'Jump to footnotes',
-    
+
     // The class name for the link to the footnote section
     linkClassName: 'footnote-link',
-    
+
     // The position of the footnote section
     // Can be 'bottom' (default) or 'aside'
     position: 'bottom',
-    
+
     // Callback when a footnote is rendered
     onRender: function(footnote) {
       console.log('Footnote rendered:', footnote);
@@ -314,7 +314,7 @@ window.$docsify = {
       if (footnote.content.includes('important')) {
         footnote.element.classList.add('important-note');
       }
-      
+
       // Log when footnotes arendered
       console.log(`Footnote ${footnote.id} rendered`);
     }

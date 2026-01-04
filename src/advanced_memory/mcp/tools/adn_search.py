@@ -39,86 +39,99 @@ async def adn_search(
 ) -> str:
     """Comprehensive search management tool for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 5 search operations into one tool.
+    This point-of-entry tool provides a unified interface for full-text search,
+    pattern matching, and metadata filtering. It can search both the internal
+    knowledge base (Advanced Memory) and external vault formats.
 
-    ⚠️ IMPORTANT: The "notes" operation searches CONTENT (text within notes), not by date/recency.
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 5 search operations into one tool to:
+    - Prevent tool explosion (5 tools -> 1 tool) while maintaining full functionality.
+    - Improve discoverability by grouping related operations together.
+    - Provide a consistent search experience across different data sources.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
 
-    - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
-    - To search by topic AND filter by date: Use the `after_date` parameter
-    - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
+    The parameters are designed to be flexible and powerful:
+    - Internal Search (notes): Supports advanced boolean logic, date filters, and tags.
+    - External Search (obsidian, joplin, notion, evernote): Requires 'source_path'.
+    - Aliasing: Operation names like 'title' or 'tag' automatically map to 'notes' with
+      the corresponding 'search_type' pre-applied.
 
-    SUPPORTED OPERATIONS:
-    - notes: Full-text search across Advanced Memory knowledge base
-    - obsidian: Search through external Obsidian vaults without importing
-    - joplin: Search through external Joplin exports without importing
-    - notion: Search through external Notion exports without importing
-    - evernote: Search through external Evernote exports without importing
+    ---------------------------------------------------------------------------
+    [TOPIC SEARCH VS. RECENCY SEARCH]
+    The 'notes' operation searches CONTENT (text within notes).
+    - To find "latest notes" or "recent notes": Use 'adn_navigation("recent_activity", timeframe="1d")'.
+    - To search by topic AND filter by date: Use the 'after_date' parameter.
+    - Queries like "latest note today" search for those WORDS, they do not sort by date.
 
-    SEARCH FEATURES:
-    - Full-text content search with relevance ranking
-    - Metadata search (titles, tags, notebooks)
-    - Boolean operators (AND, OR, NOT) for complex queries
-    - Phrase matching with quotes for exact phrases
-    - Wildcard support for pattern matching
-    - Case-sensitive and case-insensitive options
-    - Pagination support for large result sets
-    - Content previews and context highlighting
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - notes: Full-text search across Advanced Memory knowledge base (local data).
+    - obsidian: Search through external Obsidian vaults without importing.
+    - joplin: Search through external Joplin exports without importing.
+    - notion: Search through external Notion exports without importing.
+    - evernote: Search through external Evernote exports without importing.
 
-    Args:
-        operation (str): The search operation to perform. Required. MUST be one of:
-            "notes" (Advanced Memory knowledge base), "obsidian" (external vault),
-            "joplin" (external export), "notion" (external export), "evernote" (external export)
-        query (str): Search terms with boolean operators and phrases. Required.
-        source_path (str | None): Path to external vault/export. Required for: obsidian, joplin, notion, evernote operations
-        search_type (str | None): Type of search. Default: "text". Valid: "text", "title", "permalink", "tag", "file", "link", "frontmatter"
-        page (int): Result page for pagination. Default: 1
-        page_size (int): Results per page. Default: 10
-        results_per_page (int | None): Alias for page_size (compatibility). Default: None
-        max_results (int): Maximum number of results to return. Default: 20
-        case_sensitive (bool): Whether search should be case-sensitive. Default: False
-        include_content (bool): Include content previews in results. Default: False
-        types (list[str] | None): Content type filters for notes search. Example: ["note", "person"]
-        entity_types (list[str] | None): Entity category filters. Example: ["entity", "observation"]
-        after_date (str | None): Date filter - content FROM this date. Example: "1 week", "2024-01-01". Default: None
-        before_date (str | None): Date filter - content UNTIL this date. Example: "2024-12-31". Default: None
-        tags (list[str] | str | None): Tag filter - notes must have ALL specified tags
-                    * notes operation: Optional - Can be list, comma-separated string, or single tag
-                    * Other operations: NOT USED
-        file_type (str | None): File type filter for external searches
-                    * notion operation: Optional - Filter by file extension (e.g., "md", "html")
-                    * evernote operation: Optional - Filter by file type
-                    * Other operations: NOT USED
-        notebook_filter (str | None): Filter results to specific notebook
-                    * evernote operation: Optional - Filter results to specific Evernote notebook name
-                    * Other operations: NOT USED
-        tag_filter (str | None): Filter results by tag name
-                    * evernote operation: Optional - Filter results by Evernote tag name
-                    * Other operations: NOT USED
-        project (str | None): Optional project name
-                    * notes operation: Optional - Search within specific project (default: current active project)
-                    * Other operations: NOT USED
+    ---------------------------------------------------------------------------
+    [SEARCH FEATURES]
+    - Full-text content search with relevance ranking.
+    - Metadata search (titles, tags, permalinks, frontmatter).
+    - Boolean operators (AND, OR, NOT) and phrase matching ("quoted text").
+    - Recursive pattern matching and wildcards (e.g., "docs/*").
+    - Date range filtering (after_date, before_date).
+    - Tag filtering (must match ALL specified tags).
 
-    Returns:
-        Operation-specific result with search details and match counts
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - For 'notes': Active project session must be established.
+    - For external formats: Valid 'source_path' pointing to the vault/export folder.
 
-    Examples:
-        # Search Advanced Memory notes (using page_size parameter)
-        adn_search("notes", query="machine learning", page=1, page_size=10)
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): Search operation to perform. MUST be one of:
+      "notes", "obsidian", "joplin", "notion", "evernote"
+    - query (str): Search terms with boolean operators and phrases (Required)
+    - source_path (str): Path to external vault/export (Required for non-notes operations)
+    - search_type (str): Type of search. One of: "text", "title", "permalink", "tag", "file", "link", "frontmatter"
+    - page (int): Result page for pagination (Default: 1)
+    - page_size (int): Results per page (Default: 10)
+    - results_per_page (int): Alias for page_size (Compatibility)
+    - max_results (int): Maximum results to return (Default: 20)
+    - case_sensitive (bool): Whether search should be case-sensitive (Default: False)
+    - include_content (bool): Include content previews in results (Default: False)
+    - types (list): Content type filters (e.g., ["note", "person"])
+    - entity_types (list): Entity category filters (e.g., ["entity", "observation"])
+    - after_date (str): Date filter - content FROM this date (e.g., "2024-01-01", "1 week")
+    - before_date (str): Date filter - content UNTIL this date (e.g., "winter 2024")
+    - tags (list|str): Tag filter - notes must have ALL specified tags (List or comma-separated)
+    - file_type (str): File type filter for external searches (e.g., "md", "html")
+    - notebook_filter (str): Evernote specific - filter by notebook name
+    - tag_filter (str): Evernote specific - filter by tag name
+    - project (str): Optional override for active project name
 
-        # Search with results_per_page alias (compatibility with standalone search_notes tool)
-        adn_search("notes", query="machine learning", page=1, results_per_page=10)
+    ---------------------------------------------------------------------------
+    [USAGE]
+    Use this tool for all content discovery tasks. Start with simple queries and
+    narrow down results using tags, dates, and entity types as needed.
 
-        # Search external Obsidian vault
-        adn_search("obsidian", query="project planning", source_path="/path/to/vault")
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+    - Search for a specific topic in your notes:
+      adn_search("notes", query="machine learning", page_size=10)
+    - Search external Obsidian vault:
+      adn_search("obsidian", query="planning", source_path="/path/to/vault")
+    - Combined boolean and date search:
+      adn_search("notes", query="research AND python", after_date="2024-01-01")
+    - Search for notes with specific tags:
+      adn_search("notes", query="benny", tags="dog, training")
 
-        # Search external Joplin export
-        adn_search("joplin", query="meeting notes", source_path="/path/to/export")
-
-        # Search with filters
-        adn_search("notes", query="research", entity_types=["note"], after_date="2024-01-01")
-
-        # Search with tags and date range
-        adn_search("notes", query="german shepherd", tags=["dog", "training"], after_date="spring 2024", before_date="summer 2024")
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Required Parameter: 'source_path' missing for external searches or 'query' missing.
+    - Invalid Operation: The specified search operation is not supported.
+    - Empty Results: No matches found (check spelling and filters).
     """
 
     # Normalize list parameters to handle both list and string formats (including JSON strings)
@@ -196,7 +209,10 @@ async def adn_search(
     if operation == "notes" and normalized_operation in search_type_overrides:
         override_type = search_type_overrides[normalized_operation]
         applied = False
-        if normalized_operation in ("text", "plaintext") and search_type not in (None, "text"):
+        if normalized_operation in ("text", "plaintext") and search_type not in (
+            None,
+            "text",
+        ):
             logger.info(
                 "adn_search_text_no_override",
                 original_operation=original_operation,
@@ -261,7 +277,13 @@ async def adn_search(
         return await _notion_search(query, source_path, case_sensitive, file_type, max_results)
     elif operation == "evernote":
         return await _evernote_search(
-            query, source_path, case_sensitive, file_type, notebook_filter, tag_filter, max_results
+            query,
+            source_path,
+            case_sensitive,
+            file_type,
+            notebook_filter,
+            tag_filter,
+            max_results,
         )
     else:
         return f"""# Error: Invalid Search Operation
@@ -360,7 +382,11 @@ async def _notes_search(
 
 
 async def _obsidian_search(
-    query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool
+    query: str,
+    source_path: str | None,
+    search_type: str,
+    max_results: int,
+    include_content: bool,
 ) -> str:
     """Handle Obsidian vault search operation."""
     if not source_path:
@@ -390,7 +416,11 @@ adn_search(
 
 
 async def _joplin_search(
-    query: str, source_path: str | None, search_type: str, max_results: int, include_content: bool
+    query: str,
+    source_path: str | None,
+    search_type: str,
+    max_results: int,
+    include_content: bool,
 ) -> str:
     """Handle Joplin export search operation."""
     if not source_path:
@@ -485,5 +515,11 @@ adn_search(
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
 
     return await search_evernote_vault(
-        source_path, query, case_sensitive, file_type, notebook_filter, tag_filter, max_results
+        source_path,
+        query,
+        case_sensitive,
+        file_type,
+        notebook_filter,
+        tag_filter,
+        max_results,
     )  # type: ignore[operator,no-any-return]

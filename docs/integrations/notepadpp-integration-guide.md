@@ -224,4 +224,3 @@ await import_from_notepadpp.fn(note_identifier="My Research Note")
 4. **Distribute** professional documents
 
 **Notepad++ makes Basic Memory 100% FOSS-compliant for editing!** 🎉🆓
-

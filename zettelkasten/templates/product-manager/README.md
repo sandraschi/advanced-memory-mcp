@@ -30,6 +30,6 @@ cp zettelkasten/templates/product-manager/<topic>/<note>.md \
 
 ---
 
-**Category**: Product Manager  
-**Templates**: 1  
+**Category**: Product Manager
+**Templates**: 1
 **Updated**: October 17, 2025

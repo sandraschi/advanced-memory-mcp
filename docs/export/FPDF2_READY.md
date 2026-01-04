@@ -1,6 +1,6 @@
 # fpdf2 Installation Complete
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Status**: ✅ fpdf2 installed in Python 3.13
 
 ---

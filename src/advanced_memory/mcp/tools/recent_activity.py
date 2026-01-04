@@ -1,6 +1,6 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from loguru import logger
@@ -70,6 +70,10 @@ async def recent_activity(
 
         # Get activity from specific project
         recent_activity(type_filter="entity", project="work-project")
+
+    Errors:
+        - "Invalid timeframe": Returned if the provided 'timeframe' natural language format is not recognized.
+        - "Project not found": Returned if the specified 'project' name does not exist.
 
     Notes:
         - Higher depth values (>3) may impact performance with large result sets
@@ -148,8 +152,8 @@ async def recent_activity(
         else:
             return str(value)
         if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+            dt = dt.replace(tzinfo=UTC)
+        return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
     def normalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
         summary_type = summary.get("type")

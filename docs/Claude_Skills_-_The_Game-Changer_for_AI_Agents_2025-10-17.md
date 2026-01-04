@@ -214,17 +214,17 @@ Monitor how Claude uses it and refine!
 **⚠️ CRITICAL:** Skills can execute code!
 
 ### Best Practices
-✅ **Only use trusted skills** (yours or Anthropic's)  
-✅ **Audit all files** (SKILL.md, scripts, resources)  
-✅ **Check dependencies** (no malicious imports)  
-✅ **Review network calls** (unexpected external connections?)  
+✅ **Only use trusted skills** (yours or Anthropic's)
+✅ **Audit all files** (SKILL.md, scripts, resources)
+✅ **Check dependencies** (no malicious imports)
+✅ **Review network calls** (unexpected external connections?)
 ✅ **Test in isolation** before production
 
 ### Red Flags
-🚫 Obfuscated code  
-🚫 Unexpected file system access  
-🚫 Suspicious network connections  
-🚫 Discrepancy between description and behavior  
+🚫 Obfuscated code
+🚫 Unexpected file system access
+🚫 Suspicious network connections
+🚫 Discrepancy between description and behavior
 
 ---
 
@@ -354,5 +354,5 @@ Claude: *produces perfect report in one shot*
 
 ---
 
-*Last Updated: October 17, 2025*  
+*Last Updated: October 17, 2025*
 *Based on Anthropic's Skills release and engineering blog*

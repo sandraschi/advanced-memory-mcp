@@ -2,7 +2,7 @@
 
 **Discovery**: Like GitHub CLI vs GitHub MCP, using Advanced Memory's CLI can be faster and more efficient than MCP tool calls.
 
-**Date**: October 17, 2025  
+**Date**: October 17, 2025
 **Context**: Optimization pattern for AI-driven workflows
 
 ---
@@ -226,7 +226,7 @@ done
 ```
 User: "Find Python notes with errors, read them, and suggest fixes"
 
-Claude: 
+Claude:
 Step 1: Search via CLI (fast)
 ```bash
 advanced-memory tool search-notes "python error"
@@ -366,7 +366,7 @@ virtualization setup-windows-dev-vm \
 # 2. Creates VirtualBox VM
 # 3. Installs Windows
 # 4. Installs all dev tools
-# 5. Installs all AI tools  
+# 5. Installs all AI tools
 # 6. Creates snapshot
 # 7. Done!
 
@@ -392,7 +392,7 @@ virtualization setup-windows-dev-vm \
 for i in range(50):
     adn_dbops("backup", database=f"prod-{i}")
     # Wait for response... 3-5s each
-    
+
 # Total: 150-250 seconds (2.5-4 minutes)
 # Token cost: ~25,000 tokens
 # Claude gets impatient, might timeout
@@ -564,7 +564,6 @@ Claude: [synthesizes, provides insights]
 
 ---
 
-*Pattern recognition: Tokens and time both matter*  
-*CLI is underutilized for AI efficiency*  
+*Pattern recognition: Tokens and time both matter*
+*CLI is underutilized for AI efficiency*
 *October 17, 2025*
-

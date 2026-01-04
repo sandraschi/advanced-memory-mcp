@@ -1,6 +1,6 @@
 # Claude Skills Upload - What We Learned
 
-**Date:** 2025-10-21  
+**Date:** 2025-10-21
 **Status:** Manual upload required (no programmatic API available)
 
 ---
@@ -9,8 +9,8 @@
 
 ### **Skills Are Cloud-Based, Not Local**
 
-❌ **Wrong:** Local directory `~/.claude/skills/` (doesn't work)  
-❌ **Wrong:** Local directory `~/.config/claude/skills/` (doesn't work)  
+❌ **Wrong:** Local directory `~/.claude/skills/` (doesn't work)
+❌ **Wrong:** Local directory `~/.config/claude/skills/` (doesn't work)
 ✅ **Correct:** Upload ZIPs via https://claude.ai/settings/capabilities
 
 **Why:** Skills are stored in your Claude.ai account (cloud), not locally on your machine.
@@ -51,7 +51,7 @@
 
 ### **Time Estimate:**
 - **3 skills:** 2-3 minutes
-- **10 skills:** 5-8 minutes  
+- **10 skills:** 5-8 minutes
 - **All 104 skills:** 15-25 minutes (in batches)
 
 **Not bad for a one-time setup!**
@@ -198,8 +198,8 @@ Upload remaining skills in batches of 10-20.
 
 ## ✅ **Bottom Line:**
 
-**Manual upload is the way.**  
-**15-25 minutes total for 104 skills.**  
+**Manual upload is the way.**
+**15-25 minutes total for 104 skills.**
 **One-time setup, lifetime benefit!**
 
 ---
@@ -216,6 +216,5 @@ Upload remaining skills in batches of 10-20.
 
 **Ready when you are!** 🎯
 
-**Location:** `D:\Dev\repos\advanced-memory-mcp\skill-zips\`  
+**Location:** `D:\Dev\repos\advanced-memory-mcp\skill-zips\`
 **Upload to:** https://claude.ai/settings/capabilities
-

@@ -1,6 +1,6 @@
 # Modern PDF Generation Options - Dec 2025
 
-**Problem**: Current setup requires LaTeX (2GB+) or hangs with weasyprint  
+**Problem**: Current setup requires LaTeX (2GB+) or hangs with weasyprint
 **Goal**: Lightweight, pure Python PDF generation from Markdown
 
 ---
@@ -99,7 +99,7 @@ from markdown import markdown
 def markdown_to_pdf(md_content: str, output_path: str):
     # Convert markdown → HTML (lightweight)
     html = markdown(md_content, extensions=['extra', 'codehilite'])
-    
+
     # Use fpdf2 to render (pure Python, no LaTeX!)
     pdf = FPDF()
     pdf.add_page()
@@ -156,15 +156,15 @@ class MarkdownPDF(FPDF):
     def __init__(self):
         super().__init__()
         self.set_auto_page_break(auto=True, margin=15)
-    
+
     def render_markdown(self, md_content: str):
         """Convert markdown content to PDF."""
         # Parse markdown
         html = markdown(md_content, extensions=['extra', 'codehilite'])
-        
+
         # Simple HTML parsing for fpdf2
         # (or use fpdf2's built-in markdown support)
-        
+
         lines = md_content.split('\n')
         for line in lines:
             if line.startswith('# '):

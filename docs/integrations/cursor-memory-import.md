@@ -171,37 +171,37 @@ class CursorImporter(BaseImporter):
     """Import memories from Cursor IDE."""
 
     async def import_data(
-        self, 
-        data: dict[str, Any], 
+        self,
+        data: dict[str, Any],
         destination_folder: str = "cursor-memories"
     ) -> ImportResult:
         """Import Cursor memories to markdown files.
-        
+
         Args:
             data: Cursor memory export (JSON)
             destination_folder: Destination folder in project
-            
+
         Returns:
             ImportResult with stats
         """
         memories = data.get("memories", [])
         stats = ImportStats(entities=0, relations=0)
-        
+
         for memory in memories:
             # Convert to markdown
             markdown = self._convert_memory_to_markdown(memory)
-            
+
             # Generate filename
             memory_id = memory.get("id", "unknown")
             filename = f"{memory_id}.md"
             file_path = self.base_path / destination_folder / filename
-            
+
             # Write file
             file_path.parent.mkdir(parents=True, exist_ok=True)
             file_path.write_text(markdown, encoding="utf-8")
-            
+
             stats.entities += 1
-        
+
         return ImportResult(
             success=True,
             entities=stats.entities,
@@ -209,7 +209,7 @@ class CursorImporter(BaseImporter):
             conversations=len(memories),
             messages=0
         )
-    
+
     def _convert_memory_to_markdown(self, memory: dict[str, Any]) -> str:
         """Convert a Cursor memory to markdown format."""
         content = memory.get("content", "")
@@ -217,7 +217,7 @@ class CursorImporter(BaseImporter):
         tags = memory.get("tags", [])
         memory_id = memory.get("id", "")
         context = memory.get("context", {})
-        
+
         # Build YAML frontmatter
         frontmatter = f"""---
 title: "Cursor Memory: {content[:50]}"
@@ -228,16 +228,16 @@ tags:
 source: cursor
 cursor_memory_id: {memory_id}
 """
-        
+
         if context.get("file"):
             frontmatter += f"context_file: {context['file']}\n"
-        
+
         frontmatter += "---\n\n"
-        
+
         # Build markdown body
         markdown = frontmatter
         markdown += f"# Cursor Memory\n\n{content}\n\n"
-        
+
         # Add context section
         markdown += "## Context\n\n"
         if context.get("workspace"):
@@ -246,7 +246,7 @@ cursor_memory_id: {memory_id}
             markdown += f"- **File**: {context['file']}\n"
         if memory.get("source_conversation"):
             markdown += f"- **Source Conversation**: {memory['source_conversation']}\n"
-        
+
         return markdown
 ```
 
@@ -293,17 +293,17 @@ def import_cursor(
     ] = False,
 ):
     """Import Cursor IDE memories.
-    
+
     This command will:
     1. Read Cursor memory export file
     2. Convert memories to markdown notes
     3. Preserve metadata in YAML frontmatter
-    
+
     After importing, run 'advanced-memory sync' to index the new files.
     """
     # Expand ~ in path
     memories_file = memories_file.expanduser()
-    
+
     try:
         if not memories_file.exists():
             typer.echo(f"Error: File not found: {memories_file}", err=True)
@@ -312,43 +312,43 @@ def import_cursor(
             typer.echo("  2. Go to Settings > AI > Memories", err=True)
             typer.echo("  3. Click 'Export Memories'", err=True)
             raise typer.Exit(1)
-        
+
         # Get markdown processor
         markdown_processor = asyncio.run(get_markdown_processor())
         config = get_project_config()
-        
+
         # Create importer
         importer = CursorImporter(config.home, markdown_processor)
-        
+
         # Process the file
         base_path = config.home / folder
         console.print(f"\nImporting Cursor memories from {memories_file}...")
         console.print(f"Writing to {base_path}")
-        
+
         # Load JSON
         with memories_file.open("r", encoding="utf-8") as file:
             json_data = json.load(file)
-        
+
         # Filter if workspace-only
         if workspace_only:
             workspace_path = str(Path.cwd())
             memories = json_data.get("memories", [])
             filtered = [
-                m for m in memories 
+                m for m in memories
                 if m.get("context", {}).get("workspace") == workspace_path
             ]
             json_data["memories"] = filtered
             console.print(
                 f"Filtered to {len(filtered)} workspace-specific memories"
             )
-        
+
         # Run import
         result = asyncio.run(importer.import_data(json_data, folder))
-        
+
         if not result.success:
             typer.echo(f"Error during import: {result.error_message}", err=True)
             raise typer.Exit(1)
-        
+
         # Show results
         console.print(
             Panel(
@@ -357,9 +357,9 @@ def import_cursor(
                 expand=False,
             )
         )
-        
+
         console.print("\nRun 'advanced-memory sync' to index the new files.")
-    
+
     except Exception as e:
         logger.error("Import failed")
         typer.echo(f"Error during import: {e}", err=True)
@@ -432,7 +432,7 @@ If Cursor provides an API or plugin system:
 
 ## Status
 
-**Current**: Proposal phase  
+**Current**: Proposal phase
 **Next Steps**:
 1. Research Cursor memory storage format
 2. Create prototype importer
@@ -442,4 +442,3 @@ If Cursor provides an API or plugin system:
 ---
 
 *Proposal created: 2025-10-17*
-

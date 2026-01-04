@@ -1,4 +1,4 @@
-﻿# Microsoft AI
+# Microsoft AI
 
 ## Overview
 Microsoft AIs the company'sweeping initiative to infuse artificial intelligence into every layer of its product ecosystem, from the Azure cloud andeveloper tools to its flagship enterprise and consumer applications. Spearheaded by CEO Satya Nadella, Microsoft'strategy is centered on the concept of "Copilots"—AI companions designed to augment human creativity and productivity. This vision is powered by a multi-billion dollar strategic partnership with OpenAI, giving Microsoft unparalleled access to cutting-edge foundation models like GPT-4, which it integrates across itservices.

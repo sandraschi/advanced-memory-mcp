@@ -2,8 +2,8 @@
 
 **Comprehensive guide to GitHub Advanced Security (GHAS): what it is, what it costs, and whether you need it**
 
-**Date**: October 17, 2025  
-**For**: Advanced Memory MCP Project  
+**Date**: October 17, 2025
+**For**: Advanced Memory MCP Project
 **Status**: Decision guide for security features
 
 ---
@@ -233,7 +233,7 @@ Your current setup:
 - **Revenue**: $0 currently
 - **ROI**: Not justified yet
 
-**When to reconsider**: 
+**When to reconsider**:
 - Multiple contributors (team size 3+)
 - Enterprise customers requiring compliance
 - Generating revenue ($10k+/year)
@@ -368,7 +368,7 @@ When project generates significant revenue:
   run: semgrep --config=auto --json src/
 ```
 
-**Cost**: $0  
+**Cost**: $0
 **Quality**: ⭐⭐⭐⭐ (85% of CodeQL)
 
 ---
@@ -383,7 +383,7 @@ When project generates significant revenue:
   run: trivy fs --security-checks vuln .
 ```
 
-**Cost**: $0  
+**Cost**: $0
 **Quality**: ⭐⭐⭐⭐⭐ (equal to GHAS)
 
 ---
@@ -398,7 +398,7 @@ When project generates significant revenue:
   run: gitleaks detect --source . --report-path gitleaks.json
 ```
 
-**Cost**: $0  
+**Cost**: $0
 **Quality**: ⭐⭐⭐⭐ (90% of GHAS)
 
 ---
@@ -413,7 +413,7 @@ When project generates significant revenue:
   run: docker scout cves your-image:latest
 ```
 
-**Cost**: $0  
+**Cost**: $0
 **Quality**: ⭐⭐⭐⭐⭐ (better than GHAS for containers)
 
 ---
@@ -432,7 +432,7 @@ When project generates significant revenue:
       safety.json
 ```
 
-**Cost**: $0  
+**Cost**: $0
 **Quality**: ⭐⭐⭐ (no centralized dashboard, but data is there)
 
 ---
@@ -665,10 +665,9 @@ Quality: ⭐⭐⭐⭐ (85-90% of GHAS)
 
 ---
 
-**Created**: October 17, 2025  
-**For**: Advanced Memory MCP Project  
-**Decision**: Keep free tier, revisit at $10k+ revenue  
+**Created**: October 17, 2025
+**For**: Advanced Memory MCP Project
+**Decision**: Keep free tier, revisit at $10k+ revenue
 **Status**: Comprehensive
 
 **Happy (free) securing!** 🔒✨
-

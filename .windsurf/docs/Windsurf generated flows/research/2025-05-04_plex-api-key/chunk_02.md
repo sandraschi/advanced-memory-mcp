@@ -125,11 +125,11 @@ GET https://your-server:32400/search?query=your_search_term&X-Plex-Token=YOUR_TO
 - [PlexAPI](https://github.com/pkkid/python-plexapi): Comprehensive Python client
   ```python
   from plexapi.server import PlexServer
-  
+
   baseurl = 'http://your-server:32400'
   token = 'YOUR_TOKEN_HERE'
   plex = PlexServer(baseurl, token)
-  
+
   # Get all movies = plex.library.section('Movies').all()
   ```
 
@@ -138,13 +138,13 @@ GET https://your-server:32400/search?query=your_search_term&X-Plex-Token=YOUR_TO
 - [plex-api](https://github.com/phillipj/node-plex-api): Node.js client
   ```javascript
   const PlexAPI = require('plex-api');
-  
+
   const client = new PlexAPI({
     hostname: 'your-server',
     port: 32400,
     token: 'YOUR_TOKEN_HERE'
   });
-  
+
   client.query('/library/sections')
     .then(result => console.log(result), err => console.error(err));
   ```

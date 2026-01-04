@@ -179,7 +179,7 @@ MEGATEST_CLEANUP = "immediate"  # or "always"
 def isolated_test_env():
     test_dir = create_test_dir()
     yield {"test_dir": test_dir}
-    
+
     # ALWAYS cleanup
     shutil.rmtree(test_dir)
     print(f"✅ Cleaned up: {test_dir}")
@@ -221,7 +221,7 @@ MEGATEST_CLEANUP = "on-success"  # or "keep-on-failure"
 def isolated_test_env(request):
     test_dir = create_test_dir()
     yield {"test_dir": test_dir}
-    
+
     # Cleanup only if test passed
     if request.session.testsfailed == 0:
         shutil.rmtree(test_dir)
@@ -283,26 +283,26 @@ MEGATEST_CLEANUP = "archive"  # or "never"
 def isolated_test_env(request):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     test_level = get_test_level(request)  # smoke, standard, etc.
-    
+
     # Create timestamped directory
     archive_base = Path.home() / "Documents" / "megatest-results"
     archive_base.mkdir(parents=True, exist_ok=True)
-    
+
     # Will be renamed with status after test
     test_dir = archive_base / f"{timestamp}_{test_level}_RUNNING"
     test_dir.mkdir()
-    
+
     yield {"test_dir": test_dir, "timestamp": timestamp, "level": test_level}
-    
+
     # Rename with final status
     if request.session.testsfailed == 0:
         final_dir = archive_base / f"{timestamp}_{test_level}_PASS"
     else:
         final_dir = archive_base / f"{timestamp}_{test_level}_FAIL"
-    
+
     test_dir.rename(final_dir)
     print(f"📦 Archived: {final_dir}")
-    
+
     # Update manifest
     update_archive_manifest(archive_base, {
         "timestamp": timestamp,
@@ -359,12 +359,12 @@ MEGATEST_AUTO_DELETE_DAYS = 7
 def prune_old_archives(archive_dir, config):
     """Smart cleanup of old test runs."""
     manifest = load_archive_manifest(archive_dir)
-    
+
     # Keep all failures
     # Keep last N runs of each level
     # Keep all Level 5 runs
     # Delete old Level 1-2 runs after X days
-    
+
     for entry in manifest:
         if should_delete(entry, config):
             shutil.rmtree(entry["path"])
@@ -503,23 +503,23 @@ def get_test_location() -> Path:
     """Determine test location based on configuration."""
     location = os.environ.get("MEGATEST_LOCATION", "hidden")
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    
+
     if location == "hidden" or location == "temp":
         # Hidden: System temp directory
         return Path(tempfile.gettempdir()) / f"megatest_{timestamp}"
-    
+
     elif location == "visible" or location == "documents":
         # Visible: Documents folder
         base = Path.home() / "Documents" / "megatest-results"
         base.mkdir(parents=True, exist_ok=True)
         return base / timestamp
-    
+
     elif location == "local" or location == "repo":
         # Local: Repository test-results
         base = Path.cwd() / "test-results" / "megatest"
         base.mkdir(parents=True, exist_ok=True)
         return base / timestamp
-    
+
     else:
         # Custom: User-specified path
         base = Path(location)
@@ -541,18 +541,18 @@ def isolated_test_env(request):
     test_base = get_test_location()
     test_dir = test_base / "test_data"
     test_db = test_base / "test.db"
-    
+
     # Create directories
     test_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # CRITICAL: Safety checks (always enforced)
     assert is_safe_test_path(test_base)
     assert not is_production_path(test_base)
-    
+
     # Display environment
     location_type = os.environ.get("MEGATEST_LOCATION", "hidden")
     cleanup_type = get_cleanup_strategy()
-    
+
     print(f"""
 ╔══════════════════════════════════════════════════════════╗
 ║          MEGATEST ENVIRONMENT - ISOLATED                 ║
@@ -565,10 +565,10 @@ def isolated_test_env(request):
 ║ Status: ✅ ISOLATED - Safe to proceed                    ║
 ╚══════════════════════════════════════════════════════════╝
     """)
-    
+
     # Store checksum of production data (if exists)
     prod_checksum = store_production_checksum()
-    
+
     # Yield test environment
     yield {
         "test_dir": test_dir,
@@ -576,16 +576,16 @@ def isolated_test_env(request):
         "test_base": test_base,
         "timestamp": test_base.name,
     }
-    
+
     # Determine cleanup action
     cleanup_strategy = get_cleanup_strategy()
     test_failed = request.session.testsfailed > 0
-    
+
     if cleanup_strategy == "immediate":
         # Always delete
         shutil.rmtree(test_base)
         print(f"✅ Cleaned up: {test_base}")
-    
+
     elif cleanup_strategy == "on-success":
         # Delete on success, keep on failure
         if not test_failed:
@@ -593,7 +593,7 @@ def isolated_test_env(request):
             print(f"✅ Test passed - cleaned up: {test_base}")
         else:
             print(f"⚠️  Test failed - kept for debugging: {test_base}")
-    
+
     elif cleanup_strategy == "archive":
         # Keep all runs
         # Rename with status
@@ -602,11 +602,11 @@ def isolated_test_env(request):
         final_path = test_base.parent / final_name
         test_base.rename(final_path)
         print(f"📦 Archived: {final_path}")
-    
+
     elif cleanup_strategy == "smart-archive":
         # Keep with smart pruning
         archive_with_pruning(test_base, test_failed)
-    
+
     # CRITICAL: Verify production untouched
     verify_production_checksum(prod_checksum)
     print("✅ Production data verified: UNTOUCHED")
@@ -909,4 +909,3 @@ MEGATEST_LOCATION=hidden MEGATEST_CLEANUP=immediate pytest tests/megatest/ -m me
 *Location and cleanup guide created: October 15, 2025*
 *Flexible by design, safe by default*
 *Your testing ground, your choice!*
-

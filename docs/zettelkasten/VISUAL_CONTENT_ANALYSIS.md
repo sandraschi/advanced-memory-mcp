@@ -50,7 +50,7 @@ graph LR
 
 ```markdown
 Japanese Hatchet (nata):
-    
+
     handle
       |
       |
@@ -310,7 +310,7 @@ Only if users request:
 
 ## Conclusion
 
-**Is this feature creep?** 
+**Is this feature creep?**
 
 **NO** - for Tiers 1-2 (works today + minor enhancements)
 
@@ -340,5 +340,3 @@ This works TODAY! Just add the image file.
 ```
 
 **Next step**: Create best practices doc?
-
-

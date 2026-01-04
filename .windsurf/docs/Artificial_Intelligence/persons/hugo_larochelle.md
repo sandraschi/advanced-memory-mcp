@@ -67,4 +67,3 @@ Larochelle completed his PhD athe UniversitÃ© de MontrÃ©al under the supervi
 - [Theano](https://github.com/Theano/Theano)
 - [Neural Networks andeep Learning](http://www.deeplearningbook.org/) - Online book by Goodfellow, Bengio, and Courville
 - [CIFAR](https://cifar.ca/) - Canadian Institute for Advanced Research
-

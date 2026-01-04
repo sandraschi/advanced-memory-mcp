@@ -2,9 +2,9 @@
 
 **What the hell is `just`?** A modern task runner that replaced `make` for this project.
 
-**Created**: October 17, 2025  
-**Author**: Casey Rodarmor (not us!)  
-**Official**: https://github.com/casey/just  
+**Created**: October 17, 2025
+**Author**: Casey Rodarmor (not us!)
+**Official**: https://github.com/casey/just
 **Status**: Industry standard (300k+ GitHub stars)
 
 ---
@@ -199,11 +199,11 @@ just --list
 recipe-name:
     command to run
     another command
-    
+
 # Recipe with parameters
 recipe-with-params param1 param2:
     echo "Got {{param1}} and {{param2}}"
-    
+
 # Recipe with dependencies
 dependent: dependency1 dependency2
     echo "Runs after dependency1 and dependency2"
@@ -214,7 +214,7 @@ dependent: dependency1 dependency2
 # Run all tests
 test:
     pytest -v
-    
+
 # Build project
 build: test
     python -m build
@@ -498,7 +498,7 @@ build: test clean
    # Don't create a recipe for this:
    run:
        python app.py
-   
+
    # Just use: python app.py
    ```
 
@@ -652,7 +652,7 @@ just test
    test-unit:
        uv run pytest -p pytest_mock -v -n auto
    ```
-   
+
 4. **Runs `test-int`**:
    ```just
    test-int:
@@ -704,7 +704,7 @@ just release v1.0.0
 release version:
     #!/usr/bin/env bash
     set -euo pipefail
-    
+
     # Full bash script here!
     echo "Creating release {{version}}"
     # ... 50 more lines ...
@@ -1329,12 +1329,11 @@ just backup        # Create backup
 
 ---
 
-**Created**: October 17, 2025  
-**By**: Claude (explaining what should have been explained earlier!)  
-**For**: Anyone wondering "WTF is justfile?"  
+**Created**: October 17, 2025
+**By**: Claude (explaining what should have been explained earlier!)
+**For**: Anyone wondering "WTF is justfile?"
 **Status**: Comprehensive explanation complete
 
 ---
 
 *P.S. - `just` is named "just" because you "just" run commands. Not because it's "just another tool". Though it kind of is. But a good one! 😄*
-

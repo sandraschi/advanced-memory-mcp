@@ -36,7 +36,7 @@ class OrderCreated(DomainEvent):
     user_id: str
     items: list
     total_amount: float
-    
+
 @dataclass
 class PaymentProcessed(DomainEvent):
     """Payment processing event"""
@@ -63,10 +63,10 @@ import json
 
 class EventStore:
     """Store and retrieve events"""
-    
+
     def __init__(self, db):
         self.db = db
-    
+
     async def append_event(self, stream_id: str, event: DomainEvent):
         """Append event to stream"""
         await self.db.events.insert_one({
@@ -77,16 +77,16 @@ class EventStore:
             'timestamp': event.timestamp,
             'version': event.version
         })
-    
+
     async def get_events(self, stream_id: str, from_version: int = 0) -> List[DomainEvent]:
         """Get all events for stream"""
         events = await self.db.events.find({
             'stream_id': stream_id,
             'version': {'$gte': from_version}
         }).sort('version', 1).to_list(None)
-        
+
         return [self._deserialize_event(e) for e in events]
-    
+
     def _deserialize_event(self, event_data: dict) -> DomainEvent:
         """Deserialize event from storage"""
         event_type = event_data['event_type']
@@ -96,7 +96,7 @@ class EventStore:
 
 class Order:
     """Aggregate built from events"""
-    
+
     def __init__(self, order_id: str):
         self.order_id = order_id
         self.user_id = None
@@ -105,18 +105,18 @@ class Order:
         self.total_amount = 0
         self.version = 0
         self.uncommitted_events = []
-    
+
     @classmethod
     async def load(cls, order_id: str, event_store: EventStore):
         """Load order from event stream"""
         order = cls(order_id)
         events = await event_store.get_events(f"order-{order_id}")
-        
+
         for event in events:
             order._apply_event(event)
-        
+
         return order
-    
+
     def create_order(self, user_id: str, items: list, total_amount: float):
         """Create new order"""
         event = OrderCreated(
@@ -132,7 +132,7 @@ class Order:
         )
         self._apply_event(event)
         self.uncommitted_events.append(event)
-    
+
     def _apply_event(self, event: DomainEvent):
         """Apply event to state"""
         if isinstance(event, OrderCreated):
@@ -142,7 +142,7 @@ class Order:
             self.status = "created"
             self.version = event.version
         # Handle other event types...
-    
+
     async def save(self, event_store: EventStore):
         """Save uncommitted events"""
         for event in self.uncommitted_events:
@@ -170,18 +170,18 @@ class CreateOrderCommand(Command):
 
 class CommandHandler(ABC):
     """Handle commands"""
-    
+
     @abstractmethod
     async def handle(self, command: Command):
         pass
 
 class CreateOrderHandler(CommandHandler):
     """Handle order creation"""
-    
+
     def __init__(self, event_store: EventStore, event_bus: EventBus):
         self.event_store = event_store
         self.event_bus = event_bus
-    
+
     async def handle(self, command: CreateOrderCommand):
         """Create order and publish events"""
         # Create order aggregate
@@ -191,10 +191,10 @@ class CreateOrderHandler(CommandHandler):
             items=command.items,
             total_amount=calculate_total(command.items)
         )
-        
+
         # Save events
         await order.save(self.event_store)
-        
+
         # Publish events
         for event in order.uncommitted_events:
             await self.event_bus.publish(event)
@@ -202,24 +202,24 @@ class CreateOrderHandler(CommandHandler):
 # Query side
 class OrderReadModel:
     """Denormalized read model"""
-    
+
     def __init__(self, db):
         self.db = db
-    
+
     async def get_order(self, order_id: str):
         """Get order from read model"""
         return await self.db.order_views.find_one({'order_id': order_id})
-    
+
     async def get_user_orders(self, user_id: str):
         """Get all orders for user"""
         return await self.db.order_views.find({'user_id': user_id}).to_list(None)
 
 class OrderProjection:
     """Update read model from events"""
-    
+
     def __init__(self, read_model: OrderReadModel):
         self.read_model = read_model
-    
+
     async def handle_order_created(self, event: OrderCreated):
         """Update read model when order is created"""
         await self.read_model.db.order_views.insert_one({
@@ -230,7 +230,7 @@ class OrderProjection:
             'status': 'created',
             'created_at': event.timestamp
         })
-    
+
     async def handle_payment_processed(self, event: PaymentProcessed):
         """Update read model when payment is processed"""
         await self.read_model.db.order_views.update_one(
@@ -248,7 +248,7 @@ import json
 
 class KafkaEventBus:
     """Event bus using Kafka"""
-    
+
     def __init__(self, bootstrap_servers: list):
         self.producer = KafkaProducer(
             bootstrap_servers=bootstrap_servers,
@@ -256,18 +256,18 @@ class KafkaEventBus:
             acks='all',  # Wait for all replicas
             retries=3
         )
-    
+
     async def publish(self, event: DomainEvent):
         """Publish event to Kafka"""
         topic = f"events.{event.event_type.lower()}"
-        
+
         self.producer.send(
             topic,
             key=event.aggregate_id.encode('utf-8'),
             value=event.__dict__
         )
         self.producer.flush()
-    
+
     def subscribe(self, topics: list, group_id: str, handler):
         """Subscribe to events"""
         consumer = KafkaConsumer(
@@ -278,7 +278,7 @@ class KafkaEventBus:
             enable_auto_commit=False,
             max_poll_records=100
         )
-        
+
         for message in consumer:
             try:
                 event = self._deserialize_event(message.value)
@@ -297,25 +297,25 @@ import json
 
 class RabbitMQEventBus:
     """Event bus using RabbitMQ"""
-    
+
     def __init__(self, host: str, exchange_name: str = 'events'):
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=host)
         )
         self.channel = self.connection.channel()
         self.exchange = exchange_name
-        
+
         # Declare topic exchange
         self.channel.exchange_declare(
             exchange=self.exchange,
             exchange_type='topic',
             durable=True
         )
-    
+
     def publish(self, event: DomainEvent):
         """Publish event to exchange"""
         routing_key = f"events.{event.event_type.lower()}.{event.aggregate_id}"
-        
+
         self.channel.basic_publish(
             exchange=self.exchange,
             routing_key=routing_key,
@@ -325,31 +325,31 @@ class RabbitMQEventBus:
                 content_type='application/json'
             )
         )
-    
+
     def subscribe(self, routing_pattern: str, callback):
         """Subscribe to events with routing pattern"""
         # Create queue
         queue_result = self.channel.queue_declare('', exclusive=True)
         queue_name = queue_result.method.queue
-        
+
         # Bind queue to exchange with pattern
         self.channel.queue_bind(
             exchange=self.exchange,
             queue=queue_name,
             routing_key=routing_pattern
         )
-        
+
         # Consume messages
         def on_message(ch, method, properties, body):
             event_data = json.loads(body)
             callback(event_data)
             ch.basic_ack(delivery_tag=method.delivery_tag)
-        
+
         self.channel.basic_consume(
             queue=queue_name,
             on_message_callback=on_message
         )
-        
+
         self.channel.start_consuming()
 ```
 
@@ -359,47 +359,47 @@ class RabbitMQEventBus:
 ```python
 class OrderSaga:
     """Coordinate distributed transaction with events"""
-    
+
     def __init__(self, event_bus: EventBus):
         self.event_bus = event_bus
         self.state = {}
-    
+
     async def on_order_created(self, event: OrderCreated):
         """Step 1: Reserve inventory"""
         self.state[event.order_id] = {'step': 'inventory'}
-        
+
         await self.event_bus.publish(ReserveInventory(
             order_id=event.order_id,
             items=event.items
         ))
-    
+
     async def on_inventory_reserved(self, event: InventoryReserved):
         """Step 2: Process payment"""
         order_id = event.order_id
         self.state[order_id]['step'] = 'payment'
-        
+
         await self.event_bus.publish(ProcessPayment(
             order_id=order_id,
             amount=self.state[order_id]['amount']
         ))
-    
+
     async def on_payment_processed(self, event: PaymentProcessed):
         """Step 3: Complete order"""
         order_id = event.order_id
         self.state[order_id]['step'] = 'completed'
-        
+
         await self.event_bus.publish(CompleteOrder(
             order_id=order_id
         ))
-    
+
     async def on_payment_failed(self, event: PaymentFailed):
         """Compensation: Release inventory"""
         order_id = event.order_id
-        
+
         await self.event_bus.publish(ReleaseInventory(
             order_id=order_id
         ))
-    
+
     async def on_inventory_failed(self, event: InventoryFailed):
         """Compensation: Cancel order"""
         await self.event_bus.publish(CancelOrder(
@@ -411,26 +411,26 @@ class OrderSaga:
 ```python
 class EventReplayer:
     """Replay events to rebuild state"""
-    
+
     def __init__(self, event_store: EventStore):
         self.event_store = event_store
-    
+
     async def rebuild_read_model(self, projection):
         """Rebuild entire read model"""
         # Get all events
         all_events = await self.event_store.get_all_events()
-        
+
         # Clear read model
         await projection.clear()
-        
+
         # Replay events
         for event in all_events:
             await projection.handle(event)
-    
+
     async def replay_from_date(self, from_date: datetime, projection):
         """Replay events from specific date"""
         events = await self.event_store.get_events_since(from_date)
-        
+
         for event in events:
             await projection.handle(event)
 ```
@@ -453,7 +453,7 @@ class OrderCreatedV2(DomainEvent):
     user_id: str
     items: list
     shipping_address: dict  # New field
-    
+
     @classmethod
     def from_v1(cls, v1_event: OrderCreatedV1):
         """Upgrade from V1"""
@@ -474,20 +474,20 @@ class OrderCreatedV2(DomainEvent):
 ```python
 class IdempotentEventHandler:
     """Process events exactly once"""
-    
+
     def __init__(self, db):
         self.db = db
-    
+
     async def handle(self, event: DomainEvent):
         """Handle event idempotently"""
         # Check if already processed
         if await self.db.processed_events.find_one({'event_id': event.event_id}):
             return  # Already processed
-        
+
         try:
             # Process event
             await self._process(event)
-            
+
             # Mark as processed
             await self.db.processed_events.insert_one({
                 'event_id': event.event_id,
@@ -503,10 +503,10 @@ class IdempotentEventHandler:
 ```python
 class DeadLetterQueue:
     """Handle failed events"""
-    
+
     def __init__(self, db):
         self.db = db
-    
+
     async def add_failed_event(self, event: DomainEvent, error: str):
         """Add event to DLQ"""
         await self.db.dead_letters.insert_one({
@@ -515,18 +515,18 @@ class DeadLetterQueue:
             'timestamp': datetime.now(),
             'retry_count': 0
         })
-    
+
     async def retry_failed_events(self, max_retries: int = 3):
         """Retry events in DLQ"""
         failed_events = await self.db.dead_letters.find({
             'retry_count': {'$lt': max_retries}
         }).to_list(None)
-        
+
         for failed in failed_events:
             try:
                 event = self._deserialize_event(failed['event'])
                 await self.process_event(event)
-                
+
                 # Remove from DLQ
                 await self.db.dead_letters.delete_one({'_id': failed['_id']})
             except Exception as e:
@@ -573,5 +573,3 @@ class DeadLetterQueue:
 ---
 
 *Events should represent business facts that have happened—not commands or intentions.*
-
-

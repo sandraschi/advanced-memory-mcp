@@ -67,14 +67,14 @@ from .models import vehicle
 def fetch_vehicle_data(rbl_number: str, timeout: int = 10) -> Dict[str, any]:
     """
     Fetch vehicle data from Wiener Linien API for a specific RBL number.
-    
+
     Args:
         rbl_number: The RBL (stop) identifier
         timeout: Request timeout in seconds
-        
+
     Returns:
         Dictionary containing vehicle data or error information
-        
+
     Raises:
         requests.RequestException: When API request fails
     """
@@ -118,11 +118,11 @@ async function fetchVehiclePositions(vehicleType = null, lineFilter = null) {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error('Failed to fetch vehicle positions:', error);
@@ -146,22 +146,22 @@ import os
 def setup_logger(name: str, log_file: str = None, level: int = logging.INFO) -> logging.Logger:
     """
     Configure a logger with file and console handlers.
-    
+
     Args:
         name: Logger name
         log_file: Optional log file path
         level: Logging level
-        
+
     Returns:
         Configured logger instance
     """
     logger = logging.getLogger(name)
     logger.setLevel(level)
-    
+
     # Prevent duplicate handlers
     if logger.handlers:
         return logger
-    
+
     # Console handler
     console_handler = logging.StreamHandler()
     console_handler.setLevel(level)
@@ -170,7 +170,7 @@ def setup_logger(name: str, log_file: str = None, level: int = logging.INFO) -> 
     )
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
-    
+
     # File handler (if specified)
     if log_file:
         file_handler = RotatingFileHandler(
@@ -182,7 +182,7 @@ def setup_logger(name: str, log_file: str = None, level: int = logging.INFO) -> 
         )
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
-    
+
     return logger
 
 # Usage
@@ -297,13 +297,13 @@ def fetch_vehicle_data(rbl_number: str, vehicle_type: str = None) -> Dict:
     if not rbl_number or not rbl_number.isdigit():
         logger.error("Invalid RBL number: %s", rbl_number)
         raise ValueError("RBL number must be a non-empty string of digits")
-    
+
     # Validate vehicle type
     valid_types = ['bus', 'tram', 'metro', 'train', None]
     if vehicle_type not in valid_types:
         logger.error("Invalid vehicle type: %s", vehicle_type)
         raise ValueError(f"Vehicle type must be one of: {valid_types}")
-    
+
     # Continue with implementation
 ```
 
@@ -314,7 +314,7 @@ def sanitize_line_name(line_name: str) -> str:
     """Sanitize line name for safe display."""
     if not line_name:
         return "Unknown"
-    
+
     # Remove potentially dangerous characters
     sanitized = re.sub(r'[<>"\']', '', line_name.strip())
     return sanitized[:50]  # Limit length
@@ -333,7 +333,7 @@ def get_vehicle_positions():
             return vehicles
     except Exception as e:
         logger.warning("Real-time data unavailable: %s", str(e))
-    
+
     try:
         # Fallback to cached data
         vehicles = get_cached_vehicles()
@@ -342,7 +342,7 @@ def get_vehicle_positions():
             return vehicles
     except Exception as e:
         logger.warning("Cached data unavailable: %s", str(e))
-    
+
     # Final fallback to test data
     logger.info("Using test vehicle data")
     return get_test_vehicles()
@@ -363,7 +363,7 @@ def make_api_request(url: str, params: Dict = None, timeout: int = 10) -> reques
         'User-Agent': 'WienerLinienMap/1.0 (https://github.com/your-repo)',
         'Accept': 'application/json'
     }
-    
+
     try:
         response = requests.get(
             url,
@@ -388,22 +388,22 @@ def rate_limit(seconds: int):
     """Decorator to enforce rate limiting."""
     def decorator(func):
         last_call = {}
-        
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             func_name = func.__name__
             current_time = time.time()
-            
+
             if func_name in last_call:
                 time_since_last = current_time - last_call[func_name]
                 if time_since_last < seconds:
                     sleep_time = seconds - time_since_last
                     logger.debug("Rate limiting: sleeping for %.2f seconds", sleep_time)
                     time.sleep(sleep_time)
-            
+
             last_call[func_name] = time.time()
             return func(*args, **kwargs)
-        
+
         return wrapper
     return decorator
 
@@ -425,18 +425,18 @@ def validate_api_response(data: Dict) -> bool:
     if not all(key in data for key in required_keys):
         logger.error("API response missing required keys: %s", required_keys)
         return False
-    
+
     if 'monitors' not in data.get('data', {}):
         logger.error("API response missing 'monitors' key")
         return False
-    
+
     return True
 
 def parse_vehicle_data(api_response: Dict) -> List[Dict]:
     """Parse and validate vehicle data from API response."""
     if not validate_api_response(api_response):
         return []
-    
+
     vehicles = []
     try:
         for monitor in api_response['data']['monitors']:
@@ -444,7 +444,7 @@ def parse_vehicle_data(api_response: Dict) -> List[Dict]:
             vehicles.extend(extract_vehicles_from_monitor(monitor))
     except Exception as e:
         logger.error("Error parsing vehicle data: %s", str(e), exc_info=True)
-    
+
     return vehicles
 ```
 
@@ -486,7 +486,7 @@ class WienerLinienAPIClient:
         self.base_url = base_url
         self.timeout = timeout
         self.logger = setup_logger('api_client')
-    
+
     def fetch_monitor_data(self, rbl_number: str) -> Dict:
         """Fetch monitor data for a specific RBL."""
         # Implementation here
@@ -525,7 +525,7 @@ from utils.api_client import WienerLinienAPIClient
 class TestWienerLinienAPIClient(unittest.TestCase):
     def setUp(self):
         self.client = WienerLinienAPIClient('https://test.api.com')
-    
+
     def test_successful_api_request(self):
         """Test successful API request."""
         with patch('requests.get') as mock_get:
@@ -533,15 +533,15 @@ class TestWienerLinienAPIClient(unittest.TestCase):
             mock_response.json.return_value = {'data': {'monitors': []}}
             mock_response.raise_for_status.return_value = None
             mock_get.return_value = mock_response
-            
+
             result = self.client.fetch_monitor_data('1234')
             self.assertIsNotNone(result)
-    
+
     def test_api_timeout_handling(self):
         """Test API timeout handling."""
         with patch('requests.get') as mock_get:
             mock_get.side_effect = requests.exceptions.Timeout()
-            
+
             with self.assertRaises(requests.exceptions.Timeout):
                 self.client.fetch_monitor_data('1234')
 ```
@@ -616,17 +616,17 @@ except Exception as e:
 def parse_vehicle_coordinates(monitor_data: Dict) -> Tuple[float, float]:
     """
     Extract vehicle coordinates from monitor data.
-    
+
     Args:
         monitor_data: Dictionary containing monitor information from API
-        
+
     Returns:
         Tuple of (latitude, longitude) coordinates
-        
+
     Raises:
         ValueError: If coordinates cannot be extracted
         KeyError: If required data structure is missing
-        
+
     Example:
         >>> data = {'locationStop': {'geometry': {'coordinates': [16.37, 48.21]}}}
         >>> parse_vehicle_coordinates(data)
@@ -674,4 +674,4 @@ Consider implementing:
 
 ---
 
-**Remember**: This rulebook is a living document. Update it as the project evolves and new patterns emerge. All team members are responsible for following these rules and suggesting improvements. 
+**Remember**: This rulebook is a living document. Update it as the project evolves and new patterns emerge. All team members are responsible for following these rules and suggesting improvements.

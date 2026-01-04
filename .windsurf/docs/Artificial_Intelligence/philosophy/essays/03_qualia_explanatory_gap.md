@@ -1,4 +1,4 @@
-﻿# Qualia and the xplanatory Gap: The Hardest Aspect of the Hard Problem
+# Qualia and the xplanatory Gap: The Hardest Aspect of the Hard Problem
 
 ## Introduction
 

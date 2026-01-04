@@ -3,7 +3,7 @@ title: AI Assistant Guide
 type: note
 permalink: docs/ai-assistant-guide
 ---
-> Note: This is an optional document that can be copy/pasted into the project knowledge for an LLM to provide a full description of how it can work with Advanced Memory. It is provided as a helpful resource. The tools contain extensive usage description prompts with enable the LLM to understand them. 
+> Note: This is an optional document that can be copy/pasted into the project knowledge for an LLM to provide a full description of how it can work with Advanced Memory. It is provided as a helpful resource. The tools contain extensive usage description prompts with enable the LLM to understand them.
 
 You can [download](https://github.com/advanced-memory/advanced-memory/blob/main/docs/AI%20Assistant%20Guide.md) the contents of this file from GitHub
 # AI Assistant Guide for Advanced Memory
@@ -124,7 +124,7 @@ recent_activity(timeframe="1 week")     # Check what's been updated
 Basic Memory uses a special URL format to reference entities in the knowledge graph:
 
 - `memory://title` - Reference by title
-- `memory://folder/title` - Reference by folder and title 
+- `memory://folder/title` - Reference by folder and title
 - `memory://permalink` - Reference by permalink
 - `memory://path/relation_type/*` - Follow all relations of a specific type
 - `memory://path/*/target` - Find all entities with relations to target
@@ -172,7 +172,7 @@ Users will interact with Advanced Memory in patterns like:
 1. **Creating knowledge**:
    ```
    Human: "Let's write up what we discussed about search."
-   
+
    You: I'll create a note capturing our discussion about the search functionality.
    [Use write_note() to record the conversation details]
    ```
@@ -180,7 +180,7 @@ Users will interact with Advanced Memory in patterns like:
 2. **Referencing existing knowledge**:
    ```
    Human: "Take a look at memory://specs/search"
-   
+
    You: I'll examine that information.
    [Use build_context() to gather related information]
    [Then read_note() to access specific content]
@@ -189,7 +189,7 @@ Users will interact with Advanced Memory in patterns like:
 3. **Finding information**:
    ```
    Human: "What were our decisions about auth?"
-   
+
    You: Let me find that information for you.
    [Use search_notes() to find relevant notes]
    [Then build_context() to understand connections]
@@ -198,7 +198,7 @@ Users will interact with Advanced Memory in patterns like:
 4. **Editing existing notes (v0.13.0)**:
    ```
    Human: "Add a section about deployment to my API documentation"
-   
+
    You: I'll add that section to your existing documentation.
    [Use edit_note() with operation="append" to add new content]
    ```
@@ -206,7 +206,7 @@ Users will interact with Advanced Memory in patterns like:
 5. **Project management (v0.13.0)**:
    ```
    Human: "Switch to my work project and show recent activity"
-   
+
    You: I'll switch to your work project and check what's been updated recently.
    [Use switch_project() then recent_activity()]
    ```
@@ -214,7 +214,7 @@ Users will interact with Advanced Memory in patterns like:
 6. **File organization (v0.13.0)**:
    ```
    Human: "Move my old meeting notes to the archive folder"
-   
+
    You: I'll organize those notes for you.
    [Use move_note() to relocate files with database consistency]
    ```
@@ -381,7 +381,7 @@ When creating relations:
   ```
   # ❌ This might fail if identifier isn't exact
   edit_note("Meeting Note", "append", "content")
-  
+
   # ✅ Safe approach: search first, then use exact result
   results = search_notes("meeting")
   edit_note("Meeting Notes 2024", "append", "content")  # Use exact title from search

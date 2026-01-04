@@ -1,8 +1,8 @@
 # Zettelmaker Onboarding Dashboard
 
-**Version:** 1.0  
-**Created:** October 16, 2025  
-**Integration:** Phase 4 (Smart Onboarding) Enhancement  
+**Version:** 1.0
+**Created:** October 16, 2025
+**Integration:** Phase 4 (Smart Onboarding) Enhancement
 **Platforms:** CLI, Web, Desktop (Advanced Memory Pro)
 
 ---
@@ -146,13 +146,13 @@ http://localhost:8080/onboarding/dashboard
     <StatCard icon="🔗" label="Links" value="156" />
     <StatCard icon="📈" label="Score" value="847" />
   </StatsGrid>
-  
+
   <LearningPathTimeline
     completed={["Python", "Git", "Testing"]}
     current="Async Programming"
     upcoming={["FastAPI", "API Testing"]}
   />
-  
+
   <RecommendationsPanel>
     <NextStepCard priority="high" />
     <KnowledgeGapCard priority="medium" />
@@ -277,7 +277,7 @@ Next milestone: 50 notes → Unlock "Knowledge Builder" achievement
           │        └─── Async
           │              │
        Testing ────── Git
-          │              
+          │
         CI/CD ───── Docker
 
 Clusters: 3 │ Orphans: 2 │ Depth: 3 levels
@@ -294,39 +294,39 @@ class OnboardingProfile:
     user_id: str
     started_at: datetime
     last_active: datetime
-    
+
     # Progress metrics
     notes_created: int
     notes_recommended: int
     completion_percentage: float
-    
+
     # Knowledge graph metrics
     total_connections: int
     cluster_count: int
     orphan_count: int
     average_depth: float
-    
+
     # Learning path
     completed_topics: List[str]
     current_topic: str
     current_progress: float
     upcoming_topics: List[str]
-    
+
     # Skill assessment
     detected_skill_level: str  # beginner, intermediate, advanced
     knowledge_coverage: Dict[str, float]  # category -> coverage %
     knowledge_gaps: List[str]
-    
+
     # Engagement metrics
     days_active: int
     current_streak: int
     longest_streak: int
     notes_per_day: float
-    
+
     # Achievements
     earned_achievements: List[Achievement]
     achievement_progress: Dict[str, float]
-    
+
     # Recommendations
     next_steps: List[Recommendation]
     knowledge_score: int
@@ -344,36 +344,36 @@ class Achievement:
     earned: bool
     earned_at: Optional[datetime]
     progress: float  # 0.0 to 1.0
-    
+
 # Example achievements
 ACHIEVEMENTS = [
     # Getting Started
     {"id": "first-note", "icon": "📝", "title": "First Note", "requirement": "Create 1 note"},
     {"id": "first-10", "icon": "🏆", "title": "Getting Started", "requirement": "Create 10 notes"},
     {"id": "first-50", "icon": "🎯", "title": "Knowledge Builder", "requirement": "Create 50 notes"},
-    
+
     # Connections
     {"id": "first-link", "icon": "🔗", "title": "Connector", "requirement": "Create first wikilink"},
     {"id": "50-links", "icon": "🕸️", "title": "Web Weaver", "requirement": "Create 50 links"},
     {"id": "graph-master", "icon": "🌐", "title": "Graph Master", "requirement": "Create 200 links"},
-    
+
     # Learning Paths
     {"id": "complete-path", "icon": "🎓", "title": "Graduate", "requirement": "Complete one learning path"},
     {"id": "polymath", "icon": "🧠", "title": "Polymath", "requirement": "Complete 3 learning paths"},
-    
+
     # Speed
     {"id": "fast-learner", "icon": "⚡", "title": "Fast Learner", "requirement": "10 notes in one day"},
     {"id": "week-warrior", "icon": "🚀", "title": "Week Warrior", "requirement": "50 notes in one week"},
-    
+
     # Streaks
     {"id": "streak-3", "icon": "🔥", "title": "On Fire", "requirement": "3 day streak"},
     {"id": "streak-7", "icon": "💪", "title": "Committed", "requirement": "7 day streak"},
     {"id": "streak-30", "icon": "🏅", "title": "Dedicated", "requirement": "30 day streak"},
-    
+
     # Quality
     {"id": "deep-thinker", "icon": "🤔", "title": "Deep Thinker", "requirement": "Average note depth > 5"},
     {"id": "connector", "icon": "🌟", "title": "Master Connector", "requirement": "Avg 5 links per note"},
-    
+
     # Community
     {"id": "marketplace", "icon": "🏪", "title": "Explorer", "requirement": "Install from marketplace"},
     {"id": "publisher", "icon": "📦", "title": "Publisher", "requirement": "Publish to marketplace"},
@@ -391,7 +391,7 @@ class Recommendation:
     description: str
     action: str  # Command or URL to execute
     reason: str
-    
+
     # Context
     related_notes: List[str]
     estimated_time: str
@@ -591,4 +591,3 @@ The **Onboarding Dashboard** transforms zettelmaker from a content generator int
 **Cross-platform availability** (CLI, Web, Desktop, MCP) ensures users can track their progress anywhere, anytime.
 
 **Next Step:** Implement CLI dashboard in Week 1-2 of Phase 4! 🚀
-

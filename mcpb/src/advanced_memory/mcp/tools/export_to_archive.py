@@ -362,7 +362,7 @@ async def export_to_archive(
                 # Create ZIP archive using zipfile for Windows Explorer compatibility
                 # shutil.make_archive can create ZIPs that Windows Explorer doesn't recognize
                 source_dir = temp_path / "advanced-memory-backup"
-                
+
                 # Check if ZIP64 is needed (Windows Explorer has issues with ZIP64)
                 # ZIP64 is only needed if any file > 4GB or total size > 4GB
                 needs_zip64 = False
@@ -377,18 +377,18 @@ async def export_to_archive(
                         if file_size > 4 * 1024 * 1024 * 1024:
                             needs_zip64 = True
                             break
-                
+
                 # Check if total archive size would exceed 4GB (ZIP32 max archive size)
                 if not needs_zip64 and total_size_check > 4 * 1024 * 1024 * 1024:
                     needs_zip64 = True
-                
+
                 if needs_zip64:
                     logger.warning(
                         f"Archive requires ZIP64 format (max file: {max_file_size / (1024**3):.2f} GB, "
                         f"total: {total_size_check / (1024**3):.2f} GB). "
                         "Windows Explorer may have issues opening this archive. Use WinRAR or 7-Zip instead."
                     )
-                
+
                 # Create ZIP file with explicit Windows Explorer compatibility settings
                 zipf = zipfile.ZipFile(
                     archive_path,
@@ -397,7 +397,7 @@ async def export_to_archive(
                     compresslevel=6,  # Balanced compression
                     allowZip64=needs_zip64,  # Only use ZIP64 when necessary for Windows Explorer compatibility
                 )
-                
+
                 try:
                     # Walk through all files in the source directory
                     for file_path in source_dir.rglob("*"):
@@ -413,7 +413,7 @@ async def export_to_archive(
                     # Explicitly close and finalize the ZIP file
                     # This ensures proper ZIP structure that Windows Explorer expects
                     zipf.close()
-                
+
                 # Verify the ZIP file is valid
                 try:
                     test_zip = zipfile.ZipFile(archive_path, "r")

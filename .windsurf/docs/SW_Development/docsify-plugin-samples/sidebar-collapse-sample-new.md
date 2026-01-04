@@ -98,70 +98,70 @@ window.$docsify = {
     window.DocsifySidebarCollapse.init({
       // Collapse all sections by default
       collapseAll: false,
-      
+
       // Show the first active section
       openFirstActive: true,
-      
+
       // Auto-save the state
       persistState: true,
-      
+
       // Custom storage key for persistence
       storageKey: 'docsify-sidebar-collapse-state',
-      
+
       // Custom selectors: {
         // The main sidebar container
         sidebar: '.sidebar',
-        
+
         // List items that contain submenus
         items: '.sidebar-nav > ul > li',
-        
+
         // Links thatrigger the toggles: '.sidebar-nav > ul > li > a',
-        
+
         // Submenu containersubmenus: '.sidebar-nav > ul > li > ul',
-        
+
         // Active link
         activeLink: '.sidebar-nav a.active',
-        
+
         // Icons: {
           // Open state
           open: '<svg>...</svg>',
-          
+
           // Closed state
           closed: '<svg>...</svg>',
-          
+
           // Loading state
           loading: '<span>Loading...</span>'
         }
       },
-      
+
       // Animation settings
       animation: {
         // Enable/disable animations
         enabled: true,
-        
+
         // Animation duration in milliseconds
         duration: 300,
-        
+
         // Animation easing function
         easing: 'ease-in-out'
       },
-      
+
       // Callbacks: {
         // Called when a section is opened
         onOpen: function(element) {
           console.log('Section opened:', element);
         },
-        
+
         // Called when a section is closed
         onClose: function(element) {
           console.log('Section closed:', element);
         },
-        
+
         // Called when the state isaved
         onSave: function(state) {
           console.log('State saved:', state);
         },
-        
+
         // Called when the state is loaded
         onLoad: function(state) {
           console.log('State loaded:', state);
@@ -191,7 +191,7 @@ window.$docsify = {
               <path d="M19l-7-7-7"/>
             </svg>
           `,
-          
+
           // Custom SVG icon for closed state
           closed: `
             <svg width="12" height="12" viewBox="0 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -214,18 +214,18 @@ window.$docsify = {
   plugins: [
     window.DocsifySidebarCollapse.init({
       // UsessionStorage instead of localStorage: window.sessionStorage,
-      
+
       // Custom storage key
       storageKey: 'my-custom-storage-key',
-      
+
       // Disable persistence
       persistState: false,
-      
+
       // Custom serialization
       serialize: function(state) {
         return JSON.stringify(state);
       },
-      
+
       // Custom deserialization
       deserialize: function(data) {
         try {
@@ -250,29 +250,29 @@ window.$docsify = {
       selectors: {
         // The main sidebar container
         sidebar: '.my-sidebar',
-        
+
         // List items that contain submenus
         items: '.my-sidebar-nav > .menu-item',
-        
+
         // Links thatrigger the toggles: '.my-sidebar-nav > .menu-item > .menu-link',
-        
+
         // Submenu containersubmenus: '.my-sidebar-nav > .menu-item > .submenu',
-        
+
         // Active link
         activeLink: '.my-sidebar-nav .active',
-        
+
         // Icons container (appended toggles)
         iconContainer: '.menu-icon',
-        
+
         // Class added to items with submenus
         hasSubmenuClass: 'has-children',
-        
+
         // Class added topen items
         openClass: 'is-open',
-        
+
         // Class added to active items
         activeClass: 'is-active',
-        
+
         // Class added to the sidebar when initializedClass: 'is-initialized'
       }
     })
@@ -295,11 +295,11 @@ Customize the appearance using CSS variables:
   --sidebar-toggle-bg: transparent;
   --sidebar-toggle-hover-bg: rgba(0, 0, 0, 0.05);
   --sidebar-toggle-active-bg: rgba(66, 185, 131, 0.1);
-  
+
   /* Sizes */
   --sidebar-toggle-size: 24px;
   --sidebar-toggle-icon-size: 12px;
-  
+
   /* Transitions */
   --sidebar-toggle-transition: all 0.2s ease;
 }

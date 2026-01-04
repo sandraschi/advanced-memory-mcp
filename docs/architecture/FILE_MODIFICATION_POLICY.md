@@ -6,9 +6,9 @@
 
 ## TL;DR
 
-**Sync**: ❌ **NEVER modifies** existing files (read-only)  
-**Write operations**: ✅ **ONLY when you explicitly create/edit** via MCP tools  
-**Frontmatter**: ✅ **Added when YOU create** notes, NOT added to existing files  
+**Sync**: ❌ **NEVER modifies** existing files (read-only)
+**Write operations**: ✅ **ONLY when you explicitly create/edit** via MCP tools
+**Frontmatter**: ✅ **Added when YOU create** notes, NOT added to existing files
 **Relations**: ❌ **Stored in database only**, NOT written back to files
 
 ---
@@ -72,7 +72,7 @@ This is my content. I wrote this in Obsidian.
 - Just pure markdown
 ```
 
-**After sync**: 
+**After sync**:
 ```markdown
 # My Existing Note
 
@@ -98,7 +98,7 @@ This is my content. I wrote this in Obsidian.
 
 **You call**:
 ```python
-adn_content("create", 
+adn_content("create",
   title="Python Tips",
   content="Use type hints!",
   folder="dev"
@@ -162,7 +162,7 @@ id | title | permalink | file_path | type
 ```sql
 from_id | to_id | relation_type | source
 1       | 2     | uses          | wikilink
-1       | 3     | uses          | wikilink  
+1       | 3     | uses          | wikilink
 1       | 4     | depends_on    | explicit_relation
 ```
 
@@ -232,7 +232,7 @@ write_note("My Note", "Content", "folder")
 
 **Via MCP tool**:
 ```python
-adn_editor("edit", 
+adn_editor("edit",
   identifier="my-note",
   operation="append",
   content="New paragraph"
@@ -452,7 +452,7 @@ Relations:
 
 ### Principle 1: Files Are Source of Truth
 
-**Files**: What you wrote (immutable by sync)  
+**Files**: What you wrote (immutable by sync)
 **Database**: Index for fast search (derived from files)
 
 **Sync direction**: Files → Database (one-way for existing files)
@@ -785,7 +785,7 @@ Content
 - **Last write wins** (standard file system behavior)
 - Could lose changes!
 
-**Recommendation**: 
+**Recommendation**:
 - Use auto-sync for reading Obsidian changes
 - Don't use MCP write tools on files you're actively editing elsewhere
 - Or: Use Advanced Memory OR Obsidian for editing (not both simultaneously)
@@ -846,14 +846,13 @@ Content
 
 **Files are the source of truth. Database is the index.**
 
-**Sync**: Files → Database (read-only)  
-**Write tools**: YOU create/modify files → Database updates  
+**Sync**: Files → Database (read-only)
+**Write tools**: YOU create/modify files → Database updates
 **Relations**: Detected from files, stored in database, not written back
 
 **Your files stay safe!** 🛡️
 
 ---
 
-*Created: 2025-10-17*  
+*Created: 2025-10-17*
 *Purpose: Clarify file modification policy and user concerns*
-

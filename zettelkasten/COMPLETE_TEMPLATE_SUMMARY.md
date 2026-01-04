@@ -437,13 +437,11 @@ This is **more comprehensive than most paid courses** and **more practical than 
 ---
 
 **Created**: October 18, 2025
-**Categories**: 11  
-**Templates**: 58  
-**Lines**: 20,000+  
+**Categories**: 11
+**Templates**: 58
+**Lines**: 20,000+
 **Quality**: Professional
 
 **Purpose**: Make you smarter, faster. 🚀
 
 Enjoy your world-class zettelkasten library! 🎉
-
-

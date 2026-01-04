@@ -103,7 +103,7 @@ The Microsoft 365 MCP Server by Softeria is a **comprehensive, production-ready*
 - list-chats, get-chat, list-chat-messages, get-chat-message
 - send-chat-message, list-chat-message-replies, reply-to-chat-message
 
-### **✅ Teams Collaboration** ✅ **FULLY SUPPORTED**  
+### **✅ Teams Collaboration** ✅ **FULLY SUPPORTED**
 - list-joined-teams, get-team, list-team-channels, get-team-channel
 - list-channel-messages, get-channel-message, send-channel-message, list-team-members
 
@@ -182,7 +182,7 @@ The Microsoft 365 MCP Server by Softeria is a **comprehensive, production-ready*
 ### **Recommended Enhanced Configuration**
 ```json
 "microsoft-365": {
-  "command": "npx", 
+  "command": "npx",
   "args": [
     "-y",
     "@softeria/ms-365-mcp-server",
@@ -253,7 +253,7 @@ This flag ensures proper scope permissions for Teams and SharePoint features fro
 
 ### **Long-term Strategy**
 1. **Integrate with VeoGen Workflows** - Automate project documentation
-2. **Teams Collaboration** - Real-time development updates  
+2. **Teams Collaboration** - Real-time development updates
 3. **Automated Reporting** - Excel-based project metrics
 4. **Knowledge Management** - OneNote for technical documentation
 

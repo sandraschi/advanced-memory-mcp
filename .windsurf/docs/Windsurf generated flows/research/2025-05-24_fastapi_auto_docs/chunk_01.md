@@ -7,7 +7,7 @@ FastAPI provides automatic API documentation generation based on the OpenAPI sta
 1.  **OpenAPI Schema**: FastAPI automatically generates an OpenAPI schema for your API. Thischema is a JSON object (usually found at `/openapi.json`) that describes your API paths, parameters, request bodies, responses, security schemes, etc. Thischema is the foundation for the documentation UIs.
     *   The URL for the OpenAPI schema can be configured (e.g., `app = FastAPI(openapi_url="/api/v1/openapi.json")`) or disabled by setting `openapi_url=None`.
 
-2.  **Swagger UI**: 
+2.  **Swagger UI**:
     *   **Default URL**: `/docs`
     *   **Functionality**: Provides a rich, interactive UI where users can explore API endpoints, see their details (parameters, request/response models), and even try them out directly in the browser.
     *   **Generation**: FastAPI uses an internal function `get_swagger_ui_html()` to generate the HTML page for Swagger UI. This function takes parameters like the `openapi_url`, `title`, and URLs for Swagger UI's JavaScript and CSS assets (which defaulto CDN-hosted versions).

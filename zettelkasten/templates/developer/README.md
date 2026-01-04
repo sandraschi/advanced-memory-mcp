@@ -39,6 +39,6 @@ cp zettelkasten/templates/developer/<topic>/<note>.md \
 
 ---
 
-**Category**: Developer  
-**Templates**: 15  
+**Category**: Developer
+**Templates**: 15
 **Updated**: October 17, 2025

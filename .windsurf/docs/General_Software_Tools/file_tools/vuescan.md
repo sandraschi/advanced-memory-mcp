@@ -85,7 +85,7 @@ for in {1..5}; do
     /usr/local/bin/vuescan -o "$HOME/Scans/scan_$i.tif" --dpi 600 --mode Color
     echo "Press Enter to scanext document..."
     read
-    
+
     # Eject document feeder
     osascript -e 'tell application "VueScan" to activate'
     osascript -e 'tell application "System Events" to keystroke "e" using {commandown}'
@@ -125,9 +125,9 @@ if (-not (Test-Path $outputDir)) {
 1..6 | ForEach-Object {
     $outputFile = Join-Path $outputDir "film_frame_$_.tiff"
     Write-Host "Scanning frame $_ to $outputFile"
-    
+
     & "C:\Program Files\VueScan\vuescan.exe" /dpi $dpi /source "Film" /film_type "$filmType" /infrared 3 "$outputFile"
-    
+
     # Wait for user to advance film
     if ($_ -lt 6) {
         $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

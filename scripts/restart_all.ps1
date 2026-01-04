@@ -1,5 +1,5 @@
 # Restart All Advanced Memory Services
-# 
+#
 # This script restarts all Advanced Memory related services:
 # - Stops all Python processes related to Advanced Memory
 # - Optionally restarts Claude Desktop (which restarts MCP server)
@@ -37,7 +37,7 @@ $PythonProcesses = Get-Process -Name "python*" -ErrorAction SilentlyContinue | W
         $cmdLine = (Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.Id)").CommandLine
         if ($cmdLine) {
             # Check if command line contains advanced_memory or advanced-memory
-            return ($cmdLine -match "advanced.memory" -or 
+            return ($cmdLine -match "advanced.memory" -or
                     $cmdLine -match "advanced-memory" -or
                     $cmdLine -match "tapo.camera.mcp" -or
                     $cmdLine -match "tapo-camera-mcp")
@@ -50,12 +50,12 @@ $PythonProcesses = Get-Process -Name "python*" -ErrorAction SilentlyContinue | W
 
 if ($PythonProcesses) {
     Write-Host "[INFO] Found $($PythonProcesses.Count) Advanced Memory Python process(es)" -ForegroundColor Gray
-    
+
     foreach ($proc in $PythonProcesses) {
         try {
             $cmdLine = (Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.Id)").CommandLine
             Write-Host "  - PID $($proc.Id): $($cmdLine.Substring(0, [Math]::Min(80, $cmdLine.Length)))..." -ForegroundColor Gray
-            
+
             if ($Force) {
                 Stop-Process -Id $proc.Id -Force -ErrorAction Stop
                 Write-Host "    [OK] Force stopped" -ForegroundColor Green
@@ -68,7 +68,7 @@ if ($PythonProcesses) {
             Write-Host "    [WARN] Could not stop PID $($proc.Id): $_" -ForegroundColor Yellow
         }
     }
-    
+
     if ($ProcessesToStop.Count -gt 0) {
         Write-Host "[OK] Stopped $($ProcessesToStop.Count) process(es)" -ForegroundColor Green
         Start-Sleep -Seconds 2
@@ -82,7 +82,7 @@ Write-Host ""
 # Step 2: Stop Claude Desktop (which stops MCP server)
 if (-not $SkipClaude) {
     Write-Host "[2/3] Restarting Claude Desktop (restarts MCP server)..." -ForegroundColor Yellow
-    
+
     # Find Claude executable
     $ClaudePath = $null
     $PossiblePaths = @(
@@ -90,14 +90,14 @@ if (-not $SkipClaude) {
         "$env:ProgramFiles\Claude\Claude.exe",
         "${env:ProgramFiles(x86)}\Claude\Claude.exe"
     )
-    
+
     foreach ($Path in $PossiblePaths) {
         if (Test-Path $Path) {
             $ClaudePath = $Path
             break
         }
     }
-    
+
     # Try finding via PATH
     if (-not $ClaudePath) {
         try {
@@ -109,7 +109,7 @@ if (-not $SkipClaude) {
             # Not in PATH
         }
     }
-    
+
     if ($ClaudePath -and (Test-Path $ClaudePath)) {
         # Stop Claude
         $ClaudeProcess = Get-Process -Name "Claude" -ErrorAction SilentlyContinue
@@ -121,7 +121,7 @@ if (-not $SkipClaude) {
         } else {
             Write-Host "  [INFO] Claude Desktop was not running" -ForegroundColor Gray
         }
-        
+
         # Start Claude
         Write-Host "  Starting Claude Desktop..." -ForegroundColor Gray
         try {
@@ -165,4 +165,3 @@ if (-not $SkipClaude) {
 Write-Host ""
 Write-Host "[SUCCESS] Restart complete!" -ForegroundColor Green
 Write-Host ""
-

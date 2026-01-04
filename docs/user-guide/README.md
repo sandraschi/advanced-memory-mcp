@@ -59,5 +59,3 @@ Welcome to Advanced Memory! This guide covers everything you need to know to bui
 ---
 
 *Build your knowledge empire, one note at a time!*
-
-

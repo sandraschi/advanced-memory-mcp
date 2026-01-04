@@ -1,7 +1,7 @@
 # Claude Skills Integration - Implementation Plan
 
-**Created**: October 19, 2025  
-**Status**: Format conversion completed in v1.0.0b3. Deployment verification ongoing.  
+**Created**: October 19, 2025
+**Status**: Format conversion completed in v1.0.0b3. Deployment verification ongoing.
 **Note**: For ecosystem overview, see [CLAUDE_SKILLS_ECOSYSTEM.md](CLAUDE_SKILLS_ECOSYSTEM.md)
 
 ## Executive Summary
@@ -168,20 +168,20 @@ class SkillsFrontmatter:
 
 class SkillsConverter:
     """Convert between Advanced Memory and Claude Skills formats."""
-    
+
     @staticmethod
     def zettel_to_skill(zettel_frontmatter: dict) -> SkillsFrontmatter:
         """Convert zettel frontmatter to Skills format."""
         # Generate name from title (slugify)
         name = zettel_frontmatter.get("title", "").lower()
         name = name.replace(" ", "-").replace("_", "-")
-        
+
         # Extract or generate description
         description = zettel_frontmatter.get("description")
         if not description:
             # Use first sentence or generate from title
             description = f"Guide for {zettel_frontmatter.get('title')} - use when working with this topic"
-        
+
         # Preserve Advanced Memory metadata
         metadata = {
             "advanced_memory": {
@@ -192,7 +192,7 @@ class SkillsConverter:
                 "category": zettel_frontmatter.get("category"),
             }
         }
-        
+
         return SkillsFrontmatter(
             name=name,
             description=description,
@@ -200,16 +200,16 @@ class SkillsConverter:
             allowed_tools=None,  # Can be specified per-skill
             metadata=metadata
         )
-    
+
     @staticmethod
     def skill_to_zettel(skills_frontmatter: SkillsFrontmatter) -> dict:
         """Convert Skills frontmatter to zettel format."""
         # Convert name to title
         title = skills_frontmatter.name.replace("-", " ").title()
-        
+
         # Extract Advanced Memory metadata if preserved
         am_metadata = skills_frontmatter.metadata.get("advanced_memory", {})
-        
+
         return {
             "title": am_metadata.get("title") or title,
             "type": am_metadata.get("type", "skill"),
@@ -240,55 +240,55 @@ async def _export_claude_skills(
     project: str | None = None,
 ) -> str:
     """Export zettelkasten templates to Claude Skills format."""
-    
+
     export_dir = Path(export_path)
     export_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Get zettel to export
     zettel = await _get_zettel_for_export(source_folder, category, project)
-    
+
     skills_created = 0
     errors = []
-    
+
     for note in zettel:
         try:
             # Convert frontmatter
             skills_fm = SkillsConverter.zettel_to_skill(note.frontmatter.metadata)
-            
+
             # Validate
             if validate:
                 _validate_skill(skills_fm)
-            
+
             # Create skill directory
             skill_dir = export_dir / (note.category or "general") / skills_fm.name
             skill_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Write SKILL.md
             skill_content = _format_skill_markdown(skills_fm, note.content)
             (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
-            
+
             # Add LICENSE.txt if requested
             if add_license:
                 _write_license_file(skill_dir)
-            
+
             skills_created += 1
-            
+
         except Exception as e:
             errors.append(f"{note.title}: {e}")
-    
+
     # Generate summary
     summary = f"✅ Exported {skills_created} Claude Skills to {export_path}\n\n"
-    
+
     if errors:
         summary += f"⚠️ Errors: {len(errors)}\n"
         for error in errors[:10]:  # Show first 10
             summary += f"  - {error}\n"
-    
+
     summary += "\n📖 Next Steps:\n"
     summary += f"  1. Skills exported to: {export_path}\n"
     summary += "  2. Deploy to claude.ai (paid), Claude API, or share on GitHub\n"
     summary += "  3. Claude Desktop deployment: mechanism pending verification\n"
-    
+
     return summary
 ```
 
@@ -307,24 +307,24 @@ async def _import_claude_skills(
     project: str | None = None,
 ) -> str:
     """Import Claude Skills into Advanced Memory."""
-    
+
     source_dir = Path(source_path)
     skills_imported = 0
     errors = []
-    
+
     # Find all SKILL.md files
     skill_files = list(source_dir.rglob("SKILL.md"))
-    
+
     for skill_file in skill_files:
         try:
             # Parse SKILL.md
             content = skill_file.read_text(encoding="utf-8")
             skills_fm = _parse_skills_frontmatter(content)
             skills_content = _remove_skills_frontmatter(content)
-            
+
             # Convert to zettel format
             zettel_fm = SkillsConverter.skill_to_zettel(skills_fm)
-            
+
             # Determine folder
             if preserve_structure:
                 # Preserve relative path structure
@@ -332,7 +332,7 @@ async def _import_claude_skills(
                 folder = f"{destination_folder}/{rel_path}"
             else:
                 folder = destination_folder
-            
+
             # Create note in Advanced Memory
             await adn_content(
                 operation="write",
@@ -341,24 +341,24 @@ async def _import_claude_skills(
                 folder=folder,
                 tags=zettel_fm["tags"]
             )
-            
+
             # Import additional resources if requested
             if import_resources:
                 await _import_skill_resources(skill_file.parent, folder)
-            
+
             skills_imported += 1
-            
+
         except Exception as e:
             errors.append(f"{skill_file.name}: {e}")
-    
+
     # Generate summary
     summary = f"✅ Imported {skills_imported} Claude Skills\n\n"
-    
+
     if errors:
         summary += f"⚠️ Errors: {len(errors)}\n"
         for error in errors[:10]:
             summary += f"  - {error}\n"
-    
+
     return summary
 ```
 
@@ -480,7 +480,3 @@ adn_import(
 4. ✅ Test with existing templates
 5. ✅ Document in user guide
 6. 🚀 Release in v1.0.0b4
-
-
-
-

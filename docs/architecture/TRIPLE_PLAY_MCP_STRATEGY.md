@@ -1,7 +1,7 @@
 # Triple Play MCP Strategy - CLI + MCP + API as Competitive Advantage
 
-**Concept**: Add comprehensive CLIs to all major MCP servers as differentiating feature  
-**Branding**: "Triple Play MCP Servers by sandraschi"  
+**Concept**: Add comprehensive CLIs to all major MCP servers as differentiating feature
+**Branding**: "Triple Play MCP Servers by sandraschi"
 **Date**: October 17, 2025
 
 ---
@@ -183,7 +183,7 @@ adn_blender("export_vrm", path="machiya.vrm")                  # 1000
 **Via CLI** (WORKS):
 ```bash
 # Claude scaffolds the plan first (intelligent part):
-# "Here's what we need: foundation, walls, roof, tatami floors, 
+# "Here's what we need: foundation, walls, roof, tatami floors,
 #  shoji screens, engawa porch, lighting, VRChat optimization"
 
 # Then CLI executes (automation part):
@@ -237,7 +237,7 @@ blender export-vrchat scene.blend --optimize --validate
    - Example: Win 11 VM setup = half a night manually, impossible via MCP, trivial via CLI
    - 100+ steps, Windows automation, unattended operation
    - **HIGHEST PRIORITY** - solves genuinely painful problem
-   
+
 2. ⭐⭐⭐⭐⭐⭐ **Blender MCP** - Complex creative workflows
    - Example: "Build kyoto machiya, export to VRChat" = 1000+ tool calls via MCP (timeout!)
    - Modeling + texturing + lighting + optimization + export = too many steps
@@ -285,7 +285,7 @@ blender export-vrchat scene.blend --optimize --validate
 
 ### ROI Calculation
 
-**Investment**: 2-3 days per server (comprehensive CLI)  
+**Investment**: 2-3 days per server (comprehensive CLI)
 **Servers**: 4 big ones = 8-12 days total
 
 **Return**:
@@ -600,7 +600,7 @@ def backup(database: str):
 
 ### Option 2: POC → Iterate (Conservative) ⭐ **RECOMMENDED**
 
-**Phase 1**: Virtualization MCP only (1-2 weeks) 
+**Phase 1**: Virtualization MCP only (1-2 weeks)
 - **HIGHEST PRIORITY** - Solves genuinely painful problem
 - Manual setup = half a night of hair-pulling frustration
 - MCP = impossible (100+ calls = timeout)
@@ -619,7 +619,7 @@ def backup(database: str):
 
 **Timeline**: 3-4 months total
 
-**Why Virtualization first**: 
+**Why Virtualization first**:
 - Most painful problem (manual = half night)
 - Most dramatic improvement (impossible → trivial)
 - Most obvious value proposition
@@ -712,7 +712,7 @@ virtualization setup-windows-dev-vm \
 # Token cost: ~200 tokens (just the command!)
 ```
 
-**Efficiency gain**: 
+**Efficiency gain**:
 - Manual: Half a night (hair-pulling frustration)
 - MCP: Impossible (timeout after 100 calls)
 - CLI: Trivial (one command, runs unattended)
@@ -730,7 +730,7 @@ virtualization setup-windows-dev-vm \
   --os "windows-11-pro" \
   --dev-stack "python,nodejs,docker,vscode,cursor" \
   --ai-stack "claude-desktop,ollama"
-  
+
 # Behind the scenes (20-30 minutes, fully automated):
 
 # 1. ISO Download (2-5 min)
@@ -788,7 +788,7 @@ virtualization setup-windows-dev-vm \
 - Tag with metadata (date, stack versions)
 ```
 
-**Manual process**: 
+**Manual process**:
 - Takes half a night (4-6 hours)
 - Requires constant attention (click through dialogs)
 - Easy to miss a step
@@ -909,7 +909,7 @@ dbops health-check prod-1
 ```
 **Perfect for**: Automation, scripts, emergency access
 
-### 🤖 MCP (Intelligent & Conversational)  
+### 🤖 MCP (Intelligent & Conversational)
 ```
 User: "Backup all databases and email me the status"
 Claude: [uses MCP tools, orchestrates, emails]
@@ -918,7 +918,7 @@ Claude: [uses MCP tools, orchestrates, emails]
 
 ### 🌐 REST API (Programmable)
 ```python
-requests.post("http://localhost:8000/api/backup", 
+requests.post("http://localhost:8000/api/backup",
               json={"database": "prod-1"})
 ```
 **Perfect for**: Web dashboards, monitoring, integrations
@@ -1089,7 +1089,7 @@ http://localhost:8000/api/{resource}
 ⭐ Advanced Memory MCP - 2.5k stars
    Knowledge management with full automation
 
-⭐ DBOps MCP - 800 stars  
+⭐ DBOps MCP - 800 stars
    Database operations for humans, AIs, and programs
 
 ⭐ Virtualization MCP - 600 stars
@@ -1182,24 +1182,23 @@ Total: 4,350+ stars across 4 flagship Triple Play servers
 
 ### Investment
 
-**Time**: 1 week per server (basic CLI + API)  
-**Risk**: Low (POC validates concept)  
+**Time**: 1 week per server (basic CLI + API)
+**Risk**: Low (POC validates concept)
 **Potential return**: High (market differentiation, 3x audience, premium positioning)
 
 **Recommendation**: **Build BOTH Virtualization and Blender MCPs** (both are critical - your examples prove MCP-only = impossible for complex workflows)
 
-**Changed from**: DBOps first  
-**Changed to**: Virtualization + Blender (tied for #1)  
+**Changed from**: DBOps first
+**Changed to**: Virtualization + Blender (tied for #1)
 **Why**: Both have workflows that are literally impossible via MCP (timeout), but trivial via CLI
 
-**Build order**: 
+**Build order**:
 1. Virtualization (1-2 weeks) - DevOps pain point
-2. Blender (1-2 weeks) - 3D artist pain point  
+2. Blender (1-2 weeks) - 3D artist pain point
 3. DBOps (1 week) - Still important, but simpler workflows
 
 ---
 
-*Strategic analysis of Triple Play MCP architecture*  
-*Competitive advantage through multi-interface design*  
+*Strategic analysis of Triple Play MCP architecture*
+*Competitive advantage through multi-interface design*
 *October 17, 2025*
-

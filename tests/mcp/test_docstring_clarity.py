@@ -92,9 +92,7 @@ def check_parameter_clarity(param_doc: str, param_name: str) -> list[str]:
     if "NOT USED" not in param_doc and "*" not in param_doc:
         # Should have operation-specific documentation
         if not re.search(r"\*\s+\w+\s+operation", param_doc):
-            issues.append(
-                f"Parameter '{param_name}' doesn't specify which operations use it"
-            )
+            issues.append(f"Parameter '{param_name}' doesn't specify which operations use it")
 
     # Check for REQUIRED/Optional/NOT USED markers
     if "REQUIRED" not in param_doc and "Optional" not in param_doc and "NOT USED" not in param_doc:
@@ -137,9 +135,9 @@ def test_portmanteau_tool_docstring_clarity(tool_name, tool):
             pattern_text = pattern_section.group(1)
             # Should be concise (not more than 3 lines)
             pattern_lines = [l.strip() for l in pattern_text.split("\n") if l.strip()]
-            assert (
-                len(pattern_lines) <= 3
-            ), f"{tool_name} PORTMANTEAU PATTERN section is too verbose ({len(pattern_lines)} lines)"
+            assert len(pattern_lines) <= 3, (
+                f"{tool_name} PORTMANTEAU PATTERN section is too verbose ({len(pattern_lines)} lines)"
+            )
 
     # Extract parameter documentation
     param_docs = extract_docstring_parameters(docstring)
@@ -202,4 +200,3 @@ def test_portmanteau_pattern_sections_are_concise():
 
     if issues:
         pytest.fail("PORTMANTEAU PATTERN sections should be concise:\n" + "\n".join(issues))
-

@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🎉 MCP Studio ADN Documentation & System Updates
 
-**Major release** with comprehensive MCP Studio knowledge base and critical system improvements.
 
 #### Added
 - **Complete MCP Studio ADN knowledge base** with 10 detailed ADN notes covering:
@@ -53,6 +52,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Prompt/resource registration** - FastMCP 2.12+ best practices implementation
 
 ## [Unreleased]
+
+## [1.1.0b1] - 2026-01-05
+
+### 🎙️ Audio Soul 2026 Upgrade
+
+**Major overhaul** of the audio stack, transitioning from generic to "soulful" and high-performance FOSS components.
+
+#### Added
+- **Kokoro TTS Integration**: Replaced `pyttsx3` with Kokoro for high-fidelity, expressive, and "soulful" text-to-speech.
+- **faster-whisper STT Integration**: Replaced `openai-whisper` with `faster-whisper` for significant speedups and improved accuracy in speech-to-text.
+- **GPU Acceleration**: Implemented `onnxruntime-gpu` support for RTX 409X+ optimization, enabling near-instant transcription and synthesis.
+- **Viennese Personality tuning**: Initial alignment of Kokoro voices with Sandra's Vienna-based persona.
+
+#### Changed
+- Moved all audio operations to use CUDA-accelerated `float16` precision by default on supported systems.
+- Optimized wake word detection and command transcription latency.
+
+### 🧠 SOTA Docstring Refactoring
+
+**Scannability overhaul** for all core portmanteau tools to ensure peak performance in agentic IDEs like Antigravity.
+
+#### Changed
+- Standardized docstrings for 12 core tools: `adn_audio`, `adn_content`, `adn_project`, `adn_skills`, `adn_search`, `adn_navigation`, `adn_knowledge`, `adn_llm`, `adn_inbox`, `adn_export`, `adn_import`, and `adn_zettelmaker`.
+- Implemented bracketed headers (`[SUPPORTED OPERATIONS]`, `[PARAMETERS]`) and horizontal rules for superior visual structure.
+- Removed emojis and nested triple quotes to prevent parsing issues in LLM tool calling contexts.
+- Updated all examples to use operation-based routing patterns correctly.
 
 ### Added
 - Portmanteau tool exerciser suite (`scripts/testing/test_*.py`) and Windows wrapper (`scripts/testing/run-all-tool-exercisers.ps1`) for smoke-testing every core tool group with success/failure validation and optional skip flags.

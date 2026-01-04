@@ -99,28 +99,28 @@ jobs:
           name: Advanced Memory MCP ${{ steps.version.outputs.version }}
           body: |
             ## 🚀 What's New in Advanced Memory MCP ${{ steps.version.outputs.version }}
-            
+
             ${{ steps.changelog.outputs.changelog }}
-            
+
             ## 📦 Installation
-            
+
             ### Claude Desktop Extension
             1. Download `advanced-memory-mcp.mcpb` from the assets below
             2. Open Claude Desktop
             3. Go to Settings > Extensions
             4. Drop the `.mcpb` file into the extensions page
-            
+
             ### Python Package
             ```bash
             pip install advanced-memory-mcp==${{ steps.version.outputs.version_number }}
             ```
-            
+
             ## 📚 Documentation
             - [Complete Guide](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/advanced-memory-guide.md)
             - [Quick Start](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/quick-start.md)
             - [Examples](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/examples.md)
             - [Troubleshooting](https://github.com/sandraschi/advanced-memory-mcp/blob/main/prompts/troubleshooting.md)
-            
+
             ## 🎯 Portmanteau Tools
             This release includes 8 consolidated portmanteau tools:
             - `adn_content` - Content management (write, read, edit, move, delete)
@@ -131,13 +131,13 @@ jobs:
             - `adn_knowledge` - Advanced knowledge operations and analytics
             - `adn_navigation` - Navigate and explore your knowledge base
             - `adn_editor` - Editor integration (Typora, Notepad++, etc.)
-            
+
             ## 🔧 Cursor IDE Compatibility
             The portmanteau tools reduce 40+ individual tools to just 8, making Advanced Memory MCP fully compatible with Cursor IDE's 50-tool limit.
-            
+
             ## 🐛 Bug Reports
             Found a bug? Please [report it](https://github.com/sandraschi/advanced-memory-mcp/issues/new?template=bug_report.md).
-            
+
             ## 💡 Feature Requests
             Have an idea? [Suggest a feature](https://github.com/sandraschi/advanced-memory-mcp/issues/new?template=feature_request.md).
           draft: false

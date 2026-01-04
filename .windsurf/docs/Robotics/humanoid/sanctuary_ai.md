@@ -1,4 +1,4 @@
-﻿# Sanctuary AI
+# Sanctuary AI
 
 ## Overview
 Sanctuary AIs a Canadian company on a mission to create the world's first human-like intelligence in general-purpose robots. Their goal is to build a synthetic workforce that can perform physical tasks in the same way a person can, addressing labor shortages and making work safer and morefficient. Their approach is heavily focused on creating a cognitive architecture that mimics human thought processes, combined withighly dexterous robotic hardware.

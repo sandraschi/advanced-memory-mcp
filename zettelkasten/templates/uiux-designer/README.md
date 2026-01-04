@@ -31,6 +31,6 @@ cp zettelkasten/templates/uiux-designer/<topic>/<note>.md \
 
 ---
 
-**Category**: Uiux Designer  
-**Templates**: 3  
+**Category**: Uiux Designer
+**Templates**: 3
 **Updated**: October 17, 2025

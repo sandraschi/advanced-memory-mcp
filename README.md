@@ -8,7 +8,7 @@
 
 A Model Context Protocol server that integrates personal knowledge management with Claude Desktop. Features include knowledge graphs, zettelkasten note-taking, and experimental Claude Skills integration.
 
-**New in v1.0.0b9**: Complete MCP Studio ADN documentation, ADN LLM integration, native PDF export, OneNote import, and critical stdio mode stability fixes.
+**New in v1.1.0b1**: SOTA docstring scannability overhaul across all core tools, Audio Soul 2026 upgrade, ADN LLM integration, and critical stdio mode stability fixes.
 
 [Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
 
@@ -65,7 +65,14 @@ adn_llm("select_model", provider="ollama", model="llama3.2:3b")
 
 **Note**: These are comprehensive reference documents (1000-5000 words), not classic atomic zettelkasten notes. See [Zettelkasten Philosophy](docs/zettelkasten/ZETTELKASTEN_PHILOSOPHY.md) for the distinction. Classic zettelkasten support (atomic notes) planned for v1.1.
 
-### 3. Cursor IDE Compatible - Tool Mode Selection
+### 5. Audio Soul 2026 (New!)
+
+High-performance, soulful voice stack built with SOTA FOSS components:
+- **High-Fidelity TTS**: Integrated Kokoro for expressive, human-like speech.
+- **Rapid Transcription**: Accelerated faster-whisper for near-instant STT.
+- **GPU Optimized**: Powered by `onnxruntime-gpu` for peak efficiency on modern hardware.
+
+### 6. Cursor IDE Compatible - Tool Mode Selection
 
 **Problem**: Most MCPs have 40+ tools → breaks Cursor's 50-tool limit
 **Solution**: Choose between 11 portmanteau tools or full 50+ tools

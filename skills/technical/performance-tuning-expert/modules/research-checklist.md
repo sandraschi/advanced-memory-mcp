@@ -3,25 +3,25 @@
 Run this review every 6 months or after major runtime/framework releases.
 
 ## 1. Source Refresh
-- [ ] Review performance engineering blogs (Google, Netflix, AWS, Microsoft) for new techniques.  
-- [ ] Track runtime release notes (JVM, Node.js, Python, Go, Rust).  
-- [ ] Monitor browser performance updates (Chrome, Firefox, Safari).  
+- [ ] Review performance engineering blogs (Google, Netflix, AWS, Microsoft) for new techniques.
+- [ ] Track runtime release notes (JVM, Node.js, Python, Go, Rust).
+- [ ] Monitor browser performance updates (Chrome, Firefox, Safari).
 - [ ] Follow CNCF/FinOps reports for cost-performance trends.
 
 ## 2. Benchmark Health
-- [ ] Re-run benchmarks under controlled environment; update baselines.  
-- [ ] Validate CI performance tests and adjust guardrails.  
-- [ ] Evaluate new profiling tools (eBPF, Parca, Pixie).  
+- [ ] Re-run benchmarks under controlled environment; update baselines.
+- [ ] Validate CI performance tests and adjust guardrails.
+- [ ] Evaluate new profiling tools (eBPF, Parca, Pixie).
 - [ ] Inspect production metrics for anomalies/regressions.
 
 ## 3. Documentation
-- [ ] Update runbooks and playbooks with latest techniques.  
-- [ ] Refresh onboarding material for profiling tools.  
+- [ ] Update runbooks and playbooks with latest techniques.
+- [ ] Refresh onboarding material for profiling tools.
 - [ ] Capture lessons learned from recent performance incidents.
 
 ## 4. Stakeholder Review
-- [ ] Meet with product/UX to confirm performance budgets remain relevant.  
-- [ ] Align with FinOps on cost/performance trade-offs.  
+- [ ] Meet with product/UX to confirm performance budgets remain relevant.
+- [ ] Align with FinOps on cost/performance trade-offs.
 - [ ] Share report summarizing wins, regressions, and roadmap.
 
 ## 5. Source Log

@@ -105,7 +105,7 @@ variables:
    name: my-template
    description: My awesome template
    version: 1.0.0
-   
+
    variables:
      - name: project_name
        description: Project name

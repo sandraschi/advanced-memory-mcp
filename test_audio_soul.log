@@ -1,0 +1,21 @@
+C:\Users\sandr\AppData\Local\Programs\Python\Python310\lib\site-packages\ctranslate2\__init__.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+
+--- Audio Soul 2026 Verification ---
+
+[1/2] Initializing faster-whisper (tiny) on GPU...
+[SUCCESS] faster-whisper loaded on CUDA.
+
+[2/2] Initializing Kokoro Pipeline...
+C:\Users\sandr\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\rnn.py:88: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.2 and num_layers=1
+  warnings.warn("dropout option adds dropout after all but last "
+C:\Users\sandr\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\utils\weight_norm.py:134: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+WARNING: Defaulting repo_id to hexgrad/Kokoro-82M. Pass repo_id='hexgrad/Kokoro-82M' to suppress this warning.
+[SUCCESS] Kokoro pipeline initialized.
+Synthesizing: 'The audio stack upgrade is complete. Sandra's voice is now soulful and efficient. Materialism rules.'
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+[SUCCESS] Audio saved to tests\output\audio_soul_test.wav
+Audio duration: 7.28 seconds
+
+--- Verification Complete ---

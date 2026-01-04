@@ -514,13 +514,13 @@ from advanced_memory.mcp.tools import read_note, write_note
 async def operation(identifier: str):
     # Error: FunctionTool not callable
     content = await read_note(identifier)
-    
+
     # Error: Missing client parameter
     response = await call_post("/api/search", json=query)
-    
+
     # Error: Path incompatible with str
     path: str = Path("/some/path")
-    
+
     # Error: No parameter named "error"
     logger.error("failed", error=str(e))
 ```
@@ -538,13 +538,13 @@ from pathlib import Path
 async def operation(identifier: str):
     # ✅ Use .fn() method
     content = await mcp_read_note.fn(identifier)
-    
+
     # ✅ Pass client first
     response = await call_post(client, "/api/search", json=query)
-    
+
     # ✅ Accept both types
     path: str | Path = Path("/some/path")
-    
+
     # ✅ Use positional formatting
     logger.error("failed: error=%s", str(e))
 ```
@@ -595,4 +595,3 @@ See also:
 - [Workflows Guide](./WORKFLOWS.md)
 - [Security Hardening](./SECURITY_HARDENING.md)
 - [Common Pitfalls](./README.md#common-pitfalls--solutions)
-

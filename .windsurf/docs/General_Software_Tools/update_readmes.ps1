@@ -242,13 +242,13 @@ $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 foreach ($file in $contentTemplates.Keys) {
     $fullPath = Join-Path -Path $basePath -ChildPath $file
     $content = $contentTemplates[$file]
-    
+
     # Ensure directory exists
     $dir = [System.IO.Path]::GetDirectoryName($fullPath)
     if (-not (Test-Path -Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
     }
-    
+
     $content | Out-File -FilePath $fullPath -Encoding utf8 -Force
     Write-Host "Updated: $file"
 }

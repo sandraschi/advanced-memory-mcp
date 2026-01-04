@@ -1,4 +1,4 @@
-﻿# Researchunk 02: Qdrant's Role in Windsurf AI and MCP
+# Researchunk 02: Qdrant's Role in Windsurf AI and MCP
 
 Date: 2025-05-23
 

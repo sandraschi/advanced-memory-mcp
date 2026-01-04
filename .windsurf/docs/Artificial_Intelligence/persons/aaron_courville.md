@@ -67,4 +67,3 @@ Courville completed his PhD athe University of Toronto under the supervision of 
 - [Mila - Quebec AInstitute](https://mila.quebec/)
 - [Theano](https://github.com/Theano/Theano) - Deep learning library Courville helpedevelop
 - [CIFAR](https://cifar.ca/) - Canadian Institute for Advanced Research
-

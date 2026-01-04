@@ -70,4 +70,3 @@ Born in Romania, Precup earned her BSc and MSc in Computer Science from the Tech
 - [DeepMind Research](https://deepmind.com/research/)
 - [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html) - Textbook by Sutton and Barto
 - [CIFAR](https://cifar.ca/) - Canadian Institute for Advanced Research
-

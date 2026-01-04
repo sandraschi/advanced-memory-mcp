@@ -50,6 +50,11 @@ async def list_directory(
 
         # Find meeting notes in a specific project
         list_directory(dir_name="/projects", file_name_glob="*meeting*", project="work-project")
+
+    Errors:
+        - "Directory not found": Returned if the provided 'dir_name' does not exist in the knowledge base.
+        - "Invalid recursion depth": Returned if the provided 'depth' is outside the allowed range (1-10).
+        - "Project not found": Returned if the specified 'project' name does not exist.
     """
     active_project = get_active_project(project)
     project_url = active_project.project_url

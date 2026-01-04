@@ -43,9 +43,9 @@ if ($Force) {
 if ($Message) {
     Write-Host "`nSTEP 2: Committing Changes`n" -ForegroundColor Yellow
     git add -A
-    
+
     $commitOutput = git commit -m "$Message" 2>&1
-    
+
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Changes committed`n" -ForegroundColor Green
     } elseif ($commitOutput -match "nothing to commit") {
@@ -74,13 +74,12 @@ Write-Host "✅ Pushed to $Branch`n" -ForegroundColor Green
 if (-not $NoMonitor) {
     Write-Host "STEP 4: Monitoring GitHub Actions`n" -ForegroundColor Yellow
     Write-Host "Starting automated CI monitoring...`n" -ForegroundColor White
-    
+
     & "$PSScriptRoot\monitor-ci.ps1" -AutoFix -Continuous -Branch $Branch
-    
+
     exit $LASTEXITCODE
 } else {
     Write-Host "STEP 4: Monitoring Skipped`n" -ForegroundColor Yellow
     Write-Host "Check manually: https://github.com/sandraschi/advanced-memory-mcp/actions`n" -ForegroundColor Cyan
     exit 0
 }
-

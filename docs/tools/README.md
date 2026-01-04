@@ -238,7 +238,6 @@ choco install 7zip
 
 ---
 
-**Created**: October 17, 2025  
-**Purpose**: Centralized tool documentation  
+**Created**: October 17, 2025
+**Purpose**: Centralized tool documentation
 **Status**: In progress (2 tools documented, more coming)
-

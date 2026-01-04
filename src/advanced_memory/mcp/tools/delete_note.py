@@ -169,6 +169,12 @@ async def delete_note(identifier: str, project: str | None = None) -> bool | str
 
         # Delete from specific project
         delete_note("notes/project-planning", project="work-project")
+
+    Errors:
+        - "Note Not Found": Returned if the note could not be located in the current project for deletion.
+        - "Permission Error": Returned if you lack sufficient access to delete the note or if the file is locked by another application.
+        - "System Error": Returned for temporary system issues, filesystem errors, or disk space problems.
+        - "Database Error": Returned if a sync conflict, database lock, or database entry corruption occurs.
     """
     active_project = get_active_project(project)
     project_url = active_project.project_url

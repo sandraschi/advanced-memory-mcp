@@ -1,4 +1,4 @@
-﻿# Agentic AI-Based Vibe Coding (Karpathy): Pros, Cons, and Metaspects
+# Agentic AI-Based Vibe Coding (Karpathy): Pros, Cons, and Metaspects
 
 ## 9. Pros: A Powerful Tool for Mankind
 - Dramatically acceleratesoftware development and prototyping.

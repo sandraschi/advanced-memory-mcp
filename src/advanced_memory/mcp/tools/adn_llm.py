@@ -37,58 +37,82 @@ async def adn_llm(
     base_url: str | None = None,
     api_key: str | None = None,
 ) -> str:
-    """Comprehensive LLM management tool for Advanced Memory.
+    """LLM Portmanteau for Advanced Memory.
 
-    PORTMANTEAU PATTERN: Consolidates 7 LLM operations into one tool.
+    This tool consolidates the entire LLM lifecycle management, providing a
+    unified interface for local and hosted model providers.
 
-    SUPPORTED OPERATIONS:
-    - list_models: List available models for a provider
-    - list_providers: List available/configured providers
-    - select_model: Select a model to use (doesn't load, just sets preference)
-    - load_model: Load a model into memory (Ollama/LM Studio)
-    - unload_model: Unload a model from memory (Ollama/LM Studio)
-    - status: Get current LLM configuration and status
-    - health: Check health of LLM providers
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Instead of separate tools for each LLM provider or operation, this tool consolidates
+    the entire LLM lifecycle management. This design:
+    - Unifies configuration across disparate providers (Ollama, LM Studio, OpenAI)
+    - Centralizes model selection and persistence logic
+    - Provides consistent health check and status reporting
+    - Simplifies switching between local and hosted models
 
-    PROVIDERS:
-    - ollama: Local models via Ollama (default: http://localhost:11434)
-    - lmstudio: Local models via LM Studio (default: http://localhost:1234)
-    - openai: Hosted models via OpenAI API
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - list_models: List available models for a specific provider.
+    - list_providers: Enumerate configured and detected providers.
+    - select_model: Persist model selection preferences.
+    - load_model: Explicitly load model into memory (for local providers).
+    - unload_model: Free up system resources (for local providers).
+    - status: Current configuration and active model state.
+    - health: Connectivity check for all configured providers.
 
-    Args:
-        operation: The operation to perform (list_models, list_providers, select_model, load_model, unload_model, status, health)
-        provider: Provider name
-                    * list_models, select_model, load_model, unload_model, health operations: REQUIRED - Provider name ("ollama", "lmstudio", "openai")
-                    * Other operations: NOT USED
-        model: Model name/identifier
-                    * select_model, load_model operations: REQUIRED - Model name (e.g., "llama3", "gpt-4")
-                    * unload_model operation: Optional - Specific model to unload (if not provided, unloads all)
-                    * Other operations: NOT USED
-        base_url: Custom base URL for provider (overrides defaults)
-                    * list_models, load_model, unload_model, health operations: Optional - Custom base URL (defaults to provider default)
-                    * Other operations: NOT USED
-        api_key: API key (for OpenAI, or if required by provider)
-                    * load_model operation: Optional - API key for OpenAI or custom providers
-                    * Other operations: NOT USED
+    ---------------------------------------------------------------------------
+    [PROVIDERS]
+    - ollama: Local inference via Ollama (default: localhost:11434).
+    - lmstudio: Local OpenAI-compatible server (default: localhost:1234).
+    - openai: Hosted API (requires OPENAI_API_KEY).
 
-    Returns:
-        Operation-specific result with model/provider information
+    ---------------------------------------------------------------------------
+    [OPERATIONS DETAIL]
 
-    Examples:
-        # List available providers
-        adn_llm("list_providers")
+    list_models: Discovery
+    - Parameters: provider (required), base_url (optional).
+    - Returns: List of available model identifiers and metadata.
+    - Use when: exploring available models to use.
 
-        # List models for Ollama
-        adn_llm("list_models", provider="ollama")
+    select_model: Configuration
+    - Parameters: provider (required), model (required).
+    - Function: Updates persistent configuration.
+    - Use when: Switching your preferred default model.
 
-        # Load a model in Ollama
-        adn_llm("load_model", provider="ollama", model="llama3")
+    load_model: Resource Management
+    - Parameters: provider (required), model (required).
+    - Use when: Pre-warming a local model before intensive tasks.
 
-        # Select OpenAI model
-        adn_llm("select_model", provider="openai", model="gpt-4")
+    status: System State
+    - Returns: Current active model, provider health, and config.
+    - Use when: Debugging LLM connection issues.
 
-        # Check status
-        adn_llm("status")
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The LLM operation to perform (Required).
+    - provider (str): Provider identifier ("ollama", "lmstudio", "openai").
+    - model (str): Model identifier (e.g., "llama3", "gpt-4").
+    - base_url (str): Custom API endpoint URL.
+    - api_key (str): API key for hosted providers.
+
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+
+    - Check current status:
+      adn_llm(operation="status")
+
+    - Switch to local model:
+      adn_llm(operation="select_model", provider="ollama", model="llama3:8b")
+
+    - List OpenAI models:
+      adn_llm(operation="list_models", provider="openai")
+
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Provider Required: Missing provider for list/load operations.
+    - Connection Failed: Unable to reach the specified LLM service.
+    - Model Not Found: Specified model does not exist on the provider.
     """
     global _current_provider, _current_model
 

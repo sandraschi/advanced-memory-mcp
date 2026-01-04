@@ -27,7 +27,7 @@ User: "I'm a full-stack developer, love cooking, and interested in AI"
 Advanced Memory: "Perfect! Creating your starter Zettelkasten..."
 
 ✅ Created: "Full-Stack Development" (50 notes)
-✅ Created: "Cooking & Recipes" (30 notes)  
+✅ Created: "Cooking & Recipes" (30 notes)
 ✅ Created: "AI & Technology" (40 notes)
 ✅ Created: "What's Hot in AI" (20 notes)
 ✅ Created: "Claude Agent Templates" (15 notes)
@@ -51,14 +51,14 @@ starter_content:
     - Node.js, Express, FastAPI
     - Database design (SQL, NoSQL)
     - API design principles
-  
+
   - "DevOps & Infrastructure" (15 notes)
     - Docker, Kubernetes basics
     - CI/CD pipelines
     - Cloud platforms (AWS, GCP, Azure)
     - Monitoring & logging
     - Security best practices
-  
+
   - "Advanced Memory MCP Development" (15 notes)
     - docs/ folder content (all markdown files)
     - MCP server architecture
@@ -76,13 +76,13 @@ starter_content:
     - FastMCP framework guide
     - Tool development patterns
     - Testing with megatest framework
-  
+
   - "Portmanteau Tools Architecture" (10 notes)
     - Tool consolidation strategies
     - Avoiding tool explosion
     - User experience optimization
     - Performance considerations
-  
+
   - "MCP Server Examples" (15 notes)
     - Virtualization MCP patterns
     - Database MCP patterns
@@ -99,14 +99,14 @@ starter_content:
     - Model training & evaluation
     - Data preprocessing
     - Feature engineering
-  
+
   - "LLM Development" (15 notes)
     - Prompt engineering patterns
     - Fine-tuning strategies
     - RAG (Retrieval Augmented Generation)
     - Agent development
     - MCP server integration
-  
+
   - "AI Ethics & Safety" (10 notes)
     - Bias detection & mitigation
     - Responsible AI development
@@ -125,14 +125,14 @@ starter_content:
     - Flavor balancing
     - Texture mastery
     - Presentation techniques
-  
+
   - "Recipe Collections" (20 notes)
     - Quick weekday meals
     - Weekend special dishes
     - Baking fundamentals
     - International cuisines
     - Dietary adaptations (vegan, keto, etc.)
-  
+
   - "Kitchen Science" (10 notes)
     - Maillard reactions
     - Emulsification
@@ -150,14 +150,14 @@ starter_content:
     - Meaning-making in uncertainty
     - Resilience frameworks
     - Hope and purpose
-  
+
   - "AI & Neurophilosophy" (20 notes)
     - Consciousness and AI
     - Free will in digital age
     - Identity and technology
     - Ethics of artificial minds
     - Human-AI collaboration
-  
+
   - "Critical Thinking" (10 notes)
     - Logical fallacies
     - Cognitive biases
@@ -177,14 +177,14 @@ starter_content:
     - New model releases
     - Industry developments
     - Research highlights
-  
+
   - "AI History & Milestones" (20 notes)
     - Important persons (Turing, McCarthy, Hinton, etc.)
     - Key breakthroughs timeline
     - Winter periods & recoveries
     - Paradigm shifts
     - Cultural impact
-  
+
   - "AI Promises & Threats" (15 notes)
     - Cassandra predictions (doomsayers)
     - Pollyanna optimism (boosters)
@@ -202,14 +202,14 @@ starter_content:
     - Writing workflows
     - Code review templates
     - Meeting summaries
-  
+
   - "Knowledge Management" (15 notes)
     - Zettelkasten principles
     - Note-taking strategies
     - Information architecture
     - Search optimization
     - Review systems
-  
+
   - "Productivity Systems" (10 notes)
     - Getting Things Done (GTD)
     - Time blocking
@@ -229,14 +229,14 @@ starter_content:
     - Analysis frameworks
     - Writing strategies
     - Presentation skills
-  
+
   - "Academic Writing" (15 notes)
     - Citation styles
     - Argument construction
     - Peer review process
     - Publication strategies
     - Collaboration tools
-  
+
   - "Learning Techniques" (10 notes)
     - Active recall
     - Spaced repetition
@@ -255,16 +255,16 @@ starter_content:
 async def create_starter_zettelkasten():
     console.print("🎉 Welcome to Advanced Memory!")
     console.print("Let's create your personalized knowledge base...")
-    
+
     # Interest detection
     interests = await detect_interests()
-    
+
     # Content selection
     starter_content = select_starter_content(interests)
-    
+
     # Creation process
     await create_zettelkasten_content(starter_content)
-    
+
     console.print("✅ Your personalized Zettelkasten is ready!")
 ```
 
@@ -274,15 +274,15 @@ async def create_starter_zettelkasten():
 ```python
 async def detect_interests() -> list[str]:
     """Interactive interest detection"""
-    
+
     console.print("\n📋 Quick questions to personalize your experience:")
-    
+
     # Primary profession
     profession = await ask_multiple_choice(
         "What's your primary field?",
         ["Software Development", "Design", "Writing", "Research", "Business", "Other"]
     )
-    
+
     # Specific interests
     interests = await ask_checkboxes(
         "What topics interest you?",
@@ -292,7 +292,7 @@ async def detect_interests() -> list[str]:
             "Psychology", "Science", "History", "Productivity"
         ]
     )
-    
+
     # Specializations
     if profession == "Software Development":
         specialization = await ask_multiple_choice(
@@ -300,7 +300,7 @@ async def detect_interests() -> list[str]:
             ["Frontend", "Backend", "Full-Stack", "Mobile", "AI/ML", "DevOps"]
         )
         interests.append(specialization)
-    
+
     return interests
 ```
 
@@ -308,13 +308,13 @@ async def detect_interests() -> list[str]:
 ```python
 async def detect_interests_from_files() -> list[str]:
     """Detect interests from existing files"""
-    
+
     # Check for common development folders
     dev_indicators = [
         "package.json", "requirements.txt", "Dockerfile",
         "README.md", ".git", "src/", "lib/"
     ]
-    
+
     # Check for specific technologies
     tech_indicators = {
         "react": ["node_modules/react"],
@@ -322,12 +322,12 @@ async def detect_interests_from_files() -> list[str]:
         "docker": ["Dockerfile", "docker-compose.yml"],
         "mcp": ["mcpb.json", "manifest.json"]
     }
-    
+
     detected = []
     for tech, files in tech_indicators.items():
         if any(Path(f).exists() for f in files):
             detected.append(tech)
-    
+
     return detected
 ```
 
@@ -335,9 +335,9 @@ async def detect_interests_from_files() -> list[str]:
 ```python
 async def detect_interests_from_environment() -> list[str]:
     """Detect interests from system environment"""
-    
+
     interests = []
-    
+
     # Check installed tools
     if shutil.which("node"):
         interests.append("javascript")
@@ -347,12 +347,12 @@ async def detect_interests_from_environment() -> list[str]:
         interests.append("docker")
     if shutil.which("git"):
         interests.append("development")
-    
+
     # Check for IDE configurations
     ide_configs = [".vscode", ".idea", "vimrc", ".emacs"]
     if any(Path(config).exists() for config in ide_configs):
         interests.append("development")
-    
+
     return interests
 ```
 
@@ -366,30 +366,30 @@ class StarterContentTemplate:
     def __init__(self, category: str, base_notes: list[dict]):
         self.category = category
         self.base_notes = base_notes
-    
+
     def generate_notes(self, user_context: dict) -> list[Note]:
         """Generate personalized notes"""
         notes = []
-        
+
         for note_template in self.base_notes:
             note = self.personalize_note(note_template, user_context)
             notes.append(note)
-        
+
         return notes
-    
+
     def personalize_note(self, template: dict, context: dict) -> Note:
         """Personalize note content based on user context"""
-        
+
         content = template["content"]
-        
+
         # Replace placeholders
         if "{user_name}" in content:
             content = content.replace("{user_name}", context.get("name", "User"))
-        
+
         if "{experience_level}" in content:
             level = context.get("experience", "beginner")
             content = content.replace("{experience_level}", level)
-        
+
         return Note(
             title=template["title"],
             content=content,
@@ -458,7 +458,7 @@ async function fetchData() {
         "folder": "development/javascript",
         "tags": ["javascript", "es6", "fundamentals", "modern"]
     },
-    
+
     {
         "title": "React Component Patterns",
         "content": """# React Component Patterns
@@ -471,7 +471,7 @@ import React, { useState } from 'react';
 
 function Counter() {
     const [count, setCount] = useState(0);
-    
+
     return (
         <div>
             <p>Count: {count}</p>
@@ -490,7 +490,7 @@ import React, { useState, useEffect } from 'react';
 function DataFetcher({ url }) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+
     useEffect(() => {
         fetch(url)
             .then(response => response.json())
@@ -499,9 +499,9 @@ function DataFetcher({ url }) {
                 setLoading(false);
             });
     }, [url]); // Dependency array
-    
+
     if (loading) return <div>Loading...</div>;
-    
+
     return <div>{JSON.stringify(data)}</div>;
 }
 \`\`\`
@@ -586,7 +586,7 @@ COOKING_NOTES = [
         "folder": "cooking/techniques",
         "tags": ["knives", "techniques", "safety", "fundamentals"]
     },
-    
+
     {
         "title": "Quick Weekday Meals",
         "content": """# Quick Weekday Meals
@@ -659,40 +659,40 @@ class AIHotTopicsUpdater:
     def __init__(self):
         self.last_update = None
         self.update_interval = timedelta(days=7)  # Weekly updates
-    
+
     async def update_ai_content(self):
         """Update AI-related content with latest developments"""
-        
+
         if self.should_update():
             # Fetch latest AI news
             ai_news = await fetch_ai_news()
-            
+
             # Create/update notes
             await create_ai_news_notes(ai_news)
-            
+
             # Update last update time
             self.last_update = datetime.now()
-    
+
     async def fetch_ai_news(self) -> list[dict]:
         """Fetch latest AI developments from various sources"""
-        
+
         sources = [
             "https://openai.com/blog/",
             "https://www.anthropic.com/news",
             "https://deepmind.com/blog/",
             "https://huggingface.co/blog"
         ]
-        
+
         news_items = []
         for source in sources:
             items = await scrape_ai_news(source)
             news_items.extend(items)
-        
+
         return news_items
-    
+
     async def create_ai_news_notes(self, news_items: list[dict]):
         """Create notes from AI news items"""
-        
+
         for item in news_items:
             note_content = f"""# {item['title']}
 
@@ -714,7 +714,7 @@ class AIHotTopicsUpdater:
 
 *Updated: {datetime.now().strftime('%Y-%m-%d')}*
 """
-            
+
             await write_note(
                 title=item['title'],
                 content=note_content,
@@ -731,42 +731,42 @@ class AIHotTopicsUpdater:
 
 async def run_onboarding_wizard():
     """Complete onboarding experience"""
-    
+
     console.print("🎉 Welcome to Advanced Memory!")
     console.print("Let's create your personalized Zettelkasten...")
-    
+
     # Step 1: Basic info
     user_info = await collect_user_info()
-    
+
     # Step 2: Interest detection
     interests = await detect_interests()
-    
+
     # Step 3: Content selection
     selected_content = await select_starter_content(interests)
-    
+
     # Step 4: Customization
     customizations = await customize_content(selected_content)
-    
+
     # Step 5: Creation
     await create_starter_zettelkasten(user_info, customizations)
-    
+
     # Step 6: Tour
     await show_feature_tour()
-    
+
     console.print("✅ Your personalized knowledge base is ready!")
     console.print("🎯 Start exploring and adding your own notes!")
 
 async def collect_user_info() -> dict:
     """Collect basic user information"""
-    
+
     console.print("\n📝 Tell us about yourself:")
-    
+
     name = await ask_text("What's your name?", optional=True)
     experience = await ask_multiple_choice(
         "What's your experience level?",
         ["Beginner", "Intermediate", "Advanced", "Expert"]
     )
-    
+
     return {
         "name": name,
         "experience": experience,
@@ -775,29 +775,29 @@ async def collect_user_info() -> dict:
 
 async def select_starter_content(interests: list[str]) -> dict:
     """Let user select from available content"""
-    
+
     console.print(f"\n🎯 Based on your interests: {', '.join(interests)}")
     console.print("Here's what we can create for you:")
-    
+
     available_content = get_content_for_interests(interests)
-    
+
     selections = {}
     for category, content in available_content.items():
         console.print(f"\n📁 {category}:")
         for item in content:
             console.print(f"  • {item['title']} ({item['note_count']} notes)")
-        
+
         selected = await ask_checkboxes(
             f"Select {category} content:",
             [item['title'] for item in content],
             default_all=True
         )
-        
+
         selections[category] = [
-            item for item in content 
+            item for item in content
             if item['title'] in selected
         ]
-    
+
     return selections
 ```
 
@@ -805,26 +805,26 @@ async def select_starter_content(interests: list[str]) -> dict:
 ```python
 async def show_feature_tour():
     """Show user around their new Zettelkasten"""
-    
+
     console.print("\n🎯 Let's explore your new knowledge base!")
-    
+
     # Show folder structure
     console.print("\n📁 Your Zettelkasten Structure:")
     await show_folder_tree()
-    
+
     # Highlight key features
     console.print("\n✨ Key Features to Try:")
     console.print("  • Search: 'advanced-memory search <term>'")
     console.print("  • Create: 'advanced-memory write \"My Note\"'")
     console.print("  • Browse: 'advanced-memory list'")
     console.print("  • Export: 'advanced-memory export docsify'")
-    
+
     # Show sample notes
     console.print("\n📄 Sample Notes Created:")
     sample_notes = await get_sample_notes(limit=5)
     for note in sample_notes:
         console.print(f"  • {note.title}")
-    
+
     console.print("\n🎉 You're all set! Start adding your own notes!")
 ```
 

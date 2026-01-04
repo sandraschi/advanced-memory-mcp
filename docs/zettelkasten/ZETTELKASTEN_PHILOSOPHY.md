@@ -677,7 +677,7 @@ Output: Hierarchical website/PDF/DOCX (organized, TOC, search)
 
 ### Both Are Valuable
 
-**Classic Zettelkasten**: Personal thinking, research, ideation  
+**Classic Zettelkasten**: Personal thinking, research, ideation
 **Reference Library**: Learning, teaching, sharing, Skills
 
 **Not either/or**: Support both, explain when to use which
@@ -711,8 +711,7 @@ Output: Hierarchical website/PDF/DOCX (organized, TOC, search)
 
 ---
 
-**Last Updated**: October 20, 2025  
+**Last Updated**: October 20, 2025
 **Status**: Analysis complete, implementation pending
 
 **Discussion welcome**: This is a fundamental architectural decision. Community input appreciated via [GitHub Discussions](https://github.com/sandraschi/advanced-memory-mcp/discussions).
-

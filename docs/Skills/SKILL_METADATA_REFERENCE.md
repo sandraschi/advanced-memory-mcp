@@ -1,7 +1,7 @@
 # Claude Skills Metadata Reference
 
-**Last Updated:** 2025-10-27  
-**Advanced Memory MCP Version:** 1.0.0+  
+**Last Updated:** 2025-10-27
+**Advanced Memory MCP Version:** 1.0.0+
 **Claude Skills Spec:** Anthropic (October 2025)
 
 ---
@@ -72,19 +72,19 @@ metadata:
   # Categorization
   category: developer       # developer, researcher, writer, knowledge-worker, etc.
   difficulty: advanced      # beginner, intermediate, advanced, expert
-  
+
   # Timestamps
   created: 2025-10-27
   modified: 2025-10-27
-  
+
   # Authorship
   author: Sandra Schipal
   version: 1.2.0
-  
+
   # Organization
   tags: ["python", "automation", "scripting"]
   project: personal-skills
-  
+
   # Custom fields (anything you need!)
   language: English
   domain: programming
@@ -403,7 +403,6 @@ adn_skills("validate", identifier="my-skill")
 
 ---
 
-**Last Updated:** 2025-10-27  
-**Maintainer:** Sandra Schipal  
+**Last Updated:** 2025-10-27
+**Maintainer:** Sandra Schipal
 **Version:** 1.0.0
-

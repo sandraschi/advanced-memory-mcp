@@ -1,6 +1,6 @@
 # Advanced Memory MCP - Portmanteau Tools Reference
 
-**Version:** 1.0.0b2  
+**Version:** 1.0.0b2
 **Purpose:** Complete reference for all 12 portmanteau tools
 
 ## Overview
@@ -19,7 +19,7 @@ Advanced Memory MCP uses **portmanteau tools** to consolidate 50+ individual too
 Create or update a note.
 
 ```python
-adn_content("write", 
+adn_content("write",
     identifier="Meeting Notes",
     content="# Meeting\n\n## Attendees\n- Alice\n- Bob",
     folder="meetings",
@@ -51,14 +51,14 @@ Edit a note incrementally.
 
 ```python
 # Append content
-adn_content("edit", 
+adn_content("edit",
     identifier="Meeting Notes",
-    operation="append", 
+    operation="append",
     content="\n\n## Action Items\n- [ ] Task 1")
 
 # Prepend content
 adn_content("edit",
-    identifier="Meeting Notes", 
+    identifier="Meeting Notes",
     operation="prepend",
     content="# Updated Meeting\n\n")
 

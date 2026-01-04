@@ -23,7 +23,7 @@ The `"*"` wildcard in CORS origins was conflicting with specific origins, causin
 ```python
 ALLOWED_ORIGINS: List[str] = [
     "http://localhost:4710",
-    "http://goliath:4710", 
+    "http://goliath:4710",
     "http://100.118.171.110:4710",
     "*",  # ❌ This wildcard caused conflicts
 ]
@@ -33,7 +33,7 @@ ALLOWED_ORIGINS: List[str] = [
 ```python
 ALLOWED_ORIGINS: List[str] = [
     "http://localhost:4710",
-    "http://127.0.0.1:4710", 
+    "http://127.0.0.1:4710",
     "http://goliath:4710",  # Tailscale hostname
     "http://100.118.171.110:4710",  # Tailscale IP
     "http://goliath:4700",  # Backend API access
@@ -73,7 +73,7 @@ After containers restart (30 seconds):
 
 ### ✅ Should Work Now:
 - **PC Tailscale**: `http://goliath:4710/` → Login successful
-- **Mobile Tailscale**: `http://100.118.171.110:4710/` → Login successful  
+- **Mobile Tailscale**: `http://100.118.171.110:4710/` → Login successful
 - **PC Local**: `http://127.0.0.1:4710/` → Still works (unchanged)
 
 ### 🔍 Verification Steps:
@@ -100,7 +100,7 @@ After containers restart (30 seconds):
 
 ### Sandra's Network Infrastructure:
 - **Public IP**: `213.47.34.131`
-- **PC Hostname**: `goliath` 
+- **PC Hostname**: `goliath`
 - **Tailscale IP**: `100.118.171.110`
 - **Tailscale Status**: Active on PC and iOS devices
 

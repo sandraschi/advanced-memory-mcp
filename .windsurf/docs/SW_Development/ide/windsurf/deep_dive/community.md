@@ -4,7 +4,7 @@
 
 As a user of the Windsurf Agentic AIDE, you are part of a growing community oforward-thinking developers, researchers, and AI enthusiasts who are shaping the future of software development. Engaging withis community is a fantastic way to accelerate your learning, share your successes, and contribute to thevolution of the platform. This guide provides an overview of the key resources available to you.
 
---- 
+---
 
 ### 1. The Official Windsurforums
 

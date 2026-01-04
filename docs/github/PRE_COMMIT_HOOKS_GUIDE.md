@@ -2,8 +2,8 @@
 
 **Comprehensive guide to pre-commit hooks: what they are, how they work, and which ones to use**
 
-**Date**: October 17, 2025  
-**For**: Advanced Memory MCP + all Python projects  
+**Date**: October 17, 2025
+**For**: Advanced Memory MCP + all Python projects
 **Status**: Production configuration included
 
 ---
@@ -312,8 +312,8 @@ git commit -m "feat: add new feature"
   args: ['--maxkb=1000']
 ```
 
-**Current**: 1MB limit  
-**Could increase**: `--maxkb=5000` (5MB)  
+**Current**: 1MB limit
+**Could increase**: `--maxkb=5000` (5MB)
 **Could decrease**: `--maxkb=500` (500KB for stricter control)
 
 **Recommendation**: **Keep as-is** (1MB is good)
@@ -405,7 +405,7 @@ repos:
     hooks:
       - id: ruff (auto-fixes most issues)
       - id: ruff-format (auto-formats code)
-  
+
   # 2. Standard hooks (9 file quality checks)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     hooks:
@@ -418,7 +418,7 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
       - id: mixed-line-ending
-  
+
   # 3. Detect-secrets (security)
   - repo: https://github.com/Yelp/detect-secrets
     hooks:
@@ -530,22 +530,22 @@ git commit -m "fix: update code"
 2. Runs .git/hooks/pre-commit
 3. Pre-commit framework reads .pre-commit-config.yaml
 4. Runs each hook in order:
-   
+
    Running ruff...
    ✅ Passed (auto-fixed 2 issues)
-   
+
    Running ruff-format...
    ✅ Passed (formatted 1 file)
-   
+
    Running trailing-whitespace...
    ✅ Passed
-   
+
    Running check-yaml...
    ✅ Passed
-   
+
    Running detect-secrets...
    ✅ Passed (no secrets detected)
-   
+
    ... (all 12 hooks run)
 
 5. If ALL pass → Commit proceeds
@@ -1067,9 +1067,8 @@ uv run pre-commit clean
 
 ---
 
-**Created**: October 17, 2025  
-**For**: Advanced Memory MCP + all Python projects  
+**Created**: October 17, 2025
+**For**: Advanced Memory MCP + all Python projects
 **Status**: Enhanced configuration ready to apply
 
 **Commit with confidence!** 🪝✨
-

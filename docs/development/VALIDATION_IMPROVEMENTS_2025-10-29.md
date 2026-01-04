@@ -1,6 +1,6 @@
 # Validation Improvements - Complete Technical Notes
-**Date:** October 29, 2025  
-**Session:** Comprehensive Portmanteau Tools Validation Overhaul  
+**Date:** October 29, 2025
+**Session:** Comprehensive Portmanteau Tools Validation Overhaul
 **Philosophy:** "Times are a changin' - AIs actually will read and understand error responses"
 
 ---
@@ -85,18 +85,18 @@ def validate_type(type_value: str):
 def validate_type(type_values: list[str]):
     validated_types = []
     invalid_types = []
-    
+
     for t in type_values:
         try:
             validated_types.append(SearchItemType(t))
         except ValueError:
             invalid_types.append(t)
             logger.warning(f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types.")
-    
+
     # Use valid types if we have them
     if validated_types:
         return validated_types
-    
+
     # Fall back to all types if all were invalid
     elif invalid_types:
         valid_types = [t.value for t in SearchItemType]
@@ -159,15 +159,15 @@ Fallback: Invalid types are ignored. If all types are invalid, falls back to all
 recent_activity(type="entity")  # ✅ Works as expected
 
 # Invalid type
-recent_activity(type="invalid")  
+recent_activity(type="invalid")
 # ⚠️ Logs warning, returns all types
 
 # Mixed valid/invalid
-recent_activity(type=["entity", "invalid", "observation"])  
+recent_activity(type=["entity", "invalid", "observation"])
 # ⚠️ Logs warning for "invalid", returns entity + observation
 
 # All invalid
-recent_activity(type=["foo", "bar"])  
+recent_activity(type=["foo", "bar"])
 # ⚠️ Logs warning, returns all types
 ```
 
@@ -191,7 +191,7 @@ if entity_types:
             # Track invalid types but don't fail
             invalid_entity_types.append(t)
             logger.warning(f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types.")
-    
+
     # If we have valid types, use them. If all were invalid, fall back to all types
     if validated_entity_types:
         search_query.entity_types = validated_entity_types
@@ -363,7 +363,7 @@ from typing import Literal
 # Line 25: Operation parameter with 11 valid options
 async def adn_content(
     operation: Literal[
-        "write", "read", "read_latest", "view", "view_rendered", 
+        "write", "read", "read_latest", "view", "view_rendered",
         "edit", "edit_tags", "quick", "daily", "move", "delete"
     ],
     identifier: str | None = None,
@@ -372,10 +372,10 @@ async def adn_content(
     tags: TagType | None = None,
     entity_type: str = "note",
     destination_path: str | None = None,
-    
+
     # Line 32: Edit operation with 4 valid types
     edit_operation: Literal["append", "prepend", "find_replace", "replace_section"] | None = None,
-    
+
     # Line 33: Tag operation with 4 valid types
     tag_operation: Literal["add", "remove", "replace", "clear"] | None = None,
     ...
@@ -399,7 +399,7 @@ from typing import Literal
 # Line 28: Operation parameter with 8 valid options
 async def adn_project(
     operation: Literal[
-        "create", "switch", "delete", "set_default", 
+        "create", "switch", "delete", "set_default",
         "get_current", "list", "sync", "status"
     ],
     project_name: str | None = None,
@@ -479,7 +479,7 @@ async def adn_zettelmaker(
     depth: int = 3,
     count: int = 5,
     ai_generate: bool = False,
-    
+
     # Line 35: Quality parameter with 4 valid options
     quality: Literal["quick", "standard", "comprehensive", "expert"] = "standard",
     ctx: Context | None = None,
@@ -502,20 +502,20 @@ The graceful fallback pattern follows a consistent structure:
 ```python
 def validate_enum_parameter(values: list[str], enum_class: Type[Enum]):
     """Generalized enum validation with graceful fallback.
-    
+
     Returns:
         tuple[list[Enum], list[str]]: (validated_values, invalid_values)
     """
     validated = []
     invalid = []
-    
+
     for value in values:
         try:
             validated.append(enum_class(value.lower()))
         except ValueError:
             invalid.append(value)
             logger.warning(f"Invalid {enum_class.__name__} value: '{value}'. Ignoring.")
-    
+
     return validated, invalid
 ```
 
@@ -805,7 +805,7 @@ def test_all_invalid_type_filters():
 def test_edit_note_invalid_operation_error_message():
     """Test that invalid edit operations return helpful error messages."""
     result = await edit_note("Test Note", operation="invalid_op", content="test")
-    
+
     # Should return markdown error, not raise exception
     assert "# Edit Failed" in result
     assert "invalid_op" in result
@@ -816,7 +816,7 @@ def test_edit_note_invalid_operation_error_message():
 def test_edit_note_missing_find_text_error_message():
     """Test that missing find_text returns helpful error message."""
     result = await edit_note("Test Note", operation="find_replace", content="new")
-    
+
     assert "# Edit Failed" in result
     assert "Missing:" in result
     assert "find_text" in result
@@ -870,7 +870,7 @@ await edit_note("My Note", operation="find_replace", content="new")
 
 ### 1. AI-Friendly Error Messages Are Human-Friendly Too
 
-Initial assumption: "We're making this better for AI assistants"  
+Initial assumption: "We're making this better for AI assistants"
 Reality: Human developers benefit just as much from structured, example-rich errors
 
 **Key Insight:** Good error messages should be:
@@ -1093,4 +1093,3 @@ Focus on high-leverage improvements first.
 ---
 
 **End of Technical Notes**
-

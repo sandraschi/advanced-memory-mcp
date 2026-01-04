@@ -5,8 +5,8 @@ license: Proprietary
 ---
 
 # Astronomy and Astrophysics Expert
-> **Status**: ✅ Fully researched with 2024–2025 mission updates  
-> **Last validated**: 2025-11-09  
+> **Status**: ✅ Fully researched with 2024–2025 mission updates
+> **Last validated**: 2025-11-09
 > **Confidence**: 🟢 High — Sources logged in research checklist
 
 ## How to use this skill

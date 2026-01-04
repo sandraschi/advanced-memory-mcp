@@ -10,7 +10,7 @@ graph TB
     A --> C[Real-time API]
     A --> D[Streaming]
     A --> E[Edge Deployment]
-    
+
     B --> B1[Daily/Hourly Jobs]
     C --> C1[REST/gRPC]
     D --> D1[Kafka/Kinesis]
@@ -41,23 +41,23 @@ class PredictionResponse(BaseModel):
 
 class ModelServer:
     """Serve ML model via REST API"""
-    
+
     def __init__(self, model_path: str):
         self.model = joblib.load(model_path)
         self.model_version = "1.0.0"
-    
+
     def predict(self, features: np.ndarray) -> dict:
         """Make prediction"""
         try:
             # Get prediction
             prediction = self.model.predict(features.reshape(1, -1))[0]
-            
+
             # Get confidence if model supports it
             confidence = 0.95
             if hasattr(self.model, 'predict_proba'):
                 probas = self.model.predict_proba(features.reshape(1, -1))[0]
                 confidence = np.max(probas)
-            
+
             return {
                 'prediction': float(prediction),
                 'model_version': self.model_version,
@@ -89,39 +89,39 @@ import pandas as pd
 
 class AdvancedModelServer:
     """Production model server with preprocessing"""
-    
+
     def __init__(self, model_path: str, scaler_path: str = None):
         self.model = joblib.load(model_path)
         self.scaler = joblib.load(scaler_path) if scaler_path else None
         self.feature_names = ['feature1', 'feature2', 'feature3', 'feature4']
-    
+
     def preprocess(self, features: dict) -> np.ndarray:
         """Preprocess input features"""
         # Convert to DataFrame
         df = pd.DataFrame([features])
-        
+
         # Ensure correct feature order
         df = df[self.feature_names]
-        
+
         # Handle missing values
         df = df.fillna(df.median())
-        
+
         # Scale features
         if self.scaler:
             features_scaled = self.scaler.transform(df)
         else:
             features_scaled = df.values
-        
+
         return features_scaled
-    
+
     def predict(self, features: dict) -> dict:
         """Make prediction with preprocessing"""
         # Preprocess
         processed_features = self.preprocess(features)
-        
+
         # Predict
         prediction = self.model.predict(processed_features)[0]
-        
+
         # Get feature importance
         if hasattr(self.model, 'feature_importances_'):
             feature_importance = dict(zip(
@@ -130,7 +130,7 @@ class AdvancedModelServer:
             ))
         else:
             feature_importance = {}
-        
+
         return {
             'prediction': float(prediction),
             'feature_importance': feature_importance
@@ -159,55 +159,55 @@ from typing import Iterator
 
 class BatchPredictor:
     """Batch prediction for large datasets"""
-    
+
     def __init__(self, model_path: str, batch_size: int = 1000):
         self.model = joblib.load(model_path)
         self.batch_size = batch_size
-    
+
     def predict_csv(self, input_path: str, output_path: str):
         """Predict on CSV file"""
         # Read in chunks
         chunks = pd.read_csv(input_path, chunksize=self.batch_size)
-        
+
         first_chunk = True
         for chunk in chunks:
             # Preprocess
             X = self._preprocess(chunk)
-            
+
             # Predict
             predictions = self.model.predict(X)
-            
+
             # Add predictions to DataFrame
             chunk['prediction'] = predictions
-            
+
             # Write to output
             if first_chunk:
                 chunk.to_csv(output_path, index=False)
                 first_chunk = False
             else:
                 chunk.to_csv(output_path, mode='a', header=False, index=False)
-    
+
     def predict_stream(self, data_iterator: Iterator[pd.DataFrame]) -> Iterator[dict]:
         """Predict on data stream"""
         for batch in data_iterator:
             X = self._preprocess(batch)
             predictions = self.model.predict(X)
-            
+
             for idx, pred in enumerate(predictions):
                 yield {
                     'id': batch.iloc[idx]['id'],
                     'prediction': pred
                 }
-    
+
     def _preprocess(self, df: pd.DataFrame) -> np.ndarray:
         """Preprocess batch"""
         # Handle missing values
         df = df.fillna(0)
-        
+
         # Select features
         feature_cols = ['feature1', 'feature2', 'feature3', 'feature4']
         X = df[feature_cols].values
-        
+
         return X
 
 # Usage
@@ -224,29 +224,29 @@ from datetime import datetime
 
 class ModelRegistry:
     """Manage model versions"""
-    
+
     def __init__(self, registry_uri: str):
         mlflow.set_tracking_uri(registry_uri)
         self.client = mlflow.tracking.MlflowClient()
-    
+
     def register_model(self, model, model_name: str, metadata: dict):
         """Register new model version"""
         with mlflow.start_run():
             # Log model
             mlflow.sklearn.log_model(model, "model")
-            
+
             # Log metrics
             mlflow.log_metrics(metadata.get('metrics', {}))
-            
+
             # Log parameters
             mlflow.log_params(metadata.get('params', {}))
-            
+
             # Register model
             model_uri = f"runs:/{mlflow.active_run().info.run_id}/model"
             mv = mlflow.register_model(model_uri, model_name)
-            
+
             return mv.version
-    
+
     def promote_to_production(self, model_name: str, version: int):
         """Promote model version to production"""
         self.client.transition_model_version_stage(
@@ -254,13 +254,13 @@ class ModelRegistry:
             version=version,
             stage="Production"
         )
-    
+
     def load_production_model(self, model_name: str):
         """Load current production model"""
         model_uri = f"models:/{model_name}/Production"
         model = mlflow.sklearn.load_model(model_uri)
         return model
-    
+
     def get_model_versions(self, model_name: str) -> list:
         """Get all versions of a model"""
         versions = self.client.search_model_versions(f"name='{model_name}'")
@@ -280,13 +280,13 @@ import random
 
 class ABTestingServer:
     """Serve multiple model versions for A/B testing"""
-    
+
     def __init__(self, model_a_path: str, model_b_path: str, split_ratio: float = 0.5):
         self.model_a = joblib.load(model_a_path)
         self.model_b = joblib.load(model_b_path)
         self.split_ratio = split_ratio
         self.version_metrics = {'a': [], 'b': []}
-    
+
     def predict(self, features: np.ndarray, user_id: str = None) -> dict:
         """Predict with A/B testing"""
         # Deterministic assignment based on user_id
@@ -294,28 +294,28 @@ class ABTestingServer:
             version = 'a' if hash(user_id) % 100 < self.split_ratio * 100 else 'b'
         else:
             version = 'a' if random.random() < self.split_ratio else 'b'
-        
+
         # Select model
         model = self.model_a if version == 'a' else self.model_b
-        
+
         # Predict
         prediction = model.predict(features.reshape(1, -1))[0]
-        
+
         return {
             'prediction': float(prediction),
             'model_version': version,
             'user_id': user_id
         }
-    
+
     def record_feedback(self, user_id: str, prediction: float, actual: float):
         """Record prediction feedback"""
         # Determine which model was used
         version = 'a' if hash(user_id) % 100 < self.split_ratio * 100 else 'b'
-        
+
         # Calculate error
         error = abs(prediction - actual)
         self.version_metrics[version].append(error)
-    
+
     def get_metrics(self) -> dict:
         """Get A/B testing metrics"""
         return {
@@ -344,28 +344,28 @@ feature_drift_gauge = Gauge('feature_drift_score', 'Feature drift score')
 
 class MonitoredModelServer:
     """Model server with monitoring"""
-    
+
     def __init__(self, model_path: str):
         self.model = joblib.load(model_path)
         self.reference_data = None  # For drift detection
-    
+
     def predict(self, features: np.ndarray) -> dict:
         """Predict with monitoring"""
         start_time = time.time()
-        
+
         try:
             # Make prediction
             prediction = self.model.predict(features.reshape(1, -1))[0]
-            
+
             # Record metrics
             prediction_counter.inc()
             prediction_latency.observe(time.time() - start_time)
-            
+
             # Check for feature drift
             if self.reference_data is not None:
                 drift_score = self._calculate_drift(features)
                 feature_drift_gauge.set(drift_score)
-            
+
             return {
                 'prediction': float(prediction),
                 'latency_ms': (time.time() - start_time) * 1000
@@ -374,21 +374,21 @@ class MonitoredModelServer:
             # Record error
             prediction_counter.inc()
             raise
-    
+
     def _calculate_drift(self, features: np.ndarray) -> float:
         """Calculate feature drift score"""
         # Simple drift detection using KL divergence
         from scipy.stats import entropy
-        
+
         # Calculate distributions
         ref_mean = np.mean(self.reference_data, axis=0)
         ref_std = np.std(self.reference_data, axis=0)
-        
+
         curr_mean = features[0]
-        
+
         # Calculate drift
         drift = np.mean(np.abs((curr_mean - ref_mean) / (ref_std + 1e-10)))
-        
+
         return float(drift)
 
 @app.get("/metrics")
@@ -407,19 +407,19 @@ class ValidatedFeatures(BaseModel):
     age: float
     income: float
     credit_score: float
-    
+
     @validator('age')
     def validate_age(cls, v):
         if v < 0 or v > 120:
             raise ValueError('Age must be between 0 and 120')
         return v
-    
+
     @validator('income')
     def validate_income(cls, v):
         if v < 0:
             raise ValueError('Income must be positive')
         return v
-    
+
     @validator('credit_score')
     def validate_credit_score(cls, v):
         if v < 300 or v > 850:
@@ -523,16 +523,16 @@ from functools import lru_cache
 
 class CachedModelServer:
     """Model server with prediction caching"""
-    
+
     def __init__(self, model_path: str):
         self.model = joblib.load(model_path)
-    
+
     @lru_cache(maxsize=1000)
     def predict_cached(self, features_tuple: tuple) -> float:
         """Cached predictions for identical inputs"""
         features = np.array(features_tuple)
         return float(self.model.predict(features.reshape(1, -1))[0])
-    
+
     def predict(self, features: np.ndarray) -> float:
         """Convert array to tuple for caching"""
         features_tuple = tuple(features)
@@ -546,25 +546,25 @@ import sys
 
 class GracefulModelServer:
     """Handle graceful shutdown"""
-    
+
     def __init__(self):
         self.is_shutting_down = False
         signal.signal(signal.SIGTERM, self.shutdown_handler)
         signal.signal(signal.SIGINT, self.shutdown_handler)
-    
+
     def shutdown_handler(self, signum, frame):
         """Handle shutdown signal"""
         print("Shutting down gracefully...")
         self.is_shutting_down = True
-        
+
         # Wait for ongoing requests
         time.sleep(5)
-        
+
         # Cleanup
         self.cleanup()
-        
+
         sys.exit(0)
-    
+
     def cleanup(self):
         """Cleanup resources"""
         # Close database connections
@@ -609,5 +609,3 @@ class GracefulModelServer:
 ---
 
 *Deploying a model is not the end—it's the beginning of the ML lifecycle.*
-
-

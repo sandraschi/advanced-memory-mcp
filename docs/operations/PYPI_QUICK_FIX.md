@@ -45,7 +45,7 @@ uv run twine upload dist/*
    ```yaml
    # FROM:
    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc')
-   
+
    # TO:
    if: startsWith(github.ref, 'refs/tags/v')
    ```
@@ -63,20 +63,20 @@ uv run twine upload dist/*
    ```yaml
    - name: Checkout code
      uses: actions/checkout@v4
-   
+
    - name: Set up Python
      uses: actions/setup-python@v4
      with:
        python-version: "3.12"
-   
+
    - name: Install uv
      uses: astral-sh/setup-uv@v3
      with:
        version: "latest"
-   
+
    - name: Build package
      run: uv build
-   
+
    - name: Publish to PyPI
      uses: pypa/gh-action-pypi-publish@release/v1
      with:
@@ -115,12 +115,11 @@ View on PyPI: https://pypi.org/project/advanced-memory-mcp/
 
 ## 📚 Full Guide
 
-For complete details, see:  
+For complete details, see:
 `docs/operations/PYPI_PUBLISHING_COMPLETE_GUIDE.md`
 
 ---
 
-**Created**: October 17, 2025  
-**For**: v1.0.0b3 release  
+**Created**: October 17, 2025
+**For**: v1.0.0b3 release
 **Status**: Action required
-

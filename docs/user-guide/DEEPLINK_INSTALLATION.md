@@ -224,5 +224,3 @@ A: Yes! Deeplinks are just configuration URLs. For stdio mode, they simply tell 
 **Made installation too easy?** We think so! 🎉
 
 **Need help?** Check our [Troubleshooting Guide](../TROUBLESHOOTING_GUIDE.md) or open an issue on GitHub.
-
-

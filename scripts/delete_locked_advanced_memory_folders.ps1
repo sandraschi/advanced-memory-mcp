@@ -44,7 +44,7 @@ foreach ($folder in $folders) {
         Write-Host "Already deleted: $folder" -ForegroundColor Gray
         continue
     }
-    
+
     try {
         Remove-Item -Path $folder -Recurse -Force -ErrorAction Stop
         Write-Host "Deleted: $folder" -ForegroundColor Green
@@ -68,7 +68,3 @@ if ($failed -gt 0) {
     Write-Host ""
     Write-Host "CLOSE CLAUDE DESKTOP and run this script again." -ForegroundColor Red
 }
-
-
-
-

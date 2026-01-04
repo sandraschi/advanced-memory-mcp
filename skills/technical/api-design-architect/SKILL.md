@@ -5,8 +5,8 @@ license: Proprietary
 ---
 
 # API Design Architect
-> **Status**: ✅ Research complete  
-> **Last validated**: 2025-11-08  
+> **Status**: ✅ Research complete
+> **Last validated**: 2025-11-08
 > **Confidence**: 🟡 Medium — Research-backed playbook – refresh quarterly
 
 ## How to use this skill

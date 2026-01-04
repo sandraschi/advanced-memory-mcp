@@ -44,7 +44,7 @@ import hashlib
 
 # When NOT used for security (file naming, etc.)
 hash_value = hashlib.md5(
-    data.encode(), 
+    data.encode(),
     usedforsecurity=False  # ✅ Explicitly mark as non-crypto
 ).hexdigest()
 ```
@@ -585,15 +585,15 @@ codeql:
     security-events: write
   steps:
     - uses: actions/checkout@v4
-    
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: python
-    
+
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
-    
+
     - name: Analyze
       uses: github/codeql-action/analyze@v2
 ```
@@ -806,4 +806,3 @@ Before releasing:
 ---
 
 **Security is not optional! Use this guide to get it right from the start.** 🔒
-

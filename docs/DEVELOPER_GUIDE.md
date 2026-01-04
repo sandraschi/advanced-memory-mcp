@@ -1,6 +1,6 @@
 # Advanced Memory MCP - Developer Guide
 
-**Version:** 1.0.0b2  
+**Version:** 1.0.0b2
 **Purpose:** Guide for developers contributing to Advanced Memory MCP
 
 ## Development Setup
@@ -101,26 +101,26 @@ async def example_tool(
     ctx: Context | None = None,
 ) -> str:
     """Example tool with proper type hints and docstring.
-    
+
     Args:
         param1: Description of param1
         param2: Description of param2 (optional)
         ctx: MCP context for progress reporting
-        
+
     Returns:
         Description of return value
-        
+
     Raises:
         ValueError: When param1 is invalid
     """
     if not param1:
         raise ValueError("param1 cannot be empty")
-    
+
     # Implementation
     result = f"Processed {param1}"
     if param2:
         result += f" with {param2}"
-    
+
     return result
 ```
 
@@ -162,31 +162,31 @@ async def my_new_tool(
     ctx: Context | None = None,
 ) -> str:
     """My new tool description.
-    
+
     This tool does something useful for users.
-    
+
     Args:
         param1: Description of param1
         param2: Description of param2 (optional)
         ctx: MCP context for progress reporting
-        
+
     Returns:
         Formatted result string
-        
+
     Raises:
         ValueError: When param1 is invalid
     """
     if ctx:
         await ctx.info(f"Processing {param1}")
-    
+
     try:
         # Tool implementation
         result = f"✅ Processed {param1}"
         if param2:
             result += f" with value {param2}"
-        
+
         return result
-        
+
     except Exception as e:
         error_msg = f"❌ Error processing {param1}: {str(e)}"
         if ctx:
@@ -236,12 +236,12 @@ If your tool fits into an existing portmanteau:
 # src/advanced_memory/mcp/tools/content_manager.py
 async def adn_content(operation: str, **kwargs) -> str:
     """Consolidated content operations."""
-    
+
     # ... existing operations
-    
+
     elif operation == "my_new_operation":
         return await _my_new_operation(**kwargs)
-    
+
     else:
         return f"Invalid operation: {operation}"
 
@@ -270,23 +270,23 @@ async def adn_my_portmanteau(
     **kwargs: Any,
 ) -> str:
     """Consolidated my operations.
-    
+
     SUPPORTED OPERATIONS:
     - operation1: Description of operation1
     - operation2: Description of operation2
     - operation3: Description of operation3
-    
+
     Args:
         operation: Operation to perform
         ctx: MCP context for progress reporting
         **kwargs: Additional parameters for specific operations
-        
+
     Returns:
         Formatted result string
     """
     if ctx:
         await ctx.info(f"Executing {operation} operation")
-    
+
     # Route to appropriate operation
     if operation == "operation1":
         return await _operation1(**kwargs)
@@ -358,15 +358,15 @@ from advanced_memory.models.base import Base
 
 class MyModel(Base):
     """My new model."""
-    
+
     __tablename__ = "my_model"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     description = Column(String(1000))
     entity_id = Column(Integer, ForeignKey("entity.id"))
     created_at = Column(DateTime, nullable=False)
-    
+
     # Relationships
     entity = relationship("Entity", back_populates="my_models")
 ```
@@ -395,14 +395,14 @@ from advanced_memory.repository.repository import Repository
 
 class MyModelRepository(Repository[MyModel]):
     """Repository for MyModel."""
-    
+
     def __init__(self, db: Session):
         super().__init__(MyModel, db)
-    
+
     async def find_by_name(self, name: str) -> Optional[MyModel]:
         """Find model by name."""
         return self.db.query(MyModel).filter(MyModel.name == name).first()
-    
+
     async def find_by_entity_id(self, entity_id: int) -> List[MyModel]:
         """Find models by entity ID."""
         return self.db.query(MyModel).filter(MyModel.entity_id == entity_id).all()
@@ -457,27 +457,27 @@ from advanced_memory.services.service import Service
 
 class MyModelService(Service[MyModel]):
     """Service for MyModel operations."""
-    
+
     def __init__(self, repository: MyModelRepository):
         super().__init__(repository)
         self.repository = repository
-    
+
     async def create(self, data: MyModelCreate) -> MyModel:
         """Create a new my model."""
         # Business logic
         model = MyModel(**data.dict())
         return await self.repository.create(model)
-    
+
     async def update(self, id: int, data: MyModelUpdate) -> MyModel:
         """Update a my model."""
         model = await self.repository.get(id)
         if not model:
             raise ValueError(f"MyModel with id {id} not found")
-        
+
         # Update fields
         for field, value in data.dict(exclude_unset=True).items():
             setattr(model, field, value)
-        
+
         return await self.repository.update(model)
 ```
 
@@ -531,10 +531,10 @@ async def test_create_success(service, mock_repository):
     data = {"name": "test", "description": "test description"}
     expected_model = MyModel(id=1, **data)
     mock_repository.create.return_value = expected_model
-    
+
     # Act
     result = await service.create(data)
-    
+
     # Assert
     assert result.id == 1
     assert result.name == "test"
@@ -546,7 +546,7 @@ async def test_create_error(service, mock_repository):
     # Arrange
     data = {"name": "", "description": "test"}
     mock_repository.create.side_effect = ValueError("Name cannot be empty")
-    
+
     # Act & Assert
     with pytest.raises(ValueError, match="Name cannot be empty"):
         await service.create(data)
@@ -574,10 +574,10 @@ async def test_create_entity(client):
         "content": "# Test\n\nThis is a test entity.",
         "file_path": "test.md"
     }
-    
+
     response = await client.post("/main/entities", json=data)
     assert response.status_code == 200
-    
+
     result = response.json()
     assert result["title"] == "Test Entity"
     assert result["content"] == data["content"]
@@ -598,32 +598,32 @@ from advanced_memory.models.entity import Entity
 
 class MyImporter(BaseImporter):
     """Importer for My format."""
-    
+
     def __init__(self):
         super().__init__()
         self.supported_extensions = [".my", ".myformat"]
-    
+
     async def parse(self, source_path: str) -> List[Entity]:
         """Parse My format files."""
         entities = []
         source = Path(source_path)
-        
+
         if source.is_file():
             entities.extend(await self._parse_file(source))
         elif source.is_dir():
             for file_path in source.rglob("*.my"):
                 entities.extend(await self._parse_file(file_path))
-        
+
         return entities
-    
+
     async def _parse_file(self, file_path: Path) -> List[Entity]:
         """Parse a single My format file."""
         # Implementation
         content = file_path.read_text(encoding="utf-8")
-        
+
         # Extract metadata
         metadata = self._extract_metadata(content)
-        
+
         # Create entity
         entity = Entity(
             title=metadata.get("title", file_path.stem),
@@ -631,9 +631,9 @@ class MyImporter(BaseImporter):
             file_path=str(file_path),
             project_id=self.project_id
         )
-        
+
         return [entity]
-    
+
     def _extract_metadata(self, content: str) -> Dict[str, Any]:
         """Extract metadata from content."""
         # Implementation
@@ -651,35 +651,35 @@ from advanced_memory.exporters.base import BaseExporter
 
 class MyExporter(BaseExporter):
     """Exporter to My format."""
-    
+
     def __init__(self):
         super().__init__()
         self.output_extension = ".my"
-    
+
     async def export(
-        self, 
-        entities: List[Entity], 
+        self,
+        entities: List[Entity],
         output_path: str,
         **kwargs
     ) -> str:
         """Export entities to My format."""
         output = Path(output_path)
         output.mkdir(parents=True, exist_ok=True)
-        
+
         for entity in entities:
             await self._export_entity(entity, output)
-        
+
         return f"Exported {len(entities)} entities to {output_path}"
-    
+
     async def _export_entity(self, entity: Entity, output_dir: Path):
         """Export a single entity."""
         # Convert to My format
         my_content = self._convert_to_my_format(entity)
-        
+
         # Write file
         output_file = output_dir / f"{entity.title}.my"
         output_file.write_text(my_content, encoding="utf-8")
-    
+
     def _convert_to_my_format(self, entity: Entity) -> str:
         """Convert entity to My format."""
         # Implementation
@@ -812,7 +812,7 @@ async def debug_tool(param: str, ctx: Context | None = None) -> str:
     """Debug tool with logging."""
     if ctx:
         await ctx.info(f"Debug: Processing {param}")
-    
+
     try:
         # Implementation
         result = f"Processed {param}"

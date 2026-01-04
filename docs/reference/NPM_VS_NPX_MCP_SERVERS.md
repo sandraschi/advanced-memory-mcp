@@ -5,7 +5,7 @@
 
 ## Quick Answer
 
-**npm**: Installs packages permanently (local/global)  
+**npm**: Installs packages permanently (local/global)
 **npx**: Runs packages temporarily (downloads, runs, cleans up)
 
 ## Performance Comparison
@@ -124,7 +124,7 @@ With 53 servers:
 
 1. **Frequently used (daily)**: npm install in shared directory
    - docker, github, fetch, playwright
-   
+
 2. **Occasionally used**: Keep npx
    - kubernetes, aws, azure (if you use them rarely)
 
@@ -134,4 +134,3 @@ With 53 servers:
 
 ## Tags
 #mcp #npm #npx #performance #optimization #53-servers
-

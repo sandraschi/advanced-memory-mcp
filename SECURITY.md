@@ -92,5 +92,5 @@ _No vulnerabilities reported yet_
 
 ---
 
-**Last Updated**: October 9, 2025  
+**Last Updated**: October 9, 2025
 **Policy Version**: 1.0

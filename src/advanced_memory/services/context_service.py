@@ -1,7 +1,7 @@
 """Service for building rich context from the knowledge graph."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from loguru import logger
 from sqlalchemy import text
@@ -49,7 +49,7 @@ class ContextMetadata:
     types: list[SearchItemType] | None = None
     depth: int = 1
     timeframe: str | None = None
-    generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     primary_count: int = 0
     related_count: int = 0
     total_observations: int = 0

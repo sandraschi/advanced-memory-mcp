@@ -1,4 +1,4 @@
-﻿# Ethical Implications of Artificial Consciousness and Intelligence
+# Ethical Implications of Artificial Consciousness and Intelligence
 
 ## Introduction: The Moral Status of Artificial Minds
 

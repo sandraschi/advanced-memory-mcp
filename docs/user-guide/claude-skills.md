@@ -340,7 +340,7 @@ adn_export(
 
 ```python
 # 1. Import official skills
-adn_import("claude_skills", source_path="~/anthropic-skills/mcp-builder/", 
+adn_import("claude_skills", source_path="~/anthropic-skills/mcp-builder/",
            destination_folder="skills/mcp")
 
 # 2. Enhance in Advanced Memory (add your team's patterns)
@@ -497,7 +497,7 @@ The Claude Skills ecosystem is rapidly expanding with community-created skills:
 ### Import Community Skills
 ```python
 # Import any Skills repository into Advanced Memory
-adn_import("claude_skills", 
+adn_import("claude_skills",
            source_path="~/downloaded-skills-repo/",
            destination_folder="community/skill-name")
 
@@ -548,7 +548,7 @@ adn_export("claude_skills", export_path="~/Documents/claude-skills/")
 # - Claude Desktop: Deployment mechanism pending verification
 
 # 3. Import community skills into your knowledge base
-adn_import("claude_skills", 
+adn_import("claude_skills",
            source_path="~/anthropic-skills/",
            destination_folder="imported/anthropic")
 ```
@@ -556,7 +556,3 @@ adn_import("claude_skills",
 **Status**: Conversion tools are fully functional. Deployment mechanisms vary by Claude interface. We're actively verifying Claude Desktop integration.
 
 **Questions?** See [Troubleshooting Guide](../TROUBLESHOOTING_GUIDE.md) or [file an issue](https://github.com/sandraschi/advanced-memory-mcp/issues).
-
-
-
-

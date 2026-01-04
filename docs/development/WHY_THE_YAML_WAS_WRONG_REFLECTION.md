@@ -189,29 +189,29 @@ Make it **unmissable**!
 # skill-validator.py
 def validate_skill(file_path):
     content = file_path.read_text()
-    
+
     # Check 1: Starts with ---
     if not content.startswith("---"):
         raise ValueError("SKILL.md must start with YAML frontmatter (---)")
-    
+
     # Check 2: Has second ---
     if content.count("---") < 2:
         raise ValueError("YAML frontmatter must be closed with ---")
-    
+
     # Check 3: Parse YAML
     frontmatter = extract_frontmatter(content)
-    
+
     # Check 4: Required fields
     if "name" not in frontmatter:
         raise ValueError("'name' field required in YAML frontmatter")
-    
+
     if "description" not in frontmatter:
         raise ValueError("'description' field required")
-    
+
     # Check 5: Name format
     if " " in frontmatter["name"] or "_" in frontmatter["name"]:
         raise ValueError("name must be hyphen-case (e.g., 'my-skill-name')")
-    
+
     return True
 ```
 
@@ -381,7 +381,7 @@ Fix and try again.
 
 ### Why Anthropic Should Improve Onboarding
 
-**Current**: Spec assumes YAML knowledge  
+**Current**: Spec assumes YAML knowledge
 **Better**: Interactive skill creator with validation
 
 **Proposed**:
@@ -414,8 +414,8 @@ npx create-skill my-skill
 3. I didn't catch it during review (oversight)
 4. No automated validation
 
-**Not Claude's fault**: Followed reasonable default  
-**Not your fault**: You didn't know the format  
+**Not Claude's fault**: Followed reasonable default
+**Not your fault**: You didn't know the format
 **My fault**: Didn't specify format explicitly or validate output
 
 ---
@@ -462,7 +462,6 @@ npx create-skill my-skill
 
 ---
 
-*Reflection by: Development Kami (who should have caught this earlier!)*  
-*Date: 2025-10-17*  
+*Reflection by: Development Kami (who should have caught this earlier!)*
+*Date: 2025-10-17*
 *Lesson: Always validate YAML syntax explicitly*
-

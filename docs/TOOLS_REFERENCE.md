@@ -380,7 +380,7 @@ adn_export(
 
 **Formats**: PDF, DOCX, HTML, ODT, RTF, TEX, EPUB, TXT, and 40+ more
 
-**Requirements**: ✅ Pandoc auto-installs on first use! (~100MB, one-time)  
+**Requirements**: ✅ Pandoc auto-installs on first use! (~100MB, one-time)
 **For PDF**: LaTeX needed ([MiKTeX](https://miktex.org/) / [TinyTeX](https://yihui.org/tinytex/))
 
 See [Pandoc Auto-Install Guide](user-guide/PANDOC_AUTO_INSTALL.md)
@@ -1100,6 +1100,5 @@ See [User Guide Examples](user-guide/examples/) for:
 
 ---
 
-**Last Updated**: 2024-10-20  
+**Last Updated**: 2024-10-20
 **Version**: 1.0.0b3+
-

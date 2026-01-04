@@ -1,6 +1,6 @@
 # Zettelkasten - Knowledge Templates and Inbox
 
-**Purpose**: Pre-built templates, custom templates, and document inbox for Advanced Memory  
+**Purpose**: Pre-built templates, custom templates, and document inbox for Advanced Memory
 **User-Facing**: This folder is for you to use, browse, and customize!
 
 ---
@@ -235,7 +235,6 @@ adn_zettelmaker("generate", template_path="zettelkasten/user-templates/my-templa
 
 ---
 
-**Created**: October 17, 2025  
-**Purpose**: User-facing zettelkasten system with inbox and conversion  
+**Created**: October 17, 2025
+**Purpose**: User-facing zettelkasten system with inbox and conversion
 **Status**: Under construction 🚧
-

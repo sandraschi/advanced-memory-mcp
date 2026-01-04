@@ -5,8 +5,8 @@ license: Proprietary
 ---
 
 # CI/CD Pipeline Builder
-> **Status**: ✅ Research complete  
-> **Last validated**: 2025-11-08  
+> **Status**: ✅ Research complete
+> **Last validated**: 2025-11-08
 > **Confidence**: 🟡 Medium — Research-backed playbook – audit monthly
 
 ## How to use this skill

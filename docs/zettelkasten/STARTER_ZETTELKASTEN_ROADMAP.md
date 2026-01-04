@@ -8,12 +8,12 @@
   - Interactive questionnaire (5-7 questions)
   - File system analysis (detect existing projects)
   - Environment detection (installed tools)
-  
+
 - [ ] **Content Template Engine**
   - Basic template system
   - Note generation from templates
   - Folder structure creation
-  
+
 - [ ] **Onboarding Wizard**
   - CLI-based wizard flow
   - Progress indicators
@@ -24,12 +24,12 @@
   - 20 essential notes (JavaScript, React, Node.js)
   - 10 DevOps notes (Docker, CI/CD)
   - 5 MCP development notes (our docs/)
-  
+
 - [ ] **AI Enthusiast**
   - 15 AI fundamentals
   - 10 "What's Hot in AI" notes
   - 5 Claude agent templates
-  
+
 - [ ] **Cooking**
   - 15 basic techniques
   - 10 quick recipes
@@ -51,12 +51,12 @@
   - Research & Academic (methodologies, writing)
   - Design & Creative (UI/UX, art)
   - Business & Entrepreneurship (strategy, marketing)
-  
+
 - [ ] **Advanced Personalization**
   - Experience level detection (beginner/expert)
   - Learning style preferences
   - Content depth customization
-  
+
 - [ ] **Quality Validation**
   - Content review system
   - User feedback collection
@@ -67,7 +67,7 @@
   - "What's Hot in AI" (weekly updates)
   - Tech news integration
   - Academic paper summaries
-  
+
 - [ ] **User Preference Learning**
   - Track which notes users engage with
   - Suggest additional content
@@ -82,12 +82,12 @@
   - Generate content based on user interests
   - Summarize external sources
   - Create personalized learning paths
-  
+
 - [ ] **Community Contributions**
   - User-submitted content
   - Quality moderation system
   - Contributor recognition
-  
+
 - [ ] **Integration Features**
   - Import from existing tools (Notion, Obsidian)
   - Export to other formats
@@ -98,7 +98,7 @@
   - Track content engagement
   - Identify popular categories
   - Optimize content mix
-  
+
 - [ ] **Performance Metrics**
   - Onboarding completion rate
   - Time to first engagement
@@ -113,12 +113,12 @@
   - Rich terminal output with colors/emojis
   - Progress bars and animations
   - Interactive selection menus
-  
+
 - [ ] **Mobile Optimization**
   - Touch-friendly interface
   - Responsive design
   - Offline capability
-  
+
 - [ ] **Accessibility**
   - Screen reader support
   - Keyboard navigation
@@ -129,7 +129,7 @@
   - Shared content libraries
   - Role-based customization
   - Collaboration features
-  
+
 - [ ] **White-Label Options**
   - Custom branding
   - Organization-specific content
@@ -200,21 +200,21 @@
 class InterestDetector:
     async def detect_interests(self) -> list[str]:
         """Multi-method interest detection"""
-        
+
         # Method 1: Interactive questionnaire
         questionnaire_results = await self.run_questionnaire()
-        
+
         # Method 2: File system analysis
         file_analysis = await self.analyze_files()
-        
+
         # Method 3: Environment detection
         env_analysis = await self.analyze_environment()
-        
+
         # Combine and weight results
         interests = self.combine_results(
             questionnaire_results, file_analysis, env_analysis
         )
-        
+
         return interests
 ```
 
@@ -225,32 +225,32 @@ class ContentTemplate:
     def __init__(self, category: str, notes: list[dict]):
         self.category = category
         self.notes = notes
-    
+
     async def generate_content(self, user_context: dict) -> list[Note]:
         """Generate personalized content"""
-        
+
         generated_notes = []
         for note_template in self.notes:
             note = await self.personalize_note(note_template, user_context)
             generated_notes.append(note)
-        
+
         return generated_notes
-    
+
     async def personalize_note(self, template: dict, context: dict) -> Note:
         """Personalize note based on user context"""
-        
+
         content = template["content"]
-        
+
         # Replace placeholders
         placeholders = {
             "{user_name}": context.get("name", "User"),
             "{experience_level}": context.get("experience", "beginner"),
             "{interest_focus}": context.get("focus", "general")
         }
-        
+
         for placeholder, value in placeholders.items():
             content = content.replace(placeholder, value)
-        
+
         return Note(
             title=template["title"],
             content=content,
@@ -267,28 +267,28 @@ class OnboardingWizard:
         self.console = Console()
         self.interest_detector = InterestDetector()
         self.content_generator = ContentGenerator()
-    
+
     async def run(self):
         """Complete onboarding experience"""
-        
+
         # Step 1: Welcome
         await self.show_welcome()
-        
+
         # Step 2: Interest detection
         interests = await self.detect_interests()
-        
+
         # Step 3: Content selection
         selected_content = await self.select_content(interests)
-        
+
         # Step 4: Customization
         customizations = await self.customize_content(selected_content)
-        
+
         # Step 5: Generation
         await self.generate_content(customizations)
-        
+
         # Step 6: Tour
         await self.show_tour()
-        
+
         # Step 7: Completion
         await self.show_completion()
 ```

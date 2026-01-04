@@ -37,13 +37,13 @@ Add these scripts to your `index.html` file, after the main Docsify script:
 
 ```html
 <!-- KaTeX CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" 
-      integrity="sha384-GvrOXuhz4Q9Y6m4Y6sVhQl8Y4Xb3p3Ze8zF5fD8F5z0F8L8vIY5Zf5F5F5F5F5F5" 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      integrity="sha384-GvrOXuhz4Q9Y6m4Y6sVhQl8Y4Xb3p3Ze8zF5fD8F5z0F8L8vIY5Zf5F5F5F5F5F5"
       crossorigin="anonymous">
 
 <!-- KaTeX JS -->
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" 
-        integrity="sha384-GvrOXuhz4Q9Y6m4Y6sVhQl8Y4Xb3p3Ze8zF5fD8F5z0F8L8vIY5Zf5F5F5F5F5F5" 
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+        integrity="sha384-GvrOXuhz4Q9Y6m4Y6sVhQl8Y4Xb3p3Ze8zF5fD8F5z0F8L8vIY5Zf5F5F5F5F5F5"
         crossorigin="anonymous"></script>
 
 <!-- Auto-render extension for automatic rendering -->
@@ -188,13 +188,13 @@ window.$docsify = {
     macros: {
       // Simple macro
       "\\R": "\\mathbb{R}",
-      
+
       // Macro with parameters
       "\\abs": ["\\left|#1\\right|", 1],
-      
+
       // Macro with optional parameter
       "\\pd": ["\\frac{\\partial#1}{\\partial#2}", 2],
-      
+
       // Complex macro with multiple cases
       "\\evalat": ["\\left.#1\\right|_{#2}", 2]
     }
@@ -251,7 +251,7 @@ $$a^2 + b^2 = c^2$$
 ```markdown
 $$\begin{pmatrix}
   a & b \\
-  c & d 
+  c & d
 \end{pmatrix}
 \begin{pmatrix}
   x \\
@@ -325,7 +325,7 @@ Correlation: $\rho_{X,Y} = \frac{\text{cov}(X,Y)}{\sigma_X \sigma_Y}$
      E = mc^2
      \label{eq:emc2}
    \end{equation}
-   
+
    Ashown in equation \eqref{eq:emc2}, energy equals mass times the speed of light squared.
    ```
 

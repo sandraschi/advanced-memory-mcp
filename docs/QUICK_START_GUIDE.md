@@ -1,6 +1,6 @@
 # Advanced Memory MCP - Quick Start Guide
 
-**Version:** 1.0.0b2  
+**Version:** 1.0.0b2
 **For:** New users getting started quickly
 
 ## 🚀 5-Minute Setup
@@ -57,8 +57,8 @@ That's it! You're ready to use Advanced Memory MCP.
 adn_project("list")
 
 # Create a note
-adn_content("write", 
-    identifier="My First Note", 
+adn_content("write",
+    identifier="My First Note",
     content="# Hello World\n\nThis is my first note!",
     folder="getting-started")
 
@@ -97,7 +97,7 @@ adn_navigation("recent", timeframe="today")
 # Write notes (identifier should be the note title)
 adn_content("write", identifier="Note Title", content="Content", folder="folder")
 
-# Read notes  
+# Read notes
 adn_content("read", identifier="Note Title")
 
 # Edit notes
@@ -134,7 +134,7 @@ adn_search("notes", query="AI", project="research")
 ```
 ~/Documents/notes/           # Your main knowledge base
 ├── daily/                  # Daily notes
-├── projects/               # Project documentation  
+├── projects/               # Project documentation
 ├── research/               # Research notes
 ├── meetings/               # Meeting notes
 └── archive/                # Archived content
@@ -180,7 +180,7 @@ adn_project("sync", project_name="research")
 
 ### From Obsidian
 ```python
-adn_import("obsidian", 
+adn_import("obsidian",
     vault_path="~/obsidian-vault",
     destination_folder="imported/obsidian")
 ```
@@ -188,7 +188,7 @@ adn_import("obsidian",
 ### From Joplin
 ```python
 adn_import("joplin",
-    export_path="~/joplin-export", 
+    export_path="~/joplin-export",
     destination_folder="imported/joplin")
 ```
 

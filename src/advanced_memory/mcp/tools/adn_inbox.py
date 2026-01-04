@@ -21,50 +21,80 @@ async def adn_inbox(
     file_name: str | None = None,
     ctx: Context | None = None,
 ) -> str:
-    """Manage the zettelkasten inbox for file drops and automatic processing.
+    """Inbox portmanteau for Advanced Memory.
 
-    PORTMANTEAU PATTERN: Consolidates 4 inbox operations into one tool.
+    This tool consolidates the entire file ingestion pipeline, handling
+    detection, conversion, and ingestion of external documents.
 
-    The inbox allows you to drop files (markdown, Word docs, PDFs, HTML, text) into a
-    watched directory. Files are automatically converted to markdown and added to your
-    knowledge base.
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Instead of multiple tools for file ingestion, this tool consolidates the entire
+    ingestion pipeline. This design:
+    - Centralizes file type detection and conversion logic.
+    - Provides atomic processing state (inbox vs. converted).
+    - Manages background watching and conversion.
+    - Simplifies the user interface for drop-and-process workflows.
 
-    SUPPORTED OPERATIONS:
-    - status: Show inbox status and statistics
-    - process: Process all files currently in inbox
-    - info: Get information about inbox directory and supported formats
-    - watch: Start watching inbox for new files (background task)
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - status: Check inbox state, file counts, and supported formats.
+    - process: Convert and ingest pending files (Pandoc/Text extraction).
+    - info: Detailed environment and dependency information.
+    - watch: Toggle or check background monitoring status.
 
-    SUPPORTED FILE FORMATS:
-    - .md: Markdown files (moved directly to project)
-    - .docx: Word documents (converted via Pandoc)
-    - .html: HTML files (converted via Pandoc)
-    - .pdf: PDF documents (text extraction)
-    - .txt: Plain text files (wrapped in markdown)
+    ---------------------------------------------------------------------------
+    [SUPPORTED FORMATS]
+    - .md: Native markdown (direct ingestion).
+    - .docx: Word documents (via Pandoc).
+    - .html: HTML web pages (via Pandoc).
+    - .pdf: PDF documents (via pypdf/pdftotext).
+    - .txt: Plain text (formatting wrapper).
 
-    Args:
-        operation: The operation to perform (status, process, info, watch)
-        file_name: Optional specific file to process
-                    * process operation: Optional - Specific file name to process (if not provided, processes all files)
-                    * Other operations: NOT USED
-        ctx: Optional MCP context for progress reporting
-                    * All operations: Optional - MCP context for progress updates
+    ---------------------------------------------------------------------------
+    [OPERATIONS DETAIL]
 
-    Returns:
-        Operation result with status, file counts, processing results
+    status: Inbox overview
+    - Returns: Current file counts, directory paths, and pending items.
+    - Use when: Checking if you have files waiting to be processed.
 
-    Examples:
-        # Check inbox status
-        adn_inbox("status")
+    process: Execute ingestion
+    - Parameters: file_name (optional).
+    - Function: Converts files to markdown, adds metadata, moves to project.
+    - Use when: You've dropped files and want to import them now.
 
-        # Process all files in inbox
-        adn_inbox("process")
+    info: System check
+    - Returns: Dependency status (Pandoc, pypdf) and configuring paths.
+    - Use when: Troubleshooting conversion issues or finding the inbox path.
 
-        # Get inbox information
-        adn_inbox("info")
+    watch: Background monitor
+    - Function: Managing the background directory watcher.
+    - Use when: Setting up automated "drop-and-forget" workflows.
 
-        # Start inbox watcher (background)
-        adn_inbox("watch")
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - Pandoc (for .docx/.html conversion).
+    - pypdf (for .pdf text extraction).
+
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The inbox operation to perform (Required).
+    - file_name (str): Specific file to process (Optional).
+    - ctx (Context): Internal MCP context (Auto-injected).
+
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+
+    - Check pending files:
+      adn_inbox(operation="status")
+
+    - Process all files:
+      adn_inbox(operation="process")
+
+    - Process a specific document:
+      adn_inbox(operation="process", file_name="Report.docx")
+
+    - System diagnostic:
+      adn_inbox(operation="info")
     """
     logger.info(f"MCP tool call tool=adn_inbox operation={operation}")
 

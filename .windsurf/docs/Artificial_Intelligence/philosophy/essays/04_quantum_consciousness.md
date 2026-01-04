@@ -1,4 +1,4 @@
-﻿# Quantum Consciousness: Bridging the Gap Between Mind and Matter
+# Quantum Consciousness: Bridging the Gap Between Mind and Matter
 
 ## Introduction
 

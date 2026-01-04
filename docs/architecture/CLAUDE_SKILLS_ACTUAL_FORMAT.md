@@ -1,7 +1,7 @@
 # Claude Skills - Actual Format (October 16, 2025 Release)
 
-**Release Date**: October 16, 2025  
-**Source**: https://github.com/anthropics/skills (official Anthropic repository)  
+**Release Date**: October 16, 2025
+**Source**: https://github.com/anthropics/skills (official Anthropic repository)
 **Status**: ✅ CONFIRMED - This is the real format!
 
 ---
@@ -578,7 +578,7 @@ metadata:
 for template_file in zettelkasten/templates/**/*.md:
     # Parse existing frontmatter
     frontmatter = parse_yaml(template_file)
-    
+
     # Convert to skill format
     skill_yaml = {
         "name": kebab_case(frontmatter["title"]),
@@ -589,7 +589,7 @@ for template_file in zettelkasten/templates/**/*.md:
             "original_template": True
         }
     }
-    
+
     # Write back
     write_skill_format(template_file, skill_yaml)
 ```
@@ -641,10 +641,10 @@ for template_file in zettelkasten/templates/**/*.md:
 
 **Skills are just folders** with markdown files:
 
-**Claude** → Creates skill, uploads  
-**You (Human)** → Browse folder, read SKILL.md  
-**GPT-4** → Read SKILL.md via MCP, apply patterns  
-**Cursor** → Load skill into context, use for autocomplete  
+**Claude** → Creates skill, uploads
+**You (Human)** → Browse folder, read SKILL.md
+**GPT-4** → Read SKILL.md via MCP, apply patterns
+**Cursor** → Load skill into context, use for autocomplete
 **Local LLM** → Read skill offline, follow instructions
 
 **Format is portable!** Any AI that can read markdown can use skills.
@@ -705,7 +705,6 @@ for template_file in zettelkasten/templates/**/*.md:
 
 ---
 
-*Based on official Anthropic skills repository*  
-*Release: October 16, 2025*  
+*Based on official Anthropic skills repository*
+*Release: October 16, 2025*
 *Repository: https://github.com/anthropics/skills*
-

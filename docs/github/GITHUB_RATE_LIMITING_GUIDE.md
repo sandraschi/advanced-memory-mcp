@@ -2,8 +2,8 @@
 
 **Comprehensive guide to GitHub's rate limits and how our automation stays safe**
 
-**Date**: October 17, 2025  
-**For**: CI automation scripts  
+**Date**: October 17, 2025
+**For**: CI automation scripts
 **Status**: Safety measures implemented
 
 ---
@@ -314,7 +314,7 @@ just ci-stats
 **Dangerous patterns**:
 ```powershell
 # DANGEROUS: Infinite loop
-while ($true) { 
+while ($true) {
     just safe-push "auto update"
     Start-Sleep 60
 }
@@ -848,9 +848,8 @@ CI: 100 vs 2,000/month = 5% of monthly ✅
 
 ---
 
-**Created**: October 17, 2025  
-**For**: CI automation safety  
+**Created**: October 17, 2025
+**For**: CI automation safety
 **Status**: Multiple safety layers implemented
 
 **Push responsibly!** 🚀✨ (But our scripts make it hard to be irresponsible! 😄)
-

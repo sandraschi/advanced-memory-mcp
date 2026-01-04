@@ -66,4 +66,3 @@ Born in Soisy-sous-Montmorency, France, LeCun received his DiplÃ´me d'IngÃ©n
 - [Facebook AI Research (FAIR)](https://ai.facebook.com/)
 - [Thelements of AI](https://www.elementsofai.com/) - Free online course on AI fundamentals
 - [The AI Summer School](https://www.aisummerschool.org/) - Educational initiative co-founded by LeCun
-

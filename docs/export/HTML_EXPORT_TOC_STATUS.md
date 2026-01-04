@@ -1,6 +1,6 @@
 # HTML Export TOC Status
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Status**: ✅ FULL FEATURES ADDED - Same as PDF export!
 
 ---
@@ -80,5 +80,3 @@ adn_export(
 6. ✅ Clickable anchor links for all headings
 
 **HTML export now has the same features as PDF export!** ✅
-
-

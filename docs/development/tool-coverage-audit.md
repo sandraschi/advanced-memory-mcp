@@ -122,5 +122,3 @@ After implementation:
 **Total**: 47 tools
 
 ✅ **100% coverage** (after adding view_rendered to adn_content)
-
-

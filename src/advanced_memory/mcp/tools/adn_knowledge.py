@@ -27,98 +27,93 @@ async def adn_knowledge(
 ) -> str:
     """Comprehensive knowledge management tool for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 18+ knowledge operations into one tool.
+    This point-of-entry tool provides a unified interface for complex knowledge
+    operations, including bulk management, tag maintenance, content validation,
+    and LLM-powered research orchestration.
+
+    PORTMANTEAU PATTERN RATIONALE:
+    Consolidates 18+ knowledge operations into one tool to:
+    - Prevent tool explosion (18 tools -> 1 tool) while maintaining deep functionality.
+    - Improve discoverability by grouping related knowledge maintenance tasks.
+    - Centralize research orchestration and AI-powered content analysis.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+
+    PARAMETER DESIGN:
+    The parameters are categorized by operation type:
+    - Maintenance (bulk_*): Uses 'filters' to select notes and 'action' to apply changes.
+    - Tags (tag_*): Handles analytics, consolidation, and cleanup.
+    - Research (research_*): Topic-based planning and structured methodology.
+    - AI Analysis (analyze_*): LLM-powered insights, gap discovery, and clustering.
 
     SUPPORTED OPERATIONS:
-    - bulk_update: Batch update multiple notes (tags, content, metadata)
-    - bulk_move: Move multiple notes between folders
-    - bulk_delete: Delete multiple notes with confirmation
-    - tag_analytics: Analyze tag usage and statistics
-    - consolidate_tags: Merge similar tags (including semantic similarity)
-    - tag_maintenance: Clean up tags (remove duplicates, standardize case)
-    - validate_content: Check note quality and fix issues
-    - project_stats: Analyze project content and activity
-    - find_duplicates: Identify duplicate or similar content
-    - research_plan: Create detailed research roadmap with questions and methodology
-    - research_methodology: Get proven research approaches for different topics
-    - research_questions: Generate focused research questions and sub-questions
-    - note_blueprint: Design optimal note structure for research findings
-    - research_workflow: Step-by-step research execution guide
-    - analyze_quality: LLM-powered content quality analysis (readability, completeness, organization)
-    - suggest_relationships: LLM-powered relationship suggestions between notes
-    - find_gaps: LLM-powered knowledge gap identification
-    - cluster_content: LLM-powered semantic content clustering
-    - extract_insights: LLM-powered insight extraction from note collections
 
-    KNOWLEDGE FEATURES:
-    - Bulk content operations for efficiency
-    - Advanced tag analytics and consolidation
-    - Content validation and quality checking
-    - Duplicate detection and management
-    - AI-guided research planning and methodology
-    - Structured note blueprint generation
-    - Project statistics and activity analysis
+    Maintenance & Bulk Operations:
+    - bulk_update: Batch update multiple notes (tags, content, metadata).
+    - bulk_move: Relocate multiple notes between folders.
+    - bulk_delete: Remove multiple notes (non-destructive by default).
+    - find_duplicates: Identify similar content for consolidation.
+    - validate_content: Check note quality, broken links, and formatting.
 
-    Args:
-        operation: The knowledge operation to perform (see SUPPORTED OPERATIONS above)
-        filters: Filtering criteria for bulk operations
-                    * bulk_update, bulk_move, bulk_delete: REQUIRED - Dict with filter criteria (e.g., {"tags": ["draft"], "folder": "notes"})
-                    * tag_analytics, consolidate_tags, tag_maintenance: Optional - Filter tags to analyze/consolidate
-                    * validate_content, find_duplicates: Optional - Filter notes to validate/check
-                    * analyze_quality, suggest_relationships, find_gaps, cluster_content, extract_insights: Optional - Filter notes to analyze
-                    * Research operations: NOT USED
-        action: Action parameters for bulk operations
-                    * bulk_update: REQUIRED - Dict with update actions (e.g., {"add_tags": ["reviewed"], "set_folder": "archive"})
-                    * bulk_move: REQUIRED - Dict with move action (e.g., {"destination": "archive/completed"})
-                    * bulk_delete: NOT USED (confirmation handled separately)
-                    * tag_analytics: Optional - Dict with analysis options (e.g., {"analyze_usage": True, "show_stats": True})
-                    * consolidate_tags: REQUIRED - Dict with consolidation rules (e.g., {"semantic_groups": [["mcp", "mcp-server"]]})
-                    * tag_maintenance: Optional - Dict with maintenance actions (e.g., {"remove_duplicates": True, "standardize_case": True})
-                    * validate_content: Optional - Dict with validation checks (e.g., {"checks": ["broken_links", "formatting"]})
-                    * Research operations: NOT USED
-        topic: Research topic for research operations
-                    * research_plan, research_methodology, research_questions, note_blueprint, research_workflow: REQUIRED - Research topic (e.g., "quantum computing")
-                    * Other operations: NOT USED
-        topic_type: Type of topic for research operations
-                    * research_plan, research_methodology, research_questions: Optional - Type of topic (e.g., "technical", "academic", "business")
-                    * Other operations: NOT USED
-        research_type: Type of research for research operations
-                    * research_plan, research_methodology: Optional - Type of research (e.g., "exploratory", "analysis", "comparative")
-                    * Other operations: NOT USED
-        step: Research workflow step number
-                    * research_workflow: Optional - Step number to execute (1-5, default: execute all steps)
-                    * Other operations: NOT USED
-        parameters: Additional parameters for research operations
-                    * research_plan, research_methodology, research_questions, note_blueprint, research_workflow: Optional - Dict with additional parameters
-                    * Other operations: NOT USED
-        dry_run: Preview changes without applying them
-                    * bulk_update, bulk_move, bulk_delete, consolidate_tags, tag_maintenance: Optional - If True, shows what would change without applying (default: True)
-                    * Other operations: NOT USED
-        limit: Maximum items to process
-                    * bulk_update, bulk_move, bulk_delete, validate_content, find_duplicates: Optional - Maximum notes to process (default: 100)
-                    * analyze_quality, suggest_relationships, find_gaps, cluster_content, extract_insights: Optional - Maximum notes to analyze (default: 100)
-                    * Research operations: NOT USED
-        project: Optional project name
-                    * All operations: Optional - Process notes in specific project (default: current active project)
+    Tag Management:
+    - tag_analytics: Analyze tag usage patterns and statistics.
+    - consolidate_tags: Merge semantically similar tags into canonical forms.
+    - tag_maintenance: Clean up duplicates and standardize casing.
+
+    Research Orchestration:
+    - research_plan: Create a structured research roadmap with methodology.
+    - research_methodology: Get proven research approaches for specific topics.
+    - research_questions: Generate focused sub-questions for deep dives.
+    - note_blueprint: Design optimal note structures for research findings.
+    - research_workflow: Execute a step-by-step research guide.
+
+    AI Content Analysis:
+    - analyze_quality: LLM-powered readability and completeness analysis.
+    - suggest_relationships: Semantic relationship discovery between notes.
+    - find_gaps: Identification of missing subtopics and coverage gaps.
+    - cluster_content: Semantic clustering of notes by theme.
+    - extract_insights: High-level insight extraction from note collections.
+
+    Prerequisites:
+    - Active project session for all operations.
+    - Configured LLM provider (via adn_llm) for 'AI Analysis' operations.
+
+    Parameters:
+        operation: The knowledge operation to perform (Required).
+        filters: Filtering criteria (e.g., {"tags": ["draft"], "folder": "notes"}).
+        action: Action parameters (e.g., {"add_tags": ["final"], "destination": "archive"}).
+        topic: Specific topic for research operations (e.g., "quantum computing").
+        topic_type: Type of research topic (e.g., "technical", "academic").
+        research_type: Methodology type (e.g., "exploratory", "comparative").
+        step: Specific workflow step to execute (1-5).
+        parameters: Additional metadata for research/AI operations.
+        dry_run: Preview changes without applying them (Default: True).
+        limit: Maximum items to process/analyze (Default: 100).
+        project: Optional override for active project name.
 
     Returns:
-        Operation-specific result with processing details and statistics
+        Markdown string containing operation summary, statistics, or AI-generated insights.
+
+    Usage:
+    Use this tool for high-level knowledge maintenance and research planning.
+    Always use 'dry_run=True' for bulk updates to preview changes.
 
     Examples:
-        # Analyze tag usage
-        adn_knowledge("tag_analytics", action={"analyze_usage": True})
+        Analyze tag usage across the project:
+            adn_knowledge("tag_analytics")
 
-        # Bulk update notes
-        adn_knowledge("bulk_update", filters={"tags": ["draft"]}, action={"add_tags": ["reviewed"]})
+        Bulk move draft notes to archive (dry run):
+            adn_knowledge("bulk_move", filters={"tags": ["draft"]}, action={"destination": "archive"})
 
-        # Create research plan
-        adn_knowledge("research_plan", topic="quantum computing", topic_type="technical")
+        Generate a research plan for a new topic:
+            adn_knowledge("research_plan", topic="Advanced AI Safety")
 
-        # Consolidate similar tags
-        adn_knowledge("consolidate_tags", action={"semantic_groups": [["mcp", "mcp-server"]]})
+        Find knowledge gaps in your research:
+            adn_knowledge("find_gaps", filters={"topics": ["robotics", "embedded-systems"]})
 
-        # Validate content quality
-        adn_knowledge("validate_content", action={"checks": ["broken_links", "formatting"]})
+    Errors:
+        - Required Parameter: Missing 'filters', 'action', or 'topic' for specific operations.
+        - LLM Unavailable: AI operations failed due to lack of configured LLM client.
+        - Invalid operation: The specified operation is not supported.
     """
     logger.info(f"MCP tool call tool=adn_knowledge operation={operation}")
 
@@ -230,7 +225,11 @@ async def _llm_content_analysis(
 
 
 async def _analyze_content_quality(
-    active_project, filters: dict[str, Any] | None, action: dict[str, Any] | None, limit: int, llm
+    active_project,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    limit: int,
+    llm,
 ) -> str:
     """Analyze content quality using LLM."""
     from advanced_memory.mcp.tools.adn_search import adn_search
@@ -300,7 +299,11 @@ Provide quality assessments for each note."""
 
 
 async def _suggest_relationships(
-    active_project, filters: dict[str, Any] | None, action: dict[str, Any] | None, limit: int, llm
+    active_project,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    limit: int,
+    llm,
 ) -> str:
     """Suggest relationships between notes using LLM."""
     from advanced_memory.mcp.tools.adn_search import adn_search
@@ -370,7 +373,11 @@ Suggest relationships between the main note and related notes."""
 
 
 async def _find_knowledge_gaps(
-    active_project, filters: dict[str, Any] | None, action: dict[str, Any] | None, limit: int, llm
+    active_project,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    limit: int,
+    llm,
 ) -> str:
     """Find knowledge gaps using LLM."""
     from advanced_memory.mcp.tools.adn_search import adn_search
@@ -437,7 +444,11 @@ Identify knowledge gaps - what's missing or incomplete?"""
 
 
 async def _cluster_content(
-    active_project, filters: dict[str, Any] | None, action: dict[str, Any] | None, limit: int, llm
+    active_project,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    limit: int,
+    llm,
 ) -> str:
     """Cluster content semantically using LLM."""
     from advanced_memory.mcp.tools.adn_search import adn_search
@@ -503,7 +514,11 @@ Group related notes together."""
 
 
 async def _extract_insights(
-    active_project, filters: dict[str, Any] | None, action: dict[str, Any] | None, limit: int, llm
+    active_project,
+    filters: dict[str, Any] | None,
+    action: dict[str, Any] | None,
+    limit: int,
+    llm,
 ) -> str:
     """Extract key insights from notes using LLM."""
     from advanced_memory.mcp.tools.adn_search import adn_search

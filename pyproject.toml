@@ -1,6 +1,6 @@
 [project]
 name = "advanced-memory"
-version = "1.0.0b9"
+version = "1.1.0b1"
 description = "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs, derived from Advanced Memory with significant enhancements"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -57,10 +57,12 @@ dependencies = [
 
 [project.optional-dependencies]
 voice = [
-    "openai-whisper>=20231117",  # Speech-to-text (dictate)
-    "pyttsx3>=2.90",             # Text-to-speech (speak)
-    "sounddevice>=0.4.6",        # Audio recording
-    "soundfile>=0.12.1",         # Audio file handling
+    "kokoro>=0.9.4",             # Soulful Text-to-speech (speak)
+    "faster-whisper>=1.2.1",     # High-performance Speech-to-text (dictate)
+    "onnxruntime-gpu>=1.23.2",   # GPU acceleration for STT/TTS
+    "sounddevice>=0.5.2",        # Audio recording
+    "soundfile>=0.13.1",         # Audio file handling
+    "numpy>=1.26.4",             # Array processing
 ]
 plex = [
     "plexapi>=4.15.0",    # Plex Media Server API (music control)
@@ -96,7 +98,7 @@ filterwarnings = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["migrations", "mcpb", "dxt", "dist", "htmlcov"]
+extend-exclude = ["migrations", "mcpb", "dist", "htmlcov"]
 
 [tool.ruff.lint]
 select = [

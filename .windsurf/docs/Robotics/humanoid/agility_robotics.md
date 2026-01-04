@@ -1,4 +1,4 @@
-﻿# Agility Robotics
+# Agility Robotics
 
 ## Overview
 Agility Robotics is a pioneering American robotics company focused on developing bipedal, legged robots designed toperate in human-centric environments. Their core mission is to build a robotic workforce that can handle dull, dirty, andangerous jobs, particularly in the logistics and supply chain sectors. Unlike many robotic solutions that require significant infrastructure changes, Agility's robots are builto navigate the world as it is, walking up stairs, over curbs, and through spaces designed for people.

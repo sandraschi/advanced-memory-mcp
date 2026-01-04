@@ -21,8 +21,8 @@ This is what readers see.
 (Frontmatter is hidden in most viewers)
 ```
 
-**Hidden in**: Obsidian reading view, GitHub, rendered HTML, PDF exports  
-**Visible in**: Edit mode only  
+**Hidden in**: Obsidian reading view, GitHub, rendered HTML, PDF exports
+**Visible in**: Edit mode only
 **Compatible with**: Obsidian, Advanced Memory, Hugo, Jekyll, all modern markdown tools
 
 ---
@@ -269,9 +269,9 @@ Content here.
 
 ### Support
 
-**Pandoc**: ✅ Supports with extensions  
-**Obsidian**: ⚠️ Partial (via plugins)  
-**GitHub**: ❌ Not supported  
+**Pandoc**: ✅ Supports with extensions
+**Obsidian**: ⚠️ Partial (via plugins)
+**GitHub**: ❌ Not supported
 **Advanced Memory**: ❌ Not parsed
 
 **Recommendation**: Use frontmatter instead (wider support)
@@ -562,8 +562,8 @@ key: value
 ---
 ```
 
-**Visibility**: Hidden in reading view ✅  
-**Structured**: YES ✅  
+**Visibility**: Hidden in reading view ✅
+**Structured**: YES ✅
 **Recommended**: ⭐⭐⭐⭐⭐
 
 ---
@@ -574,8 +574,8 @@ key: value
 <!-- This is a comment -->
 ```
 
-**Visibility**: Hidden in reading view ✅  
-**Structured**: NO ❌  
+**Visibility**: Hidden in reading view ✅
+**Structured**: NO ❌
 **Recommended**: ⭐⭐⭐ (for notes only)
 
 ---
@@ -586,8 +586,8 @@ key: value
 [comment]: # (This is a comment)
 ```
 
-**Visibility**: Hidden ✅  
-**Structured**: NO ❌  
+**Visibility**: Hidden ✅
+**Structured**: NO ❌
 **Recommended**: ⭐ (don't use)
 
 ---
@@ -598,8 +598,8 @@ key: value
 []: # (Comment)
 ```
 
-**Visibility**: Hidden ✅  
-**Structured**: NO ❌  
+**Visibility**: Hidden ✅
+**Structured**: NO ❌
 **Recommended**: ⭐ (don't use)
 
 ---
@@ -811,8 +811,8 @@ The claim is that...
 ## Technical Details
 ```
 
-**In reading view**: All comments hidden ✅  
-**In PDF export**: Comments hidden ✅  
+**In reading view**: All comments hidden ✅
+**In PDF export**: Comments hidden ✅
 **For you in edit mode**: Comments visible (helpful reminders)
 
 ---
@@ -893,7 +893,7 @@ featured_image: /images/post.jpg
 Content here.
 ```
 
-**Hugo/Jekyll**: Uses frontmatter for site generation  
+**Hugo/Jekyll**: Uses frontmatter for site generation
 **Readers**: See only content, not frontmatter ✅
 
 ---
@@ -913,7 +913,7 @@ This is the official content.
 More official content.
 ```
 
-**Readers**: See only official content ✅  
+**Readers**: See only official content ✅
 **You**: See your personal notes in edit mode ✅
 
 ---
@@ -1072,6 +1072,5 @@ This is what readers see.
 
 ---
 
-*Created: 2025-10-17*  
+*Created: 2025-10-17*
 *Purpose: Guide for invisible metadata in markdown*
-

@@ -1,8 +1,8 @@
 # Zettelmaker Master Plan - Complete Implementation
 
-**Version:** 1.0  
-**Created:** October 16, 2025  
-**Status:** Planning Phase  
+**Version:** 1.0
+**Created:** October 16, 2025
+**Status:** Planning Phase
 **Owner:** Sandra Schi
 
 ## Vision
@@ -18,8 +18,8 @@ The Zettelmaker Master Plan encompasses five major enhancements:
 4. **Smart Onboarding** - Personalized based on existing knowledge
 5. **Template Marketplace** - Community-driven template sharing
 
-**Timeline:** 6-8 weeks  
-**Impact:** Revolutionary knowledge scaffolding for all users  
+**Timeline:** 6-8 weeks
+**Impact:** Revolutionary knowledge scaffolding for all users
 **Dependencies:** FastMCP 2.12+, OpenAI/Claude API for generation
 
 ---
@@ -36,7 +36,7 @@ Create `adn_zettelmaker` portmanteau tool for Claude-native zettelkasten generat
 @mcp.tool()
 async def adn_zettelmaker(operation: str, **kwargs) -> str:
     """Intelligent zettelkasten generation and management.
-    
+
     SUPPORTED OPERATIONS:
     - generate: Generate notes from templates
     - customize: Customize existing templates
@@ -50,14 +50,14 @@ async def adn_zettelmaker(operation: str, **kwargs) -> str:
 #### 1.2 Generate Operation
 ```python
 # Generate from existing templates
-adn_zettelmaker("generate", 
+adn_zettelmaker("generate",
     category="developer",
     topic="python-core",
     project="main")
 
 # Generate with customization
 adn_zettelmaker("generate",
-    category="developer", 
+    category="developer",
     topic="async-python",
     depth=3,  # 3 levels of interconnected notes
     include_examples=True,
@@ -195,10 +195,10 @@ Format each note as markdown with frontmatter.
 class TemplateCache:
     def store(self, topic: str, template: dict) -> str:
         """Store generated template for future use."""
-        
+
     def retrieve(self, topic: str) -> dict | None:
         """Retrieve cached template."""
-        
+
     def search(self, query: str) -> List[dict]:
         """Search cached templates."""
 ```
@@ -361,7 +361,7 @@ Personalize onboarding based on user's existing knowledge base and interests.
 ```python
 async def analyze_existing_knowledge(project: str) -> dict:
     """Analyze user's existing notes to determine interests and gaps."""
-    
+
     analysis = {
         "topics": ["Python", "Git", "Testing"],  # Detected topics
         "skill_level": "intermediate",  # Inferred from content
@@ -369,7 +369,7 @@ async def analyze_existing_knowledge(project: str) -> dict:
         "interests": ["web development", "API design"],  # Based on content
         "learning_style": "practical",  # Code-heavy vs theory-heavy
     }
-    
+
     return analysis
 ```
 
@@ -398,7 +398,7 @@ adn_zettelmaker("suggest",
 @onboard_app.command("smart")
 def smart_onboarding():
     """AI-powered personalized onboarding."""
-    
+
     # 1. Analyze existing knowledge
     # 2. Detect skill level and interests
     # 3. Identify knowledge gaps
@@ -725,24 +725,24 @@ CREATE TABLE user_knowledge_profile (
 ### Technical Risks
 1. **AI Generation Quality**
    - Mitigation: Human review, quality validation, feedback loops
-   
+
 2. **Performance with Large Templates**
    - Mitigation: Caching, pagination, lazy loading
-   
+
 3. **Marketplace Security**
    - Mitigation: Template validation, sandboxing, review process
 
 ### Product Risks
 1. **User Adoption**
    - Mitigation: Excellent onboarding, clear value proposition
-   
+
 2. **Template Quality**
    - Mitigation: Curation, community moderation, rating system
 
 ### Business Risks
 1. **API Costs**
    - Mitigation: Caching, rate limiting, tiered pricing
-   
+
 2. **Community Management**
    - Mitigation: Clear guidelines, moderation tools
 

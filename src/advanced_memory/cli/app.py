@@ -45,6 +45,7 @@ def app_callback(
         # MCP command handles logging separately to prevent stdout pollution
         if ctx.invoked_subcommand != "mcp":
             from advanced_memory.config import setup_advanced_memory_logging
+
             setup_advanced_memory_logging()
         from advanced_memory.services.initialization import ensure_initialization
 

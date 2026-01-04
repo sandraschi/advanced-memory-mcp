@@ -1,6 +1,6 @@
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -44,7 +44,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** creative  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** creative
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

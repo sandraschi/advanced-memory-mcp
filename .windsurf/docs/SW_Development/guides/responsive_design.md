@@ -75,7 +75,7 @@ For mobile navigation, we implement a collapsible hamburger menu:
     right: 15px;
     z-index: 1000;
   }
-  
+
   .mobile-nav {
     position: fixed;
     top: 0;
@@ -86,7 +86,7 @@ For mobile navigation, we implement a collapsible hamburger menu:
     transition: transform 0.3s ease;
     z-index: 999;
   }
-  
+
   .mobile-nav.active {
     transform: translateX(-300px);
   }
@@ -167,7 +167,7 @@ Handle different device orientations:
   .content {
     padding: 15px 25px;
   }
-  
+
   /* Adjust fixed elements for mobile browsers' bottom bar */
   .bottom-nav {
     padding-bottom: env(safe-area-inset-bottom);
@@ -223,7 +223,7 @@ For mobile devices, we adjusthe layout:
     height: auto;
     position: relative;
   }
-  
+
   .content {
     margin-left: 0;
     padding: 20px 24px;
@@ -325,7 +325,7 @@ Test on these common breakpoints andevices:
    html {
      -webkit-text-size-adjust: 100%;
    }
-   
+
    /* Fix for sticky hover states on mobile */
    @media (hover: none) {
      .hover-effect:hover {

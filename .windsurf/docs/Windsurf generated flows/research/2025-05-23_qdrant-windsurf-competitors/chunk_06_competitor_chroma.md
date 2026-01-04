@@ -1,4 +1,4 @@
-﻿# Researchunk 06: Qdrant Competitor - Chroma
+# Researchunk 06: Qdrant Competitor - Chroma
 
 Date: 2025-05-23
 

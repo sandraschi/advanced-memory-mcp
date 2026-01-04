@@ -1,4 +1,4 @@
-﻿# [Full Name] (Birth Year-Present)
+# [Full Name] (Birth Year-Present)
 
 ## Overview
 [Brief 2-3 sentence introduction about the person'significance in AI/tech]

@@ -1,4 +1,4 @@
-﻿# Transformer Models: Architecture and Applications
+# Transformer Models: Architecture and Applications
 
 ## Overview
 Transformer models have revolutionized natural language processing and beyond. This document covers the architecture, variants, and applications of transformer models.
@@ -19,10 +19,10 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
     """
     d_k = Q.size(-1)
     scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(torch.tensor(d_k))
-    
+
     if mask is not None:
         scores = scores.masked_fill(mask == 0, -1e9)
-    
+
     attention_weights = F.softmax(scores, dim=-1)
     output = torch.matmul(attention_weights, V)
     return output, attention_weights
@@ -38,36 +38,36 @@ class MultiHeadAttention(nn.Module):
         self.W_k = nn.Linear(d_model, d_model)
         self.W_v = nn.Linear(d_model, d_model)
         self.W_o = nn.Linear(d_model, d_model)
-        
+
     def split_heads(self, x):
         batch_size = x.size(0)
         return x.view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
-        
+
     deforward(self, Q, K, V, mask=None):
         batch_size = Q.size(0)
-        
+
         # Linear projections
         Q = self.W_q(Q)
         K = self.W_k(K)
         V = self.W_v(V)
-        
+
         # Split into multiple heads
         Q = self.split_heads(Q)
         K = self.split_heads(K)
         V = self.split_heads(V)
-        
+
         # Scaledot-product attention
         scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.d_k))
-        
+
         if mask is not None:
             scores = scores.masked_fill(mask == 0, -1e9)
-            
+
         attention_weights = F.softmax(scores, dim=-1)
         output = torch.matmul(attention_weights, V)
-        
+
         # Concatenate heads
         output = output.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
-        
+
         # Finalinear layer
         output = self.W_o(output)
         return output

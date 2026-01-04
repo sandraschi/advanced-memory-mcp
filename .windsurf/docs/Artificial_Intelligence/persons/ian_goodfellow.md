@@ -67,4 +67,3 @@ Born in the United States, Goodfellow earned his Bachelor's and Master's in comp
 - [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661) - Original GAN paper
 - [OpenAI Research](https://openai.com/research/)
 - [The GAN Zoo](https://github.com/hindupuravinash/the-gan-zoo) - Collection of GAN variants
-

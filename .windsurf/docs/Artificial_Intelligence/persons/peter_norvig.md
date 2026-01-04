@@ -69,4 +69,3 @@ Born in Boston, Massachusetts, Norvig earned his PhD in Computer Science from th
 - [Design of Computer Programs (Udacity)](https://www.udacity.com/course/design-of-computer-programs--cs212)
 - [Teach Yourself Programming in Ten Years](http://norvig.com/21-days.html) - Norvig's influential essay on learning to program
 - [The Gettysburg Powerpoint Presentation](http://norvig.com/Gettysburg/) - Satirical take on bad presentation practices
-

@@ -1,4 +1,4 @@
-﻿# OpenAI
+# OpenAI
 
 ## Overview
 OpenAIs an AI research andeployment company whose mission is to ensure that artificial general intelligence (AGI) benefits all of humanity. Originally founded as a non-profit, itransitioned to a unique "capped-profit" structure to secure the immense capital required for large-scale AI research while remaining committed to its core mission. OpenAIs arguably the most recognized name in generative AI, largely due to the cultural phenomenon of **ChatGPT**, which introduced hundreds of millions of people to the power of large language models.

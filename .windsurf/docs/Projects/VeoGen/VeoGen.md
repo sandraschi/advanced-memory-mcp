@@ -1,8 +1,8 @@
 # VeoGen - AI Creative Platform
 
-**Version**: 2.0  
-**Date**: July 2025  
-**Status**: 🔬 **PROOF OF CONCEPT / DEMO**  
+**Version**: 2.0
+**Date**: July 2025
+**Status**: 🔬 **PROOF OF CONCEPT / DEMO**
 **Team**: VeoGen Development Team
 
 ## 🎯 Overview

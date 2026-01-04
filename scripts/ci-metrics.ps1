@@ -62,7 +62,7 @@ Write-Host "`nTarget: 95%+ success rate" -ForegroundColor Cyan
 if ($Detailed) {
     Write-Host "`n═══════════════════════════════════════════════════════════════`n" -ForegroundColor Cyan
     Write-Host "📋 RECENT WORKFLOW HISTORY`n" -ForegroundColor Yellow
-    
+
     foreach ($run in $runs | Select-Object -First 10) {
         $emoji = switch ($run.conclusion) {
             "success" { "✅" }
@@ -70,7 +70,7 @@ if ($Detailed) {
             "cancelled" { "⚠️ " }
             default { "⏳" }
         }
-        
+
         $date = [DateTime]::Parse($run.created_at).ToString("MM/dd HH:mm")
         $duration = if ($run.conclusion) {
             $start = [DateTime]::Parse($run.created_at)
@@ -80,7 +80,7 @@ if ($Detailed) {
         } else {
             "running"
         }
-        
+
         Write-Host "$emoji [$date] $($run.name) - $duration" -ForegroundColor White
         if ($run.conclusion -eq "failure") {
             Write-Host "   $($run.html_url)" -ForegroundColor Gray
@@ -92,9 +92,9 @@ if ($Detailed) {
 if ($failure -gt 0) {
     Write-Host "`n═══════════════════════════════════════════════════════════════`n" -ForegroundColor Cyan
     Write-Host "🔍 FAILURE ANALYSIS`n" -ForegroundColor Yellow
-    
+
     $failedRuns = $runs | Where-Object { $_.conclusion -eq "failure" } | Select-Object -First 10
-    
+
     $failureTypes = @{}
     foreach ($run in $failedRuns) {
         $name = $run.name
@@ -103,7 +103,7 @@ if ($failure -gt 0) {
         }
         $failureTypes[$name]++
     }
-    
+
     Write-Host "Most common failing workflows:" -ForegroundColor White
     $failureTypes.GetEnumerator() | Sort-Object Value -Descending | ForEach-Object {
         Write-Host "  $($_.Value)x - $($_.Key)" -ForegroundColor Red
@@ -128,4 +128,3 @@ if ($successRate -lt 95) {
 Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Cyan
 
 exit 0
-

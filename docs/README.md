@@ -85,4 +85,3 @@ Example files and demonstrations:
 - Check the [guides/](guides/) directory for user documentation
 - See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines
 - Open an issue on GitHub for questions or suggestions
-

@@ -1,7 +1,7 @@
 # Architecture & Standards
 
-**Confidence**: 🟢 High  
-**Last validated**: 2025-11-11  
+**Confidence**: 🟢 High
+**Last validated**: 2025-11-11
 **Primary sources**: Anthropic FastMCP repo (2.13 release notes), Advanced Memory `.cursorrules`, Anthropic skill-creator patterns, Sandra Schiavone’s portmanteau reorg plan
 
 ---
@@ -43,10 +43,10 @@ Keep business logic out of tool definitions—tools orchestrate, services execut
 
 ## 3. Error & Security Standards
 
-- **Error contract**: `{"success": False, "error": "...", "error_code": "...", "suggestions": [...], "related_tools": [...]}`. Never raise raw exceptions.  
-- **Logging**: Log start, success, and failure events (`logger.info`, `logger.error(..., exc_info=True)`); include operation names and durations.  
-- **Input validation**: Pydantic models or manual validation for external user input. Reject suspicious patterns (shell metacharacters, HTML injection).  
-- **Command execution**: Prefer library APIs; if shell commands unavoidable, sanitize with `shlex.quote` and timeouts.  
+- **Error contract**: `{"success": False, "error": "...", "error_code": "...", "suggestions": [...], "related_tools": [...]}`. Never raise raw exceptions.
+- **Logging**: Log start, success, and failure events (`logger.info`, `logger.error(..., exc_info=True)`); include operation names and durations.
+- **Input validation**: Pydantic models or manual validation for external user input. Reject suspicious patterns (shell metacharacters, HTML injection).
+- **Command execution**: Prefer library APIs; if shell commands unavoidable, sanitize with `shlex.quote` and timeouts.
 - **Transport security**: When calling external APIs, use HTTPS, handle OAuth tokens securely, and redact secrets in logs.
 
 Reference: Advanced Memory `.cursorrules`, CVE notes in FastMCP 2.13 release.
@@ -55,10 +55,10 @@ Reference: Advanced Memory `.cursorrules`, CVE notes in FastMCP 2.13 release.
 
 ## 4. Portmanteau Tool Design
 
-- Group cohesive operations: e.g., `adn_content(operation="read")`, `adn_content(operation="write")`.  
-- Provide exhaustive docstrings following the mandated template (Prerequisites, Parameters, Returns, Usage, Examples, Errors, See Also).  
-- Keep operations discoverable: include operation list in docstring, ensure consistent parameter naming.  
-- Use helper routers inside the tool file (e.g., `_dispatch = {"list": _list_operation, ...}`) to keep main function tidy.  
+- Group cohesive operations: e.g., `adn_content(operation="read")`, `adn_content(operation="write")`.
+- Provide exhaustive docstrings following the mandated template (Prerequisites, Parameters, Returns, Usage, Examples, Errors, See Also).
+- Keep operations discoverable: include operation list in docstring, ensure consistent parameter naming.
+- Use helper routers inside the tool file (e.g., `_dispatch = {"list": _list_operation, ...}`) to keep main function tidy.
 - Surface `Literal[...]` typing for `operation` to improve autocomplete and static validation.
 
 ---
@@ -78,9 +78,9 @@ Ensure tests can inject in-memory storage for deterministic behavior.
 
 ## 6. Documentation & Standards Alignment
 
-- `.cursorrules` – enforce internal standards (FastMCP version, error handling, docstring requirements).  
-- README / INSTALLATION – stay in sync with installers (npx/npm, MCPB).  
-- Architecture docs – capture design decisions (ADR template) and portmanteau map.  
+- `.cursorrules` – enforce internal standards (FastMCP version, error handling, docstring requirements).
+- README / INSTALLATION – stay in sync with installers (npx/npm, MCPB).
+- Architecture docs – capture design decisions (ADR template) and portmanteau map.
 - CHANGELOG – update for every release (semver or beta tags).
 
 Keep documentation versioned alongside code to avoid drift.
@@ -88,12 +88,11 @@ Keep documentation versioned alongside code to avoid drift.
 ---
 
 ### Architecture Checklist
-- [ ] FastMCP 2.13+ lifespan, storage, and async compliance verified.  
-- [ ] `server.py` thin, tools organized by category with Pydantic schemas.  
-- [ ] Errors structured, logged, and actionable; no uncaught exceptions.  
-- [ ] Portmanteau tools defined with clear operation matrices and docstrings.  
-- [ ] Storage abstractions support tests and future persistence needs.  
+- [ ] FastMCP 2.13+ lifespan, storage, and async compliance verified.
+- [ ] `server.py` thin, tools organized by category with Pydantic schemas.
+- [ ] Errors structured, logged, and actionable; no uncaught exceptions.
+- [ ] Portmanteau tools defined with clear operation matrices and docstrings.
+- [ ] Storage abstractions support tests and future persistence needs.
 - [ ] Docs (.cursorrules, README, INSTALLATION) reflect current architecture.
 
 This module ensures your server architecture is future-proof, secure, and aligned with Anthropic expectations.***
-

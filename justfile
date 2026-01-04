@@ -65,57 +65,57 @@ migration message:
 release version:
     #!/usr/bin/env bash
     set -euo pipefail
-    
+
     # Validate version format
     if [[ ! "{{version}}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         echo "❌ Invalid version format. Use: v0.13.2"
         exit 1
     fi
-    
+
     # Extract version number without 'v' prefix
     VERSION_NUM=$(echo "{{version}}" | sed 's/^v//')
-    
+
     echo "🚀 Creating stable release {{version}}"
-    
+
     # Pre-flight checks
     echo "📋 Running pre-flight checks..."
     if [[ -n $(git status --porcelain) ]]; then
         echo "❌ Uncommitted changes found. Please commit or stash them first."
         exit 1
     fi
-    
+
     if [[ $(git branch --show-current) != "main" ]]; then
         echo "❌ Not on main branch. Switch to main first."
         exit 1
     fi
-    
+
     # Check if tag already exists
     if git tag -l "{{version}}" | grep -q "{{version}}"; then
         echo "❌ Tag {{version}} already exists"
         exit 1
     fi
-    
+
     # Run quality checks
     echo "🔍 Running quality checks..."
     just check
-    
+
     # Update version in __init__.py
     echo "📝 Updating version in __init__.py..."
     sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/basic_memory/__init__.py
     rm -f src/basic_memory/__init__.py.bak
-    
+
     # Commit version update
     git add src/basic_memory/__init__.py
     git commit -m "chore: update version to $VERSION_NUM for {{version}} release"
-    
+
     # Create and push tag
     echo "🏷️  Creating tag {{version}}..."
     git tag "{{version}}"
-    
+
     echo "📤 Pushing to GitHub..."
     git push origin main
     git push origin "{{version}}"
-    
+
     echo "✅ Release {{version}} created successfully!"
     echo "📦 GitHub Actions will build and publish to PyPI"
     echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
@@ -124,57 +124,57 @@ release version:
 beta version:
     #!/usr/bin/env bash
     set -euo pipefail
-    
+
     # Validate version format (allow beta/rc suffixes)
     if [[ ! "{{version}}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(b[0-9]+|rc[0-9]+)$ ]]; then
         echo "❌ Invalid beta version format. Use: v0.13.2b1 or v0.13.2rc1"
         exit 1
     fi
-    
+
     # Extract version number without 'v' prefix
     VERSION_NUM=$(echo "{{version}}" | sed 's/^v//')
-    
+
     echo "🧪 Creating beta release {{version}}"
-    
+
     # Pre-flight checks
     echo "📋 Running pre-flight checks..."
     if [[ -n $(git status --porcelain) ]]; then
         echo "❌ Uncommitted changes found. Please commit or stash them first."
         exit 1
     fi
-    
+
     if [[ $(git branch --show-current) != "main" ]]; then
         echo "❌ Not on main branch. Switch to main first."
         exit 1
     fi
-    
+
     # Check if tag already exists
     if git tag -l "{{version}}" | grep -q "{{version}}"; then
         echo "❌ Tag {{version}} already exists"
         exit 1
     fi
-    
+
     # Run quality checks
     echo "🔍 Running quality checks..."
     just check
-    
+
     # Update version in __init__.py
     echo "📝 Updating version in __init__.py..."
     sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/basic_memory/__init__.py
     rm -f src/basic_memory/__init__.py.bak
-    
+
     # Commit version update
     git add src/basic_memory/__init__.py
     git commit -m "chore: update version to $VERSION_NUM for {{version}} beta release"
-    
+
     # Create and push tag
     echo "🏷️  Creating tag {{version}}..."
     git tag "{{version}}"
-    
+
     echo "📤 Pushing to GitHub..."
     git push origin main
     git push origin "{{version}}"
-    
+
     echo "✅ Beta release {{version}} created successfully!"
     echo "📦 GitHub Actions will build and publish to PyPI as pre-release"
     echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"

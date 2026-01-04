@@ -254,7 +254,7 @@ Expertise propagates across AI ecosystem
 
 **Status**: ✅ **Official format released October 16, 2025** - https://github.com/anthropics/skills
 
-**Format**: 
+**Format**:
 - Folder with `SKILL.md` file
 - YAML frontmatter: just `name` + `description` required
 - Markdown body: free-form instructions
@@ -264,7 +264,7 @@ Expertise propagates across AI ecosystem
 
 **The uncanny parallel**: **Zettelkasten = Skills repository** (when content is actionable)
 - Cooking zettelkasten = cooking skills
-- Programming zettelkasten = programming skills  
+- Programming zettelkasten = programming skills
 - Both use YAML + Markdown, both link/compose, both evolve
 - We already have the infrastructure!
 

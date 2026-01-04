@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Start here to understand team context, repository health, and workflow constraints before prescribing branching or tooling changes.
@@ -23,10 +23,10 @@ Capture answers to inform branching strategy and automation priorities.
 
 ## 2. Workflow Readiness Checklist
 
-- Enforced branch protection (status checks, reviews, signed commits if required).  
-- CI pipeline turnaround < 10 minutes for trunk builds.  
-- Release automation or manual steps documented.  
-- Clear Definition of Done (tests, docs, approvals).  
+- Enforced branch protection (status checks, reviews, signed commits if required).
+- CI pipeline turnaround < 10 minutes for trunk builds.
+- Release automation or manual steps documented.
+- Clear Definition of Done (tests, docs, approvals).
 - Backlog/ticket system integrated with commits/PRs.
 
 If prerequisites missing, address them before adopting advanced workflows.
@@ -48,9 +48,9 @@ Document chosen workflow in team handbook.
 
 ## 4. Stakeholder Alignment
 
-- **Engineering**: expectations for branch lifespan, review SLA, conflict resolution.  
-- **Product**: release cadence, feature flag rollout strategy.  
-- **Security/Compliance**: sign-off requirements, audit logging, change control.  
+- **Engineering**: expectations for branch lifespan, review SLA, conflict resolution.
+- **Product**: release cadence, feature flag rollout strategy.
+- **Security/Compliance**: sign-off requirements, audit logging, change control.
 - **Platform/DevOps**: CI resources, merge queues, tooling ownership.
 
 Conduct kickoff workshops when changing workflows; provide training.
@@ -59,10 +59,10 @@ Conduct kickoff workshops when changing workflows; provide training.
 
 ## 5. Escalation Triggers
 
-- Unmerged branches older than agreed SLA (e.g., >5 days).  
-- Frequent release rollback due to merge issues.  
-- Review queue backlog exceeding team limit.  
-- Compliance violations (missing approvals, unsigned commits) detected.  
+- Unmerged branches older than agreed SLA (e.g., >5 days).
+- Frequent release rollback due to merge issues.
+- Review queue backlog exceeding team limit.
+- Compliance violations (missing approvals, unsigned commits) detected.
 - Merge queue or CI instability affecting throughput.
 
 Escalate to workflow steering group; capture action items in retro.
@@ -70,16 +70,16 @@ Escalate to workflow steering group; capture action items in retro.
 ---
 
 ### Module Map
-- Branching decisions → [modules/branching-strategies.md](modules/branching-strategies.md)  
-- Collaboration & reviews → [modules/collaboration-and-reviews.md](modules/collaboration-and-reviews.md)  
-- Automation → [modules/automation-and-tooling.md](modules/automation-and-tooling.md)  
-- Governance → [modules/maintenance-and-governance.md](modules/maintenance-and-governance.md)  
+- Branching decisions → [modules/branching-strategies.md](modules/branching-strategies.md)
+- Collaboration & reviews → [modules/collaboration-and-reviews.md](modules/collaboration-and-reviews.md)
+- Automation → [modules/automation-and-tooling.md](modules/automation-and-tooling.md)
+- Governance → [modules/maintenance-and-governance.md](modules/maintenance-and-governance.md)
 - Outstanding work → [modules/known-gaps.md](modules/known-gaps.md)
 
 Revisit this guidance semi-annually to ensure workflow choices still fit team maturity.*** End Patch
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -123,7 +123,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** technical
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

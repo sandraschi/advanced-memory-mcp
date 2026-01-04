@@ -10,7 +10,7 @@
 
 **Wrong usage** (repeated 15+ times):
 ```python
-adn_content("edit", 
+adn_content("edit",
     identifier="...",
     edit_operation="find_replace",
     find_text="...",
@@ -22,7 +22,7 @@ adn_content("edit",
 ```python
 adn_content("edit",
     identifier="...",
-    edit_operation="find_replace", 
+    edit_operation="find_replace",
     find_text="...",
     content="..."  # ✅ Correct parameter name
 )
@@ -45,19 +45,19 @@ async def adn_content(
     # ... other parameters ...
 ) -> str:
     """Comprehensive content management tool..."""
-    
+
     # Parameter aliasing at function start
     # Handle common mistakes and aliases
     import inspect
     frame = inspect.currentframe()
     if frame:
         local_vars = frame.f_back.f_locals if frame.f_back else {}
-        
+
         # Alias handling: new_string -> content
         if 'new_string' in local_vars and 'content' not in local_vars:
             content = local_vars.get('new_string')
             logger.warning("Parameter 'new_string' is deprecated. Use 'content' instead.")
-        
+
         # Alias handling: replacement -> content (for find_replace)
         if edit_operation == "find_replace":
             if 'replacement' in local_vars and 'content' not in local_vars:
@@ -101,7 +101,7 @@ async def adn_content(
     **kwargs
 ) -> str:
     """Comprehensive content management tool..."""
-    
+
     # Parameter alias mapping
     alias_map = {
         "new_string": "content",
@@ -109,7 +109,7 @@ async def adn_content(
         "new_content": "content",
         "text": "content",  # Common mistake
     }
-    
+
     # Map aliases to correct parameters
     for alias, correct_param in alias_map.items():
         if alias in kwargs and locals().get(correct_param) is None:
@@ -120,11 +120,11 @@ async def adn_content(
                 f"Parameter '{alias}' is deprecated. Use '{correct_param}' instead. "
                 f"Automatically mapped for this call."
             )
-    
+
     # Remove aliases from kwargs to avoid conflicts
     for alias in alias_map.keys():
         kwargs.pop(alias, None)
-    
+
     # Continue with normal processing...
 ```
 
@@ -181,13 +181,13 @@ def normalize_parameters(kwargs: dict) -> dict:
         "replacement": "content",
         "new_content": "content",
     }
-    
+
     normalized = kwargs.copy()
     for alias, correct in alias_map.items():
         if alias in normalized and correct not in normalized:
             normalized[correct] = normalized.pop(alias)
             logger.warning(f"Mapped '{alias}' -> '{correct}'")
-    
+
     return normalized
 
 # Apply before tool execution (if FastMCP supports this)
@@ -208,14 +208,14 @@ def normalize_parameters(kwargs: dict) -> dict:
 
 def _validate_edit_parameters(operation, edit_operation, content, find_text, **kwargs):
     """Validate edit operation parameters with helpful error messages."""
-    
+
     # Check for common wrong parameter names
     wrong_params = {
         "new_string": "content",
-        "replacement": "content", 
+        "replacement": "content",
         "new_content": "content",
     }
-    
+
     for wrong, correct in wrong_params.items():
         if wrong in kwargs:
             return f"""# Parameter Error
@@ -230,11 +230,11 @@ Change `{wrong}="..."` to `{correct}="..."` in your tool call.
 # ❌ Wrong
 adn_content("edit", edit_operation="find_replace", {wrong}="new text")
 
-# ✅ Correct  
+# ✅ Correct
 adn_content("edit", edit_operation="find_replace", {correct}="new text")
 ```
 """
-    
+
     # Continue with normal validation...
 ```
 
@@ -255,7 +255,7 @@ After implementation, test with:
 
 ```python
 # Should work (with warning)
-adn_content("edit", 
+adn_content("edit",
     identifier="test",
     edit_operation="find_replace",
     find_text="old",
@@ -264,7 +264,7 @@ adn_content("edit",
 
 # Should provide helpful error
 adn_content("edit",
-    identifier="test", 
+    identifier="test",
     edit_operation="find_replace",
     new_string="new"  # Should suggest using 'content'
 )
@@ -280,34 +280,6 @@ adn_content("edit",
 
 ---
 
-**Status**: Proposal - Needs implementation  
-**Priority**: Medium (reduces failed tool calls)  
+**Status**: Proposal - Needs implementation
+**Priority**: Medium (reduces failed tool calls)
 **Effort**: Low (error messages) to Medium (aliases if supported)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

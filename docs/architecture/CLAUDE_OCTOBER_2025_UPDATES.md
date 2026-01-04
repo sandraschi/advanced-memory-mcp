@@ -1,6 +1,6 @@
 # Claude October 2025 Updates - Major Feature Drop
 
-**Release Window**: October 10-16, 2025  
+**Release Window**: October 10-16, 2025
 **Status**: Based on web research and user observation
 
 ---
@@ -242,7 +242,7 @@ Claude:
 
 ### 1. File Upload Improvements
 
-**Before**: Limited file types  
+**Before**: Limited file types
 **Now**: DOCX, PDF, PPTX, XLSX via skills
 
 **Example**:
@@ -421,10 +421,10 @@ Expected: Claude responds with voice, loads Vienna cooking skill
 
 **October 10-16, 2025**: Anthropic "Skills Week"
 
-**Day 1 (Oct 10)**: Code Interpreter announced  
-**Day 2-3**: Document skills released  
-**Day 4-5**: Artifact improvements (download button)  
-**Day 6 (Oct 16)**: Skills officially released + repo public  
+**Day 1 (Oct 10)**: Code Interpreter announced
+**Day 2-3**: Document skills released
+**Day 4-5**: Artifact improvements (download button)
+**Day 6 (Oct 16)**: Skills officially released + repo public
 
 **Theme**: "Equipping Agents for the Real World"
 
@@ -457,7 +457,7 @@ Expected: Claude responds with voice, loads Vienna cooking skill
 
 **This is a MAJOR update** - possibly the biggest since Claude 3.5 Sonnet release!
 
-**Recommendation**: 
+**Recommendation**:
 1. Check Anthropic's engineering blog for full announcement
 2. Read Simon Willison's blog (he'll have comprehensive coverage)
 3. Test the new features (Code Interpreter, document skills, voice)
@@ -475,7 +475,6 @@ Expected: Claude responds with voice, loads Vienna cooking skill
 
 ---
 
-*Created: 2025-10-17*  
-*Based on: User observation + web research + logical inference*  
+*Created: 2025-10-17*
+*Based on: User observation + web research + logical inference*
 *Status: Needs verification from official Anthropic sources*
-

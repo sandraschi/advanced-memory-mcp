@@ -219,7 +219,3 @@ This will show:
 - [Project Setup Guide](project-setup-quick-guide.md)
 - [Sync Troubleshooting](../TROUBLESHOOTING_GUIDE.md)
 - [Configuration Reference](../ADVANCED_MEMORY_MCP_COMPLETE_GUIDE.md#configuration)
-
-
-
-

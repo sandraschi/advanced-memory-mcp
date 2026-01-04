@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Start here to understand pipeline maturity, stakeholder needs, and platform constraints before diving into detailed implementation modules.
@@ -47,9 +47,9 @@ Document the rationale in an ADR before implementation.
 
 ## 4. Stakeholder Communication
 
-- **Developers**: emphasise faster feedback, self-service pipelines, rollback safety.  
-- **Security/compliance**: highlight policy-as-code, SBOM generation, audit logging.  
-- **Ops/SRE**: show deployment guardrails, observability, and roll-forward vs rollback plans.  
+- **Developers**: emphasise faster feedback, self-service pipelines, rollback safety.
+- **Security/compliance**: highlight policy-as-code, SBOM generation, audit logging.
+- **Ops/SRE**: show deployment guardrails, observability, and roll-forward vs rollback plans.
 - **Leadership**: present DORA metrics baseline and improvement targets.
 
 Schedule quarterly demos of pipeline improvements to sustain buy-in.

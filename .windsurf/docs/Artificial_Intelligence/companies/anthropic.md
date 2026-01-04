@@ -1,4 +1,4 @@
-﻿# Anthropic
+# Anthropic
 
 ## Overview
 Anthropic is an AI safety and research company structured as a Public Benefit Corporation (PBC). Founded by former senior members of OpenAI, the company's core mission is to ensure that artificial general intelligence (AGI) is developed in a way that benefits humanity. Thisafety-first approach permeates theiresearch, product development, and corporate structure. They are best known for their family of large language models, **Claude**, and their pioneering training technique, **Constitutional AI**.
@@ -44,7 +44,7 @@ client = anthropic.Anthropic()
 with client.messages.stream(
     max_tokens=1024,
     messages=[{
-        "role": "user", 
+        "role": "user",
         "content": "Explain the concept of Constitutional AIn simple terms."
     }],
     model="claude-3-sonnet-20240229",

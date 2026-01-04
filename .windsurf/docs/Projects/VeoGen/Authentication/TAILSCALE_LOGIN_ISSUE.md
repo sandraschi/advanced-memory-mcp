@@ -22,7 +22,7 @@ When accessing via `http://goliath:4710/`, the frontend likely makes API calls t
 The React frontend uses `AuthContext.js` which determines API base URL:
 
 ```javascript
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '' // Use relative URLs in production (proxy handles it)
   : (process.env.REACT_APP_API_URL || 'http://localhost:4700');
 ```
@@ -39,7 +39,7 @@ ALLOWED_ORIGINS: List[str] = [
     # ... existing origins ...
     # Tailscale network access
     "http://goliath:4710",  # Tailscale hostname frontend
-    "http://100.118.171.110:4710",  # Tailscale IP frontend  
+    "http://100.118.171.110:4710",  # Tailscale IP frontend
     "http://goliath:4700",  # Tailscale hostname backend API
     "http://100.118.171.110:4700",  # Tailscale IP backend API
     "*",  # Allow all origins for mobile access (temporary)
@@ -55,7 +55,7 @@ The frontend needs to detect when accessed via Tailscale hostname and adjust API
 
 ```javascript
 // Current logic
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '' // Use relative URLs in production (proxy handles it)
   : (process.env.REACT_APP_API_URL || 'http://localhost:4700');
 
@@ -64,7 +64,7 @@ const getApiBaseUrl = () => {
   if (process.env.NODE_ENV === 'production') {
     return ''; // Use relative URLs in production (proxy handles it)
   }
-  
+
   // Check if accessing via Tailscale hostname
   const hostname = window.location.hostname;
   if (hostname === 'goliath') {
@@ -73,7 +73,7 @@ const getApiBaseUrl = () => {
   if (hostname === '100.118.171.110') {
     return 'http://100.118.171.110:4700';
   }
-  
+
   // Default to localhost for local development
   return process.env.REACT_APP_API_URL || 'http://localhost:4700';
 };
@@ -100,7 +100,7 @@ const API_BASE_URL = getApiBaseUrl();
 
 ### Working Scenario (127.0.0.1)
 ```
-Frontend: http://127.0.0.1:4710/ 
+Frontend: http://127.0.0.1:4710/
 API Calls: http://localhost:4700/api/v1/enhanced-auth/login ✅
 Result: localhost resolves to same machine, authentication succeeds
 ```
@@ -108,7 +108,7 @@ Result: localhost resolves to same machine, authentication succeeds
 ### Broken Scenario (goliath hostname)
 ```
 Frontend: http://goliath:4710/
-API Calls: http://localhost:4700/api/v1/enhanced-auth/login ❌  
+API Calls: http://localhost:4700/api/v1/enhanced-auth/login ❌
 Result: localhost resolves to client device, API unreachable
 ```
 

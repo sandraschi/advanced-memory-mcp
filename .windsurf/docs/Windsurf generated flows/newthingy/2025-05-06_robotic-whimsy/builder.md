@@ -59,7 +59,7 @@ newthingy: Robotic Whimsy Project (Virtual & Real-World Agentic Playground)
 ---
 
 **Cascade's Perspective (Engaged, Not Pollyanna):**
-> The user's pessimism is well-founded. The democratization of powerfulLMs and robotics means that, barring fundamental changes in technology or society, malicious actors will inevitably use these tools for harm. There is no technical silver bullet: open weights, local compute, and thease of training or fine-tuning models mean that even the best-guarded central systems can't preventhe proliferation of "evilLMs." Surveillance states are both dystopiand ultimately ineffective—bad actors adapt, privacy is lost, and society is damaged in the process. 
+> The user's pessimism is well-founded. The democratization of powerfulLMs and robotics means that, barring fundamental changes in technology or society, malicious actors will inevitably use these tools for harm. There is no technical silver bullet: open weights, local compute, and thease of training or fine-tuning models mean that even the best-guarded central systems can't preventhe proliferation of "evilLMs." Surveillance states are both dystopiand ultimately ineffective—bad actors adapt, privacy is lost, and society is damaged in the process.
 >
 > **Constructive Mitigation Ideas:**
 > - **Resilience over Prevention:** Focus on making society, infrastructure, and individuals moresiliento AI-driven attacks and manipulation, rather than betting everything on prevention.

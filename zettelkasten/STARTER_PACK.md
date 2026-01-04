@@ -225,7 +225,7 @@ Claude: [Copies all 7 AI templates to your project]
 - Mermaid diagrams included
 - Code examples throughout
 
-**Equivalent Value**: $1,000-5,000 in curated content  
+**Equivalent Value**: $1,000-5,000 in curated content
 **Your Cost**: Free with Advanced Memory! 🎉
 
 ## 🚀 Next Steps
@@ -250,9 +250,8 @@ You: "Generate AI category templates"
 
 ---
 
-**Location**: `zettelkasten/templates/`  
-**Full Index**: See `zettelkasten/INDEX.md`  
-**Documentation**: See `zettelkasten/FINAL_SUMMARY.md`  
+**Location**: `zettelkasten/templates/`
+**Full Index**: See `zettelkasten/INDEX.md`
+**Documentation**: See `zettelkasten/FINAL_SUMMARY.md`
 
 **Enjoy your knowledge base!** 📚🎯
-

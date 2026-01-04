@@ -10,16 +10,16 @@ graph TB
     A --> C[AI Infrastructure]
     A --> D[AI Applications]
     A --> E[AI Services]
-    
+
     B --> B1[OpenAI]
     B --> B2[Anthropic]
     B --> B3[Google DeepMind]
     B --> B4[Meta AI]
-    
+
     C --> C1[NVIDIA - GPUs]
     C --> C2[Cloud Providers]
     C --> C3[Data Providers]
-    
+
     D --> D1[Coding - GitHub Copilot]
     D --> D2[Design - Midjourney]
     D --> D3[Enterprise - Salesforce Einstein]
@@ -125,7 +125,7 @@ graph TB
 ```python
 class APIBusinessModel:
     """Sell AI as service"""
-    
+
     def economics(self):
         return {
             "revenue": "Usage-based (tokens) or subscription",
@@ -134,7 +134,7 @@ class APIBusinessModel:
             "moat": "Model quality, ecosystem, reliability",
             "challenge": "Price competition, open source pressure"
         }
-    
+
     def pricing_example_openai(self):
         """OpenAI API pricing"""
         return {
@@ -151,7 +151,7 @@ class APIBusinessModel:
 ```python
 class ConsumerSubscription:
     """ChatGPT model"""
-    
+
     def metrics(self):
         return {
             "chatgpt_plus": "$20/month",
@@ -168,7 +168,7 @@ class ConsumerSubscription:
 ```python
 class OpenSourceModel:
     """Meta's strategy"""
-    
+
     def strategy(self):
         return {
             "give_away": "LLaMA models (free)",
@@ -189,7 +189,7 @@ class OpenSourceModel:
 ```python
 class EnterpriseLicense:
     """Sell to big companies"""
-    
+
     def model(self):
         return {
             "examples": "Anthropic Enterprise, OpenAI Enterprise",
@@ -226,7 +226,7 @@ class EnterpriseLicense:
 ```python
 class AICompetitiveMoats:
     """Do AI companies have defensibility?"""
-    
+
     def potential_moats(self):
         return {
             "data": {
@@ -260,7 +260,7 @@ class AICompetitiveMoats:
                 "challenger_problem": "Hard to displace defaults"
             }
         }
-    
+
     def consensus(self):
         return "Moats exist but are narrower than typical software"
 ```
@@ -273,7 +273,7 @@ class AICompetitiveMoats:
 ```python
 class PricingTrends:
     """AI prices falling fast"""
-    
+
     def price_drops(self):
         """90% annual decline"""
         return {
@@ -306,7 +306,7 @@ Companies moving up and down the stack:
 ```python
 class OpenVsClosed:
     """Fundamental strategic choice"""
-    
+
     def closed_source_case(self):
         """OpenAI, Anthropic approach"""
         return {
@@ -323,7 +323,7 @@ class OpenVsClosed:
             ],
             "bet": "Quality lead justifies closed development"
         }
-    
+
     def open_source_case(self):
         """Meta, Mistral approach"""
         return {
@@ -365,7 +365,7 @@ class OpenVsClosed:
 ```python
 class AIInvestors:
     """Follow the money"""
-    
+
     def strategic_investors(self):
         """Tech giants hedging bets"""
         return {
@@ -376,7 +376,7 @@ class AIInvestors:
             "salesforce": "Anthropic, You.com",
             "strategy": "Don't get left behind"
         }
-    
+
     def vcs(self):
         """Traditional venture capital"""
         return {
@@ -394,7 +394,7 @@ class AIInvestors:
 ```python
 class AgentEconomics:
     """The next wave"""
-    
+
     def agent_business_model(self):
         """AI that takes actions"""
         return {
@@ -428,7 +428,7 @@ class AgentEconomics:
 ```python
 class MarketSize:
     """How big will AI market be?"""
-    
+
     def estimates(self):
         return {
             "2024": "$200B (AI market)",
@@ -484,7 +484,7 @@ class MarketSize:
 ```python
 class ValueCapture:
     """Where does AI money flow?"""
-    
+
     def value_stack(self):
         return {
             "nvidia": "Capturing most value (80%+ GPU share)",
@@ -523,5 +523,3 @@ class ValueCapture:
 *"In the short run, the market is a voting machine. In the long run, it's a weighing machine." - Benjamin Graham*
 
 *The AI market is being weighed right now, and valuations are both enormous and uncertain.*
-
-

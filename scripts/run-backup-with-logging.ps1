@@ -10,10 +10,10 @@ function Write-ExecutionLog {
         [string]$Message,
         [string]$Level = "INFO"
     )
-    
+
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss.fff"
     $logEntry = "[$timestamp] [$Level] $Message"
-    
+
     $color = switch ($Level) {
         "ERROR" { "Red" }
         "WARN" { "Yellow" }
@@ -21,10 +21,10 @@ function Write-ExecutionLog {
         "INFO" { "Cyan" }
         default { "White" }
     }
-    
+
     Write-Host $logEntry -ForegroundColor $color
     $logEntry | Out-File -FilePath $script:LogFile -Append -Encoding UTF8
-    
+
     if ($Level -eq "ERROR") {
         $logEntry | Out-File -FilePath $script:ErrorLog -Append -Encoding UTF8
     }
@@ -99,33 +99,33 @@ try {
         Set-Location (Split-Path $ScriptPath -Parent | Split-Path -Parent)
         & $ScriptPath *>&1
     } -ArgumentList $scriptPath
-    
+
     $timeout = 600 # 10 minutes
     $completed = Wait-Job $job -Timeout $timeout
-    
+
     if (-not $completed) {
         Write-ExecutionLog "ERROR: Backup script timed out after $timeout seconds" "ERROR"
         Stop-Job $job
         Remove-Job $job
         exit 1
     }
-    
+
     $output = Receive-Job $job
     Remove-Job $job
-    
+
     foreach ($line in $output) {
         $outputLines += $line
         Write-ExecutionLog "$line" "INFO"
-        
+
         if ($line -match "ERROR|FAILED|Exception") {
             $errorLines += $line
         }
     }
-    
+
     $backupDuration = (Get-Date) - $backupStart
     Write-ExecutionLog ""
     Write-ExecutionLog "Backup execution completed in $([math]::Round($backupDuration.TotalSeconds, 1)) seconds" "INFO"
-    
+
     if ($errorLines.Count -gt 0) {
         Write-ExecutionLog "  Warnings/Errors captured: $($errorLines.Count)" "WARN"
     }
@@ -144,18 +144,18 @@ $backupFound = $false
 foreach ($target in $targets) {
     if ($target.Path -and (Test-Path (Split-Path $target.Path -Parent) -ErrorAction SilentlyContinue)) {
         Write-ExecutionLog "Checking $($target.Name)..." "INFO"
-        
+
         if (Test-Path $target.Path -ErrorAction SilentlyContinue) {
             $zips = Get-ChildItem -Path $target.Path -Filter "*.zip" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
-            
+
             if ($zips) {
                 $latest = $zips | Select-Object -First 1
                 $backupFound = $true
-                
+
                 Write-ExecutionLog "  ✓ Backup found: $($latest.Name)" "SUCCESS"
                 Write-ExecutionLog "    Size: $([math]::Round($latest.Length/1MB, 2)) MB" "INFO"
                 Write-ExecutionLog "    Date: $($latest.LastWriteTime)" "INFO"
-                
+
                 # Check if created in last 5 minutes
                 $ageMinutes = ((Get-Date) - $latest.LastWriteTime).TotalMinutes
                 if ($ageMinutes -lt 5) {

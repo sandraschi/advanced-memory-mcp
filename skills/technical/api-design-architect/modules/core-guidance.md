@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Use this module as the decision hub before diving into the deeper playbooks. It helps you triage the request, pick the right protocol, and surface the most relevant supporting module.

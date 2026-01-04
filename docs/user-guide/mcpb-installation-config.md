@@ -206,7 +206,7 @@ Shows what will be indexed and which folders are skipped.
 
 **Cause**: Old buggy code defaulted to `Path.home() / "advanced-memory"`
 
-**Solution**: 
+**Solution**:
 1. ✅ Fixed in version 1.0.0b2+ (both src/ and mcpb/)
 2. Set `ADVANCED_MEMORY_HOME` explicitly in Claude Desktop config
 3. Delete wrong folder after moving any important files
@@ -305,7 +305,3 @@ This means **data is stored in the extension directory** by default, which is:
 - [Project Setup Guide](project-setup-quick-guide.md)
 - [File Type Filtering](file-type-filtering.md)
 - [Archive Patterns](archive-folder-patterns.md)
-
-
-
-

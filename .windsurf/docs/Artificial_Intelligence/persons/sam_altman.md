@@ -7,7 +7,7 @@ Sam Altman is a prominentrepreneur, investor, and technology executive, best kno
 
 ### Early Life and Education
 - **Birth**: April 22, 1985 (Chicago, Illinois, USA)
-- **Education**: 
+- **Education**:
   - Studied Computer Science at Stanford University (left before completing his degree)
 
 ### Career

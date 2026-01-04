@@ -333,5 +333,3 @@ The researchers, entrepreneurs, and visionaries who created and shaped artificia
 *"We are at a unique moment in history where the people building the most powerful technology are also the ones most worried about it."*
 
 *The question is: Will the Cassandras or the Pollyannas be proven right?*
-
-

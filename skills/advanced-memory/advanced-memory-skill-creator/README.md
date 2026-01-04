@@ -19,4 +19,3 @@ This directory contains the modular Claude skill that teaches Claude (and teamma
 - Complete research checklist, gather upstream citations, and set `metadata.confidence` once verified.
 - Add real scripts/references/assets per project needs.
 - Publish packaged skill after validation passes with zero issues.
-

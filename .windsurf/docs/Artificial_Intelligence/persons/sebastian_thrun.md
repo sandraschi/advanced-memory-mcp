@@ -68,4 +68,3 @@ Born in Solingen, West Germany, Thrun studied computer science and statistics at
 - [Kitty Hawk](https://kittyhawk.aero/)
 - [Stanford AI Lab](https://ai.stanford.edu/)
 - [The Future of AI and Self-Driving Cars](https://www.ted.com/talks/sebastian_thrun_google_s_driverless_car) - Thrun's TED Talk
-

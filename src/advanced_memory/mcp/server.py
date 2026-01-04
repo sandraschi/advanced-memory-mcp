@@ -5,11 +5,10 @@ Advanced Memory FastMCP server with console output suppression.
 # CRITICAL: Configure logging FIRST, before any imports that might log
 # Logging is configured in mcp_instance.py which is imported below
 # This ensures consistent logging configuration across all entry points
-import sys
-import warnings
 import logging
 import os
-from io import StringIO
+import sys
+import warnings
 
 # CRITICAL: Set stdio to binary mode on Windows for Antigravity IDE compatibility
 # MUST be done BEFORE patching stdout, otherwise DevNullStdout won't have fileno()

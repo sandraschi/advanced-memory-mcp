@@ -1,4 +1,4 @@
-﻿# The Nature of Mind and the Future of Consciousness: A Synthesis
+# The Nature of Mind and the Future of Consciousness: A Synthesis
 
 ## Introduction: The Threads of Understanding
 

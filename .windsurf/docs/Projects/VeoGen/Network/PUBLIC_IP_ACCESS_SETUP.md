@@ -8,7 +8,7 @@ Added Sandra's public IP to backend CORS origins:
 ```python
 # Public IP access (for when port forwarding is enabled)
 "http://213.47.34.131:4710",   # Public IP frontend
-"http://213.47.34.131:4700",   # Public IP backend API  
+"http://213.47.34.131:4700",   # Public IP backend API
 "https://213.47.34.131:4710",  # Public IP frontend (HTTPS)
 "https://213.47.34.131:4700",  # Public IP backend API (HTTPS)
 ```
@@ -36,11 +36,11 @@ When you're ready to go public, configure these router port forwards:
 ```
 Rule 1: VeoGen Frontend
 - External Port: 4710
-- Internal IP: [goliath IP address]  
+- Internal IP: [goliath IP address]
 - Internal Port: 4710
 - Protocol: TCP
 
-Rule 2: VeoGen Backend  
+Rule 2: VeoGen Backend
 - External Port: 4700
 - Internal IP: [goliath IP address]
 - Internal Port: 4700
@@ -52,7 +52,7 @@ Rule 2: VeoGen Backend
 Rule 3: VeoGen Frontend HTTPS
 - External Port: 443
 - Internal IP: [goliath IP address]
-- Internal Port: 4710  
+- Internal Port: 4710
 - Protocol: TCP
 
 Rule 4: VeoGen Backend HTTPS
@@ -102,7 +102,7 @@ Rule 4: VeoGen Backend HTTPS
 Method               URL                            Status    Use Case
 -------------------- ------------------------------ --------- ------------------
 PC Local            http://127.0.0.1:4710/        ✅ Ready  Development/Testing
-Tailscale Hostname   http://goliath:4710/          ✅ Ready  Secure Remote Access  
+Tailscale Hostname   http://goliath:4710/          ✅ Ready  Secure Remote Access
 Tailscale IP         http://100.118.171.110:4710/  ✅ Ready  Secure Mobile Access
 Public IP HTTP       http://213.47.34.131:4710/    🔧 Ready  Public Demo/Sharing
 Public IP HTTPS      https://213.47.34.131:4710/   🔧 Ready  Production Public
@@ -110,7 +110,7 @@ Public IP HTTPS      https://213.47.34.131:4710/   🔧 Ready  Production Public
 
 ### Current Status:
 - ✅ **CORS configured** for all access methods
-- ✅ **Frontend detection** handles all scenarios  
+- ✅ **Frontend detection** handles all scenarios
 - 🔧 **Port forwarding** needed for public access
 - 🔧 **SSL certificate** needed for HTTPS
 

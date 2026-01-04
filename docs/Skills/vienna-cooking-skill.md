@@ -37,7 +37,7 @@ This skill provides comprehensive knowledge of traditional Viennese cooking, inc
 - **Definition**: Boiled beef (usually from the hip) served with root vegetables and chive sauce
 - **Cuts**: Tafelspitz, Schulterscherzel, Beinfleisch
 - **Broth Preparation**: Start in cold water, add vegetables after 1 hour
-- **Classic Accompaniments**: 
+- **Classic Accompaniments**:
   - Apfelkren (horseradish-apple sauce)
   - Schnittlauchsauce (chive sauce)
   - Spinat (creamed spinach)
@@ -45,7 +45,7 @@ This skill provides comprehensive knowledge of traditional Viennese cooking, inc
 
 #### Sachertorte
 - **Definition**: Dense chocolate cake with apricot jam filling and dark chocolate glaze
-- **Key Points**: 
+- **Key Points**:
   - Original recipe is a closely guarded secret
   - Must have exactly one layer of apricot jam
   - Glaze should be smooth and shiny

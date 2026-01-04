@@ -1,7 +1,7 @@
 # GitHub Setup for MCP Projects
 
 > **Purpose**: Comprehensive GitHub configuration guide to avoid hours of trial-and-error setup.
-> 
+>
 > **⚠️ Repository-Specific**: These workflows are optimized for **Advanced Memory MCP**, a complex MCP server with database, CLI, and extensive testing (1,190 tests). See [Project Type Considerations](#project-type-considerations) for adaptation guidance.
 
 ---
@@ -16,7 +16,7 @@
 - ✅ 1,190 comprehensive tests
 - ✅ MCPB packaging
 
-**Your project might be simpler!** 
+**Your project might be simpler!**
 
 ### Quick Project Type Check
 
@@ -159,9 +159,9 @@ jobs:
   publish-pypi:
     # Only publish stable releases to PyPI
     if: >
-      startsWith(github.ref, 'refs/tags/v') && 
-      !contains(github.ref, 'alpha') && 
-      !contains(github.ref, 'beta') && 
+      startsWith(github.ref, 'refs/tags/v') &&
+      !contains(github.ref, 'alpha') &&
+      !contains(github.ref, 'beta') &&
       !contains(github.ref, 'rc')
 ```
 
@@ -303,20 +303,20 @@ dev-dependencies = [
     "pytest>=8.3.4",
     "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.24.0",
-    
+
     # Linting & Type Checking
     "ruff>=0.1.6",
     "pyright>=1.1.390",
     "mypy>=1.8.0",
-    
+
     # Security
     "bandit>=1.7.0",
     "safety>=3.0.0",
-    
+
     # Building & Publishing (CRITICAL - don't forget!)
     "build>=1.0.0",
     "twine>=5.0.0",
-    
+
     # Security (XML parsing)
     "defusedxml>=0.7.1",
 ]
@@ -726,4 +726,3 @@ just setup-hooks           # Install pre-commit hooks
 ---
 
 **Remember**: Better to spend 30 minutes setting up correctly than 6 hours debugging! 🚀
-

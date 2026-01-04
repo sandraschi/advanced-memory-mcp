@@ -11,7 +11,7 @@ The legal, artistic, ethical, and societal conflicts surrounding artificial inte
 ```python
 class CopyrightDebate:
     """The great AI copyright debate"""
-    
+
     def ai_company_argument(self):
         """What AI companies claim"""
         return {
@@ -26,7 +26,7 @@ class CopyrightDebate:
             "precedent": "Google Books case (scanning books for search)",
             "economic": "AI creates new value, doesn't replace originals"
         }
-    
+
     def creator_argument(self):
         """What artists/authors claim"""
         return {
@@ -88,7 +88,7 @@ class CopyrightDebate:
 ```python
 class LegalTheories:
     """How this might be resolved"""
-    
+
     def fair_use_4_factors_us(self):
         """U.S. fair use analysis"""
         factors = {
@@ -110,7 +110,7 @@ class LegalTheories:
             }
         }
         return "Courts will weigh these - outcome uncertain"
-    
+
     def likely_outcomes(self):
         """Possible resolutions"""
         return {
@@ -146,7 +146,7 @@ class LegalTheories:
 ```python
 class ArtisticDebate:
     """Is AI-generated content 'art'?"""
-    
+
     def anti_ai_art_position(self):
         """Critics of AI art"""
         return {
@@ -160,7 +160,7 @@ class ArtisticDebate:
             "emotional": "Feels like theft of human creativity",
             "slogan": "Slop, not art"
         }
-    
+
     def pro_ai_art_position(self):
         """AI art advocates"""
         return {
@@ -198,7 +198,7 @@ class ArtisticDebate:
 ```python
 class ArtistResponse:
     """How artists are fighting back"""
-    
+
     def boycotts_and_protests(self):
         """Organized resistance"""
         return {
@@ -207,7 +207,7 @@ class ArtistResponse:
             "platform_pressure": "Demand AI disclosure/bans",
             "guild_action": "SAG-AFTRA, WGA negotiate AI clauses"
         }
-    
+
     def technical_countermeasures(self):
         """Fighting back with technology"""
         return {
@@ -216,7 +216,7 @@ class ArtistResponse:
             "watermarking": "Invisible marks to track usage",
             "opt_out_tools": "Have Me Removed, spawning.ai"
         }
-    
+
     def legal_collective_action(self):
         """Class actions and lobbying"""
         return {
@@ -235,7 +235,7 @@ class ArtistResponse:
 ```python
 class DeepfakeHarms:
     """Non-consensual intimate imagery (NCII)"""
-    
+
     def scope_of_problem(self):
         """How bad is it?"""
         return {
@@ -245,7 +245,7 @@ class DeepfakeHarms:
             "platforms": "Telegram, dedicated sites",
             "removal": "Nearly impossible once posted"
         }
-    
+
     def celebrity_cases(self):
         """High-profile victims"""
         return {
@@ -254,7 +254,7 @@ class DeepfakeHarms:
             "politicians": "Used for kompromat and blackmail",
             "regular_people": "Most victims are non-celebrities"
         }
-    
+
     def legal_responses(self):
         """What's being done"""
         return {
@@ -279,7 +279,7 @@ class DeepfakeHarms:
 ```python
 class PoliticalDeepfakes:
     """AI in elections"""
-    
+
     def attack_vectors(self):
         """How AI is weaponized"""
         return {
@@ -289,7 +289,7 @@ class PoliticalDeepfakes:
             "micro_targeting": "Personalized disinfo",
             "bot_networks": "AI-powered troll farms"
         }
-    
+
     def defenses(self):
         """Countermeasures"""
         return {
@@ -311,7 +311,7 @@ class PoliticalDeepfakes:
 ```python
 class JobDisplacement:
     """Who's at risk?"""
-    
+
     def threatened_professions(self):
         """Jobs AI is coming for"""
         return {
@@ -336,7 +336,7 @@ class JobDisplacement:
                 "resistance": "Limited power"
             }
         }
-    
+
     def economic_models(self):
         """How this plays out"""
         return {
@@ -380,7 +380,7 @@ class JobDisplacement:
 ```python
 class DataSources:
     """Questionable data practices"""
-    
+
     def scraping_controversies(self):
         """What data was used"""
         return {
@@ -431,7 +431,7 @@ class DataSources:
 ```python
 class BiasCases:
     """Documented bias incidents"""
-    
+
     def hiring_bias(self):
         """Amazon's recruiting tool (2018)"""
         return {
@@ -440,7 +440,7 @@ class BiasCases:
             "outcome": "Amazon scrapped the tool",
             "lesson": "Training data reflects historical discrimination"
         }
-    
+
     def facial_recognition_bias(self):
         """Joy Buolamwini's research"""
         return {
@@ -450,7 +450,7 @@ class BiasCases:
             "response": "Some companies stopped selling to police",
             "ongoing": "Still widely deployed despite bias"
         }
-    
+
     def language_model_bias(self):
         """Stereotyping in LLMs"""
         return {
@@ -472,7 +472,7 @@ class BiasCases:
 ```python
 class EnvironmentalImpact:
     """AI's carbon footprint"""
-    
+
     def training_costs(self):
         """Energy to train models"""
         return {
@@ -490,7 +490,7 @@ class EnvironmentalImpact:
                 "note": "Open source, trained once, used widely"
             }
         }
-    
+
     def inference_costs(self):
         """Energy per query"""
         return {
@@ -500,7 +500,7 @@ class EnvironmentalImpact:
             "scale": "Billions of queries daily",
             "trend": "Growing exponentially"
         }
-    
+
     def water_usage(self):
         """Cooling data centers"""
         return {
@@ -541,5 +541,3 @@ class EnvironmentalImpact:
 *"Technology is neither good nor bad; nor is it neutral." - Melvin Kranzberg*
 
 *These controversies will shape whether AI benefits everyone or just a few.*
-
-

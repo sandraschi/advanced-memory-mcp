@@ -376,7 +376,6 @@ cp ~/Documents/meetings/*.docx zettelkasten/inbox/
 
 ---
 
-**Created**: October 17, 2025  
-**Purpose**: Automatic document import for Advanced Memory  
+**Created**: October 17, 2025
+**Purpose**: Automatic document import for Advanced Memory
 **Status**: Implementation in progress 🚧
-

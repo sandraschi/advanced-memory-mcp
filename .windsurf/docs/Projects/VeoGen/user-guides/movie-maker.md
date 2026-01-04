@@ -20,7 +20,7 @@ The Movie Maker combines several advanced technologies:
 ### Step 2: Choose Movie Preset
 Select from pre-configured movie types:
 - **🎬 Short Film**: 5-10 clips (40-80 seconds, $0.50-2.50)
-- **📺 Commercial**: 3-5 clips (24-40 seconds, $0.30-1.25)  
+- **📺 Commercial**: 3-5 clips (24-40 seconds, $0.30-1.25)
 - **🎵 Music Video**: 8-15 clips (64-120 seconds, $0.80-3.75)
 - **🎭 Feature**: 20-50 clips (160-400 seconds, $2.00-12.50)
 - **📖 Story**: 10-20 clips (80-160 seconds, $1.00-5.00)
@@ -52,7 +52,7 @@ The AI will create a detailed script with:
 
 The VeoGen script generator uses sophisticated AI prompting to:
 
-1. **Concept Analysis**: 
+1. **Concept Analysis**:
    - Understands the story, tone, and genre
    - Identifies key narrative elements
    - Determines appropriate pacing
@@ -162,22 +162,22 @@ You can modify the generated script:
 
 The VeoGen continuity system ensures smooth transitions between scenes:
 
-1. **Frame Extraction**: 
+1. **Frame Extraction**:
    - Uses FFmpeg to extract the final frame from each clip
    - Captures exact visual state at scene end
    - Preserves lighting, composition, and character positions
 
-2. **Style Transfer**: 
+2. **Style Transfer**:
    - Applies consistent color grading across clips
    - Maintains visual style coherence
    - Adjusts lighting and tone for consistency
 
-3. **Seamless Transitions**: 
+3. **Seamless Transitions**:
    - Generates next scene starting from previous end frame
    - Minimizes visual discontinuity between scenes
    - Maintains character and object consistency
 
-4. **Quality Control**: 
+4. **Quality Control**:
    - Automated assessment of transition quality
    - Retry generation if continuity issues detected
    - Manual override options for fine-tuning
@@ -189,7 +189,7 @@ The VeoGen continuity system ensures smooth transitions between scenes:
 def generate_movie_with_continuity(script, style):
     clips = []
     last_frame = None
-    
+
     for scene in script.scenes:
         if last_frame:
             # Use last frame as reference for next scene
@@ -205,10 +205,10 @@ def generate_movie_with_continuity(script, style):
                 prompt=scene.description,
                 style=style
             )
-        
+
         clips.append(clip)
         last_frame = extract_final_frame(clip)
-    
+
     return assemble_movie(clips)
 ```
 
@@ -256,61 +256,61 @@ Before generation, you'll see:
 
 ### Writing Effective Concepts
 
-1. **Be Specific**: 
+1. **Be Specific**:
    - Clear vision leads to better scripts
    - Include key visual elements
    - Specify mood and atmosphere
 
-2. **Set the Tone**: 
+2. **Set the Tone**:
    - Define emotional tone (happy, dramatic, mysterious)
    - Specify visual mood (bright, dark, colorful)
    - Include style preferences
 
-3. **Define Key Elements**: 
+3. **Define Key Elements**:
    - Main characters or subjects
    - Primary setting or location
    - Key actions or events
 
-4. **Choose Appropriate Genre**: 
+4. **Choose Appropriate Genre**:
    - Helps AI understand narrative structure
    - Influences visual style suggestions
    - Guides scene pacing and transitions
 
 ### Script Optimization
 
-1. **Review Each Scene**: 
+1. **Review Each Scene**:
    - Check scene descriptions for clarity
    - Ensure visual focus over dialogue
    - Verify action-oriented content
 
-2. **Maintain Consistency**: 
+2. **Maintain Consistency**:
    - Character descriptions across scenes
    - Setting and location continuity
    - Visual style coherence
 
-3. **Optimize for Video**: 
+3. **Optimize for Video**:
    - Emphasize visual elements
    - Focus on what's happening, not what's said
    - Include camera movement and angles
 
-4. **Plan Transitions**: 
+4. **Plan Transitions**:
    - Consider how scenes connect
    - Plan smooth visual transitions
    - Maintain narrative flow
 
 ### Style Selection Tips
 
-1. **Match Content to Style**: 
+1. **Match Content to Style**:
    - Choose style that fits your story
    - Consider target audience preferences
    - Match visual tone to narrative tone
 
-2. **Consistency is Key**: 
+2. **Consistency is Key**:
    - Stick with one style per movie
    - Don't mix incompatible styles
    - Trust the continuity system
 
-3. **Test and Experiment**: 
+3. **Test and Experiment**:
    - Try different styles for same concept
    - Use short movies to test styles
    - Learn which styles work best for your content

@@ -28,7 +28,7 @@ graph TD
     B -->|Calls| F
     F -->|Updates| G[SQLite Database]
     F -->|Indexes| H[Full-Text Search]
-    
+
     I[MCP Tool] -->|Query| J[Status JSON File]
     E -->|Writes| J
 ```
@@ -345,7 +345,7 @@ else:
 
 ### ❌ Misconception 1: Sync is a separate background app
 
-**Reality**: 
+**Reality**:
 - Sync is a **service** (Python class)
 - Called by CLI command or file watcher
 - Not a separate process
@@ -637,6 +637,5 @@ advanced-memory mcp
 
 ---
 
-*Created: 2025-10-17*  
+*Created: 2025-10-17*
 *Purpose: Clarify sync architecture and correct misconceptions*
-

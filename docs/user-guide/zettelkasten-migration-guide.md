@@ -1,7 +1,7 @@
 # Zettelkasten Migration Guide - Python to Markdown Templates
 
-**Migration Version**: v1.0.0b2 → v1.0.0b3+  
-**Date**: October 2025  
+**Migration Version**: v1.0.0b2 → v1.0.0b3+
+**Date**: October 2025
 **Breaking Changes**: No (backward compatible)
 
 ---
@@ -80,7 +80,7 @@ zettelkasten/templates/
 Python is a high-level programming language...
 ```
 
-**Access**: 
+**Access**:
 - Browse directly in file system
 - Edit with any text editor
 - Version control with Git
@@ -574,4 +574,3 @@ template = loader.load_template("user-templates/my-category/my-template.md")
 ---
 
 *Last updated: October 17, 2025*
-

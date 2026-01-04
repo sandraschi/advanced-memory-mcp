@@ -1,4 +1,4 @@
-﻿# Veo 3: Advanced Video Generation by Google DeepMind
+# Veo 3: Advanced Video Generation by Google DeepMind
 
 ## Introduction
 Veo 3 is Google DeepMind's cutting-edge video generation model, representing a significant advancement in AI-powered video creation. This document provides a comprehensive guide to Veo 3's capabilities, technical aspects, and potential applications.
@@ -34,9 +34,9 @@ def generate_video(project_id: str, location: str, prompt: str):
     client = aiplatform.gapic.PredictionServiceClient(
         client_options={"api_endpoint": f"{location}-aiplatform.googleapis.com"}
     )
-    
+
     endpoint = f"projects/{project_id}/locations/{location}/publishers/google/models/veo-3"
-    
+
     instance = {
         "prompt": prompt,
         "resolution": "1080p",
@@ -44,20 +44,20 @@ def generate_video(project_id: str, location: str, prompt: str):
         "style": "cinematic",
         "seed": 42  # Optional: foreproducibility
     }
-    
+
     instances = [instance]
     parameters = {
         "temperature": 0.7,
         "top_p": 0.9,
         "top_k": 50
     }
-    
+
     response = client.predict(
         endpoint=endpoint,
         instances=instances,
         parameters=parameters
     )
-    
+
     return response.predictions[0]["video"]
 
 # Example usage
@@ -86,24 +86,24 @@ def video_to_video(
     client = aiplatform.gapic.PredictionServiceClient(
         client_options={"api_endpoint": f"{location}-aiplatform.googleapis.com"}
     )
-    
+
     endpoint = f"projects/{project_id}/locations/{location}/publishers/google/models/veo-3-video2video"
-    
+
     with open(input_video_path, "rb") as f:
         video_bytes = f.read()
-    
+
     instance = {
         "input_video": {"b64": base64.b64encode(video_bytes).decode("utf-8")},
         "prompt": style_prompt,
         "style_strength": 0.7,
         "temporal_consistency": 0.9
     }
-    
+
     response = client.predict(
         endpoint=endpoint,
         instances=[instance]
     )
-    
+
     return response.predictions[0]["video"]
 ```
 
@@ -120,9 +120,9 @@ def video_inpainting(
     client = aiplatform.gapic.PredictionServiceClient(
         client_options={"api_endpoint": f"{location}-aiplatform.googleapis.com"}
     )
-    
+
     endpoint = f"projects/{project_id}/locations/{location}/publishers/google/models/veo-3-inpainting"
-    
+
     with open(input_video_path, "rb") as f_vid, open(mask_path, "rb") as f_mask:
         instance = {
             "input_video": {"b64": base64.b64encode(f_vid.read()).decode("utf-8")},
@@ -130,12 +130,12 @@ def video_inpainting(
             "prompt": prompt,
             "inpainting_strength": 0.8
         }
-    
+
     response = client.predict(
         endpoint=endpoint,
         instances=[instance]
     )
-    
+
     return response.predictions[0]["video"]
 ```
 

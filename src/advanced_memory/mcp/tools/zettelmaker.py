@@ -35,82 +35,87 @@ async def adn_zettelmaker(
     quality: Literal["quick", "standard", "comprehensive", "expert"] = "standard",
     ctx: Context | None = None,
 ) -> str:
-    """Intelligent zettelkasten generation and management for knowledge scaffolding.
+    """Intelligent Zettelkasten Portmanteau for Advanced Memory.
 
-    This portmanteau tool consolidates all zettelkasten operations into a single interface,
-    providing AI-powered template generation, customization, expansion, and analysis.
+    This tool consolidates the entire zettelkasten scaffolding workflow into one interface.
+    Instead of separate tools for generation, analysis, and expansion, this unifies
+    the cognitive pipeline: Analyze -> Suggest -> Generate -> Expand -> Connect.
 
-    SUPPORTED OPERATIONS:
-    - generate: Generate notes from templates (category + topic required)
-    - customize: Customize template generation parameters
-    - expand: Extend existing notes with new related topics
-    - suggest: Get AI-suggested topics based on existing knowledge
-    - connect: Auto-create relationships between related notes
-    - analyze: Analyze knowledge gaps and recommend templates
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    This tool consolidates the entire zettelkasten scaffolding workflow into one interface.
+    Instead of separate tools for generation, analysis, and expansion, this unifies
+    the cognitive pipeline: Analyze -> Suggest -> Generate -> Expand -> Connect.
 
-    CATEGORIES (10 total):
-    - developer: Python, Git, Testing, Architecture
-    - researcher: Research methods, critical thinking, writing
-    - writer: Craft, storytelling, publishing
-    - knowledge-worker: Productivity, PKM, communication
-    - devops: Docker, Kubernetes, CI/CD, Infrastructure as Code
-    - data-scientist: Machine Learning, Statistics, Data Analysis
-    - uiux-designer: Design Principles, Figma, User Research
-    - product-manager: Strategy, Roadmaps, Metrics, OKRs
-    - entrepreneur: Business Models, Fundraising, Growth
-    - creative: Photography, Video, Audio, Design
+    The 10-category taxonomy provides a comprehensive structure for professional knowledge work,
+    from development to creative arts.
 
-    TOPICS (examples by category):
-    - developer: python-core, git, testing, architecture
-    - researcher: research-methods, critical-thinking, academic-writing
-    - writer: storytelling, editing, publishing
-    - knowledge-worker: productivity, note-taking, communication
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - generate: Create notes from templates (pre-built or AI-generated).
+    - suggest: Get intelligent topic recommendations based on knowledge gaps.
+    - expand: Extend existing notes with related concepts (horizontal growth).
+    - analyze: Evaluate knowledge base composition and identify missing deeper layers.
+    - connect: Auto-discover and instantiate relationships between existing notes.
+    - customize: Configure template parameters (depth, tone, structure).
 
-    Args:
-        operation: The zettelkasten operation to perform (generate, customize, expand, suggest, connect, analyze)
-        category: Template category for generation
-                    * generate operation: REQUIRED - One of: "developer", "researcher", "writer", "knowledge-worker", "devops", "data-scientist", "uiux-designer", "product-manager", "entrepreneur", "creative"
-                    * Other operations: NOT USED
-        topic: Specific topic within category or custom topic
-                    * generate operation: REQUIRED - Pre-built topic (e.g., "python-core", "git") or custom topic with ai_generate=True
-                    * expand operation: REQUIRED - Topic to expand existing note with
-                    * Other operations: NOT USED
-        note_identifier: Title/permalink of existing note
-                    * expand operation: REQUIRED - Note to expand
-                    * Other operations: NOT USED
-        depth: Depth of analysis or generation (1-5, default: 3)
-                    * expand, analyze operations: Optional (default: 3)
-                    * Other operations: NOT USED
-        count: Number of suggestions/connections to return (default: 5)
-                    * suggest, connect operations: Optional (default: 5)
-                    * Other operations: NOT USED
-        ai_generate: Use AI to generate templates for any topic (requires API key, default: False)
-                    * generate operation: Optional (default: False)
-                    * Other operations: NOT USED
-        quality: Quality level for AI generation (quick, standard, comprehensive, expert, default: standard)
-                    * generate operation with ai_generate=True: Optional (default: "standard")
-                    * Other operations: NOT USED
-        ctx: Optional MCP context for progress reporting
+    ---------------------------------------------------------------------------
+    [CATEGORIES & TOPICS]
+    - developer: python-core, git, testing, architecture, rust, go.
+    - researcher: methods, critical-thinking, academic-writing, grants.
+    - writer: storytelling, editing, publishing, screenwriting.
+    - knowledge-worker: productivity, pkm, communication, negotiation.
+    - devops: docker, k8s, ci-cd, terraform, aws.
+    - data-scientist: ml, statistics, visualization, pandas.
+    - uiux-designer: principles, figma, research, accessibility.
+    - product-manager: strategy, roadmaps, metrics, okrs.
+    - entrepreneur: models, fundraising, growth, sales.
+    - creative: photography, video, design, music.
 
-    Returns:
-        Operation-specific result with generated notes, suggestions, or analysis
+    ---------------------------------------------------------------------------
+    [OPERATIONS DETAIL]
 
-    Examples:
-        # Generate Python templates (pre-built)
-        adn_zettelmaker("generate", category="developer", topic="python-core")
+    generate: Creation Engine
+    - Parameters: category (required), topic (required).
+    - Optional: ai_generate=True (for custom topics), quality="expert".
+    - Use when: Starting a new knowledge cluster.
 
-        # Generate AI-powered templates for any topic
-        adn_zettelmaker("generate", category="developer", topic="Rust Programming",
-                        ai_generate=True, quality="comprehensive")
+    suggest: Discovery Engine
+    - Parameters: category (optional), count (default: 5).
+    - Returns: Prioritized list of next steps based on current graph state.
+    - Use when: You don't know what to write next.
 
-        # Get suggestions for next topics
-        adn_zettelmaker("suggest", category="developer", count=5)
+    analyze: Insight Engine
+    - Parameters: category (optional), depth (default: 3).
+    - Function: Scans for structural gaps and shallow areas.
+    - Use when: Reviewing the maturity of your knowledge base.
 
-        # Analyze knowledge gaps
-        adn_zettelmaker("analyze", category="developer", depth=3)
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The zettelkasten operation to perform (Required).
+    - category (str): Template category (Required for 'generate').
+    - topic (str): Specific topic name (Required for 'generate').
+    - note_identifier (str): Target note title/permalink (Required for 'expand').
+    - depth (int): Analysis or generation depth level (1-5).
+    - count (int): Number of items to return (Default: 5).
+    - ai_generate (bool): Enable LLM-based template generation (Default: False).
+    - quality (str): Content quality model (quick, standard, comprehensive, expert).
+    - ctx (Context): Internal context object (Auto-injected).
 
-        # Expand existing note
-        adn_zettelmaker("expand", note_identifier="Python Fundamentals", depth=2)
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+
+    - Standard generation (pre-built):
+      adn_zettelmaker(operation="generate", category="developer", topic="python-core")
+
+    - Custom AI generation:
+      adn_zettelmaker(operation="generate", category="developer", topic="Rust Async", ai_generate=True, quality="expert")
+
+    - Analyze gaps:
+      adn_zettelmaker(operation="analyze", category="developer")
+
+    - Get next steps:
+      adn_zettelmaker(operation="suggest", count=3)
     """
     logger.info(
         f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}"
@@ -253,7 +258,9 @@ async def _generate_operation(
                 await ctx.info(f"Creating note: {template['title']}")
 
             result = await mcp_write_note.fn(
-                title=template["title"], content=template["content"], folder=template["folder"]
+                title=template["title"],
+                content=template["content"],
+                folder=template["folder"],
             )
 
             notes_created.append(template["title"])
@@ -911,7 +918,9 @@ def _map_topic_to_category(topic: str) -> str:
     return topic_mapping.get(topic, "developer")
 
 
-def _get_complementary_topics(detected_topics: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _get_complementary_topics(
+    detected_topics: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
     """Get complementary topics based on what user already has."""
     detected_names = {t["topic"] for t in detected_topics}
     complementary = []

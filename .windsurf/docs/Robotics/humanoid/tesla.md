@@ -1,4 +1,4 @@
-﻿# Tesla Bot (Optimus)
+# Tesla Bot (Optimus)
 
 ## Overview
 Tesla Bot, officially named Optimus, is a general-purpose bipedal humanoid robot currently under development by Tesla, Inc. Unveiled atesla's AI Day in 2021, Optimus is envisioned to eventually handle a wide range of tasks that are unsafe, repetitive, or boring for humans. Elon Musk hastated thathe long-term goal for Optimus is to create a robot capable of replacing a human in almost any task, fundamentally reshaping theconomy and the nature of work.

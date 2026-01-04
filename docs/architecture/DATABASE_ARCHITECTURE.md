@@ -320,7 +320,3 @@ Potential improvements:
 - ✅ **Efficient** for 10 notes or 10,000 notes
 - ✅ **No cross-project linking** by design
 - ✅ **Fast rebuilds** (~1 minute for 2000 notes)
-
-
-
-

@@ -18,32 +18,32 @@ The Sidebar Collapse plugin adds collapsible sections to your Docsify sidebar, m
 window.$docsify = {
   loadSidebar: true, // Required for sidebar
   subMaxLevel: 3,    // Maximum header level to include in the sidebar
-  
+
   // Sidebar Collapse plugin optionsidebarCollapse: {
     // Whether to show the collapse button
     collapseButton: true,
-    
+
     // Whether to show the collapse button mobile
     collapseButtonMobile: true,
-    
+
     // The texto showhen the sidebar is collapsed
     collapseLabel: '◄',
-    
+
     // The texto showhen the sidebar is expanded
     expandLabel: '►',
-    
+
     // Whether to persisthe sidebar state (collapsed/expanded)
     persist: true,
-    
+
     // The key to use for localStorage
     persistKey: 'sidebar-collapse-state',
-    
+
     // Whether to auto collapse other items when expanding one
     accordion: false,
-    
+
     // The duration of the collapse/expand animation (ms)
     animationDuration: 250,
-    
+
     // Callback when a section is toggled
     onToggle: function(isCollapsed) {
       console.log('Sidebar is now', isCollapsed ? 'collapsed' : 'expanded');
@@ -79,7 +79,7 @@ You can control the initial state of specific sections using HTML comments in yo
   - [Page 1](page1.md)
   - [Page 2](page2.md)
   <!-- sidebar-collapse:collapsed -->
-  
+
 - Section 2
   - [Page 3](page3.md)
   - [Page 4](page4.md)
@@ -261,7 +261,7 @@ window.$docsify = {
 window.$docsify = {
   loadSidebar: true,
   subMaxLevel: 4,
-  
+
   sidebarCollapse: {
     collapseButton: true,
     collapseButtonMobile: true,
@@ -271,9 +271,9 @@ window.$docsify = {
     persistKey: 'my-docs-sidebar-state',
     accordion: true,
     animationDuration: 300,
-    
+
     // Custom class for the sidebarClass: 'custom-sidebar',
-    
+
     // Callback when sidebar state changes
     onToggle: function(isCollapsed) {
       const mainContent = document.querySelector('.content');
@@ -298,23 +298,23 @@ window.$docsify = {
     constoggleBtn = document.getElementById('custom-toggle');
     const showText = toggleBtn.querySelector('.show-text');
     const hideText = toggleBtn.querySelector('.hide-text');
-    
+
     // Initial state
     updateButton();
-    
+
     // Toggle on click
     toggleBtn.addEventListener('click', function() {
       window.$docsify.sidebar.toggle();
       updateButton();
     });
-    
+
     // Update button text based on state
     function updateButton() {
       const isCollapsed = document.body.classList.contains('sidebar-collapsed');
       showText.style.display = isCollapsed ? 'inline' : 'none';
       hideText.style.display = isCollapsed ? 'none' : 'inline';
     }
-    
+
     // Listen for sidebar togglevents
     document.addEventListener('sidebar-collapse:toggle', updateButton);
   });

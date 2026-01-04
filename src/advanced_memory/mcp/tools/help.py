@@ -48,6 +48,10 @@ async def help(level: str = "basic", topic: str | None = None) -> str:
     - Level 2 (intermediate): Detailed tool descriptions and workflows
     - Level 3 (advanced): Technical details and architecture
     - Level 4 (expert): Development and troubleshooting
+
+    Errors:
+        - "Unknown help level": Returned if an invalid level is provided (e.g. not basic/intermediate/advanced/expert).
+        - "Unknown topic": Returned if an invalid topic is provided.
     """
 
     if topic:

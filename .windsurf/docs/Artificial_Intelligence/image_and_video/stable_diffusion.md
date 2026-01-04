@@ -1,4 +1,4 @@
-﻿# Stable Diffusion: Advanced image generationeration
+# Stable Diffusion: Advanced image generationeration
 
 ## Introduction
 Stable Diffusion is a powerful open-source text-to-image generationeration model that has revolutionized AI art creation. This document provides a comprehensive guide to using and customizing Stable Diffusion for various applications.

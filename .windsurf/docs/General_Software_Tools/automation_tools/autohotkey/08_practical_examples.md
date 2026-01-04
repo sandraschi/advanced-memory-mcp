@@ -2,7 +2,7 @@
 
 Theory is important, but seeing real-world examples is often the best way to learn. This chapter provides a collection of practical, commented scripts that solve common problems. You can use them as-is or adapthem to fit your specific needs. All examples are written for AutoHotkey v2.0.
 
---- 
+---
 
 ### Example 1: A Universal "Paste as Plain Text" Hotkey
 
@@ -16,16 +16,16 @@ Theory is important, but seeing real-world examples is often the best way to lea
 {
     ; A_Clipboard is a built-in variable that contains the current content of the clipboard.
     SavedClipboard := A_Clipboard
-    
+
     ; By assigning the clipboard to itself, AutoHotkey cleans it of most formatting.
     A_Clipboard := SavedClipboard
-    
+
     ; Send the standard paste command (Ctrl+V).
     Send("^v")
 }
 ```
 
---- 
+---
 
 ### Example 2: Quickly Search Google for Selected Text
 
@@ -39,33 +39,33 @@ Theory is important, but seeing real-world examples is often the best way to lea
 {
     ; Save the current clipboard content so we don't overwrite it.
     SavedClipboard := A_Clipboard := "" ; Clear the clipboard
-    
+
     ; Send Ctrl+C to copy the currently selected text.
     Send("^c")
-    
+
     ; Wait for the clipboard to contain the copied text.
     ClipWait(1) ; Wait up to 1 second
-    
+
     If (A_Clipboard = "")
     {
         ; If nothing was copied, restore the old clipboard ando nothing.
         A_Clipboard := SavedClipboard
         return
     }
-    
+
     ; Build the Google search URL.
     SearchTerm := A_Clipboard
     SearchURL := "https://www.google.com/search?q=" Trim(SearchTerm)
-    
+
     ; Run the URL, which will open in the default webrowser.
     Run(SearchURL)
-    
+
     ; Restore the original clipboard content.
     A_Clipboard := SavedClipboard
 }
 ```
 
---- 
+---
 
 ### Example 3: A Simple Window Management Hotkey
 
@@ -79,24 +79,24 @@ Theory is important, but seeing real-world examples is often the best way to lea
 {
     ; Gethe unique ID of the active window.
     ActiveWin := WinExist("A")
-    
+
     ; Gethe window's current position and size.
     WinGetPos(&WinX, &WinY, &WinWidth, &WinHeight, ActiveWin)
-    
+
     ; Gethe monitor's resolution.
     MonitorWidth := A_ScreenWidth
     MonitorHeight := A_ScreenHeight
-    
+
     ; Calculate the new X and Y coordinates for centering.
     NewX := (MonitorWidth - WinWidth) // 2
     NewY := (MonitorHeight - WinHeight) // 2
-    
+
     ; Move the window.
     WinMove(NewX, NewY, WinWidth, WinHeight, ActiveWin)
 }
 ```
 
---- 
+---
 
 ### Example 4: A Simple GUI for Unit Conversion
 
@@ -126,13 +126,13 @@ ConvertMiles(*)
 {
     ; Submithe GUI data to its associated variables.
     MyGui.Submit()
-    
+
     ; Gethe value from thedit box.
     Miles := MyGui.MilesValue
-    
+
     ; Perform the calculation.
     Kilometers := Miles * 1.60934
-    
+
     ; Update the resultext control.
     TextResult.Text := Round(Kilometers, 2) ; Round to 2 decimal places
 }

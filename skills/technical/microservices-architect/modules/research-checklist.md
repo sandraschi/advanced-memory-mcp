@@ -3,25 +3,25 @@
 Run this review every 6 months or when major architectural guidance changes.
 
 ## 1. Source Refresh
-- [ ] Review CNCF microservices whitepapers, SIG App Delivery updates.  
-- [ ] Track major cloud provider architecture guides (AWS Builders Library, Google CRE blog, Azure Architecture Center).  
-- [ ] Check service mesh roadmaps (Istio Ambient, Linkerd, Cilium).  
+- [ ] Review CNCF microservices whitepapers, SIG App Delivery updates.
+- [ ] Track major cloud provider architecture guides (AWS Builders Library, Google CRE blog, Azure Architecture Center).
+- [ ] Check service mesh roadmaps (Istio Ambient, Linkerd, Cilium).
 - [ ] Monitor Team Topologies and DDD community articles for organizational patterns.
 
 ## 2. Architecture Health Audit
-- [ ] Update service catalog and ownership map; ensure no orphaned services.  
-- [ ] Audit SLO compliance and incident trends per service.  
-- [ ] Evaluate coupling (shared databases, duplicated logic) and plan remediation.  
+- [ ] Update service catalog and ownership map; ensure no orphaned services.
+- [ ] Audit SLO compliance and incident trends per service.
+- [ ] Evaluate coupling (shared databases, duplicated logic) and plan remediation.
 - [ ] Assess platform capability gaps (observability, CI/CD, governance).
 
 ## 3. Documentation & Training
-- [ ] Refresh ADR index and highlight deprecated decisions.  
-- [ ] Update onboarding materials for new teams/services.  
+- [ ] Refresh ADR index and highlight deprecated decisions.
+- [ ] Update onboarding materials for new teams/services.
 - [ ] Capture lessons from recent migrations or outages.
 
 ## 4. Compliance & Security
-- [ ] Review zero-trust controls, policy-as-code rules, and threat models.  
-- [ ] Confirm data residency/privacy policies remain accurate.  
+- [ ] Review zero-trust controls, policy-as-code rules, and threat models.
+- [ ] Confirm data residency/privacy policies remain accurate.
 - [ ] Audit supply chain security posture (SBOM, signing) across services.
 
 ## 5. Source Log

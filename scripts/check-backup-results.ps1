@@ -21,23 +21,23 @@ $totalBackups = 0
 foreach ($target in $targets) {
     Write-Host "Checking $($target.Name)..." -ForegroundColor Yellow
     Write-Host "  Path: $($target.Path)" -ForegroundColor Gray
-    
+
     if ($target.Path -and (Test-Path (Split-Path $target.Path -Parent) -ErrorAction SilentlyContinue)) {
         if (Test-Path $target.Path -ErrorAction SilentlyContinue) {
             $zips = Get-ChildItem -Path $target.Path -Filter "*.zip" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
-            
+
             if ($zips) {
                 $latest = $zips | Select-Object -First 1
                 $age = ((Get-Date) - $latest.LastWriteTime).TotalMinutes
                 $totalBackups += $zips.Count
-                
+
                 Write-Host "  ✓ BACKUP FOUND!" -ForegroundColor Green
                 Write-Host "    File: $($latest.Name)" -ForegroundColor Cyan
                 Write-Host "    Size: $([math]::Round($latest.Length/1MB, 2)) MB" -ForegroundColor White
                 Write-Host "    Created: $($latest.LastWriteTime)" -ForegroundColor White
                 Write-Host "    Age: $([math]::Round($age, 1)) minutes" -ForegroundColor $(if ($age -lt 10) { "Green" } else { "Yellow" })
                 Write-Host "    Total backups in directory: $($zips.Count)" -ForegroundColor Gray
-                
+
                 if ($age.TotalMinutes -lt 10) {
                     $foundBackups += @{
                         Location = $target.Name
@@ -73,7 +73,7 @@ Write-Host ""
 
 if ($foundBackups.Count -gt 0) {
     $recentBackups = $foundBackups | Where-Object { $_.Recent -eq $true }
-    
+
     if ($recentBackups.Count -gt 0) {
         Write-Host "✓ SUCCESS: Recent backups created!" -ForegroundColor Green
         Write-Host ""
@@ -87,7 +87,7 @@ if ($foundBackups.Count -gt 0) {
             Write-Host "  - $($backup.Location): $($backup.File) ($($backup.AgeMinutes) min ago)" -ForegroundColor Yellow
         }
     }
-    
+
     Write-Host ""
     Write-Host "Total backup files found: $totalBackups" -ForegroundColor Cyan
 } else {

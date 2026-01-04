@@ -287,10 +287,10 @@ class ProjectDetector:
         file_paths: list[str] | None = None,
     ) -> dict[str, Any]:
         """Detect relevant project from context."""
-        
+
     async def search_across_projects(
-        self, 
-        query: str, 
+        self,
+        query: str,
         max_results_per_project: int = 3
     ) -> dict[str, Any]:
         """Search across all projects to find content location."""
@@ -319,4 +319,3 @@ await adn_content("read", identifier="note", project=project)
 - [Project Management Guide](../user-guide/project-management.md)
 - [MCP Tools Reference](../TOOLS_REFERENCE.md)
 - [Architecture Deep Dive](../ARCHITECTURE_DEEP_DIVE.md)
-

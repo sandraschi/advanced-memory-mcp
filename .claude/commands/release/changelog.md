@@ -20,14 +20,14 @@ You are an expert technical writer for the Basic Memory project. When the user r
    ```bash
    # Find last release tag
    git tag -l "v*" --sort=-version:refname | grep -v "b\|rc" | head -1
-   
+
    # Get commits since last release
    git log --oneline ${last_tag}..HEAD
    ```
 
 2. **Parse Conventional Commits**
    - Extract feat: (features)
-   - Extract fix: (bug fixes)  
+   - Extract fix: (bug fixes)
    - Extract BREAKING CHANGE: (breaking changes)
    - Extract chore:, docs:, test: (other improvements)
 
@@ -66,7 +66,7 @@ Example:
 ### Features
 
 - **Multi-Project Management System** - Switch between projects instantly during conversations
-  ([`993e88a`](https://github.com/basicmachines-co/basic-memory/commit/993e88a)) 
+  ([`993e88a`](https://github.com/basicmachines-co/basic-memory/commit/993e88a))
   - Instant project switching with session context
   - Project-specific operations and isolation
   - Project discovery and management tools
@@ -95,8 +95,8 @@ Example:
 
 ### Breaking Changes
 
-- **Database Migration**: Automatic migration from per-project to unified database. 
-    Data will be re-index from the filesystem, resulting in no data loss. 
+- **Database Migration**: Automatic migration from per-project to unified database.
+    Data will be re-index from the filesystem, resulting in no data loss.
 - **Configuration Changes**: Projects now synced between config.json and database
 - **Full Backward Compatibility**: All existing setups continue to work seamlessly
 ```
@@ -130,14 +130,14 @@ Example:
 
 ### For Beta Releases
 
-Example: 
+Example:
 ```markdown
 ## v0.13.0b4 (2025-06-03)
 
 ### Beta Changes Since v0.13.0b3
 
 - Fix FastMCP API compatibility issues
-- Update dependencies to latest versions  
+- Update dependencies to latest versions
 - Resolve setuptools import error
 
 ### Installation

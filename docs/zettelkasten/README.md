@@ -10,15 +10,15 @@ Advanced Memory transforms from a simple knowledge tool into an **Intelligent Kn
 
 ### 1. Core Features
 
-**[STARTER_ZETTELKASTEN.md](STARTER_ZETTELKASTEN.md)**  
+**[STARTER_ZETTELKASTEN.md](STARTER_ZETTELKASTEN.md)**
 Personalized starter content based on user interests. Instead of an empty system, users get 50-150 curated notes from day one.
 
-**[STARTER_ZETTELKASTEN_ROADMAP.md](STARTER_ZETTELKASTEN_ROADMAP.md)**  
+**[STARTER_ZETTELKASTEN_ROADMAP.md](STARTER_ZETTELKASTEN_ROADMAP.md)**
 8-week implementation plan for building the starter Zettelkasten feature.
 
 ### 2. Revolutionary Platform
 
-**[ZETTELKASTEN_PLATFORM_VISION.md](ZETTELKASTEN_PLATFORM_VISION.md)**  
+**[ZETTELKASTEN_PLATFORM_VISION.md](ZETTELKASTEN_PLATFORM_VISION.md)**
 The complete vision for transforming Advanced Memory into an intelligent knowledge platform with:
 - Comprehensive user questionnaires
 - Multi-LLM integration (Claude + FOSS)
@@ -29,14 +29,14 @@ The complete vision for transforming Advanced Memory into an intelligent knowled
 
 ### 3. Practical Implementation
 
-**[COST_CONSCIOUS_ZETTELKASTEN.md](COST_CONSCIOUS_ZETTELKASTEN.md)**  
+**[COST_CONSCIOUS_ZETTELKASTEN.md](COST_CONSCIOUS_ZETTELKASTEN.md)**
 Don't go bankrupt! Practical guide for building Zettelkästen with:
 - Hardware detection (Potato PC → Workstation)
 - FOSS LLM setup (Ollama, Llama, Qwen)
 - Hybrid strategies (80% free, 20% paid)
 - Budget protection
 
-**[PREBUILT_ZETTELKASTEN_DISTRIBUTION.md](PREBUILT_ZETTELKASTEN_DISTRIBUTION.md)**  
+**[PREBUILT_ZETTELKASTEN_DISTRIBUTION.md](PREBUILT_ZETTELKASTEN_DISTRIBUTION.md)**
 Distribution strategy for pre-built, curated Zettelkästen via GitHub releases and community repositories.
 
 ## 🎯 Quick Start
@@ -73,11 +73,10 @@ Not one-size-fits-all. Every user gets content matched to their:
 
 ## 🚀 The Vision
 
-**From**: Empty tool that overwhelms users  
-**To**: Intelligent platform that guides users  
+**From**: Empty tool that overwhelms users
+**To**: Intelligent platform that guides users
 **Result**: "Wikipedia meets Zettelkasten meets AI curation"
 
 ---
 
 *Revolutionary knowledge management for everyone*
-

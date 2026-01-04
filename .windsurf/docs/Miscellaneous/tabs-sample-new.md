@@ -85,31 +85,31 @@ window.$docsify = {
     loadAllTabs: false,      // Load all tab content at once
     sync: true,              // Sync tabs withe same name across the page
     persist: false,          // Persisthe active tab across page loads
-    
+
     // Styling
     theme: 'default',        // 'default' or 'material'
     tabHeadings: 'all',      // 'all' or 'active'
-    
+
     // Animation: 200,          // Animation duration in milliseconds
-    
+
     // Custom Classes
     tabContainerClass: 'docsify-tabs',
     tabNavigationClass: 'docsify-tabs__nav',
     tabItemClass: 'docsify-tabs__tab',
     tabActiveClass: 'docsify-tabs__tab--active',
     tabContentClass: 'docsify-tabs__content',
-    
+
     // Callbacks
     onTabShow: function(tab) {
       // Called when a tab ishown
       console.log('Tab shown:', tab);
     },
-    
+
     onTabHide: function(tab) {
       // Called when a tab is hidden
       console.log('Tab hidden:', tab);
     },
-    
+
     // Advancedynamic: false,          // Enable dynamic tab loading
     updateHash: true,        // Update URL hash when switching tabs
     useStorage: true,        // Use localStorage to persistab state

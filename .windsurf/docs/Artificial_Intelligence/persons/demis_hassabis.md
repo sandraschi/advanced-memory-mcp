@@ -64,4 +64,3 @@ Born in London, Hassabis was a child chess prodigy and achieved the title of Int
 - [DeepMind Research](https://deepmind.com/research/)
 - [Nature: The Science Behind AlphaFold](https://www.nature.com/articles/d41586-021-01968-y)
 - [The Game Has Changed - AI Wins Againsthe World's Best Go Player](https://www.wired.com/2016/01/in-a-huge-breakthrough-googles-ai-beats-a-top-player-at-the-game-of-go/)
-

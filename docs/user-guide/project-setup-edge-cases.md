@@ -8,7 +8,7 @@
 
 ### Short Answer
 
-**With auto-sync enabled**: ✅ YES (automatic)  
+**With auto-sync enabled**: ✅ YES (automatic)
 **Without auto-sync**: ⏳ NO (need manual sync)
 
 ---
@@ -320,7 +320,7 @@ Advanced Memory **skips** these directories:
 IGNORE_PATTERNS = {
     # Node.js
     "node_modules",
-    
+
     # Build outputs
     "dist",
     "build",
@@ -328,27 +328,27 @@ IGNORE_PATTERNS = {
     "out",
     ".next",
     ".nuxt",
-    
+
     # Python
     "__pycache__",
     ".pytest_cache",
     ".tox",
     "venv",
     ".venv",
-    
+
     # Other package managers
     "vendor",
     ".gradle",
     ".cargo",
     "coverage",
-    
+
     # IDE and editor files
     ".vscode",
     ".idea",
-    
+
     # Version control
     ".git",
-    
+
     # OS files
     ".DS_Store",
     "Thumbs.db",
@@ -485,7 +485,7 @@ advanced-memory project add repos D:/Dev/repos \
    ```bash
    # Linux/macOS
    find D:/Dev/repos -name "*.md" | wc -l
-   
+
    # Windows PowerShell
    (Get-ChildItem -Path D:/Dev/repos -Filter *.md -Recurse).Count
    ```
@@ -573,7 +573,7 @@ advanced-memory reset
 
 ### Copying Files Into Project
 
-**With auto-sync**: ✅ Automatic ingestion (~500ms)  
+**With auto-sync**: ✅ Automatic ingestion (~500ms)
 **Without auto-sync**: ⏳ Manual `sync` required
 
 ---
@@ -612,6 +612,5 @@ Choose based on your use case! 🎯
 
 ---
 
-*Created: 2025-10-17*  
+*Created: 2025-10-17*
 *Purpose: Clarify edge cases for project setup*
-

@@ -85,7 +85,7 @@ The AI automatically detects projects from your queries:
 ### High Confidence (Auto-Switches)
 
 ```
-"Tomorrow I meet Steve" 
+"Tomorrow I meet Steve"
 → Detects: private project (personal context)
 → Confidence: 70%
 → Auto-switches ✓
@@ -176,4 +176,3 @@ Better Query: "Find Docker notes in my work project"
 - See [Multi-Project Examples](./MULTI_PROJECT_EXAMPLES.md) for detailed scenarios
 - See [AI-Managed Project Switching](../features/AI_MANAGED_PROJECT_SWITCHING.md) for technical details
 - See [Project Management Guide](./project-management.md) for all operations
-

@@ -1,4 +1,4 @@
-﻿# Windsurf Agentic AIDE: An Overview
+# Windsurf Agentic AIDE: An Overview
 
 ## Introduction: Redefining the Development Experience
 

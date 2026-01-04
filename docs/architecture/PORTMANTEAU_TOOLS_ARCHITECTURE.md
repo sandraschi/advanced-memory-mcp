@@ -99,10 +99,10 @@ async def adn_content(
     # ... other parameters
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
-    
+
     This portmanteau tool consolidates all content operations into a single interface,
     reducing MCP tool count while maintaining full functionality for Cursor IDE compatibility.
-    
+
     SUPPORTED OPERATIONS:
     - write: Create new notes or update existing ones with semantic processing
     - read: Retrieve complete note content with intelligent lookup strategies
@@ -143,7 +143,7 @@ if operation not in VALID_OPERATIONS:
 # Write a note
 adn_content("write", identifier="Project Plan", content="# Overview...", folder="projects")
 
-# Read a note  
+# Read a note
 adn_content("read", identifier="Project Plan")
 
 # Edit a note
@@ -217,7 +217,7 @@ adn_export("pdf_book", export_path="book.pdf", book_title="Research Papers", tag
 Portmanteau tools solve the fundamental incompatibility between comprehensive knowledge management systems and tool-limited MCP clients. By consolidating 40+ tools into 8 comprehensive tools, Advanced Memory achieves:
 
 - **✅ Universal Compatibility**: Works with all MCP clients
-- **✅ Full Functionality**: No features lost in consolidation  
+- **✅ Full Functionality**: No features lost in consolidation
 - **✅ Better Performance**: Faster tool discovery and registration
 - **✅ Improved UX**: Cleaner, more organized tool palette
 - **✅ Future-Proof**: Scalable architecture for growth

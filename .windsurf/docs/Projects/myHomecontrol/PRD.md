@@ -35,4 +35,3 @@ Home automation and control system with IoT integration
 *High-level projectimeline*
 
 ## 9. Repository
-

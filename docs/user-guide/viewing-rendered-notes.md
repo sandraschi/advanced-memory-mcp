@@ -63,7 +63,7 @@ graph TD
 ## Components
 
 - **UI**: React frontend
-- **API**: FastAPI backend  
+- **API**: FastAPI backend
 - **DB**: PostgreSQL database
 ```
 
@@ -428,5 +428,3 @@ view_note_rendered("deployment-process")
 **Status**: ✅ Available now in both standard and MCPB versions!
 
 🎉 **Enjoy your beautifully rendered diagrams!**
-
-

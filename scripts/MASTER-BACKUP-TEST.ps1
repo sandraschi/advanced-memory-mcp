@@ -50,7 +50,7 @@ try {
     $backupOutput = & ".\scripts\backup-repo.ps1" -Verbose *>&1 | Tee-Object -FilePath $backupOutputFile
     $backupDuration = (Get-Date) - $backupStart
     Write-MasterLog "  Backup script executed in $([math]::Round($backupDuration.TotalSeconds, 1)) seconds" "INFO"
-    
+
     # Check for errors in output
     $errors = $backupOutput | Where-Object { $_ -match "ERROR|FAILED|Exception" }
     if ($errors) {
@@ -84,12 +84,12 @@ foreach ($target in $targets) {
             if ($zips) {
                 $latest = $zips | Select-Object -First 1
                 $age = (Get-Date) - $latest.LastWriteTime
-                
+
                 Write-MasterLog "    ✓ Backup found: $($latest.Name)" "SUCCESS"
                 Write-MasterLog "      Size: $([math]::Round($latest.Length/1MB, 2)) MB" "INFO"
                 Write-MasterLog "      Created: $($latest.LastWriteTime)" "INFO"
                 Write-MasterLog "      Age: $([math]::Round($age.TotalMinutes, 1)) minutes" "INFO"
-                
+
                 if ($age.TotalMinutes -lt 10) {
                     Write-MasterLog "      ✓ Recently created!" "SUCCESS"
                     $backupFound = $true

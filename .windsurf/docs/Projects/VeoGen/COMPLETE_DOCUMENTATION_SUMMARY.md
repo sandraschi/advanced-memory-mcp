@@ -255,13 +255,13 @@ def process_custom_job(job_data):
     try:
         # Your business logic
         result = perform_operation(job_data)
-        
+
         # Track success
         track_custom_metric(
             'custom_operations_total',
             {'operation_type': 'custom', 'status': 'success'}
         )
-        
+
         return result
     except Exception as e:
         # Track failure

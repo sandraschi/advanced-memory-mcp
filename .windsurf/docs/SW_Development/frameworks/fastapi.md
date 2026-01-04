@@ -107,7 +107,7 @@ classettings(BaseSettings):
     DEBUG: bool = False
     DATABASE_URL: str
     SECRET_KEY: str
-    
+
     class Config:
         env_file = ".env"
 

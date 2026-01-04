@@ -1,13 +1,13 @@
 # Zettelkasten As Skills: The Uncanny Parallel
 
-**Date**: October 17, 2025  
-**Insight**: Zettelkasten is already a skill repository - we just need to formalize it  
+**Date**: October 17, 2025
+**Insight**: Zettelkasten is already a skill repository - we just need to formalize it
 
 ---
 
 ## The Realization
 
-**Zettelkasten** = Interconnected notes about accumulated knowledge  
+**Zettelkasten** = Interconnected notes about accumulated knowledge
 **Skills** = Accumulated expertise that guides behavior
 
 **They're the same thing.**
@@ -98,8 +98,8 @@ High heat + dry surface = Maillard reaction = flavor
 - Why do Java developers wear glasses? They can't C#!
 ```
 
-**This is**: Entertainment, not expertise  
-**Can it guide behavior?**: No  
+**This is**: Entertainment, not expertise
+**Can it guide behavior?**: No
 **Is it a skill?**: No
 
 ---
@@ -111,8 +111,8 @@ High heat + dry surface = Maillard reaction = flavor
 Hollabrunn was founded in the 12th century...
 ```
 
-**This is**: Information, not methodology  
-**Can it guide behavior?**: Only if you're a historian doing research  
+**This is**: Information, not methodology
+**Can it guide behavior?**: Only if you're a historian doing research
 **Is it a skill?**: Not really (unless "researching Hollabrunn" is your job)
 
 ---
@@ -130,8 +130,8 @@ Hollabrunn was founded in the 12th century...
 4. Cut into 1/8 inch strips
 ```
 
-**This is**: Procedural knowledge  
-**Can it guide behavior?**: Yes - you can follow it  
+**This is**: Procedural knowledge
+**Can it guide behavior?**: Yes - you can follow it
 **Is it a skill?**: ✅ YES
 
 ---
@@ -146,8 +146,8 @@ Hollabrunn was founded in the 12th century...
 - Keep hooks pure (no side effects in declarations)
 ```
 
-**This is**: Expertise  
-**Can it guide behavior?**: Yes - improves code quality  
+**This is**: Expertise
+**Can it guide behavior?**: Yes - improves code quality
 **Is it a skill?**: ✅ YES
 
 ---
@@ -164,8 +164,8 @@ Hollabrunn was founded in the 12th century...
 5. Synthesize themes
 ```
 
-**This is**: Methodology  
-**Can it guide behavior?**: Yes - structures research approach  
+**This is**: Methodology
+**Can it guide behavior?**: Yes - structures research approach
 **Is it a skill?**: ✅ YES
 
 ---
@@ -448,7 +448,7 @@ source: "claude-generated"
 // ✅ Good
 const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
   const [user, setUser] = useState<User | null>(null);
-  
+
   return <div>{user?.name}</div>;
 };
 
@@ -525,7 +525,7 @@ Skill is successfully applied when:
 - complements [[testing_react_components]]
 ```
 
-**Is this a zettelkasten note or a skill?**  
+**Is this a zettelkasten note or a skill?**
 **Answer: BOTH. They're the same thing.**
 
 ---
@@ -668,7 +668,7 @@ Uniform strips cook evenly and look professional
 **Unification**:
 > **Skill-focused zettelkasten = repository of actionable expertise**
 
-**Not all zettelkasten are skills** (can include reference material).  
+**Not all zettelkasten are skills** (can include reference material).
 **But all skills can be zettelkasten** (structured markdown notes).
 
 ---
@@ -744,7 +744,7 @@ async def adn_skill(
 ) -> str:
     """
     Manage skills stored as zettelkasten notes.
-    
+
     Operations:
     - list: Show all available skills
     - read: Read skill definition (loads into context)
@@ -866,8 +866,8 @@ AI: [searches skills]
 
 **Conclusion**: Zettelkasten and Skills are **the same conceptual system** with different emphasis.
 
-**Zettelkasten**: Focus on knowledge interconnection  
-**Skills**: Focus on behavioral guidance  
+**Zettelkasten**: Focus on knowledge interconnection
+**Skills**: Focus on behavioral guidance
 **Overlap**: ~95% when zettelkasten contains procedural/actionable knowledge
 
 ---
@@ -1013,6 +1013,5 @@ skill_version: "1.0.0"
 
 ---
 
-*The uncanny parallel revealed!*  
+*The uncanny parallel revealed!*
 *October 17, 2025*
-

@@ -1,6 +1,6 @@
 # Advanced Memory MCP - Troubleshooting Guide
 
-**Version:** 1.0.0b2  
+**Version:** 1.0.0b2
 **Purpose:** Comprehensive troubleshooting for common issues
 
 ## Quick Diagnosis
@@ -191,7 +191,7 @@ chmod -R 644 ~/source-directory
 **Solution 3: Use Absolute Paths**
 ```python
 # Instead of ~/path, use full path
-adn_import("obsidian", 
+adn_import("obsidian",
     vault_path="/Users/username/obsidian-vault",
     destination_folder="imported/obsidian")
 ```
@@ -307,7 +307,7 @@ ls -la ~/Documents/project-directory
 ```python
 # Delete and recreate
 adn_project("delete", project_name="problematic-project")
-adn_project("create", 
+adn_project("create",
     project_name="new-project",
     project_path="~/Documents/new-project")
 ```
@@ -524,7 +524,7 @@ advanced-memory sync --force-reindex
 #### Fix Project Configuration
 ```python
 # Recreate project configuration
-adn_project("create", 
+adn_project("create",
     project_name="main",
     project_path="~/Documents/notes",
     set_default=True)

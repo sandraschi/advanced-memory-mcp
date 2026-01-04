@@ -109,9 +109,9 @@ To achieve **Gold Status** (95/100+ points) on GLAMA.ai:
 2. **README.md Structure**:
    ```markdown
    # Your MCP Server Name
-   
+
    [![GLAMA.ai](https://glama.ai/mcp/servers/YOUR_SERVER_ID/badge)](https://glama.ai/mcp/servers/YOUR_SERVER_ID)
-   
+
    ## Quick Start
    ## Installation
    ## Features
@@ -153,7 +153,7 @@ Configure your repository with these settings:
 
 - **Visibility**: Public (unless specific privacy requirements)
 - **Features**: Enable Issues, Discussions, Projects, Wiki
-- **Merge Options**: 
+- **Merge Options**:
   - Allow auto-merge
   - Automatically delete head branches
   - Set "Allow squash merging" as default
@@ -477,17 +477,17 @@ jobs:
           release_name: Advanced Memory MCP ${{ steps.version.outputs.version }}
           body: |
             ## 🚀 What's New in Advanced Memory MCP ${{ steps.version.outputs.version }}
-            
+
             ${{ steps.changelog.outputs.changelog }}
-            
+
             ## 📦 Installation
-            
+
             ### Claude Desktop Extension
             1. Download `advanced-memory-mcp.mcpb` from the assets below
             2. Open Claude Desktop
             3. Go to Settings > Extensions
             4. Drop the `.mcpb` file into the extensions page
-            
+
             ### Python Package
             ```bash
             pip install advanced-memory-mcp==${{ steps.version.outputs.version_number }}
@@ -760,24 +760,24 @@ jobs:
           title: "chore: update dependencies"
           body: |
             ## 🔄 Dependency Updates
-            
+
             This PR updates dependencies to their latest versions.
-            
+
             ### Changes
             - Updated Python package dependencies
             - Updated development dependencies
             - Updated uv lock file
-            
+
             ### Testing
             - [x] Tests pass locally
             - [x] No breaking changes detected
-            
+
             ### Review Checklist
             - [ ] Review dependency changes
             - [ ] Verify no breaking changes
             - [ ] Test functionality
             - [ ] Approve and merge
-            
+
             ---
             *This PR was automatically created by the dependency update workflow.*
           branch: dependency-updates
@@ -897,7 +897,7 @@ asyncio_mode = "strict"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["migrations", "mcpb", "dxt", "dist", "htmlcov"]
+extend-exclude = ["migrations", "mcpb", "dist", "htmlcov"]
 
 [tool.ruff.lint]
 select = [
@@ -1347,16 +1347,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
-      
+
       - name: Install dependencies
         run: |
           pip install -e ".[dev]"
-      
+
       - name: Run quality assessment
         run: |
           echo "## GLAMA.ai Quality Assessment" >> $GITHUB_STEP_SUMMARY
@@ -1364,19 +1364,19 @@ jobs:
           pytest --cov=src --cov-report=term-missing --cov-report=xml
           coverage=$(python -c "import xml.etree.ElementTree as ET; tree = ET.parse('coverage.xml'); print(f'{float(tree.getroot().attrib[\"line-rate\"])*100:.1f}%')")
           echo "- Coverage: $coverage" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "### Security Scan" >> $GITHUB_STEP_SUMMARY
           bandit -r src/ -f json -o bandit-report.json || true
           safety check --json --output safety-report.json || true
           echo "- Security scan completed" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "### Documentation Check" >> $GITHUB_STEP_SUMMARY
           if [ -f "README.md" ] && [ -f "CONTRIBUTING.md" ] && [ -f "CHANGELOG.md" ]; then
             echo "- ✅ All required documentation present" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ❌ Missing required documentation" >> $GITHUB_STEP_SUMMARY
           fi
-      
+
       - name: Upload quality reports
         uses: actions/upload-artifact@v4
         with:

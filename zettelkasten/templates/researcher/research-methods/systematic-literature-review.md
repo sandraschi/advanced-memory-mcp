@@ -14,7 +14,7 @@ graph TB
     F --> G[Quality Assessment]
     G --> H[Synthesis]
     H --> I[Write Report]
-    
+
     J[PRISMA Checklist] --> A
     J --> B
     J --> C
@@ -32,17 +32,17 @@ graph TB
 ```python
 class ResearchQuestion:
     """Structure research question using PICO"""
-    
+
     def __init__(self, population, intervention, comparison, outcome):
         self.population = population
         self.intervention = intervention
         self.comparison = comparison
         self.outcome = outcome
-    
+
     def formulate_question(self):
         """Create research question"""
         return f"In {self.population}, does {self.intervention} compared to {self.comparison} affect {self.outcome}?"
-    
+
     def generate_keywords(self):
         """Generate search keywords from PICO"""
         keywords = {
@@ -51,9 +51,9 @@ class ResearchQuestion:
             'comparison_terms': self._extract_keywords(self.comparison),
             'outcome_terms': self._extract_keywords(self.outcome)
         }
-        
+
         return keywords
-    
+
     def example_medical(self):
         """Example: Medical research question"""
         return {
@@ -63,7 +63,7 @@ class ResearchQuestion:
             'O': 'HbA1c levels',
             'question': 'In adults with type 2 diabetes, does metformin therapy compared to placebo reduce HbA1c levels?'
         }
-    
+
     def example_tech(self):
         """Example: Technology research question"""
         return {
@@ -81,7 +81,7 @@ class ResearchQuestion:
 ```python
 class DatabaseSearch:
     """Systematic database searching"""
-    
+
     def __init__(self):
         self.databases = {
             'general': {
@@ -105,7 +105,7 @@ class DatabaseSearch:
                 'arXiv': {'coverage': 'Preprints', 'access': 'Free'}
             }
         }
-    
+
     def build_search_string(self, keywords, operators='AND'):
         """Build Boolean search string"""
         # Example keywords structure:
@@ -114,18 +114,18 @@ class DatabaseSearch:
         #     'intervention': ['metformin', 'glucophage'],
         #     'outcome': ['HbA1c', 'glycemic control']
         # }
-        
+
         # Build OR clauses within each concept
         concept_strings = []
         for concept, terms in keywords.items():
             or_string = ' OR '.join([f'"{term}"' for term in terms])
             concept_strings.append(f'({or_string})')
-        
+
         # Combine concepts with AND
         search_string = f' {operators} '.join(concept_strings)
-        
+
         return search_string
-    
+
     def example_search_string(self):
         """Example PubMed search"""
         return '''
@@ -137,7 +137,7 @@ class DatabaseSearch:
         AND
         ("randomized controlled trial"[Publication Type] OR "clinical trial")
         '''
-    
+
     def advanced_techniques(self):
         """Advanced search techniques"""
         return {
@@ -170,7 +170,7 @@ class DatabaseSearch:
 ```python
 class PRISMAFlow:
     """Track screening process using PRISMA"""
-    
+
     def __init__(self):
         self.identification = {
             'database_results': 0,
@@ -188,29 +188,29 @@ class PRISMAFlow:
         self.included = {
             'studies_included': 0
         }
-    
+
     def calculate_prisma_numbers(self):
         """Calculate PRISMA flow numbers"""
         total_identified = (
             self.identification['database_results'] +
             self.identification['other_sources']
         )
-        
+
         after_dedup = (
             total_identified -
             self.identification['duplicates_removed']
         )
-        
+
         after_screening = (
             self.screening['titles_screened'] -
             self.screening['excluded_at_title']
         )
-        
+
         after_eligibility = (
             self.eligibility['full_text_assessed'] -
             sum(self.eligibility['excluded_reasons'].values())
         )
-        
+
         return {
             'identification': total_identified,
             'after_deduplication': after_dedup,
@@ -218,7 +218,7 @@ class PRISMAFlow:
             'full_text_reviewed': self.eligibility['full_text_assessed'],
             'included': self.included['studies_included']
         }
-    
+
     def exclusion_reasons(self):
         """Common exclusion reasons"""
         return {
@@ -238,12 +238,12 @@ class PRISMAFlow:
 ```python
 class ScreeningManager:
     """Manage systematic screening"""
-    
+
     def __init__(self, inclusion_criteria, exclusion_criteria):
         self.inclusion_criteria = inclusion_criteria
         self.exclusion_criteria = exclusion_criteria
         self.screened_papers = []
-    
+
     def screen_paper(self, paper):
         """Screen a single paper"""
         decision = {
@@ -253,33 +253,33 @@ class ScreeningManager:
             'reason': None,
             'screener': 'Reviewer 1'
         }
-        
+
         # Check exclusion criteria first (faster)
         for criterion in self.exclusion_criteria:
             if self._meets_exclusion(paper, criterion):
                 decision['decision'] = 'Exclude'
                 decision['reason'] = criterion
                 return decision
-        
+
         # Check inclusion criteria
         meets_all = all(
             self._meets_inclusion(paper, criterion)
             for criterion in self.inclusion_criteria
         )
-        
+
         if meets_all:
             decision['decision'] = 'Include'
         else:
             decision['decision'] = 'Exclude'
             decision['reason'] = 'Does not meet inclusion criteria'
-        
+
         return decision
-    
+
     def dual_screening(self, paper, reviewer1, reviewer2):
         """Two reviewers screen independently"""
         r1_decision = reviewer1.screen_paper(paper)
         r2_decision = reviewer2.screen_paper(paper)
-        
+
         if r1_decision['decision'] == r2_decision['decision']:
             # Agreement
             return {
@@ -295,20 +295,20 @@ class ScreeningManager:
                 'r1_decision': r1_decision['decision'],
                 'r2_decision': r2_decision['decision']
             }
-    
+
     def calculate_inter_rater_reliability(self, decisions_r1, decisions_r2):
         """Calculate Cohen's Kappa"""
         from sklearn.metrics import cohen_kappa_score
-        
+
         kappa = cohen_kappa_score(decisions_r1, decisions_r2)
-        
+
         interpretation = {
             'kappa': kappa,
             'agreement_level': self._interpret_kappa(kappa)
         }
-        
+
         return interpretation
-    
+
     def _interpret_kappa(self, kappa):
         """Interpret Cohen's Kappa value"""
         if kappa > 0.8:
@@ -328,7 +328,7 @@ class ScreeningManager:
 ```python
 class DataExtraction:
     """Extract data from included studies"""
-    
+
     def __init__(self):
         self.extraction_form = {
             'study_details': [
@@ -367,29 +367,29 @@ class DataExtraction:
                 'adverse_events'
             ]
         }
-    
+
     def extract_data(self, paper):
         """Extract data from paper"""
         data = {}
-        
+
         for category, fields in self.extraction_form.items():
             data[category] = {}
             for field in fields:
                 # Extract field from paper
                 data[category][field] = self._extract_field(paper, field)
-        
+
         return data
-    
+
     def validate_extraction(self, extracted_data):
         """Validate extracted data"""
         issues = []
-        
+
         # Check for missing critical fields
         critical_fields = ['sample_size', 'study_design', 'primary_outcome_results']
         for field in critical_fields:
             if not self._find_field(extracted_data, field):
                 issues.append(f"Missing critical field: {field}")
-        
+
         # Check for inconsistencies
         if extracted_data.get('results', {}).get('p_values'):
             p_value = float(extracted_data['results']['p_values'])
@@ -397,7 +397,7 @@ class DataExtraction:
                 # Should have effect size
                 if not extracted_data.get('results', {}).get('effect_size'):
                     issues.append("Significant result but missing effect size")
-        
+
         return {
             'valid': len(issues) == 0,
             'issues': issues
@@ -409,7 +409,7 @@ class DataExtraction:
 ```python
 class QualityAssessment:
     """Assess study quality and risk of bias"""
-    
+
     def __init__(self):
         # Risk of Bias tools
         self.rob_tools = {
@@ -418,7 +418,7 @@ class QualityAssessment:
             'Diagnostic': 'QUADAS-2',
             'Qualitative': 'CASP Qualitative Checklist'
         }
-    
+
     def cochrane_rob_assessment(self, study):
         """Cochrane Risk of Bias 2.0"""
         domains = {
@@ -448,35 +448,35 @@ class QualityAssessment:
                 'support': None
             }
         }
-        
+
         # Assess each domain
         for domain, criteria in domains.items():
             rating = self._assess_domain(study, domain)
             domains[domain]['rating'] = rating
-        
+
         # Overall risk of bias
         overall = self._calculate_overall_rob(domains)
-        
+
         return {
             'domains': domains,
             'overall_rob': overall
         }
-    
+
     def _calculate_overall_rob(self, domains):
         """Calculate overall risk of bias"""
         ratings = [d['rating'] for d in domains.values()]
-        
+
         if any(r == 'High' for r in ratings):
             return 'High'
         elif all(r == 'Low' for r in ratings):
             return 'Low'
         else:
             return 'Some concerns'
-    
+
     def grade_evidence(self, body_of_evidence):
         """GRADE evidence quality assessment"""
         # Starting point: RCTs = High, Observational = Low
-        
+
         factors = {
             'downgrade': {
                 'risk_of_bias': 'Study limitations',
@@ -491,25 +491,25 @@ class QualityAssessment:
                 'confounders': 'All plausible confounders reduce effect'
             }
         }
-        
+
         # Start with High for RCTs
         quality = 'High'
-        
+
         # Apply downgrades
         downgrades = 0
         for factor in factors['downgrade']:
             if self._has_concern(body_of_evidence, factor):
                 downgrades += 1
-        
+
         # Apply upgrades (for observational studies)
         upgrades = 0
         for factor in factors['upgrade']:
             if self._has_upgrade(body_of_evidence, factor):
                 upgrades += 1
-        
+
         levels = ['Very Low', 'Low', 'Moderate', 'High']
         final_level = max(0, min(3, 3 - downgrades + upgrades))
-        
+
         return {
             'quality': levels[final_level],
             'downgrades': downgrades,
@@ -525,30 +525,30 @@ from scipy import stats
 
 class MetaAnalysis:
     """Statistical synthesis of studies"""
-    
+
     def __init__(self, studies):
         self.studies = studies
-    
+
     def fixed_effect_meta_analysis(self, effect_sizes, standard_errors):
         """Fixed-effect meta-analysis"""
         # Calculate weights (inverse variance)
         variances = np.array(standard_errors) ** 2
         weights = 1 / variances
-        
+
         # Pooled effect size
         pooled_effect = np.sum(weights * effect_sizes) / np.sum(weights)
-        
+
         # Standard error of pooled effect
         pooled_se = np.sqrt(1 / np.sum(weights))
-        
+
         # 95% confidence interval
         ci_lower = pooled_effect - 1.96 * pooled_se
         ci_upper = pooled_effect + 1.96 * pooled_se
-        
+
         # Z-test
         z_score = pooled_effect / pooled_se
         p_value = 2 * (1 - stats.norm.cdf(abs(z_score)))
-        
+
         return {
             'pooled_effect': pooled_effect,
             'se': pooled_se,
@@ -556,26 +556,26 @@ class MetaAnalysis:
             'z_score': z_score,
             'p_value': p_value
         }
-    
+
     def heterogeneity_test(self, effect_sizes, standard_errors, weights):
         """Test for heterogeneity (I² statistic)"""
         k = len(effect_sizes)  # Number of studies
-        
+
         # Q statistic
         pooled_effect = np.sum(weights * effect_sizes) / np.sum(weights)
         Q = np.sum(weights * (effect_sizes - pooled_effect) ** 2)
-        
+
         # I² statistic
         df = k - 1
         I_squared = max(0, ((Q - df) / Q) * 100)
-        
+
         interpretation = {
             'I_squared': I_squared,
             'heterogeneity': self._interpret_heterogeneity(I_squared)
         }
-        
+
         return interpretation
-    
+
     def _interpret_heterogeneity(self, i_squared):
         """Interpret I² statistic"""
         if i_squared < 25:
@@ -593,7 +593,7 @@ class MetaAnalysis:
 ```python
 class ReviewManuscript:
     """Structure systematic review manuscript"""
-    
+
     def __init__(self):
         self.structure = {
             'title': 'Clear, specific title indicating systematic review',
@@ -665,5 +665,3 @@ class ReviewManuscript:
 ---
 
 *"The plural of anecdote is not data, but a systematic review comes close."*
-
-

@@ -1,6 +1,6 @@
 # PowerShell Debugging in Cursor/VS Code
 
-**Guide**: How to debug PowerShell scripts with breakpoints in Cursor editor  
+**Guide**: How to debug PowerShell scripts with breakpoints in Cursor editor
 **Date**: 2025-12-02
 
 ---

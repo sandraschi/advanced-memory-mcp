@@ -1,7 +1,7 @@
 # Application Security
 
-**Confidence**: 🟢 High  
-**Last validated**: 2025-11-11  
+**Confidence**: 🟢 High
+**Last validated**: 2025-11-11
 **Primary sources**: OWASP Top 10:2021 + 2024 addendum, OWASP API Security Top 10:2023, OWASP ASVS v4.0.3, NIST SP 800-63-3, SLSA v1.0, Google “Architecting Secure Applications” (2025), Microsoft Secure Development Lifecycle (2024 refresh)
 
 ---
@@ -40,39 +40,38 @@ Treat OWASP Top 10 as baseline and augment with domain-specific checklists (e.g.
 
 ## 3. Secure Coding & Review Playbook
 
-1. **Standardize guidance**: Maintain language/framework-specific secure coding guides (e.g., Python, Go, Node, Java). Reference CERT secure coding rules.  
-2. **Pre-commit & CI hooks**: Bandit, Gosec, ESLint security, spotbugs. Fail builds on critical findings.  
-3. **Secure code review**: Use checklist template covering auth, data exposure, crypto, secrets, error handling, logging. Require a security champion review on high-risk changes.  
+1. **Standardize guidance**: Maintain language/framework-specific secure coding guides (e.g., Python, Go, Node, Java). Reference CERT secure coding rules.
+2. **Pre-commit & CI hooks**: Bandit, Gosec, ESLint security, spotbugs. Fail builds on critical findings.
+3. **Secure code review**: Use checklist template covering auth, data exposure, crypto, secrets, error handling, logging. Require a security champion review on high-risk changes.
 4. **AI-assisted coding guardrails**: If using Copilot/Cline, enforce secrets checking, diff scanning, and code provenance review to prevent prompt injection or random library inclusion.
 
 ---
 
 ## 4. Dependency & Supply Chain Security
 
-- **Source control hygiene**: Enforce signed commits and verified GitHub/GitLab workflows; track third-party contributors.  
-- **Package policy**: Maintain allow/block lists, monitor typosquatting via Artifact Hub/Phylum, require checksums (`pip --require-hashes`, `npm audit signatures`, `cargo vet`).  
-- **SBOM pipeline**: Generate SBOM at build time (Syft, CycloneDX) and store in registry; compare against VEX advisories.  
-- **Runtime attestation**: Validate containers/binaries before deployment (Cosign, AWS Signer).  
+- **Source control hygiene**: Enforce signed commits and verified GitHub/GitLab workflows; track third-party contributors.
+- **Package policy**: Maintain allow/block lists, monitor typosquatting via Artifact Hub/Phylum, require checksums (`pip --require-hashes`, `npm audit signatures`, `cargo vet`).
+- **SBOM pipeline**: Generate SBOM at build time (Syft, CycloneDX) and store in registry; compare against VEX advisories.
+- **Runtime attestation**: Validate containers/binaries before deployment (Cosign, AWS Signer).
 - **Third-party SaaS review**: Use vendor questionnaires (SIG Lite), require SOC 2 + pen test summary for integrated services.
 
 ---
 
 ## 5. Runtime & Client Protections
 
-- **Edge defense**: Configure WAF/CDN (AWS WAF, Cloud Armor, Azure Front Door) with managed rules + custom rules for business logic.  
-- **API security**: Use API gateways with schema validation, JWT validation, mTLS, rate limiting, and quota enforcement; log to API inventory service.  
-- **Browser controls**: Strict CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy, Subresource Integrity, downscope CORS.  
-- **Feature flags**: Deploy security fixes behind flags, maintain rollback strategies, integrate with incident automation.  
+- **Edge defense**: Configure WAF/CDN (AWS WAF, Cloud Armor, Azure Front Door) with managed rules + custom rules for business logic.
+- **API security**: Use API gateways with schema validation, JWT validation, mTLS, rate limiting, and quota enforcement; log to API inventory service.
+- **Browser controls**: Strict CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy, Subresource Integrity, downscope CORS.
+- **Feature flags**: Deploy security fixes behind flags, maintain rollback strategies, integrate with incident automation.
 - **Telemetry**: Instrument RASP/EDR signals, collect user behavior analytics to detect anomalies.
 
 ---
 
 ### Validation Checklist
-- [ ] ASVS L2 controls satisfied (L3 for payment/auth systems).  
-- [ ] OWASP Top 10 + API Top 10 mapped to concrete mitigations with owners.  
-- [ ] Secure coding standards enforced via linting, reviews, and champion sign-off.  
-- [ ] SBOM + package policies implemented; supply-chain risks monitored.  
+- [ ] ASVS L2 controls satisfied (L3 for payment/auth systems).
+- [ ] OWASP Top 10 + API Top 10 mapped to concrete mitigations with owners.
+- [ ] Secure coding standards enforced via linting, reviews, and champion sign-off.
+- [ ] SBOM + package policies implemented; supply-chain risks monitored.
 - [ ] Runtime protections (WAF, rate limiting, CSP, API gateway) active and tested quarterly.
 
 Robust application security combines preventive design, continuous verification, and runtime defenses to stay ahead of evolving attack surfaces.***
-

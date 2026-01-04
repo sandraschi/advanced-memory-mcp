@@ -43,7 +43,7 @@ The Footnote plugin addsupport for footnotes in your Docsify documentation, allo
 window.$docsify = {
   // Enable with default options
   footnote: true,
-  
+
   // OR with custom options
   footnote: {
     // Configuration options go here
@@ -92,42 +92,42 @@ window.$docsify = {
   footnote: {
     // Enable/disable the plugin (default: true)
     enabled: true,
-    
+
     // Customize the footnote section title: 'Footnotes',
-    
+
     // Customize the backlink text
     backlinkText: '↩',
-    
+
     // Customize the backlink title (tooltip)
     backlinkTitle: 'Back to content',
-    
+
     // Customize the footnote ID prefix: 'fn-',
-    
+
     // Customize the footnote reference class
     refClass: 'footnote-ref',
-    
+
     // Customize the footnote content class
     contentClass: 'footnote-content',
-    
+
     // Customize the footnote section classectionClass: 'footnotes',
-    
+
     // Enable/disable auto-numbering (default: true)
     autoNumber: true,
-    
+
     // Customize the number format (function or string)
     numberFormat: function(n) {
       return '[' + n + ']';
     },
-    
+
     // Customize the footnote separator (appears between footnotes)
     separator: '<hr>',
-    
+
     // Enable/disable scroll to footnote (default: true)
     scrollToFootnote: true,
-    
+
     // Scroll behavior ('auto' or 'smooth')
     scrollBehavior: 'smooth',
-    
+
     // Enable/disable debug mode (default: false)
     debug: false
   }
@@ -147,7 +147,7 @@ window.$docsify = {
       backlink: 'footnote-backlink',
       // ... other classes
     },
-    
+
     // Inline styles (applied to the container)
     style: {
       marginTop: '2em',
@@ -173,17 +173,17 @@ window.$docsify = {
         </a>
       </sup>`;
     },
-    
+
     // Custom render function for the footnote content
     renderContent: function(footnoteId, number, content) {
       return `<div id="${footnoteId}-content" class="footnote-content">
         <span class="footnote-number">${number}.</span>
         <div class="footnote-text">${content}</div>
-        <a href="#${footnoteId}" class="footnote-backlink" 
+        <a href="#${footnoteId}" class="footnote-backlink"
            aria-label="Back to content">${this.backlinkText}</a>
       </div>`;
     },
-    
+
     // Custom render function for the footnotesection
     renderSection: function(html) {
       return `<section class="footnotes">
@@ -218,7 +218,7 @@ window.$docsify = {
   footnote: {
     // Enable nested footnotes (default: false)
     allowNested: true,
-    
+
     // Maximum nesting depth (default: 2)
     maxNesting: 2
   }
@@ -245,18 +245,18 @@ window.$docsify = {
     onRefCreated: function(refElement, footnoteId, number) {
       console.log('Footnote reference created:', footnoteId, number);
     },
-    
+
     // Called when a footnote content is created
     onContentCreated: function(contentElement, footnoteId, number) {
       console.log('Footnote content created:', footnoteId, number);
     },
-    
+
     // Called when a footnote reference is clicked
     onRefClick: function(event, refElement, footnoteId) {
       console.log('Footnote reference clicked:', footnoteId);
       // Return false to prevent default behavior
     },
-    
+
     // Called when a backlink is clicked
     onBacklinkClick: function(event, backlinkElement, footnoteId) {
       console.log('Backlink clicked:', footnoteId);

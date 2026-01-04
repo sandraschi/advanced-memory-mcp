@@ -1,4 +1,4 @@
-﻿# Image and Video AI: An Overview
+# Image and Video AI: An Overview
 
 ## Introduction
 This document provides a comprehensive overview of AI technologies for image and video generation, editing, and analysis. It covers the current state of the art, popular tools, and practical applications.

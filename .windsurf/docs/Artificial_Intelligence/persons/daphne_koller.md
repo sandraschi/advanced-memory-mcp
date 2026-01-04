@@ -68,4 +68,3 @@ Born in Jerusalem, Israel, Koller earned her BSc and MSc from thebrew University
 - [Insitro](https://insitro.com/)
 - [Probabilistic Graphical Modelspecialization](https://www.coursera.org/specializations/probabilistic-graphical-models) - Koller's course on PGM
 - [AIn Healthcare](https://www.coursera.org/learn/ai-healthcare) - Koller's course on AI applications in medicine
-

@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟢 HIGH  
+**Confidence**: 🟢 HIGH
 **Last validated**: 2025-11-11
 
 > Begin with context. A good intake distinguishes a high-regulated fintech rollout from an internal prototype and prevents “one-size-fits-all” controls.
@@ -24,20 +24,20 @@
 
 ## 2. Risk Prioritization & Scorecarding
 
-1. **Map risks** using an impact × likelihood matrix (align severities with corporate risk appetite).  
-2. **Focus on top systemic threats**: OWASP Top 10, OWASP API Top 10, MITRE ATT&CK TTPs relevant to your stack, supply-chain / SLSA considerations.  
+1. **Map risks** using an impact × likelihood matrix (align severities with corporate risk appetite).
+2. **Focus on top systemic threats**: OWASP Top 10, OWASP API Top 10, MITRE ATT&CK TTPs relevant to your stack, supply-chain / SLSA considerations.
 3. **Quantify** with a lightweight scorecard:
-   - Critical APIs without authentication? => score 5  
-   - CVSS ≥ 9.0 findings unresolved >7 days? => score 4  
-   - SBOM coverage < 70% of services? => score 3  
+   - Critical APIs without authentication? => score 5
+   - CVSS ≥ 9.0 findings unresolved >7 days? => score 4
+   - SBOM coverage < 70% of services? => score 3
 4. Produce an executive summary that separates **“rapid wins”** (e.g., secret detection) from **strategic programmes** (e.g., zero trust network segmentation).
 
 ---
 
 ## 3. Outcome & Metric Alignment
 
-- Tie security improvements to **business outcomes**: e.g., “Reduce high severity MTTR from 7 days to 48 hours,” or “Achieve ISO 27001 certification Q2.”  
-- Track **leading indicators** (SAST coverage %, threat model completion per epic) and **lagging indicators** (critical vulnerability backlog, incident MTTA/MTTR).  
+- Tie security improvements to **business outcomes**: e.g., “Reduce high severity MTTR from 7 days to 48 hours,” or “Achieve ISO 27001 certification Q2.”
+- Track **leading indicators** (SAST coverage %, threat model completion per epic) and **lagging indicators** (critical vulnerability backlog, incident MTTA/MTTR).
 - Align with engineering OKRs or value-stream KPIs; publish dashboards (Looker, Grafana, PowerBI) to reinforce accountability.
 
 ---
@@ -57,9 +57,9 @@ Document roles/responsibilities (RACI) and share internally (Confluence/Notion/S
 
 ## 5. Escalation & Incident Readiness
 
-- Maintain severity guidelines (SEV0 critical) with explicit impact thresholds (data exfiltration, production outage).  
-- Publish on-call tree (Security Ops → Duty Manager → Incident Commander) and contact channels (Slack #security-incident, hotline).  
-- Define decision points: when to engage legal/privacy, escalate to executives, or contact regulators/customers.  
+- Maintain severity guidelines (SEV0 critical) with explicit impact thresholds (data exfiltration, production outage).
+- Publish on-call tree (Security Ops → Duty Manager → Incident Commander) and contact channels (Slack #security-incident, hotline).
+- Define decision points: when to engage legal/privacy, escalate to executives, or contact regulators/customers.
 - Conduct quarterly tabletop exercises covering ransomware, supply-chain compromise, insider risk scenarios; feed outcomes into [modules/detection-and-response.md](modules/detection-and-response.md).
 
 ---
@@ -79,10 +79,10 @@ Review and share quarterly (see research checklist).
 ---
 
 ### Module Map
-- Secure SDLC → [modules/secure-sdlc.md](modules/secure-sdlc.md)  
-- Application security → [modules/application-security.md](modules/application-security.md)  
-- Cloud & infrastructure → [modules/cloud-and-infrastructure.md](modules/cloud-and-infrastructure.md)  
-- Detection & response → [modules/detection-and-response.md](modules/detection-and-response.md)  
+- Secure SDLC → [modules/secure-sdlc.md](modules/secure-sdlc.md)
+- Application security → [modules/application-security.md](modules/application-security.md)
+- Cloud & infrastructure → [modules/cloud-and-infrastructure.md](modules/cloud-and-infrastructure.md)
+- Detection & response → [modules/detection-and-response.md](modules/detection-and-response.md)
 - Compliance & governance → [modules/compliance-and-governance.md](modules/compliance-and-governance.md)
 
 Re-run intake at least quarterly or whenever business scope shifts (new regions, mergers, major feature launches).***

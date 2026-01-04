@@ -1,4 +1,4 @@
-﻿---
+---
 title: chunk_03
 type: note
 created: 2025-08-07T21:32:24
@@ -34,4 +34,3 @@ The automation of research writing is a topic of active debate in both academic 
 ---
 
 [End of Chunk 3]
-

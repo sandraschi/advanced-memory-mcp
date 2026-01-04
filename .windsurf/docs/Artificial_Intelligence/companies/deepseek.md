@@ -1,4 +1,4 @@
-﻿# DeepSeek AI
+# DeepSeek AI
 
 ## Overview
 DeepSeek is a highly regarded Chinese artificial intelligence company that emerged with a clear mission: to pursue AGI (Artificial General Intelligence) by developing powerful, open-source large language models. The company quickly gained international recognition by releasing a series of high-performance models that not only rivaled but, in some benchmarks, surpassed leading open-source and even some proprietary models. Their strategy focuses on transparency and community contribution, positioning them as a key player in the global open-source AI movement.

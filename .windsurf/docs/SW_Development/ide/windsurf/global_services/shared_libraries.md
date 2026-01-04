@@ -75,7 +75,7 @@ import { ApiClient } from '@windsurf/api-client';
    ```bash
    # Create new Python library
    windsurf lib create python my-library
-   
+
    # Create new TypeScript library
    windsurf lib create typescript my-library
    ```

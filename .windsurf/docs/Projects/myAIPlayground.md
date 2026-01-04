@@ -1,4 +1,4 @@
-﻿# myAIPlayground
+# myAIPlayground
 
 ## Overview
 An interactive playground for experimenting with various AI/ML models, including language models, image generationeration, and other machine learning applications. Designed for both learning and practical experimentation.

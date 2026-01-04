@@ -293,7 +293,7 @@ docker volume prune
     app:
       volumes:
         - my-volume:/app/data
-  
+
   volumes:
     my-volume:
   ```

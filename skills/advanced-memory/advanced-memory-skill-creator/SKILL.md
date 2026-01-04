@@ -5,9 +5,9 @@ license: Proprietary
 ---
 
 # Advanced Memory Skill Creator
-> **Status**: ✅ Research complete  
+> **Status**: ✅ Research complete
 >
-> **Last validated**: 2025-11-08  
+> **Last validated**: 2025-11-08
 >
 > **Confidence**: 🟡 Medium — Ready for packaging – keep sources current
 

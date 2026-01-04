@@ -47,15 +47,15 @@ sudo yum install nginx
 server {
     listen 80;
     server_name docs.yourdomain.com;
-    
+
     location / {
         root /path/to/your/docs;
         index.html;
-        
+
         # Enable gzip compression
         gzip on;
         gzip_types text/plain text/css application/json application/javascriptext/xml application/xml application/xml+rss text/javascript;
-        
+
         # Handle HTML5 History Mode
         try_files $uri $uri/ /index.html;
     }
@@ -75,20 +75,20 @@ server {
 server {
     listen 443 ssl http2;
     server_name docs.yourdomain.com;
-    
+
     ssl_certificate /etc/letsencrypt/live/docs.yourdomain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/docs.yourdomain.com/privkey.pem;
-    
+
     # SSL configuration
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 1d;
-    
+
     # HSTS (uncomment after testing)
     # add_header Strict-Transport-Security "max-age=63072000" always;
-    
+
     location / {
         root /path/to/your/docs;
         index.html;
@@ -116,7 +116,7 @@ worker_processes auto;
 
 events {
     # Max connections per worker_connections 1024;
-    
+
     # Efficient connection processing
     usepoll; # Linux only
     multi_accept on;
@@ -126,18 +126,18 @@ http {
     # Buffer size for headers
     client_header_buffer_size 1k;
     large_client_header_buffers 4 8k;
-    
+
     # Timeouts
     client_body_timeout 12;
     client_header_timeout 12;
     keepalive_timeout 15;
     send_timeout 10;
-    
+
     # File handling
     sendfile on;
     tcp_nopush on;
     tcp_nodelay on;
-    
+
     # Gzip settings
     gzip on;
     gzip_comp_level 5;
@@ -187,7 +187,7 @@ limit_req_zone $binary_remote_addr zone=one:10m rate=10r/s;
 
 server {
     # ... other server config ...
-    
+
     location / {
         limit_req zone=one burst=20 nodelay;
         # ... other location config ...

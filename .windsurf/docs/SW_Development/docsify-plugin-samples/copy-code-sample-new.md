@@ -70,41 +70,41 @@ window.$docsify = {
     buttonText: 'Copy to clipboard',
     errorText: 'Error',
     successText: 'Copied!',
-    
+
     // Button appearance
     buttonClass: 'btn-copy',
     buttonStyle: 'background: #f5f5f5; border: 1px solid #ddd; border-radius: 3px;',
-    
+
     // Position (top-right, bottom-right, top-left, bottom-left)
     position: 'top-right',
-    
+
     // Show/hide line numbershowLineNumbers: true,
-    
+
     // Callbacks
     onCopy: function(code) {
       // Called when code is copied
       console.log('Code copied:', code);
     },
-    
+
     // Advanced options
     timeout: 2000, // Time to show success/error message (ms)
     autoUpdate: true, // Auto-update for dynamicontent
-    
+
     // Custom selector for code blocks (default: 'pre[data-lang]')
     selector: 'pre[data-lang]',
-    
+
     // Custom CSSelector for the button container
     buttonContainer: '.copy-code-button',
-    
+
     // Custom CSS class for the buttonClass: 'copy-code-button',
-    
+
     // Custom CSS class for the successtate
     successClass: 'copy-code-success',
-    
+
     // Custom CSS class for therror staterrorClass: 'copy-code-error',
-    
+
     // Whether to show the copy button mobile deviceshowOnMobile: true,
-    
+
     // Whether to show the copy button desktop
     showOnDesktop: true
   }
@@ -250,16 +250,16 @@ window.$docsify = {
     onCopy: function(code, button, codeElement) {
       // Code that was copied
       console.log('Copied code:', code);
-      
+
       // The copy button element
       console.log('Button:', button);
-      
+
       // The code block element
       console.log('Codelement:', codeElement);
-      
+
       // You can modify the button or codelement here
       button.classList.add('copied');
-      
+
       // Return false to prevent default behavior
       // return false;
     }

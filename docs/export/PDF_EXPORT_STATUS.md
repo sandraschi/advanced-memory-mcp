@@ -1,6 +1,6 @@
 # PDF Export Status - fpdf2 Integration
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Status**: ✅ Code Complete - ⚠️ fpdf2 installation needed in server environment
 
 ---
@@ -13,7 +13,7 @@
    - Removed all documentation references
 
 2. **Added fpdf2**
-   - Added to `mcpb/requirements.txt` 
+   - Added to `mcpb/requirements.txt`
    - Added to `pyproject.toml`
    - Created `export_pdf_native.py` with fpdf2
 
@@ -49,7 +49,7 @@ py -3.13 -m pip install fpdf2
 **Option 2: Install globally**
 ```powershell
 python -m pip install fpdf2
-py -3.13 -m pip install fpdf2  
+py -3.13 -m pip install fpdf2
 py -m pip install fpdf2
 ```
 
@@ -76,7 +76,7 @@ adn_export("pdf", export_path="d:/Dev/repos/test-pdf-export", source_folder="tes
 ## 📝 Files Changed
 
 1. `mcpb/requirements.txt` - fpdf2 added, weasyprint removed
-2. `pyproject.toml` - fpdf2 added  
+2. `pyproject.toml` - fpdf2 added
 3. `src/advanced_memory/mcp/tools/export_pdf_native.py` - NEW
 4. `src/advanced_memory/mcp/tools/adn_export.py` - PDF operation added
 5. `src/advanced_memory/mcp/tools/export_pandoc.py` - PDF blocked

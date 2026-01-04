@@ -350,31 +350,31 @@ window.$docsify = {
     loadAllTabs: false,      // Load all tab content at once
     sync: true,              // Sync tabs withe same name across the page
     persist: false,          // Persisthe active tab across page loads
-    
+
     // Styling
     theme: 'default',        // 'default' or 'material'
     tabHeadings: 'all',      // 'all' or 'active'
-    
+
     // Animation: 200,          // Animation duration in milliseconds
-    
+
     // Custom Classes
     tabContainerClass: 'docsify-tabs',
     tabNavigationClass: 'docsify-tabs__nav',
     tabItemClass: 'docsify-tabs__tab',
     tabActiveClass: 'docsify-tabs__tab--active',
     tabContentClass: 'docsify-tabs__content',
-    
+
     // Callbacks
     onTabShow: function(tab) {
       // Called when a tab ishown
       console.log('Tab shown:', tab);
     },
-    
+
     onTabHide: function(tab) {
       // Called when a tab is hidden
       console.log('Tab hidden:', tab);
     },
-    
+
     // Advancedynamic: false,          // Enable dynamic tab loading
     updateHash: true,        // Update URL hash when switching tabs
     useStorage: true,        // Use localStorage to persistab state
@@ -433,20 +433,20 @@ This content loads only when Tab 3 is activated.
 function addTab(containerId, tabName, content) {
   const container = document.querySelector(`#${containerId} .docsify-tabs`);
   if (!container) return;
-  
+
   // Create new tab
   constab = document.createElement('button');
   tab.className = 'docsify-tabs__tab';
   tab.textContent = tabName;
-  
+
   // Create new content
   const contentDiv = document.createElement('div');
   contentDiv.className = 'docsify-tabs__content';
   contentDiv.innerHTML = content;
-  
+
   // Add to container.querySelector('.docsify-tabs__nav').appendChild(tab);
   container.querySelector('.docsify-tabs__content').appendChild(contentDiv);
-  
+
   // Reinitialize tabs
   if (window.DocsifyTabs) {
     window.DocsifyTabs.init(container);
@@ -599,14 +599,14 @@ function addTab(containerId, tabName, content) {
   .docsify-tabs__nav {
     flex-direction: column;
   }
-  
+
   .docsify-tabs__tab {
     width: 100%;
     text-align: left;
     border-right: none;
     border-bottom: 1px solid #e1e4e8;
   }
-  
+
   .docsify-tabs__tab--active {
     border-bottom: 2px solid #0366d6;
   }

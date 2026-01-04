@@ -1,6 +1,6 @@
 # PDF Export Test Guide - LaTeX Dependencies
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Purpose**: Test Advanced Memory PDF export with Pandoc + LaTeX/MiKTeX
 
 ---
@@ -68,7 +68,7 @@ pandoc test.md -o test.pdf --pdf-engine=weasyprint
 
 ## Expected Behavior
 
-1. **First export**: 
+1. **First export**:
    - Auto-downloads Pandoc (~30 seconds)
    - Proceeds with export
 

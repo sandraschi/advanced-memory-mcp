@@ -46,83 +46,105 @@ async def adn_skills_creator(
 ) -> dict[str, Any]:
     """Create, validate, and package Claude skills using the gold-standard workflow.
 
-    PORTMANTEAU PATTERN: Consolidates 5 skill creation operations into one tool.
+    PORTMANTEAU PATTERN RATIONALE:
+    This tool mirrors Anthropic's skill-creator methodology while enforcing Advanced Memory's
+    modular requirements (modules, research checklist, metadata). It acts as the central
+    manufacturing plant for skills: scaffolding, validating, packaging, inspecting, and upgrading.
+    Consolidates 5 distinct CLI operations into one unified agentic tool.
 
-    This portmanteau tool mirrors Anthropic's skill-creator methodology while enforcing
-    Advanced Memory's modular requirements (modules, research checklist, metadata).
-    It can scaffold new skills, validate existing ones, package them for distribution,
-    inspect metadata, or upgrade legacy skills into the modular layout.
+    SUPPORTED OPERATIONS:
+    - scaffold: Initialize a new skill with modular structure and templates
+    - validate: Enforce Anthropic & Advanced Memory compliance checks
+    - package: Create distributable .zip archives for sharing
+    - inspect: Read and parse skill metadata without modifying files
+    - upgrade: Convert legacy single-file skills to the new modular layout
+
+    OPERATIONS DETAIL:
+
+    scaffold: Creation Engine
+    - Parameters: skill_name (required), category (optional)
+    - Effect: Creates skills/<category>/<skill_name>/ with SKILL.md and folders
+    - Use when: Starting a new skill from scratch
+
+    validate: Quality Assurance
+    - Parameters: skill_path (required)
+    - Effect: Runs static analysis on skill structure and YAML frontmatter
+    - Use when: Checking work before packaging
+
+    package: Distribution Engine
+    - Parameters: skill_path (required), output_dir (optional)
+    - Effect: Zips the skill directory into a standardized format
+    - Use when: Sharing skills with other agents or users
+
+    inspect: Metadata Reader
+    - Parameters: skill_path (required)
+    - Effect: Returns the parsed frontmatter as JSON
+    - Use when: Agent needs to understand what a skill does
+
+    upgrade: Migration Engine
+    - Parameters: skill_path (required)
+    - Effect: Refactors file structure to meet current standards
+    - Use when: Updating old skills to the new SOTA format
 
     Prerequisites:
         - Provide hyphen-case skill names for new scaffolds (e.g., `brand-guidelines`)
         - Ensure `skills/` directory is writable when creating or upgrading skills
         - Validation and packaging require an existing skill folder with `SKILL.md`
 
-    Parameters:
-        operation: REQUIRED. Which action to perform.
-            - Valid values: scaffold | validate | package | inspect | upgrade
-        skill_name: Optional. Name of the skill to scaffold (hyphen-case preferred).
-            - Used only when operation == scaffold.
-        skill_path: Optional. Path to an existing skill directory.
-            - Required for validate, package, inspect, and upgrade operations.
-        output_dir: Optional. Destination directory for new scaffolds or archives.
-            - Defaults to current working directory when omitted.
-        category: Optional. Metadata category inserted during scaffold (default: general).
-        confidence: Optional. Initial confidence level for scaffold metadata (low/medium/high).
-        overwrite: Optional. When True, existing scaffold directory will be replaced.
+    Args:
+        operation (str): REQUIRED. The action to perform.
+            Must be one of: "scaffold", "validate", "package", "inspect", "upgrade".
+        skill_name (str | None): Name of the skill to scaffold (hyphen-case preferred).
+            Required for 'scaffold'.
+        skill_path (str | None): Path to an existing skill directory.
+            Required for 'validate', 'package', 'inspect', and 'upgrade'.
+        output_dir (str | None): Destination directory for new scaffolds or archives.
+            Defaults to current working directory when omitted.
+        category (str): Metadata category inserted during scaffold. Default: "general".
+        confidence (str): Initial confidence level for metadata ("low", "medium", "high").
+            Default: "low".
+        overwrite (bool): When True, existing scaffold directory will be replaced.
+            Default: False.
 
     Returns:
-        Dictionary containing:
-            - success: bool indicating whether the operation succeeded
-            - data: operation-specific payload (paths, validation issues, metadata)
-            - metadata: supplemental context (operation, inputs)
-            - error: present when success is False, with actionable guidance
+        dict[str, Any]: Operation result containing:
+            - success (bool): Whether the operation succeeded
+            - data (dict): Operation-specific payload (paths, issues, metadata)
+            - metadata (dict): Context about the operation performed
+            - error (str, optional): Error message if failed
+            - error_code (str, optional): Machine-readable error code
+            - suggestions (list[str]): Actionable fixes for errors
 
     Usage:
         Use this tool to generate modular Claude skills that follow Anthropic's gold-standard
         layout while automatically adding Advanced Memory's hallucination guardrails.
-        Validation ensures required modules are present, metadata is complete, and research
-        instructions reference distillation helpers.
-
-        Common scenarios:
-        - scaffold: start a brand-new skill with placeholder modules and resources
-        - validate: check compliance before packaging or publishing
-        - package: create a distributable zip archive with manifest
-        - inspect: retrieve metadata (name, description, category, confidence)
-        - upgrade: convert legacy single-file skills to the modular layout
 
     Examples:
-        Basic usage:
-            await adn_skills_creator(
-                operation="scaffold",
-                skill_name="brand-guidelines",
-                output_dir="skills/company",
-                category="enterprise"
-            )
+        # Scaffold a new skill
+        await adn_skills_creator(
+            operation="scaffold",
+            skill_name="brand-guidelines",
+            category="enterprise"
+        )
 
-        With optional parameters:
-            await adn_skills_creator(
-                operation="package",
-                skill_path="skills/company/brand-guidelines",
-                output_dir="dist"
-            )
+        # Validate a skill
+        await adn_skills_creator(
+            operation="validate",
+            skill_path="skills/enterprise/brand-guidelines"
+        )
 
-        Error handling:
-            await adn_skills_creator(
-                operation="validate",
-                skill_path="skills/company/missing-skill"
-            )
-            # Returns: {'success': False, 'error': 'Skill directory does not exist.', ...}
+        # Package for distribution
+        await adn_skills_creator(
+            operation="package",
+            skill_path="skills/enterprise/brand-guidelines",
+            output_dir="dist"
+        )
 
     Errors:
-        Common errors and solutions:
-        - Missing skill_path: Provide the directory when validating, packaging, inspecting, or upgrading.
-        - Invalid skill name: Use hyphen-case (lowercase letters, digits, hyphen) for new scaffolds.
-        - Validation failures: Review returned issues and address missing modules or metadata.
-
-    See Also:
-        - adn_skills: For importing, exporting, and distilling skills content.
-        - scripts/refactor_skills_modular.py: CLI bulk upgrade helper built on this service.
+        - "skill_name is required": Missing name when scaffolding.
+        - "skill_path is required": Missing path for validation/packaging.
+        - "Unsupported operation": Operation parameter is invalid.
+        - "SKILL.md not found": skill_path exists but lacks manifest.
     """
 
     try:

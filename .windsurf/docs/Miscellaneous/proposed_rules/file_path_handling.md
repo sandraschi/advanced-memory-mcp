@@ -59,5 +59,5 @@ copy source.txt backup.txt
 - [Scripting Standards](./scripting_standards.md)
 
 ---
-*Proposed on: 2025-06-26*  
+*Proposed on: 2025-06-26*
 *Status: Pending Review*

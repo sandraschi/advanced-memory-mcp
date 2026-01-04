@@ -1,4 +1,4 @@
-﻿# Hosted LLM: OpenAI
+# Hosted LLM: OpenAI
 
 ## Overview: The Generative AI Pioneer
 OpenAIs an AI research andeployment company that has been athe forefront of the generative AI revolution. Its mission is to ensure that artificial general intelligence (AGI) benefits all of humanity. OpenAIs responsible for creating some of the most influential and widely used AI models in the world.

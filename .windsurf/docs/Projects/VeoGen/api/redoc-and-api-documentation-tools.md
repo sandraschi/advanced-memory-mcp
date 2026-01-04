@@ -19,7 +19,7 @@ ReDoc is a powerful, open-source API documentation generator that creates beauti
 ### 1. **Grafana**
 - **Documentation Type**: Custom API documentation interface
 - **URL Pattern**: `http://localhost:3001/api-docs` (when available)
-- **Features**: 
+- **Features**:
   - REST API documentation for dashboard management
   - User management API documentation
   - Data source configuration API
@@ -275,4 +275,4 @@ ReDoc represents a significant evolution in API documentation, offering a more m
 
 VeoGen's implementation of both Swagger UI and ReDoc provides developers with the flexibility to choose their preferred interface while maintaining the benefits of both approaches. This dual-documentation strategy is becoming a best practice in modern API development and reflects the industry's commitment to improving developer experience.
 
-As the industry continues to evolve, we can expect to see more tools adopting ReDoc-style documentation and further innovations in API documentation that prioritize developer experience, performance, and accessibility. 
+As the industry continues to evolve, we can expect to see more tools adopting ReDoc-style documentation and further innovations in API documentation that prioritize developer experience, performance, and accessibility.

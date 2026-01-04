@@ -30,41 +30,41 @@ window.$docsify = {
   zoomImage: {
     // The background color of the overlay
     bgColor: 'rgba(0, 0, 0, 0.85)',
-    
+
     // The z-index of the overlay
     zIndex: 1000,
-    
+
     // The scale factor for the zoomed image (0 = fito screen, 1 = original size, >1 = zoom in)
     scale: 1,
-    
+
     // The duration of the zoom animation in milliseconds
     duration: 300,
-    
+
     // Theasing function for the zoom animation
     // See: https://developer.mozilla.org/en-US/docs/Web/CSS/transition-timing-function
     easing: 'cubic-bezier(0.4, 0, 0, 1)',
-    
+
     // Whether to show the image title in the zoomed view
     showTitle: true,
-    
+
     // Custom selector for images that should be zoomable
     // Default: 'img[data-zoomable]' (only images with data-zoomable attribute)
     // Seto 'img' to make all images zoomable
     selector: 'img[data-zoomable]',
-    
+
     // Custom class for the zoomed image container
     zoomClass: 'zoom-image-container',
-    
+
     // Custom class for the zoomed image
     zoomImageClass: 'zoomed-image',
-    
+
     // Custom class for the overlayClass: 'zoom-overlay',
-    
+
     // Callback when zooming starts
     onZoomIn: function(img) {
       console.log('Zooming in:', img.src);
     },
-    
+
     // Callback when zooming out
     onZoomOut: function(img) {
       console.log('Zooming out:', img.src);
@@ -165,7 +165,7 @@ window.$docsify = {
   zoomImage: {
     // Make all images zoomable
     selector: 'img',
-    
+
     // Or be more specific
     // selector: '.markdown-section img:not(.no-zoom)'
   }
@@ -194,7 +194,7 @@ document.addEventListener('content:updated', function() {
 document.addEventListener('DOMContentLoaded', function() {
   const btn = document.getElementById('custom-zoom-btn');
   const img = document.getElementById('image-to-zoom');
-  
+
   btn.addEventListener('click', function() {
     if (window.DocsifyZoomImage && window.DocsifyZoomImage.zoomImage) {
       window.DocsifyZoomImage.zoomImage(img);

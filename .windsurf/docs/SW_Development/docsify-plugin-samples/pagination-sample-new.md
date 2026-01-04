@@ -72,57 +72,57 @@ window.$docsify = {
   pagination: {
     // Customize the previous button text
     previousText: 'Previous',
-    
+
     // Customize the next button text
     nextText: 'Next',
-    
+
     // Customize the cross-chapter text
     crossChapter: true,
     crossChapterText: true,
-    
+
     // Customize the position ('top', 'bottom', or 'both')
     position: 'bottom',
-    
+
     // Custom CSS class for the container
     className: 'pagination',
-    
+
     // Custom CSS class for the navigationavClassName: 'pagination-nav',
-    
+
     // Custom CSS class for the previous button
     previousClassName: 'pagination-nav__link--previous',
-    
+
     // Custom CSS class for the next buttonextClassName: 'pagination-nav__link--next',
-    
+
     // Custom CSS class for the linkClassName: 'pagination-nav__link',
-    
+
     // Custom CSS class for the labelClassName: 'pagination-nav__label',
-    
+
     // Custom CSS class for the titleClassName: 'pagination-nav__title',
-    
+
     // Custom CSS class for the subtitleClassName: 'pagination-nav__subtitle',
-    
+
     // Custom CSS class for the arrowClassName: 'pagination-nav__arrow',
-    
+
     // Custom CSS class for the arrow icon
     arrowIconClassName: 'pagination-nav__arrow-icon',
-    
+
     // Custom CSS class for the arrow icon previous
     arrowIconPreviousClassName: 'pagination-nav__arrow-icon--previous',
-    
+
     // Custom CSS class for the arrow iconext
     arrowIconNextClassName: 'pagination-nav__arrow-icon--next',
-    
+
     // Custom CSS class for the link text
     linkTextClassName: 'pagination-nav__link-text',
-    
+
     // Custom CSS class for the link labelinkLabelClassName: 'pagination-nav__link-label',
-    
+
     // Custom CSS class for the link title
     linkTitleClassName: 'pagination-nav__link-title',
-    
+
     // Custom CSS class for the link subtitle
     linkSubtitleClassName: 'pagination-nav__link-subtitle',
-    
+
     // Custom template for the navigation
     template: `
       <nav class="{{className}}">
@@ -169,20 +169,20 @@ window.$docsify = {
     filter: function(prevNext, currentPath) {
       // Skip certain paths
       const skipPaths = ['/changelog', '/license', '/404'];
-      
+
       // Skip if current path is in the skip list
       if (skipPaths.includes(currentPath)) {
         return false;
       }
-      
+
       // Skip if the page is in the skip list
       if (prevNext && prevNext.path && skipPaths.includes(prevNext.path)) {
         return false;
       }
-      
+
       return true;
     },
-    
+
     // Or use a regular expression to match paths
     matchPath: /^(?!\/(changelog|license|404)$).*$/
   }
@@ -225,7 +225,7 @@ window.$docsify = {
     crossChapterText: true,
     crossChapterText: 'Continue to: {{title}}',
     crossChapterPreviousText: 'Go back to: {{title}}',
-    
+
     // Custom filter for cross-chapter navigation
     crossChapterFilter: function(section) {
       // Only include sections that have a specific front-matter flag

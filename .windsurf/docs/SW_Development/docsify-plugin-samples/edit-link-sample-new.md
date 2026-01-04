@@ -41,10 +41,10 @@ Thedit Link plugin adds an "Edithis page" link to your documentation, allowing u
 window.$docsify = {
   // Basiconfiguration (GitHub example)
   repo: 'username/repository',
-  
+
   // OR use full URL
   // repo: 'https://github.com/username/repository',
-  
+
   // Plugin configuration
   editLink: {
     // Options go here
@@ -60,16 +60,16 @@ window.$docsify = {
 window.$docsify = {
   // Required: GitHub repository
   repo: 'username/repository',
-  
+
   // Optional: Customize the link text
   editLinkText: 'Edithis page',
-  
+
   // Optional: Customize the link title (tooltip)
   editLinkTitle: 'Edithis page on GitHub',
-  
+
   // Optional: Customize the link target
   editLinkTarget: '_blank',
-  
+
   // Optional: Show edit link only for specific paths
   editLinkShow: function(currentPath) {
     return !currentPath.includes('private/');
@@ -83,12 +83,12 @@ window.$docsify = {
 window.$docsify = {
   // Required: GitLab repository URL
   repo: 'https://gitlab.com/username/repository',
-  
+
   // Required: Specify the type of repository
   editLink: {
     type: 'gitlab'
   },
-  
+
   // Optional: Customize the link text
   editLinkText: 'Edithis page on GitLab'
 };
@@ -100,12 +100,12 @@ window.$docsify = {
 window.$docsify = {
   // Required: Bitbucket repository URL
   repo: 'https://bitbucket.org/username/repository',
-  
+
   // Required: Specify the type of repository
   editLink: {
     type: 'bitbucket'
   },
-  
+
   // Optional: Customize the link text
   editLinkText: 'Edithis page on Bitbucket'
 };
@@ -117,26 +117,26 @@ window.$docsify = {
 window.$docsify = {
   // Required: Custom repository URL
   repo: 'https://custom-git-host.com/username/repository',
-  
+
   // Required: Custom link templateditLink: {
     type: 'custom',
     template: 'https://custom-git-host.com/username/repository/edit/branch/path/{file}',
-    
+
     // Optional: Custom text for the link
     text: 'Edithis page',
-    
+
     // Optional: Custom title for the link (tooltip)
     title: 'Edithis page on ourepository',
-    
+
     // Optional: Custom CSS class for the link
     class: 'custom-edit-link',
-    
+
     // Optional: Custom position ('top' or 'bottom')
     position: 'bottom',
-    
+
     // Optional: Custom icon (HTML or Unicode)
     icon: '✏️',
-    
+
     // Optional: Customize which fileshow thedit link
     show: function(currentPath) {
       // Return true to show the link, false to hide it
@@ -153,28 +153,28 @@ window.$docsify = {
 ```javascript
 window.$docsify = {
   repo: 'username/repository',
-  
+
   editLink: {
     // Custom text for the link
     text: 'Help improve this page',
-    
+
     // Custom title (tooltip)
     title: 'Edithis page on GitHub',
-    
+
     // Custom CSS class: 'edit-button',
-    
+
     // Custom icon (HTML or Unicode)
     icon: '✎',
-    
+
     // Custom position ('top' or 'bottom')
     position: 'bottom',
-    
+
     // Custom target attribute
     target: '_blank',
-    
+
     // Custom rel attribute
     rel: 'noopener noreferrer',
-    
+
     // Custom attributes (object)
     attributes: {
       'data-tracking': 'edit-link',
@@ -189,11 +189,11 @@ window.$docsify = {
 ```javascript
 window.$docsify = {
   repo: 'username/repository',
-  
+
   editLink: {
     // Position can be 'top' or 'bottom' (default: 'bottom')
     position: 'top',
-    
+
     // Or use a custom function to position the link
     position: function(content, currentPath) {
       // Return a DOM element where the link should be inserted
@@ -210,19 +210,19 @@ window.$docsify = {
 ```javascript
 window.$docsify = {
   repo: 'username/repository',
-  
+
   editLink: {
     // Show edit link only for specific pathshow: function(currentPath) {
       // Don't show for private files
       if (currentPath.includes('private/')) {
         return false;
       }
-      
+
       // Only show for markdown files
       if (!currentPath.endsWith('.md')) {
         return false;
       }
-      
+
       // Show for all other cases
       return true;
     }
@@ -235,21 +235,21 @@ window.$docsify = {
 ```javascript
 window.$docsify = {
   repo: 'username/repository',
-  
+
   editLink: {
     // Custom function to generate thedit link: function(repo, currentPath) {
       // repo: The repository URL
       // currentPath: The current file path (e.g., 'guide/configuration.md')
-      
+
       // Example: Custom branch
       const branch = 'main';
-      
+
       // Example: Custom file path transformation
       let filePath = currentPath;
       if (currentPath.startsWith('docs/')) {
         filePath = currentPath.replace('docs/', '');
       }
-      
+
       // Return the full URL
       return `${repo}/edit/${branch}/${filePath}`;
     }
@@ -364,7 +364,7 @@ Enable debug mode for more detailed error messages:
 ```javascript
 window.$docsify = {
   repo: 'username/repository',
-  
+
   editLink: {
     debug: true
   }

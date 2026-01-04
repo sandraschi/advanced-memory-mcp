@@ -53,7 +53,7 @@ uv tool upgrade basic-memory --prerelease=allow
 ```
 
 ## Version Guidelines
-- **First beta**: `v0.13.2b1` 
+- **First beta**: `v0.13.2b1`
 - **Subsequent betas**: `v0.13.2b2`, `v0.13.2b3`, etc.
 - **Release candidates**: `v0.13.2rc1`, `v0.13.2rc2`, etc.
 - **Final release**: `v0.13.2` (use `/release` command)

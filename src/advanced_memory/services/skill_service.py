@@ -1,7 +1,7 @@
 """Skill service for Claude Skills management."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from loguru import logger
 from sqlalchemy import select
@@ -53,7 +53,7 @@ class SkillService:
         Returns:
             Created Skill instance
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         skill_data = {
             "name": name,
@@ -112,7 +112,7 @@ class SkillService:
             logger.warning(f"Skill not found for update: {name}")
             return None
 
-        update_data = {"updated_at": datetime.now(timezone.utc)}
+        update_data = {"updated_at": datetime.now(UTC)}
 
         if description is not None:
             update_data["description"] = description
@@ -183,7 +183,7 @@ class SkillService:
                 skill.id,
                 {
                     "usage_count": skill.usage_count + 1,
-                    "updated_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(UTC),
                 },
             )
             logger.debug(f"Incremented usage for skill: {name}")

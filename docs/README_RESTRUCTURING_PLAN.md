@@ -152,7 +152,7 @@ Ask Claude: "Search my notes for async patterns"
 - **User Guide**
   - [Memory Access](docs/user-guide/memory-access.md) - Read & search
   - [Memory Writing](docs/user-guide/memory-writing.md) - Create & organize
-  
+
 - **Zettelkasten**
   - [Getting Started](docs/zettelkasten/getting-started.md)
   - [LLM Generation](docs/zettelkasten/generation.md)
@@ -323,8 +323,3 @@ Result: Clean, navigable, professional
 *Restructuring plan: Keep it simple, make it navigable*
 *Main README = billboard, not manual*
 *Detailed docs = in docs/ directory*
-
-
-
-
-

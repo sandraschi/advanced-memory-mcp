@@ -30,27 +30,27 @@ window.$docsify = {
   pagination: {
     // Customize the previous button text
     previousText: 'Previous',
-    
+
     // Customize the next button text
     nextText: 'Next',
-    
+
     // Whether to show the page title in the button
     // Can be true, false, or a function that returns a string
     crossChapter: true,
-    
+
     // Customize the separator between chapter and title
     crossChapterText: ' - ',
-    
+
     // Custom CSS class for the pagination container
     className: 'pagination',
-    
+
     // Custom CSS class for the previous button
     previousClassName: 'pagination-prev',
-    
+
     // Custom CSS class for the next buttonextClassName: 'pagination-next',
-    
+
     // Custom CSS class for the page titleClassName: 'pagination-title',
-    
+
     // Custom template for the pagination
     // Available variables: previousText, previousLink, previousTitle, nextText, nextLink, nextTitle
     template: `
@@ -73,23 +73,23 @@ window.$docsify = {
         </div>
       </nav>
     `,
-    
+
     // Custom filter function to determine the previous/next page
     filter: function(prevNext, currentPath) {
       // prevNext is an object with `prev` and `next` properties
       // currentPath is the path of the current page
       // You can modify the prev/next values hereturn prevNext;
     },
-    
+
     // Custom sort function to determine the order of pagesort: function(pages) {
       // pages is an array of all pages
       // You can sorthem hereturn pages.sort();
     },
-    
+
     // Customize the position where the pagination is inserted
     // Can be 'top', 'bottom', or a CSSelector
     position: 'bottom',
-    
+
     // Whether to hide the pagination when there's no previous/next page
     hideOnSinglePage: true
   }
@@ -215,15 +215,15 @@ window.$docsify = {
     filter: function(prevNext, currentPath) {
       // Example: Skip certain paths
       const skipPaths = ['/changelog', '/license'];
-      
+
       if (prevNext.prev && skipPaths.includes(prevNext.prev.path)) {
         prevNext.prev = null;
       }
-      
+
       if (prevNext.next && skipPaths.includes(prevNext.next.path)) {
         prevNext.next = null;
       }
-      
+
       return prevNext;
     }
   }

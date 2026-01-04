@@ -95,9 +95,8 @@ Browse collections:
 
 ---
 
-*Simple, practical, actionable*  
-*Start small, scale later*  
+*Simple, practical, actionable*
+*Start small, scale later*
 *Don't go crazy!*
 
 😄 **STOP HERE!** 😄
-

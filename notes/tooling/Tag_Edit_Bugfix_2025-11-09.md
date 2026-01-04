@@ -29,4 +29,3 @@ updated: 2025-11-09
 ## Follow-up ideas
 - Audit other metadata mutations for similar “missing body” hazards.
 - Add regression coverage to the tool exercisers so `edit_tags` is tested alongside other operations.
-

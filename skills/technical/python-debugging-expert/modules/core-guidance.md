@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Start here to capture context, triage severity, and create a reproducible path before diving into tooling.
@@ -23,36 +23,36 @@ Populate template in issue tracker before debugging begins.
 
 ## 2. Severity & Prioritization
 
-- **P0**: production outage, data corruption → mobilize incident response.  
-- **P1**: severe user impact, SLA at risk → prioritize, assign dedicated engineers.  
-- **P2**: minor regression or non-critical bug → schedule into sprint.  
+- **P0**: production outage, data corruption → mobilize incident response.
+- **P1**: severe user impact, SLA at risk → prioritize, assign dedicated engineers.
+- **P2**: minor regression or non-critical bug → schedule into sprint.
 - Communicate status to stakeholders; maintain timeline of actions.
 
 ---
 
 ## 3. Debugging Workflow
 
-1. Reproduce issue locally or in isolated environment.  
-2. Add logging/assertions to narrow down scope (use `logging`, `rich`, `structlog`).  
-3. Attach debugger or profiling tool relevant to symptom.  
-4. Validate hypotheses iteratively; keep notes.  
+1. Reproduce issue locally or in isolated environment.
+2. Add logging/assertions to narrow down scope (use `logging`, `rich`, `structlog`).
+3. Attach debugger or profiling tool relevant to symptom.
+4. Validate hypotheses iteratively; keep notes.
 5. Once fixed, add regression tests and observability guardrails.
 
 ---
 
 ## 4. Communication
 
-- Provide updates in incident channels or issue comments with findings.  
-- Share reproduction steps and temporary mitigations.  
+- Provide updates in incident channels or issue comments with findings.
+- Share reproduction steps and temporary mitigations.
 - Document final root cause analysis (RCA) and fix summary.
 
 ---
 
 ## 5. Anti-patterns
 
-- Making speculative fixes without reproduction.  
-- Ignoring dependency/environment differences.  
-- Leaving logging changes or debug code in production.  
+- Making speculative fixes without reproduction.
+- Ignoring dependency/environment differences.
+- Leaving logging changes or debug code in production.
 - Skipping regression tests after fix.
 
 Escalate when reproduction is blocked or impact escalates.
@@ -60,15 +60,15 @@ Escalate when reproduction is blocked or impact escalates.
 ---
 
 ### Module Map
-- Tooling and diagnostics → [modules/diagnostics-and-tooling.md](modules/diagnostics-and-tooling.md)  
-- Concurrency issues → [modules/async-and-concurrency.md](modules/async-and-concurrency.md)  
-- Performance/memory → [modules/performance-and-memory.md](modules/performance-and-memory.md)  
+- Tooling and diagnostics → [modules/diagnostics-and-tooling.md](modules/diagnostics-and-tooling.md)
+- Concurrency issues → [modules/async-and-concurrency.md](modules/async-and-concurrency.md)
+- Performance/memory → [modules/performance-and-memory.md](modules/performance-and-memory.md)
 - Reproduction & testing → [modules/testing-and-reproduction.md](modules/testing-and-reproduction.md)
 
 Review this guide semi-annually to align with updated incident response procedures.***
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -112,7 +112,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** technical
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

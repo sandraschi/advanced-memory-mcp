@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Use this module to align on platform goals, constraints, and readiness before implementing container/Kubernetes solutions.
@@ -23,9 +23,9 @@ Document answers in an architecture brief before design work.
 
 ## 2. Platform Fit Assessment
 
-- Evaluate whether managed Kubernetes (EKS/GKE/AKS), self-hosted, or alternative (Nomad, ECS, Cloud Run) is appropriate.  
-- Consider build vs buy: do teams have ops capability to run clusters 24/7?  
-- Assess data services: externalize databases/message queues unless strong reason to run in-cluster.  
+- Evaluate whether managed Kubernetes (EKS/GKE/AKS), self-hosted, or alternative (Nomad, ECS, Cloud Run) is appropriate.
+- Consider build vs buy: do teams have ops capability to run clusters 24/7?
+- Assess data services: externalize databases/message queues unless strong reason to run in-cluster.
 - Identify ecosystem integrations (service mesh, ingress, secrets, logging).
 
 ---
@@ -44,19 +44,19 @@ Use the ladder to set roadmap targets with stakeholders.
 
 ## 4. Stakeholder Alignment
 
-- **App teams**: define onboarding process, responsibilities for manifests vs platform modules.  
-- **Security**: agree on scanning, RBAC, secrets, network policies.  
-- **Ops/SRE**: establish observability, incident response, capacity planning.  
+- **App teams**: define onboarding process, responsibilities for manifests vs platform modules.
+- **Security**: agree on scanning, RBAC, secrets, network policies.
+- **Ops/SRE**: establish observability, incident response, capacity planning.
 - **Finance**: track cost per cluster/workload, implement governance.
 
 ---
 
 ## 5. Escalation Triggers
 
-- Frequent pod evictions or crash loops without clear root cause.  
-- Security scan failures blocking releases with no remediation plan.  
-- Cluster capacity < 20% headroom or frequent scaling failures.  
-- Network policy misconfigurations causing outages.  
+- Frequent pod evictions or crash loops without clear root cause.
+- Security scan failures blocking releases with no remediation plan.
+- Cluster capacity < 20% headroom or frequent scaling failures.
+- Network policy misconfigurations causing outages.
 - Governance/gating inconsistencies between environments.
 
 Escalate to platform steering group; document incidents and action items.
@@ -64,16 +64,16 @@ Escalate to platform steering group; document incidents and action items.
 ---
 
 ### Module Map
-- Foundations → [modules/platform-foundations.md](modules/platform-foundations.md)  
-- Deployment patterns → [modules/deployment-patterns.md](modules/deployment-patterns.md)  
-- Security & compliance → [modules/security-and-compliance.md](modules/security-and-compliance.md)  
-- Operations → [modules/observability-and-operations.md](modules/observability-and-operations.md)  
+- Foundations → [modules/platform-foundations.md](modules/platform-foundations.md)
+- Deployment patterns → [modules/deployment-patterns.md](modules/deployment-patterns.md)
+- Security & compliance → [modules/security-and-compliance.md](modules/security-and-compliance.md)
+- Operations → [modules/observability-and-operations.md](modules/observability-and-operations.md)
 - Follow-ups → [modules/known-gaps.md](modules/known-gaps.md)
 
 Review this guidance quarterly to stay aligned with evolving platform strategy.*** End Patch
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -117,7 +117,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** technical
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

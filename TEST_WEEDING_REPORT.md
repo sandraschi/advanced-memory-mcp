@@ -1,6 +1,6 @@
 # Test Weeding Report - Tag-Related Tests
 
-**Date:** 2025-10-29  
+**Date:** 2025-10-29
 **Analysis:** 31 tag-related tests across multiple files
 
 ## Summary
@@ -18,7 +18,7 @@
 
 ### ✅ KEEP: tests/utils/test_parse_tags.py (15 → 3 tests)
 
-**Current:** 15 parametrized tests + 1 special case  
+**Current:** 15 parametrized tests + 1 special case
 **Status:** Mostly good, but too granular
 
 **Keep:**
@@ -40,13 +40,13 @@ def test_parse_tags_formats():
     assert parse_tags("#tag1,##tag2") == ["tag1", "tag2"]
 ```
 
-**Delete:** 13 redundant tests  
+**Delete:** 13 redundant tests
 - All the individual parametrized variations
 - The special case test (can merge into basic)
 
 ### ❌ DELETE: tests/services/test_search_service.py (7 → 1 test)
 
-**Current:** 7 tests for `_extract_entity_tags` method  
+**Current:** 7 tests for `_extract_entity_tags` method
 **Status:** Over-testing a simple method
 
 **Why delete:**
@@ -66,7 +66,7 @@ async def test_search_by_tags(search_service, session_maker, test_project):
 
 **Delete:** 6 tests
 - `test_extract_entity_tags_list_format`
-- `test_extract_entity_tags_string_format`  
+- `test_extract_entity_tags_string_format`
 - `test_extract_entity_tags_empty_list`
 - `test_extract_entity_tags_empty_string`
 - `test_extract_entity_tags_no_metadata`
@@ -99,7 +99,7 @@ async def test_search_by_tags(search_service, session_maker, test_project):
 2. **Merge 2 tag search tests** into 1
 3. **Reduce parse_tags from 15 → 3 tests**
 
-**Impact:** 31 → 18 tests (-42%)  
+**Impact:** 31 → 18 tests (-42%)
 **Risk:** Low - these test simple/obvious behavior
 
 ### Follow-up (Medium Value)
@@ -121,7 +121,7 @@ async def test_search_by_tags(search_service, session_maker, test_project):
 ## Benefits
 
 1. **Faster test runs** - Less redundant code to execute
-2. **Clearer intent** - Each test has meaningful purpose  
+2. **Clearer intent** - Each test has meaningful purpose
 3. **Easier maintenance** - Fewer tests to update when behavior changes
 4. **Better coverage** - Focus on actual behaviors, not hypothetical edge cases
 
@@ -138,4 +138,3 @@ Delete tests that:
 - Test trivial utilities in isolation
 - Test every edge case of simple parsing
 - Test private/internal methods exhaustively
-

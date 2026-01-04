@@ -90,7 +90,7 @@ def remove_unused_ignores():
         ["uv", "run", "mypy", "src/", "--strict", "--no-error-summary"],
         capture_output=True, text=True
     )
-    
+
     for line in result.stderr.splitlines():
         if "unused-ignore" in line:
             # Extract file and line number
@@ -176,13 +176,13 @@ grep -r "# type: ignore" src/ --include="*.py"
 
 #### 2. Notepad++ MCP
 - **Current Status**: Unknown
-- **Strategy**: 
+- **Strategy**:
   1. Run initial assessment
   2. Focus on CLI tools first
   3. Batch fix common patterns
 
 #### 3. Other MCP Servers
-- **Strategy**: 
+- **Strategy**:
   1. Start with unused-ignore cleanup
   2. Add basic type annotations
   3. Focus on public APIs first

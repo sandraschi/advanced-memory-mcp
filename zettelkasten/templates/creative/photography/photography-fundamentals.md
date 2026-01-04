@@ -309,7 +309,7 @@ Camera controls everything.
   - iPhone Pro: 48MP main + telephoto + ultra-wide + LiDAR
   - Pixel: Computational photography pioneer + Google AI
   - Sony Xperia: Computational + Sony's camera sensor expertise
-  
+
 - **Hybrid cameras** (2025+): DSLRs/mirrorless with computational features
   - Sony A1: Full-frame sensor + AI autofocus + computational HDR
   - Canon R5: 45MP + AI subject detection + in-camera upscaling
@@ -323,7 +323,7 @@ graph LR
     C --> D[Best of Both Worlds]
 ```
 
-**Prediction**: 
+**Prediction**:
 - Smartphones will continue improving (better computational algorithms)
 - Pro cameras will add computational features (catching up)
 - Gap narrows but doesn't disappear (physics still matters)

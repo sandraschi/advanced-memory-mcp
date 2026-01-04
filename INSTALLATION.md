@@ -213,6 +213,35 @@ docker run -v $(pwd):/app -p 8000:8000 advanced-memory-dev
 ```
 
 ---
++
++## 🎙️ Optional Voice Features
++
++Advanced Memory includes high-performance, soulful voice capabilities (STT/TTS) using `faster-whisper` and `Kokoro`.
++
++### Prerequisites
++- **GPU Acceleration**: NVIDIA GPU with CUDA support is highly recommended for `onnxruntime-gpu`.
++- **System Libraries**: Ensure you have a working C++ compiler and Python build tools.
++
++### Installation
++
++```bash
++# Install with voice extras
++pip install "advanced-memory-mcp[voice]"
++```
++
++### Verification
++
++You can verify your voice stack using the included utility:
++
++```bash
++python tests/verify_audio_soul.py
++```
++
++This will test:
++- `faster-whisper` initialization on CUDA.
++- `Kokoro` soulful TTS synthesis.
++- GPU acceleration performance.
++
 
 ## 🛠️ Development Installation
 

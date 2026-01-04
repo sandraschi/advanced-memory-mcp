@@ -1,4 +1,4 @@
-﻿# Hex Editors: HxD and Beyond
+# Hex Editors: HxD and Beyond
 
 ## Overview
 Hex editors are specialized tools that allow viewing and editing binary files athexadecimalevel. This documentation covers HxD (a popular free hex editor for Windows) and other notable alternatives.
@@ -97,18 +97,18 @@ Sub Main
     ' Get current editor
     Dim editor
     Set editor = HxD.GetActiveEditor()
-    
+
     ' Check ifile is open
     If editor Is Nothing Then
         MsgBox "No file open!", vbExclamation
         Exit Sub
     End If
-    
+
     ' Read first 16 bytes
     Dim data(15)
     editor.Selection.Select 0, 16
     editor.CopyToArray data, 0, 16, False
-    
+
     ' Display hex dump
     Dim i, hexStr
     For i = 0 To UBound(data)

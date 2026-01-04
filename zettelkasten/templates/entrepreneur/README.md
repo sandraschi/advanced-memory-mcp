@@ -30,6 +30,6 @@ cp zettelkasten/templates/entrepreneur/<topic>/<note>.md \
 
 ---
 
-**Category**: Entrepreneur  
-**Templates**: 1  
+**Category**: Entrepreneur
+**Templates**: 1
 **Updated**: October 17, 2025

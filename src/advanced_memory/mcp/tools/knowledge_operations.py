@@ -13,8 +13,8 @@ from advanced_memory.mcp.tools.utils import call_post
 from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool
-async def knowledge_operations(
+@mcp.tool(name="adn_knowledge")
+async def adn_knowledge(
     operation: str,
     filters: dict[str, Any] | None = None,
     action: dict[str, Any] | None = None,
@@ -22,19 +22,79 @@ async def knowledge_operations(
     limit: int = 100,
     project: str | None = None,
 ) -> str:
-    """
-    Comprehensive knowledge operations tool.
+    """Comprehensive knowledge management tool for Advanced Memory knowledge base.
 
-    Args:
-        operation: Operation to perform (bulk_update, tag_analytics, etc.)
-        filters: Filters to apply (folder, tags, dates, etc.)
-        action: Action parameters (what to do)
-        dry_run: Preview changes without applying them
-        limit: Maximum items to process
-        project: Target project
+    This point-of-entry tool provides a unified interface for complex knowledge
+    operations, including bulk management, tag maintenance, content validation,
+    and LLM-powered research orchestration.
 
-    Returns:
-        Operation results and statistics
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 18+ knowledge operations into one tool to:
+    - Prevent tool explosion (18 tools -> 1 tool) while maintaining deep functionality.
+    - Improve discoverability by grouping related knowledge maintenance tasks.
+    - Centralize research orchestration and AI-powered content analysis.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
+    The parameters are categorized by operation type:
+    - Maintenance (bulk_*): Uses 'filters' to select notes and 'action' to apply changes.
+    - Tags (tag_*): Handles analytics, consolidation, and cleanup.
+    - Research (research_*): Topic-based planning and structured methodology.
+    - AI Analysis (analyze_*): LLM-powered insights, gap discovery, and clustering.
+
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+
+    Maintenance & Bulk Operations:
+    - bulk_update: Batch update multiple notes (tags, content, metadata).
+    - bulk_move: Relocate multiple notes between folders.
+    - bulk_delete: Remove multiple notes (non-destructive by default).
+    - find_duplicates: Identify similar content for consolidation.
+    - validate_content: Check note quality, broken links, and formatting.
+
+    Tag Management:
+    - tag_analytics: Analyze tag usage patterns and statistics.
+    - consolidate_tags: Merge semantically similar tags into canonical forms.
+    - tag_maintenance: Clean up duplicates and standardize casing.
+
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - Active project session for all operations.
+    - Configured LLM provider (via adn_llm) for AI operations.
+
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The knowledge operation to perform (Required).
+    - filters (dict): Filtering criteria (e.g., {"tags": ["draft"], "folder": "notes"}).
+    - action (dict): Action parameters (e.g., {"add_tags": ["final"], "destination": "archive"}).
+    - dry_run (bool): Preview changes without applying them (Default: True).
+    - limit (int): Maximum items to process/analyze (Default: 100).
+    - project (str): Optional override for active project name.
+
+    ---------------------------------------------------------------------------
+    [USAGE]
+    Use this tool for high-level knowledge maintenance and research planning.
+    Always use 'dry_run=True' for bulk updates to preview changes.
+
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+
+    - Analyze tag usage across the project:
+      adn_knowledge(operation="tag_analytics")
+
+    - Bulk move draft notes to archive (dry run):
+      adn_knowledge(operation="bulk_move", filters={"tags": ["draft"]}, action={"destination": "archive"})
+
+    - Find duplicate content in the 'inbox':
+      adn_knowledge(operation="find_duplicates", filters={"folder": "inbox"})
+
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Missing Parameter: Required filters or action for specific operations.
+    - LLM Unavailable: AI operations failed due to lack of configured LLM client.
+    - Invalid Operation: The specified operation is not supported.
     """
     try:
         ConfigManager()
@@ -248,7 +308,11 @@ async def _handle_tag_maintenance(
 
 
 async def _handle_bulk_update(
-    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+    filters: dict[str, Any],
+    action: dict[str, Any],
+    dry_run: bool,
+    limit: int,
+    project: str | None,
 ) -> str:
     """Bulk update multiple notes based on filters."""
     if not action:
@@ -310,7 +374,11 @@ async def _handle_bulk_update(
 
 
 async def _handle_content_validation(
-    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+    filters: dict[str, Any],
+    action: dict[str, Any],
+    dry_run: bool,
+    limit: int,
+    project: str | None,
 ) -> str:
     """Validate content quality and identify issues."""
     checks = action.get("checks", ["broken_links", "formatting", "missing_tags"])
@@ -363,7 +431,10 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
     )
 
     response = await call_post(
-        client, "/api/search", params={"page": 1, "page_size": 1000}, json=search_query.model_dump()
+        client,
+        "/api/search",
+        params={"page": 1, "page_size": 1000},
+        json=search_query.model_dump(),
     )
 
     if not response:
@@ -471,7 +542,11 @@ async def _handle_find_duplicates(filters: dict[str, Any], limit: int, project: 
 
 
 async def _handle_bulk_move(
-    filters: dict[str, Any], action: dict[str, Any], dry_run: bool, limit: int, project: str | None
+    filters: dict[str, Any],
+    action: dict[str, Any],
+    dry_run: bool,
+    limit: int,
+    project: str | None,
 ) -> str:
     """Move multiple notes to a new folder."""
     destination = action.get("destination_folder")

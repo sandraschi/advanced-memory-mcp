@@ -118,7 +118,7 @@ This is the canonical, protected global rulebook for all Windsurf/Cascade agenti
 Never create files longer than these limits without modular refactoring:
 
 - **JavaScript/TypeScript**: 300 lines max (optimal: 150-250)
-- **HTML**: 400 lines max (optimal: 200-300)  
+- **HTML**: 400 lines max (optimal: 200-300)
 - **CSS**: 500 lines max (optimal: 250-400)
 - **Documentation**: 800 lines max (optimal: 400-600)
 - **Configuration/Data Files (JSON/YAML)**: 150 lines max (optimal: 50-100)
@@ -211,4 +211,3 @@ Large files are acceptable only for:
 **GOLDEN RULE: "If you're thinking about writing a file longer than these limits, think modular instead!"**
 
 This prevents truncated files, unmanageable code, debugging nightmares, and promotes clean, professional architecture.
-

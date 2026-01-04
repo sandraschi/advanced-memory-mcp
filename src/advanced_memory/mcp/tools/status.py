@@ -32,6 +32,10 @@ async def status(level: str = "basic", focus: str | None = None) -> str:
         status("intermediate") - Tool and configuration status
         status("advanced", "system") - System performance metrics
         status("diagnostic") - Full diagnostic information
+
+    Errors:
+        - "Invalid status level": Returned if the provided 'level' is not one of the supported levels (basic, intermediate, advanced, diagnostic).
+        - "Invalid focus area": Returned if the provided 'focus' area is not recognized.
     """
 
     if focus:

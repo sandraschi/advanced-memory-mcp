@@ -6,18 +6,19 @@ for registration, avoiding circular import issues.
 
 # CRITICAL: Configure logging FIRST for MCP stdio mode
 # This must happen before any imports that might log
-import sys
-import warnings
 import logging
 import os
+import sys
+import warnings
 
 # CRITICAL: Set stdio to binary mode on Windows for Antigravity IDE compatibility
 # MUST be done BEFORE patching stdout, otherwise DevNullStdout won't have fileno()
 # Antigravity IDE is strict about JSON-RPC protocol and interprets trailing \r as "invalid trailing data"
 # Binary mode prevents Python from automatically converting line endings
-if os.name == 'nt':  # Windows
+if os.name == "nt":  # Windows
     try:
         import msvcrt
+
         # Set stdin/stdout to binary mode to prevent line ending conversion
         # This fixes "invalid trailing data" errors with Antigravity IDE
         # Store original filenos before any patching
@@ -38,7 +39,7 @@ if os.name == 'nt':  # Windows
 # Detect if we're running in stdio mode (MCP server)
 # Check environment variable or if stdout is not a TTY
 _is_stdio_mode = (
-    not sys.stdout.isatty() 
+    not sys.stdout.isatty()
     or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
     or "stdio" in sys.argv
 )
@@ -48,35 +49,36 @@ if _is_stdio_mode:
     # This catches print statements, Rich console, FastMCP banners, etc.
     class DevNullStdout:
         """A file-like object that discards all writes (like /dev/null)."""
+
         def write(self, s: str) -> int:
             # Discard all writes to stdout - they would break JSON-RPC
             return len(s)
-        
+
         def flush(self) -> None:
             pass
-        
+
         def isatty(self) -> bool:
             return False
-        
+
         def readable(self) -> bool:
             return False
-        
+
         def writable(self) -> bool:
             return True
-        
+
         def seekable(self) -> bool:
             return False
-    
+
     # Store original stdout and replace with null device
     # This will be restored before FastMCP.run() in server.py or mcp.py
-    if not hasattr(sys, '_original_stdout'):
+    if not hasattr(sys, "_original_stdout"):
         sys._original_stdout = sys.stdout
     sys.stdout = DevNullStdout()
-    
+
     # Suppress SQLAlchemy deprecation warnings
     warnings.filterwarnings("ignore", category=DeprecationWarning, module="sqlalchemy")
     warnings.filterwarnings("ignore", category=DeprecationWarning)
-    
+
     # Configure Python's logging module to prevent stdout pollution
     # FastMCP uses Python's logging module internally
     logging.basicConfig(
@@ -85,63 +87,118 @@ if _is_stdio_mode:
         stream=sys.stderr,  # Send to stderr, not stdout
         force=True,  # Override any existing configuration
     )
-    
+
     # Suppress ALL loggers to prevent any output
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.CRITICAL)
     root_logger.handlers = []
-    
+
     # Suppress FastMCP and other noisy loggers completely
-    for logger_name in ['fastmcp', 'mcp', 'httpx', 'httpcore', 'h11', 'uvicorn', 'asyncio']:
+    for logger_name in ["fastmcp", "mcp", "httpx", "httpcore", "h11", "uvicorn", "asyncio"]:
         log = logging.getLogger(logger_name)
         log.setLevel(logging.CRITICAL)
         log.handlers = []
         log.propagate = False
-    
+
     # NUCLEAR OPTION: Completely disable loguru during stdio mode
     try:
         # Create a complete no-op logger class
         class NoOpLogger:
             """Complete no-op logger that does nothing - nuclear option for stdio mode."""
+
             def __call__(self, *args, **kwargs):
                 return self
-            def info(self, *args, **kwargs): pass
-            def error(self, *args, **kwargs): pass
-            def warning(self, *args, **kwargs): pass
-            def debug(self, *args, **kwargs): pass
-            def exception(self, *args, **kwargs): pass
-            def critical(self, *args, **kwargs): pass
-            def success(self, *args, **kwargs): pass
-            def trace(self, *args, **kwargs): pass
-            def remove(self, *args, **kwargs): return self
-            def add(self, *args, **kwargs): return self
-            def disable(self, *args, **kwargs): return self
-            def enable(self, *args, **kwargs): return self
-            def bind(self, *args, **kwargs): return self
-            def patch(self, *args, **kwargs): return self
-            def opt(self, *args, **kwargs): return self
-        
+
+            def info(self, *args, **kwargs):
+                pass
+
+            def error(self, *args, **kwargs):
+                pass
+
+            def warning(self, *args, **kwargs):
+                pass
+
+            def debug(self, *args, **kwargs):
+                pass
+
+            def exception(self, *args, **kwargs):
+                pass
+
+            def critical(self, *args, **kwargs):
+                pass
+
+            def success(self, *args, **kwargs):
+                pass
+
+            def trace(self, *args, **kwargs):
+                pass
+
+            def remove(self, *args, **kwargs):
+                return self
+
+            def add(self, *args, **kwargs):
+                return self
+
+            def disable(self, *args, **kwargs):
+                return self
+
+            def enable(self, *args, **kwargs):
+                return self
+
+            def bind(self, *args, **kwargs):
+                return self
+
+            def patch(self, *args, **kwargs):
+                return self
+
+            def opt(self, *args, **kwargs):
+                return self
+
         # Replace loguru logger module with no-op
         import sys
-        if 'loguru' not in sys.modules:
-            sys.modules['loguru'] = type('Module', (), {'logger': NoOpLogger()})()
+
+        if "loguru" not in sys.modules:
+            sys.modules["loguru"] = type("Module", (), {"logger": NoOpLogger()})()
         from loguru import logger
+
         # Force replace the logger instance
         logger = NoOpLogger()
     except Exception:
         # If anything fails, create a no-op logger anyway
         class NoOpLogger:
-            def __call__(self, *args, **kwargs): return self
-            def info(self, *args, **kwargs): pass
-            def error(self, *args, **kwargs): pass
-            def warning(self, *args, **kwargs): pass
-            def debug(self, *args, **kwargs): pass
-            def exception(self, *args, **kwargs): pass
-            def critical(self, *args, **kwargs): pass
-            def success(self, *args, **kwargs): pass
-            def trace(self, *args, **kwargs): pass
-            def remove(self, *args, **kwargs): return self
-            def add(self, *args, **kwargs): return self
+            def __call__(self, *args, **kwargs):
+                return self
+
+            def info(self, *args, **kwargs):
+                pass
+
+            def error(self, *args, **kwargs):
+                pass
+
+            def warning(self, *args, **kwargs):
+                pass
+
+            def debug(self, *args, **kwargs):
+                pass
+
+            def exception(self, *args, **kwargs):
+                pass
+
+            def critical(self, *args, **kwargs):
+                pass
+
+            def success(self, *args, **kwargs):
+                pass
+
+            def trace(self, *args, **kwargs):
+                pass
+
+            def remove(self, *args, **kwargs):
+                return self
+
+            def add(self, *args, **kwargs):
+                return self
+
         logger = NoOpLogger()
 
 import asyncio

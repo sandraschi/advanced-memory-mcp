@@ -229,7 +229,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latesteps:
     - uses: actions/checkout@v3
-    
+
     - name: Build andeploy
       run: |
         docker-compose buildocker-compose up -d

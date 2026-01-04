@@ -75,213 +75,126 @@ async def adn_content(
     replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
 ) -> str:
-    """Comprehensive content management tool for Advanced Memory knowledge base.
+    """
+    Comprehensive content management tool for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 15+ content operations into one tool.
+    This point-of-entry tool consolidates all zettelkasten content operations including
+    creation, retrieval, visualization, targeted editing, and intelligent enhancement.
+    It serves as the primary interface for interacting with knowledge entities.
 
-    PARAMETER DESIGN:
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 15+ content operations into one tool to:
+    - Prevent tool explosion (15 tools -> 1 tool) while maintaining full functionality.
+    - Improve discoverability by grouping related operations together.
+    - Reduce cognitive load and saving tokens by centralizing context.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
     The 'identifier' parameter is intentionally flexible:
-    - For write operations: Pass the note title (e.g., "My Meeting Notes")
+    - For write operations: Pass the note title (e.g., "My Meeting Notes").
       Advanced Memory will automatically generate the permalink from the title.
-    - For read/view operations: Can pass title, permalink, or memory:// URL
+    - For read/view operations: Can pass Title, Permalink, or memory:// URL.
       This flexibility allows reading notes in multiple ways.
 
-    TIP FOR CLAUDE:
+    ---------------------------------------------------------------------------
+    [TIP FOR CLAUDE]
     When using this tool, always specify the operation first (write, read, edit, etc.),
     then provide the required parameters. The documentation below shows what each operation needs.
 
-    SUPPORTED OPERATIONS:
-    - write: Create new notes or update existing ones with semantic processing
-    - read: Retrieve complete note content with intelligent lookup strategies
-    - view: Display notes as formatted artifacts for better readability
-    - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
-    - edit: Perform targeted edits (append, prepend, find_replace, replace_section)
-    - edit_tags: Edit tags (add, remove, replace, clear) without full note edits
-    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags from content)
-    - daily: Create or append to today's daily journal note
-    - move: Relocate notes while preserving relationships and updating references
-    - delete: Remove notes from knowledge base with relationship cleanup
-    - suggest_tags: LLM-powered semantic tag suggestions for notes
-    - summarize: LLM-powered note summarization
-    - enhance: LLM-powered note enhancement (structure, clarity, completeness)
-    - generate: LLM-powered content generation for new notes
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - write: Create new notes or update existing ones with semantic processing.
+    - read: Retrieve complete note content with intelligent lookup strategies.
+    - view: Display notes as formatted artifacts for better readability.
+    - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams.
+    - edit: Perform targeted edits (append, prepend, find_replace, replace_section, insert_mermaid, etc.).
+    - edit_tags: Edit tags (add, remove, replace, clear) without full note edits.
+    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags).
+    - daily: Create or append to today's daily journal note.
+    - move: Relocate notes while preserving relationships and updating references.
+    - delete: Remove notes from knowledge base with relationship cleanup.
+    - suggest_tags: LLM-powered semantic tag suggestions for notes.
+    - summarize: LLM-powered note summarization.
+    - enhance: LLM-powered note enhancement (structure, clarity, completeness).
+    - generate: LLM-powered content generation for new notes.
 
-    NOTE: Audio operations (dictate, speak) moved to adn_audio tool
+    ---------------------------------------------------------------------------
+    [OPERATIONS DETAIL]
+    - write: Requires 'identifier' (title) and 'content'. Optional 'folder' (default: "inbox").
+    - read/view: Requires 'identifier'. Supports Title, Permalink, or memory:// URL.
+    - edit: Requires 'identifier', 'edit_operation', and relevant payload ('content', 'section', 'find_text').
+    - edit_tags: Requires 'identifier', 'tag_operation', and 'tags'.
+    - quick: Requires 'content'. Automatically generates title and folder.
+    - daily: Requires 'content'. Manages today's journal entry.
+    - move: Requires 'identifier' and 'destination_path'.
+    - delete: Requires 'identifier'.
 
-    SKILL SUPPORT (AUTO-DETECTION):
+    ---------------------------------------------------------------------------
+    [SKILL SUPPORT (AUTO-DETECTION)]
     When writing to skills/ folder, adn_content automatically:
-    - Detects missing Claude Skills frontmatter
-    - Auto-generates YAML frontmatter with name, description, metadata
-    - Extracts category from folder path (skills/developer -> category: developer)
-    - Sets entity_type to 'skill' automatically
-    - Validates frontmatter format against Anthropic spec
+    - Detects missing Claude Skills frontmatter.
+    - Auto-generates YAML frontmatter with name, description, metadata.
+    - Extracts category from folder path (skills/developer -> category: developer).
+    - Sets entity_type to 'skill' automatically.
 
-    This means you can write skills like regular notes, and frontmatter is added automatically!
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - Active project session established via adn_project tool.
+    - Write access to the local filesystem for project storage.
 
-    Example skill creation:
-        adn_content("write",
-            identifier="Python Expert",
-            content="# Python Expert\\n\\nAdvanced Python guidance...",
-            folder="skills/developer")
-        # Auto-generates frontmatter with name: python-expert
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation: The content operation to perform (write, read, edit, etc.)
+    - identifier: Note Title, Permalink, or memory:// URL (Required for most operations)
+    - content: Markdown content or edit payload (Required for write/edit/quick/daily)
+    - folder: Target folder path relative to project root (Optional, default: "inbox")
+    - tags: Tags for categorization (string, list, or None)
+    - entity_type: The type of document being created (Default: "note")
+    - destination_path: New path for move operations
+    - edit_operation: Operation type for edits (append, prepend, find_replace, replace_section, insert_*)
+    - tag_operation: Operation type for editing tags (add, remove, replace, clear)
+    - find_text: Text to search for during find_replace operations
+    - expected_replacements: Number of expected replacements for validation (Default: 1)
+    - use_regex: Whether to treat find_text as a regular expression (Default: False)
+    - section: Section header to target for replace_section or title for insertions
+    - page: Page number for paginated results (Default: 1)
+    - page_size: Number of items per page (Default: 10)
+    - results_per_page: Alias for page_size
+    - project: Optional override for active project name
 
-    CONTENT PROCESSING:
-    - Automatic entity recognition and linking ([[Entity Name]] syntax)
-    - Relationship extraction and graph building
-    - Tag processing and categorization
-    - Folder organization and hierarchy
-    - Markdown rendering and syntax validation
-    - Claude Skills frontmatter generation (when writing to skills/)
+    ---------------------------------------------------------------------------
+    [USAGE]
+    This tool is the primary entry point for managing knowledge content. It handles everything
+    from manual note writing to automatic skill processing. Use it for all CRUD operations
+    on notes and entities within your knowledge base.
 
-    Args:
-        operation: Operation type (write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete)
-        identifier: Note identifier - REQUIRED for most operations. What you pass depends on the operation:
-                    * Write operations: REQUIRED - The note title as a string (e.g., "My Meeting Notes")
-                      Advanced Memory will automatically create the permalink from the title.
-                    * Read/View operations: REQUIRED - Can be any of:
-                      - Note title (e.g., "My Meeting Notes")
-                      - Permalink (e.g., "meetings/my-meeting-notes")
-                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
-                    * Edit/Move/Delete/Edit_tags operations: REQUIRED - Can be any of:
-                      - Note title (e.g., "My Meeting Notes")
-                      - Permalink (e.g., "meetings/my-meeting-notes")
-                      - Memory URL (e.g., "memory://meetings/my-meeting-notes")
-                    * Quick/Daily operations: NOT USED - These operations don't require identifier
-        content: Markdown content
-                    * Write operations: REQUIRED - Full note content
-                    * Edit operations: REQUIRED - Content to add/replace (depends on edit_operation)
-                      - For find_replace: REPLACEMENT text (find_text is what to find)
-                      - For append: Content to add at the end of the note
-                      - For prepend: Content to add at the beginning of the note
-                      - For replace_section: New content to replace the entire section
-                      - For insert_mermaid: Diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
-                      - For insert_kanban: Comma-separated column names (e.g., "To Do,In Progress,Done")
-                      - For insert_changelog: Version string (e.g., "1.0.0" or "Unreleased")
-                      - For insert_ascii_art: Art type ("cat", "dog", "robot", "heart", "star", "tree")
-                      - For insert_kilroy: Optional custom message (or leave empty for default)
-                    * Quick/Daily operations: REQUIRED - Content to capture
-                    * Other operations: NOT USED
-                    * DEPRECATED ALIASES (automatically mapped to content): new_string, replacement, new_content
-                      These aliases work but will log a warning. Use 'content' directly.
-        folder: Target folder path
-                    * Write operations: Optional - Destination folder for new note (defaults to "inbox" if not specified)
-                    * Move operations: NOT USED - Use destination_path instead
-                    * Other operations: NOT USED
-        destination_path: New path for move operations
-                    * Move operations: REQUIRED - Full destination path
-                    * Other operations: NOT USED
-        edit_operation: Edit type for edit operations
-                    * Edit operations: REQUIRED - One of: "append", "prepend", "find_replace", "replace_section", "insert_mermaid", "insert_ascii_art", "insert_kilroy", "insert_kanban", "insert_changelog"
-                    * For insert_mermaid: content can be diagram type ("flowchart", "sequence", "gantt", "mindmap", "er") OR custom Mermaid code
-                    * For insert_kanban: content is comma-separated column names (e.g., "To Do,In Progress,Done"), section is optional title
-                    * For insert_changelog: content is version (e.g., "1.0.0" or "Unreleased"), section is optional project name
-                    * See edit_note tool documentation for comprehensive Mermaid syntax guide
-                    * Other operations: NOT USED
-        tag_operation: Tag operation for edit_tags
-                    * Edit_tags operations: REQUIRED - One of: "add", "remove", "replace", "clear"
-                    * Other operations: NOT USED
-        tags: Tags for categorization (string, list, or None)
-                    * Write operations: Optional - Tags for categorization
-                    * Edit_tags operations:
-                      - For "add": REQUIRED - Tags to add to existing tags
-                      - For "remove": REQUIRED - Tags to remove from existing tags
-                      - For "replace": REQUIRED - Tags to replace all existing tags with
-                      - For "clear": NOT USED (tags parameter ignored, all tags cleared)
-                    * Quick/Daily operations: Optional - Additional tags to include
-                    * Other operations: NOT USED
-        entity_type: Content type (default: "note")
-                    * Write operations: Optional (default: "note")
-                    * Other operations: NOT USED
-        find_text: Text to find for find_replace operation
-                    * Edit with find_replace: REQUIRED - The exact text to search for
-                    * Other operations: NOT USED
-        expected_replacements: Expected replacement count for find_replace validation (default: 1)
-                    * Edit with find_replace: Optional - Validates that exactly this many replacements occurred
-                    * Other operations: NOT USED
-        use_regex: Enable regex pattern matching for find_replace (default: False)
-                    * Edit with find_replace: Optional - When True, find_text is treated as a regex pattern
-                      - Content can use backreferences like \\1, \\2 for captured groups
-                      - Includes security safeguards (pattern length limits, ReDoS protection)
-                    * Other operations: NOT USED
-        section: Section header or title for various edit operations
-                    * Edit with replace_section: REQUIRED - Section header to replace (e.g., "## Summary")
-                    * Edit with insert_mermaid: Optional - Title for the diagram section
-                    * Edit with insert_kanban: Optional - Title for the Kanban board section
-                    * Edit with insert_changelog: Optional - Project name for the changelog entry
-                    * Other operations: NOT USED
-        page: Pagination page number (default: 1)
-                    * Read/View/View_rendered operations: Optional - Page number for paginated results
-                    * Other operations: NOT USED
-        page_size: Items per page for paginated content (default: 10)
-                    * Read/View/View_rendered operations: Optional - Number of items per page
-                    * Other operations: NOT USED
-        results_per_page: Alias for page_size (compatibility with standalone search_notes tool)
-                    * Read/View/View_rendered operations: Optional - Same as page_size
-                    * Other operations: NOT USED
-        new_string: DEPRECATED alias for 'content' parameter (automatically mapped)
-                    * All operations: Optional - Use 'content' instead
-                    * Automatically mapped to 'content' with warning logged
-        replacement: DEPRECATED alias for 'content' parameter (automatically mapped, common for find_replace)
-                    * All operations: Optional - Use 'content' instead
-                    * Automatically mapped to 'content' with warning logged
-        new_content: DEPRECATED alias for 'content' parameter (automatically mapped)
-                    * All operations: Optional - Use 'content' instead
-                    * Automatically mapped to 'content' with warning logged
-        project: Optional project name. Supports:
-            - None (default): uses current active project
-            - "project-name": uses specific project
-            Note: Multi-project operations not supported for write/edit/delete (safety)
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
 
-    Returns:
-        Operation-specific result with semantic content summary and project context
+    - Write a new note with explicit folder:
+      result = await adn_content("write", identifier="SOTA Standards", content="# Standard...", folder="specs")
+      # Returns: Created note summary for specs/sota-standards.md
 
-    Examples:
-        # Write a new note - identifier is REQUIRED and must be the note title
-        # Advanced Memory will auto-generate the permalink from the title
-        adn_content("write", identifier="Project Plan", content="# Project Overview...", folder="projects")
+    - Edit an existing note by appending content:
+      result = await adn_content("edit", identifier="SOTA Standards", edit_operation="append", content="\n## Updated")
+      # Returns: Updated summary for SOTA Standards
 
-        # Write a note without folder (defaults to "inbox")
-        adn_content("write", identifier="Quick Note", content="# My Note\\n\\nContent here...")
+    - Quickly capture a thought without title:
+      result = await adn_content("quick", content="Important thought about MCP...")
+      # Returns: Created note summary in inbox/
 
-        # Read a note - can use title, permalink, or URL
-        adn_content("read", identifier="Project Plan")  # By title
-        adn_content("read", identifier="projects/project-plan")  # By permalink
-        adn_content("read", identifier="memory://projects/project-plan")  # By URL
+    - Error handling (missing parameter):
+      result = await adn_content("write", identifier="Missing Content")
+      # Returns: # Error: Missing Required Parameters
 
-        # Edit a note (append content)
-        adn_content("edit", identifier="Project Plan", edit_operation="append", content="\\n## Updates...")
-
-        # Edit tags (add tags)
-        adn_content("edit_tags", identifier="Meeting Notes", tag_operation="add", tags="urgent, follow-up")
-
-        # Edit tags (remove tags)
-        adn_content("edit_tags", identifier="Draft", tag_operation="remove", tags=["draft", "wip"])
-
-        # Edit tags (replace all)
-        adn_content("edit_tags", identifier="Project Plan", tag_operation="replace", tags="final, approved")
-
-        # Find and replace text
-        adn_content("edit", identifier="My Note", edit_operation="find_replace",
-                    find_text="old text", content="new text", expected_replacements=1)
-
-        # DEPRECATED: Using alias parameters (works but logs warning - use 'content' instead)
-        # adn_content("edit", identifier="My Note", edit_operation="find_replace",
-        #             find_text="old text", new_string="new text")  # ❌ Use 'content' instead
-
-        # Quick capture (ultra-fast note creation)
-        adn_content("quick", content="Great insight: use AI for code reviews")
-
-        # Daily journal entry
-        adn_content("daily", content="## Meeting Notes\\n\\nDiscussed Q4 roadmap with team")
-
-        # Move a note
-        adn_content("move", identifier="Project Plan", destination_path="archive/completed/project-plan.md")
-
-        # Delete a note
-        adn_content("delete", identifier="Project Plan")
-
-        # View note with rendered Mermaid diagrams
-        adn_content("view_rendered", identifier="System Architecture")
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Missing Parameters: Required fields for specific operations were not provided.
+    - Note Not Found: The specified identifier does not resolve to an existing note.
+    - Invalid Path: The specified folder or destination is outside project boundaries.
+    - Replace Fail: find_replace operation did not find the target text.
     """
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page → page_size (for compatibility with search_notes tool)
@@ -296,7 +209,7 @@ async def adn_content(
         "replacement": replacement,
         "new_content": new_content,
     }
-    
+
     # Map aliases to content if content is not set but alias is
     for alias_name, alias_value in content_aliases.items():
         if alias_value is not None and content is None:
@@ -307,7 +220,7 @@ async def adn_content(
             )
             # Log for analytics
             logger.info(
-                f"adn_content_parameter_alias_used",
+                "adn_content_parameter_alias_used",
                 alias=alias_name,
                 operation=operation,
                 edit_operation=edit_operation,
@@ -414,7 +327,14 @@ The `quick` operation automatically:
         )
 
     elif operation == "read":
-        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        latest_aliases = {
+            "",
+            "latest",
+            "last",
+            "__latest__",
+            "latest_note",
+            "last_note",
+        }
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
@@ -432,7 +352,14 @@ The `quick` operation automatically:
         return await _read_latest_operation(active_project)
 
     elif operation == "view":
-        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        latest_aliases = {
+            "",
+            "latest",
+            "last",
+            "__latest__",
+            "latest_note",
+            "last_note",
+        }
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
@@ -444,7 +371,14 @@ The `quick` operation automatically:
         return await _view_operation(active_project, identifier)
 
     elif operation == "view_rendered":
-        latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
+        latest_aliases = {
+            "",
+            "latest",
+            "last",
+            "__latest__",
+            "latest_note",
+            "last_note",
+        }
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
@@ -460,7 +394,7 @@ The `quick` operation automatically:
             return '# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="\\n## New Section")\n```'
         if not edit_operation:
             return '# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="New content")\n```'
-        
+
         # Check for find_replace specific requirements
         if edit_operation == "find_replace":
             if not find_text:
@@ -471,8 +405,8 @@ The `find_replace` operation requires:
 - `content`: The replacement text (REQUIRED)
 
 **Common mistakes:**
-- Using `new_string` instead of `content` ❌
-- Using `replacement` instead of `content` ❌
+- Using `new_string` instead of `content` [ERROR]
+- Using `replacement` instead of `content` [ERROR]
 
 **Correct usage:**
 ```python
@@ -480,11 +414,11 @@ adn_content("edit",
     identifier="My Note",
     edit_operation="find_replace",
     find_text="old text",
-    content="new text"  # ✅ Use 'content', not 'new_string'
+    content="new text"  # [SUCCESS] Use 'content', not 'new_string'
 )
 ```
 
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
 However, please use `content` directly in future calls.
 """
             if not content:
@@ -508,10 +442,10 @@ adn_content("edit",
 )
 ```
 
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
 However, please use `content` directly in future calls.
 """
-        
+
         if not content and edit_operation in ["append", "prepend", "replace_section"]:
             return f"""# Error: Missing Required Parameter
 
@@ -530,7 +464,7 @@ adn_content("edit",
 )
 ```
 
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`. 
+**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
 However, please use `content` directly in future calls.
 """
         return await _edit_operation(
@@ -651,7 +585,12 @@ pip install advanced-memory[voice]
 
 
 async def _write_operation(
-    active_project, identifier: str, content: str, folder: str, tags: TagType, entity_type: str
+    active_project,
+    identifier: str,
+    content: str,
+    folder: str,
+    tags: TagType,
+    entity_type: str,
 ) -> str:
     """Handle write operation with auto-skill detection."""
     if not identifier or not content or not folder:
@@ -661,7 +600,9 @@ async def _write_operation(
     project_path = active_project.home
     if folder and not validate_project_path(folder, project_path):
         logger.warning(
-            "Attempted path traversal attack blocked", folder=folder, project=active_project.name
+            "Attempted path traversal attack blocked",
+            folder=folder,
+            project=active_project.name,
         )
         return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
 
@@ -846,7 +787,10 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     from advanced_memory.mcp.tools.read_note import read_note
 
     return await read_note.fn(
-        identifier=identifier, page=page, page_size=page_size, project=active_project.name
+        identifier=identifier,
+        page=page,
+        page_size=page_size,
+        project=active_project.name,
     )
 
 
@@ -1114,7 +1058,9 @@ async def _move_operation(active_project, identifier: str, destination_path: str
     from advanced_memory.mcp.tools.move_note import move_note
 
     return await move_note.fn(
-        identifier=identifier, destination_path=destination_path, project=active_project.name
+        identifier=identifier,
+        destination_path=destination_path,
+        project=active_project.name,
     )
 
 
@@ -1234,15 +1180,42 @@ def _extract_content_tags(content: str, title: str) -> list[str]:
             "caterpillar",
         ],
         "science": ["science", "scientific", "research", "study", "experiment"],
-        "technology": ["technology", "tech", "software", "programming", "code", "computer"],
+        "technology": [
+            "technology",
+            "tech",
+            "software",
+            "programming",
+            "code",
+            "computer",
+        ],
         "history": ["history", "historical", "ancient", "medieval", "war", "battle"],
         "literature": ["literature", "book", "novel", "poetry", "author", "writing"],
         "art": ["art", "artistic", "painting", "drawing", "sculpture", "design"],
         "music": ["music", "musical", "song", "instrument", "composer"],
         "philosophy": ["philosophy", "philosophical", "ethics", "morality", "theory"],
-        "psychology": ["psychology", "psychological", "mental", "behavior", "cognitive"],
-        "mathematics": ["mathematics", "math", "mathematical", "equation", "formula", "theorem"],
-        "politics": ["politics", "political", "government", "election", "scandal", "corruption"],
+        "psychology": [
+            "psychology",
+            "psychological",
+            "mental",
+            "behavior",
+            "cognitive",
+        ],
+        "mathematics": [
+            "mathematics",
+            "math",
+            "mathematical",
+            "equation",
+            "formula",
+            "theorem",
+        ],
+        "politics": [
+            "politics",
+            "political",
+            "government",
+            "election",
+            "scandal",
+            "corruption",
+        ],
         "news": ["news", "current", "developments", "breaking", "update"],
     }
 
@@ -1343,7 +1316,10 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
     from advanced_memory.mcp.tools.read_note import read_note
 
     existing_note = await read_note.fn(
-        identifier=f"{folder}/{title}", page=1, page_size=1000, project=active_project.name
+        identifier=f"{folder}/{title}",
+        page=1,
+        page_size=1000,
+        project=active_project.name,
     )
 
     # Check if note exists (not an error message)
@@ -1640,7 +1616,12 @@ Make it informative and useful for a knowledge base."""
 
         # Create the note
         return await _write_operation(
-            active_project, title, generated_content, target_folder, tag_list, entity_type
+            active_project,
+            title,
+            generated_content,
+            target_folder,
+            tag_list,
+            entity_type,
         )
 
     except Exception as e:

@@ -2144,400 +2144,400 @@ tests\importers\test_importer_base.py ...
 2025-10-17 06:28:12,485 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:12,640 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:12] ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'memory//test'                          
-                             contains double slashes                           
-                             [type=value_error,                                
-                             input_value='memory//test',                       
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'memory//test'
+                             contains double slashes
+                             [type=value_error,
+                             input_value='memory//test',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:12,726 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'invalid://test'                        
-                             contains protocol scheme                          
-                             [type=value_error,                                
-                             input_value='invalid://test',                     
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'invalid://test'
+                             contains protocol scheme
+                             [type=value_error,
+                             input_value='invalid://test',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:12,780 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'notes<brackets>'                       
-                             contains invalid characters                       
-                             [type=value_error,                                
-                             input_value='notes<brackets>',                    
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'notes<brackets>'
+                             contains invalid characters
+                             [type=value_error,
+                             input_value='notes<brackets>',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:12,837 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'notes"quotes"'                         
-                             contains invalid characters                       
-                             [type=value_error,                                
-                             input_value='notes"quotes"',                      
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'notes"quotes"'
+                             contains invalid characters
+                             [type=value_error,
+                             input_value='notes"quotes"',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:12,972 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:12,976 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Memory URL path                    
-                             cannot be empty or whitespace                     
-                             [type=value_error,                                
-                             input_value='   ',                                
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Memory URL path
+                             cannot be empty or whitespace
+                             [type=value_error,
+                             input_value='   ',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:13,163 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:13,223 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-10-17 06:28:13,259 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:13,353 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:13,511 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:13] ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'memory//bad'                           
-                             contains double slashes                           
-                             [type=value_error,                                
-                             input_value='memory//bad',                        
-                             input_type=str]                                   
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'memory//bad'
+                             contains double slashes
+                             [type=value_error,
+                             input_value='memory//bad',
+                             input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:13,577 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'build_context'                                   
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :273 in run                |                    
-                             |                            |                    
-                             |   270             argument |                    
-                             |   271                      |                    
-                             |   272         type_adapter |                    
-                             | > 273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             |   276             result = |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\pydantic\type_adapter |                    
-                             | .py:421 in validate_python |                    
-                             |                            |                    
-                             |   418                 code |                    
-                             |   419             )        |                    
-                             |   420                      |                    
-                             | > 421         return self. |                    
-                             |   422             object,  |                    
-                             |   423             strict=s |                    
-                             |   424             from_att |                    
-                             +----------------------------+                    
-                             ValidationError: 1 validation                     
-                             error for call[build_context]                     
-                             url                                               
-                               Value error, Invalid memory                     
-                             URL path: 'http://example.com'                    
-                             contains protocol scheme                          
-                             [type=value_error,                                
-                             input_value='http://example.co                    
-                             m', input_type=str]                               
-                                 For further information                       
-                             visit                                             
-                             https://errors.pydantic.dev/2.                    
-                             11/v/value_error                                  
+                             'build_context'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :273 in run                |
+                             |                            |
+                             |   270             argument |
+                             |   271                      |
+                             |   272         type_adapter |
+                             | > 273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             |   276             result = |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\pydantic\type_adapter |
+                             | .py:421 in validate_python |
+                             |                            |
+                             |   418                 code |
+                             |   419             )        |
+                             |   420                      |
+                             | > 421         return self. |
+                             |   422             object,  |
+                             |   423             strict=s |
+                             |   424             from_att |
+                             +----------------------------+
+                             ValidationError: 1 validation
+                             error for call[build_context]
+                             url
+                               Value error, Invalid memory
+                             URL path: 'http://example.com'
+                             contains protocol scheme
+                             [type=value_error,
+                             input_value='http://example.co
+                             m', input_type=str]
+                                 For further information
+                             visit
+                             https://errors.pydantic.dev/2.
+                             11/v/value_error
 2025-10-17 06:28:13,831 - mcp.server.lowlevel.server - INFO - Warning: RuntimeWarning: coroutine 'initialize_app' was never awaited
 2025-10-17 06:28:13,831 - mcp.server.lowlevel.server - INFO - Warning: RuntimeWarning: coroutine 'call_delete' was never awaited
 2025-10-17 06:28:13,831 - mcp.server.lowlevel.server - INFO - Warning: RuntimeWarning: coroutine 'call_get' was never awaited
@@ -2763,100 +2763,100 @@ Error editing note: Expected 5 occurrences of 'test', but found 6
 2025-10-17 06:28:25,333 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-10-17 06:28:25,336 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:25] ERROR    Error calling tool 'edit_note' tool_manager.py:193
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\edit_note.py:27 |                    
-                             | 5 in edit_note             |                    
-                             |                            |                    
-                             |   272     # Validate opera |                    
-                             |   273     valid_operations |                    
-                             |   274     if operation not |                    
-                             | > 275         raise ValueE |                    
-                             |   276             f"Invali |                    
-                             |       '.join(valid_operati |                    
-                             |   277         )            |                    
-                             |   278                      |                    
-                             +----------------------------+                    
-                             ValueError: Invalid operation                     
-                             'invalid_operation'. Must be                      
-                             one of: append, prepend,                          
-                             find_replace, replace_section                     
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\edit_note.py:27 |
+                             | 5 in edit_note             |
+                             |                            |
+                             |   272     # Validate opera |
+                             |   273     valid_operations |
+                             |   274     if operation not |
+                             | > 275         raise ValueE |
+                             |   276             f"Invali |
+                             |       '.join(valid_operati |
+                             |   277         )            |
+                             |   278                      |
+                             +----------------------------+
+                             ValueError: Invalid operation
+                             'invalid_operation'. Must be
+                             one of: append, prepend,
+                             find_replace, replace_section
 2025-10-17 06:28:25,520 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:25,688 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
 2025-10-17 06:28:25,688 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
 2025-10-17 06:28:25,689 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-10-17 06:28:25,692 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool 'edit_note' tool_manager.py:193
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\edit_note.py:28 |                    
-                             | 1 in edit_note             |                    
-                             |                            |                    
-                             |   278                      |                    
-                             |   279     # Validate requi |                    
-                             |   280     if operation ==  |                    
-                             | > 281         raise ValueE |                    
-                             |   282     if operation ==  |                    
-                             |   283         raise ValueE |                    
-                             |   284                      |                    
-                             +----------------------------+                    
-                             ValueError: find_text                             
-                             parameter is required for                         
-                             find_replace operation                            
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\edit_note.py:28 |
+                             | 1 in edit_note             |
+                             |                            |
+                             |   278                      |
+                             |   279     # Validate requi |
+                             |   280     if operation ==  |
+                             | > 281         raise ValueE |
+                             |   282     if operation ==  |
+                             |   283         raise ValueE |
+                             |   284                      |
+                             +----------------------------+
+                             ValueError: find_text
+                             parameter is required for
+                             find_replace operation
 2025-10-17 06:28:25,833 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:26,232 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
 2025-10-17 06:28:26,232 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
@@ -3164,105 +3164,105 @@ tests\integration\mcp\test_move_note_integration.py ............
 2025-10-17 06:28:39,775 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
 2025-10-17 06:28:39,870 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:39] ERROR    Error calling tool             tool_manager.py:193
-                             'set_default_project'                             
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:233 in |                    
-                             | call_put                   |                    
-                             |                            |                    
-                             |   230             logger.e |                    
-                             |   231                      |                    
-                             |   232         # Raise a to |                    
-                             | > 233         response.rai |                    
-                             |   234         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   235                      |                    
-                             |   236     except HTTPStatu |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\httpx\_models.py:829  |                    
-                             | in raise_for_status        |                    
-                             |                            |                    
-                             |    826         }           |                    
-                             |    827         error_type  |                    
-                             |    828         message = m |                    
-                             | >  829         raise HTTPS |                    
-                             |    830                     |                    
-                             |    831     def json(self,  |                    
-                             |    832         return json |                    
-                             +----------------------------+                    
-                             HTTPStatusError: Client error                     
-                             '404 Not Found' for url                           
-                             'http://test/projects/non-exis                    
-                             tent-project/default'                             
-                             For more information check:                       
-                             https://developer.mozilla.org/                    
-                             en-US/docs/Web/HTTP/Status/404                    
-                                                                               
-                             The above exception was the                       
-                             direct cause of the following                     
-                             exception:                                        
-                                                                               
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\project_managem |                    
-                             | ent.py:346 in              |                    
-                             | set_default_project        |                    
-                             |                            |                    
-                             |   343         await ctx.in |                    
-                             |   344                      |                    
-                             |   345     # Call API to se |                    
-                             | > 346     response = await |                    
-                             |   347     status_response  |                    
-                             |   348                      |                    
-                             |   349     result = f"\u2713 {st |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:237 in |                    
-                             | call_put                   |                    
-                             |                            |                    
-                             |   234         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   235                      |                    
-                             |   236     except HTTPStatu |                    
-                             | > 237         raise ToolEr |                    
-                             |   238                      |                    
-                             |   239                      |                    
-                             |   240 async def call_patch |                    
-                             +----------------------------+                    
-                             ToolError: Project:                               
-                             'non-existent-project' does                       
-                             not exist                                         
+                             'set_default_project'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:233 in |
+                             | call_put                   |
+                             |                            |
+                             |   230             logger.e |
+                             |   231                      |
+                             |   232         # Raise a to |
+                             | > 233         response.rai |
+                             |   234         return respo |
+                             |       checker  # pragma: n |
+                             |   235                      |
+                             |   236     except HTTPStatu |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\httpx\_models.py:829  |
+                             | in raise_for_status        |
+                             |                            |
+                             |    826         }           |
+                             |    827         error_type  |
+                             |    828         message = m |
+                             | >  829         raise HTTPS |
+                             |    830                     |
+                             |    831     def json(self,  |
+                             |    832         return json |
+                             +----------------------------+
+                             HTTPStatusError: Client error
+                             '404 Not Found' for url
+                             'http://test/projects/non-exis
+                             tent-project/default'
+                             For more information check:
+                             https://developer.mozilla.org/
+                             en-US/docs/Web/HTTP/Status/404
+
+                             The above exception was the
+                             direct cause of the following
+                             exception:
+
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\project_managem |
+                             | ent.py:346 in              |
+                             | set_default_project        |
+                             |                            |
+                             |   343         await ctx.in |
+                             |   344                      |
+                             |   345     # Call API to se |
+                             | > 346     response = await |
+                             |   347     status_response  |
+                             |   348                      |
+                             |   349     result = f"\u2713 {st |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:237 in |
+                             | call_put                   |
+                             |                            |
+                             |   234         return respo |
+                             |       checker  # pragma: n |
+                             |   235                      |
+                             |   236     except HTTPStatu |
+                             | > 237         raise ToolEr |
+                             |   238                      |
+                             |   239                      |
+                             |   240 async def call_patch |
+                             +----------------------------+
+                             ToolError: Project:
+                             'non-existent-project' does
+                             not exist
 2025-10-17 06:28:40,089 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:40,122 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-10-17 06:28:40,125 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
@@ -3301,106 +3301,106 @@ tests\integration\mcp\test_move_note_integration.py ............
 2025-10-17 06:28:41,105 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-10-17 06:28:41,108 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:41] ERROR    Error calling tool             tool_manager.py:193
-                             'create_memory_project'                           
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:425 in |                    
-                             | call_post                  |                    
-                             |                            |                    
-                             |   422             logger.e |                    
-                             |   423                      |                    
-                             |   424         # Raise a to |                    
-                             | > 425         response.rai |                    
-                             |   426         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   427                      |                    
-                             |   428     except HTTPStatu |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\httpx\_models.py:829  |                    
-                             | in raise_for_status        |                    
-                             |                            |                    
-                             |    826         }           |                    
-                             |    827         error_type  |                    
-                             |    828         message = m |                    
-                             | >  829         raise HTTPS |                    
-                             |    830                     |                    
-                             |    831     def json(self,  |                    
-                             |    832         return json |                    
-                             +----------------------------+                    
-                             HTTPStatusError: Client error                     
-                             '400 Bad Request' for url                         
-                             'http://test/projects/projects                    
-                             '                                                 
-                             For more information check:                       
-                             https://developer.mozilla.org/                    
-                             en-US/docs/Web/HTTP/Status/400                    
-                                                                               
-                             The above exception was the                       
-                             direct cause of the following                     
-                             exception:                                        
-                                                                               
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\project_managem |                    
-                             | ent.py:389 in              |                    
-                             | create_memory_project      |                    
-                             |                            |                    
-                             |   386     )                |                    
-                             |   387                      |                    
-                             |   388     # Call API to cr |                    
-                             | > 389     response = await |                    
-                             |       json=project_request |                    
-                             |   390     status_response  |                    
-                             |   391                      |                    
-                             |   392     result = f"\u2713 {st |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:429 in |                    
-                             | call_post                  |                    
-                             |                            |                    
-                             |   426         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   427                      |                    
-                             |   428     except HTTPStatu |                    
-                             | > 429         raise ToolEr |                    
-                             |   430                      |                    
-                             |   431                      |                    
-                             |   432 async def call_delet |                    
-                             +----------------------------+                    
-                             ToolError: Project                                
-                             'duplicate-test' already                          
-                             exists                                            
+                             'create_memory_project'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:425 in |
+                             | call_post                  |
+                             |                            |
+                             |   422             logger.e |
+                             |   423                      |
+                             |   424         # Raise a to |
+                             | > 425         response.rai |
+                             |   426         return respo |
+                             |       checker  # pragma: n |
+                             |   427                      |
+                             |   428     except HTTPStatu |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\httpx\_models.py:829  |
+                             | in raise_for_status        |
+                             |                            |
+                             |    826         }           |
+                             |    827         error_type  |
+                             |    828         message = m |
+                             | >  829         raise HTTPS |
+                             |    830                     |
+                             |    831     def json(self,  |
+                             |    832         return json |
+                             +----------------------------+
+                             HTTPStatusError: Client error
+                             '400 Bad Request' for url
+                             'http://test/projects/projects
+                             '
+                             For more information check:
+                             https://developer.mozilla.org/
+                             en-US/docs/Web/HTTP/Status/400
+
+                             The above exception was the
+                             direct cause of the following
+                             exception:
+
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\project_managem |
+                             | ent.py:389 in              |
+                             | create_memory_project      |
+                             |                            |
+                             |   386     )                |
+                             |   387                      |
+                             |   388     # Call API to cr |
+                             | > 389     response = await |
+                             |       json=project_request |
+                             |   390     status_response  |
+                             |   391                      |
+                             |   392     result = f"\u2713 {st |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:429 in |
+                             | call_post                  |
+                             |                            |
+                             |   426         return respo |
+                             |       checker  # pragma: n |
+                             |   427                      |
+                             |   428     except HTTPStatu |
+                             | > 429         raise ToolEr |
+                             |   430                      |
+                             |   431                      |
+                             |   432 async def call_delet |
+                             +----------------------------+
+                             ToolError: Project
+                             'duplicate-test' already
+                             exists
 2025-10-17 06:28:41,346 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:41,355 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
 2025-10-17 06:28:41,355 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
@@ -3410,102 +3410,102 @@ tests\integration\mcp\test_move_note_integration.py ............
 2025-10-17 06:28:41,392 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:41,482 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'delete_project'                                  
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\project_managem |                    
-                             | ent.py:500 in              |                    
-                             | delete_project             |                    
-                             |                            |                    
-                             |   497     project_exists = |                    
-                             |   498     if not project_e |                    
-                             |   499         available_pr |                    
-                             | > 500         raise ValueE |                    
-                             |   501             f"Projec |                    
-                             |       '.join(available_pro |                    
-                             |   502         )            |                    
-                             |   503                      |                    
-                             +----------------------------+                    
-                             ValueError: Project                               
-                             'non-existent-project' not                        
-                             found. Available projects:                        
-                             test-project                                      
+                             'delete_project'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\project_managem |
+                             | ent.py:500 in              |
+                             | delete_project             |
+                             |                            |
+                             |   497     project_exists = |
+                             |   498     if not project_e |
+                             |   499         available_pr |
+                             | > 500         raise ValueE |
+                             |   501             f"Projec |
+                             |       '.join(available_pro |
+                             |   502         )            |
+                             |   503                      |
+                             +----------------------------+
+                             ValueError: Project
+                             'non-existent-project' not
+                             found. Available projects:
+                             test-project
 2025-10-17 06:28:41,635 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
                     ERROR    Error calling tool             tool_manager.py:193
-                             'delete_project'                                  
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\project_managem |                    
-                             | ent.py:488 in              |                    
-                             | delete_project             |                    
-                             |                            |                    
-                             |   485                      |                    
-                             |   486     # Check if tryin |                    
-                             |   487     if project_name  |                    
-                             | > 488         raise ValueE |                    
-                             |   489             f"Cannot |                    
-                             |       different project fi |                    
-                             |   490         )            |                    
-                             |   491                      |                    
-                             +----------------------------+                    
-                             ValueError: Cannot delete the                     
-                             currently active project                          
-                             'test-project'. Switch to a                       
-                             different project first.                          
+                             'delete_project'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\project_managem |
+                             | ent.py:488 in              |
+                             | delete_project             |
+                             |                            |
+                             |   485                      |
+                             |   486     # Check if tryin |
+                             |   487     if project_name  |
+                             | > 488         raise ValueE |
+                             |   489             f"Cannot |
+                             |       different project fi |
+                             |   490         )            |
+                             |   491                      |
+                             +----------------------------+
+                             ValueError: Cannot delete the
+                             currently active project
+                             'test-project'. Switch to a
+                             different project first.
 2025-10-17 06:28:41,781 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:41,790 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
 2025-10-17 06:28:41,790 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
@@ -3673,104 +3673,104 @@ tests\integration\mcp\test_project_state_sync_integration.py FF.
 2025-10-17 06:28:47,871 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:48,039 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 [10/17/25 06:28:48] ERROR    Error calling tool             tool_manager.py:193
-                             'read_content'                                    
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:143 in |                    
-                             | call_get                   |                    
-                             |                            |                    
-                             |   140             logger.e |                    
-                             |   141                      |                    
-                             |   142         # Raise a to |                    
-                             | > 143         response.rai |                    
-                             |   144         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   145                      |                    
-                             |   146     except HTTPStatu |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\httpx\_models.py:829  |                    
-                             | in raise_for_status        |                    
-                             |                            |                    
-                             |    826         }           |                    
-                             |    827         error_type  |                    
-                             |    828         message = m |                    
-                             | >  829         raise HTTPS |                    
-                             |    830                     |                    
-                             |    831     def json(self,  |                    
-                             |    832         return json |                    
-                             +----------------------------+                    
-                             HTTPStatusError: Client error                     
-                             '404 Not Found' for url                           
-                             'http://test/test-project/reso                    
-                             urce/nonexistent/file.md'                         
-                             For more information check:                       
-                             https://developer.mozilla.org/                    
-                             en-US/docs/Web/HTTP/Status/404                    
-                                                                               
-                             The above exception was the                       
-                             direct cause of the following                     
-                             exception:                                        
-                                                                               
-                             +- Traceback (most recent ca-+                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool_ma |                    
-                             | nager.py:184 in call_tool  |                    
-                             |                            |                    
-                             |   181                 rais |                    
-                             |   182                      |                    
-                             |   183             try:     |                    
-                             | > 184                 retu |                    
-                             |   185                      |                    
-                             |   186             # raise  |                    
-                             |   187             except T |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\.venv\Lib\site-pack |                    
-                             | ages\fastmcp\tools\tool.py |                    
-                             | :276 in run                |                    
-                             |                            |                    
-                             |   273         result = typ |                    
-                             |   274                      |                    
-                             |   275         if inspect.i |                    
-                             | > 276             result = |                    
-                             |   277                      |                    
-                             |   278         if isinstanc |                    
-                             |   279             return r |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\read_content.py |                    
-                             | :264 in read_content       |                    
-                             |                            |                    
-                             |   261             "error": |                    
-                             |       boundaries",         |                    
-                             |   262         }            |                    
-                             |   263                      |                    
-                             | > 264     response = await |                    
-                             |   265     content_type = r |                    
-                             |   266     content_length = |                    
-                             |   267                      |                    
-                             |                            |                    
-                             | D:\Dev\repos\advanced-memo |                    
-                             | ry-mcp\src\advanced_memory |                    
-                             | \mcp\tools\utils.py:147 in |                    
-                             | call_get                   |                    
-                             |                            |                    
-                             |   144         return respo |                    
-                             |       checker  # pragma: n |                    
-                             |   145                      |                    
-                             |   146     except HTTPStatu |                    
-                             | > 147         raise ToolEr |                    
-                             |   148                      |                    
-                             |   149                      |                    
-                             |   150 async def call_put(  |                    
-                             +----------------------------+                    
-                             ToolError: Resource not found:                    
-                             nonexistent/file.md                               
+                             'read_content'
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:143 in |
+                             | call_get                   |
+                             |                            |
+                             |   140             logger.e |
+                             |   141                      |
+                             |   142         # Raise a to |
+                             | > 143         response.rai |
+                             |   144         return respo |
+                             |       checker  # pragma: n |
+                             |   145                      |
+                             |   146     except HTTPStatu |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\httpx\_models.py:829  |
+                             | in raise_for_status        |
+                             |                            |
+                             |    826         }           |
+                             |    827         error_type  |
+                             |    828         message = m |
+                             | >  829         raise HTTPS |
+                             |    830                     |
+                             |    831     def json(self,  |
+                             |    832         return json |
+                             +----------------------------+
+                             HTTPStatusError: Client error
+                             '404 Not Found' for url
+                             'http://test/test-project/reso
+                             urce/nonexistent/file.md'
+                             For more information check:
+                             https://developer.mozilla.org/
+                             en-US/docs/Web/HTTP/Status/404
+
+                             The above exception was the
+                             direct cause of the following
+                             exception:
+
+                             +- Traceback (most recent ca-+
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool_ma |
+                             | nager.py:184 in call_tool  |
+                             |                            |
+                             |   181                 rais |
+                             |   182                      |
+                             |   183             try:     |
+                             | > 184                 retu |
+                             |   185                      |
+                             |   186             # raise  |
+                             |   187             except T |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\.venv\Lib\site-pack |
+                             | ages\fastmcp\tools\tool.py |
+                             | :276 in run                |
+                             |                            |
+                             |   273         result = typ |
+                             |   274                      |
+                             |   275         if inspect.i |
+                             | > 276             result = |
+                             |   277                      |
+                             |   278         if isinstanc |
+                             |   279             return r |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\read_content.py |
+                             | :264 in read_content       |
+                             |                            |
+                             |   261             "error": |
+                             |       boundaries",         |
+                             |   262         }            |
+                             |   263                      |
+                             | > 264     response = await |
+                             |   265     content_type = r |
+                             |   266     content_length = |
+                             |   267                      |
+                             |                            |
+                             | D:\Dev\repos\advanced-memo |
+                             | ry-mcp\src\advanced_memory |
+                             | \mcp\tools\utils.py:147 in |
+                             | call_get                   |
+                             |                            |
+                             |   144         return respo |
+                             |       checker  # pragma: n |
+                             |   145                      |
+                             |   146     except HTTPStatu |
+                             | > 147         raise ToolEr |
+                             |   148                      |
+                             |   149                      |
+                             |   150 async def call_put(  |
+                             +----------------------------+
+                             ToolError: Resource not found:
+                             nonexistent/file.md
 2025-10-17 06:28:48,312 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
 2025-10-17 06:28:48,493 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
 2025-10-17 06:28:48,493 - mcp.server.lowlevel.server - INFO - Warning: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
@@ -4742,14 +4742,14 @@ Traceback (most recent call last):
              -> functools.partial(<built-in method rollback of sqlite3.Connection object at 0x000001A337A3A5C0>)
 
 sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 Search failed for query '*': (sqlite3.OperationalError) no such table: project
-[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at 
-FROM project 
+[SQL: SELECT project.id, project.name, project.description, project.permalink, project.path, project.is_active, project.is_default, project.created_at, project.updated_at
+FROM project
 WHERE project.permalink = ?]
 [parameters: ('test-project',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)

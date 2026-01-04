@@ -1,6 +1,6 @@
 # Advanced Memory MCP - Architecture Deep Dive
 
-**Version:** 1.0.0b2  
+**Version:** 1.0.0b2
 **Purpose:** Technical architecture documentation for developers and advanced users
 
 ## System Architecture Overview
@@ -129,7 +129,7 @@ Business logic and orchestration between API and data layers.
 class EntityService:
     def __init__(self, entity_repo: EntityRepository):
         self.entity_repo = entity_repo
-    
+
     async def create_entity(self, data: EntityCreate) -> Entity:
         # Business logic
         entity = await self.entity_repo.create(data)
@@ -198,14 +198,14 @@ CREATE TABLE relation (
 
 -- Full-Text Search Tables
 CREATE VIRTUAL TABLE fts_entity USING fts5(
-    title, content, 
-    content='entity', 
+    title, content,
+    content='entity',
     content_rowid='id'
 );
 
 CREATE VIRTUAL TABLE fts_observation USING fts5(
-    content, 
-    content='observation', 
+    content,
+    content='observation',
     content_rowid='id'
 );
 ```
@@ -229,7 +229,7 @@ class WatchService:
     def __init__(self, config: Config):
         self.config = config
         self.observer = Observer()
-    
+
     def start_watching(self):
         # Monitor all active projects
         for project in self.active_projects:
@@ -303,7 +303,7 @@ Portmanteau tools use a **command pattern** with **operation routing**:
 @mcp.tool()
 async def adn_content(operation: str, **kwargs) -> str:
     '''Consolidated content operations'''
-    
+
     # Route to appropriate operation
     if operation == "write":
         return await _write_operation(**kwargs)
@@ -341,7 +341,7 @@ class BaseImporter(ABC):
     @abstractmethod
     async def parse(self, source_path: str) -> List[Entity]:
         pass
-    
+
     @abstractmethod
     def extract_metadata(self, content: str) -> Dict[str, Any]:
         pass
@@ -396,7 +396,7 @@ class Config:
     sync_changes: bool
     sync_delay: int
     database_path: str
-    
+
     @classmethod
     def load(cls) -> 'Config':
         # Load from file, environment, defaults

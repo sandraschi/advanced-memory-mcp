@@ -1,4 +1,4 @@
-﻿# Windsurf IDE: A Look athe Architecture
+# Windsurf IDE: A Look athe Architecture
 
 ## The Agenticore: A Multi-Layered System
 

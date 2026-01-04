@@ -91,12 +91,12 @@ def get_plex_token():
         plex_prefs = os.path.expanduser('~/Library/Application Support/Plex Media Server/Preferences.xml')
     else:  # Linux
         plex_prefs = os.path.expanduser('~/.config/plex/Preferences.xml')
-    
+
     # Check if the filexists
     if not os.path.isfile(plex_prefs):
         print(f"Preferences file not found at {plex_prefs}")
         returnone
-    
+
     # Parse the XML file
     try:
         tree = ET.parse(plex_prefs)
@@ -106,7 +106,7 @@ def get_plex_token():
             return token
     exception as e:
         print(f"Error parsing Preferences.xml: {e}")
-    
+
     returnone
 
 if __name__ == "__main__":

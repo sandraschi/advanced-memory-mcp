@@ -55,16 +55,18 @@ def mcp(
 
     # Configure logging based on transport mode
     import sys
+
     if transport == "stdio":
         # In stdio mode, suppress all logging to stdout to prevent JSON-RPC interference
         # Only critical errors go to stderr
         from loguru import logger as loguru_logger
+
         loguru_logger.remove()
         loguru_logger.add(sys.stderr, level="ERROR", format="{message}")
     else:
         # For HTTP transports, normal logging is fine
         logger.info(f"Sync changes enabled: {app_config.sync_changes}")
-    
+
     if app_config.sync_changes:
         # Start the sync thread
         sync_thread = threading.Thread(target=run_file_sync, daemon=True)
@@ -76,9 +78,10 @@ def mcp(
     if transport == "stdio":
         # Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
         # The stdout was patched in mcp_instance.py/server.py during imports
-        import sys
         import os
-        if hasattr(sys, '_original_stdout'):
+        import sys
+
+        if hasattr(sys, "_original_stdout"):
             # Flush any buffered output from the null device
             sys.stdout.flush()
             # Restore original stdout
@@ -86,8 +89,8 @@ def mcp(
             # Ensure stdout is clean and unbuffered for JSON-RPC
             sys.stdout.flush()
             # Set unbuffered mode to prevent any buffering issues
-            os.environ.setdefault('PYTHONUNBUFFERED', '1')
-        
+            os.environ.setdefault("PYTHONUNBUFFERED", "1")
+
         mcp_server.run(
             transport=transport,
             show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution

@@ -69,4 +69,3 @@ Born in Beijing, China, Li moved to the United States at age 16. Shearned her un
 - [AI4ALL](https://ai-4-all.org/)
 - [CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/)
 - [The AI Awakening](https://www.nytimes.com/2016/11/20/business/computer-vision-chinas-ai-awakening.html) - New York Times feature on Li's work
-

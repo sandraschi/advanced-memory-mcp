@@ -16,7 +16,7 @@ function Get-LatestWorkflowRun {
     # Get latest workflow run status from GitHub API
     $repo = "sandraschi/advanced-memory-mcp"
     $apiUrl = "https://api.github.com/repos/$repo/actions/runs?branch=$Branch&per_page=1"
-    
+
     try {
         $response = Invoke-RestMethod -Uri $apiUrl -Headers @{
             "Accept" = "application/vnd.github+json"
@@ -30,10 +30,10 @@ function Get-LatestWorkflowRun {
 
 function Get-WorkflowDetails {
     param($RunId)
-    
+
     $repo = "sandraschi/advanced-memory-mcp"
     $apiUrl = "https://api.github.com/repos/$repo/actions/runs/$RunId/jobs"
-    
+
     try {
         $response = Invoke-RestMethod -Uri $apiUrl -Headers @{
             "Accept" = "application/vnd.github+json"
@@ -47,7 +47,7 @@ function Get-WorkflowDetails {
 
 function Analyze-Failures {
     param($Jobs)
-    
+
     $failures = @{
         lint = $false
         format = $false
@@ -56,17 +56,17 @@ function Analyze-Failures {
         security = $false
         details = @()
     }
-    
+
     foreach ($job in $Jobs) {
         if ($job.conclusion -eq "failure") {
             $jobName = $job.name.ToLower()
-            
+
             $failures.details += @{
                 name = $job.name
                 url = $job.html_url
                 conclusion = $job.conclusion
             }
-            
+
             if ($jobName -match "lint") { $failures.lint = $true }
             if ($jobName -match "format") { $failures.format = $true }
             if ($jobName -match "test") { $failures.tests = $true }
@@ -74,19 +74,19 @@ function Analyze-Failures {
             if ($jobName -match "security") { $failures.security = $true }
         }
     }
-    
+
     return $failures
 }
 
 function Auto-Fix-Issues {
     param($Failures)
-    
+
     $fixed = $false
     $commitMessage = "fix: auto-fix CI failures"
     $changes = @()
-    
+
     Write-Host "`n🔧 AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
-    
+
     # Fix format issues
     if ($Failures.format) {
         Write-Host "Fixing format issues..." -ForegroundColor Cyan
@@ -94,7 +94,7 @@ function Auto-Fix-Issues {
         $changes += "format"
         $fixed = $true
     }
-    
+
     # Fix lint issues
     if ($Failures.lint) {
         Write-Host "Fixing lint issues..." -ForegroundColor Cyan
@@ -102,7 +102,7 @@ function Auto-Fix-Issues {
         $changes += "lint"
         $fixed = $true
     }
-    
+
     # Tests can't be auto-fixed
     if ($Failures.tests) {
         Write-Host "`n⚠️  Test failures detected - cannot auto-fix" -ForegroundColor Yellow
@@ -110,19 +110,19 @@ function Auto-Fix-Issues {
         uv run pytest --maxfail=1 -x --tb=short 2>&1 | Select-Object -Last 30
         return $false
     }
-    
+
     # Build issues need manual intervention
     if ($Failures.build -and -not $Failures.format -and -not $Failures.lint) {
         Write-Host "`n⚠️  Build failures detected - cannot auto-fix" -ForegroundColor Yellow
         Write-Host "This requires manual intervention`n" -ForegroundColor Cyan
         return $false
     }
-    
+
     if ($fixed) {
         $commitMessage += " (" + ($changes -join ", ") + ")"
         Write-Host "`n✅ Applied fixes: $($changes -join ', ')" -ForegroundColor Green
     }
-    
+
     return $fixed
 }
 
@@ -161,7 +161,7 @@ if ($MaxAttempts -gt 5) {
 
 do {
     $attempt++
-    
+
     # SAFETY: Hard limit on iterations (failsafe)
     if ($attempt -gt 10) {
         Write-Host "`n🚨 SAFETY LIMIT REACHED: 10 attempts!" -ForegroundColor Red
@@ -169,39 +169,39 @@ do {
         Write-Host "   This is to protect you from the GitHub goon squad! 😄`n" -ForegroundColor Yellow
         break
     }
-    
+
     Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
     Write-Host "🔄 Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
-    
+
     # Get latest workflow run
     Write-Host "Fetching latest workflow status..." -ForegroundColor Cyan
     $workflow = Get-LatestWorkflowRun
     $apiCallCount++
-    
+
     if (-not $workflow) {
         Write-Host "❌ Could not fetch workflow status`n" -ForegroundColor Red
         exit 1
     }
-    
+
     $status = $workflow.status
     $conclusion = $workflow.conclusion
     $runUrl = $workflow.html_url
     $workflowName = $workflow.name
-    
+
     Write-Host "Workflow: $workflowName" -ForegroundColor White
     Write-Host "Status: $status" -ForegroundColor White
     if ($conclusion) {
         Write-Host "Conclusion: $conclusion" -ForegroundColor White
     }
     Write-Host "URL: $runUrl`n" -ForegroundColor Cyan
-    
+
     # Wait if still running
     if ($status -eq "in_progress" -or $status -eq "queued") {
         Write-Host "⏳ Workflow still running... waiting 30 seconds`n" -ForegroundColor Yellow
         Start-Sleep -Seconds 30
         continue
     }
-    
+
     # Check conclusion
     if ($conclusion -eq "success") {
         Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
@@ -210,15 +210,15 @@ do {
         $success = $true
         break
     }
-    
+
     if ($conclusion -eq "failure") {
         Write-Host "❌ WORKFLOW FAILED`n" -ForegroundColor Red
-        
+
         # Get job details
         Write-Host "Fetching failure details..." -ForegroundColor Cyan
         $jobs = Get-WorkflowDetails -RunId $workflow.id
         $apiCallCount++
-        
+
         if ($jobs) {
             Write-Host "`nFailed jobs:" -ForegroundColor Yellow
             foreach ($job in $jobs) {
@@ -227,23 +227,23 @@ do {
                     Write-Host "     URL: $($job.html_url)" -ForegroundColor Gray
                 }
             }
-            
+
             # Analyze failures
             $failures = Analyze-Failures -Jobs $jobs
-            
+
             # Auto-fix if enabled
             if ($AutoFix -and ($failures.lint -or $failures.format)) {
                 $fixed = Auto-Fix-Issues -Failures $failures
-                
+
                 if ($fixed) {
                     Write-Host "`n✅ Auto-fixes applied!`n" -ForegroundColor Green
-                    
+
                     # RATE LIMITING: Warn if approaching max attempts
                     if ($attempt -ge $MaxAttempts - 1) {
                         Write-Host "⚠️  WARNING: This is attempt $($attempt + 1) of $MaxAttempts!" -ForegroundColor Yellow
                         Write-Host "   After this, manual intervention required to avoid rate limiting.`n" -ForegroundColor Yellow
                     }
-                    
+
                     Write-Host "Committing fixes..." -ForegroundColor Cyan
                     git add -A
                     git commit -m "fix: auto-fix CI failures (format/lint)
@@ -252,10 +252,10 @@ Auto-fixed by monitor-ci.ps1 script after workflow failure.
 Detected and fixed: format and/or lint issues.
 
 Signed-off-by: CI Monitor <ci@advanced-memory.com>"
-                    
+
                     Write-Host "Pushing fixes..." -ForegroundColor Cyan
                     git push origin $Branch
-                    
+
                     # RATE LIMITING: Enforce minimum wait between pushes
                     Write-Host "`n⏳ RATE LIMIT PROTECTION: Waiting $MinWaitBetweenPushes seconds before next check..." -ForegroundColor Yellow
                     Write-Host "   (This prevents GitHub API rate limiting)`n" -ForegroundColor Gray
@@ -275,12 +275,12 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
             }
         }
     }
-    
+
     if ($conclusion -eq "cancelled") {
         Write-Host "⚠️  Workflow was cancelled`n" -ForegroundColor Yellow
         break
     }
-    
+
 } while ($Continuous -and $attempt -lt $MaxAttempts -and -not $success)
 
 # Final status
@@ -301,4 +301,3 @@ if ($success) {
     Write-Host "Check status: https://github.com/sandraschi/advanced-memory-mcp/actions`n" -ForegroundColor Cyan
     exit 1
 }
-

@@ -1,4 +1,4 @@
-﻿# Digital Afterlives: Mind Uploading and the Fading Qualiargument
+# Digital Afterlives: Mind Uploading and the Fading Qualiargument
 
 ## Introduction: The Dream of Digital Immortality
 
@@ -141,7 +141,7 @@ The possibility of digital afterlives forces us to confront fundamental question
 - Searle, J. R. (1980). *Minds, Brains, and Programs*. Behavioral and Brain Sciences, 3(3), 417-424.
 - Kurzweil, R. (2005). *The Singularity Is Near: When Humans Transcend Biology*. Viking.
 - Blackford, R., & Broderick, D. (Eds.). (2014). *Intelligence Unbound: The Future of Uploaded and Machine Minds*. Wiley-Blackwell.
-- Koene, R. A. (2016). *Embracing Competitive Balance: The Case for Substrate-Independent Minds and Whole Brain Emulation*. In *Thend of the Beginning: Life, Society and Economy on the Brink of the Singularity*. 
+- Koene, R. A. (2016). *Embracing Competitive Balance: The Case for Substrate-Independent Minds and Whole Brain Emulation*. In *Thend of the Beginning: Life, Society and Economy on the Brink of the Singularity*.
 - Metzinger, T. (2009). *Thego Tunnel: The Science of the Mind and the Myth of the Self*. Basic Books.
 - Rothblatt, M. (2014). *Virtually Human: The Promise—and the Peril—of Digital Immortality*. St. Martin's Press.
 - Sandberg, A., & Bostrom, N. (2008). *Whole Brain Emulation: A Roadmap*. Technical Report #2008-3, Future of Humanity Institute, Oxford University.

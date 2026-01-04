@@ -1,4 +1,4 @@
-﻿# Mermaid.js Integration - Complete Guide
+# Mermaid.js Integration - Complete Guide
 
 ## Table of Contents
 
@@ -101,7 +101,7 @@ window.$docsify = {
     // Mermaid initialization optionstartOnLoad: true,
     theme: 'default',  // or 'dark', 'forest', 'neutral'
     securityLevel: 'loose',
-    
+
     // Common configuration for all diagrams
     themeVariables: {
       primaryColor: '#7c3aed',
@@ -112,17 +112,17 @@ window.$docsify = {
       tertiaryColor: '#f3f4f6',
       // ... other theme variables
     },
-    
+
     // Font settings
     fontFamily: '"Trebuchet MS", robot to, -apple-system, sans-serif',
-    
+
     // Diagram-specificonfigurations
     flowchart: {
       htmlLabels: true,
       useMaxWidth: true,
       curve: 'basis'
     },
-    
+
     sequence: {
       diagramMarginX: 50,
       diagramMarginY: 10,
@@ -130,9 +130,9 @@ window.$docsify = {
       useMaxWidth: true,
       // ... other sequence diagram options
     },
-    
+
     // Other diagram configurations...
-    
+
     // Callback after Mermaid is loaded
     callback: function() {
       console.log('Mermaid initialized');
@@ -152,7 +152,7 @@ flowchartD
     B -- Yes --> C[OK]
     C --> D[Rethink]
     D --> B -- No --> E[End]
-    
+
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style fill:#bbf,stroke:#333,stroke-width:2px
 ```
@@ -164,15 +164,15 @@ flowchartD
 flowchart LR
     A[Lefto Right] --> B[Another box]
     B --> C[End]
-    
+
     subgraph TB [Top to Bottom]
     D[Top] --> E[Bottom]
     end
-    
+
     subgraph RL [Righto Left]
     F[Right] --> G[Left]
     end
-    
+
     subgraph BT [Bottom top]
     H[Bottom] --> I[Top]
     end
@@ -233,13 +233,13 @@ stateDiagram-v2
     [*] --> Still --> [*]
     Still --> Moving --> Still
     Moving --> Crash --> [*]
-    
+
     state "Still" as1
     state "Moving" as2 {
         state "Accelerating" as2_1
         state "Decelerating" as2_2
         state "Constant Speed" as2_3
-        
+
         [*] --> s2_1 --> s2_3: 50% full\nofuel
         s2_3 --> s2_2: Need to stop
         s2_2 --> [*]
@@ -257,7 +257,7 @@ erDiagram
     CUSTOMER ||--o{ ORDER : places
     ORDER ||--|{ LINE-ITEM : contains
     CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
-    
+
     CUSTOMER {
         string name
         string email
@@ -353,12 +353,12 @@ C4 model for visualizing software architecture.
 ````markdown
 ```mermaid
 C4Contextitle System Context diagram for Internet Banking System
-    
+
     Person(customer, "Banking Customer", "A customer of the bank, with personal bank accounts.")
     System(banking_system, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
-    
+
     Rel(customer, banking_system, "Uses")
-    
+
     UpdateLayoutConfig($c4ShapeInRow="3")
 ```
 ````

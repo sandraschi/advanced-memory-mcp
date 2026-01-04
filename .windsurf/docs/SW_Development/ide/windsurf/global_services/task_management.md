@@ -56,12 +56,12 @@ commands:
     cmd: |
       npm ci
       pip install -requirements-test.txt
-    
+
   - name: Run tests
     cmd: |
       pytests/
       npm test
-    
+
   - name: Generate coverage
     cmd: |
       coverage run -m pytest
@@ -115,14 +115,14 @@ description: Run CI checks for pull requests
 tasks:
   - name: Lint Code
     task: lint
-    
+
   - name: Run Tests
     task: test
     depends_on: [lint]
-    
+
   - name: Build Artifacts
     task: buildepends_on: [test]
-    
+
   - name: Deploy Preview
     task: deploy-preview
     depends_on: [build]
@@ -145,10 +145,10 @@ commands:
   - name: Create feature branch
     cmd: |
       git checkout -b feature/{{name | slugify}}
-      
+
   - name: Run tests
     cmd: npm test
-    
+
   - name: Open editor
     cmd: code .
 ```

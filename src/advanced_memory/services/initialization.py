@@ -22,29 +22,61 @@ if _is_stdio_mode:
     # Create a complete no-op logger class that does absolutely nothing
     class NoOpLogger:
         """Complete no-op logger that does nothing - nuclear option for stdio mode."""
+
         def __call__(self, *args, **kwargs):
             return self
-        def info(self, *args, **kwargs): pass
-        def error(self, *args, **kwargs): pass
-        def warning(self, *args, **kwargs): pass
-        def debug(self, *args, **kwargs): pass
-        def exception(self, *args, **kwargs): pass
-        def critical(self, *args, **kwargs): pass
-        def success(self, *args, **kwargs): pass
-        def trace(self, *args, **kwargs): pass
-        def remove(self, *args, **kwargs): return self
-        def add(self, *args, **kwargs): return self
-        def disable(self, *args, **kwargs): return self
-        def enable(self, *args, **kwargs): return self
-        def bind(self, *args, **kwargs): return self
-        def patch(self, *args, **kwargs): return self
-        def opt(self, *args, **kwargs): return self
-    
+
+        def info(self, *args, **kwargs):
+            pass
+
+        def error(self, *args, **kwargs):
+            pass
+
+        def warning(self, *args, **kwargs):
+            pass
+
+        def debug(self, *args, **kwargs):
+            pass
+
+        def exception(self, *args, **kwargs):
+            pass
+
+        def critical(self, *args, **kwargs):
+            pass
+
+        def success(self, *args, **kwargs):
+            pass
+
+        def trace(self, *args, **kwargs):
+            pass
+
+        def remove(self, *args, **kwargs):
+            return self
+
+        def add(self, *args, **kwargs):
+            return self
+
+        def disable(self, *args, **kwargs):
+            return self
+
+        def enable(self, *args, **kwargs):
+            return self
+
+        def bind(self, *args, **kwargs):
+            return self
+
+        def patch(self, *args, **kwargs):
+            return self
+
+        def opt(self, *args, **kwargs):
+            return self
+
     # NUCLEAR: Replace logger with no-op - completely disable all logging
     logger = NoOpLogger()
-    
+
     # Also patch the loguru module's logger to prevent other imports from using it
     import loguru
+
     loguru.logger = NoOpLogger()
 
 from advanced_memory import db

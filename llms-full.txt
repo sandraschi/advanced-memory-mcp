@@ -5583,7 +5583,7 @@ filterwarnings = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["migrations", "mcpb", "dxt", "dist", "htmlcov"]
+extend-exclude = ["migrations", "mcpb", "dist", "htmlcov"]
 
 [tool.ruff.lint]
 select = [

@@ -44,6 +44,11 @@ async def edit_in_notepadpp(
 
     Returns:
         Success message with workspace information
+
+    Errors:
+        - "Note not found": The provided note_identifier could not be found or returned empty content.
+        - "Notepad++ not found": The Notepad++ executable could not be located in common installation paths or PATH.
+        - "Failed to open Notepad++": An error occurred while launching the Notepad++ process.
     """
     try:
         # Get the note content
@@ -109,7 +114,9 @@ async def edit_in_notepadpp(
 
 @mcp.tool
 async def import_from_notepadpp(
-    note_identifier: str, workspace_path: str | None = None, keep_workspace: bool = False
+    note_identifier: str,
+    workspace_path: str | None = None,
+    keep_workspace: bool = False,
 ) -> str:
     """
     Import an edited note back from Notepad++ workspace.
@@ -124,6 +131,12 @@ async def import_from_notepadpp(
 
     Returns:
         Success message with import details
+
+    Errors:
+        - "Workspace directory not found": The provided workspace_path does not exist.
+        - "Edited file not found": The markdown file matching the note_identifier was not found in the workspace directory.
+        - "Original note not found": The original note could not be retrieved from the knowledge base for comparison.
+        - "Failed to update the note": An error occurred while writing the edited content back to the knowledge base.
     """
     try:
         # Setup workspace
@@ -159,7 +172,11 @@ The content in Notepad++ workspace is identical to the original note.
 
         # Update the note
         success = await mcp_write_note.fn(
-            title=note_identifier, content=edited_content, folder="", tags=None, entity_type="note"
+            title=note_identifier,
+            content=edited_content,
+            folder="",
+            tags=None,
+            entity_type="note",
         )
         if not success:
             return "[UNICODE] Failed to update the note with edited content."

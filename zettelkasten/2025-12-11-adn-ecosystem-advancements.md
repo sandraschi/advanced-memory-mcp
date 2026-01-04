@@ -328,7 +328,7 @@ class MCP_Server:
 # Protocol: Generic OSC operations
 await osc_mcp.send_osc_message(address, args)
 
-# Application: Platform-specific conventions  
+# Application: Platform-specific conventions
 await vrchat_mcp.control_avatar_parameter(param, value)
 
 # Orchestration: Domain logic
@@ -431,7 +431,7 @@ await robotics_mcp.control_robot_via_vrchat(robot_id, command)
 This work represents a significant advancement in the MCP ecosystem:
 
 1. **ADN MCP Resurrection** - Restored a critical knowledge management system
-2. **Tool Family Architecture** - Solved scalability problems for complex MCP servers  
+2. **Tool Family Architecture** - Solved scalability problems for complex MCP servers
 3. **OSC Layering** - Enabled clean compositing without conflicts
 4. **ROS Integration** - Opened industrial robotics capabilities to virtual worlds
 5. **Documentation Organization** - Established clear separation between personal and reference docs

@@ -91,24 +91,24 @@ feature_extractor = ViTFeatureExtractor.from_pretrained(model_name)
 def classify_image(image):
     # Preprocess the image
     inputs = feature_extractor(images=image, return_tensors="pt")
-    
+
     # Get model predictions
     with torch.no_grad():
         outputs = model(**inputs)
         logits = outputs.logits
-    
+
     # Converto probabilities
     probs = torch.nn.functional.softmax(logits, dim=-1)
-    
+
     # Getop 5 predictions
     top_probs, top_indices = torch.topk(probs, 5)
-    
+
     # Format results = {}
     for in range(5):
         label = model.config.id2label[top_indices[0][i].item()]
         prob = top_probs[0][i].item()
         results[label] = prob
-    
+
     return results
 
 # Create interface
@@ -171,7 +171,7 @@ with gr.Blocks() as demo:
                 output = gr.Textbox(label="Greeting")
             greet_btn = gr.Button("Greet")
             greet_btn.click(greet, inputs=name, outputs=output)
-            
+
         with gr.TabItem("Calculator"):
             with gr.Row():
                 num1 = gr.Number(label="First Number")
@@ -289,7 +289,7 @@ with gr.Blocks() as demo:
     chatbot = gr.Chatbot()
     msg = gr.Textbox()
     clear = gr.Button("Clear")
-    
+
     msg.submit(store_message, [msg, chatbot], [chatbot, msg])
     clear.click(lambda: None, None, chatbot, queue=False)
 
@@ -309,7 +309,7 @@ with demo:
     </style>
     <div class="custom-text">Custom Styled Text</div>
     """)
-    
+
     with gr.Row():
         gr.Button("Button 1")
         gr.Button("Button 2")

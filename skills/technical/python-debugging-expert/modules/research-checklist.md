@@ -3,25 +3,25 @@
 Review every 6 months or when major Python releases land.
 
 ## 1. Source Refresh
-- [ ] Read Python release notes (https://docs.python.org/3/whatsnew/).  
-- [ ] Monitor PyCon/PyData talks on debugging and tooling.  
-- [ ] Track IDE/debugger updates (VSCode, PyCharm, Wing).  
+- [ ] Read Python release notes (https://docs.python.org/3/whatsnew/).
+- [ ] Monitor PyCon/PyData talks on debugging and tooling.
+- [ ] Track IDE/debugger updates (VSCode, PyCharm, Wing).
 - [ ] Follow asyncio, Trio, and concurrency SIG updates.
 
 ## 2. Tooling Audit
-- [ ] Verify debugger versions and compatibility (debugpy, pdb, IDE).  
-- [ ] Review logging formats and redaction policies.  
-- [ ] Ensure profiling tools (scalene, py-spy) support current Python version.  
+- [ ] Verify debugger versions and compatibility (debugpy, pdb, IDE).
+- [ ] Review logging formats and redaction policies.
+- [ ] Ensure profiling tools (scalene, py-spy) support current Python version.
 - [ ] Update Docker dev containers or VSCode settings.
 
 ## 3. Documentation
-- [ ] Refresh debugging quickstart guides and onboarding docs.  
-- [ ] Update incident response templates with recent examples.  
+- [ ] Refresh debugging quickstart guides and onboarding docs.
+- [ ] Update incident response templates with recent examples.
 - [ ] Archive root cause analyses for recurring issues.
 
 ## 4. Metrics
-- [ ] Analyze error tracking trends; identify top recurring issues.  
-- [ ] Measure mean-time-to-detect/resolve for debugging incidents.  
+- [ ] Analyze error tracking trends; identify top recurring issues.
+- [ ] Measure mean-time-to-detect/resolve for debugging incidents.
 - [ ] Review flake rate in CI; adjust tooling accordingly.
 
 ## 5. Source Log

@@ -1,4 +1,4 @@
-﻿# Timnit Gebru
+# Timnit Gebru
 
 ## Overview
 Timnit Gebru is a leading computer scientist and AI ethics researcher known for her work in algorithmic bias, data mining, and AI ethics. She is the founder of the Distributed AI Research Institute (DAIR) and has been a prominent advocate for diversity in technology and responsible AI development.

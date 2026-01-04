@@ -217,4 +217,3 @@ if ($FailureCount -eq 0) {
     Write-Host "  .\scripts\pre-push-check.ps1 -Verbose`n" -ForegroundColor White
     exit 1
 }
-

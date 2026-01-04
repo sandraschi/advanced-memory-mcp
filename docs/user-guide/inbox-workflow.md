@@ -1,6 +1,6 @@
 # Inbox Workflow - Drop Files into Your Knowledge Base
 
-**Last Updated**: October 2025  
+**Last Updated**: October 2025
 **Feature Status**: ✅ Available in v1.0.0b3+
 
 ---
@@ -157,7 +157,7 @@ advanced-memory inbox process
 advanced-memory search "neural networks"
 ```
 
-**Result**: 
+**Result**:
 - PDF text extracted to markdown
 - Original PDF preserved in `zettelkasten/converted/`
 - Note indexed and searchable
@@ -678,4 +678,3 @@ advanced-memory inbox process
 - [Document Conversion Guide](../integrations/pandoc-integration-guide.md)
 - [Import/Export Guide](../integrations/README.md)
 - [CLI Reference](../README.md)
-

@@ -37,7 +37,7 @@ if os.name == 'nt':  # Windows
 
 # Detect if we're running in stdio mode (MCP server)
 _is_stdio_mode = (
-    not sys.stdout.isatty() 
+    not sys.stdout.isatty()
     or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
     or "stdio" in sys.argv
     or __name__ == "__main__"
@@ -53,22 +53,22 @@ if _is_stdio_mode:
             def write(self, s: str) -> int:
                 # Discard all writes to stdout - they would break JSON-RPC
                 return len(s)
-            
+
             def flush(self) -> None:
                 pass
-            
+
             def isatty(self) -> bool:
                 return False
-            
+
             def readable(self) -> bool:
                 return False
-            
+
             def writable(self) -> bool:
                 return True
-            
+
             def seekable(self) -> bool:
                 return False
-        
+
         # Store original stdout and replace with null device
         # This will be restored before FastMCP.run()
         sys._original_stdout = sys.stdout
@@ -76,7 +76,7 @@ if _is_stdio_mode:
     # Suppress SQLAlchemy deprecation warnings
     warnings.filterwarnings("ignore", category=DeprecationWarning, module="sqlalchemy")
     warnings.filterwarnings("ignore", category=DeprecationWarning)
-    
+
     # Configure Python's logging module to prevent stdout pollution
     # FastMCP uses Python's logging module internally
     logging.basicConfig(
@@ -85,19 +85,19 @@ if _is_stdio_mode:
         stream=sys.stderr,  # Send to stderr, not stdout
         force=True,  # Override any existing configuration
     )
-    
+
     # Suppress ALL loggers to prevent any output
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.CRITICAL)
     root_logger.handlers = []
-    
+
     # Suppress FastMCP and other noisy loggers completely
     for logger_name in ['fastmcp', 'mcp', 'httpx', 'httpcore', 'h11', 'uvicorn', 'asyncio']:
         log = logging.getLogger(logger_name)
         log.setLevel(logging.CRITICAL)
         log.handlers = []
         log.propagate = False
-    
+
     # NUCLEAR OPTION: Completely disable loguru during stdio mode
     try:
         # Create a complete no-op logger class
@@ -120,7 +120,7 @@ if _is_stdio_mode:
             def bind(self, *args, **kwargs): return self
             def patch(self, *args, **kwargs): return self
             def opt(self, *args, **kwargs): return self
-        
+
         # Replace loguru logger module with no-op
         import sys
         if 'loguru' not in sys.modules:
@@ -166,13 +166,13 @@ class AppContext:
 @asynccontextmanager
 async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma: no cover
     """MCP server lifespan - handles initialization and cleanup including file watching.
-    
+
     CRITICAL: This function runs AFTER stdout is restored for JSON-RPC communication.
     All logging MUST go to stderr only to prevent polluting the JSON-RPC stream.
     """
     # defer import so tests can monkeypatch
     from advanced_memory.mcp.project_session import session
-    
+
     # CRITICAL: Ensure loguru is configured for stderr-only logging during lifespan
     # This prevents any accidental stdout writes that would break JSON-RPC protocol
     try:
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     if _is_stdio_mode and hasattr(sys, '_original_stdout'):
         # Restore original stdout
         sys.stdout = sys._original_stdout
-        
+
         # CRITICAL: Set binary mode AFTER restoration for Antigravity IDE compatibility
         # This must happen after restoration but before FastMCP starts
         if os.name == 'nt':  # Windows
@@ -250,12 +250,12 @@ if __name__ == "__main__":
                 msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
             except (ImportError, OSError, AttributeError):
                 pass  # If binary mode can't be set, continue anyway
-        
+
         # Ensure stdout is clean and unbuffered for JSON-RPC
         sys.stdout.flush()
         # Set unbuffered mode to prevent any buffering issues
         os.environ.setdefault('PYTHONUNBUFFERED', '1')
-        
+
         # CRITICAL: Ensure loguru logger is configured to NEVER write to stdout
         # This prevents any accidental stdout writes during lifespan initialization
         try:

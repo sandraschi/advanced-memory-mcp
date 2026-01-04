@@ -94,16 +94,16 @@
   .sidebar {
     transform: translateX(calc(-1 * var(--sidebar-width)));
   }
-  
+
   .sidebar.visible {
     transform: translateX(0);
   }
-  
+
   .content {
     margin-left: 0;
     width: 100%;
   }
-  
+
   .sidebar-toggle {
     display: block;
     position: fixed;
@@ -122,28 +122,28 @@ document.addEventListener('DOMContentLoaded', function() {
   const sidebar = document.querySelector('.sidebar');
   constoggleBtn = document.querySelector('.sidebar-toggle');
   const content = document.querySelector('.content');
-  
+
   // Toggle sidebar
   toggleBtn?.addEventListener('click', function() {
     sidebar.classList.toggle('collapsed');
     content.classList.toggle('expanded');
-    
+
     // Save state
     const isCollapsed = sidebar.classList.contains('collapsed');
     localStorage.setItem('sidebarCollapsed', isCollapsed);
   });
-  
+
   // Load saved state
   const savedState = localStorage.getItem('sidebarCollapsed');
   if (savedState === 'true') {
     sidebar.classList.add('collapsed');
     content.classList.add('expanded');
   }
-  
+
   // Close sidebar when clicking outside on mobile
   document.addEventListener('click', function(event) {
-    if (window.innerWidth <= 768 && 
-        !sidebar.contains(event.target) && 
+    if (window.innerWidth <= 768 &&
+        !sidebar.contains(event.target) &&
         !toggleBtn.contains(event.target)) {
       sidebar.classList.add('collapsed');
       content.classList.remove('expanded');
@@ -157,14 +157,14 @@ document.addEventListener('DOMContentLoaded', function() {
 ### 1. Whitespace/Blob Issues
 - **Problem**: Unwanted white space on the left side
 - **Cause**: Margin/padding inconsistencies or transform issues
-- **Solution**: 
+- **Solution**:
   ```css
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-  
+
   html, body {
     overflow-x: hidden;
     width: 100%;
@@ -209,12 +209,12 @@ document.addEventListener('DOMContentLoaded', function() {
   .layout {
     grid-template-columns: 1fr;
   }
-  
+
   .sidebar {
     position: fixed;
     transform: translateX(-100%);
   }
-  
+
   .sidebar.visible {
     transform: translateX(0);
   }
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
   .layout {
     position: relative;
   }
-  
+
   .sidebar {
     position: fixed;
     height: 100%;
@@ -279,11 +279,11 @@ document.addEventListener('DOMContentLoaded', function() {
   .sidebar {
     transform: translateX(0);
   }
-  
+
   .content {
     margin-left: 300px;
   }
-  
+
   .sidebar-toggle {
     display: none;
   }

@@ -13,11 +13,11 @@ This directory contains all files related to building and distributing Basic Mem
 - **`mcpb.json`** - MCPB package configuration
   - Defines package metadata, entry points, and dependencies
   - Used during the build process to generate the MCPB package
-  
+
 - **`manifest.json`** - Package manifest
   - Contains detailed package information
   - Defines MCP server capabilities and resources
-  
+
 - **`requirements.txt`** - Python dependencies for the MCPB package
   - Specifies exact versions of Python packages needed
   - Bundled with the MCPB package for isolated installation
@@ -32,7 +32,7 @@ This directory contains all files related to building and distributing Basic Mem
 - **`src/advanced_memory/`** - Copy of the source code for building
   - This is a snapshot of the main source used for the MCPB build
   - Contains all modules: MCP server, API, CLI, services, etc.
-  
+
 - **`data/`** - Static data and resources for the package
 
 ## Building the MCPB Package
@@ -123,4 +123,3 @@ For issues with MCPB building or distribution:
 - Open an issue on GitHub
 - Check the `MCPB_BUILDING_GUIDE.md` for detailed troubleshooting
 - Review Claude Desktop's MCP documentation
-

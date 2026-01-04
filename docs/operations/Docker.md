@@ -130,7 +130,7 @@ When using Docker volumes, you'll need to configure projects to point to your mo
    ```bash
    # If you mounted /path/to/your/vault to /app/data
    docker exec advanced-memory-server advanced-memory project create my-vault /app/data
-   
+
    # Set it as default
    docker exec advanced-memory-server advanced-memory project set-default my-vault
    ```
@@ -252,7 +252,7 @@ docker-compose logs -f advanced-memory
    If using HTTP transport, consider using reverse proxy with SSL/TLS and authentication if the endpoint is available on
    a network.
 
-4. **IMPORTANT:** The HTTP endpoints have no authorization. They should not be exposed on a public network.  
+4. **IMPORTANT:** The HTTP endpoints have no authorization. They should not be exposed on a public network.
 
 ## Integration Examples
 

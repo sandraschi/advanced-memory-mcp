@@ -1,6 +1,6 @@
 # Process Guide
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last captured**: 2025-11-08
 
 > This module adapts Anthropic’s six-step skill-creator methodology to Advanced Memory MCP. Use it when gathering requirements or coaching the user through the workflow.
@@ -52,4 +52,3 @@
 - Combine this guide with the research checklist to prevent stale instructions.
 - Use the CLI in automated pipelines to enforce validation before publishing.
 - Encourage teams to store manifests and source citations with each packaged skill.
-

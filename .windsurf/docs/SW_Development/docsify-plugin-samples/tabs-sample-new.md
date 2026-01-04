@@ -190,11 +190,11 @@ Add tabs dynamically with JavaScript:
 function addTab(groupId, tabName, content) {
   const container = document.querySelector(`[data-tab-group="${groupId}"]`);
   if (!container) return;
-  
+
   constabs = container.querySelector('.docsify-tabs');
   constabList = tabs.querySelector('.docsify-tabs__list');
   constabContent = tabs.querySelector('.docsify-tabs__content');
-  
+
   // Create tabutton
   constabId = `tab-${Date.now()}`;
   constabButton = document.createElement('button');
@@ -203,7 +203,7 @@ function addTab(groupId, tabName, content) {
   tabButton.setAttribute('data-tab', tabId);
   tabButton.setAttribute('role', 'tab');
   tabButton.setAttribute('aria-selected', 'false');
-  
+
   // Create tab panel
   constabPanel = document.createElement('div');
   tabPanel.className = 'docsify-tabs__panel';
@@ -211,11 +211,11 @@ function addTab(groupId, tabName, content) {
   tabPanel.setAttribute('role', 'tabpanel');
   tabPanel.setAttribute('aria-labelledby', tabId);
   tabPanel.innerHTML = content;
-  
+
   // Add to DOM
   tabList.appendChild(document.createElement('li')).appendChild(tabButton);
   tabContent.appendChild(tabPanel);
-  
+
   // Initialize the new tab
   if (window.DocsifyTabs) {
     window.DocsifyTabs.initTab(tabs, tabButton, tabPanel);
@@ -275,37 +275,37 @@ window.$docsify = {
     persist: false,
     sync: false,
     theme: 'default',
-    
+
     // Styling
     tabButtonClass: 'docsify-tabs__tab',
     tabPanelClass: 'docsify-tabs__panel',
     tabListClass: 'docsify-tabs__list',
     tabContainerClass: 'docsify-tabs',
-    
+
     // Behavior
     lazyRender: false,
     dynamicHeight: true,
     animate: true,
     animationDuration: 300,
-    
+
     // Callbacks
     onInit: function(tabs) {},
     onChange: function(tab, panel, group) {},
-    
+
     // Templates: {
       tab: function(tab, index) {
-        return `<button class="${this.tabButtonClass}" 
-                       data-tab="${tab.id}" 
-                       role="tab" 
+        return `<button class="${this.tabButtonClass}"
+                       data-tab="${tab.id}"
+                       role="tab"
                        aria-selected="${index === 0 ? 'true' : 'false'}">
           ${tab.title}
         </button>`;
       },
       panel: function(panel, index) {
         const isActive = index === 0 ? 'is-active' : '';
-        return `<div class="${this.tabPanelClass} ${isActive}" 
-                       id="${panel.id}" 
-                       role="tabpanel" 
+        return `<div class="${this.tabPanelClass} ${isActive}"
+                       id="${panel.id}"
+                       role="tabpanel"
                        aria-labelledby="${panel.id}-tab"
                        ${index > 0 ? 'hidden' : ''}>
           ${panel.content}
@@ -490,10 +490,10 @@ window.$docsify = {
     templates: {
       tab: function(tab, index) {
         return `
-          <button class="${this.tabButtonClass}" 
+          <button class="${this.tabButtonClass}"
                   id="${tab.id}-tab"
-                  data-tab="${tab.id}" 
-                  role="tab" 
+                  data-tab="${tab.id}"
+                  role="tab"
                   aria-selected="${index === 0 ? 'true' : 'false'}"
                   aria-controls="${tab.id}"
                   tabindex="${index === 0 ? '0' : '-1'}">
@@ -503,11 +503,11 @@ window.$docsify = {
       },
       panel: function(panel, index) {
         return `
-          <div class="${this.tabPanelClass} ${index === 0 ? 'is-active' : ''}" 
-               id="${panel.id}" 
-               role="tabpanel" 
+          <div class="${this.tabPanelClass} ${index === 0 ? 'is-active' : ''}"
+               id="${panel.id}"
+               role="tabpanel"
                aria-labelledby="${panel.id}-tab"
-               ${index > 0 ? 'hidden' : ''} 
+               ${index > 0 ? 'hidden' : ''}
                tabindex="0">
             ${panel.content}
           </div>`;
@@ -621,7 +621,7 @@ window.$docsify = {
     templates: {
       tab: function(tab, index) {
         return `
-          <button class="custom-tab" 
+          <button class="custom-tab"
                   data-tab="${tab.id}"
                   role="tab"
                   aria-selected="${index === 0 ? 'true' : 'false'}">
@@ -631,8 +631,8 @@ window.$docsify = {
       },
       panel: function(panel, index) {
         return `
-          <div class="custom-panel ${index === 0 ? 'is-active' : ''}" 
-               id="${panel.id}" 
+          <div class="custom-panel ${index === 0 ? 'is-active' : ''}"
+               id="${panel.id}"
                role="tabpanel"
                ${index > 0 ? 'hidden' : ''}>
             <div class="panel-content">

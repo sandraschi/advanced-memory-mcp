@@ -1,4 +1,4 @@
-﻿# 2. Getting Started with AutoHotkey
+# 2. Getting Started with AutoHotkey
 
 ## Installation
 
@@ -65,4 +65,3 @@ If you wanto stop the script from running:
 The script will terminate, and the Ctrl+J hotkey will no longer do anything.
 
 Congratulations! You have successfully created and run your first AutoHotkey script. Now you'ready to learn more about the core building blocks in [Hotkeys and Hotstrings](/automation_tools/autohotkey/./03_hotkeys_hotstrings.md).
-

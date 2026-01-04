@@ -35,16 +35,16 @@ window.$docsify = {
   copyCode: {
     // Button text (supports HTML)
     buttonText: 'Copy',
-    
+
     // Text shown after copying (supports HTML)
     successText: 'Copied!',
-    
+
     // How long to show the success text (ms)
     successTextTimeout: 2000,
-    
+
     // Show the copy button the left side
     align: 'right', // 'left' or 'right'
-    
+
     // Custom styling
     style: {
       background: '#f5f5f5',
@@ -60,17 +60,17 @@ window.$docsify = {
       'opacity': '0.8',
       'z-index': '1'
     },
-    
+
     // Custom class for the buttonClass: 'copy-code-button',
-    
+
     // Custom class for the success text
     successClass: 'copy-code-success',
-    
+
     // Show line numbershowLineNumbers: true,
-    
+
     // Only show copy button when hovering over the code block
     showOnHover: false,
-    
+
     // Customize the copy function
     copy: function(text) {
       // This function is called when the copy button is clicked

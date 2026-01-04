@@ -1,9 +1,9 @@
 # 2025-12-11 - MCP Zoo Integration Progress
 
-**Timestamp**: 2025-12-11 13:30:00  
-**Tags**: #mcp-zoo #unity3d-mcp #robotics-mcp #avatar-mcp #tool-families #modularization #fastmcp-2.13  
-**Type**: progress  
-**Status**: current  
+**Timestamp**: 2025-12-11 13:30:00
+**Tags**: #mcp-zoo #unity3d-mcp #robotics-mcp #avatar-mcp #tool-families #modularization #fastmcp-2.13
+**Type**: progress
+**Status**: current
 
 ---
 

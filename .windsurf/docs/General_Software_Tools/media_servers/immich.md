@@ -1,4 +1,4 @@
-﻿# Immich: Self-Hosted Photo and Video Backup Solution
+# Immich: Self-Hosted Photo and Video Backup Solution
 
 ## Overview
 Immich is a high-performance, self-hosted photo and video backup solution that provides a Google Photos-likexperience. It's designed to be fast, reliable, and privacy-focused, allowing you to maintain full control over your personal media.
@@ -126,7 +126,7 @@ services:
 server {
     listen 80;
     server_name photos.example.com;
-    
+
     location / {
         proxy_pass http://localhost:2283;
         proxy_http_version 1.1;
@@ -135,7 +135,7 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-    
+
     # Increase client max body size for large uploads
     client_max_body_size 5000M;
 }

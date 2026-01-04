@@ -1,6 +1,6 @@
 # Tool Modes - Advanced Memory MCP
 
-**Last Updated:** 2025-10-24  
+**Last Updated:** 2025-10-24
 **Status:** Production Feature
 
 ---
@@ -196,6 +196,5 @@ Or just remove the `env` section entirely (default is false).
 
 **Recommendation:** Use portmanteau mode (default) for best experience!
 
-**Version:** 1.0  
+**Version:** 1.0
 **Last Updated:** 2025-10-24
-

@@ -45,7 +45,7 @@ if estimated_files > 1000:
     # Warn user!
     console.print(f"⚠️  Warning: Found {estimated_files}+ markdown files")
     console.print(f"   This could take a long time to sync!")
-    
+
     if not typer.confirm("Continue?"):
         raise typer.Abort()
 ```
@@ -84,7 +84,7 @@ total_size = estimate_directory_size(path, extensions=[".md"])
 if total_size > 1_000_000_000:  # 1 GB
     console.print(f"⚠️  Warning: Directory contains ~{total_size / 1e9:.1f} GB of markdown")
     console.print("   This is unusually large and may not be what you intended.")
-    
+
     if not typer.confirm("Continue anyway?"):
         raise typer.Abort()
 ```
@@ -113,26 +113,26 @@ if estimated_files > 500:
 ```python
 async def add_project(self, name: str, path: str, set_default: bool = False) -> None:
     """Add a new project to the configuration and database.
-    
+
     Args:
         name: The name of the project
         path: The file path to the project directory
         set_default: Whether to set this project as the default
-    
+
     Raises:
         ValueError: If the project already exists or path is invalid
     """
     # Resolve to absolute path
     resolved_path = os.path.abspath(os.path.expanduser(path))
-    
+
     # SANITY CHECK 1: Path exists
     if not os.path.exists(resolved_path):
         raise ValueError(f"Path does not exist: {resolved_path}")
-    
+
     # SANITY CHECK 2: Path is directory
     if not os.path.isdir(resolved_path):
         raise ValueError(f"Path is not a directory: {resolved_path}")
-    
+
     # SANITY CHECK 3: Dangerous paths
     dangerous_paths = [
         "C:\\",
@@ -145,13 +145,13 @@ async def add_project(self, name: str, path: str, set_default: bool = False) -> 
         "/etc",
         "/var",
     ]
-    
+
     if resolved_path.rstrip(os.sep) in [p.rstrip(os.sep) for p in dangerous_paths]:
         raise ValueError(
             f"Cannot index system directory: {resolved_path}\n"
             "This would index thousands of system files."
         )
-    
+
     # SANITY CHECK 4: Home directory warning
     home_dir = str(Path.home())
     if resolved_path == home_dir:
@@ -160,11 +160,11 @@ async def add_project(self, name: str, path: str, set_default: bool = False) -> 
             f"Create a specific subdirectory instead:\n"
             f"  advanced-memory project add notes {home_dir}/Documents/Notes"
         )
-    
+
     # SANITY CHECK 5: Quick file count estimate
     try:
         file_count = estimate_markdown_files(resolved_path, max_scan=1000, timeout=5)
-        
+
         if file_count >= 1000:
             logger.warning(
                 f"Large project detected: {file_count}+ markdown files in {resolved_path}"
@@ -173,7 +173,7 @@ async def add_project(self, name: str, path: str, set_default: bool = False) -> 
             # API will just log warning
     except Exception as e:
         logger.warning(f"Could not estimate file count: {e}")
-    
+
     # Continue with normal add logic...
     project_config = self.config_manager.add_project(name, resolved_path)
     # ... etc
@@ -183,41 +183,41 @@ async def add_project(self, name: str, path: str, set_default: bool = False) -> 
 ```python
 def estimate_markdown_files(path: str, max_scan: int = 1000, timeout: int = 5) -> int:
     """Estimate number of markdown files in directory.
-    
+
     Args:
         path: Directory to scan
         max_scan: Maximum files to scan before stopping
         timeout: Maximum seconds to spend scanning
-    
+
     Returns:
         Estimated file count (or max_scan if exceeded)
     """
     import time
     from pathlib import Path
-    
+
     start_time = time.time()
     count = 0
-    
+
     try:
         for root, dirs, files in os.walk(path):
             # Skip ignored directories
             dirs[:] = [d for d in dirs if d not in IGNORE_PATTERNS]
-            
+
             # Count .md files
             md_files = [f for f in files if f.endswith('.md')]
             count += len(md_files)
-            
+
             # Stop if exceeded limits
             if count >= max_scan:
                 return max_scan
-            
+
             if time.time() - start_time > timeout:
                 return count
-    
+
     except (PermissionError, OSError):
         # Can't scan directory, return what we have
         pass
-    
+
     return count
 ```
 
@@ -238,24 +238,24 @@ def add_project(
     """Add a new project with sanity checks."""
     # Resolve to absolute path
     resolved_path = os.path.abspath(os.path.expanduser(path))
-    
+
     # Quick validation
     if not os.path.exists(resolved_path):
         console.print(f"[red]Error: Path does not exist: {resolved_path}[/red]")
         raise typer.Exit(1)
-    
+
     if not os.path.isdir(resolved_path):
         console.print(f"[red]Error: Path is not a directory: {resolved_path}[/red]")
         raise typer.Exit(1)
-    
+
     # Pre-scan (unless --force)
     if not force:
         console.print(f"\n[cyan]Scanning directory: {resolved_path}[/cyan]")
-        
+
         try:
             # Quick estimate
             file_count = estimate_markdown_files(resolved_path, max_scan=1000, timeout=5)
-            
+
             # Show estimate
             if file_count >= 1000:
                 console.print(f"[yellow]⚠️  Found 1000+ markdown files[/yellow]")
@@ -263,25 +263,25 @@ def add_project(
                 console.print(f"[yellow]⚠️  Found ~{file_count} markdown files[/yellow]")
             else:
                 console.print(f"[green]Found ~{file_count} markdown files[/green]")
-            
+
             # Warning for large projects
             if file_count > 500:
                 console.print("\n[yellow]This is a large project![/yellow]")
                 console.print(f"  Estimated sync time: {estimate_sync_time(file_count)}")
                 console.print(f"  Estimated database size: {estimate_db_size(file_count)}")
                 console.print("\n💡 Consider creating separate projects for subdirectories instead.")
-                
+
                 if not typer.confirm("\nContinue with this large directory?"):
                     console.print("[yellow]Aborted. No project created.[/yellow]")
                     raise typer.Exit(0)
-        
+
         except Exception as e:
             logger.warning(f"Could not scan directory: {e}")
             console.print(f"[yellow]Warning: Could not scan directory ({e})[/yellow]")
-            
+
             if not typer.confirm("Continue anyway?"):
                 raise typer.Exit(0)
-    
+
     # Continue with normal add logic...
     try:
         data = {"name": name, "path": resolved_path, "set_default": set_default}
@@ -348,7 +348,7 @@ BLOCKED_PATHS = [
     "C:\\Program Files",
     "C:\\Program Files (x86)",
     "D:\\",  # Could be data drive, but risky
-    
+
     # Linux/macOS
     "/",
     "/usr",
@@ -384,7 +384,7 @@ if resolved_path == str(Path.home()):
     console.print("\n💡 Did you mean a subdirectory?")
     console.print(f"   • {Path.home()}/Documents/Notes")
     console.print(f"   • {Path.home()}/Documents/Obsidian")
-    
+
     if not typer.confirm("\nIndex entire home directory anyway?", default=False):
         raise typer.Exit(0)
 ```
@@ -430,7 +430,7 @@ if resolved_path.startswith("\\\\") or resolved_path.startswith("//"):
     console.print("   Warning: Network filesystems are slower and less reliable")
     console.print("   Auto-sync may not work correctly on network paths")
     console.print("\n   Recommendation: Use local paths or disable auto-sync")
-    
+
     if not typer.confirm("Continue with network path?"):
         raise typer.Exit(0)
 ```
@@ -449,7 +449,7 @@ for existing_name, existing_path in existing_projects.items():
         console.print(f"   Existing: {existing_path}")
         console.print(f"   New: {resolved_path}")
         console.print("\n   This will create overlapping projects (not recommended)")
-        
+
         if not typer.confirm("Continue anyway?"):
             raise typer.Exit(0)
 ```
@@ -462,38 +462,38 @@ for existing_name, existing_path in existing_projects.items():
 
 ```python
 def estimate_markdown_files(
-    path: str, 
-    max_scan: int = 1000, 
+    path: str,
+    max_scan: int = 1000,
     timeout: int = 5
 ) -> int:
     """Estimate number of markdown files (fast scan)."""
     import time
-    
+
     start_time = time.time()
     count = 0
-    
+
     try:
         for root, dirs, files in os.walk(path):
             # Filter ignored directories IN-PLACE (prevents descending)
             dirs[:] = [
-                d for d in dirs 
+                d for d in dirs
                 if d not in IGNORE_PATTERNS and not d.startswith('.')
             ]
-            
+
             # Count .md files
             md_files = [f for f in files if f.endswith('.md')]
             count += len(md_files)
-            
+
             # Stop conditions
             if count >= max_scan:
                 return max_scan  # Return "at least this many"
-            
+
             if time.time() - start_time > timeout:
                 return count  # Return "found this many so far"
-    
+
     except (PermissionError, OSError) as e:
         logger.warning(f"Could not scan directory: {e}")
-    
+
     return count
 ```
 
@@ -506,7 +506,7 @@ def estimate_sync_time(file_count: int) -> str:
     """Estimate how long sync will take."""
     # Rough estimate: 100ms per file (parsing + DB insert)
     seconds = file_count * 0.1
-    
+
     if seconds < 60:
         return f"~{int(seconds)} seconds"
     elif seconds < 3600:
@@ -524,7 +524,7 @@ def estimate_db_size(file_count: int) -> str:
     """Estimate database size."""
     # Rough estimate: 100 KB per file (entities + relations + search index)
     bytes_size = file_count * 100 * 1024
-    
+
     if bytes_size < 1_000_000:
         return f"~{int(bytes_size / 1024)} KB"
     elif bytes_size < 1_000_000_000:
@@ -560,7 +560,7 @@ advanced-memory project add everything ~/Documents
 Scanning directory: /home/user/Documents
 ⚠️  Found 1000+ markdown files
    This could take a long time to sync!
-   
+
    Estimated sync time: ~2 minutes
    Estimated database size: ~100 MB
 
@@ -583,7 +583,7 @@ advanced-memory project add everything C:/
 # Output:
 ❌ ERROR: Cannot index system directory: C:/
    This would index thousands of files and is probably not what you want.
-   
+
    Please specify a subdirectory like:
    • C:/Users/Sandra/Documents/Notes
    • C:/Users/Sandra/Projects
@@ -744,17 +744,17 @@ advanced-memory project preview <path>
 
 ### Current State
 
-❌ **No validation** - user can accidentally index C:/ or entire home directory  
-❌ **No warnings** - no indication that sync will take forever  
-❌ **No preview** - can't see what you're about to index  
+❌ **No validation** - user can accidentally index C:/ or entire home directory
+❌ **No warnings** - no indication that sync will take forever
+❌ **No preview** - can't see what you're about to index
 
 ### Proposed State
 
-✅ **Smart validation** - blocks dangerous paths  
-✅ **Interactive warnings** - alerts for large projects  
-✅ **Helpful suggestions** - recommends better approaches  
-✅ **Preview command** - see before committing  
-✅ **Force flag** - power users can skip  
+✅ **Smart validation** - blocks dangerous paths
+✅ **Interactive warnings** - alerts for large projects
+✅ **Helpful suggestions** - recommends better approaches
+✅ **Preview command** - see before committing
+✅ **Force flag** - power users can skip
 
 ### User Impact
 
@@ -772,7 +772,7 @@ advanced-memory project add oops C:/Users/sandr
 ⚠️  Warning: You're about to index your entire home directory!
    Found 10,000+ markdown files
    This could take ~15 minutes to sync
-   
+
 💡 Did you mean a subdirectory?
    • C:/Users/sandr/Documents/Notes
 
@@ -796,7 +796,6 @@ Continue? [y/N]: n
 
 ---
 
-*Proposal created: 2025-10-17*  
-*Status: Ready for implementation*  
+*Proposal created: 2025-10-17*
+*Status: Ready for implementation*
 *Priority: HIGH (prevents major UX issues)*
-

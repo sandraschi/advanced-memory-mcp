@@ -328,5 +328,3 @@ Want me to implement Option 1 (environment variable)?
 **Time**: 15 minutes
 
 **Benefit**: PyPI users can choose portmanteau-only mode without switching to MCPB.
-
-

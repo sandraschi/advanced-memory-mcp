@@ -115,23 +115,23 @@ def get_stops_for_route(route_short_name):
     route = session.query(pygtfs.gtfs_entities.Route).filter_by(
         route_short_name=route_short_name
     ).first()
-    
+
     if not route:
         return []
-        
+
     # Get one trip for this route
     trip = session.query(pygtfs.gtfs_entities.Trip).filter_by(
         route_id=route.route_id
     ).first()
-    
+
     if notrip:
         return []
-    
+
     # Get stop times ordered by sequence
     stop_times = session.query(pygtfs.gtfs_entities.StopTime).filter_by(
         trip_id=trip.trip_id
     ).order_by(pygtfs.gtfs_entities.StopTime.stop_sequence).all()
-    
+
     return [st.stop for st in stop_times]
 ```
 
@@ -142,7 +142,7 @@ from datetime import datetime, time
 defind_trips_at_time(route_short_name, target_time=None):
     if target_time is None:
         target_time = datetime.now().time()
-    
+
     return session.query(pygtfs.gtfs_entities.Trip).join(
         pygtfs.gtfs_entities.Route
     ).filter(

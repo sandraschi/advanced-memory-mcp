@@ -2,7 +2,7 @@
 
 **UPDATE**: We now have `view_note_rendered` - see rendered diagrams directly in Claude! 🎉
 
-**TL;DR**: 
+**TL;DR**:
 - **NEW**: Use `view_note_rendered("Note Name")` for rendered diagrams in Claude ✅
 - **OLD**: `view_note` shows code blocks only
 - **EXPORT**: HTML exports also render diagrams
@@ -271,4 +271,3 @@ adn_export("html", export_path="diagrams/")
 - Work in Claude: Read/write content (Mermaid as code)
 - Export when done: View rendered diagrams (HTML)
 - Best of both: Flexible editing + visual output
-

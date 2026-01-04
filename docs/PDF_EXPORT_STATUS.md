@@ -1,6 +1,6 @@
 # PDF Export Status
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Status**: ✅ **Implemented and Working** (requires fpdf2 dependency)
 
 ---
@@ -19,7 +19,7 @@ PDF export is **fully implemented** using **fpdf2** (pure Python, no LaTeX neede
 ## How It Works
 
 ### Routing
-1. `adn_export("pdf", ...)` → calls `_pdf_export()` 
+1. `adn_export("pdf", ...)` → calls `_pdf_export()`
 2. `_pdf_export()` → calls `export_pdf_native()` function
 3. `export_pdf_native()` → creates PDFs using fpdf2
 

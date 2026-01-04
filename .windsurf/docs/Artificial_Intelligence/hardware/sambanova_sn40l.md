@@ -141,16 +141,16 @@ lineChartitle Token Latency Comparison (ms)
 ```
 
 ### Key Performance Innovations
-- **Sparsity Support**: 
+- **Sparsity Support**:
   - Native 2:4 and 1:8 sparsity patterns
   - Up to 4x speedup for sparse models
   - Zero-overhead sparse computation
-  
-- **Dynamic Sparsity**: 
+
+- **Dynamic Sparsity**:
   - Runtime adaptation to model sparsity patterns
   - Automatic sparsity-aware scheduling
   - Mixed sparsity pattern support
-  
+
 - **Precision Flexibility**:
   - FP32: 45 TFLOPS
   - TF32: 180 TFLOPS
@@ -158,7 +158,7 @@ lineChartitle Token Latency Comparison (ms)
   - FP8: 1,440 TFLOPS
   - INT8: 2,880 TOPS
   - INT4: 5,760 TOPS
-  
+
 - **Memory Hierarchy**:
   - 3D stacked memory with 1.6TB/s bandwidth
   - Smart caching and prefetching

@@ -108,7 +108,7 @@ CREATE TABLE users (
 );
 
 -- Insert sample data
-INSERT INTO users (username, email) 
+INSERT INTO users (username, email)
 VALUES ('johndoe', 'john@example.com');
 
 -- Query with JOIN
@@ -129,19 +129,19 @@ function Get-DirectorySize {
         [string]$Path = '.',
         [string]$Filter = '*.*'
     )
-    
-    Get-ChildItem -Path $Path -Filter $Filter -Recurse -File | 
-    Measure-Object -Property Length -Sum | 
+
+    Get-ChildItem -Path $Path -Filter $Filter -Recurse -File |
+    Measure-Object -Property Length -Sum |
     Select-Object @{
-        Name = 'Path'; 
+        Name = 'Path';
         Expression = { (Resolve-Path $Path).Path }
-    }, 
+    },
     @{
-        Name = 'FileCount'; 
+        Name = 'FileCount';
         Expression = { $_.Count }
-    }, 
+    },
     @{
-        Name = 'SizeMB'; 
+        Name = 'SizeMB';
         Expression = { [math]::Round(($_.Sum / 1MB), 2) }
     }
 }
@@ -170,7 +170,7 @@ check_file() {
 process_logs() {
     localog_dir="/var/log"
     local output_file="log_summary_$(date +%Y%m%d).txt"
-    
+
     # Find all .log files modified in the last 7 days
     find "$log_dir" -name "*.log" -mtime -7 -type f | while read -r file; do
         if check_file "$file"; then

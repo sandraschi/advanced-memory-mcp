@@ -52,24 +52,24 @@ jobs:
           title: "chore: update dependencies"
           body: |
             ## 🔄 Dependency Updates
-            
+
             This PR updates dependencies to their latest versions.
-            
+
             ### Changes
             - Updated Python package dependencies
             - Updated development dependencies
             - Updated uv lock file
-            
+
             ### Testing
             - [x] Tests pass locally
             - [x] No breaking changes detected
-            
+
             ### Review Checklist
             - [ ] Review dependency changes
             - [ ] Verify no breaking changes
             - [ ] Test functionality
             - [ ] Approve and merge
-            
+
             ---
             *This PR was automatically created by the dependency update workflow.*
           branch: dependency-updates

@@ -3,26 +3,26 @@
 Run this refresh every quarter or after major Kubernetes/Docker releases.
 
 ## 1. Source Refresh
-- [ ] Review Kubernetes release notes (https://kubernetes.io/releases/).  
-- [ ] Check Docker/BuildKit updates and OCI spec changes.  
-- [ ] Track CNCF security/governance whitepapers and SIG announcements.  
+- [ ] Review Kubernetes release notes (https://kubernetes.io/releases/).
+- [ ] Check Docker/BuildKit updates and OCI spec changes.
+- [ ] Track CNCF security/governance whitepapers and SIG announcements.
 - [ ] Monitor managed Kubernetes provider updates (EKS, GKE, AKS, OpenShift).
 
 ## 2. Platform Validation
-- [ ] Audit cluster versions, upgrade plans, and deprecations.  
-- [ ] Re-run conformance tests (Sonobuoy) on staging.  
-- [ ] Validate GitOps pipelines (sync status, drift alerts).  
+- [ ] Audit cluster versions, upgrade plans, and deprecations.
+- [ ] Re-run conformance tests (Sonobuoy) on staging.
+- [ ] Validate GitOps pipelines (sync status, drift alerts).
 - [ ] Confirm admission policies and runtime security controls functioning.
 
 ## 3. Observability & Cost
-- [ ] Review SLO dashboards; adjust thresholds if workloads changed.  
-- [ ] Analyze cost reports (Kubecost) and document actions.  
-- [ ] Confirm autoscaling policies meet demand; run load test if necessary.  
+- [ ] Review SLO dashboards; adjust thresholds if workloads changed.
+- [ ] Analyze cost reports (Kubecost) and document actions.
+- [ ] Confirm autoscaling policies meet demand; run load test if necessary.
 - [ ] Update incident runbooks with recent lessons learned.
 
 ## 4. Documentation
-- [ ] Update platform architecture diagrams and onboarding guides.  
-- [ ] Append new sources to `metadata.sources` and table below.  
+- [ ] Update platform architecture diagrams and onboarding guides.
+- [ ] Append new sources to `metadata.sources` and table below.
 - [ ] Share quarterly platform health report with stakeholders.
 
 ## 5. Source Log

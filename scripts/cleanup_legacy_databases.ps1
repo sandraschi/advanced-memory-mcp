@@ -1,5 +1,5 @@
 # Cleanup Legacy Per-Project Advanced Memory Databases
-# 
+#
 # This script removes .advanced-memory folders from project directories.
 # These are legacy/redundant - the global database at ~\.advanced-memory\memory.db is used.
 #
@@ -39,12 +39,12 @@ foreach ($folder in $found) {
         Write-Host "  SKIP: $($folder.FullName) (global config)" -ForegroundColor Cyan
         continue
     }
-    
+
     # Calculate size
     $size = (Get-ChildItem -Path $folder.FullName -Recurse -File | Measure-Object -Property Length -Sum).Sum
     $totalSize += $size
     $sizeMB = [math]::Round($size / 1MB, 2)
-    
+
     Write-Host "  $($folder.Parent.Name)\" -ForegroundColor White -NoNewline
     Write-Host ".advanced-memory" -ForegroundColor Red -NoNewline
     Write-Host " ($sizeMB MB)" -ForegroundColor Gray
@@ -84,7 +84,7 @@ foreach ($folder in $found) {
     if ($folder.Parent.FullName -eq $env:USERPROFILE) {
         continue
     }
-    
+
     try {
         Remove-Item -Path $folder.FullName -Recurse -Force -ErrorAction Stop
         Write-Host "  Deleted: $($folder.FullName)" -ForegroundColor Green
@@ -114,7 +114,3 @@ if ($failed -gt 0) {
 Write-Host ""
 Write-Host "Your markdown files and content are safe!" -ForegroundColor Green
 Write-Host "Databases can be rebuilt anytime with sync." -ForegroundColor Cyan
-
-
-
-

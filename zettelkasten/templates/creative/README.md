@@ -30,6 +30,6 @@ cp zettelkasten/templates/creative/<topic>/<note>.md \
 
 ---
 
-**Category**: Creative  
-**Templates**: 1  
+**Category**: Creative
+**Templates**: 1
 **Updated**: October 17, 2025

@@ -82,15 +82,15 @@
 ### Core Framework
 
 #### FastMCP
-**What**: High-performance Model Context Protocol framework  
-**Why**: 
+**What**: High-performance Model Context Protocol framework
+**Why**:
 - Simplifies MCP server implementation
 - Handles stdio transport automatically
 - Provides tool registration and validation
 - Active development and community
 
-**Homepage**: https://github.com/jlowin/fastmcp  
-**Documentation**: [FastMCP Docs](https://github.com/jlowin/fastmcp#readme)  
+**Homepage**: https://github.com/jlowin/fastmcp
+**Documentation**: [FastMCP Docs](https://github.com/jlowin/fastmcp#readme)
 **Our Usage**: [docs/integrations/fastmcp.md](docs/integrations/fastmcp.md)
 
 **Alternatives Considered**:
@@ -100,15 +100,15 @@
 ### Database
 
 #### SQLAlchemy + SQLite
-**What**: ORM with async support + embedded database  
+**What**: ORM with async support + embedded database
 **Why**:
 - SQLite: Zero-config, single file, cross-platform
 - SQLAlchemy: Powerful ORM with async/await support
 - No server required (vs PostgreSQL, MySQL)
 - Portable database (easy backup/migration)
 
-**SQLite Homepage**: https://www.sqlite.org/  
-**SQLAlchemy Docs**: https://docs.sqlalchemy.org/  
+**SQLite Homepage**: https://www.sqlite.org/
+**SQLAlchemy Docs**: https://docs.sqlalchemy.org/
 **Our Schema**: [docs/architecture/DATABASE_ARCHITECTURE.md](docs/architecture/DATABASE_ARCHITECTURE.md)
 
 **Performance**:
@@ -117,27 +117,27 @@
 - Full-text search via Whoosh
 
 #### Alembic
-**What**: Database migration tool  
-**Why**: Version control for database schema  
+**What**: Database migration tool
+**Why**: Version control for database schema
 **Docs**: https://alembic.sqlalchemy.org/
 
 ### Search
 
 #### Whoosh
-**What**: Pure-Python full-text search library  
+**What**: Pure-Python full-text search library
 **Why**:
 - No external dependencies (vs Elasticsearch)
 - Fast full-text indexing
 - Supports complex queries
 - Integrates with SQLAlchemy
 
-**Homepage**: https://whoosh.readthedocs.io/  
+**Homepage**: https://whoosh.readthedocs.io/
 **Our Implementation**: Search engine in `src/advanced_memory/services/search_service.py`
 
 ### Configuration
 
 #### Pydantic
-**What**: Data validation using Python type hints  
+**What**: Data validation using Python type hints
 **Why**:
 - Type-safe configuration
 - Automatic validation
@@ -149,8 +149,8 @@
 ### Markdown Processing
 
 #### Python-Frontmatter
-**What**: YAML frontmatter parser  
-**Why**: Standard way to embed metadata in markdown  
+**What**: YAML frontmatter parser
+**Why**: Standard way to embed metadata in markdown
 **Docs**: https://python-frontmatter.readthedocs.io/
 
 **Our Frontmatter Format**:
@@ -171,8 +171,8 @@ modified: 2024-12-21T14:00:00Z
 
 ### Pandoc (Export Engine)
 
-**What**: Universal document converter  
-**Homepage**: https://pandoc.org/  
+**What**: Universal document converter
+**Homepage**: https://pandoc.org/
 **Install**: https://pandoc.org/installing.html
 
 **Why We Use Pandoc**:
@@ -220,25 +220,39 @@ adn_export("pandoc", export_path="output.tex", format_type="tex")
 
 ### External Tool Integrations
 
-**Obsidian**: https://obsidian.md/  
+**Obsidian**: https://obsidian.md/
 - Import WikiLinks, frontmatter, vaults
 - Docs: [docs/integrations/obsidian.md](docs/integrations/obsidian.md)
 
-**Notion**: https://notion.so/  
+**Notion**: https://notion.so/
 - Import HTML/Markdown exports
 - Docs: [docs/integrations/notion.md](docs/integrations/notion.md)
 
-**Joplin**: https://joplinapp.org/  
+**Joplin**: https://joplinapp.org/
 - Import/export notes, notebooks
 - Docs: [docs/integrations/joplin.md](docs/integrations/joplin.md)
 
-**Evernote**: https://evernote.com/  
+**Evernote**: https://evernote.com/
 - Import ENEX files
 - Docs: [docs/integrations/evernote.md](docs/integrations/evernote.md)
 
-**Claude Skills**: https://github.com/anthropics/anthropic-skills  
+**Claude Skills**: https://github.com/anthropics/anthropic-skills
 - Bidirectional conversion
 - Docs: [docs/user-guide/claude-skills.md](docs/user-guide/claude-skills.md)
+
+### Voice Stack (Audio Soul 2026)
+
+**STT Engine**: `faster-whisper` (Replaced `openai-whisper`)
+- **Implementation**: CTranslate2-based implementation for 4x+ speedup.
+- **Format**: int8/float16 quantization supported.
+
+**TTS Engine**: `Kokoro` (Replaced `pyttsx3`)
+- **Implementation**: PyTorch-based high-fidelity synthesis.
+- **Features**: Expressive, soulful voices (e.g., af_heart, am_adam).
+
+**Inference Engine**: `onnxruntime-gpu`
+- **Performance**: Zero-copy GPU memory access on RTX 409X.
+- **Execution**: CUDA Provider with float16 precision.
 
 ---
 
@@ -246,8 +260,8 @@ adn_export("pandoc", export_path="output.tex", format_type="tex")
 
 ### Package Management: UV
 
-**What**: Fast Python package installer (Rust-based)  
-**Homepage**: https://github.com/astral-sh/uv  
+**What**: Fast Python package installer (Rust-based)
+**Homepage**: https://github.com/astral-sh/uv
 **Why**: 10-100x faster than pip
 
 **Installation**:
@@ -276,7 +290,7 @@ uv run pytest
 
 ### Project Configuration: pyproject.toml
 
-**Standard**: PEP 518, PEP 621  
+**Standard**: PEP 518, PEP 621
 **File**: [pyproject.toml](pyproject.toml)
 
 **Key Sections**:
@@ -303,8 +317,8 @@ dev = ["pytest", "pytest-asyncio", "ruff", "mypy"]
 
 ### Lock File: uv.lock
 
-**Purpose**: Reproducible builds  
-**Contains**: Exact versions of all dependencies (including transitive)  
+**Purpose**: Reproducible builds
+**Contains**: Exact versions of all dependencies (including transitive)
 **Commit**: Yes (ensures consistent environments)
 
 ---
@@ -325,14 +339,14 @@ lint:
   - Setup Python 3.12
   - Install dependencies
   - Run ruff (linting)
-  
+
 test:
   matrix:
     python-version: [3.11, 3.12, 3.13]
   steps:
     - Run pytest
     - Upload coverage reports
-    
+
 security:
   - Run Bandit (security scanning)
   - Check dependencies for vulnerabilities
@@ -352,7 +366,7 @@ build-python:
   - Build wheel (.whl)
   - Build source distribution (.tar.gz)
   - Upload to GitHub Release
-  
+
 build-mcpb:
   - Build MCPB package (.mcpb)
   - Validate manifest
@@ -481,8 +495,8 @@ advanced-memory mcp
 
 ### Test Suite
 
-**Framework**: pytest + pytest-asyncio  
-**Location**: `tests/`  
+**Framework**: pytest + pytest-asyncio
+**Location**: `tests/`
 **Count**: 1113 tests (v1.0.0b3)
 
 **Test Structure**:
@@ -518,7 +532,7 @@ uv run pytest -x
 
 ### Test Coverage
 
-**Current**: ~54% (growing)  
+**Current**: ~54% (growing)
 **Target**: >70%
 
 **View Coverage**:
@@ -666,8 +680,8 @@ docker run -v ~/.advanced-memory:/root/.advanced-memory advanced-memory-mcp
 
 ### Code Style
 
-**Formatter**: Ruff (configured in `pyproject.toml`)  
-**Linter**: Ruff  
+**Formatter**: Ruff (configured in `pyproject.toml`)
+**Linter**: Ruff
 **Type Checker**: mypy
 
 **Rules**:
@@ -706,19 +720,18 @@ docker run -v ~/.advanced-memory:/root/.advanced-memory advanced-memory-mcp
 
 ### For Developers
 
-**Issues**: https://github.com/sandraschi/advanced-memory-mcp/issues  
-**Discussions**: https://github.com/sandraschi/advanced-memory-mcp/discussions  
+**Issues**: https://github.com/sandraschi/advanced-memory-mcp/issues
+**Discussions**: https://github.com/sandraschi/advanced-memory-mcp/discussions
 **Pull Requests**: https://github.com/sandraschi/advanced-memory-mcp/pulls
 
 ### For System Administrators
 
-**Installation**: [INSTALLATION.md](INSTALLATION.md)  
-**Troubleshooting**: [docs/TROUBLESHOOTING_GUIDE.md](docs/TROUBLESHOOTING_GUIDE.md)  
+**Installation**: [INSTALLATION.md](INSTALLATION.md)
+**Troubleshooting**: [docs/TROUBLESHOOTING_GUIDE.md](docs/TROUBLESHOOTING_GUIDE.md)
 **Configuration**: [docs/user-guide/](docs/user-guide/)
 
 ---
 
-**Last Updated**: October 20, 2025  
-**Version**: 1.0.0b3  
+**Last Updated**: October 20, 2025
+**Version**: 1.0.0b3
 **Maintainer**: Sandra Schipal
-

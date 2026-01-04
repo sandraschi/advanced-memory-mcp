@@ -70,4 +70,3 @@ try {
     Write-Host $_ -ForegroundColor Red
     exit 1
 }
-

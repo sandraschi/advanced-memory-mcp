@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Imagine a brilliant neuroscientist, Mary, who has spent her entire life in a black-and-white room, studying the physical processes of color vision. She knows everything there is to know about the physics of light, the biology of the eye, and the neurology of visual processing. One day, she steps outside and sees a red rose for the first time. Does she learn something new? 
+Imagine a brilliant neuroscientist, Mary, who has spent her entire life in a black-and-white room, studying the physical processes of color vision. She knows everything there is to know about the physics of light, the biology of the eye, and the neurology of visual processing. One day, she steps outside and sees a red rose for the first time. Does she learn something new?
 This famous thought experiment by Frank Jackson suggests that there's more to consciousness than just physical processes—a gap between objective description and subjective experience that David Chalmers would later call "the hard problem" of consciousness.
 
 ## The Hard Problem Defined

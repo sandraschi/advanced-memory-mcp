@@ -1,7 +1,7 @@
 # MCP-Commons Integration Patch
 
-**Date:** October 10, 2025  
-**Purpose:** Integrate bulletproof utilities into advanced-memory-mcp  
+**Date:** October 10, 2025
+**Purpose:** Integrate bulletproof utilities into advanced-memory-mcp
 **Fixes:** Silent sync failures, file crashes, link parser hangs
 
 ---
@@ -31,13 +31,13 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
     """Find wiki-style links in regular content."""
     relations = []
     start = 0
-    
+
     while True:
         # Find next outer-most [[
         start = content.find("[[", start)  # ❌ Can hang on large files
         if start == -1:
             break
-        
+
         # Manual bracket matching - O(n²) worst case
         depth = 1
         pos = start + 2
@@ -55,16 +55,16 @@ _link_parser = LinkParser(
 
 def parse_inline_relations(content: str) -> list[dict[str, Any]]:
     """Find wiki-style links in regular content (robust version)."""
-    
+
     # Use robust parser
     result = parse_links_safe(content)
-    
+
     if not result.is_valid:
         logger.warning("link_parsing_failed",
                       content_size=len(content),
                       errors=result.errors)
         return []  # Graceful degradation
-    
+
     # Convert to expected format
     relations = []
     for link in result.links:
@@ -74,12 +74,12 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
                 "target": link.target,
                 "context": None
             })
-    
+
     # Log warnings
     if result.warnings:
         for warning in result.warnings:
             logger.info("link_warning", warning=warning)
-    
+
     return relations
 ```
 
@@ -99,32 +99,32 @@ class SyncService:
             allow_empty=True,
             strict_frontmatter=False
         )
-    
+
     async def sync_file(self, relative_path: str, new: bool = False):
         """Sync file with validation."""
-        
+
         # Get full path
         full_path = self.project.path / relative_path
-        
+
         # Validate file BEFORE processing
         validation_result = self.file_validator.validate_file(full_path)
-        
+
         if not validation_result.is_valid:
             logger.warning("skipping_invalid_file",
                           path=relative_path,
                           errors=validation_result.errors)
             return None, None  # Skip file
-        
+
         # Log warnings
         for warning in validation_result.warnings:
             logger.info("file_warning",
                        path=relative_path,
                        warning=warning)
-        
+
         # Use validated content
         content = validation_result.content
         frontmatter = validation_result.frontmatter
-        
+
         # Continue with normal processing...
         ...
 ```
@@ -150,21 +150,21 @@ sync_monitor: SyncHealthMonitor | None = None
 def initialize_health_monitor(project_path: str):
     """Initialize health monitor on startup."""
     global sync_monitor
-    
+
     sync_monitor = SyncHealthMonitor(
         project_path=project_path,
         stall_timeout=60,
         check_interval=10,
         max_recovery_attempts=3
     )
-    
+
     sync_monitor.start_scan()
 
 
 async def sync_health_check(ctx: Context) -> str:
     """
     Comprehensive sync health check with diagnostics.
-    
+
     Returns detailed status including:
     - Watcher process state
     - Database growth rate
@@ -174,7 +174,7 @@ async def sync_health_check(ctx: Context) -> str:
     """
     if sync_monitor is None:
         return "❌ Health monitor not initialized"
-    
+
     return sync_monitor.format_health_report()
 ```
 
@@ -220,12 +220,12 @@ def test_link_parser_handles_many_links():
     # 5000 links - would hang with old parser
     links = [f"[[Page{i}]]" for i in range(5000)]
     content = " ".join(links)
-    
+
     import time
     start = time.time()
     result = parse_inline_relations(content)
     elapsed = time.time() - start
-    
+
     assert elapsed < 1.0  # Should be fast
     assert len(result) > 0
 ```
@@ -342,13 +342,12 @@ sync_health_check()
 
 ## Success Criteria
 
-✅ All 1,896 files sync successfully  
-✅ No hangs on large notes  
-✅ No crashes on weird files  
-✅ Health check tool works  
-✅ Performance acceptable (< 5 minutes total)  
+✅ All 1,896 files sync successfully
+✅ No hangs on large notes
+✅ No crashes on weird files
+✅ Health check tool works
+✅ Performance acceptable (< 5 minutes total)
 
 ---
 
 *Ready to integrate - October 10, 2025*
-

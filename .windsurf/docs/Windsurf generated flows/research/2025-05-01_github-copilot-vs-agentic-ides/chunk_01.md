@@ -1,4 +1,4 @@
-﻿# Improvements and Limitations of the New Version of GitHub Copilot (2025)
+# Improvements and Limitations of the New Version of GitHub Copilot (2025)
 
 ## 1. Introduction
 This research explores the improvements and limitations of the latest version of GitHub Copilot, with a particular focus on how it compares tother agentic AIDEs, such as Windsurf. The goal is to provide a comprehensive, up-to-date, and unbiased overview for technical decision-makers andevelopers considering advanced AI coding assistants.

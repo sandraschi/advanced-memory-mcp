@@ -77,7 +77,7 @@ AI: Creates note, but "Steve" could match:
 **With Projects:**
 ```
 User: "Create a note in my private project: Tomorrow I meet Steve"
-AI: 
+AI:
     1. Detects "private" project from query
     2. Switches to private project
     3. Creates note about meeting Steve
@@ -217,13 +217,13 @@ AI:
 
 ```python
 # Create private project for personal notes
-adn_project("create", 
+adn_project("create",
     project_name="private",
     project_path="~/Documents/advanced-memory/private")
 
 # Create work project
 adn_project("create",
-    project_name="work", 
+    project_name="work",
     project_path="~/Documents/advanced-memory/work")
 
 # Optional: Create research project
@@ -259,7 +259,7 @@ AI: Detects research project → Searches there
 
 ```
 User: "Show me notes from my work project"
-AI: 
+AI:
     - Detects "work" project (confidence: 80%)
     - Auto-switches to work project
     - "I've switched to your work project. Here are your notes..."
@@ -388,7 +388,7 @@ adn_export("html", project="work,private")
 
 **Problem**: AI switches to wrong project.
 
-**Solution**: 
+**Solution**:
 1. Manually switch: `adn_project("switch", project_name="correct-project")`
 2. Use explicit project parameter in tool calls
 3. Provide more context in your query
@@ -397,7 +397,7 @@ adn_export("html", project="work,private")
 
 **Problem**: You have too many projects and it's confusing.
 
-**Solution**: 
+**Solution**:
 - Consolidate similar projects
 - Use folders within projects instead
 - Archive old projects
@@ -420,4 +420,3 @@ adn_export("html", project="work,private")
 For more details, see:
 - [AI-Managed Project Switching](../features/AI_MANAGED_PROJECT_SWITCHING.md)
 - [Project Management Guide](./project-management.md)
-

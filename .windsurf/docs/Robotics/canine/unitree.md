@@ -1,4 +1,4 @@
-﻿# Unitree Robotics
+# Unitree Robotics
 
 ## Overview
 Unitree Robotics is a prominent Chinese robotics company that has made a significant impact on the market by developing and manufacturing high-performance yet cost-effective legged robots. The company is widely recognized for democratizing access to advanced quadruped and humanoid robotics, making them available to a broad audience of researchers, developers, educators, and hobbyists who were previously priced out of the market.

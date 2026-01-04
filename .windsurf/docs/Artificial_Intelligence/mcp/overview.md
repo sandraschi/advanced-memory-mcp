@@ -31,7 +31,7 @@ graph TD
     B --> C[Model Backend 1]
     B --> D[Model Backend 2]
     B --> E[Model Backend N]
-    
+
     B --> F[Monitoring]
     B --> G[Logging]
     B --> H[Auth]

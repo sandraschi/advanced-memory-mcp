@@ -1,4 +1,4 @@
-﻿# AI Analysis: Stalled Peace Process (Ukraine-Russia, US/EU Involvement)
+# AI Analysis: Stalled Peace Process (Ukraine-Russia, US/EU Involvement)
 
 **Timestamp:** 2025-04-28T20:26:45+02:00
 

@@ -1,7 +1,7 @@
 # CLI Architecture Guide - Advanced Memory's Command-Line Interface
 
-**Last Updated**: October 17, 2025  
-**Status**: Comprehensive CLI with 13 command groups  
+**Last Updated**: October 17, 2025
+**Status**: Comprehensive CLI with 13 command groups
 
 ---
 
@@ -483,12 +483,12 @@ GET  /api/search?q=python
 
 ### Project Commands
 
-**`project list`** - List all projects  
-**`project add`** - Create new project  
-**`project remove`** - Delete project  
-**`project default`** - Set default  
-**`project sync-config`** - Sync config ↔ database  
-**`project info`** - Project details  
+**`project list`** - List all projects
+**`project add`** - Create new project
+**`project remove`** - Delete project
+**`project default`** - Set default
+**`project sync-config`** - Sync config ↔ database
+**`project info`** - Project details
 
 **Purpose**: Multi-project management (inherited from Basic Memory)
 
@@ -496,10 +496,10 @@ GET  /api/search?q=python
 
 ### Import Commands
 
-**`import claude conversations`** - Claude exports  
-**`import claude projects`** - Claude project exports  
-**`import chatgpt`** - ChatGPT conversations.json  
-**`import memory-json`** - Legacy memory.json format  
+**`import claude conversations`** - Claude exports
+**`import claude projects`** - Claude project exports
+**`import chatgpt`** - ChatGPT conversations.json
+**`import memory-json`** - Legacy memory.json format
 
 **Purpose**: Migrate from other tools
 
@@ -528,7 +528,7 @@ GET  /api/search?q=python
 
 **Available tools**:
 - `write-note` - Create notes
-- `read-note` - Read notes  
+- `read-note` - Read notes
 - `search-notes` - Search
 - `build-context` - Build context
 - `recent-activity` - Recent changes
@@ -794,9 +794,9 @@ entities = response.json()
 
 ### Evolution Path
 
-**Started**: Basic Memory with CLI  
-**Added**: MCP server (AI integration)  
-**Added**: REST API (GUI support)  
+**Started**: Basic Memory with CLI
+**Added**: MCP server (AI integration)
+**Added**: REST API (GUI support)
 **Result**: Three interfaces, shared backend
 
 **Benefits**:
@@ -842,8 +842,8 @@ server.listen();
 
 ### Advanced Memory (our architecture)
 
-**Lines of code**: ~30,000+  
-**Components**: CLI + API + MCP + Database + Sync + Services  
+**Lines of code**: ~30,000+
+**Components**: CLI + API + MCP + Database + Sync + Services
 **Entry points**:
 - `advanced-memory <command>` (CLI)
 - `advanced-memory mcp` (MCP server)
@@ -964,6 +964,5 @@ advanced-memory mcp [--transport stdio|sse]
 
 ---
 
-*Understanding Advanced Memory's multi-interface architecture*  
+*Understanding Advanced Memory's multi-interface architecture*
 *October 17, 2025*
-

@@ -24,7 +24,7 @@
 - **PC Local**: `http://127.0.0.1:4710/` ✅ CONFIRMED WORKING
 - **PC Localhost**: `http://localhost:4710/` ✅ CONFIRMED WORKING
 
-### ❌ Non-Working Access Methods  
+### ❌ Non-Working Access Methods
 - **Tailscale Hostname**: `http://goliath:4710/` ❌ LOGIN FAILS
   - **Issue**: Login screen appears but authentication fails
   - **Root Cause**: CORS/backend configuration issue with hostname resolution
@@ -37,7 +37,7 @@
 
 ### Issue #1: Tailscale Hostname Login Failure
 - **Problem**: `http://goliath:4710/` shows login screen but authentication fails
-- **Symptoms**: 
+- **Symptoms**:
   - Frontend loads successfully
   - Login form appears
   - Credentials rejected (likely backend communication issue)
@@ -46,7 +46,7 @@
 
 ### Issue #2: Mobile Access via Tailscale
 - **Problem**: iOS devices need Tailscale network access to VeoGen
-- **Required URLs**: 
+- **Required URLs**:
   - `http://100.118.171.110:4710/` (IP-based)
   - `http://goliath:4710/` (hostname-based, preferred)
 - **Status**: 🔧 PENDING TESTING
@@ -57,7 +57,7 @@
 ```python
 ALLOWED_ORIGINS: List[str] = [
     "http://localhost:3000",
-    "http://localhost:8080", 
+    "http://localhost:8080",
     "http://localhost:4710",  # Frontend port
     "http://127.0.0.1:3000",
     "http://127.0.0.1:8080",
@@ -72,7 +72,7 @@ ALLOWED_ORIGINS: List[str] = [
 ```python
 # Tailscale network access
 "http://goliath:4710",
-"http://100.118.171.110:4710", 
+"http://100.118.171.110:4710",
 "http://goliath:4700",  # Backend API
 "http://100.118.171.110:4700",  # Backend API
 ```

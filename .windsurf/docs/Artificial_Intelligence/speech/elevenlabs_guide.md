@@ -250,28 +250,28 @@ while True:
         with mic asource:
             print("Listening...")
             audio = r.listen(source)
-            
+
         # Convert speech to text
         user_input = r.recognize_google(audio)
         print(f"You: {user_input}")
-        
+
         if user_input.lower() == 'exit':
             print("Goodbye!")
             break
-            
+
         # Add user message to conversation.append({"role": "user", "content": user_input})
-        
+
         # Get response from OpenAI
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=conversation
         )
-        
+
         assistant_response = response.choices[0].message['content']
         print(f"Assistant: {assistant_response}")
-        
+
         # Add assistant response to conversation.append({"role": "assistant", "content": assistant_response})
-        
+
         # Convert response to speech
         audio = generate(
             text=assistant_response,
@@ -279,7 +279,7 @@ while True:
             voice="Rachel"
         )
         play(audio)
-        
+
     except sr.UnknownValueError:
         print("Sorry, I didn't catch that. Could you repeat?")
     except sr.RequestError as e:

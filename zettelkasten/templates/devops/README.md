@@ -33,6 +33,6 @@ cp zettelkasten/templates/devops/<topic>/<note>.md \
 
 ---
 
-**Category**: Devops  
-**Templates**: 6  
+**Category**: Devops
+**Templates**: 6
 **Updated**: October 17, 2025

@@ -53,17 +53,17 @@ await write_note(
     title="Synthesis of {{capitalize query}} Information",
     content='''
     # Synthesis of {{capitalize query}} Information
-    
+
     ## Overview
     [Synthesis of the search results and your conversation]
-    
+
     ## Key Insights
     [Summary of main points learned from these results]
-    
+
     ## Observations
     - [insight] [Important observation from search results]
     - [connection] [How this connects to other topics]
-    
+
     ## Relations
     - relates_to [[{{#if results.length}}{{#if results.0.title}}{{results.0.title}}{{else}}Related Topic{{/if}}{{else}}Related Topic{{/if}}]]
     - extends [[Another Relevant Topic]]

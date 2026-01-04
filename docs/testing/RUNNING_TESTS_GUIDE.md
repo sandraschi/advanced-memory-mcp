@@ -2,8 +2,8 @@
 
 **How to run tests without canceling prematurely and breaking CI**
 
-**Date**: October 17, 2025  
-**Problem**: Tests take 4+ minutes, you get impatient, cancel early, miss failures  
+**Date**: October 17, 2025
+**Problem**: Tests take 4+ minutes, you get impatient, cancel early, miss failures
 **Solution**: Strategies to run tests efficiently and completely
 
 ---
@@ -48,7 +48,7 @@ Average: 0.2 seconds per test
 
 **Slowest tests**:
 - Integration tests: 1-5 seconds each
-- MCP server tests: 0.5-2 seconds each  
+- MCP server tests: 0.5-2 seconds each
 - Database tests: 0.3-1 second each
 
 **Why they're slow**:
@@ -315,7 +315,7 @@ test_entity_parser.py::test_parse PASSED [3/1190]
 
 **Start tests, then**:
 - ☕ Get coffee
-- 📧 Check email  
+- 📧 Check email
 - 📖 Read documentation
 - 🎮 Quick game
 - 🧘 Stretch
@@ -566,7 +566,7 @@ uv run pytest  # 4 minutes
 ```
 tests/
 ├── unit/         # Fast (0.01s each) - Run often
-├── integration/  # Medium (0.5s each) - Run before commit  
+├── integration/  # Medium (0.5s each) - Run before commit
 └── e2e/          # Slow (5s each) - Run before push
 ```
 
@@ -605,7 +605,7 @@ if ($Quick) {
     Write-Host "   📧 Check email" -ForegroundColor Gray
     Write-Host "   📖 Read docs" -ForegroundColor Gray
     Write-Host "   🧘 Stretch`n" -ForegroundColor Gray
-    
+
     # Use parallel execution for speed
     $testCmd = "uv run pytest -n auto --cov=src/advanced_memory --cov-report=term-missing -v"
 }
@@ -650,7 +650,7 @@ uv run pytest tests/mcp/test_zettelmaker.py -v
 # Test all MCP tools
 uv run pytest tests/mcp/ -v
 
-# Test all integration tests  
+# Test all integration tests
 uv run pytest tests/integration/ -v
 
 # Time: 1-2 minutes
@@ -800,7 +800,7 @@ just pre-push
 
 **Your problem**: Getting impatient and canceling tests early
 
-**The fix**: 
+**The fix**:
 1. **Recognize 4 minutes is normal** (not "forever")
 2. **Use `-n auto` for 1.5 minute runs** (faster)
 3. **Use `just pre-push`** (automates waiting)
@@ -814,9 +814,8 @@ just pre-push
 
 ---
 
-**Created**: October 17, 2025  
-**Problem**: Premature test cancellation  
+**Created**: October 17, 2025
+**Problem**: Premature test cancellation
 **Solution**: Patience + automation + parallelization
 
 **Wait for it!** ⏰✨
-

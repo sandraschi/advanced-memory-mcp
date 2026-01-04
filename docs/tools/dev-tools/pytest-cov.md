@@ -1,8 +1,8 @@
 # pytest-cov - Test Coverage Tool
 
-**What**: Test coverage measurement tool for Python  
-**Official**: https://pytest-cov.readthedocs.io/  
-**Purpose**: Measure which lines of code are executed during tests  
+**What**: Test coverage measurement tool for Python
+**Official**: https://pytest-cov.readthedocs.io/
+**Purpose**: Measure which lines of code are executed during tests
 **Output**: `htmlcov/` directory with visual coverage reports
 
 ---
@@ -237,7 +237,7 @@ pytest --cov=src --cov-report=term-missing
 - name: Run tests with coverage
   run: |
     uv run pytest --cov=src --cov-report=xml --cov-report=html
-    
+
 - name: Upload coverage to Codecov
   uses: codecov/codecov-action@v3
   with:
@@ -710,12 +710,12 @@ exclude_lines = [
 def process_data(data):
     if not data:                    # Green (tested)
         return None                 # Green (tested)
-    
+
     processed = transform(data)     # Green (tested)
-    
+
     if validate(processed):         # Green (tested)
         return processed            # Green (tested)
-    else:                           
+    else:
         logger.error("Invalid")     # Red (NOT TESTED!)
         return None                 # Red (NOT TESTED!)
 ```
@@ -898,7 +898,6 @@ coverage.xml          # XML report (for CI)
 
 ---
 
-**Created**: October 17, 2025  
-**Purpose**: Explain htmlcov/ and test coverage for Advanced Memory MCP  
+**Created**: October 17, 2025
+**Purpose**: Explain htmlcov/ and test coverage for Advanced Memory MCP
 **Status**: Complete reference guide
-

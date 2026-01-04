@@ -37,18 +37,18 @@ jobs:
             echo "Please provide a detailed description of your changes"
             exit 1
           fi
-          
+
           # Check for required sections
           if [[ ! "$PR_BODY" =~ "## 📋 Description" ]]; then
             echo "❌ PR description missing 'Description' section"
             exit 1
           fi
-          
+
           if [[ ! "$PR_BODY" =~ "## 🔗 Related Issues" ]]; then
             echo "❌ PR description missing 'Related Issues' section"
             exit 1
           fi
-          
+
           echo "✅ PR description is complete"
 
       - name: Check for breaking changes
@@ -70,7 +70,7 @@ jobs:
           # Check for changes to critical files
           if git diff --name-only HEAD~1 | grep -E "^(src/advanced_memory/mcp/tools/|manifest\.json|server/)" > /dev/null; then
             echo "📝 Changes detected in core MCP files"
-            
+
             # Check if tests are updated
             if ! git diff --name-only HEAD~1 | grep -E "^tests/" > /dev/null; then
               echo "⚠️  Warning: Core MCP changes detected but no test updates found"
@@ -84,7 +84,7 @@ jobs:
         run: |
           if [[ -f "manifest.json" ]]; then
             echo "📋 Validating MCPB manifest..."
-            
+
             # Check if Node.js is available for MCPB validation
             if command -v node >/dev/null 2>&1; then
               npm install -g @anthropic-ai/mcpb
@@ -104,7 +104,7 @@ jobs:
           # Check if any MCP tools were modified
           if git diff --name-only HEAD~1 | grep -E "^src/advanced_memory/mcp/tools/" > /dev/null; then
             echo "🔧 MCP tools modified, checking documentation..."
-            
+
             # Check if prompt templates were updated
             if git diff --name-only HEAD~1 | grep -E "^prompts/" > /dev/null; then
               echo "✅ Prompt templates updated"

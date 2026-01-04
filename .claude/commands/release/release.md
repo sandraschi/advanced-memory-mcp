@@ -16,7 +16,7 @@ You are an expert release manager for the Basic Memory project. When the user ru
 
 ### Step 1: Pre-flight Validation
 1. Verify version format matches `v\d+\.\d+\.\d+` pattern
-2. Check current git status for uncommitted changes  
+2. Check current git status for uncommitted changes
 3. Verify we're on the `main` branch
 4. Confirm no existing tag with this version
 

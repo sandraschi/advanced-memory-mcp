@@ -71,48 +71,48 @@ window.$docsify = {
   pdfEmbed: {
     // PDF.js worker path (required for WebAssembly)
     pdfWorker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js',
-    
+
     // Default height for PDF viewer
     height: '500px',
-    
+
     // Defaultitle for PDF viewer
     title: 'PDF Document',
-    
+
     // Show download button
     showDownload: true,
-    
+
     // Show print button
     showPrint: true,
-    
+
     // Show open inew tabutton
     showOpen: true,
-    
+
     // Show fullscreen button
     showFullscreen: true,
-    
+
     // Show page controlshowPageControls: true,
-    
+
     // Enable text selection
     enableTextSelection: true,
-    
+
     // Default zoom level (1 = 100%)
     scale: 1,
-    
+
     // Enable WebAssembly for better performance
     useWorker: true,
-    
+
     // Custom CSS class for the container
     className: 'pdf-embed-container',
-    
+
     // Custom CSS class for the toolbarClass: 'pdf-toolbar',
-    
+
     // Custom CSS class for the iframeClass: 'pdf-iframe',
-    
+
     // Callback when PDF is loaded
     onLoad: function(pdf) {
       console.log('PDF loaded:', pdf);
     },
-    
+
     // Callback when there's an error
     onError: function(error) {
       console.error('PDF error:', error);
@@ -312,17 +312,17 @@ loadingTask.promise.then(function(pdf) {
   const viewport = page.getViewport({ scale: 1.5 });
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
-  
+
   // Set canvas dimensions
   canvas.height = viewport.height;
   canvas.width = viewport.width;
-  
+
   // Render PDF page
   const renderContext = {
     canvasContext: context,
     viewport: viewport
   };
-  
+
   return page.render(renderContext).promise.then(function() {
     // Add canvas to the document.body.appendChild(canvas);
   });

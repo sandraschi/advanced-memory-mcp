@@ -50,9 +50,9 @@ Rules follow a standard Markdown format with specific metadata:
 
 ```markdown
 ## Rule ID: RULE-001
-**Category**: Security  
-**Severity**: High  
-**Enforcement**: Automatic  
+**Category**: Security
+**Severity**: High
+**Enforcement**: Automatic
 
 ### Description
 Detailedescription of the rule and its purpose.

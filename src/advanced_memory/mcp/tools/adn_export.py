@@ -35,132 +35,87 @@ async def adn_export(
 ) -> str:
     """Comprehensive export management tool for Advanced Memory knowledge base.
 
-    PORTMANTEAU PATTERN: Consolidates 10 export operations into one tool.
+    This point-of-entry tool provides a unified interface for exporting content
+    from the Advanced Memory ecosystem to various external formats and services.
 
-    SUPPORTED OPERATIONS:
-    - pdf: Export to PDF using fpdf2 (pure Python, no LaTeX, no weasyprint!)
-      * Supports search_query to find notes (e.g., "docker")
-      * Supports combine_into_one to create single PDF with clickable TOC
-    - pandoc: Export to Word, HTML, and 40+ formats using Pandoc (auto-installs! No PDF support)
-    - docsify: Export to Docsify documentation website with navigation
-    - html: Export to standalone HTML website with Mermaid diagram rendering
-      * Supports search_query to find notes (e.g., "docker")
-      * Supports combine_into_one to create single HTML with clickable TOC
-    - joplin: Export to Joplin-compatible format for cross-platform access
-    - pdf_book: Create professional PDF books with title pages and chapters
-    - archive: Export complete Advanced Memory archive for migration/backup
-    - repo: Export repository folder tree as ZIP, respecting .gitignore patterns
-      * Uses source_folder as repo_path (path to repository root)
-      * Excludes files/directories matching .gitignore patterns
-      * Creates Windows Explorer-compatible ZIP archive
-    - evernote: Export to Evernote-compatible format
-    - notion: Export to Notion-compatible format
-    - claude_skills: Export zettelkasten to Claude Skills format (Anthropic agent skills)
+    ---------------------------------------------------------------------------
+    [PORTMANTEAU PATTERN RATIONALE]
+    Consolidates 10+ export operations into one tool to:
+    - Prevent tool explosion (10+ tools -> 1 tool) while maintaining deep functionality.
+    - Improve discoverability by grouping related data egress tasks.
+    - Centralize export logic, formatting standards, and path resolution.
+    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
 
-    EXPORT FEATURES:
-    - Multiple format support (PDF, HTML, DOCX, EPUB, etc.)
-    - Professional document generation with templates
-    - Mermaid diagram rendering in HTML exports
-    - Cross-platform compatibility for various note-taking apps
-    - Complete archive creation for backup/migration
+    ---------------------------------------------------------------------------
+    [PARAMETER DESIGN]
+    The parameters are categorized by export type and requirements:
+    - Operation: The specific export task (pdf, pandoc, docsify, html, etc.).
+    - Destination (export_path): Where the files go (Defaults to Desktop).
+    - Content (source_folder, project, search_query, tag_filter): What to export.
+    - Formatting (format_type, book_title, site_title, pdf_engine): How it looks.
+    - Behavior (combine_into_one, make_toc, serve, open_after): Functional switches.
 
-    Args:
-        operation: The export operation to perform (pdf, pandoc, docsify, html, joplin, pdf_book, archive, repo, evernote, notion, claude_skills)
-        export_path: Path where exported files will be saved
-                    **IMPORTANT: Leave this None/omit parameter to use smart default!**
-                    Default behavior (when omitted):
-                    - Windows: C:\\Users\\{user}\\Desktop\\advanced-memory-exports\\{operation}\\
-                    - macOS: ~/Desktop/advanced-memory-exports/{operation}/
-                    - Linux: ~/Desktop/advanced-memory-exports/{operation}/
-                    **Only provide export_path when user explicitly specifies a custom location!**
-                    * All operations: Optional (has smart default)
-        format_type: Output format for pandoc operations
-                    * pandoc operation: Optional (default: "pdf")
-                    * Other operations: NOT USED
-        source_folder: Source folder to export from
-                    * All operations: Optional (default: "/" - root folder)
-                    * repo operation: Path to repository root directory (default: current working directory)
-        include_subfolders: Include subfolders recursively
-                    * All operations: Optional (default: True)
-        site_title: Title for docsify/html exports
-                    * docsify operation: Optional - Site title
-                    * html operation (with combine_into_one=True): Title for combined HTML
-                    * Other operations: NOT USED
-        site_description: Description for docsify/html exports
-                    * docsify, html operations: Optional
-                    * Other operations: NOT USED
-        book_title: Title for PDF book exports
-                    * pdf_book operation: REQUIRED - Title for the generated PDF book
-                    * pdf operation (with combine_into_one=True): Title for combined PDF
-                    * Other operations: NOT USED
-        search_query: Search query to find notes (for pdf/html operations)
-                    * pdf/html operations: Optional - Search for notes by keyword (e.g., "docker")
-                    * Other operations: NOT USED
-        combine_into_one: Combine multiple notes into single file with TOC (for pdf/html operations)
-                    * pdf/html operations: Optional - If True, creates one file with clickable TOC
-                    * Other operations: NOT USED
-        make_toc: Add clickable table of contents (for pdf/html operations)
-                    * pdf operation: Optional - If True, adds TOC page to combined PDF (default: True).
-                                     Bookmarks are always added for navigation regardless of this setting.
-                    * html operation: Optional - If True, adds clickable TOC sidebar to combined HTML (default: True)
-                    * Other operations: NOT USED
-        tag_filter: Filter notes by tag for exports
-                    * pdf_book operation: Optional - Only export notes with these tags (comma-separated or list)
-                    * Other operations: NOT USED
-        pdf_engine: PDF generation engine for Pandoc
-                    * pandoc operation: Optional - Engine to use (default: "pdflatex")
-                      Valid options: "pdflatex", "xelatex", "lualatex"
-                      Note: Pandoc PDF export is deprecated - use "pdf" operation instead
-                    * Other operations: NOT USED
-        serve: Start local web server after export
-                    * docsify operation: Optional - If True, starts local server to preview docsify site (default: True)
-                    * Other operations: NOT USED
-        port: Port number for local web server
-                    * docsify operation: Optional - Port for preview server (default: 3211)
-                    * Other operations: NOT USED
-        export_all: Export all content regardless of filters
-                    * docsify operation: Optional - If True, exports all notes ignoring source_folder filters (default: True)
-                    * Other operations: NOT USED
-        show_after_export: Open export location after completion
-                    * pandoc operation: Optional - If True, opens file explorer to export location (default: True)
-                    * html operation: Optional - If True, opens browser to HTML index page (default: True)
-                    * archive operation: Optional - If True, opens file explorer to archive location (default: True)
-                    * Other operations: NOT USED
-        project: Optional project specification. Supports:
-            - None (default): exports current active project
-            - "project-name": exports specific project
-            - "proj1,proj2,proj3": exports multiple projects to separate folders
-            - "ALL": exports all projects to separate folders
-            When exporting multiple projects, each gets its own subfolder
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
 
-    Returns:
-        Operation-specific result with export details and file counts
+    Document Formats:
+    - pdf: Native PDF with fpdf2 (No LaTeX required).
+    - pandoc: Universal converter (DOCX, HTML, EPUB, etc.).
+    - pdf_book: Professional book generation with cover/TOC.
 
-    Examples:
-        # Export to PDF with Pandoc - OMIT export_path to use Desktop (RECOMMENDED!)
-        adn_export("pandoc", format_type="pdf")  # → Desktop/advanced-memory-exports/pandoc/
+    Web Publishing:
+    - docsify: Static documentation site generator.
+    - html: Standalone HTML with Mermaid support.
 
-        # Export to DOCX - automatically goes to Desktop
-        adn_export("pandoc", format_type="docx")  # → Desktop/advanced-memory-exports/pandoc/
+    External Systems:
+    - joplin: Joplin-compatible Markdown export.
+    - evernote: Evernote ENEX compatible export.
+    - notion: Notion-compatible Markdown/CSV export.
+    - claude_skills: Anthropic agent skills export.
 
-        # Export to Docsify website - automatically goes to Desktop
-        adn_export("docsify")  # → Desktop/advanced-memory-exports/docsify/
-        adn_export("docsify", export_path="C:/website/")  # Only when user says "export to C:/website"
+    System & Data:
+    - archive: Full system backup.
+    - repo: Git repository export (ZIP with .gitignore support).
 
-        # Create PDF book
-        adn_export("pdf_book", book_title="Research Papers")  # Default path
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    - 'pandoc' must be installed for pandoc operations.
+    - 'pathspec' required for repo export.
 
-        # Export Claude Skills
-        adn_export("claude_skills")  # Default: Desktop/advanced-memory-exports/claude_skills/
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The export type to perform (Required).
+    - export_path (str): Destination path (Optional - Defaults to Desktop).
+    - format_type (str): Target format for Pandoc (Default: 'pdf').
+    - source_folder (str): Base directory for export (Default: '/').
+    - project (str): Project context for filtering (Optional).
+    - search_query (str): Filter content by keyword (Optional).
+    - tag_filter (str): Filter content by tags (Optional).
+    - book_title (str): Title for PDF books (Required for pdf_book).
+    - combine_into_one (bool): Merge multiple notes into one file (Default: False).
 
-        # Export complete archive
-        adn_export("archive")  # Default path
+    ---------------------------------------------------------------------------
+    [USAGE]
+    Use this tool to publish content, migrate data, or create backups.
+    It automatically handles path resolution and format conversion.
 
-        # Export all projects to separate folders
-        adn_export("pandoc", format_type="pdf", project="ALL")  # → Desktop/advanced-memory-exports/pandoc/project1/, project2/, etc.
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
 
-        # Export specific projects
-        adn_export("claude_skills", project="work,personal")  # → exports two projects
+    - Export project to PDF:
+      adn_export(operation="pdf", project="research", combine_into_one=True)
+
+    - Export to Docsify site:
+      adn_export(operation="docsify", site_title="My Knowledge Base")
+
+    - Create a repo archive:
+      adn_export(operation="repo", source_folder="/path/to/repo")
+
+    ---------------------------------------------------------------------------
+    [ERRORS]
+    - Export failed: General failure in the export process.
+    - Missing dependency: Required tools (like pandoc) not found.
+    - Invalid path: Source or destination path is invalid.
     """
     logger.info(f"MCP tool call tool=adn_export operation={operation} export_path={export_path}")
 
@@ -322,7 +277,12 @@ async def adn_export(
         )
     elif operation == "pdf_book":
         return await _pdf_book_export(
-            resolved_export_path, source_folder, include_subfolders, book_title, tag_filter, project
+            resolved_export_path,
+            source_folder,
+            include_subfolders,
+            book_title,
+            tag_filter,
+            project,
         )
     elif operation == "archive":
         return await _archive_export(resolved_export_path, show_after_export, project)
@@ -519,9 +479,7 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     )  # type: ignore[operator,no-any-return]
 
 
-async def _repo_export(
-    export_path: str, repo_path: str | None, show_after_export: bool
-) -> str:
+async def _repo_export(export_path: str, repo_path: str | None, show_after_export: bool) -> str:
     """Export repository folder tree as ZIP, respecting .gitignore patterns.
 
     Args:
@@ -575,34 +533,34 @@ async def _repo_export(
     # Root .gitignore patterns apply to entire repo
     # Nested .gitignore patterns apply only to their directory and subdirectories
     ignore_specs = {}  # Maps directory (relative to repo_root) -> PathSpec
-    
+
     # First, parse root .gitignore (applies to entire repo)
     root_gitignore = repo_root / ".gitignore"
     root_patterns = []
     if root_gitignore.exists():
         try:
-            with open(root_gitignore, "r", encoding="utf-8") as f:
+            with open(root_gitignore, encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if line and not line.startswith("#"):
                         root_patterns.append(line)
         except Exception as e:
             logger.warning(f"Failed to read root .gitignore: {e}")
-    
+
     if root_patterns:
         ignore_specs[Path(".")] = PathSpec.from_lines(GitWildMatchPattern, root_patterns)
         logger.debug(f"Loaded {len(root_patterns)} patterns from root .gitignore")
-    
+
     # Then parse nested .gitignore files (patterns apply only within their directory)
     for gitignore_file in gitignore_files:
         if gitignore_file == root_gitignore:
             continue  # Already processed
-        
+
         # Get directory relative to repo root
         gitignore_dir = gitignore_file.parent.relative_to(repo_root)
-        
+
         try:
-            with open(gitignore_file, "r", encoding="utf-8") as f:
+            with open(gitignore_file, encoding="utf-8") as f:
                 patterns = []
                 for line in f:
                     line = line.strip()
@@ -610,7 +568,9 @@ async def _repo_export(
                         patterns.append(line)
                 if patterns:
                     ignore_specs[gitignore_dir] = PathSpec.from_lines(GitWildMatchPattern, patterns)
-                    logger.debug(f"Loaded {len(patterns)} patterns from nested .gitignore at {gitignore_dir}")
+                    logger.debug(
+                        f"Loaded {len(patterns)} patterns from nested .gitignore at {gitignore_dir}"
+                    )
         except Exception as e:
             logger.warning(f"Failed to read .gitignore at {gitignore_file}: {e}")
 
@@ -632,13 +592,13 @@ async def _repo_export(
         # Check if file matches any .gitignore pattern
         # Check root patterns first, then check nested patterns for each parent directory
         should_ignore = False
-        
+
         # Check root .gitignore patterns (apply to entire repo)
         if Path(".") in ignore_specs:
             if ignore_specs[Path(".")].match_file(rel_path_str):
                 should_ignore = True
                 logger.debug(f"Ignoring (root .gitignore): {rel_path_str}")
-        
+
         # Check nested .gitignore patterns (check each parent directory up to repo root)
         # Nested .gitignore files only apply to files within their directory tree
         if not should_ignore:
@@ -646,22 +606,27 @@ async def _repo_export(
             for gitignore_dir, spec in ignore_specs.items():
                 if gitignore_dir == Path("."):
                     continue  # Already checked root
-                
+
                 # Check if file is within this .gitignore's directory
                 try:
                     # Check if rel_path is within gitignore_dir
-                    if rel_path_obj.is_relative_to(gitignore_dir) or gitignore_dir in rel_path_obj.parents:
+                    if (
+                        rel_path_obj.is_relative_to(gitignore_dir)
+                        or gitignore_dir in rel_path_obj.parents
+                    ):
                         # Get path relative to the .gitignore directory
                         rel_to_gitignore = rel_path_obj.relative_to(gitignore_dir)
                         rel_to_gitignore_str = str(rel_to_gitignore).replace("\\", "/")
                         if spec.match_file(rel_to_gitignore_str):
                             should_ignore = True
-                            logger.debug(f"Ignoring (nested .gitignore in {gitignore_dir}): {rel_path_str}")
+                            logger.debug(
+                                f"Ignoring (nested .gitignore in {gitignore_dir}): {rel_path_str}"
+                            )
                             break
                 except ValueError:
                     # File is not within this directory, skip
                     continue
-        
+
         if should_ignore:
             continue
 
@@ -698,7 +663,7 @@ async def _repo_export(
         compresslevel=6,
         allowZip64=needs_zip64,
     )
-    
+
     try:
         for file_path, rel_path_str in files_to_include:
             try:
@@ -712,7 +677,7 @@ async def _repo_export(
         # Explicitly close and finalize the ZIP file
         # This ensures proper ZIP structure that Windows Explorer expects
         zipf.close()
-    
+
     # Verify the ZIP file is valid
     try:
         test_zip = zipfile.ZipFile(export_path_obj, "r")

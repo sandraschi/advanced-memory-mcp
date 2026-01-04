@@ -69,4 +69,3 @@ Born in Canada, Pineau earned her Bachelors in Electrical Engineering fromcGill 
 - [Facebook AI Research](https://ai.facebook.com/)
 - [NeurIPS](https://neurips.cc/) - Conference where Pineau has held leadership roles
 - [CIFAR](https://cifar.ca/) - Canadian Institute for Advanced Research
-

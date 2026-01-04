@@ -60,6 +60,11 @@ async def build_context(
 
         # Build context from specific project
         build_context("memory://specs/search", project="work-project")
+
+    Errors:
+        - "Invalid URL format": Returned if the provided 'url' does not follow the memory:// URI pattern.
+        - "Project not found": Returned if the specified 'project' name does not exist.
+        - "Migration in progress": Returned if a background data migration is occurring, preventing immediate context building.
     """
     logger.info(f"Building context from {url}")
     # URL is already validated and normalized by MemoryUrl type annotation

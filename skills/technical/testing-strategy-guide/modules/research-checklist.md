@@ -3,25 +3,25 @@
 Review every 6 months or when major testing frameworks/patterns evolve.
 
 ## 1. Source Refresh
-- [ ] Google Testing Blog & Accelerate updates.  
-- [ ] ThoughtWorks Technology Radar, Testing Dojos.  
-- [ ] Framework release notes (pytest, Playwright, Cypress, k6).  
+- [ ] Google Testing Blog & Accelerate updates.
+- [ ] ThoughtWorks Technology Radar, Testing Dojos.
+- [ ] Framework release notes (pytest, Playwright, Cypress, k6).
 - [ ] Industry case studies (Netflix, Shopify, Microsoft).
 
 ## 2. Tooling Audit
-- [ ] Validate CI pipelines and shared libraries for compatibility.  
-- [ ] Review test flake dashboard; track resolution rate.  
-- [ ] Confirm license/support plans for testing tools.  
+- [ ] Validate CI pipelines and shared libraries for compatibility.
+- [ ] Review test flake dashboard; track resolution rate.
+- [ ] Confirm license/support plans for testing tools.
 - [ ] Update devcontainers/local tooling for parity.
 
 ## 3. Metrics & Outcomes
-- [ ] Recalculate coverage and mutation scores; adjust targets.  
-- [ ] Analyze escaped defect trends.  
+- [ ] Recalculate coverage and mutation scores; adjust targets.
+- [ ] Analyze escaped defect trends.
 - [ ] Assess pipeline duration and resource costs.
 
 ## 4. Documentation & Training
-- [ ] Update testing handbook, templates, examples.  
-- [ ] Refresh training sessions for new hires.  
+- [ ] Update testing handbook, templates, examples.
+- [ ] Refresh training sessions for new hires.
 - [ ] Archive outdated frameworks/tests.
 
 ## 5. Source Log

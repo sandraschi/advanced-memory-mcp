@@ -105,6 +105,13 @@ async def adn_editor(
 
         # Read image content
         adn_editor("read_content", path="images/diagram.png")
+
+    Errors:
+        - "Invalid operation": The provided operation is not supported by the tool.
+        - "Note not found": Returned if the note identifier for Notepad++ edit or import was not found in the knowledge base.
+        - "Notepad++ not found": Returned if the Notepad++ executable could not be located on the system.
+        - "File not found": Returned if the provided path for read_content does not exist.
+        - "Canvas creation failed": Returned if an error occurred during JSON serialization or file writing for canvas creation.
     """
     logger.info(f"MCP tool call tool=adn_editor operation={operation}")
 
@@ -446,7 +453,15 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
         content_type, _ = mimetypes.guess_type(str(file_path))
 
         # Handle different file types
-        if file_path.suffix.lower() in [".md", ".txt", ".py", ".js", ".html", ".css", ".json"]:
+        if file_path.suffix.lower() in [
+            ".md",
+            ".txt",
+            ".py",
+            ".js",
+            ".html",
+            ".css",
+            ".json",
+        ]:
             # Text files
             try:
                 content = file_path.read_text(encoding="utf-8")

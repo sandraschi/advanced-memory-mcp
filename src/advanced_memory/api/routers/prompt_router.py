@@ -4,7 +4,7 @@ This router is responsible for rendering various prompts using Handlebars templa
 It centralizes all prompt formatting logic that was previously in the MCP prompts.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException, status
 from loguru import logger
@@ -175,7 +175,7 @@ async def continue_conversation(
             "search_limit": request.search_items_limit,
             "context_depth": request.depth,
             "related_limit": request.related_items_limit,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
         prompt_metadata = PromptMetadata(**metadata)
@@ -245,7 +245,7 @@ async def search_prompt(
             "search_limit": limit,
             "context_depth": 0,  # No context depth for basic search
             "related_limit": 0,  # No related items for basic search
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
         prompt_metadata = PromptMetadata(**metadata)

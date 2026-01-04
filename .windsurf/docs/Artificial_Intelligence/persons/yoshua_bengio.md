@@ -68,4 +68,3 @@ Born in Paris, France, Bengio moved to Canada to study at McGill University, whe
 - [Element AI](https://www.elementai.com/) - AI startup co-founded by Bengio
 - [The Deep Learning Textbook](https://www.deeplearningbook.org/)
 - [AI for Humanity Summit](https://montreal.ai/ai4h/) - Conference series co-founded by Bengio
-

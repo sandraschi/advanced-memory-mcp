@@ -225,5 +225,3 @@ A comprehensive timeline of artificial intelligence development, from ancient au
 *"The future is already here – it's just not evenly distributed." - William Gibson*
 
 *History shows AI progress is exponential in the long run, but with sudden jumps and frustrating plateaus.*
-
-

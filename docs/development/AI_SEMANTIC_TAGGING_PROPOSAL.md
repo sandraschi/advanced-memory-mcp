@@ -59,7 +59,7 @@ court corruption.
 {
   "suggested_tags": [
     "shakespeare",
-    "hamlet", 
+    "hamlet",
     "ophelia",
     "tragedy",
     "character-analysis",
@@ -264,7 +264,7 @@ Most common tags:
 Recommendations:
   ⚠️  175 entities have no tags
   💡 Run: advanced-memory tag batch --query "tag:none"
-  
+
   ⚠️  67 entities have only 1 tag
   💡 Run: advanced-memory tag batch --query "tag_count:1"
 ```
@@ -294,10 +294,10 @@ advanced-memory tag cleanup --remove-unused
 Similar tag groups:
   1. python, Python, python-lang, py
      → Suggest: Merge to "python"
-  
+
   2. machine-learning, ml, machinelearning
      → Suggest: Merge to "machine-learning"
-  
+
   3. javascript, js, JavaScript
      → Suggest: Merge to "javascript"
 
@@ -389,11 +389,11 @@ from advanced_memory.services.ai_integration import AIIntegration
 
 class AITaggingService:
     """Service for AI-powered tag generation."""
-    
+
     def __init__(self, model: str = "claude-3-5-sonnet-20241022"):
         self.ai = AIIntegration(model=model)
         self.default_prompt = self._load_default_prompt()
-    
+
     async def suggest_tags(
         self,
         content: str,
@@ -403,14 +403,14 @@ class AITaggingService:
         custom_prompt: str | None = None,
     ) -> dict[str, Any]:
         """Generate tag suggestions for content.
-        
+
         Args:
             content: Markdown content to analyze
             existing_tags: Tags already present (optional)
             max_tags: Maximum tags to suggest
             min_confidence: Minimum confidence threshold
             custom_prompt: Custom tagging instructions
-            
+
         Returns:
             {
                 "suggested_tags": ["tag1", "tag2", ...],
@@ -420,7 +420,7 @@ class AITaggingService:
             }
         """
         prompt = custom_prompt or self.default_prompt
-        
+
         # Build full prompt
         full_prompt = f"""
 {prompt}
@@ -434,28 +434,28 @@ Note content:
 
 Return JSON with suggested_tags, confidence, and reasoning.
 """
-        
+
         # Call AI
         try:
             response = await self.ai.generate_completion(full_prompt)
-            
+
             # Parse JSON response
             result = json.loads(response)
-            
+
             # Filter by confidence
             filtered_tags = [
                 tag for tag, conf in result["confidence"].items()
                 if conf >= min_confidence
             ]
-            
+
             result["suggested_tags"] = filtered_tags[:max_tags]
-            
+
             # Preserve existing tags
             if existing_tags:
                 result["existing_preserved"] = existing_tags
-            
+
             return result
-        
+
         except Exception as e:
             logger.error(f"AI tagging failed: {e}")
             return {
@@ -464,18 +464,18 @@ Return JSON with suggested_tags, confidence, and reasoning.
                 "reasoning": f"Error: {str(e)}",
                 "error": True
             }
-    
+
     async def batch_tag(
         self,
         files: list[str],
         **kwargs
     ) -> dict[str, Any]:
         """Tag multiple files.
-        
+
         Args:
             files: List of file paths to tag
             **kwargs: Passed to suggest_tags()
-            
+
         Returns:
             {
                 "total_files": 47,
@@ -494,7 +494,7 @@ Return JSON with suggested_tags, confidence, and reasoning.
             "total_tags_added": 0,
             "details": {}
         }
-        
+
         for file_path in files:
             # Read file
             # Get existing tags
@@ -502,9 +502,9 @@ Return JSON with suggested_tags, confidence, and reasoning.
             # Update frontmatter
             # Track stats
             pass
-        
+
         return results
-    
+
     def _load_default_prompt(self) -> str:
         """Load default tagging prompt."""
         return """
@@ -524,7 +524,7 @@ Rules:
 
 Examples:
 - Note about Ophelia → tags include "shakespeare", "hamlet", "tragedy"
-- Note about neural networks → tags include "ai", "deep-learning", "machine-learning"  
+- Note about neural networks → tags include "ai", "deep-learning", "machine-learning"
 - Note about Docker → tags include "containers", "devops", "infrastructure"
 
 Return JSON with suggested_tags, confidence scores (0-1), and brief reasoning.
@@ -579,37 +579,37 @@ def suggest_tags(
 async def _suggest_tags_async(
     file_path: Path,
     max_tags: int,
-    min_confidence: float, 
+    min_confidence: float,
     auto_accept: float | None,
     dry_run: bool,
     model: str,
 ):
     """Async implementation of suggest_tags."""
     config = get_project_config()
-    
+
     # Validate file exists
     full_path = config.home / file_path
     if not full_path.exists():
         console.print(f"[red]Error: File not found: {file_path}[/red]")
         raise typer.Exit(1)
-    
+
     # Read content
     content = full_path.read_text(encoding="utf-8")
-    
+
     # Extract existing tags
     # (parse frontmatter if present)
     from advanced_memory.file_utils import has_frontmatter, parse_frontmatter
-    
+
     existing_tags = []
     if has_frontmatter(content):
         frontmatter = parse_frontmatter(content)
         existing_tags = frontmatter.get("tags", [])
-    
+
     # Get AI suggestions
     console.print(f"\n📝 Analyzing: [cyan]{file_path.name}[/cyan]\n")
-    
+
     tagging_service = AITaggingService(model=model)
-    
+
     with console.status("[bold cyan]AI is thinking..."):
         result = await tagging_service.suggest_tags(
             content=content,
@@ -617,49 +617,49 @@ async def _suggest_tags_async(
             max_tags=max_tags,
             min_confidence=min_confidence,
         )
-    
+
     if result.get("error"):
         console.print(f"[red]Error: {result['reasoning']}[/red]")
         raise typer.Exit(1)
-    
+
     # Display suggestions
     suggested = result["suggested_tags"]
     confidence = result["confidence"]
     reasoning = result["reasoning"]
-    
+
     if not suggested:
         console.print("[yellow]No tags suggested above confidence threshold.[/yellow]")
         return
-    
+
     console.print(f"🤖 AI suggests {len(suggested)} tags:\n")
-    
+
     # Group by confidence
     high_conf = [(tag, conf) for tag, conf in confidence.items() if conf >= 0.95]
     medium_conf = [(tag, conf) for tag, conf in confidence.items() if 0.85 <= conf < 0.95]
     low_conf = [(tag, conf) for tag, conf in confidence.items() if min_confidence <= conf < 0.85]
-    
+
     if high_conf:
         console.print("[bold green]High confidence (≥95%):[/bold green]")
         for tag, conf in high_conf:
             console.print(f"  ✅ {tag} ({conf*100:.0f}%)")
-    
+
     if medium_conf:
         console.print("\n[bold yellow]Medium confidence (85-94%):[/bold yellow]")
         for tag, conf in medium_conf:
             console.print(f"  ⚠️  {tag} ({conf*100:.0f}%)")
-    
+
     if low_conf:
         console.print(f"\n[bold]Lower confidence ({min_confidence*100:.0f}-84%):[/bold]")
         for tag, conf in low_conf:
             console.print(f"  ℹ️  {tag} ({conf*100:.0f}%)")
-    
+
     console.print(f"\n[dim]Reasoning: {reasoning}[/dim]")
-    
+
     # Dry run - stop here
     if dry_run:
         console.print("\n[yellow]Dry run - no changes made[/yellow]")
         return
-    
+
     # Auto-accept?
     if auto_accept:
         tags_to_add = [tag for tag, conf in confidence.items() if conf >= auto_accept]
@@ -670,7 +670,7 @@ async def _suggest_tags_async(
             "\nAccept these tags? [Y/n/custom]",
             default="Y"
         )
-        
+
         if choice.lower() == "n":
             console.print("[yellow]Cancelled - no changes made[/yellow]")
             return
@@ -682,7 +682,7 @@ async def _suggest_tags_async(
                     tags_to_add.append(tag)
         else:
             tags_to_add = suggested
-    
+
     # Update frontmatter
     # (add tags, add ai_tagged: true, ai_tagged_date)
     console.print(f"\n✅ Added {len(tags_to_add)} tags to frontmatter!")
@@ -737,13 +737,13 @@ async def adn_tagger(
 ) -> str:
     """
     AI-powered semantic tagging for your knowledge base.
-    
+
     Operations:
     - suggest: Get AI tag suggestions for a file
     - batch: Tag multiple files at once
     - analyze: Analyze tag quality
     - cleanup: Clean up redundant tags
-    
+
     Examples:
     - adn_tagger("suggest", identifier="my-note")
     - adn_tagger("batch", query="tag:none", limit=50)
@@ -1018,8 +1018,8 @@ Note about "JS" → suggests: javascript, js, web-programming
 
 **AI detects domain and adjusts tags**:
 
-**Code note** → Focus on: languages, frameworks, concepts  
-**Research note** → Focus on: topics, methodologies, authors  
+**Code note** → Focus on: languages, frameworks, concepts
+**Research note** → Focus on: topics, methodologies, authors
 **Creative note** → Focus on: themes, genres, techniques
 
 **Benefit**: Domain-appropriate tags
@@ -1074,7 +1074,7 @@ superpostion to achive paralelism.
     "contains-gibberish"
   ],
   "errors_detected": {
-    "typos": ["Quantm→Quantum", "Computng→Computing", "Fundamentls→Fundamentals", 
+    "typos": ["Quantm→Quantum", "Computng→Computing", "Fundamentls→Fundamentals",
               "systms→systems", "utiliz→utilize", "superpostion→superposition",
               "achive→achieve", "paralelism→parallelism"],
     "gibberish": ["goblahoy"],
@@ -1103,7 +1103,7 @@ advanced-memory tag suggest notes/quantum.md
 ⚠️  Quality Issues Detected!
    • 8 typos found
    • 1 nonsense word: "goblahoy"
-   
+
 Suggested corrections:
    Quantm → Quantum
    goblahoy → (unknown - needs review)
@@ -1354,7 +1354,7 @@ advanced-memory tool search-notes "tag:incomplete AND tag:needs-expansion"
 # 1. Find problematic notes
 advanced-memory tag check-quality --type gibberish
 
-# Output: 
+# Output:
 # notes/quantum.md - contains "goblahoy"
 # notes/experiment.md - contains "xyzqwerty"
 
@@ -1557,8 +1557,8 @@ Continue? [y/N]:
 
 ### Use Case 1: "Tag My 500 Old Notes"
 
-**Before**: Hours of manual tagging work  
-**After**: 
+**Before**: Hours of manual tagging work
+**After**:
 ```bash
 advanced-memory tag batch notes/ --model gpt-3.5-turbo
 # 5 minutes, $0.25 cost, 2,500 tags added
@@ -1568,7 +1568,7 @@ advanced-memory tag batch notes/ --model gpt-3.5-turbo
 
 ### Use Case 2: "Find All Shakespeare Notes"
 
-**Before**: Hope you remembered to tag them  
+**Before**: Hope you remembered to tag them
 **After**: AI tagged automatically
 ```bash
 advanced-memory tool search-notes "tag:shakespeare"
@@ -1579,7 +1579,7 @@ advanced-memory tool search-notes "tag:shakespeare"
 
 ### Use Case 3: "Organize Research Papers"
 
-**Before**: Manual categorization  
+**Before**: Manual categorization
 **After**: AI understands context
 ```bash
 advanced-memory tag batch research/ --auto-accept 0.95
@@ -1714,7 +1714,6 @@ advanced-memory tag batch notes/ --detect-errors
 
 ---
 
-*Proposal created: 2025-10-17*  
-*Status: Ready for implementation*  
+*Proposal created: 2025-10-17*
+*Status: Ready for implementation*
 *Priority: HIGH (game-changing feature)*
-

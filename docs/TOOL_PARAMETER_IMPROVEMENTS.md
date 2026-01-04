@@ -166,13 +166,12 @@ search_notes("query", projects="ALL")
 
 ## Version
 
-**Introduced in**: v1.0.0b6 (or v1.0.0rc1)  
-**Breaking Changes**: search_notes() parameter renamed  
+**Introduced in**: v1.0.0b6 (or v1.0.0rc1)
+**Breaking Changes**: search_notes() parameter renamed
 **Migration Required**: Yes, for search_all_projects users
 
 ---
 
-**Last Updated**: 2025-10-28  
-**Status**: Complete  
+**Last Updated**: 2025-10-28
+**Status**: Complete
 **Quality**: Production-ready
-

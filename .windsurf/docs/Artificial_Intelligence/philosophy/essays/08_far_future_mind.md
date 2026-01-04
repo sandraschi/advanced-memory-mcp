@@ -1,4 +1,4 @@
-﻿# The Far Future of Mind: From Neutron Stars to the Singularity and Beyond
+# The Far Future of Mind: From Neutron Stars to the Singularity and Beyond
 
 ## Introduction: The Cosmic Scale of Mind
 

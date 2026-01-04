@@ -35,12 +35,12 @@ function Start-ManagedProcess {
         [string]$WorkingDirectory,
         [int]$Port
     )
-    
+
     # Check for port conflicts
     if ($Port -and (Test-PortInUse -Port $Port)) {
         $existingProcess = Get-ProcessByPort -Port $Porthrow "Port $Port is in use by process $($existingProcess.Id) ($($existingProcess.ProcessName))"
     }
-    
+
     # Starthe process
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $Command
@@ -49,24 +49,24 @@ function Start-ManagedProcess {
     $processInfo.UseShellExecute = $false
     $processInfo.RedirectStandardOutput = $true
     $processInfo.RedirectStandardError = $true
-    
+
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo = $processInfo
     $process.EnableRaisingEvents = $true
-    
+
     # Set up event handlers
     $process.OutputDataReceived += { Write-Host $_.Data }
     $process.ErrorDataReceived += { Write-Error $_.Data }
-    
+
     # Starthe process
     $process.Start() | Out-Null
     $process.BeginOutputReadLine()
     $process.BeginErrorReadLine()
-    
+
     # Save process info
     $process | Add-Member -MemberType NoteProperty -Name 'StartTime' -Value (Get-Date)
     $process | Add-Member -MemberType NoteProperty -Name 'Port' -Value $Port
-    
+
     return $process
 }
 
@@ -76,7 +76,7 @@ try {
     if (-not $process.CloseMainWindow()) {
         # If no UI, try sending Ctrl+C
         $process.StandardInput.WriteLine([char]3)  # Ctrl+C
-        
+
         # Wait for graceful exit
         if (-not $process.WaitForExit(5000)) {
             # Force stop if still running
@@ -94,7 +94,7 @@ try {
 ```powershell
 function Test-PortInUse {
     param([int]$Port)
-    
+
     try {
         # Method 1: Using .NET (fastest)
         $tcpListener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Any, $Port)
@@ -114,7 +114,7 @@ function Test-PortInUse {
 
 function Get-ProcessByPort {
     param([int]$Port)
-    
+
     try {
         # Method 1: Get-NetTCPConnection (Windows 8/2012+)
         if (Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue) {
@@ -123,7 +123,7 @@ function Get-ProcessByPort {
                 return Get-Process -Id $connection.OwningProcess -ErrorAction SilentlyContinue
             }
         }
-        
+
         # Method 2: netstat fallback
         $netstatOutput = netstat -ano | findstr ":$Port.*LISTENING"
         if ($netstatOutput) {
@@ -134,7 +134,7 @@ function Get-ProcessByPort {
     } catch {
         Write-Warning "Error finding process on port $Port : $_"
     }
-    
+
     return $null
 }
 ```
@@ -162,9 +162,9 @@ Register-ObjectEvent -InputObject $nodeProcess -EventNamexited -Action {
 ```powershell
 function Stop-Application {
     param([System.Diagnostics.Process]$Process)
-    
+
     Write-Host "Initiatingraceful shutdown..."
-    
+
     # 1. Notify the application to shut down
     if ($Process.HasExited -eq $false) {
         # Try graceful shutdown first
@@ -175,7 +175,7 @@ function Stop-Application {
                 return
             }
         }
-        
+
         # 2. Try sending Ctrl+C if it's a console app
         try {
             $Process.StandardInput.WriteLine([char]3)  # Ctrl+C
@@ -186,13 +186,13 @@ function Stop-Application {
         } catch {
             # Ctrl+C not supported
         }
-        
+
         # 3. Force stop as last resort
         Write-Host "Force stopping process..."
         $Process.Kill()
         $Process.WaitForExit(1000)
     }
-    
+
     Write-Host "Shutdown complete"
 }
 ```
@@ -290,25 +290,25 @@ jobs:
     runs-on: windows-latesteps:
     - name: Checkout code
       uses: actions/checkout@v2
-      
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '16'
-        
+
     - name: Install dependencies
       run: npm ci
-      
+
     - name: Run tests
       run: npm test
-      
+
     - name: Deploy to production
       run: |
         $ErrorActionPreference = 'Stop'
         .\deploy.ps1 -Environment Production
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-        
+
     - name: Verify deployment
       run: |
         $status = Invoke-WebRequest -Uri "https://api.example.com/health" -UseBasicParsing | Select-Object -Expand StatusCode
@@ -348,19 +348,19 @@ $task | Set-ScheduledTask
 class DatabaseManager {
     [System.Data.SqlClient.SqlConnection[]]$Connections
     [int]$MaxConnections = 10
-    
+
     DatabaseManager() {
         $this.Connections = New-Object System.Data.SqlClient.SqlConnection[] $this.MaxConnections
         $this.InitializePool()
     }
-    
+
     [void] InitializePool() {
         for ($i = 0; $i -lt $this.MaxConnections; $i++) {
             $conn = New-Object System.Data.SqlClient.SqlConnection("Server=myServer;Database=myDB;Integrated Security=True")
             $this.Connections[$i] = $conn
         }
     }
-    
+
     [System.Data.SqlClient.SqlConnection] GetConnection() {
         foreach ($conn in $this.Connections) {
             if ($conn.State -eq [System.Data.ConnectionState]::Closed) {
@@ -370,7 +370,7 @@ class DatabaseManager {
         }
         throw "No available connections in the pool"
     }
-    
+
     [void] CloseAll() {
         foreach ($conn in $this.Connections) {
             if ($conn -and $conn.State -ne [System.Data.ConnectionState]::Closed) {
@@ -401,16 +401,16 @@ Register-ObjectEvent -InputObject $global:MyApp -EventName OnExit -Action {
 ```powershell
 class FileLockManager {
     [System.Collections.Generic.Dictionary[string, System.IO.FileStream]]$FileLocks
-    
+
     FileLockManager() {
         $this.FileLocks = [System.Collections.Generic.Dictionary[string, System.IO.FileStream]]::new()
     }
-    
+
     [System.IO.FileStream] AcquireLock([string]$filePath) {
         if ($this.FileLocks.ContainsKey($filePath)) {
             throw "File is already locked: $filePath"
         }
-        
+
         try {
             $stream = [System.IO.File]::Open(
                 $filePath,
@@ -424,7 +424,7 @@ class FileLockManager {
             throw "Failed to acquire lock on $filePath : $_"
         }
     }
-    
+
     [void] ReleaseLock([string]$filePath) {
         if ($this.FileLocks.TryGetValue($filePath, [ref]$stream)) {
             $stream.Close()
@@ -432,7 +432,7 @@ class FileLockManager {
             $this.FileLocks.Remove($filePath)
         }
     }
-    
+
     [void] ReleaseAllLocks() {
         foreach ($kvp in $this.FileLocks.GetEnumerator()) {
             try {
@@ -462,9 +462,9 @@ class FileLockManager {
 # Find process using a specific port
 function Find-ProcessUsingPort {
     param([int]$Port)
-    
+
     Write-Host "Checking for processes using port $Port..."
-    
+
     # Method 1: Get-NetTCPConnection (Windows 8/2012+)
     if (Get-Command Get-NetTCPConnection -ErrorAction SilentlyContinue) {
         $connection = Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue
@@ -475,7 +475,7 @@ function Find-ProcessUsingPort {
             }
         }
     }
-    
+
     # Method 2: netstat fallback
     $netstatOutput = netstat -ano | findstr ":$Port.*LISTENING"
     if ($netstatOutput) {
@@ -483,7 +483,7 @@ function Find-ProcessUsingPort {
         $processId = $parts[-1]
         return Get-Process -Id $processId -ErrorAction SilentlyContinue
     }
-    
+
     return $null
 }
 ```
@@ -505,21 +505,21 @@ function Find-ProcessUsingPort {
 # Get process tree
 function Get-ProcessTree {
     param([int]$ProcessId)
-    
+
     $process = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
     if (-not $process) { return }
-    
+
     $tree = @()
     $queue = [System.Collections.Queue]::new()
     $queue.Enqueue($process)
-    
+
     while ($queue.Count -gt 0) {
         $current = $queue.Dequeue()
         $tree += $current
-        
+
         # Get child processes
-        Get-CimInstance -ClassName Win32_Process | Where-Object { 
-            $_.ParentProcessId -eq $current.Id 
+        Get-CimInstance -ClassName Win32_Process | Where-Object {
+            $_.ParentProcessId -eq $current.Id
         } | ForEach-Object {
             $childProcess = Get-Process -Id $_.ProcessId -ErrorAction SilentlyContinue
             if ($childProcess) {
@@ -527,7 +527,7 @@ function Get-ProcessTree {
             }
         }
     }
-    
+
     return $tree
 }
 ```
@@ -549,19 +549,19 @@ function Get-ProcessTree {
 # Check effective permissions
 function Test-ProcessPermission {
     param([string]$Path, [Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent())
-    
+
     $rules = (Get-Acl -Path $Path).Access
     $access = $false
-    
+
     foreach ($rule in $rules) {
-        if ($rule.IdentityReference -eq $Identity.Name -or 
+        if ($rule.IdentityReference -eq $Identity.Name -or
             $rule.IdentityReference -eq $Identity.Groups) {
             if ($rule.FileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl) {
                 return $true
             }
         }
     }
-    
+
     return $false
 }
 ```
@@ -584,14 +584,14 @@ function Test-ProcessPermission {
 # Monitoresource usage
 function Get-ProcessResources {
     param([int]$ProcessId)
-    
+
     $process = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
     if (-not $process) { return }
-    
+
     $handleCount = $process.HandleCount
     $threadCount = $process.Threads.Count
     $memoryMB = [math]::Round($process.WorkingSet64 / 1MB, 2)
-    
+
     [PSCustomObject]@{
         ProcessId = $process.Id
         ProcessName = $process.ProcessName
@@ -655,17 +655,17 @@ functionew-PerformanceCounter {
         [string]$CounterName,
         [string]$HelpText
     )
-    
+
     if (-not [System.Diagnostics.PerformanceCounterCategory]::Exists($CategoryName)) {
         $counterData = New-Object System.Diagnostics.CounterCreationDataCollection
-        
+
         $counter = New-Object System.Diagnostics.CounterCreationData
         $counter.CounterName = $CounterName
         $counter.CounterHelp = $HelpText
         $counter.CounterType = [System.Diagnostics.PerformanceCounterType]::NumberOfItems32
-        
+
         $counterData.Add($counter) | Out-Null
-        
+
         [System.Diagnostics.PerformanceCounterCategory]::Create(
             $CategoryName,
             "Performance counters for $CategoryName",
@@ -693,11 +693,11 @@ function Write-EventLogEntry {
         [System.Diagnostics.EventLogEntryType]$EntryType = 'Information',
         [int]$EventId = 1000
     )
-    
+
     if (-not [System.Diagnostics.EventLog]::SourceExists($Source)) {
         [System.Diagnostics.EventLog]::CreateEventSource($Source, 'Application')
     }
-    
+
     [System.Diagnostics.EventLog]::WriteEntry($Source, $Message, $EntryType, $EventId)
 }
 

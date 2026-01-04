@@ -3,24 +3,24 @@
 Review annually or when major refactoring literature/tooling updates release.
 
 ## 1. Source Refresh
-- [ ] Scan ThoughtWorks Technology Radar for evolution and techniques.  
-- [ ] Review new editions/titles on refactoring, legacy code, evolutionary architecture.  
-- [ ] Monitor IDE/tooling release notes (IntelliJ, VSCode, Sourcery).  
+- [ ] Scan ThoughtWorks Technology Radar for evolution and techniques.
+- [ ] Review new editions/titles on refactoring, legacy code, evolutionary architecture.
+- [ ] Monitor IDE/tooling release notes (IntelliJ, VSCode, Sourcery).
 - [ ] Check community blogs/case studies (Martin Fowler, Uber/Stripe engineering).
 
 ## 2. Metrics & Outcomes
-- [ ] Update baseline code health metrics; compare with previous year.  
-- [ ] Measure ROI of completed refactors (defects, lead time, availability).  
+- [ ] Update baseline code health metrics; compare with previous year.
+- [ ] Measure ROI of completed refactors (defects, lead time, availability).
 - [ ] Review technical debt board for stale items; close or reprioritize.
 
 ## 3. Process Audit
-- [ ] Verify charter template still aligns with org processes.  
-- [ ] Audit testing safety nets and CI policies.  
+- [ ] Verify charter template still aligns with org processes.
+- [ ] Audit testing safety nets and CI policies.
 - [ ] Evaluate change management effectiveness via stakeholder surveys.
 
 ## 4. Documentation
-- [ ] Refresh pattern catalog with new examples.  
-- [ ] Update architectural modernization case studies.  
+- [ ] Refresh pattern catalog with new examples.
+- [ ] Update architectural modernization case studies.
 - [ ] Archive completed refactoring retros with takeaways.
 
 ## 5. Source Log

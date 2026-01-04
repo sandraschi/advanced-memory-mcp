@@ -381,8 +381,8 @@ New-Item -ItemType Directory -Path $backupDir -Force
 docker cp grafana:/var/lib/grafana/grafana.db "$backupDir\grafana.db"
 
 # Keep backups for 30 days
-Get-ChildItem "D:\backups" -Directory | 
-  Where-Object { $_.Name -match 'grafana-\d{8}' -and $_.CreationTime -lt (Get-Date).AddDays(-30) } | 
+Get-ChildItem "D:\backups" -Directory |
+  Where-Object { $_.Name -match 'grafana-\d{8}' -and $_.CreationTime -lt (Get-Date).AddDays(-30) } |
   Remove-Item -Recurse -Force
 ```
 

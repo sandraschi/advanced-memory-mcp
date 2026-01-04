@@ -74,7 +74,7 @@ pytest tests/megatest/ -v -m megatest_integration
 pytest tests/megatest/ -v -m megatest_full
 ```
 
-**Pass Criteria**: 
+**Pass Criteria**:
 - All levels must pass
 - No critical failures
 - Performance within acceptable limits
@@ -199,7 +199,7 @@ cat safety-report.json
    vim pyproject.toml  # version = "1.0.0"
    vim src/advanced_memory/__init__.py  # __version__ = "1.0.0"
    vim mcpb/manifest.json  # "version": "1.0.0"
-   
+
    # Update CHANGELOG
    vim CHANGELOG.md  # Add [1.0.0] entry
    ```
@@ -209,7 +209,7 @@ cat safety-report.json
    git add -A
    git commit -m "chore: bump version to 1.0.0"
    git push origin master
-   
+
    git tag -a v1.0.0 -m "Stable release v1.0.0"
    git push origin v1.0.0
    ```
@@ -293,4 +293,3 @@ cat safety-report.json
 ---
 
 **Remember**: Better to delay a release than publish untested code! 🛡️
-

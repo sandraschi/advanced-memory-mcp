@@ -34,6 +34,6 @@ cp zettelkasten/templates/researcher/<topic>/<note>.md \
 
 ---
 
-**Category**: Researcher  
-**Templates**: 7  
+**Category**: Researcher
+**Templates**: 7
 **Updated**: October 17, 2025

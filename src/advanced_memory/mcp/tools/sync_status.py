@@ -73,6 +73,9 @@ async def sync_status(project: str | None = None) -> str:
 
     Returns:
         Formatted sync status with progress, readiness, and guidance
+
+    Errors:
+        - "Project not found": Returned if the specified 'project' name does not exist.
     """
     logger.info("MCP tool call tool=sync_status")
 

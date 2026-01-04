@@ -10,16 +10,16 @@ graph TB
     A --> C[Component Library]
     A --> D[Pattern Library]
     A --> E[Documentation]
-    
+
     C --> C1[Atoms]
     C --> C2[Molecules]
     C --> C3[Organisms]
     C --> C4[Templates]
-    
+
     C1 --> C11[Button]
     C1 --> C12[Input]
     C1 --> C13[Icon]
-    
+
     C2 --> C21[Form Field]
     C2 --> C22[Card]
     C2 --> C23[Navigation Item]
@@ -40,13 +40,13 @@ Design tokens are the visual design atoms of the design system—specifically, t
   --color-primary-500: #2196f3;
   --color-primary-700: #1976d2;
   --color-primary-900: #0d47a1;
-  
+
   /* Semantic Colors */
   --color-success: #4caf50;
   --color-warning: #ff9800;
   --color-error: #f44336;
   --color-info: #2196f3;
-  
+
   /* Neutral Colors */
   --color-gray-50: #fafafa;
   --color-gray-100: #f5f5f5;
@@ -54,11 +54,11 @@ Design tokens are the visual design atoms of the design system—specifically, t
   --color-gray-500: #9e9e9e;
   --color-gray-700: #616161;
   --color-gray-900: #212121;
-  
+
   /* Typography */
   --font-family-sans: 'Inter', -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', monospace;
-  
+
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
   --font-size-base: 1rem;     /* 16px */
@@ -67,16 +67,16 @@ Design tokens are the visual design atoms of the design system—specifically, t
   --font-size-2xl: 1.5rem;    /* 24px */
   --font-size-3xl: 1.875rem;  /* 30px */
   --font-size-4xl: 2.25rem;   /* 36px */
-  
+
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
+
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
-  
+
   /* Spacing */
   --spacing-1: 0.25rem;   /* 4px */
   --spacing-2: 0.5rem;    /* 8px */
@@ -88,7 +88,7 @@ Design tokens are the visual design atoms of the design system—specifically, t
   --spacing-10: 2.5rem;   /* 40px */
   --spacing-12: 3rem;     /* 48px */
   --spacing-16: 4rem;     /* 64px */
-  
+
   /* Border Radius */
   --radius-sm: 0.125rem;  /* 2px */
   --radius-base: 0.25rem; /* 4px */
@@ -97,14 +97,14 @@ Design tokens are the visual design atoms of the design system—specifically, t
   --radius-xl: 0.75rem;   /* 12px */
   --radius-2xl: 1rem;     /* 16px */
   --radius-full: 9999px;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
+
   /* Animation */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -152,7 +152,7 @@ export const Button: React.FC<ButtonProps> = ({
     fullWidth && 'button--full-width',
     loading && 'button--loading',
   ].filter(Boolean).join(' ');
-  
+
   return (
     <button
       className={classes}
@@ -332,7 +332,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       trailingIcon && 'input-wrapper--has-trailing',
       className,
     ].filter(Boolean).join(' ');
-    
+
     return (
       <div className={classes}>
         {leadingIcon && (
@@ -340,13 +340,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {leadingIcon}
           </div>
         )}
-        
+
         <input
           ref={ref}
           className="input"
           {...props}
         />
-        
+
         {trailingIcon && (
           <div className="input__icon input__icon--trailing">
             {trailingIcon}
@@ -479,7 +479,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   const fieldId = id || `field-${Math.random().toString(36).substr(2, 9)}`;
   const error = Boolean(errorMessage);
   const success = Boolean(successMessage);
-  
+
   return (
     <div className="form-field">
       {label && (
@@ -488,26 +488,26 @@ export const FormField: React.FC<FormFieldProps> = ({
           {required && <span className="form-field__required">*</span>}
         </label>
       )}
-      
+
       <Input
         id={fieldId}
         error={error}
         success={success}
         {...inputProps}
       />
-      
+
       {helperText && !errorMessage && !successMessage && (
         <div className="form-field__helper-text">
           {helperText}
         </div>
       )}
-      
+
       {errorMessage && (
         <div className="form-field__error-message">
           {errorMessage}
         </div>
       )}
-      
+
       {successMessage && (
         <div className="form-field__success-message">
           {successMessage}
@@ -560,18 +560,18 @@ export const Form: React.FC<FormProps> = ({
     const data = Object.fromEntries(formData.entries());
     onSubmit(data);
   };
-  
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       {title && <h2 className="form__title">{title}</h2>}
       {description && <p className="form__description">{description}</p>}
-      
+
       <div className="form__fields">
         {fields.map((field, index) => (
           <FormField key={index} {...field} />
         ))}
       </div>
-      
+
       <div className="form__actions">
         {onCancel && (
           <Button
@@ -582,7 +582,7 @@ export const Form: React.FC<FormProps> = ({
             {cancelText}
           </Button>
         )}
-        
+
         <Button
           type="submit"
           loading={loading}
@@ -740,7 +740,7 @@ export const ExpensiveComponent = React.memo(({ data }) => {
 ```tsx
 const Tabs = ({ children }) => {
   const [activeTab, setActiveTab] = useState(0);
-  
+
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
       {children}
@@ -777,5 +777,3 @@ Tabs.Panel = TabPanel;
 ---
 
 *A component library is only as good as its documentation and ease of use.*
-
-

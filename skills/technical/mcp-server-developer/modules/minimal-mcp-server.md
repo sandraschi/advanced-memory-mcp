@@ -1,7 +1,7 @@
 # Minimal MCP Server (Hello World)
 
-**Confidence**: 🟢 High  
-**Last validated**: 2025-11-11  
+**Confidence**: 🟢 High
+**Last validated**: 2025-11-11
 **Primary sources**: FastMCP 2.13 docs, Anthropic sample servers, Advanced Memory `server.py`
 
 ---
@@ -17,7 +17,7 @@ hello-mcp/
         └── server.py
 ```
 
-- Use `uv init hello-mcp` or `python -m venv .venv && pip install fastmcp>=2.13.0,<2.14.0`.  
+- Use `uv init hello-mcp` or `python -m venv .venv && pip install fastmcp>=2.13.0,<2.14.0`.
 - Keep the server module thin; add tools in dedicated files or packages as it grows.
 
 ---
@@ -81,16 +81,16 @@ if __name__ == "__main__":
 ```
 
 Key points:
-- Use `@tool()` (FastMCP decorator) to register async functions.  
-- Return structured dictionaries (`success`, `message`, etc.).  
+- Use `@tool()` (FastMCP decorator) to register async functions.
+- Return structured dictionaries (`success`, `message`, etc.).
 - Lifespan hook enables warm-up/cool-down tasks (initialize clients, load storage).
 
 ---
 
 ## 4. Local Run & Client Registration
 
-1. `uv run hello-mcp` (default host `127.0.0.1:8000`).  
-2. In Claude Desktop: `/mcp servers add hello-mcp --url http://127.0.0.1:8000`.  
+1. `uv run hello-mcp` (default host `127.0.0.1:8000`).
+2. In Claude Desktop: `/mcp servers add hello-mcp --url http://127.0.0.1:8000`.
 3. In Cursor: update `.cursor/mcp.json`:
    ```json
    {
@@ -109,27 +109,27 @@ Key points:
 
 ## 5. Expanding Safely
 
-- **Logging**: integrate `loguru` for structured logs and error capture.  
-- **Error handling**: wrap tool bodies in try/except returning structured errors (see `.cursorrules`).  
-- **Configuration**: use environment variables or `pydantic` settings module for API keys.  
-- **Testing**: add pytest cases hitting tool functions directly.  
+- **Logging**: integrate `loguru` for structured logs and error capture.
+- **Error handling**: wrap tool bodies in try/except returning structured errors (see `.cursorrules`).
+- **Configuration**: use environment variables or `pydantic` settings module for API keys.
+- **Testing**: add pytest cases hitting tool functions directly.
 - **Packaging**: wire into MCPB manifest + npx bootstrap once stable.
 
 Use this template as the smallest viable FastMCP server—grow by adding modules, portmanteau tools, and persistence as needed.***
 # Minimal FastMCP “Hello World” Server
 
-**Confidence**: 🟢 High  
-**Last validated**: 2025-11-11  
+**Confidence**: 🟢 High
+**Last validated**: 2025-11-11
 **Primary sources**: Anthropic FastMCP quick-start (https://docs.anthropic.com/claude/docs/mcp-quickstart), FastMCP 2.13 API reference, Advanced Memory `.cursorrules`
 
 ---
 
 ## 1. Prerequisites
 
-- Python 3.11+  
-- `uv` for dependency management (`pip install uv` if missing)  
-- FastMCP 2.13+ (`fastmcp>=2.13.0,<2.14.0`)  
-- `loguru` for structured logging (recommended)  
+- Python 3.11+
+- `uv` for dependency management (`pip install uv` if missing)
+- FastMCP 2.13+ (`fastmcp>=2.13.0,<2.14.0`)
+- `loguru` for structured logging (recommended)
 - A project folder with `pyproject.toml` (see snippet below)
 
 ```toml
@@ -215,8 +215,8 @@ if __name__ == "__main__":
 ```
 
 Key FastMCP 2.13 features demonstrated:
-- `@tool()` decorator with structured error handling.  
-- Lifespan context for startup/shutdown logs.  
+- `@tool()` decorator with structured error handling.
+- Lifespan context for startup/shutdown logs.
 - Graceful fallback when unsupported operations are requested.
 
 ---
@@ -270,16 +270,15 @@ Expected JSON:
 
 ## 5. Packaging Checklist
 
-- Add `scripts/testing/test_smoke.py` that imports and calls `hello()` to ensure deterministic output.  
-- Configure `pyproject.toml` or `fastmcp.toml` with metadata for marketplaces (name, summary, tags).  
+- Add `scripts/testing/test_smoke.py` that imports and calls `hello()` to ensure deterministic output.
+- Configure `pyproject.toml` or `fastmcp.toml` with metadata for marketplaces (name, summary, tags).
 - Add `README.md` explaining installation steps and `skill_zips/manifest.json` if you intend to publish.
 
 ---
 
 ### Next Steps
 
-- Extend the server with additional tools following the portmanteau pattern (restrict count to avoid tool explosion).  
-- Integrate persistent storage (`fastmcp.storage.DiskStore`) if state is required.  
-- See [modules/distribution-and-installation.md](modules/distribution-and-installation.md) for publishing paths (MCPB, npm/npx).  
+- Extend the server with additional tools following the portmanteau pattern (restrict count to avoid tool explosion).
+- Integrate persistent storage (`fastmcp.storage.DiskStore`) if state is required.
+- See [modules/distribution-and-installation.md](modules/distribution-and-installation.md) for publishing paths (MCPB, npm/npx).
 - Reference [modules/release-readiness.md](modules/release-readiness.md) before shipping.
-

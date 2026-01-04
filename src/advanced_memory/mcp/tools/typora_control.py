@@ -40,7 +40,12 @@ class TyporaRPCClient:
         if params is None:
             params = {}
 
-        request = {"jsonrpc": "2.0", "id": self._generate_id(), "method": method, "params": params}
+        request = {
+            "jsonrpc": "2.0",
+            "id": self._generate_id(),
+            "method": method,
+            "params": params,
+        }
 
         try:
             async with websockets.connect(
@@ -105,7 +110,15 @@ async def typora_control(
     # Advanced parameters
     options: dict[str, Any] | None = None,
 ) -> str:
-    """Swiss Army Knife tool for Typora control via json_rpc."""
+    """Swiss Army Knife tool for Typora control via json_rpc.
+
+    Errors:
+        - "Connection failed": Returned if Typora is not running or the json_rpc plugin is not enabled on port 8888.
+        - "Request timeout": Returned if Typora takes too long to respond to a command.
+        - "Export requires 'format' parameter": Returned if a required argument for export is missing.
+        - "File Not Found": Returned if the provided file path for open_file does not exist.
+        - "Unsupported operation": Returned if the provided operation is not recognized by the tool.
+    """
 
     # Default options
     if options is None:
@@ -510,7 +523,10 @@ async def _handle_toggle_toolbar(visible: bool | None) -> str:
 
 
 async def _handle_batch_export(
-    files: list[str] | None, format: str | None, output_path: str | None, options: dict[str, Any]
+    files: list[str] | None,
+    format: str | None,
+    output_path: str | None,
+    options: dict[str, Any],
 ) -> str:
     """Export multiple files."""
     if not files:
@@ -649,7 +665,12 @@ async def _handle_link_validation() -> str:
                     link_text = line[line.find("[") + 1 : start]
                     link_url = line[start + 2 : end]
                     links_found.append(
-                        {"line": i, "text": link_text, "url": link_url, "full_match": line}
+                        {
+                            "line": i,
+                            "text": link_text,
+                            "url": link_url,
+                            "full_match": line,
+                        }
                     )
 
     if not links_found:

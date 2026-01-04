@@ -34,11 +34,11 @@ flowchartB
     subgraph One
     A[Process 1] --> B[Process 2]
     end
-    
+
     subgraph Two
     C[Process 3] --> D[Process 4]
     end
-    
+
     B --> C
 ```
 ````
@@ -48,11 +48,11 @@ flowchartB
     subgraph One
     A[Process 1] --> B[Process 2]
     end
-    
+
     subgraph Two
     C[Process 3] --> D[Process 4]
     end
-    
+
     B --> C
 ```
 

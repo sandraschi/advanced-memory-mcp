@@ -1,6 +1,6 @@
 # Antigravity IDE Compatibility Guide
 
-**Date**: 2025-12-12  
+**Date**: 2025-12-12
 **Status**: Server works in Cursor IDE, Claude Desktop, Zed IDE, but fails in Antigravity IDE
 
 ## Known Antigravity IDE Requirements
@@ -125,4 +125,3 @@ If server still fails in Antigravity after verifying above:
 2. **Compare with working IDEs** - what's different?
 3. **Test minimal server** - create a simple FastMCP server to isolate issue
 4. **Report to Antigravity** - may be an Antigravity-specific bug
-

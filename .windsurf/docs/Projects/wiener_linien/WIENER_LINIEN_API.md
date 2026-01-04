@@ -1,4 +1,4 @@
-﻿# Wiener Linien API Guide & Vienna Public Transport System
+# Wiener Linien API Guide & Vienna Public Transport System
 
 ## Table of Contents
 1. [Wiener Linien API Overview](#wiener-linien-api-overview)
@@ -470,7 +470,7 @@ class WienerLinienAPI:
     def __init__(self):
         self.base_url = "https://www.wienerlinien.at/ogd_realtime"
         self.timeout = 10
-        
+
     def get_vehicle_positions(self, rbl_numbers: List[str]) -> Dict:
         """Get real-time vehicle positions for specific stops."""
         try:
@@ -517,20 +517,20 @@ def rate_limit(seconds: int):
     """Decorator to enforce rate limiting."""
     def decorator(func):
         last_call = {}
-        
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             func_name = func.__name__
             current_time = time.time()
-            
+
             ifunc_name in last_call:
                 time_since_last = current_time - last_call[func_name]
                 if time_since_last < seconds:
                     sleep_time = seconds - time_since_lastime.sleep(sleep_time)
-            
+
             last_call[func_name] = time.time()
             return func(*args, **kwargs)
-        
+
         return wrappereturn decorator
 
 # Usage
@@ -603,11 +603,11 @@ async function fetchVehiclePositions(rblNumbers) {
             headers: { 'Content-Type': 'application/json' },
             params: { rbl: rblNumbers.join(',') }
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error('Failed to fetch vehicle positions:', error);
@@ -629,11 +629,11 @@ from typing import List
     success_count: int = 0
     error_count: int = 0
     total_response_time: float = 0.0
-    
+
     @property
     def success_rate(self) -> float:
         return self.success_count / max(self.request_count, 1)
-    
+
     @property
     def average_response_time(self) -> float:
         return self.total_response_time / max(self.request_count, 1)
@@ -641,11 +641,11 @@ from typing import List
 class APIMonitor:
     def __init__(self):
         self.metrics = APIMetrics()
-    
+
     def record_request(self, response_time: float, success: bool):
         self.metrics.request_count += 1
         self.metrics.total_response_time += response_time
-        
+
         if success:
             self.metrics.success_count += 1
         else:
@@ -657,4 +657,4 @@ This comprehensive guide provides a complete overview of the Wiener Linien API a
 ---
 
 *Last updated: June 2024*
-*Sources: Wiener Linien official data, UITP reports, academic research, and international surveys* 
+*Sources: Wiener Linien official data, UITP reports, academic research, and international surveys*

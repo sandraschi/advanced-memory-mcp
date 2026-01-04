@@ -127,7 +127,7 @@ Core commands:
   pr:          Manage pull requests
   release:     Manage releases
   repo:        Manage repositories
-  
+
 Additional commands:
   alias:       Create command shortcuts
   api:         Make an authenticated GitHub API request
@@ -551,6 +551,5 @@ gh release create v1.0.0 \
 
 ---
 
-*Written after discovering MCP wastes tokens, CLI is smooth sailing*  
+*Written after discovering MCP wastes tokens, CLI is smooth sailing*
 *October 2025*
-

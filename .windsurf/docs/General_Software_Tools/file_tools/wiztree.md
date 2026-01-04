@@ -88,7 +88,7 @@ import os
 def get_disk_usage(path='C:\\'):
     with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as tmp:
         tmp_path = tmp.name
-    
+
     try:
         # Run WizTreexport
         subprocess.run([
@@ -97,7 +97,7 @@ def get_disk_usage(path='C:\\'):
             '/admin=1',
             path
         ], check=True)
-        
+
         # Read CSV into pandas
         df = pd.read_csv(tmp_path)
         return dfinally:

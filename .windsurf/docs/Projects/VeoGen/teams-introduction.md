@@ -190,4 +190,4 @@ VeoGen shows what's possible when cutting-edge AI technology meets thoughtful pr
 
 ---
 
-*This is a demonstration system showcasing the technical capabilities of AI-powered video generation. While the architecture is production-ready, this is currently a proof-of-concept for testing and evaluation purposes.* 
+*This is a demonstration system showcasing the technical capabilities of AI-powered video generation. While the architecture is production-ready, this is currently a proof-of-concept for testing and evaluation purposes.*

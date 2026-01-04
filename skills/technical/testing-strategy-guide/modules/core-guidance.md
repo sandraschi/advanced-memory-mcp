@@ -1,6 +1,6 @@
 # Core Guidance
 
-**Confidence**: 🟡 MEDIUM  
+**Confidence**: 🟡 MEDIUM
 **Last validated**: 2025-11-08
 
 > Establish context, risks, and goals before investing in new tests or automation frameworks.
@@ -23,47 +23,47 @@ Document findings in test strategy charter.
 
 ## 2. Goals & Metrics
 
-- Define SMART goals (e.g., reduce escaped defects by 40%, cut pipeline time by 30%).  
-- Set target coverage types (unit, integration, E2E) and quality KPIs (MTTR, change failure rate).  
+- Define SMART goals (e.g., reduce escaped defects by 40%, cut pipeline time by 30%).
+- Set target coverage types (unit, integration, E2E) and quality KPIs (MTTR, change failure rate).
 - Align with engineering/product leadership to secure buy-in.
 
 ---
 
 ## 3. Risk Matrix
 
-- Map features/services to risk levels (critical, high, medium, low).  
-- Allocate testing intensity based on risk (more integration/e2e for critical paths).  
+- Map features/services to risk levels (critical, high, medium, low).
+- Allocate testing intensity based on risk (more integration/e2e for critical paths).
 - Reassess after major releases or incidents.
 
 ---
 
 ## 4. Governance
 
-- Identify test strategy owner, QA leads, developer champions.  
-- Schedule reviews (quarterly) to adjust plan.  
+- Identify test strategy owner, QA leads, developer champions.
+- Schedule reviews (quarterly) to adjust plan.
 - Communicate expectations via engineering handbook and onboarding.
 
 ---
 
 ## 5. Escalation
 
-- Define process for blocker bugs or test infrastructure failures.  
-- Maintain incident channel for flaky tests and pipeline outages.  
+- Define process for blocker bugs or test infrastructure failures.
+- Maintain incident channel for flaky tests and pipeline outages.
 - Track debt items in backlog with prioritization.
 
 ---
 
 ### Module Map
-- Test portfolio planning → [modules/test-pyramid-and-planning.md](modules/test-pyramid-and-planning.md)  
-- Automation architecture → [modules/automation-frameworks.md](modules/automation-frameworks.md)  
-- Non-functional → [modules/non-functional-testing.md](modules/non-functional-testing.md)  
-- CI & observability → [modules/ci-integration-and-observability.md](modules/ci-integration-and-observability.md)  
+- Test portfolio planning → [modules/test-pyramid-and-planning.md](modules/test-pyramid-and-planning.md)
+- Automation architecture → [modules/automation-frameworks.md](modules/automation-frameworks.md)
+- Non-functional → [modules/non-functional-testing.md](modules/non-functional-testing.md)
+- CI & observability → [modules/ci-integration-and-observability.md](modules/ci-integration-and-observability.md)
 - Metrics → [modules/quality-metrics-and-governance.md](modules/quality-metrics-and-governance.md)
 
 Review intake semi-annually to remain aligned with evolving product needs.***
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -107,7 +107,7 @@ Activate when the user asks about:
 
 ---
 
-**Category:** technical  
-**Version:** 1.0.0  
-**Created:** 2025-10-21  
+**Category:** technical
+**Version:** 1.0.0
+**Created:** 2025-10-21
 **Source:** Advanced Memory MCP

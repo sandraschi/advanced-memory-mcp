@@ -1,8 +1,8 @@
 # 🔴 CRITICAL: Inbox Folder Created in Wrong Location (Outside Project Directory)
 
-**Severity:** 🔴 **CRITICAL**  
-**Type:** Bug  
-**Component:** File Service / Path Resolution  
+**Severity:** 🔴 **CRITICAL**
+**Type:** Bug
+**Component:** File Service / Path Resolution
 **Date Discovered:** 2025-12-07
 
 ## Summary
@@ -161,11 +161,3 @@ Until fixed, users should:
 1. Always start Advanced Memory from the project directory
 2. Manually move orphaned files from wrong locations to correct project folders
 3. Verify file locations after creation
-
-
-
-
-
-
-
-

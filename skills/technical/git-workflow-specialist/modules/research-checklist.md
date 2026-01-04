@@ -3,25 +3,25 @@
 Run this validation every 6 months or after major Git platform announcements.
 
 ## 1. Source Refresh
-- [ ] Review latest Git release notes (https://github.com/git/git/tree/master/Documentation/RelNotes).  
-- [ ] Check hosting provider updates (GitHub, GitLab, Azure DevOps) for workflow features.  
-- [ ] Monitor trunk-based development and GitFlow community articles for emerging practices.  
+- [ ] Review latest Git release notes (https://github.com/git/git/tree/master/Documentation/RelNotes).
+- [ ] Check hosting provider updates (GitHub, GitLab, Azure DevOps) for workflow features.
+- [ ] Monitor trunk-based development and GitFlow community articles for emerging practices.
 - [ ] Track compliance/security guidelines (CISA, NIST) affecting commit signing or approvals.
 
 ## 2. Workflow Health Audit
-- [ ] Pull metrics on merge frequency, review turnaround, change failure rate.  
-- [ ] Inspect backlog of long-lived branches; verify SLA adherence.  
-- [ ] Validate merge queue / CI stability; note flakiness trends.  
+- [ ] Pull metrics on merge frequency, review turnaround, change failure rate.
+- [ ] Inspect backlog of long-lived branches; verify SLA adherence.
+- [ ] Validate merge queue / CI stability; note flakiness trends.
 - [ ] Review dependency update cadence and automation effectiveness.
 
 ## 3. Documentation & Tooling
-- [ ] Ensure CONTRIBUTING.md, workflow docs, and PR templates reflect current process.  
-- [ ] Verify automation scripts/bots still functioning (pre-commit, release bots).  
+- [ ] Ensure CONTRIBUTING.md, workflow docs, and PR templates reflect current process.
+- [ ] Verify automation scripts/bots still functioning (pre-commit, release bots).
 - [ ] Update training materials and record any new walkthroughs.
 
 ## 4. Compliance & Governance
-- [ ] Audit branch protection and required reviews; adjust if org policy changed.  
-- [ ] Review signing policies and credential rotation logs.  
+- [ ] Audit branch protection and required reviews; adjust if org policy changed.
+- [ ] Review signing policies and credential rotation logs.
 - [ ] Confirm audit trail accessibility for recent releases/incidents.
 
 ## 5. Source Log

@@ -80,6 +80,10 @@ async def canvas(
 
         # Create canvas in specific project
         canvas(nodes=[...], edges=[...], title="My Canvas", folder="diagrams", project="work-project")
+
+    Errors:
+        - "Project not found": If the specified project does not exist.
+        - "Permission denied": If the target folder is not writable.
     """
     active_project = get_active_project(project)
     project_url = active_project.project_url

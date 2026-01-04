@@ -141,7 +141,7 @@ rectangle "E-commerce System" {
   Customer --> (View Order History)
   admin --> (Manage Products)
   admin --> (Manage Users)
-  
+
   (Purchase Product) .> (Payment) : includes
   (Purchase Product) .> (Shipping) : includes
 }
@@ -161,7 +161,7 @@ rectangle "E-commerce System" {
   Customer --> (View Order History)
   admin --> (Manage Products)
   admin --> (Manage Users)
-  
+
   (Purchase Product) .> (Payment) : includes
   (Purchase Product) .> (Shipping) : includes
 }
@@ -177,36 +177,36 @@ window.$docsify = {
   plantuml: {
     // Server URL (default: https://www.plantuml.com/plantuml/svg/)
     server: 'https://www.plantuml.com/plantuml/svg/',
-    
+
     // Image format (svg, png, txt, etc.)
     format: 'svg',
-    
+
     // Defaultheme for diagrams
     // Available: default, sketchy, sketchy-outline
     theme: 'default',
-    
+
     // Enable/disable diagram caching
     cache: true,
-    
+
     // Cache duration in milliseconds (default: 1 hour)
     cacheTTL: 60 * 60 * 1000,
-    
+
     // Enable/disable loading spinner
     showLoading: true,
-    
+
     // Custom CSS class for the containerClass: 'plantuml-diagram',
-    
+
     // Custom CSS class for the loading spinner
     loadingClass: 'plantuml-loading',
-    
+
     // Custom CSS class for error messages
     errorClass: 'plantuml-error',
-    
+
     // Callback when a diagram is rendered
     onRender: function(element, code) {
       console.log('Diagram rendered:', element);
     },
-    
+
     // Callback when there's an error
     onError: function(element, error) {
       console.error('Diagram error:', error);

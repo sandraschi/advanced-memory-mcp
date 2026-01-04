@@ -1,6 +1,6 @@
 # PDF Export Test Instructions
 
-**Date**: 2025-12-02  
+**Date**: 2025-12-02
 **Status**: ✅ Code Complete - Needs fpdf2 installation
 
 ---

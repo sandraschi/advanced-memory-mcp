@@ -53,8 +53,8 @@ async function extractText(imagePath) {
     const { data: { text } } = awaitesseract.recognize(
       imagePath,
       'eng',
-      { 
-        logger: m => console.log(m) 
+      {
+        logger: m => console.log(m)
       }
     );
     console.log('Extracted Text:', text);
@@ -96,7 +96,7 @@ async function extractMultiLanguage(imagePath) {
   const { data: { text } } = awaitesseract.recognize(
     imagePath,
     'eng+fra+spa', // English + French + Spanish
-    { 
+    {
       logger: m => console.log(m)
     }
   );
@@ -112,23 +112,23 @@ const Jimp = require('jimp');
 async function preprocessAndExtract(imagePath) {
   // Load and preprocess image
   const image = await Jimp.read(imagePath);
-  
+
   // Apply preprocessing
   await image
     .greyscale() // Converto grayscale
     .contrast(0.5) // Increase contrast
     .normalize(); // Normalize image
-  
+
   // Converto buffer
   const processedBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-  
+
   // Perform OCR
   const { data: { text } } = awaitesseract.recognize(
     processedBuffer,
     'eng',
     { logger: m => console.log(m) }
   );
-  
+
   return text;
 }
 ```
@@ -144,7 +144,7 @@ const { v4: uuidv4 } = require('uuid');
 async function extractTextFromPDF(pdfPath, outputDir = './temp') {
   // Createmp directory if it doesn't exist
   await fs.mkdir(outputDir, { recursive: true });
-  
+
   // Convert PDF to images
   const options = {
     density: 300, // DPI
@@ -154,13 +154,13 @@ async function extractTextFromPDF(pdfPath, outputDir = './temp') {
     width: 2000,
     height: 2000
   };
-  
+
   const convert = pdf2pic.fromPath(pdfPath, options);
   const pages = await convert.bulk(-1); // -1 for all pages
-  
+
   // Process each page
   let fullText = '';
-  
+
   for (const page of pages) {
     const { data: { text } } = awaitesseract.recognize(
       page.path,
@@ -168,11 +168,11 @@ async function extractTextFromPDF(pdfPath, outputDir = './temp') {
       { logger: m => console.log(m) }
     );
     fullText += `\n\n--- Page ${page.page} ---\n${text}`;
-    
+
     // Clean up temporary image
     await fs.unlink(page.path);
   }
-  
+
   return fullText;
 }
 ```
@@ -202,21 +202,21 @@ const workerPool = Tesseract.createWorker({
 async function processBatch(images) {
   const numWorkers = Math.min(os.cpus().length, 4); // Max 4 workers
   const results = [];
-  
+
   for (let i = 0; i < images.length; i += numWorkers) {
     const batch = images.slice(i, i + numWorkers);
-    const batchPromises = batch.map(image => 
+    const batchPromises = batch.map(image =>
       workerPool.recognize(image, 'eng')
         .then(({ data: { text } }) => ({
           image,
           text
         }))
     );
-    
+
     const batchResults = await Promise.all(batchPromises);
     results.push(...batchResults);
   }
-  
+
   return results;
 }
 ```
@@ -230,24 +230,24 @@ class OCRService {
     this.worker = null;
     this.isInitialized = false;
   }
-  
+
   async initialize() {
     if (this.isInitialized) return;
-    
+
     this.worker = awaitesseract.createWorker({
       logger: m => console.log(m)
     });
-    
+
     awaithis.worker.loadLanguage('eng');
     awaithis.worker.initialize('eng');
     this.isInitialized = true;
   }
-  
+
   async recognize(imagePath) {
     if (!this.isInitialized) {
       awaithis.initialize();
     }
-    
+
     try {
       const { data: { text } } = awaithis.worker.recognize(imagePath);
       return text;
@@ -256,7 +256,7 @@ class OCRService {
       throw error;
     }
   }
-  
+
   async terminate() {
     if (this.worker) {
       awaithis.worker.terminate();
@@ -295,24 +295,24 @@ async function processReceipt(imagePath) {
   const { data: { text } } = awaitesseract.recognize(
     imagePath,
     'eng',
-    { 
+    {
       logger: m => console.log(m),
       tessedit_char_whitelist: '0123456789$€£.\n '
     }
   );
-  
+
   // Simple parsing of receipt data
   const lines = text.split('\n').filter(line => line.trim() !== '');
   const items = [];
   letotal = 0;
-  
+
   for (const line of lines) {
     // Simple regex to match price patterns
     const priceMatch = line.match(/(\d+\.\d{2})/);
     if (priceMatch) {
       const price = parseFloat(priceMatch[1]);
       const itemName = line.replace(priceMatch[0], '').trim();
-      
+
       if (itemName.toLowerCase().includes('total') || itemName.toLowerCase().includes('summe')) {
         total = price;
       } else {
@@ -323,7 +323,7 @@ async function processReceipt(imagePath) {
       }
     }
   }
-  
+
   return {
     items,
     total,
@@ -341,16 +341,16 @@ async function parseBusinessCard(imagePath) {
   const { data: { text } } = awaitesseract.recognize(
     imagePath,
     'eng',
-    { 
+    {
       logger: m => console.log(m),
       preserve_interword_spaces: '1',
       tessedit_pageseg_mode: '6' // Sparse text mode
     }
   );
-  
+
   // Simple parsing logic (would need refinement foreal-world use)
   const lines = text.split('\n').filter(line => line.trim() !== '');
-  
+
   const result = {
     name: '',
     title: '',
@@ -360,11 +360,11 @@ async function parseBusinessCard(imagePath) {
     website: '',
     address: []
   };
-  
+
   // Simple heuristics to extract information
   for (const line of lines) {
     const lowerLine = line.toLowerCase();
-    
+
     if (!result.name && /^[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*$/.test(line)) {
       result.name = line;
     } else if (lowerLine.includes('@') && lowerLine.includes('.')) {
@@ -378,7 +378,7 @@ async function parseBusinessCard(imagePath) {
       result.address.push(line.trim());
     }
   }
-  
+
   return result;
 }
 ```
@@ -388,7 +388,7 @@ async function parseBusinessCard(imagePath) {
 ### Common Issues
 
 #### 1. Low Accuracy
-- **Solution**: 
+- **Solution**:
   - Preprocess images (grayscale, thresholding, deskewing)
   - Increase image DPI (300+ recommended)
   - Use higher quality source images

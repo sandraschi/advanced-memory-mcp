@@ -137,7 +137,7 @@ services:
 server {
     listen 80;
     server_name sonarr.example.com;
-    
+
     location / {
         proxy_pass http://localhost:8989;
         proxy_http_version 1.1;

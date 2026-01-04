@@ -71,9 +71,9 @@ try {
     if (Test-Path $testZipPath) {
         Remove-Item $testZipPath -Force -ErrorAction Stop
     }
-    
+
     $zip = [System.IO.Compression.ZipFile]::Open($testZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
-    
+
     # Add one test file
     $testContentFile = Join-Path $repoRoot "README.md"
     if (Test-Path $testContentFile) {
@@ -81,9 +81,9 @@ try {
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $testContentFile, $relativePath, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
         Write-Host "  [OK] Added file to ZIP" -ForegroundColor Green
     }
-    
+
     $zip.Dispose()
-    
+
     if (Test-Path $testZipPath) {
         $size = (Get-Item $testZipPath).Length
         Write-Host "  [OK] ZIP created: $size bytes" -ForegroundColor Green

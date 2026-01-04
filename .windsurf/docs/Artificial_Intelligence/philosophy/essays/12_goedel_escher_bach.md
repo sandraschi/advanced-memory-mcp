@@ -1,4 +1,4 @@
-﻿# Gödel, Escher, Bach: An Eternal Golden Braid - A Timeless Exploration of Mind and Meaning
+# Gödel, Escher, Bach: An Eternal Golden Braid - A Timeless Exploration of Mind and Meaning
 
 ## Introduction: The Interwoven Worlds of Mind, Mathematics, and Art
 

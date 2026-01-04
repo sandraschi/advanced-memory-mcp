@@ -12,11 +12,11 @@ graph LR
     B --> C[DISTILL]
     C --> D[EXPRESS]
     D -->|Feedback Loop| A
-    
+
     A1[Ideas & Insights] --> A
     A2[Resources] --> A
     A3[Experiences] --> A
-    
+
     D --> D1[Create Content]
     D --> D2[Make Decisions]
     D --> D3[Solve Problems]
@@ -29,7 +29,7 @@ Capture anything that resonates with you:
 ```python
 class CaptureSystem:
     """Systematic approach to capturing information"""
-    
+
     def __init__(self):
         self.capture_criteria = {
             'inspiring': 'Does it inspire me?',
@@ -37,7 +37,7 @@ class CaptureSystem:
             'surprising': 'Does it challenge my thinking?',
             'personal': 'Does it resonate personally?'
         }
-    
+
     def should_capture(self, information):
         """Decide if information is worth capturing"""
         # At least one criterion should be met
@@ -47,7 +47,7 @@ class CaptureSystem:
             self._is_surprising(information),
             self._is_personal(information)
         ])
-    
+
     def capture_workflow(self, source_type):
         """Capture workflow by source type"""
         workflows = {
@@ -77,9 +77,9 @@ class CaptureSystem:
                 'metadata': ['source', 'date', 'why_important']
             }
         }
-        
+
         return workflows.get(source_type)
-    
+
     def capture_best_practices(self):
         """Best practices for effective capture"""
         return {
@@ -98,7 +98,7 @@ class CaptureSystem:
 ```python
 class PARASystem:
     """PARA organizational method"""
-    
+
     def __init__(self):
         self.structure = {
             'Projects': {
@@ -147,7 +147,7 @@ class PARASystem:
                 'active': False
             }
         }
-    
+
     def classify_note(self, note):
         """Classify note into PARA category"""
         questions = {
@@ -156,22 +156,22 @@ class PARASystem:
             'is_resource': 'Is this reference material for a topic of interest?',
             'is_archive': 'Is this no longer active but worth keeping?'
         }
-        
+
         # Projects take precedence
         if self._has_deadline(note) and self._has_specific_outcome(note):
             return 'Projects'
-        
+
         # Then areas
         if self._is_ongoing_responsibility(note):
             return 'Areas'
-        
+
         # Then resources
         if self._is_reference_material(note):
             return 'Resources'
-        
+
         # Finally archives
         return 'Archives'
-    
+
     def organize_folder_structure(self):
         """Recommended folder structure"""
         return {
@@ -238,7 +238,7 @@ effortless.
 ```python
 class ProgressiveSummarization:
     """Implement progressive summarization"""
-    
+
     def __init__(self):
         self.layers = [
             'original_content',
@@ -247,23 +247,23 @@ class ProgressiveSummarization:
             'executive_summary',
             'personal_remix'
         ]
-    
+
     def distill_note(self, note_content, current_layer=0):
         """Apply next layer of summarization"""
         if current_layer >= len(self.layers):
             return note_content
-        
+
         next_layer = self.layers[current_layer + 1]
-        
+
         strategies = {
             'bold_key_points': self._apply_bold,
             'highlight_essential': self._apply_highlights,
             'executive_summary': self._create_summary,
             'personal_remix': self._create_remix
         }
-        
+
         return strategies[next_layer](note_content)
-    
+
     def when_to_distill(self, note):
         """Progressive summarization is just-in-time"""
         return {
@@ -273,7 +273,7 @@ class ProgressiveSummarization:
             'layer_4': 'When you express/create with it',
             'principle': 'Only distill when you need to use it'
         }
-    
+
     def distillation_guidelines(self):
         """Guidelines for effective distillation"""
         return {
@@ -307,10 +307,10 @@ The ultimate goal is to create and share:
 ```python
 class KnowledgeExpression:
     """Turn knowledge into creative output"""
-    
+
     def __init__(self, second_brain):
         self.second_brain = second_brain
-    
+
     def intermediate_packets(self):
         """Break work into reusable components"""
         return {
@@ -335,7 +335,7 @@ class KnowledgeExpression:
                 'reuse': 'Search and remix for new projects'
             }
         }
-    
+
     def creative_workflow(self, project_type):
         """Workflow for different creative projects"""
         workflows = {
@@ -372,9 +372,9 @@ class KnowledgeExpression:
                 'Add new research as needed'
             ]
         }
-        
+
         return workflows.get(project_type)
-    
+
     def knowledge_garden(self):
         """Cultivate your knowledge like a garden"""
         return {
@@ -409,7 +409,7 @@ class KnowledgeExpression:
 ```python
 class SecondBrainTools:
     """Tool recommendations for Second Brain"""
-    
+
     def __init__(self):
         self.tools = {
             'capture': {
@@ -434,7 +434,7 @@ class SecondBrainTools:
                 'publishing': ['Substack', 'Medium', 'Ghost']
             }
         }
-    
+
     def choose_tools(self, priorities):
         """Choose tools based on priorities"""
         if 'simplicity' in priorities:
@@ -497,7 +497,7 @@ class SecondBrainTools:
 ```python
 class DailySecondBrainHabits:
     """Daily routines for Second Brain maintenance"""
-    
+
     def morning_routine(self):
         """Start day with Second Brain"""
         return [
@@ -517,7 +517,7 @@ class DailySecondBrainHabits:
                 'purpose': 'Capture fresh ideas'
             }
         ]
-    
+
     def evening_routine(self):
         """End day with Second Brain"""
         return [
@@ -600,5 +600,3 @@ time_spent = {
 ---
 
 *"Your mind is for having ideas, not holding them." - David Allen*
-
-

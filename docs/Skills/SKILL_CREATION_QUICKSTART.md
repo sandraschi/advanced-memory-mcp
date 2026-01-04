@@ -295,6 +295,5 @@ description: Expert guidance for [topic]. Use when working with [use cases] and 
 
 ---
 
-**Last Updated:** 2025-10-27  
+**Last Updated:** 2025-10-27
 **Version:** 1.0.0
-

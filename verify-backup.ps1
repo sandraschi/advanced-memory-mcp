@@ -15,12 +15,12 @@ $paths = @(
 foreach ($location in $paths) {
     $output += "--- $($location.Name) ---"
     $output += "Path: $($location.Path)"
-    
+
     if (Test-Path $location.Path) {
         $zips = Get-ChildItem -Path $location.Path -Filter "*.zip" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
         $output += "Status: EXISTS"
         $output += "Backup files: $($zips.Count)"
-        
+
         if ($zips.Count -gt 0) {
             $latest = $zips[0]
             $output += "Latest backup:"

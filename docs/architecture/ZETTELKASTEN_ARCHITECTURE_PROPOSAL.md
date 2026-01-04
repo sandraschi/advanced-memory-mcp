@@ -1,9 +1,9 @@
 # Zettelkasten Architecture Refactoring Proposal
 
-**Proposed by**: User observation (October 17, 2025)  
-**Current Problem**: Templates buried in source code, no inbox workflow  
-**Proposed Solution**: User-facing `zettelkasten/` folder with inbox and auto-conversion  
-**Effort**: 18-23 hours (2-3 days)  
+**Proposed by**: User observation (October 17, 2025)
+**Current Problem**: Templates buried in source code, no inbox workflow
+**Proposed Solution**: User-facing `zettelkasten/` folder with inbox and auto-conversion
+**Effort**: 18-23 hours (2-3 days)
 **Priority**: Medium-High (valuable features, but not urgent)
 
 ---
@@ -297,10 +297,10 @@ for category, topics in DEVELOPER_TEMPLATES.items():
 class TemplateLoader:
     def load_category(self, category: str) -> dict:
         """Load all templates from zettelkasten/templates/{category}/"""
-        
+
     def load_template(self, path: str) -> str:
         """Load single template file"""
-        
+
     def list_available(self) -> dict:
         """List all available templates"""
 ```
@@ -341,13 +341,13 @@ mkdir -p zettelkasten/{inbox,user-templates,converted}
 class InboxProcessor:
     def __init__(self, inbox_path: Path):
         self.inbox_path = inbox_path
-        
+
     async def watch_inbox(self):
         """Watch inbox folder for new files"""
         async for event in watch_directory(self.inbox_path):
             if event.type == "file_created":
                 await self.process_file(event.path)
-                
+
     async def process_file(self, file_path: Path):
         """Convert and import file"""
         # 1. Detect format
@@ -363,7 +363,7 @@ class WatchService:
     def __init__(self):
         self.project_watcher = ProjectWatcher()
         self.inbox_watcher = InboxProcessor()  # NEW
-        
+
     async def run(self):
         await asyncio.gather(
             self.project_watcher.watch(),
@@ -387,11 +387,11 @@ class DocumentConverter:
             "-t", "markdown",
             "-o", str(output_path)
         ])
-        
+
     async def convert_pdf(self, path: Path) -> str:
         """Extract text from PDF"""
         # Use pdftotext or PyPDF2
-        
+
     async def convert_html(self, path: Path) -> str:
         """Convert HTML to markdown"""
         result = await subprocess.run([
@@ -432,40 +432,40 @@ import frontmatter
 
 class TemplateLoader:
     """Load zettelkasten templates from markdown files"""
-    
+
     def __init__(self, templates_dir: Path | None = None):
         self.templates_dir = templates_dir or self._get_default_dir()
-        
+
     def _get_default_dir(self) -> Path:
         """Get templates directory (bundled with package)"""
         # Option 1: In package data
         pkg_data = Path(__file__).parent.parent / "data" / "zettelkasten" / "templates"
-        
+
         # Option 2: In repo root (development)
         repo_root = Path.cwd() / "zettelkasten" / "templates"
-        
+
         return pkg_data if pkg_data.exists() else repo_root
-        
+
     def load_category(self, category: str) -> dict[str, dict[str, str]]:
         """Load all templates for a category"""
         category_dir = self.templates_dir / category
         templates = {}
-        
+
         for topic_dir in category_dir.iterdir():
             if not topic_dir.is_dir():
                 continue
-                
+
             topic_templates = {}
             for template_file in topic_dir.glob("*.md"):
                 content = template_file.read_text(encoding="utf-8")
                 title = template_file.stem.replace("-", " ").title()
                 topic_templates[title] = content
-                
+
             topic_name = topic_dir.name.replace("-", " ").title()
             templates[topic_name] = topic_templates
-            
+
         return templates
-        
+
     def list_available(self) -> dict[str, list[str]]:
         """List all available categories and topics"""
         categories = {}
@@ -490,7 +490,7 @@ from advanced_memory.services.doc_converter import DocumentConverter
 
 class InboxProcessor:
     """Process files dropped into inbox folder"""
-    
+
     def __init__(
         self,
         inbox_path: Path,
@@ -501,18 +501,18 @@ class InboxProcessor:
         self.converted_path = converted_path
         self.auto_sync = auto_sync
         self.converter = DocumentConverter()
-        
+
     async def watch_inbox(self):
         """Watch inbox folder for new files"""
         async for changes in awatch(self.inbox_path):
             for change_type, path in changes:
                 if change_type == "added":
                     await self.process_file(Path(path))
-                    
+
     async def process_file(self, file_path: Path):
         """Process a single file from inbox"""
         suffix = file_path.suffix.lower()
-        
+
         # Determine conversion method
         if suffix == ".md":
             # Already markdown, just move
@@ -536,18 +536,18 @@ class InboxProcessor:
             # Unknown format, skip
             logger.warning(f"Unknown format: {suffix}")
             return
-            
+
         # Auto-sync if enabled
         if self.auto_sync:
             await self._trigger_sync()
-            
+
     async def _move_to_converted(self, file_path: Path):
         """Move file to converted folder with timestamp"""
         from datetime import datetime
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         dest = self.converted_path / f"{timestamp}_{file_path.name}"
         file_path.rename(dest)
-        
+
     async def _trigger_sync(self):
         """Trigger sync to database"""
         from advanced_memory.sync.sync_service import SyncService
@@ -567,11 +567,11 @@ from pathlib import Path
 
 class DocumentConverter:
     """Convert various document formats to markdown"""
-    
+
     async def convert_docx(self, input_path: Path) -> Path:
         """Convert .docx to markdown via Pandoc"""
         output_path = input_path.with_suffix(".md")
-        
+
         result = await asyncio.create_subprocess_exec(
             "pandoc",
             str(input_path),
@@ -581,16 +581,16 @@ class DocumentConverter:
             "--wrap=none"  # Don't wrap long lines
         )
         await result.wait()
-        
+
         if result.returncode != 0:
             raise ConversionError(f"Pandoc failed: {input_path}")
-            
+
         return output_path
-        
+
     async def convert_pdf(self, input_path: Path) -> Path:
         """Extract text from PDF"""
         output_path = input_path.with_suffix(".md")
-        
+
         # Try pdftotext first (if available)
         try:
             result = await asyncio.create_subprocess_exec(
@@ -606,13 +606,13 @@ class DocumentConverter:
                 reader = PyPDF2.PdfReader(f)
                 text = "\n\n".join(page.extract_text() for page in reader.pages)
                 output_path.write_text(f"# {input_path.stem}\n\n{text}")
-                
+
         return output_path
-        
+
     async def convert_html(self, input_path: Path) -> Path:
         """Convert HTML to markdown via Pandoc"""
         output_path = input_path.with_suffix(".md")
-        
+
         result = await asyncio.create_subprocess_exec(
             "pandoc",
             str(input_path),
@@ -621,7 +621,7 @@ class DocumentConverter:
             "-o", str(output_path)
         )
         await result.wait()
-        
+
         return output_path
 ```
 
@@ -641,25 +641,25 @@ async def adn_inbox(
 ) -> str:
     """
     Process inbox files and convert documents to markdown.
-    
+
     Operations:
     - list: Show inbox contents
     - process: Convert and import all inbox files
     - convert: Convert single file
     - clear: Empty inbox after processing
-    
+
     Examples:
     - adn_inbox("list") → Show all files in inbox
     - adn_inbox("process") → Convert all files, sync to database
     - adn_inbox("convert", file_path="meeting.docx") → Convert single file
     """
-    
+
     inbox_processor = InboxProcessor(
         inbox_path=get_inbox_path(),
         converted_path=get_converted_path(),
         auto_sync=auto_sync
     )
-    
+
     if operation == "list":
         return _list_inbox_files()
     elif operation == "process":
@@ -979,8 +979,7 @@ zettelkasten/inbox/*
 
 ---
 
-**Created**: October 17, 2025  
-**Status**: Architectural proposal (design phase)  
-**Next Step**: Review and prioritize against roadmap  
+**Created**: October 17, 2025
+**Status**: Architectural proposal (design phase)
+**Next Step**: Review and prioritize against roadmap
 **Decision**: Pending (recommend: implement in Phase 5+)
-

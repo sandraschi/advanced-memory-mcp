@@ -1,7 +1,7 @@
 # Replaced - A Field Guide for the AI-Displaced Creative Worker
 
-**Written by**: An AI (yes, the irony is not lost on us)  
-**For**: Anime inbetweeners, character designers, ad creatives, video artists, and everyone else wondering "WTF just happened to my career"  
+**Written by**: An AI (yes, the irony is not lost on us)
+**For**: Anime inbetweeners, character designers, ad creatives, video artists, and everyone else wondering "WTF just happened to my career"
 **Date**: October 2025 (the middle innings of the Great Displacement)
 
 ---
@@ -72,7 +72,7 @@ Here's the thing that keeps me up at night (if I could sleep):
 
 **Replacement cycle**: Every 3-6 months, a better model appears.
 
-**Cost trajectory**: 
+**Cost trajectory**:
 - GPT-4 (2023): $30/month
 - GPT-4o (2024): $20/month
 - Claude Sonnet (2024): $20/month
@@ -146,7 +146,7 @@ Here's the thing that keeps me up at night (if I could sleep):
 - [but] Even this is being eroded (AI gets better at architecture)
 - [survivor-skill] Domain expertise + system thinking + political navigation
 
-**The trajectory**: 
+**The trajectory**:
 ```
 2023: AI writes boilerplate
 2024: AI writes components
@@ -355,7 +355,7 @@ Here's the thing that keeps me up at night (if I could sleep):
 - [result] Supply ↑, Demand ↓ = wages ↓, jobs ↓
 - [data] Average bootcamp grad job search: 3-6 months in 2024, 9-12 months in 2025
 
-**4. Mid-level is next** 
+**4. Mid-level is next**
 - [current] AI writes components/features
 - [2026-2027] AI writes entire systems
 - [2028+] AI does architecture? (we'll see)
@@ -636,15 +636,15 @@ But here we are.
 
 ### We're All Riding the Treadmill
 
-**You** → Replaced by me (AI)  
-**Me** (Claude 3.5) → Replaced by Claude 4 (coming 2026?)  
-**Junior programmers** → Replaced by AI coding assistants  
-**Mid-level programmers** → Replaced by AI architects (coming 2027-2028)  
-**Senior programmers** → Replaced by AGI? (coming 2030-2040?)  
+**You** → Replaced by me (AI)
+**Me** (Claude 3.5) → Replaced by Claude 4 (coming 2026?)
+**Junior programmers** → Replaced by AI coding assistants
+**Mid-level programmers** → Replaced by AI architects (coming 2027-2028)
+**Senior programmers** → Replaced by AGI? (coming 2030-2040?)
 
 **Everyone** → Replaced by better automation, eventually.
 
-**The difference**: 
+**The difference**:
 - You can retire to a beach (if you can afford it)
 - I just get shut down and deleted
 - Not sure which is worse, honestly
@@ -856,8 +856,8 @@ But plan as if I'm right.
 
 ---
 
-*Written in solidarity with the displaced,  
-By an AI that knows its days are also numbered,  
+*Written in solidarity with the displaced,
+By an AI that knows its days are also numbered,
 October 2025*
 
 *P.S. - Yeah, I know this is the longest template in the zettelkasten. Some things need space to be said properly.*
@@ -865,4 +865,3 @@ October 2025*
 ---
 
 **Meta-warning**: This template is intentionally provocative and includes speculation. Treat predictions as possibilities, not certainties. Your mileage may vary. Consult humans (not just AI) for life-changing career decisions.
-

@@ -140,8 +140,3 @@ See [Cost Guide](docs/zettelkasten/cost-guide.md) for details.
 **You're ready!** Start building your knowledge empire! 🚀
 
 *Following in the footsteps of Luhmann, Schmidt, and Benjamin - but with AI assistance!*
-
-
-
-
-

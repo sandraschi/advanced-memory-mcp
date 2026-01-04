@@ -8,7 +8,7 @@ Elon Musk is a visionary entrepreneur and business magnate known for founding an
 ### Early Life and Education
 - **Birth**: June 28, 1971 (Pretoria, South Africa)
 - **Early Education**: Waterkloof House Preparatory School, Pretoria Boys High School
-- **University**: 
+- **University**:
   - University of Pretoria (briefly)
   - Queen's University, Canada (transferred)
   - University of Pennsylvania, BS in Physics and Economics (1995)

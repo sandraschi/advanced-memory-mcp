@@ -3,24 +3,24 @@
 Use this flow each quarter or when significant tooling/AI changes land.
 
 ## 1. Source Refresh
-- [ ] Review Google “Engineering Practices” updates (https://google.github.io/eng-practices/).  
-- [ ] Check Microsoft, GitHub, and Atlassian code review guidance posts for new recommendations.  
+- [ ] Review Google “Engineering Practices” updates (https://google.github.io/eng-practices/).
+- [ ] Check Microsoft, GitHub, and Atlassian code review guidance posts for new recommendations.
 - [ ] Track ThoughtWorks Technology Radar entries relevant to review tooling.
 
 ## 2. Metrics & Analytics
-- [ ] Export review turnaround, rework rate, defect escape rate; compare against targets.  
-- [ ] Survey developers for review satisfaction; log sentiments.  
+- [ ] Export review turnaround, rework rate, defect escape rate; compare against targets.
+- [ ] Survey developers for review satisfaction; log sentiments.
 - [ ] Inspect random merged PRs for calibration (quality audit).
 
 ## 3. Tooling Validation
-- [ ] Audit lint/check configurations; ensure automation covers style issues.  
-- [ ] Review AI assistant policy; test latest capabilities and guardrails.  
-- [ ] Confirm CODEOWNERS and reviewer rotation scripts reflect team changes.  
+- [ ] Audit lint/check configurations; ensure automation covers style issues.
+- [ ] Review AI assistant policy; test latest capabilities and guardrails.
+- [ ] Confirm CODEOWNERS and reviewer rotation scripts reflect team changes.
 - [ ] Ensure reminder bots and dashboards still operate correctly.
 
 ## 4. Policy & Documentation
-- [ ] Update Definition of Review Done and reviewer onboarding docs.  
-- [ ] Record new examples of exemplary reviews for knowledge base.  
+- [ ] Update Definition of Review Done and reviewer onboarding docs.
+- [ ] Record new examples of exemplary reviews for knowledge base.
 - [ ] Refresh inline comment templates/examples.
 
 ## 5. Source Log

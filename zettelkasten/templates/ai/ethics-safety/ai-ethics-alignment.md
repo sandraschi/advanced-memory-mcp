@@ -39,7 +39,7 @@ graph TB
 
 **How it works**:
 1. Pre-train model on internet text
-2. Collect human rankings of AI outputs  
+2. Collect human rankings of AI outputs
 3. Train reward model to predict human preferences
 4. Fine-tune AI to maximize predicted reward
 
@@ -165,7 +165,7 @@ AI can be used for good or harm:
 
 **Tensions**:
 - Training requires data ← Privacy
-- Personalization requires data ← Privacy  
+- Personalization requires data ← Privacy
 - Improvement requires usage data ← Privacy
 
 **Solutions**:
@@ -298,7 +298,7 @@ If Company A slows for safety:
 
 **For AI Users**:
 1. Don't over-trust AI outputs
-2. Maintain human judgment  
+2. Maintain human judgment
 3. Understand limitations
 4. Report harmful behavior
 5. Advocate for safety
@@ -350,5 +350,3 @@ If Company A slows for safety:
 *"Alignment is not just a technical problem—it's a philosophical, political, and civilizational challenge."*
 
 *"We're trying to specify and instill human values in systems smarter than us. No pressure."*
-
-

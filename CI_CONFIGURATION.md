@@ -17,7 +17,7 @@ This repository has been configured with multiple CI/CD workflows to prevent fai
 
 ### 2. **Full CI** (`.github/workflows/ci.yml`)
 - **Purpose**: Comprehensive testing and quality checks
-- **Triggers**: 
+- **Triggers**:
   - Push to main/master/develop (automatic)
   - Manual dispatch with `run_full_ci: true`
 - **What it does**:

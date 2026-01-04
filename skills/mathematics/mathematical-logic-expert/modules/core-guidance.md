@@ -1,6 +1,6 @@
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -28,7 +28,7 @@ Activate when the user asks about:
 ### Logical Connectives
 
 - Conjunction: $P \land Q$
-- Disjunction: $P \lor Q$  
+- Disjunction: $P \lor Q$
 - Implication: $P \Rightarrow Q \equiv \neg P \lor Q$
 - Biconditional: $P \Leftrightarrow Q \equiv (P \Rightarrow Q) \land (Q \Rightarrow P)$
 
@@ -91,7 +91,7 @@ $$
 
 ---
 
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
+**Category:** mathematics
+**Difficulty:** Advanced
+**Version:** 1.0.0
 **Created:** 2025-10-21

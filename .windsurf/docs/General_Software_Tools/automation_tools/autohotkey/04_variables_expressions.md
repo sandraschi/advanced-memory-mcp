@@ -81,4 +81,3 @@ HasAdminRights := false
 ```
 
 Understanding how to store and manipulate data is the key to unlocking the full power of AutoHotkey. Withis knowledge, you canow create scripts that are not justatic, but can react and adapto different situations. In the next chapter, we willearn how to use this to control the flow of our scripts with [Control Flow: If, Else, and Loops](/automation_tools/autohotkey/./05_control_flow.md).
-

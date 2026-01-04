@@ -1,6 +1,6 @@
 # Core Guidance (Legacy Template)
 
-**Confidence**: 🔴 LOW  
+**Confidence**: 🔴 LOW
 **Last captured**: 2025-11-08
 
 > This module preserves the original skill instructions prior to modular conversion. Treat every section as unverified until you complete the research checklist and add dated sources.
@@ -88,7 +88,7 @@ FFT computes this in $O(N\log N)$ instead of $O(N^2)$.
 
 ---
 
-**Category:** mathematics  
-**Difficulty:** Advanced  
-**Version:** 1.0.0  
+**Category:** mathematics
+**Difficulty:** Advanced
+**Version:** 1.0.0
 **Created:** 2025-10-21

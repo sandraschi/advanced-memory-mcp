@@ -1,8 +1,8 @@
 # Advanced Memory MCP - Complete Documentation
 
-**Version:** 1.0.0b2  
-**Last Updated:** October 16, 2025  
-**Author:** Sandra Schi  
+**Version:** 1.0.0b2
+**Last Updated:** October 16, 2025
+**Author:** Sandra Schi
 
 ## Table of Contents
 
@@ -392,8 +392,8 @@ A **project** in Advanced Memory is a collection of markdown files organized in 
 
 ```python
 # Create a new project
-adn_project("create", 
-    project_name="my-research", 
+adn_project("create",
+    project_name="my-research",
     project_path="~/Documents/research",
     set_default=False)
 ```
@@ -479,9 +479,9 @@ Navigate the knowledge graph using memory URLs:
 
 ```python
 # Build context from memory URL
-adn_navigation("context", 
-    url="memory://research/ai-fundamentals", 
-    depth=2, 
+adn_navigation("context",
+    url="memory://research/ai-fundamentals",
+    depth=2,
     timeframe="1 week")
 ```
 
@@ -490,8 +490,8 @@ Track changes across the knowledge base:
 
 ```python
 # Get recent changes
-adn_navigation("recent", 
-    timeframe="2 days", 
+adn_navigation("recent",
+    timeframe="2 days",
     type="notes")
 ```
 
@@ -565,7 +565,7 @@ adn_navigation("sync_status")
 #### Obsidian Migration
 ```python
 # Import complete Obsidian vault
-adn_import("obsidian", 
+adn_import("obsidian",
     vault_path="~/obsidian-vault",
     destination_folder="imported/obsidian",
     convert_links=True)
@@ -722,7 +722,7 @@ adn_search("notes", query="machine learning")
 adn_search("notes", query="deep learning", project="research")
 
 # Export research compilation
-adn_export("pdf_book", 
+adn_export("pdf_book",
     book_title="ML Research Compilation",
     source_folder="/research",
     tag_filter="important")
@@ -736,7 +736,7 @@ adn_export("pdf_book",
 
 #### 1. Database Locked
 **Symptoms**: Sync fails with "database is locked"
-**Solution**: 
+**Solution**:
 ```bash
 # Kill background processes
 Get-Process | Where-Object {$_.ProcessName -match "python"} | Stop-Process

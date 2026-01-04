@@ -30,7 +30,7 @@ Spot is a commercial quadruped robot designed for industrial and commercial appl
 
 - **Autonomy**: Utilizes a suite of cameras and sensors for 360-degree perception, allowing ito navigate complex environments, avoid obstacles, and follow pre-programmed routes.
 - **Payloads**: Features a modular payload system, enabling customization with equipment like thermal cameras, LIDAR scanners, and robotic arms (Spot Arm).
-- **Applications**: 
+- **Applications**:
   - **Industrial Inspection**: Automating inspection rounds in factories, power plants, and on construction sites.
   - **Public Safety**: Remote inspection of hazardous environments.
   - **Research**: A popular platform forobotics research and education.

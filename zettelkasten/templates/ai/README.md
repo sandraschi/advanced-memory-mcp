@@ -220,7 +220,7 @@ The challenge of aligning AI with human values:
 
 **Alignment Problem**:
 - Specification (outer alignment): Can't write down what we want
-- Learning (inner alignment): Can't learn from behavior alone  
+- Learning (inner alignment): Can't learn from behavior alone
 - Robustness: Alignment may not generalize
 
 **Current Approaches**:
@@ -443,7 +443,7 @@ Key areas to watch:
 
 We're living through the most important technological transition in human history. AI will likely be more transformative than:
 - The printing press
-- The Industrial Revolution  
+- The Industrial Revolution
 - The Internet
 
 **And it's happening in your lifetime.**
@@ -454,7 +454,7 @@ These templates help you:
 - Participate in shaping the future
 - Avoid both hype and complacency
 
-**The stakes**: 
+**The stakes**:
 - Economic systems
 - Political structures
 - Human relationships
@@ -471,7 +471,6 @@ These templates help you:
 
 *"We are at a unique moment where the people building the most powerful technology are also the ones most worried about it."*
 
-**Created**: October 2025  
-**Status**: Living documents - will need updates as AI landscape evolves  
+**Created**: October 2025
+**Status**: Living documents - will need updates as AI landscape evolves
 **Purpose**: Combat information deficit about AI
-

@@ -6,9 +6,9 @@
 
 ## 🎯 Current Status
 
-**Repository**: advanced-memory-mcp  
-**Current Version**: 1.0.0b3 (Beta 3)  
-**Release Automation**: ✅ Partially configured  
+**Repository**: advanced-memory-mcp
+**Current Version**: 1.0.0b3 (Beta 3)
+**Release Automation**: ✅ Partially configured
 **PyPI Publishing**: ❌ **NOT WORKING - Needs Setup**
 
 ---
@@ -91,7 +91,7 @@ Even if the above issues are fixed, you need a `PYPI_API_TOKEN` secret configure
 3. Click **"Add API token"**
 4. Fill in:
    - **Token name**: `advanced-memory-mcp-github-actions` (descriptive name)
-   - **Scope**: 
+   - **Scope**:
      - ⭐ **Recommended**: "Entire account" (can upload any package)
      - Alternative: "Project" → Will need to create project first
 5. Click **"Add token"**
@@ -154,20 +154,20 @@ publish-test-pypi:
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.12"
-    
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         version: "latest"
-    
+
     - name: Build package
       run: uv build
-    
+
     - name: Publish to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
@@ -333,7 +333,7 @@ ERROR: HTTPError: 400 Bad Request
 File already exists. See https://pypi.org/help/#file-name-reuse
 ```
 
-**Cause**: Trying to upload same version again  
+**Cause**: Trying to upload same version again
 **Solution**: Increment version number in `src/advanced_memory/__init__.py`:
 ```python
 __version__ = "1.0.0b4"  # Increment this!
@@ -348,8 +348,8 @@ ERROR: HTTPError: 403 Forbidden
 Invalid or non-existent authentication information
 ```
 
-**Cause**: Wrong token or username  
-**Solution**: 
+**Cause**: Wrong token or username
+**Solution**:
 - Username must be `__token__` (with underscores!)
 - Password is your API token starting with `pypi-AgEI...`
 - Verify token is correct in GitHub Secrets
@@ -362,8 +362,8 @@ Invalid or non-existent authentication information
 ERROR: The name 'advanced-memory-mcp' is already claimed
 ```
 
-**Cause**: Someone else registered this name (unlikely for this project)  
-**Solution**: 
+**Cause**: Someone else registered this name (unlikely for this project)
+**Solution**:
 - Check if YOU own it: https://pypi.org/project/advanced-memory-mcp/
 - If you own it, use your account token
 - If someone else owns it, contact PyPI admins
@@ -376,7 +376,7 @@ ERROR: The name 'advanced-memory-mcp' is already claimed
 ERROR: PyPI requires two-factor authentication
 ```
 
-**Cause**: 2FA not enabled on your PyPI account  
+**Cause**: 2FA not enabled on your PyPI account
 **Solution**: Enable 2FA (see Step 1B above)
 
 ---
@@ -387,7 +387,7 @@ ERROR: PyPI requires two-factor authentication
 ERROR: Unable to download artifact(s): Artifact 'dist' not found
 ```
 
-**Cause**: The `release` job didn't upload artifacts  
+**Cause**: The `release` job didn't upload artifacts
 **Solution**: Add artifact upload step (see Step 4 above)
 
 ---
@@ -510,9 +510,8 @@ publish-pypi:
 
 ---
 
-**Created**: October 17, 2025  
-**For**: Advanced Memory MCP v1.0.0b3+  
+**Created**: October 17, 2025
+**For**: Advanced Memory MCP v1.0.0b3+
 **Status**: Ready to implement
 
 **Happy publishing!** 🚀📦
-

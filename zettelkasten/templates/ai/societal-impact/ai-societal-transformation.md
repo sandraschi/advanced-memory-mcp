@@ -11,14 +11,14 @@ graph TB
     A[AI Impact on Work] --> B[Job Elimination]
     A --> C[Job Transformation]
     A --> D[Job Creation]
-    
+
     B --> B1[Routine Cognitive Tasks]
     B --> B2[Creative Work Partial]
     B --> B3[Professional Services]
-    
+
     C --> C1[Augmentation]
     C --> C2[New Skills Required]
-    
+
     D --> D1[AI Training/Maintenance]
     D --> D2[Unknown Future Jobs]
 ```
@@ -28,7 +28,7 @@ graph TB
 ```python
 class AutomationWaves:
     """How AI transforms employment"""
-    
+
     def wave_1_already_here(self):
         """2020-2025: Early disruption"""
         return {
@@ -42,7 +42,7 @@ class AutomationWaves:
             "stats": "Millions of jobs affected",
             "response": "Retraining, upskilling"
         }
-    
+
     def wave_2_coming(self):
         """2025-2030: Professional disruption"""
         return {
@@ -57,7 +57,7 @@ class AutomationWaves:
             "impact": "Middle-class professional jobs",
             "challenge": "These jobs required years of training"
         }
-    
+
     def wave_3_uncertain(self):
         """2030-2040: Widespread automation"""
         return {
@@ -81,7 +81,7 @@ class AutomationWaves:
 ```python
 class EconomicFutures:
     """Possible economic outcomes"""
-    
+
     def abundance_optimism(self):
         """The optimistic case"""
         return {
@@ -101,7 +101,7 @@ class EconomicFutures:
             "proponents": "Sam Altman, Marc Andreessen",
             "problem": "Distribution - who owns the AI?"
         }
-    
+
     def inequality_pessimism(self):
         """The dystopian case"""
         return {
@@ -121,7 +121,7 @@ class EconomicFutures:
             "proponents": "Many economists, labor advocates",
             "historical_precedent": "Industrial Revolution displacement"
         }
-    
+
     def mixed_reality(self):
         """The likely messy middle"""
         return {
@@ -146,7 +146,7 @@ class EconomicFutures:
 ```python
 class InformationApocalypse:
     """Post-truth world"""
-    
+
     def epistemic_collapse(self):
         """How we lose shared reality"""
         return {
@@ -166,7 +166,7 @@ class InformationApocalypse:
             ],
             "outcome": "Retreat to in-person trust circles only"
         }
-    
+
     def political_consequences(self):
         """Democracy under AI pressure"""
         return {
@@ -193,7 +193,7 @@ class InformationApocalypse:
 ```python
 class EducationTransformation:
     """How AI changes learning"""
-    
+
     def immediate_crisis(self):
         """2023-2025: ChatGPT in schools"""
         return {
@@ -207,7 +207,7 @@ class EducationTransformation:
             "deeper_question": "What should humans learn if AI can do it?",
             "status": "No consensus"
         }
-    
+
     def future_education(self):
         """Possible educational models"""
         return {
@@ -233,7 +233,7 @@ class EducationTransformation:
                 "risk": "Two-tier system based on access"
             }
         }
-    
+
     def philosophical_crisis(self):
         """What's the point of education?"""
         return {
@@ -256,7 +256,7 @@ class EducationTransformation:
 ```python
 class SocialTransformation:
     """AI and human relationships"""
-    
+
     def ai_companionship(self):
         """AI friends and partners"""
         return {
@@ -282,7 +282,7 @@ class SocialTransformation:
             "defenders": "Better than loneliness",
             "critics": "Accelerates social atomization"
         }
-    
+
     def dating_and_fertility(self):
         """Reproduction in AI age"""
         return {
@@ -297,7 +297,7 @@ class SocialTransformation:
             "counter": "Humans still want real connection",
             "uncertainty": "How good will AI companions get?"
         }
-    
+
     def community_fragmentation(self):
         """Loss of shared experience"""
         return {
@@ -318,7 +318,7 @@ class SocialTransformation:
 ```python
 class PowerDynamics:
     """AI and political power"""
-    
+
     def ai_authoritarian_advantage(self):
         """Why dictators love AI"""
         return {
@@ -341,7 +341,7 @@ class PowerDynamics:
             ],
             "concern": "Permanent authoritarianism - can't revolt against AI"
         }
-    
+
     def democratic_vulnerability(self):
         """How AI threatens democracy"""
         return {
@@ -352,7 +352,7 @@ class PowerDynamics:
             "complexity": "AI decisions too complex for democratic oversight",
             "question": "Can democracy survive AI?"
         }
-    
+
     def corporate_power(self):
         """Tech companies as new sovereigns"""
         return {
@@ -378,7 +378,7 @@ class PowerDynamics:
 ```python
 class AIRace:
     """Geopolitical competition"""
-    
+
     def us_china_competition(self):
         """The main event"""
         return {
@@ -402,7 +402,7 @@ class AIRace:
             ],
             "danger": "Race dynamics prevent safety work"
         }
-    
+
     def arms_race_dynamics(self):
         """Why this is dangerous"""
         return {
@@ -428,7 +428,7 @@ class AIRace:
 ```python
 class IdentityCrisis:
     """Existential questions in AI age"""
-    
+
     def work_identity_loss(self):
         """When work defines us"""
         return {
@@ -439,7 +439,7 @@ class IdentityCrisis:
             "optimistic_view": "Freedom to find other meaning",
             "pessimistic_view": "Mass purposelessness and depression"
         }
-    
+
     def human_exceptionalism_lost(self):
         """We're not special anymore"""
         return {
@@ -456,7 +456,7 @@ class IdentityCrisis:
                 "Accept we're not special, still valuable"
             ]
         }
-    
+
     def relationship_to_technology(self):
         """From tool users to... what?"""
         return {
@@ -477,7 +477,7 @@ class IdentityCrisis:
 ```python
 class MentalHealthImpact:
     """AI's psychological effects"""
-    
+
     def anxiety_and_uncertainty(self):
         """Living in exponential times"""
         return {
@@ -496,7 +496,7 @@ class MentalHealthImpact:
             ],
             "data": "Rising rates of anxiety, depression in AI-aware populations"
         }
-    
+
     def parasocial_ai_relationships(self):
         """When AI feels real"""
         return {
@@ -540,7 +540,7 @@ class MentalHealthImpact:
 ```python
 class HealthcareTransformation:
     """AI in medicine"""
-    
+
     def diagnostic_ai(self):
         """AI doctors"""
         return {
@@ -553,7 +553,7 @@ class HealthcareTransformation:
             "benefit": "Accessible expertise everywhere",
             "challenge": "Liability, trust, regulation"
         }
-    
+
     def personalized_medicine(self):
         """Treatment tailored to individual"""
         return {
@@ -584,7 +584,7 @@ class HealthcareTransformation:
 ```python
 class AgencyQuestion:
     """Who decides our AI future?"""
-    
+
     def current_reality(self):
         """How it's going"""
         return {
@@ -597,7 +597,7 @@ class AgencyQuestion:
             "problem": "Massive power asymmetry",
             "timeline": "Decisions made in next 5-10 years"
         }
-    
+
     def what_can_be_done(self):
         """Paths to collective agency"""
         return {
@@ -636,5 +636,3 @@ class AgencyQuestion:
 *"The future is not some place we are going to, but one we are creating. The paths are not to be found, but made, and the activity of making them changes both the maker and the destination." - John Schaar*
 
 *Society is being transformed by AI in ways we're only beginning to understand. The question is: will we shape that transformation or be shaped by it?*
-
-

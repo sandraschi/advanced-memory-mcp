@@ -59,7 +59,7 @@ graph TD
    ```powershell
    # Install required Python packages
    pip install calibre-web
-   
+
    # Create startup script (start-calibre.ps1)
    @"
    $env:CALIBRE_DB_PATH = "D:\Path\To\Calibre\Library"
@@ -155,7 +155,7 @@ if (-not (Test-Path $outputDir)) {
 # Query Calibre database and generate markdown
 # This a simplified example
 $books = sqlite3 -json $calibreDb @"
-SELECT 
+SELECT
     b.id,
     b.title,
     b.authors,
@@ -180,21 +180,21 @@ GROUP BY b.id
 foreach ($book in $books) {
     $bookId = $book.id
     $formats = $book.formats -split ','
-    
+
     # Add to all books list
-    "| [$($book.title)](/resources/ebooks/books/$bookId) | $($book.authors) | $($book.pubdate) | $($formats -join ', ') |" | 
+    "| [$($book.title)](/resources/ebooks/books/$bookId) | $($book.authors) | $($book.pubdate) | $($formats -join ', ') |" |
         Out-File -FilePath "$outputDir\all.md" -Append -Encoding utf8
-    
+
     # Generate individual book page
     $bookDir = "$outputDir\books"
     if (-not (Test-Path $bookDir)) {
         New-Item -ItemType Directory -Path $bookDir -Force
     }
-    
+
     @"
 # $($book.title)
 
-**Author**: $($book.authors)  
+**Author**: $($book.authors)
 **Published**: $($book.pubdate)
 
 ## Description
@@ -258,9 +258,9 @@ if (-not (Test-Path $dest)) {
 Compress-Archive -Path $source -DestinationPath $backupFile -CompressionLevel Optimal
 
 # Keep only last 30 days of backups
-Get-ChildItem -Path "$dest\calibre_library_*.zip" | 
-    Sort-Object CreationTime -Descending | 
-    Select-Object -Skip 30 | 
+Get-ChildItem -Path "$dest\calibre_library_*.zip" |
+    Sort-Object CreationTime -Descending |
+    Select-Object -Skip 30 |
     Remove-Item -Force
 ```
 

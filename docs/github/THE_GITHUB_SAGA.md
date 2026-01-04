@@ -2,10 +2,10 @@
 
 **Technical Report: Advanced Memory MCP GitHub Workflows**
 
-**Date**: October 17, 2025  
-**Project**: Advanced Memory MCP  
-**Project Type**: Complex MCP Server with Database & CLI  
-**Analysis Period**: Single development session (6.5 hours)  
+**Date**: October 17, 2025
+**Project**: Advanced Memory MCP
+**Project Type**: Complex MCP Server with Database & CLI
+**Analysis Period**: Single development session (6.5 hours)
 **Outcome**: Production-ready CI/CD pipeline with comprehensive documentation
 
 ---
@@ -75,8 +75,8 @@ This document provides a comprehensive technical analysis of the GitHub CI/CD im
 
 ### Issue 1: Test Assertion Mismatch
 
-**Discovery Time**: 30 minutes into analysis  
-**Severity**: High (blocking CI)  
+**Discovery Time**: 30 minutes into analysis
+**Severity**: High (blocking CI)
 **Component**: Integration tests
 
 **Root Cause Analysis**:
@@ -104,16 +104,16 @@ assert ("Case Test Note" in write_text or "Case_Test_Note" in write_text)
 
 ### Issue 2: PyPI Publishing Workflow Exclusions
 
-**Discovery Time**: 1.5 hours  
-**Severity**: Critical (blocking release)  
+**Discovery Time**: 1.5 hours
+**Severity**: Critical (blocking release)
 **Component**: GitHub Actions release workflow
 
 **Root Cause Analysis**:
 
 Examination of `.github/workflows/release.yml` line 154 revealed:
 ```yaml
-if: startsWith(github.ref, 'refs/tags/v') && 
-    !contains(github.ref, 'alpha') && 
+if: startsWith(github.ref, 'refs/tags/v') &&
+    !contains(github.ref, 'alpha') &&
     !contains(github.ref, 'beta') &&     # ← Blocks v1.0.0b3
     !contains(github.ref, 'rc')
 ```
@@ -142,8 +142,8 @@ if: startsWith(github.ref, 'refs/tags/v') &&
 
 ### Issue 3: GitHub Advanced Security Dependency
 
-**Discovery Time**: 2 hours  
-**Severity**: High (blocking security scans)  
+**Discovery Time**: 2 hours
+**Severity**: High (blocking security scans)
 **Component**: Security scanning workflow
 
 **Problem Statement**: Security scan workflow failed with two distinct errors:
@@ -202,8 +202,8 @@ Most open-source MCP projects use free security scanning:
 
 ### Issue 4: GitHub API Rate Limiting Risk
 
-**Discovery Time**: 3 hours  
-**Severity**: Medium (preventive)  
+**Discovery Time**: 3 hours
+**Severity**: Medium (preventive)
 **Component**: CI monitoring automation
 
 **User Concern**: "careful about rate limiting. i do not want to check after a nights sleep and find out you did 500 pushes"
@@ -246,9 +246,9 @@ if ($MaxAttempts -gt 5) {
 $MinWaitBetweenPushes = 300  # 5 minutes between pushes
 
 # Layer 4: Absolute failsafe
-if ($attempt -gt 10) { 
+if ($attempt -gt 10) {
     Write-Error "Hard limit reached"
-    break 
+    break
 }
 ```
 
@@ -268,8 +268,8 @@ if ($attempt -gt 10) {
 
 ### Issue 5: Test Suite Execution Patience
 
-**Discovery Time**: 5 hours  
-**Severity**: Medium (developer experience)  
+**Discovery Time**: 5 hours
+**Severity**: Medium (developer experience)
 **Component**: Local development workflow
 
 **Problem Pattern Identified**:
@@ -335,8 +335,8 @@ pytest  # 1,190 tests, 1.5 minutes
 
 ### Issue 6: GitHub Actions Log Overflow
 
-**Discovery Time**: 6 hours  
-**Severity**: Critical (workflow cancellation)  
+**Discovery Time**: 6 hours
+**Severity**: Critical (workflow cancellation)
 **Component**: GitHub Actions test execution
 
 **User Insight**: "the tests, even if passing, just produced too many output lines. am i right?"
@@ -561,7 +561,7 @@ jobs:
     steps:
       - ruff check . --fix
       - ruff format --check .
-      
+
   test:  # Primary validation (4 minutes)
     strategy:
       matrix:
@@ -570,20 +570,20 @@ jobs:
       - uv sync --dev
       - pytest -n auto -q --disable-warnings --maxfail=10
       - Generate coverage report
-      
+
   security:  # Security analysis (2 minutes)
     steps:
       - bandit -r src/
       - safety scan
       - trivy fs .
       - semgrep --config=auto
-      
+
   build:  # Package validation (1 minute)
     steps:
       - uv build
       - Check package contents
       - Validate metadata
-      
+
   mcpb:  # MCPB packaging (2 minutes)
     steps:
       - mcpb pack
@@ -645,7 +645,7 @@ jobs:
 - **10% secret gap**: GHAS catches proprietary service tokens
 - **30% SARIF gap**: Visualization and trend analysis
 
-**Strategic Recommendation**: 
+**Strategic Recommendation**:
 - **Current**: Maintain free stack ($0/year)
 - **Threshold**: Revenue > $10k/year OR enterprise customer requirement
 - **Alternative**: If visualization needed, implement custom security dashboard using JSON artifacts (~$0 with GitHub Pages)
@@ -808,8 +808,8 @@ jobs:
       - run: ruff format --check .
 ```
 
-**Execution Time**: 30-60 seconds  
-**Complexity**: Low  
+**Execution Time**: 30-60 seconds
+**Complexity**: Low
 **Adaptation from Advanced Memory**: Remove 80% of workflow (database, migrations, CLI tests, security scans, MCPB build)
 
 ### Type 2: Complex MCP Server with Database
@@ -840,22 +840,22 @@ jobs:
       - run: uv sync --dev
       - run: pytest -n auto -q --disable-warnings --maxfail=10
       - run: pytest --cov=src --cov-report=xml
-      
+
   security:
     steps:
       - run: bandit -r src/
       - run: safety scan
       - run: trivy fs .
       - run: semgrep --config=auto
-      
+
   migrations:
     steps:
       - run: alembic upgrade head
       - run: alembic check
 ```
 
-**Execution Time**: 2-5 minutes  
-**Complexity**: Medium-High  
+**Execution Time**: 2-5 minutes
+**Complexity**: Medium-High
 **This Repository's Workflows**: Directly applicable with minimal adaptation
 
 ### Type 3: Full-Stack MCP (Backend + Frontend)
@@ -880,13 +880,13 @@ jobs:
     steps:
       - run: uv sync --dev
       - run: pytest -q
-      
+
   test-frontend:
     steps:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      
+
   e2e:
     needs: [test-backend, test-frontend]
     steps:
@@ -894,8 +894,8 @@ jobs:
       - run: npx playwright test
 ```
 
-**Execution Time**: 5-10 minutes  
-**Complexity**: High  
+**Execution Time**: 5-10 minutes
+**Complexity**: High
 **Adaptation from Advanced Memory**: Add frontend testing jobs, E2E tests, Docker orchestration
 
 ### Type 4: Windows Service / Native Application
@@ -922,9 +922,9 @@ jobs:
       - run: pytest -q --disable-warnings
 ```
 
-**Execution Time**: 2-4 minutes  
-**Complexity**: Medium  
-**Cost Impact**: **2x more expensive** (Windows runners count double)  
+**Execution Time**: 2-4 minutes
+**Complexity**: Medium
+**Cost Impact**: **2x more expensive** (Windows runners count double)
 **Adaptation from Advanced Memory**: Change runner OS, add Windows-specific dependencies
 
 ### Type 5: Cross-Platform CLI Tool
@@ -952,9 +952,9 @@ jobs:
       - run: pytest -q --disable-warnings
 ```
 
-**Execution Time**: 5-15 minutes (3 OS × 2 Python versions)  
-**Complexity**: High  
-**Cost Impact**: 
+**Execution Time**: 5-15 minutes (3 OS × 2 Python versions)
+**Complexity**: High
+**Cost Impact**:
 - Ubuntu: 1x multiplier
 - Windows: 2x multiplier
 - **macOS: 10x multiplier** (very expensive!)
@@ -989,14 +989,14 @@ jobs:
       - run: mcpb validate dist/server.mcpb
 ```
 
-**Execution Time**: 1-2 minutes  
-**Complexity**: Very Low  
+**Execution Time**: 1-2 minutes
+**Complexity**: Very Low
 **Adaptation from Advanced Memory**: Remove 95% of workflow, keep MCPB build only
 
 ### Adaptation Decision Matrix
 
 | Your Project Type | Keep from Advanced Memory | Remove from Advanced Memory | Add to Workflow |
-|-------------------|---------------------------|-----------------------------|-----------------| 
+|-------------------|---------------------------|-----------------------------|-----------------|
 | Simple MCP | Ruff, basic pytest | Database, migrations, CLI, security | Nothing |
 | Complex MCP (DB) | **KEEP EVERYTHING** | Nothing | Nothing |
 | Full-Stack | Backend testing | Nothing | Frontend tests, E2E tests |
@@ -1012,7 +1012,7 @@ jobs:
 
 #### 1. FastMCP FunctionTool Invocation Pattern
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: All MCP servers using FastMCP framework
 
 **Problem**:
@@ -1040,7 +1040,7 @@ result = await adn_zettelmaker.fn(...)
 
 #### 2. Beta Release Workflow Exclusions
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: All Python projects with CI/CD
 
 **Problem**:
@@ -1059,12 +1059,12 @@ if: !contains(github.ref, 'beta')  # Silently blocks v1.0.0b3
 ```yaml
 # Dual-track approach
 publish-prod:
-  if: startsWith(github.ref, 'refs/tags/v') && 
+  if: startsWith(github.ref, 'refs/tags/v') &&
       !contains(github.ref, 'b') &&
       !contains(github.ref, 'rc')
 
 publish-test:
-  if: startsWith(github.ref, 'refs/tags/v') && 
+  if: startsWith(github.ref, 'refs/tags/v') &&
       (contains(github.ref, 'b') || contains(github.ref, 'rc'))
   # Publish to TestPyPI
 ```
@@ -1075,7 +1075,7 @@ publish-test:
 
 #### 3. GitHub Actions Log Limits
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: All projects with 200+ tests
 
 **The Critical Discovery**:
@@ -1103,7 +1103,7 @@ pytest -q --disable-warnings  # Quiet, only failures
 
 **Impact**: 96% log reduction (15,000 → 600 lines)
 
-**Industry Pattern**: 
+**Industry Pattern**:
 - **Best practice**: Quiet mode in CI universally recommended
 - **Common mistake**: Developers copy local commands to CI
 - **Detection**: Workflow cancellations at consistent line numbers
@@ -1117,7 +1117,7 @@ pytest -q --disable-warnings  # Quiet, only failures
 
 #### 4. Pre-Commit Hook Performance
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: All projects using pre-commit framework
 
 **Design Principle**: Total hook time must be <3 seconds
@@ -1153,7 +1153,7 @@ pytest -q --disable-warnings  # Quiet, only failures
 
 #### 5. Test Suite Patience and Parallel Execution
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: All projects with 500+ tests
 
 **The Psychology Problem**: Developer impatience vs. test suite reality
@@ -1207,7 +1207,7 @@ Reality: Only 8% of suite executed, 92% untested
 
 #### 6. Warning Suppression Strategy
 
-**Criticality**: ⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐
 **Applicability**: All Python projects with CI
 
 **The Problem**: Deprecation warnings create massive log output
@@ -1263,7 +1263,7 @@ export PYTHONWARNINGS="ignore"
 
 #### 7. Rate Limiting Safety Architecture
 
-**Criticality**: ⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐
 **Applicability**: Any automation calling GitHub API
 
 **GitHub's Limits**:
@@ -1331,7 +1331,7 @@ if ($attempt -gt 10) {
 
 #### 8. Project Type Taxonomy
 
-**Criticality**: ⭐⭐⭐⭐⭐  
+**Criticality**: ⭐⭐⭐⭐⭐
 **Applicability**: Universal (all GitHub projects)
 
 **The Critical Mistake**: One-size-fits-all workflows
@@ -1355,7 +1355,7 @@ if ($attempt -gt 10) {
 3. **Cost optimization**: Evaluate macOS necessity (10x cost)
 4. **Maintenance burden**: More complex workflows = higher ongoing maintenance
 
-**Advanced Memory MCP Position**: 
+**Advanced Memory MCP Position**:
 - Category: Complex MCP with Database
 - Monthly cost: FREE (1,240 minutes within 2,000 limit)
 - Optimization opportunity: Implement caching (projected 50% reduction → 620 minutes)
@@ -1390,8 +1390,8 @@ publish-test-pypi:
 - Test installation in clean environments
 - Catch distribution issues early
 
-**Effort**: 2 hours  
-**Risk**: Low  
+**Effort**: 2 hours
+**Risk**: Low
 **Priority**: High
 
 ---
@@ -1423,8 +1423,8 @@ publish-test-pypi:
 - Average (80% hit rate): 27 seconds (77.5% reduction)
 - **Total CI time**: 9 minutes → 5 minutes
 
-**Effort**: 1 hour  
-**Risk**: Low  
+**Effort**: 1 hour
+**Risk**: Low
 **Priority**: High
 
 ---
@@ -1469,8 +1469,8 @@ pytest  # 4 minutes (all tests)
 - Development cycle: 4 minutes → 15 seconds (16x speedup)
 - Developer satisfaction: Significant improvement
 
-**Effort**: 8 hours (mark all tests)  
-**Risk**: Medium (test categorization mistakes)  
+**Effort**: 8 hours (mark all tests)
+**Risk**: Medium (test categorization mistakes)
 **Priority**: Medium
 
 ---
@@ -1512,8 +1512,8 @@ GitHub Pages (Static Site)
 
 **Cost**: $0 (GitHub Pages free for public repos)
 
-**Effort**: 20 hours  
-**Risk**: Medium (maintenance burden)  
+**Effort**: 20 hours
+**Risk**: Medium (maintenance burden)
 **Priority**: Low (current JSON artifacts sufficient)
 
 ---
@@ -1553,8 +1553,8 @@ jobs:
 - Prioritize fixes based on flake frequency
 - Improve CI reliability
 
-**Effort**: 12 hours  
-**Risk**: Low  
+**Effort**: 12 hours
+**Risk**: Low
 **Priority**: Medium
 
 ---
@@ -1589,8 +1589,8 @@ def test_search_performance():
 - Block merge if performance regression detected
 - Generate performance trend reports
 
-**Effort**: 30 hours  
-**Risk**: Medium (false positives possible)  
+**Effort**: 30 hours
+**Risk**: Medium (false positives possible)
 **Priority**: Low (premature optimization at current stage)
 
 ---
@@ -1634,8 +1634,8 @@ updates:
 - Test suite must be comprehensive
 - Requires high CI reliability
 
-**Effort**: 4 hours initial setup, 2 hours/month monitoring  
-**Risk**: Medium (breaking changes)  
+**Effort**: 4 hours initial setup, 2 hours/month monitoring
+**Risk**: Medium (breaking changes)
 **Priority**: High (security implications)
 
 ---
@@ -1715,7 +1715,7 @@ updates:
 
 **Analysis**: Advanced Memory's documentation volume exceeds top 10% of Python projects.
 
-**Competitive Advantage**: 
+**Competitive Advantage**:
 - Best-in-class for MCP projects
 - Exceeds typical open-source documentation
 - Comparable to enterprise-level documentation
@@ -1734,7 +1734,7 @@ updates:
 
 **Issue**: PowerShell scripts not portable to Linux/macOS
 
-**Impact**: 
+**Impact**:
 - Linux/macOS developers cannot use automation
 - Reduces contributor accessibility
 - Creates platform fragmentation
@@ -1785,7 +1785,7 @@ pytest --random-order --random-order-seed=different_seed
 
 **Current State**: Beta tags created but not published anywhere
 
-**Impact**: 
+**Impact**:
 - Cannot test installation from PyPI
 - Cannot verify dependency resolution
 - Cannot test package metadata
@@ -1802,7 +1802,7 @@ pytest --random-order --random-order-seed=different_seed
 
 **Issue**: Every CI run reinstalls all dependencies
 
-**Current Impact**: 
+**Current Impact**:
 - 8 minutes wasted per CI run
 - 10 runs/day × 8 min = 80 min/day
 - 2,400 minutes/month wasted
@@ -1845,7 +1845,7 @@ pytest --random-order --random-order-seed=different_seed
 
 **Issue**: `pre-push-check.ps1` only validates Python 3.11
 
-**Risk**: 
+**Risk**:
 - Python 3.12-specific issues not caught locally
 - Discovered in CI (slow feedback)
 
@@ -2071,9 +2071,9 @@ calculate_monthly_cost(2, 10)
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 17, 2025  
-**Maintainers**: Advanced Memory MCP Team  
+**Document Version**: 1.0
+**Last Updated**: October 17, 2025
+**Maintainers**: Advanced Memory MCP Team
 **Review Cycle**: Quarterly
 
 **Change Log**:

@@ -68,34 +68,34 @@ window.$docsify = {
   pdfEmbed: {
     // Enable/disable the plugin
     enabled: true,
-    
+
     // PDF.js worker path (relative or absolute)
     workerSrc: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js',
-    
+
     // Default scale: 1.5,
-    
+
     // Show download button
     showDownloadButton: true,
-    
+
     // Show print button
     showPrintButton: true,
-    
+
     // Show fullscreen button
     showFullscreenButton: true,
-    
+
     // Enable text selection
     enableTextSelection: true,
-    
+
     // Enable hand tool (pan/scroll)
     enableHandTool: true,
-    
+
     // Enable search
     enableSearch: true,
-    
+
     // Enable presentation modenablePresentationMode: false,
-    
+
     // Custom CSS className: 'pdf-embed',
-    
+
     // Custom button text
     buttons: {
       download: 'Download',
@@ -107,23 +107,23 @@ window.$docsify = {
       search: 'Search',
       presentation: 'Presentation Mode'
     },
-    
+
     // Custom styles: {
       container: 'border: 1px solid #eaecef; border-radius: 4px;',
       toolbar: 'background: #f6f8fa; padding: 8px;',
       button: 'background: none; border: none; cursor: pointer;',
       page: 'margin: 10px auto; box-shadow: 0 10px rgba(0,0,0,0.1);'
     },
-    
+
     // Callbacks
     onLoad: function(pdf) {
       console.log('PDF loaded', pdf);
     },
-    
+
     onError: function(error) {
       console.error('PDF error', error);
     },
-    
+
     onPageChange: function(pageNumber) {
       console.log('Page changed to', pageNumber);
     }
@@ -153,7 +153,7 @@ window.$docsify = {
     // Disable default controlshowDownloadButton: false,
     showPrintButton: false,
     showFullscreenButton: false,
-    
+
     // Add custom controls
     onLoad: function(pdf) {
       const container = document.querySelector('.pdf-embed-container');
@@ -164,12 +164,12 @@ window.$docsify = {
         <button class="custom-next">Next</button>
       `;
       container.prepend(customControls);
-      
+
       // Add event listeners
       customControls.querySelector('.custom-prev').addEventListener('click', () => {
         // Previous page logic
       });
-      
+
       customControls.querySelector('.custom-next').addEventListener('click', () => {
         // Next page logic
       });

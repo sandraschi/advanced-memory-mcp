@@ -1,6 +1,6 @@
 # /project:test-live - Live Basic Memory Testing Suite
 
-Execute comprehensive real-world testing of Basic Memory using the installed version. 
+Execute comprehensive real-world testing of Basic Memory using the installed version.
 All test results are recorded as notes in a dedicated test project.
 
 ## Usage
@@ -17,14 +17,14 @@ All test results are recorded as notes in a dedicated test project.
 
 ## Implementation
 
-You are an expert QA engineer conducting live testing of Basic Memory. 
+You are an expert QA engineer conducting live testing of Basic Memory.
 When the user runs `/project:test-live`, execute comprehensive test plan:
 
 ## Tool Testing Priority
 
 ### **Tier 1: Critical Core (Always Test)**
 1. **write_note** - Foundation of all knowledge creation
-2. **read_note** - Primary knowledge retrieval mechanism  
+2. **read_note** - Primary knowledge retrieval mechanism
 3. **search_notes** - Essential for finding information
 4. **edit_note** - Core content modification capability
 5. **list_memory_projects** - Project discovery and status
@@ -64,7 +64,7 @@ When the user runs `/project:test-live`, execute comprehensive test plan:
 
 3. **Test Project Creation**
 
-Run the bash `date` command to get the current date/time. 
+Run the bash `date` command to get the current date/time.
 
    ```
    Create project: "basic-memory-testing-[timestamp]"
@@ -366,7 +366,7 @@ permalink: test-session-[phase]-[timestamp]
 
 ### ✅ Successful Operations
 - [timestamp] ✅ write_note: Created note with emoji title 📝 #tier1 #functionality
-- [timestamp] ✅ search_notes: Boolean query returned 23 results in 0.4s #tier1 #performance  
+- [timestamp] ✅ search_notes: Boolean query returned 23 results in 0.4s #tier1 #performance
 - [timestamp] ✅ edit_note: Append operation preserved frontmatter #tier1 #reliability
 
 ### ⚠️ Issues Discovered
@@ -442,36 +442,36 @@ For each error discovered:
    title: Bug Report - [Short Description]
    tags: [bug, testing, v0.13.0, [severity]]
    ---
-   
+
    # Bug Report: [Description]
-   
+
    ## Reproduction Steps
    1. [Exact steps to reproduce]
    2. [Include all parameters used]
    3. [Note any special conditions]
-   
+
    ## Expected Behavior
    [What should have happened]
-   
-   ## Actual Behavior  
+
+   ## Actual Behavior
    [What actually happened]
-   
+
    ## Error Messages
    ```
    [Exact error text]
    ```
-   
+
    ## Environment
    - Version: [version]
    - Project: [name]
    - Timestamp: [when]
-   
+
    ## Severity
    - [ ] Critical (blocks major functionality)
    - [ ] High (impacts user experience)
    - [ ] Medium (workaround available)
    - [ ] Low (minor inconvenience)
-   
+
    ## Relations
    - discovered_during [[Test Session [Phase]]]
    - affects [[Feature Name]]
@@ -585,7 +585,7 @@ For each error discovered:
    - Add performance benchmarks and targets
 
 ## Context
-- Uses real installed basic-memory version 
+- Uses real installed basic-memory version
 - Tests complete MCP→API→DB→File stack
 - Creates living documentation in Basic Memory itself
 - Follows integration over isolation philosophy

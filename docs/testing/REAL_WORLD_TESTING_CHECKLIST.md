@@ -382,7 +382,7 @@ adn_search("joplin", query="test", source_path="/path/to/export/")
 ```markdown
 ### Obsidian Import
 
-**Prerequisites**: 
+**Prerequisites**:
 - Obsidian vault (https://obsidian.md/)
 - Vault exported or accessible locally
 
@@ -414,8 +414,7 @@ adn_search("joplin", query="test", source_path="/path/to/export/")
 
 ---
 
-**Last Updated**: November 11, 2025  
+**Last Updated**: November 11, 2025
 **Next Review**: Before v1.0.0 final release
 
 **Maintainer Note**: This is our accountability document. Mark features as tested only after real-world verification. Public repo = public reputation.
-

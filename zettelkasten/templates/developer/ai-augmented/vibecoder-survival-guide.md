@@ -1,8 +1,8 @@
 # The Vibecoder Survival Guide - Building Software with AI (Without Getting Murdered by "Real Devs")
 
-**For**: People who use AI to build software without traditional CS degrees  
-**Reality check**: You're not a "10x developer," you're an AI-augmented builder  
-**Survival skill**: Navigating the cultural minefield of traditional dev culture  
+**For**: People who use AI to build software without traditional CS degrees
+**Reality check**: You're not a "10x developer," you're an AI-augmented builder
+**Survival skill**: Navigating the cultural minefield of traditional dev culture
 **Date**: October 2025
 
 ---
@@ -201,7 +201,7 @@ npm install --save-dev eslint prettier
 npx eslint --init
 echo "Cursor: add prettier and eslint configs with best practices"
 
-# Python project  
+# Python project
 pip install ruff black
 echo "Cursor: add ruff.toml and pyproject.toml configs"
 ```
@@ -554,7 +554,7 @@ if user.email.endswith("@test.com"):
 
 ### Why GitHub Matters for Vibecoders
 
-**Traditional developers**: CS degree, bootcamp, or 10 years experience  
+**Traditional developers**: CS degree, bootcamp, or 10 years experience
 **Vibecoders**: "I built this" is your only credential
 
 **GitHub as resume**:
@@ -803,7 +803,7 @@ jobs:
 
 ### Pitfall 1: No Testing
 
-**The trap**: AI writes code, looks good, you ship it.  
+**The trap**: AI writes code, looks good, you ship it.
 **The reality**: Breaks in production, users angry, you're scrambling.
 
 **Solution**: Always test. AI writes tests, you run them, verify manually.
@@ -812,7 +812,7 @@ jobs:
 
 ### Pitfall 2: Over-Reliance on AI
 
-**The trap**: AI does everything, you understand nothing.  
+**The trap**: AI does everything, you understand nothing.
 **The reality**: When AI is wrong, you can't tell. Subtle bugs ship.
 
 **Solution**: Learn enough to evaluate AI output. Read code, ask "does this make sense?"
@@ -821,7 +821,7 @@ jobs:
 
 ### Pitfall 3: No Version Control
 
-**The trap**: "I'll just save as project_v2, project_v3, project_final, project_final_FINAL"  
+**The trap**: "I'll just save as project_v2, project_v3, project_final, project_final_FINAL"
 **The reality**: Loses changes, can't revert, looks amateur.
 
 **Solution**: Git from day 1. Commit often, push to GitHub.
@@ -830,7 +830,7 @@ jobs:
 
 ### Pitfall 4: Chasing Shiny Tools
 
-**The trap**: "New AI tool dropped! Let me rewrite everything!"  
+**The trap**: "New AI tool dropped! Let me rewrite everything!"
 **The reality**: Never ship, always rewriting.
 
 **Solution**: Pick a stack (Next.js or Django or whatever), stick with it for 6 months.
@@ -839,7 +839,7 @@ jobs:
 
 ### Pitfall 5: Ignoring Fundamentals
 
-**The trap**: "I don't need to learn HTTP, AI handles it."  
+**The trap**: "I don't need to learn HTTP, AI handles it."
 **The reality**: Can't debug basic issues, limited by AI's explanations.
 
 **Solution**: Learn just enough:
@@ -854,7 +854,7 @@ jobs:
 
 ### Pitfall 6: Overpromising
 
-**The trap**: "I can build you Facebook in 2 weeks!"  
+**The trap**: "I can build you Facebook in 2 weeks!"
 **The reality**: Underestimate complexity, miss deadline, lose credibility.
 
 **Solution**: Underpromise, overdeliver. Double your estimate.
@@ -940,7 +940,7 @@ jobs:
 
 ### Month 6: Next Steps
 
-<!-- 
+<!--
 REALITY CHECK: The job/freelance market for AI-augmented developers is unproven.
 Traditional devs with 2+ years experience still preferred by most companies.
 Freelance platforms are saturated. The "6 months to hireable" timeline is optimistic.
@@ -1036,9 +1036,8 @@ That's realistic vibecoding.
 
 ---
 
-*Written for the builders,  
-Who use AI to ship,  
+*Written for the builders,
+Who use AI to ship,
 October 2025*
 
 *P.S. - Traditional devs: I respect your craft. But the tools changed. Adapt or get left behind. (Same applies to me—Cursor will replace itself eventually.)*
-

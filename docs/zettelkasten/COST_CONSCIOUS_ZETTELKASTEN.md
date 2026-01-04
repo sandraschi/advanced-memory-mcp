@@ -25,9 +25,9 @@ But with iterations, refinements, updates, expansions:
 - Google Colab (free with limits)
 - Together.ai (free tier)
 
-**Setup**: 10 minutes  
-**Cost**: $0/month  
-**Quality**: 7/10  
+**Setup**: 10 minutes
+**Cost**: $0/month
+**Quality**: 7/10
 **Speed**: Slow (30-60 sec per note)
 
 ```python
@@ -49,9 +49,9 @@ response = client.text_generation(
 - Llama 3.2 3B (fast, 2GB RAM)
 - Qwen 2.5 7B (better quality, 8GB RAM)
 
-**Setup**: 30 minutes  
-**Cost**: $2/month (electricity)  
-**Quality**: 8/10  
+**Setup**: 30 minutes
+**Cost**: $2/month (electricity)
+**Quality**: 8/10
 **Speed**: Medium (10-20 sec per note)
 
 ```bash
@@ -71,9 +71,9 @@ ollama run llama3.2:3b "Create a comprehensive note about..."
 - Llama 3.1 70B (q4 quantized)
 - Qwen 2.5 72B (q4 quantized)
 
-**Setup**: 1 hour  
-**Cost**: $5/month (electricity)  
-**Quality**: 9/10  
+**Setup**: 1 hour
+**Cost**: $5/month (electricity)
+**Quality**: 9/10
 **Speed**: Fast (5-10 sec per note)
 
 ```bash
@@ -86,9 +86,9 @@ ollama pull llama3.1:70b-q4_K_M  # ~40GB RAM needed
 - Bulk notes: Free FOSS models
 - Critical notes: Claude Sonnet 4
 
-**Setup**: 30 minutes  
-**Cost**: $10-15/month  
-**Quality**: 9/10 average  
+**Setup**: 30 minutes
+**Cost**: $10-15/month
+**Quality**: 9/10 average
 **Speed**: Mixed (depends on split)
 
 **This is the sweet spot for most users!**
@@ -105,10 +105,10 @@ ollama pull llama3.1:70b-q4_K_M  # ~40GB RAM needed
 class HardwareDetector:
     def detect_and_recommend(self) -> dict:
         """Detect hardware, recommend LLM setup"""
-        
+
         gpu = self.detect_gpu()  # NVIDIA/AMD/None
         ram = self.detect_ram()  # GB
-        
+
         if gpu["vram"] == 0:
             return self.recommend_cloud_free()
         elif gpu["vram"] < 6:
@@ -125,15 +125,15 @@ class HardwareDetector:
 class LLMSetupWizard:
     async def run(self):
         """Interactive setup wizard"""
-        
+
         # Detect hardware
         recommendation = HardwareDetector().detect_and_recommend()
-        
+
         console.print(f"✓ Hardware detected: {recommendation['name']}")
         console.print(f"  Recommended: {recommendation['setup']}")
         console.print(f"  Monthly cost: {recommendation['cost']}")
         console.print(f"  Quality: {recommendation['quality']}")
-        
+
         # User choice
         choice = ask_multiple_choice(
             "Which option?",
@@ -143,7 +143,7 @@ class LLMSetupWizard:
                 "Show all options"
             ]
         )
-        
+
         # Execute setup
         if "Claude" in choice:
             await self.setup_claude()
@@ -158,43 +158,43 @@ class LLMSetupWizard:
 ```python
 class CostAwareGenerator:
     """Generate content within budget"""
-    
+
     def __init__(self, monthly_budget: float = 10.0):
         self.budget = monthly_budget
         self.spent = 0.0
-    
+
     async def generate_starter_content(
         self,
         note_count: int = 50
     ) -> list[Note]:
         """Generate with cost awareness"""
-        
+
         if self.provider == "ollama":
             # Free! Go wild
             return await self.generate_all(note_count)
-        
+
         elif self.provider == "claude":
             # Paid. Use hybrid strategy
             return await self.generate_hybrid(note_count)
-    
+
     async def generate_hybrid(self, note_count: int) -> list[Note]:
         """Hybrid: 80% free, 20% paid"""
-        
+
         # Critical notes (20%): Claude
         critical = int(note_count * 0.2)
         critical_notes = await self.generate_with_claude(critical)
-        
+
         # Bulk notes (80%): Free FOSS
         bulk = note_count - critical
         bulk_notes = await self.generate_with_foss(bulk)
-        
+
         # Cost report
         cost = critical * 0.016  # ~$0.016 per Claude note
         console.print(f"✓ Generated {note_count} notes")
         console.print(f"  Critical (Claude): {critical} notes = ${cost:.2f}")
         console.print(f"  Bulk (FOSS): {bulk} notes = $0.00")
         console.print(f"  Total cost: ${cost:.2f}")
-        
+
         return critical_notes + bulk_notes
 ```
 
@@ -239,10 +239,10 @@ class CostAwareGenerator:
 ```python
 class BudgetProtection:
     """Prevent overspending"""
-    
+
     def check_before_generation(self, estimated_cost: float) -> bool:
         """Check if we can afford this"""
-        
+
         if self.spent + estimated_cost > self.budget:
             console.print("⚠️  Budget exceeded!")
             console.print(f"  Spent: ${self.spent:.2f}")
@@ -252,7 +252,7 @@ class BudgetProtection:
             console.print("  2. Wait until next month")
             console.print("  3. Increase budget")
             return False
-        
+
         return True
 ```
 
@@ -271,7 +271,7 @@ class BudgetProtection:
 
 ---
 
-*Practical, affordable, sustainable*  
+*Practical, affordable, sustainable*
 *Quality doesn't have to cost a fortune*
 
 💰 **STAY SOLVENT!** 💰

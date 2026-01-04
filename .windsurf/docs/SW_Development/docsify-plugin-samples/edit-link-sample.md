@@ -12,13 +12,13 @@ Thedit Link plugin adds an "Edithis page" link to your documentation, allowing u
 window.$docsify = {
   repo: 'username/repo', // GitHub repository
   // ORepo: 'https://github.com/username/repo', // Full URL
-  
+
   // Customize the link text
   editLinkText: 'Edithis page',
-  
+
   // Customize the link title (tooltip)
   editLinkTitle: 'Edithis page on GitHub',
-  
+
   // Enable/disable thedit link
   editLink: true
 };
@@ -48,12 +48,12 @@ window.$docsify = {
     text: 'Improve this page',
     noEmoji: false,
     position: 'top', // 'top' or 'bottom'
-    
+
     // Custom function to generate thedit URL
     formatLink: function (repo, path) {
       // repo: The repository URL
       // path: The file path relative to the docs root
-      
+
       // Example: Add a custom query parametereturn repo + '/edit/main/docs/' + path + '?ref=docs';
     }
   }

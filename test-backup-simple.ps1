@@ -61,27 +61,27 @@ Write-Host "   Test ZIP path: $testZipPath" -ForegroundColor Gray
 try {
     $repoRoot = (Get-Item .).FullName
     Write-Host "   Repository root: $repoRoot" -ForegroundColor Gray
-    
+
     # Get a few files to test with
     $testFiles = Get-ChildItem -File -ErrorAction Stop | Select-Object -First 5
-    
+
     if ($testFiles.Count -eq 0) {
         Write-Host "   [ERROR] No files found in repository root!" -ForegroundColor Red
         exit 1
     }
-    
+
     Write-Host "   Testing with $($testFiles.Count) files..." -ForegroundColor Gray
-    
+
     $zip = [System.IO.Compression.ZipFile]::Open($testZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
-    
+
     foreach ($file in $testFiles) {
         $relativePath = $file.Name
         Write-Host "      Adding: $relativePath" -ForegroundColor DarkGray
         [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $relativePath, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
     }
-    
+
     $zip.Dispose()
-    
+
     if (Test-Path $testZipPath) {
         $size = (Get-Item $testZipPath).Length
         Write-Host "   [OK] Test ZIP created: $size bytes" -ForegroundColor Green

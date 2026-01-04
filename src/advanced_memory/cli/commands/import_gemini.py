@@ -60,7 +60,9 @@ def import_gemini(
         config = get_project_config()
         # Process the file
         base_path = config.home / folder
-        console.print(f"\nImporting Gemini chats from {conversations_json}...writing to {base_path}")
+        console.print(
+            f"\nImporting Gemini chats from {conversations_json}...writing to {base_path}"
+        )
 
         # Create importer and run import
         importer = GeminiImporter(config.home, markdown_processor)
@@ -88,4 +90,3 @@ def import_gemini(
         logger.error("Import failed")
         typer.echo(f"Error during import: {e}", err=True)
         raise typer.Exit(1) from e
-

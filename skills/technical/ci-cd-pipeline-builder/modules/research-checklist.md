@@ -3,26 +3,26 @@
 Run this checklist monthly or when major CI/CD platform releases drop.
 
 ## 1. Source Refresh
-- [ ] DORA Accelerate research updates (https://dora.dev/research/).  
-- [ ] SLSA specification changes (https://slsa.dev/spec/).  
-- [ ] GitHub Actions, GitLab, Jenkins release notes for pipeline features.  
+- [ ] DORA Accelerate research updates (https://dora.dev/research/).
+- [ ] SLSA specification changes (https://slsa.dev/spec/).
+- [ ] GitHub Actions, GitLab, Jenkins release notes for pipeline features.
 - [ ] Progressive delivery tooling updates (LaunchDarkly, Harness, Argo Rollouts).
 
 ## 2. Platform Validation
-- [ ] Smoke-test reusable workflow templates; confirm OIDC auth still succeeds.  
-- [ ] Validate autoscaling runners capacity; ensure build queue time < 2 minutes.  
-- [ ] Re-run reference pipeline across dev/staging/prod environments; confirm parity.  
+- [ ] Smoke-test reusable workflow templates; confirm OIDC auth still succeeds.
+- [ ] Validate autoscaling runners capacity; ensure build queue time < 2 minutes.
+- [ ] Re-run reference pipeline across dev/staging/prod environments; confirm parity.
 - [ ] Audit artifact retention policies and storage costs.
 
 ## 3. Security & Compliance
-- [ ] Review OWASP CI/CD Security Top 10 for new recommendations.  
-- [ ] Regenerate SBOM + provenance for reference service; verify signatures.  
-- [ ] Audit secrets inventory, rotate stale tokens, and confirm vault policies.  
+- [ ] Review OWASP CI/CD Security Top 10 for new recommendations.
+- [ ] Regenerate SBOM + provenance for reference service; verify signatures.
+- [ ] Audit secrets inventory, rotate stale tokens, and confirm vault policies.
 - [ ] Run SAST/SCA/DAST on sample service and attach reports.
 
 ## 4. Documentation & Metrics
-- [ ] Update pipeline runbooks, architecture diagrams, and escalation contacts.  
-- [ ] Export DORA metrics and compare against OKRs.  
+- [ ] Update pipeline runbooks, architecture diagrams, and escalation contacts.
+- [ ] Export DORA metrics and compare against OKRs.
 - [ ] Refresh screenshots/snippets embedded in developer portal docs.
 
 ## 5. Source Log

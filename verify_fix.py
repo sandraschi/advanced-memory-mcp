@@ -1,7 +1,4 @@
-import sys
-import os
 from io import StringIO
-import advanced_memory.mcp.server as server_module
 
 
 def test_stdout_wrapper():

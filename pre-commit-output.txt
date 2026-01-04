@@ -1,0 +1,558 @@
+Detect secrets...........................................................Failed
+- hook id: detect-secrets
+- duration: 13.95s
+- exit code: 1
+
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Basic Auth Credentials
+Location:    docs\reference\OFFICIAL_NPX_MCP_SERVERS.md:25
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\business-japanese-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\discrete-mathematics-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\ethics-moral-philosophy.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\mathematical-logic-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\storytelling-narrative-coach.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    full-test-results.txt:165
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\calculus-tutor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\complex-analysis-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\continental-philosophy-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\graphic-design-fundamentals.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\numerology-interpretation.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\real-analysis-fundamentals.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\content-strategy-planner.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\feng-shui-space-harmony.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\italian-cooking-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\jlpt-preparation-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\logic-argumentation-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\polyglot-learning-strategies.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\python-debugging-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\seance-spiritualism-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\ui-ux-design-consultant.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\alchemy-hermetic-traditions.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\docker-kubernetes-pro.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\linguistic-anthropology-guide.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\abstract-algebra-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\medieval-scholasticism-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\tarot-reading-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\technical-writing-editor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\topology-geometry-guide.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\photography-composition-guide.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\comparative-religion-scholar.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\etymology-word-origins.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\french-language-coach.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\matrix-theory-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\vegetarian-vegan-chef.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\astrology-interpretation-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\chemistry-lab-techniques.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\fourier-analysis-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\statistics-probability-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\testing-strategy-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    src\advanced_memory\alembic\versions\6a8b2c3d4e5f_add_skills_table.py:15
+
+Secret Type: Hex High Entropy String
+Location:    src\advanced_memory\alembic\versions\6a8b2c3d4e5f_add_skills_table.py:16
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    mcpb\src\advanced_memory\alembic\versions\6a8b2c3d4e5f_add_skills_table.py:15
+
+Secret Type: Hex High Entropy String
+Location:    mcpb\src\advanced_memory\alembic\versions\6a8b2c3d4e5f_add_skills_table.py:16
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\french-pastry-master.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\git-workflow-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\number-theory-explorer.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\spanish-cooking.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\video-editing-advisor.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\analytic-philosophy-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\ecology-evolution-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\materials-science-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\oceanography-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\presentation-design-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\runes-divination-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\ancient-greek-philosophy.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\geology-earth-science.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\translation-techniques-specialist.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\biology-comprehensive-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\i-ching-oracle-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\linear-algebra-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\nominalism-realism-debate.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\optimization-theory-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\spanish-language-tutor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\wine-sommelier-assistant.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\advanced-memory-skill-creator.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\copywriting-persuasion-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\crystal-healing-traditions.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\game-theory-strategist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\japanese-grammar-master.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\security-best-practices.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\ci-cd-pipeline-builder.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\climate-science-explainer.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\cocktail-mixology-master.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\eastern-philosophy-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\mathematical-proofs-mentor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\palmistry-chiromancy-guide.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\performance-tuning-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\bbq-smoking-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\buddhist-philosophy-teacher.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\microservices-architect.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\numerical-methods-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\phenomenology-existentialism.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\api-design-architect.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\biblical-exegesis-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\podcast-production-guide.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\probability-theory-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\asian-fusion-chef.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\bread-baking-artisan.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\herbalism-folk-magic.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\kanji-etymology-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\neuroscience-fundamentals.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\refactoring-specialist.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\mexican-cuisine-specialist.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\social-media-strategy-advisor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    test-results.txt:171
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\applied-mathematics-engineering.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\astronomy-astrophysics-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\code-review-assistant.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\dream-interpretation-analyst.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\genetics-genomics-expert.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\mcp-server-developer.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\mythology-archetype-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\coffee-espresso-expert.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\chakra-energy-systems.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\database-optimization-guru.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\differential-equations-solver.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\meal-prep-efficiency-guru.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\music-production-basics.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\physics-fundamentals-tutor.manifest.json:6
+
+Secret Type: Hex High Entropy String
+Location:    skill-zips\quantum-mechanics-explainer.manifest.json:6
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository
+

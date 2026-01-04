@@ -610,4 +610,3 @@ Typora/
 Typora offers excellent markdown editing at a reasonable $15 one-time price, but its automation capabilities are limited despite the Electron architecture. The lack of official API endpoints means GUI automation (WinAuto) remains the most practical approach for programmatic export. For fully automated workflows, Pandoc provides a more reliable FOSS alternative.
 
 The optimal strategy combines both: Typora for quality manual exports and Pandoc for automated batch processing, with WinAuto bridging the gap where needed.
-

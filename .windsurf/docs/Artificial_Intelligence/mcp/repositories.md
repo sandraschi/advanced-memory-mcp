@@ -44,11 +44,11 @@
 - **Usage**:
   ```javascript
   import { MCPClient } from '@mcplatform/mcp-js';
-  
+
   const client = new MCPClient({
     apiKey: 'your-api-key',
   });
-  
+
   const response = await client.generate({
     model: 'gpt-4',
     prompt: 'Hello, world!',

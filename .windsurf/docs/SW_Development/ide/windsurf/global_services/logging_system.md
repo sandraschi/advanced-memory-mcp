@@ -50,7 +50,7 @@ Example:
    ```python
    # Good
    logger.info("User logged in", extra={"user_id": 123, "ip": "192.168.1.1"})
-   
+
    # Avoid
    logger.info(f"User 123 logged in from 192.168.1.1")
    ```

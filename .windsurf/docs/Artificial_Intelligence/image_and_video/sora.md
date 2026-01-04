@@ -1,4 +1,4 @@
-﻿# Sora: Text-to-Video Generation by OpenAI
+# Sora: Text-to-Video Generation by OpenAI
 
 ## Introduction
 Sora is OpenAI's advanced text-to-video generation model that creates realistic and imaginative video content from text prompts. This document provides an in-depth look at Sora's capabilities, technical aspects, and potential applications.

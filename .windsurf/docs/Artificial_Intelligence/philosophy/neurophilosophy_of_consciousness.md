@@ -1,4 +1,4 @@
-﻿# 🧠 The Neurophilosophy of Consciousness: From Neurons to the Singularity
+# 🧠 The Neurophilosophy of Consciousness: From Neurons to the Singularity
 
 ## Abstract paper explores the philosophical implications of consciousness across biological and artificial substrates. We examine traditional theories of mind, challenge anthropocentric notions of sentience, and speculate on future trajectories of intelligence. The discussion spans from quantum consciousness theories to the ethical implications of digital minds in neutron star computers, proposing a framework for understanding consciousness that transcends biological chauvinism.
 

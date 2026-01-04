@@ -1,4 +1,4 @@
-﻿# A Comprehensive History of Artificial Intelligence
+# A Comprehensive History of Artificial Intelligence
 
 ## The Dawn of AI: Theoretical Foundations (1940s-1950s)
 

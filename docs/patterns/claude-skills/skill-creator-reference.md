@@ -1,7 +1,7 @@
 # Anthropic Skill Creator Reference (Gold Standard)
 
-**Updated:** 2025-11-08  
-**Source Repo:** `D:/Dev/repos/external/anthropic-skills/skill-creator/` (read-only clone)  
+**Updated:** 2025-11-08
+**Source Repo:** `D:/Dev/repos/external/anthropic-skills/skill-creator/` (read-only clone)
 **Purpose:** Canonical blueprint for Advanced Memory’s skill-creator facility
 
 ---
@@ -23,27 +23,27 @@ We mirror these ideas inside Advanced Memory MCP so users—and Claude—can gen
 
 Key sections:
 
-1. **Metadata (YAML frontmatter)**  
-   - `name`: hyphen-case skill identifier  
-   - `description`: third-person explanation of capabilities & activation conditions  
+1. **Metadata (YAML frontmatter)**
+   - `name`: hyphen-case skill identifier
+   - `description`: third-person explanation of capabilities & activation conditions
    - Optional `license`, etc.
 
-2. **Skill Body**  
-   - `# Skill Creator` heading  
-   - “About Skills” section describing anatomy (SKILL.md plus optional scripts / references / assets)  
-   - “Progressive Disclosure” principle (metadata → SKILL.md → bundled resources)  
+2. **Skill Body**
+   - `# Skill Creator` heading
+   - “About Skills” section describing anatomy (SKILL.md plus optional scripts / references / assets)
+   - “Progressive Disclosure” principle (metadata → SKILL.md → bundled resources)
    - Six-step “Skill Creation Process”:
-     1. Understanding concrete usage examples  
-     2. Planning reusable contents  
-     3. Initializing via `init_skill.py`  
-     4. Editing (focus on imperative voice, references to resources)  
-     5. Packaging via `package_skill.py`  
+     1. Understanding concrete usage examples
+     2. Planning reusable contents
+     3. Initializing via `init_skill.py`
+     4. Editing (focus on imperative voice, references to resources)
+     5. Packaging via `package_skill.py`
      6. Iteration
 
-3. **Guidance specifics**  
-   - When to include scripts, references, assets  
-   - Examples from other skills  
-   - Stylistic rules (“Write for another Claude”, imperative tone)  
+3. **Guidance specifics**
+   - When to include scripts, references, assets
+   - Examples from other skills
+   - Stylistic rules (“Write for another Claude”, imperative tone)
    - Packaging/validation instructions
 
 ---
@@ -80,45 +80,45 @@ Notable patterns:
 python scripts/package_skill.py /path/to/skill [output-dir]
 ```
 
-1. Resolve paths; verify folder/`SKILL.md` exists.  
+1. Resolve paths; verify folder/`SKILL.md` exists.
 2. Run `quick_validate.validate_skill(skill_path)`:
    - Ensures frontmatter exists.
    - Checks required fields (`name`, `description`).
    - Enforces hyphen-case naming rules.
-   - Guards against angle brackets in description (prevents HTML injection).  
+   - Guards against angle brackets in description (prevents HTML injection).
 3. If validation passes, create ZIP containing entire skill using relative paths.
 
 ### quick_validate Highlights
 
-- Minimal dependencies—pure Python with regex parsing.  
-- Future extension hooks: check module files, required directories, etc.  
+- Minimal dependencies—pure Python with regex parsing.
+- Future extension hooks: check module files, required directories, etc.
 - Returns tuple `(valid: bool, message: str)` – ready for direct CLI messaging.
 
 ---
 
 ## 5. Key Patterns to Adopt in Advanced Memory MCP
 
-1. **Three-Level Loading**  
-   - Metadata: short, precise description (100 words max).  
-   - SKILL.md: <= 5k words, focus on procedural knowledge.  
+1. **Three-Level Loading**
+   - Metadata: short, precise description (100 words max).
+   - SKILL.md: <= 5k words, focus on procedural knowledge.
    - Bundled resources: load or execute only when needed.
 
-2. **Scaffolding Tools**  
-   - Provide CLI (and future MCP tool) to scaffold new skills following the same template.  
+2. **Scaffolding Tools**
+   - Provide CLI (and future MCP tool) to scaffold new skills following the same template.
    - Generate `_toc.md`, modular `modules/` (Advanced Memory extension) + placeholder resources.
 
-3. **Validation Pipeline**  
-   - Pre-package validation BEFORE distribution.  
-   - Enforce naming & description quality.  
+3. **Validation Pipeline**
+   - Pre-package validation BEFORE distribution.
+   - Enforce naming & description quality.
    - Extend validators with our modular requirements (known gaps, research checklist).
 
-4. **Imperative Style & Cross-References**  
-   - Write instructions for “another Claude”.  
-   - Reference scripts/assets by path.  
+4. **Imperative Style & Cross-References**
+   - Write instructions for “another Claude”.
+   - Reference scripts/assets by path.
    - Provide concrete examples and decision trees.
 
-5. **Iteration & Research**  
-   - Encourage recurring validation (last_validated metadata).  
+5. **Iteration & Research**
+   - Encourage recurring validation (last_validated metadata).
    - Document known gaps and research tasks (Advanced Memory modules).
 
 ---
@@ -157,4 +157,3 @@ python scripts/package_skill.py /path/to/skill [output-dir]
 - Publish usage guide in Advanced Memory’s user documentation.
 
 This reference stays updated as Anthropic evolves their skill tooling; revisit whenever the upstream repo changes.
-

@@ -34,4 +34,3 @@ For manyears, v1.1 was the standard. However, as the language grew organically, 
 **This guide will focus exclusively on AutoHotkey v2.0.** When searching for help online, it is crucial to look for v2-specific examples and tutorials to avoid confusion.
 
 Now that younderstand the background, let's move on to [Getting Started](/automation_tools/autohotkey/./02_getting_started.md) with installing AutoHotkey and writing your first script.
-

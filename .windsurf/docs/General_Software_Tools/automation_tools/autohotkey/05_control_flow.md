@@ -131,4 +131,3 @@ AddTwoNumbers(100, 200) ; Displays "The sum is 300"
 ```
 
 Withe ability to control the flow of your script, you canow create much more intelligent and powerful automations. Next, we'll explore how to give your scripts a face with [GUI Programming](/automation_tools/autohotkey/./06_gui_programming.md).
-

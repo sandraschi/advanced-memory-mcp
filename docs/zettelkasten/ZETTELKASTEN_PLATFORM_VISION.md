@@ -36,7 +36,7 @@ questions:
       - Healthcare Professional
       - Creative Artist
       - Other
-    
+
   - id: specialization
     type: dependent  # Shows based on profession
     question: "What is your specialization?"
@@ -75,7 +75,7 @@ questions:
         - Cybersecurity
         - Cloud Computing
         - IoT/Hardware
-      
+
       Creative:
         - Writing & Literature
         - Visual Arts
@@ -83,7 +83,7 @@ questions:
         - Photography
         - Video Production
         - Graphic Design
-      
+
       Lifestyle:
         - Cooking & Culinary Arts
         - Fitness & Health
@@ -91,7 +91,7 @@ questions:
         - Fashion & Style
         - Home & Garden
         - Personal Finance
-      
+
       Intellectual:
         - Philosophy
         - Psychology
@@ -100,7 +100,7 @@ questions:
         - Mathematics
         - Economics
         - Politics
-      
+
       Practical:
         - Productivity & Organization
         - Project Management
@@ -120,7 +120,7 @@ questions:
       - Intermediate (Have some experience)
       - Advanced (Experienced practitioner)
       - Expert (Deep expertise, could teach)
-  
+
   - id: experience_specific
     type: dynamic_scales  # For each selected interest
     question: "Rate your experience in each interest area:"
@@ -141,12 +141,12 @@ questions:
       - Deep theoretical understanding
       - Practical how-to guides
       - Case studies and real examples
-  
+
   - id: content_depth
     type: slider
     question: "Content depth preference"
     scale: [Brief summaries, Balanced, Comprehensive deep-dives]
-  
+
   - id: update_frequency
     type: multiple_choice
     question: "How often do you want content updates?"
@@ -168,7 +168,7 @@ questions:
       - Include mainstream views only
       - Exclude controversial topics entirely
       - Let me choose per-topic
-    
+
   - id: content_filters
     type: checkbox_multiple
     question: "Content you prefer to avoid (optional):"
@@ -181,7 +181,7 @@ questions:
       - Sensitive health topics
       - Financial speculation
       - Conspiracy theories
-  
+
   - id: fact_check_level
     type: multiple_choice
     question: "Fact-checking preference:"
@@ -202,7 +202,7 @@ questions:
       - Yes, use open-source LLMs (Llama, Mistral)
       - Yes, but I'll review everything
       - No, manual curation only
-  
+
   - id: ai_use_cases
     type: checkbox_multiple
     question: "How can AI help you?"
@@ -227,19 +227,19 @@ questions:
 
 class ClaudeContentGenerator:
     """Generate high-quality content using Claude"""
-    
+
     async def generate_starter_content(
-        self, 
+        self,
         interests: list[str],
         experience_level: str,
         learning_style: list[str]
     ) -> list[Note]:
         """Generate personalized content using Claude"""
-        
+
         prompt = self._build_generation_prompt(
             interests, experience_level, learning_style
         )
-        
+
         # Use Claude API
         response = await self.claude_client.messages.create(
             model="claude-sonnet-4-20250514",
@@ -249,15 +249,15 @@ class ClaudeContentGenerator:
                 "content": prompt
             }]
         )
-        
+
         # Parse response into notes
         notes = self._parse_response_to_notes(response.content)
-        
+
         # Quality check
         notes = await self._quality_check(notes)
-        
+
         return notes
-    
+
     def _build_generation_prompt(
         self,
         interests: list[str],
@@ -265,7 +265,7 @@ class ClaudeContentGenerator:
         learning_style: list[str]
     ) -> str:
         """Build prompt for Claude"""
-        
+
         return f"""Generate a comprehensive Zettelkasten starter content for:
 
 Interests: {', '.join(interests)}
@@ -320,7 +320,7 @@ Requirements:
 
 class FOSSContentGenerator:
     """Generate content using open-source LLMs"""
-    
+
     def __init__(self):
         # Support multiple open-source LLMs
         self.models = {
@@ -329,23 +329,23 @@ class FOSSContentGenerator:
             "qwen": "Qwen/Qwen2.5-72B-Instruct",
             "deepseek": "deepseek-ai/DeepSeek-V3"
         }
-    
+
     async def generate_starter_content(
         self,
         interests: list[str],
         model: str = "llama3"
     ) -> list[Note]:
         """Generate content using local/FOSS LLM"""
-        
+
         # Use Ollama for local generation
         response = await self.ollama_client.generate(
             model=self.models[model],
             prompt=self._build_prompt(interests),
             stream=False
         )
-        
+
         notes = self._parse_response(response)
-        
+
         return notes
 ```
 
@@ -355,27 +355,27 @@ class FOSSContentGenerator:
 
 class HybridContentGenerator:
     """Combine Claude for quality + FOSS for volume"""
-    
+
     async def generate_starter_content(
         self,
         interests: list[str],
         budget: str = "balanced"
     ) -> list[Note]:
         """Hybrid content generation"""
-        
+
         if budget == "premium":
             # Claude for everything (best quality)
             return await self.claude_generator.generate_starter_content(interests)
-        
+
         elif budget == "free":
             # FOSS for everything (no cost)
             return await self.foss_generator.generate_starter_content(interests)
-        
+
         else:  # "balanced"
             # Claude for critical content, FOSS for bulk
             critical_notes = await self.claude_generator.generate_core_concepts(interests)
             bulk_notes = await self.foss_generator.generate_supplementary_content(interests)
-            
+
             return critical_notes + bulk_notes
 ```
 
@@ -391,10 +391,10 @@ class HybridContentGenerator:
 
 class ContentValidator:
     """Validate content quality"""
-    
+
     async def validate_note(self, note: Note) -> ValidationResult:
         """Comprehensive note validation"""
-        
+
         checks = [
             self.check_length(note),           # Not too short/long
             self.check_structure(note),        # Has required sections
@@ -405,32 +405,32 @@ class ContentValidator:
             self.check_duplicates(note),       # Not duplicate
             self.check_formatting(note),       # Proper markdown
         ]
-        
+
         results = await asyncio.gather(*checks)
-        
+
         return ValidationResult(
             passed=all(r.passed for r in results),
             issues=[r.issue for r in results if not r.passed],
             score=sum(r.score for r in results) / len(results)
         )
-    
+
     async def check_accuracy(self, note: Note) -> CheckResult:
         """Fact-check note content"""
-        
+
         # Extract claims
         claims = self.extract_claims(note.content)
-        
+
         # Check against reliable sources
         for claim in claims:
             sources = await self.find_supporting_sources(claim)
-            
+
             if len(sources) < 2:
                 return CheckResult(
                     passed=False,
                     issue=f"Insufficient sources for claim: {claim}",
                     score=0.5
                 )
-        
+
         return CheckResult(passed=True, score=1.0)
 ```
 
@@ -440,53 +440,53 @@ class ContentValidator:
 
 class SourceVerifier:
     """Verify source credibility"""
-    
+
     # Trusted source tiers
     TIER_1_SOURCES = [
         # Academic & peer-reviewed
         "arxiv.org", "scholar.google.com", "pubmed.ncbi.nlm.nih.gov",
         "ieee.org", "acm.org", "nature.com", "science.org",
-        
+
         # Official documentation
         "python.org", "nodejs.org", "react.dev", "developer.mozilla.org",
-        
+
         # Reputable tech sites
         "stackoverflow.com", "github.com", "wikipedia.org"
     ]
-    
+
     TIER_2_SOURCES = [
         # Quality tech blogs
         "martinfowler.com", "blog.google", "aws.amazon.com/blogs",
-        
+
         # Education platforms
         "coursera.org", "edx.org", "khanacademy.org",
-        
+
         # Reputable news
         "nytimes.com", "reuters.com", "apnews.com"
     ]
-    
+
     BLACKLIST = [
         # Known unreliable sources
         "clickbait-site.com", "spam-content.com",
-        
+
         # Controversial/unverified
         "conspiracy-theory-site.com"
     ]
-    
+
     def verify_source(self, url: str) -> SourceRating:
         """Rate source credibility"""
-        
+
         domain = self.extract_domain(url)
-        
+
         if domain in self.TIER_1_SOURCES:
             return SourceRating(tier=1, credible=True, score=1.0)
-        
+
         elif domain in self.TIER_2_SOURCES:
             return SourceRating(tier=2, credible=True, score=0.8)
-        
+
         elif domain in self.BLACKLIST:
             return SourceRating(tier=0, credible=False, score=0.0)
-        
+
         else:
             # Unknown source - manual review needed
             return SourceRating(tier=3, credible=None, score=0.5)
@@ -498,45 +498,45 @@ class SourceVerifier:
 
 class SlopDetector:
     """Detect low-quality "slop" content"""
-    
+
     SLOP_INDICATORS = [
         # Generic filler phrases
         r"in conclusion",
         r"as we can see",
         r"it is important to note",
         r"at the end of the day",
-        
+
         # Marketing speak
         r"revolutionary",
         r"game-changing",
         r"cutting-edge",
         r"industry-leading",
-        
+
         # AI-generated tells
         r"as an AI language model",
         r"I don't have personal opinions",
         r"delve into",
         r"multifaceted",
-        
+
         # Vague language
         r"some experts say",
         r"studies show",
         r"it has been proven",
         r"everyone knows"
     ]
-    
+
     def detect_slop(self, content: str) -> SlopScore:
         """Calculate slop score (0=quality, 1=slop)"""
-        
+
         indicators_found = []
-        
+
         for pattern in self.SLOP_INDICATORS:
             matches = re.findall(pattern, content, re.IGNORECASE)
             indicators_found.extend(matches)
-        
+
         # Calculate score
         slop_density = len(indicators_found) / (len(content.split()) / 100)
-        
+
         return SlopScore(
             score=min(slop_density, 1.0),
             indicators=indicators_found,
@@ -550,22 +550,22 @@ class SlopDetector:
 
 class CommunityModerator:
     """Community-driven quality control"""
-    
+
     async def submit_for_review(self, note: Note) -> Review:
         """Submit note for community review"""
-        
+
         # Get reviewers (users with high reputation)
         reviewers = await self.get_reviewers(
             expertise=note.tags,
             min_reputation=500
         )
-        
+
         # Request reviews
         reviews = await self.request_reviews(note, reviewers, count=3)
-        
+
         # Aggregate results
         approval_rate = sum(r.approved for r in reviews) / len(reviews)
-        
+
         if approval_rate >= 0.67:  # 2/3 approval
             return Review(approved=True, confidence="high")
         elif approval_rate >= 0.50:
@@ -585,7 +585,7 @@ class CommunityModerator:
 meta_zettelkasten:
   title: "Zettelkasten Ideas Catalog"
   description: "A curated collection of knowledge domains for creating specialized Zettelkastens"
-  
+
   categories:
     - Technology
     - Science
@@ -603,23 +603,23 @@ meta_zettelkasten:
 
 class EducationalLevel(Enum):
     """Standardized educational levels"""
-    
+
     # K-12 Education
     ELEMENTARY = "elementary"        # Ages 6-11, basic concepts
     MIDDLE_SCHOOL = "middle_school"  # Ages 12-14, foundational knowledge
     HIGH_SCHOOL = "high_school"      # Ages 15-18, detailed understanding
-    
+
     # Higher Education
     UNDERGRADUATE = "undergraduate"  # College level, academic depth
     GRADUATE = "graduate"            # Master's level, specialized knowledge
     DOCTORAL = "doctoral"            # PhD level, research-level depth
-    
+
     # Professional/Practical
     BEGINNER = "beginner"            # Just starting, needs basics
     INTERMEDIATE = "intermediate"    # Some experience, building skills
     ADVANCED = "advanced"            # Experienced, refining expertise
     EXPERT = "expert"                # Master level, could teach others
-    
+
     # Specialized
     HOBBYIST = "hobbyist"            # Casual interest, enjoyment focus
     PROFESSIONAL = "professional"    # Career-focused, practical application
@@ -628,7 +628,7 @@ class EducationalLevel(Enum):
 
 class ZettelkastenTemplate:
     """Template for creating specialized Zettelkastens"""
-    
+
     def __init__(
         self,
         domain: str,
@@ -638,10 +638,10 @@ class ZettelkastenTemplate:
         self.domain = domain
         self.educational_level = educational_level
         self.learning_goals = learning_goals
-    
+
     def generate_content_outline(self) -> dict:
         """Generate content structure based on level"""
-        
+
         if self.educational_level == EducationalLevel.BEGINNER:
             return {
                 "fundamentals": 40,  # 40% fundamentals
@@ -649,7 +649,7 @@ class ZettelkastenTemplate:
                 "glossary": 20,      # 20% terminology
                 "resources": 10      # 10% learning resources
             }
-        
+
         elif self.educational_level == EducationalLevel.ADVANCED:
             return {
                 "fundamentals": 10,
@@ -658,7 +658,7 @@ class ZettelkastenTemplate:
                 "research": 20,
                 "cutting_edge": 10
             }
-        
+
         elif self.educational_level == EducationalLevel.EXPERT:
             return {
                 "research_papers": 30,
@@ -693,7 +693,7 @@ programming_templates:
       practice:
         - "10 Beginner Exercises"
         - "5 Mini Projects"
-  
+
   - id: python_intermediate
     title: "Python Intermediate Skills"
     level: intermediate
@@ -712,7 +712,7 @@ programming_templates:
         - "Code Style (PEP 8)"
         - "Testing with pytest"
         - "Virtual Environments"
-  
+
   - id: python_expert
     title: "Python Expert Mastery"
     level: expert
@@ -758,7 +758,7 @@ CURATED_RESOURCES = {
             "tags": ["movies", "tv", "entertainment"]
         }
     },
-    
+
     "technology": {
         "stack_overflow": {
             "url": "https://stackoverflow.com",
@@ -780,7 +780,7 @@ CURATED_RESOURCES = {
             "tags": ["tech", "news", "trends"]
         }
     },
-    
+
     "learning": {
         "khan_academy": {
             "url": "https://www.khanacademy.org",
@@ -796,7 +796,7 @@ CURATED_RESOURCES = {
             "tags": ["courses", "certificates", "university"]
         }
     },
-    
+
     "reference": {
         "wikipedia": {
             "url": "https://en.wikipedia.org",
@@ -813,7 +813,7 @@ CURATED_RESOURCES = {
             "tags": ["archive", "preservation", "history"]
         }
     },
-    
+
     "productivity": {
         "notion": {
             "url": "https://www.notion.so",
@@ -828,7 +828,7 @@ CURATED_RESOURCES = {
             "tags": ["obsidian", "community", "plugins"]
         }
     },
-    
+
     "creative": {
         "behance": {
             "url": "https://www.behance.net",
@@ -850,38 +850,38 @@ CURATED_RESOURCES = {
 ```python
 class ResourceCurator:
     """Curate web resources based on user interests"""
-    
+
     async def curate_resources(
         self,
         interests: list[str],
         level: EducationalLevel
     ) -> list[Resource]:
         """Get curated resources for user"""
-        
+
         resources = []
-        
+
         for interest in interests:
             # Get category resources
             category_resources = self.get_category_resources(interest)
-            
+
             # Filter by educational level
             level_appropriate = self.filter_by_level(category_resources, level)
-            
+
             # Add quality score
             scored_resources = await self.score_resources(level_appropriate)
-            
+
             # Sort by relevance
             sorted_resources = sorted(scored_resources, key=lambda r: r.score, reverse=True)
-            
+
             resources.extend(sorted_resources[:10])  # Top 10 per interest
-        
+
         return resources
-    
+
     async def create_resource_notes(self, resources: list[Resource]) -> list[Note]:
         """Create notes for each resource"""
-        
+
         notes = []
-        
+
         for resource in resources:
             note_content = f"""# {resource.name}
 
@@ -909,16 +909,16 @@ class ResourceCurator:
 ## Tags
 {', '.join(resource.tags)}
 """
-            
+
             note = Note(
                 title=f"Resource: {resource.name}",
                 content=note_content,
                 folder="resources/web",
                 tags=resource.tags + ["resource", "web"]
             )
-            
+
             notes.append(note)
-        
+
         return notes
 ```
 
@@ -934,7 +934,7 @@ class ResourceCurator:
 
 class ControlOversy(Enum):
     """Controversy levels for content"""
-    
+
     SAFE = "safe"                    # No controversy
     MILD = "mild"                    # Minor disagreements
     MODERATE = "moderate"            # Significant debate
@@ -943,7 +943,7 @@ class ControlOversy(Enum):
 
 class ContentClassifier:
     """Classify content by controversy level"""
-    
+
     CONTROVERSIAL_TOPICS = {
         ControversyLevel.HIGH: [
             "politics", "religion", "abortion", "gun_control",
@@ -958,14 +958,14 @@ class ContentClassifier:
             "operating_systems", "framework_preferences"
         ]
     }
-    
+
     def classify_topic(self, topic: str) -> ControversyLevel:
         """Classify topic controversy level"""
-        
+
         for level, topics in self.CONTROVERSIAL_TOPICS.items():
             if any(t in topic.lower() for t in topics):
                 return level
-        
+
         return ControversyLevel.SAFE
 ```
 
@@ -973,38 +973,38 @@ class ContentClassifier:
 ```python
 class BalancedCoverageStrategy:
     """Ensure balanced coverage of controversial topics"""
-    
+
     async def create_balanced_content(
         self,
         topic: str,
         user_preference: str
     ) -> list[Note]:
         """Create balanced content based on user preference"""
-        
+
         controversy_level = self.classifier.classify_topic(topic)
-        
+
         if user_preference == "include_all_perspectives":
             return await self.create_multi_perspective_notes(topic)
-        
+
         elif user_preference == "mainstream_only":
             return await self.create_mainstream_notes(topic)
-        
+
         elif user_preference == "exclude_controversial":
             if controversy_level >= ControversyLevel.MODERATE:
                 return []  # Skip controversial content
             return await self.create_safe_notes(topic)
-        
+
         else:  # "let_me_choose"
             return await self.create_optional_notes(topic, controversy_level)
-    
+
     async def create_multi_perspective_notes(self, topic: str) -> list[Note]:
         """Create notes showing multiple perspectives"""
-        
+
         # Get different viewpoints
         perspectives = await self.research_perspectives(topic)
-        
+
         notes = []
-        
+
         # Overview note
         overview = Note(
             title=f"{topic}: Overview and Perspectives",
@@ -1013,7 +1013,7 @@ class BalancedCoverageStrategy:
             tags=["controversial", "balanced", "overview"]
         )
         notes.append(overview)
-        
+
         # Individual perspective notes
         for perspective in perspectives:
             perspective_note = Note(
@@ -1023,7 +1023,7 @@ class BalancedCoverageStrategy:
                 tags=["controversial", perspective.stance, "perspective"]
             )
             notes.append(perspective_note)
-        
+
         # Comparison note
         comparison = Note(
             title=f"{topic}: Perspective Comparison",
@@ -1032,12 +1032,12 @@ class BalancedCoverageStrategy:
             tags=["controversial", "comparison", "analysis"]
         )
         notes.append(comparison)
-        
+
         return notes
-    
+
     def _create_overview_content(self, topic: str, perspectives: list) -> str:
         """Create balanced overview"""
-        
+
         return f"""# {topic}: A Balanced Overview
 
 ## Introduction

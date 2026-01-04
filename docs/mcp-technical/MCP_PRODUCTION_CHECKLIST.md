@@ -143,19 +143,11 @@ Use this checklist to audit any MCP server repo before marking it production-rea
 
 ---
 
-**Total Items:** 95  
-**Completed:** _____ / 95  
+**Total Items:** 95
+**Completed:** _____ / 95
 **Coverage:** _____%
 
-**Auditor:** _____________  
-**Date:** _____________  
-**Repo:** _____________  
+**Auditor:** _____________
+**Date:** _____________
+**Repo:** _____________
 **Status:** ⬜ In Progress | ⬜ Ready for Review | ⬜ Production Ready
-
-
-
-
-
-
-
-

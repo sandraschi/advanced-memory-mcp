@@ -85,7 +85,7 @@ Generate a comprehensive report:
 
 ✅ PASSED CHECKS:
 ├── Git status clean
-├── On main branch  
+├── On main branch
 ├── All tests passing (744/744)
 ├── Test coverage: 98.2%
 ├── Type checking passed
@@ -112,7 +112,7 @@ Recommended next steps:
 ### Must Pass (Blocking)
 - [ ] All tests pass
 - [ ] No type errors
-- [ ] No linting errors  
+- [ ] No linting errors
 - [ ] Working directory clean
 - [ ] On main branch
 - [ ] CHANGELOG.md has version entry

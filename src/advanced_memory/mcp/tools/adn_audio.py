@@ -31,7 +31,17 @@ _timer_counter = 0
 @mcp.tool
 async def adn_audio(
     operation: Literal[
-        "dictate", "speak", "listen", "wake", "wake_start", "wake_stop", "wake_status"
+        "dictate",
+        "speak",
+        "listen",
+        "wake",
+        "wake_start",
+        "wake_stop",
+        "wake_status",
+        "weather",
+        "timer",
+        "alarm",
+        "music",
     ],
     identifier: str | None = None,
     audio_path: str | None = None,
@@ -42,98 +52,93 @@ async def adn_audio(
     save_audio: bool = False,
     tags: TagType | None = None,
     wake_word: str = "memorizer",
+    location: str | None = None,
+    duration: str | None = None,
+    time_str: str | None = None,
+    command: str | None = None,
+    query: str | None = None,
     project: str | None = None,
 ) -> str:
-    """Voice operations for Advanced Memory knowledge base.
+    """
+    Voice and audio management for Advanced Memory.
 
-    PORTMANTEAU PATTERN: Consolidates 7 audio/voice operations into one tool.
+    This tool provides a unified interface for all audio operations, including
+    transcription, speech synthesis, and media control.
 
-    Audio and voice operations with optional dependencies (Whisper, pyttsx3).
+    ---------------------------------------------------------------------------
+    [RATIONALE]
+    By consolidating audio operations into one tool, we centralize dependencies
+    like faster-whisper, Kokoro, and onnxruntime-gpu. This ensures consistent
+    handling of audio devices and background threads while providing a rich
+    set of features through a single entry point.
 
-    OPERATIONS:
-    - dictate: Speech-to-text note creation (audio file or live recording)
-    - speak: Text-to-speech note reading (play audio or save to file)
-    - listen: Voice command input - listens for voice, transcribes, and executes commands
-    - wake: Continuous wake word listening - monitors for wake word (default: "memorizer"), then records and executes command (DEPRECATED: use wake_start/wake_stop)
-    - wake_start: Start wake word listener in background (runs until wake_stop is called)
-    - wake_stop: Stop the running wake word listener
-    - wake_status: Check if wake word listener is currently running
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - dictate: Creates notes by transcribing live recording or audio files.
+    - speak: Converts text or note content to speech using high-fidelity Kokoro voices.
+    - listen: Records a short audio clip and executes interpreted voice commands.
+    - wake_start: Starts a background listener for hands-free activation.
+    - wake_stop: Stops the background wake word listener.
+    - wake_status: Reports the current status of the background listener.
+    - weather: Provides a formatted weather report for any location.
+    - timer: Sets a countdown timer with a specified duration.
+    - alarm: Sets a time-based reminder or wake-up alarm.
+    - music: Controls playback for Plex or Windows Media Player.
 
-    INSTALLATION:
-    These operations require optional voice dependencies:
+    ---------------------------------------------------------------------------
+    [PLEX AUTHENTICATION]
+    To use Plex music control, configure the following environment variables:
+    - PLEX_SERVER_URL: The URL of your Plex server (e.g., http://localhost:32400).
+    - PLEX_TOKEN: Your private Plex authentication token.
+
+    ---------------------------------------------------------------------------
+    [AUDIO SOUL 2026 STACK]
+    This tool uses the latest audio libraries:
+    - Kokoro: For expressive and natural speech synthesis.
+    - faster-whisper: For rapid and accurate speech-to-text.
+    - GPU Acceleration: Optimized for high-end GPUs like the RTX 4090 using CUDA.
+
+    ---------------------------------------------------------------------------
+    [PREREQUISITES]
+    Install the optional voice dependencies:
     pip install advanced-memory[voice]
 
-    This installs:
-    - openai-whisper (speech-to-text)
-    - pyttsx3 (text-to-speech)
-    - sounddevice (audio recording)
-    - soundfile (audio file handling)
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The specific task to perform.
+    - identifier (str, optional): Note title or text content for speech synthesis.
+    - audio_path (str, optional): Path to a file for transcription. Defaults to microphone.
+    - record_duration (int, optional): Recording length in seconds.
+    - voice (str, optional): Preferred Kokoro voice (e.g., heart, sky, adam).
+    - speed (float, optional): Rate of speech playback. Range 0.5 to 2.0.
+    - volume (int, optional): Output level from 1 to 10.
+    - save_audio (bool, optional): If true, writes output to a WAV file instead of playing.
+    - tags (str, optional): Metadata tags for created notes.
+    - wake_word (str, optional): Word used to trigger the background listener.
+    - location (str, optional): Target city for weather reports.
+    - duration (str, optional): Time length for timers (e.g., 5 mins).
+    - time_str (str, optional): Target time for alarms (e.g., 7 AM).
+    - command (str, optional): Music action like play, pause, or next.
+    - query (str, optional): Search term for music playback.
+    - project (str, optional): The project context for the operation.
 
-    Args:
-        operation: Operation type (dictate, speak, listen, wake, wake_start, wake_stop, wake_status)
-        identifier: Note title/permalink
-                    * speak operation: REQUIRED - Note to read aloud
-                    * Other operations: NOT USED
-        audio_path: Path to audio file
-                    * dictate operation: Optional - Path to audio file (if not provided, records live)
-                    * listen operation: Optional - Path to audio file (if not provided, records live)
-                    * Other operations: NOT USED
-        record_duration: Duration in seconds for live recording (default: 5)
-                    * dictate operation: Optional - Recording duration if audio_path not provided
-                    * listen operation: Optional - Recording duration if audio_path not provided
-                    * wake, wake_start operations: Optional - Command recording duration after wake word (default: 5)
-                    * Other operations: NOT USED
-        voice: Voice ID for speak operation (OS-dependent)
-                    * speak operation: Optional - Voice ID (OS-specific, e.g., "com.apple.speech.synthesis.voice.Alex" on macOS)
-                    * Other operations: NOT USED
-        speed: Playback speed for speak operation (0.5 to 2.0, default 1.0)
-                    * speak operation: Optional - Playback speed multiplier
-                    * Other operations: NOT USED
-        volume: Volume level for speak operation (1 to 10, default 5)
-                    * speak operation: Optional - Volume level (1=quiet, 10=loud)
-                    * Other operations: NOT USED
-        save_audio: Save audio to file instead of playing
-                    * speak operation: Optional - If True, saves audio to file instead of playing (default: False)
-                    * Other operations: NOT USED
-        tags: Tags for categorization
-                    * dictate operation: Optional - Tags to add to created note
-                    * Other operations: NOT USED
-        wake_word: Wake word to listen for (default: "memorizer")
-                    * wake, wake_start operations: Optional - Wake word to trigger recording (default: "memorizer")
-                    * Other operations: NOT USED
-        project: Optional project name (defaults to active project)
-                    * All operations: Optional - Process in specific project
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
 
-    Returns:
-        Operation-specific result with audio processing details
+    - Record a note with tags:
+      adn_audio(operation='dictate', record_duration=10, tags='ideas')
 
-    Examples:
-        # Dictate note from audio file
-        adn_audio("dictate", audio_path="recording.mp3", tags="voice-note")
+    - Speak a specific project note:
+      adn_audio(operation='speak', identifier='Meeting Summary', speed=1.2)
 
-        # Dictate by recording live (30 seconds)
-        adn_audio("dictate", record_duration=30, tags="quick-thought")
+    - Get the weather in Vienna:
+      adn_audio(operation='weather', location='Vienna')
 
-        # Speak (read note aloud)
-        adn_audio("speak", identifier="Python Basics", speed=1.5, volume=7)
+    - Set a five minute timer:
+      adn_audio(operation='timer', duration='5 minutes')
 
-        # Speak and save to audio file
-        adn_audio("speak", identifier="Study Notes", save_audio=True, volume=5)
-
-        # Listen for voice command (records 5 seconds by default)
-        adn_audio("listen", record_duration=5)
-
-        # Listen from audio file
-        adn_audio("listen", audio_path="command.wav")
-
-        # Start wake word listener in background
-        adn_audio("wake_start", wake_word="memorizer", record_duration=5)
-
-        # Check if wake word listener is running
-        adn_audio("wake_status")
-
-        # Stop wake word listener
-        adn_audio("wake_stop")
+    - Start playing music on Plex:
+      adn_audio(operation='music', command='play', query='Bach')
     """
     logger.info(f"MCP tool call tool=adn_audio operation={operation}")
 
@@ -172,8 +177,22 @@ async def adn_audio(
         return await _wake_stop_operation()
     elif operation == "wake_status":
         return await _wake_status_operation()
+    elif operation == "weather":
+        return await _get_weather(location)
+    elif operation == "timer":
+        if not duration:
+            return "# Error\n\nTimer operation requires: duration parameter"
+        return await _set_timer(duration)
+    elif operation == "alarm":
+        if not time_str:
+            return "# Error\n\nAlarm operation requires: time_str parameter"
+        return await _set_alarm(time_str)
+    elif operation == "music":
+        if not command:
+            return "# Error\n\nMusic operation requires: command parameter"
+        return await _control_music(command, query)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen, wake, wake_start, wake_stop, wake_status"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen, wake, wake_start, wake_stop, wake_status, weather, timer, alarm, music"
 
 
 async def _dictate_operation(
@@ -181,23 +200,17 @@ async def _dictate_operation(
 ) -> str:
     """Handle dictate operation - speech-to-text note creation."""
     try:
-        import whisper
+        from faster_whisper import WhisperModel
     except ImportError:
         return """# Voice Features Not Available
 
 Speech-to-text (dictate) requires optional voice dependencies.
 
 INSTALL:
-pip install advanced-memory[voice]
-
-This installs:
-- openai-whisper (speech-to-text)
-- pyttsx3 (text-to-speech)
-- sounddevice (audio recording)
-- soundfile (audio file handling)
+pip install kokoro faster-whisper onnxruntime-gpu sounddevice soundfile
 
 Or install manually:
-pip install openai-whisper pyttsx3 sounddevice soundfile
+pip install faster-whisper kokoro onnxruntime-gpu sounddevice soundfile
 
 Then restart and try again!"""
 
@@ -236,12 +249,15 @@ Then restart and try again!"""
     if not audio_path or not Path(audio_path).exists():
         return "# Error\n\nDictate requires either audio_path (to existing file) or record_duration (to record live)"
 
-    # Transcribe audio using Whisper
+    # Transcribe audio using faster-whisper
     try:
         logger.info(f"Transcribing audio: {audio_path}")
-        model = whisper.load_model("base")  # base model is fast and good enough
-        result = model.transcribe(audio_path)
-        transcribed_text = result["text"].strip()
+        # Use GPU (cuda) with float16 for maximum performance on 4090
+        model = WhisperModel("base", device="cuda", compute_type="float16")
+        segments, info = model.transcribe(audio_path, beam_size=5)
+
+        # Collect segments into a single string
+        transcribed_text = " ".join([segment.text for segment in segments]).strip()
 
         if not transcribed_text:
             return "# Transcription Failed\n\nNo speech detected in audio. Please try again with clearer audio."
@@ -307,23 +323,15 @@ async def _speak_operation(
 ) -> str:
     """Handle speak operation - text-to-speech note reading."""
     try:
-        import pyttsx3
+        import sounddevice as sd
+        from kokoro import KPipeline
     except ImportError:
         return """# Voice Features Not Available
 
-Text-to-speech (speak) requires optional voice dependencies.
+Text-to-speech (speak) requires optional voice dependencies (Kokoro).
 
 INSTALL:
-pip install advanced-memory[voice]
-
-This installs:
-- pyttsx3 (text-to-speech)
-- openai-whisper (speech-to-text)
-- sounddevice (audio recording)
-- soundfile (audio file handling)
-
-Or install manually:
-pip install pyttsx3
+pip install kokoro onnxruntime-gpu sounddevice soundfile
 
 Then restart and try again!"""
 
@@ -361,63 +369,98 @@ Then restart and try again!"""
     if not text_to_speak:
         return f"# No Content to Speak\n\nNote '{identifier}' has no readable content."
 
-    # Initialize TTS engine
+    # Initialize Kokoro pipeline
     try:
-        engine = pyttsx3.init()
+        logger.info(f"Synthesizing speech with Kokoro: {identifier}")
+        # Initialize pipeline (American English default)
+        pipeline = KPipeline(lang_code="a")
 
-        # Set speed (rate)
-        current_rate = engine.getProperty("rate")
-        engine.setProperty("rate", int(current_rate * speed))
-
-        # Set volume (0.0 to 1.0, map from 1-10 range)
-        volume_normalized = volume / 10.0
-        engine.setProperty("volume", volume_normalized)
-
-        # Set voice if specified
+        # Map voice parameter to Kokoro voice IDs
+        # Default Kokoro voices: af_heart, af_bella, af_nicole, af_sky, am_adam, am_michael
+        kokoro_voice = "af_heart"  # Default soulful female voice
         if voice:
-            voices = engine.getProperty("voices")
-            # Try to find matching voice
-            for v in voices:
-                if voice.lower() in v.id.lower() or voice.lower() in v.name.lower():
-                    engine.setProperty("voice", v.id)
-                    break
+            voice_lower = voice.lower()
+            if "adam" in voice_lower or "male" in voice_lower:
+                kokoro_voice = "am_adam"
+            elif "michael" in voice_lower or "man" in voice_lower:
+                kokoro_voice = "am_michael"
+            elif "sky" in voice_lower:
+                kokoro_voice = "af_sky"
+            elif "bella" in voice_lower:
+                kokoro_voice = "af_bella"
+            elif "nicole" in voice_lower:
+                kokoro_voice = "af_nicole"
+
+        # Generate audio using Kokoro
+        generator = pipeline(text_to_speak, voice=kokoro_voice, speed=speed, split_pattern=r"\n+")
+
+        audio_segments = []
+        for gs, ps, audio in generator:
+            audio_segments.append(audio)
+
+        import numpy as np
+
+        full_audio = np.concatenate(audio_segments)
 
         if save_audio:
+            import soundfile as sf
+
             # Save to audio file
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             audio_dir = active_project.home / "audio"
             audio_dir.mkdir(exist_ok=True)
 
             safe_title = identifier.replace("/", "-").replace("\\", "-")[:50]
-            audio_file = audio_dir / f"{safe_title}_{timestamp}.mp3"
+            audio_file = audio_dir / f"{safe_title}_{timestamp}.wav"
 
-            engine.save_to_file(text_to_speak, str(audio_file))
-            engine.runAndWait()
+            # Kokoro output is 24kHz
+            sf.write(str(audio_file), full_audio, 24000)
 
-            return f"""# Audio Saved
+            return f"""# Audio Saved (Kokoro 2026)
 
 **Note:** {identifier}
 **Audio file:** {audio_file}
+**Voice:** {kokoro_voice}
 **Duration:** ~{len(text_to_speak.split()) // 150} minutes
 **Speed:** {speed}x
 **Volume:** {volume}/10
 
-✅ Text-to-speech conversion complete!"""
+[SUCCESS] High-fidelity Kokoro synthesis complete!"""
 
         else:
-            # Play audio directly
-            engine.say(text_to_speak)
-            engine.runAndWait()
+            # Play audio directly using sounddevice
+            logger.info(f"Playing audio through sounddevice (24kHz, voice={kokoro_voice})")
+            sd.play(full_audio, 24000)
+            sd.wait()
 
-            return f"""# Note Spoken
+            return f"""# Note Spoken (Kokoro 2026)
 
 **Note:** {identifier}
+**Voice:** {kokoro_voice}
 **Word count:** {len(text_to_speak.split())}
 **Duration:** ~{len(text_to_speak.split()) // 150} minutes
 **Speed:** {speed}x
 **Volume:** {volume}/10
 
-✅ Text-to-speech playback complete!"""
+[SUCCESS] High-fidelity Kokoro playback complete!"""
+
+    except Exception as e:
+        logger.error(f"Kokoro TTS error: {e}")
+        # Fallback to pyttsx3 if Kokoro fails
+        try:
+            import pyttsx3
+
+            logger.info("Falling back to pyttsx3 (SAPI5)...")
+            engine = pyttsx3.init()
+            current_rate = engine.getProperty("rate")
+            engine.setProperty("rate", int(current_rate * speed))
+            volume_normalized = volume / 10.0
+            engine.setProperty("volume", volume_normalized)
+            engine.say(text_to_speak)
+            engine.runAndWait()
+            return f"# Note Spoken (Fallback)\n\nKokoro synthesis failed, used system fallback (pyttsx3).\n\nError: {str(e)}"
+        except Exception as _:
+            return f"# Text-to-Speech Failed\n\nBoth Kokoro and fallback (pyttsx3) failed.\n\nError: {str(e)}"
 
     except Exception as e:
         logger.error(f"TTS error: {e}")
@@ -433,23 +476,14 @@ async def _listen_command_operation(
     Uses rule-based parsing for common commands, with LLM fallback for complex ones.
     """
     try:
-        import whisper
+        from faster_whisper import WhisperModel
     except ImportError:
         return """# Voice Features Not Available
 
-Voice command (listen) requires optional voice dependencies.
+Voice command (listen) requires optional voice dependencies (faster-whisper).
 
 INSTALL:
-pip install advanced-memory[voice]
-
-This installs:
-- openai-whisper (speech-to-text)
-- pyttsx3 (text-to-speech)
-- sounddevice (audio recording)
-- soundfile (audio file handling)
-
-Or install manually:
-pip install openai-whisper pyttsx3 sounddevice soundfile
+pip install faster-whisper onnxruntime-gpu sounddevice soundfile
 
 Then restart and try again!"""
 
@@ -488,12 +522,12 @@ Then restart and try again!"""
     if not audio_path or not Path(audio_path).exists():
         return "# Error\n\nListen requires either audio_path (to existing file) or record_duration (to record live)"
 
-    # Transcribe audio using Whisper
+    # Transcribe audio using faster-whisper
     try:
         logger.info(f"Transcribing voice command: {audio_path}")
-        model = whisper.load_model("base")
-        result = model.transcribe(audio_path)
-        command_text = result["text"].strip().lower()
+        model = WhisperModel("base", device="cuda", compute_type="float16")
+        segments, info = model.transcribe(audio_path, beam_size=5)
+        command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
         if not command_text:
             return "# Transcription Failed\n\nNo speech detected in audio. Please try again with clearer audio."
@@ -820,7 +854,10 @@ async def _get_weather(location: str | None = None) -> str:
             location_clean = location.strip()
             # Remove trailing words like "please", "now", etc.
             location_clean = re.sub(
-                r"\s+(please|now|today|right\s+now)$", "", location_clean, flags=re.IGNORECASE
+                r"\s+(please|now|today|right\s+now)$",
+                "",
+                location_clean,
+                flags=re.IGNORECASE,
             )
             url = f"https://wttr.in/{location_clean}?format=j1"
             logger.info(f"Fetching weather for: {location_clean}")
@@ -1228,20 +1265,24 @@ async def _control_music(command: str, query: str | None = None) -> str:
 async def _control_music_plex(command: str, query: str | None) -> str:
     """Control music using Plex Media Server API (controls Plexamp and other Plex clients)."""
     try:
+        import os
+
         from plexapi.server import PlexServer
 
         # Try to connect to Plex server
         # First, try to discover server on local network
         try:
             # Try to find server automatically (requires server name or baseurl)
-            # For now, we'll need user to configure this, but we can try common defaults
-            server = None
+            # Use environment variables if available
+            server_url = os.getenv("PLEX_SERVER_URL", "http://localhost:32400")
+            token = os.getenv("PLEX_TOKEN")
 
-            # Try localhost first (most common)
+            # Try configured/default URL
             try:
-                server = PlexServer("http://localhost:32400")
+                logger.info(f"Connecting to Plex server at {server_url}...")
+                server = PlexServer(server_url, token)
             except Exception:
-                pass
+                server = None
 
             # If that fails, try to discover
             if not server:
@@ -1504,24 +1545,14 @@ async def _wake_word_operation(active_project, wake_word: str, record_duration: 
         import numpy as np
         import sounddevice as sd
         import soundfile as sf
-        import whisper
+        from faster_whisper import WhisperModel
     except ImportError:
         return """# Voice Features Not Available
 
-Wake word listening requires optional voice dependencies.
+Wake word listening requires optional voice dependencies (faster-whisper).
 
 INSTALL:
-pip install advanced-memory[voice]
-
-This installs:
-- openai-whisper (speech-to-text)
-- pyttsx3 (text-to-speech)
-- sounddevice (audio recording)
-- soundfile (audio file handling)
-- numpy (audio processing)
-
-Or install manually:
-pip install openai-whisper pyttsx3 sounddevice soundfile numpy
+pip install faster-whisper onnxruntime-gpu sounddevice soundfile numpy
 
 Then restart and try again!"""
 
@@ -1537,7 +1568,7 @@ Then restart and try again!"""
 
     try:
         # Load Whisper model once
-        model = whisper.load_model("base")
+        model = WhisperModel("base", device="cuda", compute_type="float16")
 
         # Continuous listening loop
         wake_word_detected = False
@@ -1567,8 +1598,8 @@ Then restart and try again!"""
                     sf.write(temp_audio, command_audio, sample_rate)
 
                     # Transcribe and execute
-                    result = model.transcribe(str(temp_audio))
-                    command_text = result["text"].strip().lower()
+                    segments, info = model.transcribe(str(temp_audio), beam_size=5)
+                    command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                     if command_text:
                         logger.info(f"Transcribed command: {command_text}")
@@ -1583,8 +1614,8 @@ Then restart and try again!"""
                 sf.write(temp_chunk_file, chunk, sample_rate)
 
                 # Quick transcription to check for wake word
-                result = model.transcribe(str(temp_chunk_file))
-                transcribed = result["text"].strip().lower()
+                segments, info = model.transcribe(str(temp_chunk_file), beam_size=5)
+                transcribed = " ".join([segment.text for segment in segments]).strip().lower()
 
                 if wake_word_lower in transcribed:
                     logger.info(f"Wake word '{wake_word}' detected!")
@@ -1633,7 +1664,10 @@ The wake word listener is already running.
                 # Run the wake word operation with stop event
                 loop.run_until_complete(
                     _wake_word_operation_background(
-                        active_project, wake_word, record_duration, _wake_listener_stop_event
+                        active_project,
+                        wake_word,
+                        record_duration,
+                        _wake_listener_stop_event,
                     )
                 )
             finally:
@@ -1723,7 +1757,7 @@ async def _wake_word_operation_background(
         import numpy as np
         import sounddevice as sd
         import soundfile as sf
-        import whisper
+        from faster_whisper import WhisperModel
     except ImportError:
         logger.error("Voice dependencies not available for wake word listener")
         return
@@ -1739,7 +1773,7 @@ async def _wake_word_operation_background(
 
     try:
         # Load Whisper model once
-        model = whisper.load_model("base")
+        model = WhisperModel("base", device="cuda", compute_type="float16")
 
         wake_word_detected = False
         command_audio_chunks = []
@@ -1773,8 +1807,8 @@ async def _wake_word_operation_background(
                     sf.write(temp_audio, command_audio, sample_rate)
 
                     # Transcribe and execute
-                    result = model.transcribe(str(temp_audio))
-                    command_text = result["text"].strip().lower()
+                    segments, info = model.transcribe(str(temp_audio), beam_size=5)
+                    command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                     if command_text:
                         logger.info(f"Transcribed command: {command_text}")
@@ -1792,8 +1826,8 @@ async def _wake_word_operation_background(
                 sf.write(temp_chunk_file, chunk, sample_rate)
 
                 # Quick transcription to check for wake word
-                result = model.transcribe(str(temp_chunk_file))
-                transcribed = result["text"].strip().lower()
+                segments, info = model.transcribe(str(temp_chunk_file), beam_size=5)
+                transcribed = " ".join([segment.text for segment in segments]).strip().lower()
 
                 if wake_word_lower in transcribed:
                     logger.info(f"Wake word '{wake_word}' detected!")

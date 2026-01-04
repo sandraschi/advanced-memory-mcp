@@ -1,7 +1,7 @@
 # Advanced Memory Integrations
 
-**Purpose**: Documentation for all import/export integrations and third-party tool support  
-**Location**: `docs/integrations/`  
+**Purpose**: Documentation for all import/export integrations and third-party tool support
+**Location**: `docs/integrations/`
 **Status**: Mix of implemented features and future plans
 
 ---
@@ -642,7 +642,7 @@ graph LR
 2. Sync to import all notes
 3. Use both tools simultaneously (file-based)
 
-**Guides**: 
+**Guides**:
 - [obsidian-integration-guide.md](./obsidian-integration-guide.md)
 
 ---
@@ -805,13 +805,13 @@ advanced-memory import chatgpt
 ```python
 class Importer:
     """Base class for all importers"""
-    
+
     async def import_file(self, file_path: str) -> list[Entity]:
         """Import single file → entities"""
-        
+
     async def import_directory(self, dir_path: str) -> list[Entity]:
         """Import directory → entities"""
-        
+
     async def extract_entities(self, content: str) -> list[Entity]:
         """Parse content → entities"""
 ```
@@ -1045,8 +1045,7 @@ New integration must have:
 
 ---
 
-**Created**: October 17, 2025  
-**Purpose**: Central index for all integrations  
-**Status**: Comprehensive catalog with implementation status  
+**Created**: October 17, 2025
+**Purpose**: Central index for all integrations
+**Status**: Comprehensive catalog with implementation status
 **Maintainer**: Advanced Memory MCP Team
-

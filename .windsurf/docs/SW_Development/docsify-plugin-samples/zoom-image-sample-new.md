@@ -91,7 +91,7 @@ Add the following scripto your `index.html` file, after the main Docsify script:
   .zoom-image-overlay {
     background-color: rgba(0, 0, 0, 0.9);
   }
-  
+
   .zoom-image-img {
     max-width: 90%;
     max-height: 90%;
@@ -147,8 +147,8 @@ window.$docsify = {
 Add the `data-zoomable` attribute to images you wanto be zoomable:
 
 ```html
-<img 
-  src="path/to/image.jpg" 
+<img
+  src="path/to/image.jpg"
   alt="Description"
   data-zoomable
   width="600"
@@ -167,8 +167,8 @@ In Markdown, add the `data-zoomable` class to images:
 Or withTML in Markdown:
 
 ```html
-<img 
-  src="path/to/image.jpg" 
+<img
+  src="path/to/image.jpg"
   alt="Description"
   data-zoomable
   class="custom-class"
@@ -186,47 +186,47 @@ window.$docsify = {
   zoomImage: {
     // Enable/disable the plugin
     enabled: true,
-    
+
     // Custom selector for zoomable imageselector: 'img[data-zoomable]',
-    
+
     // Animation duration in milliseconds
     duration: 300,
-    
+
     // Easing function for animations
     easing: 'cubic-bezier(0.4, 0, 0, 1)',
-    
+
     // Background color of the overlayBackground: 'rgba(0, 0, 0, 0.9)',
-    
+
     // Scale factor for zoomed images (0 = fito screen)
     scale: 0,
-    
+
     // Custom class for the zoom containerClass: 'zoom-image-container',
-    
+
     // Custom class for the overlayClass: 'zoom-image-overlay',
-    
+
     // Custom class for the zoomed imageClass: 'zoom-image-img',
-    
+
     // Close when clicking outside the image
     closeOnOutsideClick: true,
-    
+
     // Close when pressing theSC key
     closeOnEsc: true,
-    
+
     // Show loading spinner while images load
     showLoading: true,
-    
+
     // Custom loading template
     loadingTemplate: '<div class="zoom-image-loading">Loading...</div>',
-    
+
     // Callbacks
     onOpen: function(image) {
       console.log('Zoom opened:', image);
     },
-    
+
     onClose: function() {
       console.log('Zoom closed');
     },
-    
+
     onError: function(image, error) {
       console.error('Zoom error:', error, image);
     }
@@ -239,8 +239,8 @@ window.$docsify = {
 Override global settings for individual images using datattributes:
 
 ```html
-<img 
-  src="image.jpg" 
+<img
+  src="image.jpg"
   alt="Custom settings"
   data-zoomable
   data-zoom-duration="500"
@@ -259,16 +259,16 @@ window.$docsify = {
   zoomImage: {
     // Animation duration in milliseconds
     duration: 400,
-    
+
     // Easing function (CSS transition timing function)
     easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-    
+
     // Animation type: 'zoom', 'fade', or 'slide'
     type: 'zoom',
-    
+
     // Animation direction for slideffect: 'top', 'right', 'bottom', 'left'
     direction: 'bottom',
-    
+
     // Enable/disable animation
     animate: true
   }
@@ -304,7 +304,7 @@ window.$docsify = {
   zoomImage: {
     // Custom container selector element
     container: '#custom-zoom-container',
-    
+
     // Or a function that returns a container element
     container: function() {
       const container = document.createElement('div');
@@ -324,7 +324,7 @@ Initialize zoom for dynamically loaded images:
 // After adding new images to the DOM
 function loadNewImages() {
   // Load your images...
-  
+
   // Initialize zoom for new images
   if (window.DocsifyZoomImage) {
     window.DocsifyZoomImage.init({
@@ -584,19 +584,19 @@ Make the zoom experience better on mobile devices:
     width: auto;
     height: auto;
   }
-  
+
   .zoom-image-nav {
     width: 40px;
     height: 40px;
     font-size: 20px;
   }
-  
+
   .zoom-image-close {
     width: 36px;
     height: 36px;
     font-size: 20px;
   }
-  
+
   .zoom-image-caption {
     font-size: 12px;
     padding: 10px;
@@ -611,8 +611,8 @@ Make the zoom experience better on mobile devices:
 Use with lazy loading for better performance:
 
 ```html
-<img 
-  src="placeholder.jpg" 
+<img
+  src="placeholder.jpg"
   data-src="large-image.jpg"
   data-zoom-src="extra-large-image.jpg"
   alt="Description"
@@ -659,8 +659,8 @@ Use with lazy loading for better performance:
 Add proper ARIAttributes for better accessibility:
 
 ```html
-<img 
-  src="image.jpg" 
+<img
+  src="image.jpg"
   alt="Description of the image"
   data-zoomable
   aria-label="Click to zoom"
@@ -677,22 +677,22 @@ Create an image gallery with zoom:
 
 ```html
 <div class="gallery">
-  <img 
-    src="image1.jpg" 
+  <img
+    src="image1.jpg"
     alt="Image 1"
     data-zoomable
     data-zoom-group="gallery1"
     class="gallery-image"
   >
-  <img 
-    src="image2.jpg" 
+  <img
+    src="image2.jpg"
     alt="Image 2"
     data-zoomable
     data-zoom-group="gallery1"
     class="gallery-image"
   >
-  <img 
-    src="image3.jpg" 
+  <img
+    src="image3.jpg"
     alt="Image 3"
     data-zoomable
     data-zoom-group="gallery1"
@@ -750,7 +750,7 @@ function loadMoreImages() {
     .then(response => response.json())
     .then(images => {
       const container = document.querySelector('.image-container');
-      
+
       images.forEach(image => {
         const img = document.createElement('img');
         img.src = image.thumbnail;
@@ -760,7 +760,7 @@ function loadMoreImages() {
         img.className = 'dynamic-image';
         container.appendChild(img);
       });
-      
+
       // Initialize zoom for new images
       if (window.DocsifyZoomImage) {
         window.DocsifyZoomImage.init({
