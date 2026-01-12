@@ -668,7 +668,42 @@ adn_content("write",
 
     elif operation == "daily":
         if not content:
-            return "# Error\n\nDaily note operation requires: content parameter"
+            return {
+                "success": False,
+                "operation": operation,
+                "error": "Missing required content parameter for daily note",
+                "error_code": "MISSING_CONTENT",
+                "summary": "Daily note operation failed - content required",
+                "message": "To add something to your daily journal, you need to provide the content you want to record. Daily notes help you track thoughts and progress over time.",
+                "recovery_options": [
+                    "Provide the content parameter with your daily note text",
+                    "Include what you want to record in today's journal"
+                ],
+                "clarification_options": {
+                    "content": {
+                        "description": "What would you like to add to today's daily journal?",
+                        "type": "string"
+                    }
+                },
+                "diagnostic_info": {"operation": operation, "has_content": bool(content)},
+                "alternative_solutions": [
+                    "Use write operation with explicit folder='daily' for more control",
+                    "Use quick operation for faster note creation"
+                ],
+                "estimated_resolution_time": "< 1 minute",
+                "urgency": "low",
+                "suggestions": [
+                    "Daily notes work best for quick thoughts and progress tracking",
+                    "Use markdown formatting for better organization",
+                    "Include timestamps or categories in your daily entries"
+                ],
+                "follow_up_questions": [
+                    "What happened today that you want to record?",
+                    "Do you want me to help you format your daily note entry?",
+                    "Should I create a template for your daily notes?"
+                ],
+                "context": {"operation_type": "daily_journal", "requires_content": True}
+            }
         return await _daily_note_operation(active_project, content, tags)
 
     elif operation == "dictate" or operation == "speak":
@@ -690,11 +725,92 @@ pip install advanced-memory[voice]
 
     elif operation == "move":
         if identifier is None or destination_path is None:
-            return "# Error\n\nMove operation requires: identifier, destination_path"
+            return {
+                "success": False,
+                "operation": operation,
+                "error": "Missing required parameters for move operation",
+                "error_code": "MISSING_PARAMETERS",
+                "summary": "Move operation failed - missing required parameters",
+                "message": "To move a note to a new location, I need to know which note you want to move and where to move it to. This preserves relationships and updates references.",
+                "recovery_options": [
+                    "Provide both identifier and destination_path parameters",
+                    "Specify which note you want to move",
+                    "Choose the destination folder path"
+                ],
+                "clarification_options": {
+                    "identifier": {
+                        "description": "Which note do you want to move?",
+                        "type": "string"
+                    },
+                    "destination_path": {
+                        "description": "Where should the note be moved to?",
+                        "type": "string"
+                    }
+                },
+                "diagnostic_info": {
+                    "operation": operation,
+                    "has_identifier": bool(identifier),
+                    "has_destination_path": bool(destination_path)
+                },
+                "alternative_solutions": [
+                    "Use the note title if you don't know the exact path",
+                    "Use search to find the correct note identifier first"
+                ],
+                "estimated_resolution_time": "< 2 minutes",
+                "urgency": "medium",
+                "suggestions": [
+                    "Use relative paths for destination (e.g., 'archive/old-notes')",
+                    "Moving notes preserves all relationships and backlinks",
+                    "Consider organizing notes in logical folder structures"
+                ],
+                "follow_up_questions": [
+                    "Which note are you trying to move?",
+                    "Where would you like to move it to?",
+                    "Do you need help finding the correct note identifier?"
+                ],
+                "context": {"operation_type": "file_management", "preserves_relationships": True}
+            }
         return await _move_operation(active_project, identifier, destination_path)
     elif operation == "delete":
         if identifier is None:
-            return "# Error\n\nDelete operation requires: identifier"
+            return {
+                "success": False,
+                "operation": operation,
+                "error": "Missing required identifier parameter for delete operation",
+                "error_code": "MISSING_IDENTIFIER",
+                "summary": "Delete operation failed - no note specified",
+                "message": "To delete a note, I need to know which specific note you want to remove. This operation will clean up relationships and references.",
+                "recovery_options": [
+                    "Provide the identifier parameter with the note to delete",
+                    "Use note title, permalink, or memory:// URL",
+                    "Search for the note first if you're unsure of the exact identifier"
+                ],
+                "clarification_options": {
+                    "identifier": {
+                        "description": "Which note do you want to delete?",
+                        "type": "string"
+                    }
+                },
+                "diagnostic_info": {"operation": operation, "has_identifier": bool(identifier)},
+                "alternative_solutions": [
+                    "Use move operation to archive notes instead of deleting",
+                    "Check note contents first with read operation",
+                    "Use search to confirm the correct note identifier"
+                ],
+                "estimated_resolution_time": "< 1 minute",
+                "urgency": "medium",
+                "suggestions": [
+                    "Deletion is permanent - consider archiving instead",
+                    "Delete operation cleans up all relationships automatically",
+                    "Use descriptive identifiers to avoid mistakes"
+                ],
+                "follow_up_questions": [
+                    "Which note are you sure you want to delete?",
+                    "Have you backed up any important information?",
+                    "Would archiving be a better option than deleting?"
+                ],
+                "context": {"operation_type": "file_management", "permanent_action": True}
+            }
         return await _delete_operation(active_project, identifier)
 
     elif operation == "suggest_tags":
@@ -731,7 +847,58 @@ async def _write_operation(
 ) -> str:
     """Handle write operation with auto-skill detection."""
     if not identifier or not content or not folder:
-        return "# Error\n\nWrite operation requires: identifier, content, and folder parameters"
+        return {
+            "success": False,
+            "operation": operation,
+            "error": "Missing required parameters for write operation",
+            "error_code": "MISSING_PARAMETERS",
+            "summary": "Write operation failed - missing required parameters",
+            "message": "To create a new note, I need the note title (identifier), the content, and the folder where it should be stored. These form the foundation of your knowledge graph.",
+            "recovery_options": [
+                "Provide all required parameters: identifier, content, and folder",
+                "Specify a meaningful title for your note",
+                "Choose an appropriate folder for organization",
+                "Add the content you want to store"
+            ],
+            "clarification_options": {
+                "identifier": {
+                    "description": "What should this note be titled?",
+                    "type": "string"
+                },
+                "content": {
+                    "description": "What content should this note contain?",
+                    "type": "string"
+                },
+                "folder": {
+                    "description": "Which folder should this note be stored in?",
+                    "type": "string"
+                }
+            },
+            "diagnostic_info": {
+                "operation": operation,
+                "has_identifier": bool(identifier),
+                "has_content": bool(content),
+                "has_folder": bool(folder)
+            },
+            "alternative_solutions": [
+                "Use quick operation for faster note creation with auto-generated parameters",
+                "Use daily operation to append to today's journal"
+            ],
+            "estimated_resolution_time": "< 2 minutes",
+            "urgency": "medium",
+            "suggestions": [
+                "Use descriptive, searchable titles for your notes",
+                "Organize notes in logical folder structures",
+                "Include relevant tags for better discoverability"
+            ],
+            "follow_up_questions": [
+                "What would you like to title this note?",
+                "What content do you want to include?",
+                "Which folder makes sense for this note?",
+                "Do you want me to suggest a folder structure?"
+            ],
+            "context": {"operation_type": "content_creation", "creates_relationships": True}
+        }
 
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home
@@ -918,7 +1085,45 @@ An error occurred while trying to create or update the note.
 async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> str:
     """Handle read operation."""
     if not identifier:
-        return "# Error\n\nRead operation requires identifier parameter"
+        return {
+            "success": False,
+            "operation": operation,
+            "error": "Missing required identifier parameter for read operation",
+            "error_code": "MISSING_IDENTIFIER",
+            "summary": "Read operation failed - no note specified",
+            "message": "To read a note, I need to know which specific note you want to access. I can find it by title, permalink, or memory URL.",
+            "recovery_options": [
+                "Provide the identifier parameter with the note to read",
+                "Use note title, permalink, or memory:// URL",
+                "Search for notes first if you're unsure of the exact identifier"
+            ],
+            "clarification_options": {
+                "identifier": {
+                    "description": "Which note do you want to read?",
+                    "type": "string"
+                }
+            },
+            "diagnostic_info": {"operation": operation, "has_identifier": bool(identifier)},
+            "alternative_solutions": [
+                "Use read_latest to get the most recently updated note",
+                "Use search to find notes by content or tags",
+                "Use view operation to see formatted note preview"
+            ],
+            "estimated_resolution_time": "< 1 minute",
+            "urgency": "low",
+            "suggestions": [
+                "Use descriptive identifiers for easy recall",
+                "Note titles are automatically converted to URL-friendly permalinks",
+                "Read operations include full knowledge graph context"
+            ],
+            "follow_up_questions": [
+                "Which note are you trying to read?",
+                "Do you remember the title or any keywords?",
+                "Would you like me to search for notes on a specific topic?",
+                "Should I show you the most recent notes instead?"
+            ],
+            "context": {"operation_type": "content_retrieval", "includes_context": True}
+        }
 
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
@@ -1042,7 +1247,55 @@ async def _edit_tags_operation(
 ) -> str:
     """Handle edit_tags operation."""
     if not tag_operation:
-        return "# Error\n\nEdit tags operation requires tag_operation parameter (add, remove, replace, clear)"
+        return {
+            "success": False,
+            "operation": operation,
+            "error": "Missing required tag_operation parameter for edit_tags operation",
+            "error_code": "MISSING_TAG_OPERATION",
+            "summary": "Edit tags operation failed - no operation specified",
+            "message": "To modify note tags, I need to know what kind of tag operation you want to perform. Tags help organize and find your notes more effectively.",
+            "recovery_options": [
+                "Provide the tag_operation parameter (add, remove, replace, clear)",
+                "Specify which tags you want to add, remove, or replace",
+                "Choose the appropriate operation for your tagging needs"
+            ],
+            "clarification_options": {
+                "tag_operation": {
+                    "description": "What tag operation do you want to perform?",
+                    "options": ["add", "remove", "replace", "clear"],
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "Which tags do you want to work with?",
+                    "type": "string"
+                }
+            },
+            "diagnostic_info": {
+                "operation": operation,
+                "has_identifier": bool(identifier),
+                "has_tag_operation": bool(tag_operation),
+                "has_tags": bool(tags)
+            },
+            "alternative_solutions": [
+                "Use edit operation for more complex note modifications",
+                "Use suggest_tags operation to get AI-powered tag recommendations",
+                "Review existing tags with read operation first"
+            ],
+            "estimated_resolution_time": "< 1 minute",
+            "urgency": "low",
+            "suggestions": [
+                "Use consistent tag naming conventions across your notes",
+                "Tags support both single words and hyphenated compound terms",
+                "Tag operations are atomic and preserve note content"
+            ],
+            "follow_up_questions": [
+                "What do you want to do with the tags (add, remove, replace, or clear)?",
+                "Which specific tags are you working with?",
+                "Do you want me to suggest appropriate tags for this note?",
+                "Should I show you the current tags on this note first?"
+            ],
+            "context": {"operation_type": "metadata_management", "supports_multiple_tags": True}
+        }
 
     # Get current note to read existing tags
     project_url = active_project.project_url
