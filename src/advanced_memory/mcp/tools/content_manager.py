@@ -425,11 +425,11 @@ However, please use `content` directly in future calls.
                 return """# Error: Missing Required Parameter for find_replace
 
 The `find_replace` operation requires:
-- `find_text`: The text to find (REQUIRED) ✅ You provided this
-- `content`: The replacement text (REQUIRED) ❌ Missing
+- `find_text`: The text to find (REQUIRED) [PROVIDED] You provided this
+- `content`: The replacement text (REQUIRED) [MISSING] Missing
 
 **Common mistakes:**
-- Using `new_string` instead of `content` ❌
+- Using `new_string` instead of `content` [ERROR]
 - Using `replacement` instead of `content` ❌
 
 **Correct usage:**
@@ -438,7 +438,7 @@ adn_content("edit",
     identifier="My Note",
     edit_operation="find_replace",
     find_text="old text",
-    content="new text"  # ✅ Use 'content', not 'new_string'
+    content="new text"  # [SUCCESS] Use 'content', not 'new_string'
 )
 ```
 
@@ -452,7 +452,7 @@ However, please use `content` directly in future calls.
 Edit operation '{edit_operation}' requires: `content` parameter
 
 **Common mistakes:**
-- Using `new_string` instead of `content` ❌
+- Using `new_string` instead of `content` [ERROR]
 - Using `replacement` instead of `content` ❌
 
 **Correct usage:**
@@ -460,7 +460,7 @@ Edit operation '{edit_operation}' requires: `content` parameter
 adn_content("edit",
     identifier="My Note",
     edit_operation="{edit_operation}",
-    content="Content to {edit_operation}"  # ✅ Use 'content', not 'new_string'
+    content="Content to {edit_operation}"  # [SUCCESS] Use 'content', not 'new_string'
 )
 ```
 
