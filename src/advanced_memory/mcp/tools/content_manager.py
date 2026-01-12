@@ -1,7 +1,109 @@
 """Content Manager portmanteau tool for Advanced Memory MCP server.
 
-This tool consolidates all content operations: write, read, view, edit, edit_tags, move, and delete.
-It reduces the number of MCP tools while maintaining full functionality.
+PORTMANTEAU PATTERN RATIONALE:
+Instead of creating 7 separate tools (write_note, read_note, view_note, edit_note, edit_tags, move_note, delete_note),
+this tool consolidates all content operations into a single interface. Prevents tool explosion (7 tools -> 1 tool)
+while maintaining full functionality and improving discoverability. Follows FastMCP 2.14.1+ SOTA standards.
+
+Supported Operations:
+- write: Create new notes with semantic processing and relations
+- read: Retrieve complete note content with knowledge graph awareness
+- read_latest: Get the most recently updated note in the project
+- view: Display notes as formatted artifacts for better readability
+- view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
+- edit: Perform targeted edits (append, prepend, find_replace, replace_section, insert_*)
+- edit_tags: Edit tags (add, remove, replace, clear) without full note edits
+- quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags)
+- daily: Create or append to today's daily journal note
+- move: Relocate notes while preserving relationships and updating references
+- delete: Remove notes from knowledge base with relationship cleanup
+- suggest_tags: LLM-powered semantic tag suggestions for notes
+- summarize: LLM-powered note summarization
+- enhance: LLM-powered note enhancement (structure, clarity, completeness)
+- generate: LLM-powered content generation for new notes
+
+Prerequisites:
+- Active project session established via adn_project tool
+- Write access to local filesystem for project storage
+
+Args:
+    operation (Literal, required): The content operation to perform. Must be one of:
+        "write", "read", "read_latest", "view", "view_rendered", "edit", "edit_tags", "quick",
+        "daily", "move", "delete", "suggest_tags", "summarize", "enhance", "generate".
+
+    identifier (str | None): Note title, permalink, or memory:// URL. Required for:
+        read, view, view_rendered, edit, edit_tags, move, delete, suggest_tags, summarize, enhance.
+
+    content (str | None): Markdown content or edit payload. Required for:
+        write, edit (some operations), quick, daily, generate.
+
+    folder (str | None): Target folder path relative to project root. Default: "inbox".
+        Used by: write, quick operations.
+
+    tags (TagType | None): Tags for categorization. Used by: write, edit_tags operations.
+
+    entity_type (str): Type of document. Default: "note". Used by: write operation.
+
+    destination_path (str | None): New path for move operations. Required for: move.
+
+    edit_operation (str | None): Edit type for edit operations. Required for: edit.
+
+    tag_operation (str | None): Tag operation type. Required for: edit_tags.
+
+    find_text (str | None): Text to search for in find_replace. Required when edit_operation="find_replace".
+
+    new_string (str | None): Replacement text for find_replace. Required when edit_operation="find_replace".
+
+    section (str | None): Section header for replace_section. Required when edit_operation="replace_section".
+
+    expected_replacements (int): Expected matches for find_replace validation. Default: 1.
+
+    use_regex (bool): Whether find_text is regex. Default: False.
+
+    page (int): Pagination page. Default: 1.
+
+    page_size (int): Items per page. Default: 10.
+
+Returns:
+    FastMCP 2.14.1+ Conversational Response Structure:
+
+    Success Response:
+    - success (bool): True if operation succeeded
+    - operation (str): Operation that was performed
+    - summary (str): Conversational description of what happened
+    - result (dict): Operation-specific return data
+    - next_steps (list[str]): Suggested actions user can take next
+    - context (dict): Additional contextual information
+    - suggestions (list[str]): AI-friendly follow-up suggestions
+    - follow_up_questions (list[str]): Questions to engage user in dialogue
+
+    Error Recovery Response:
+    - success (bool): Always false for errors
+    - error (str): Detailed, conversational error description
+    - error_code (str): Machine-readable error code
+    - message (str): Human-friendly explanation with context
+    - recovery_options (list[str]): Step-by-step recovery instructions
+    - diagnostic_info (dict): Technical details for debugging
+    - alternative_solutions (list[str]): Alternative approaches
+    - estimated_resolution_time (str): Time estimate for resolution
+    - urgency (str): Priority level (low/medium/high)
+
+Examples:
+    # Basic usage
+    result = await adn_content("read", identifier="Meeting Notes")
+    # Returns: {"success": true, "summary": "Retrieved note content", ...}
+
+    # Error handling
+    result = await adn_content("read", identifier="nonexistent")
+    # Returns: {"success": false, "error": "Note not found", ...}
+
+Errors:
+    NO_ACTIVE_PROJECT: No active project session found
+    MISSING_IDENTIFIER: Required identifier parameter not provided
+    MISSING_CONTENT: Required content parameter not provided
+    NOTE_NOT_FOUND: Specified note does not exist in project
+    PERMISSION_DENIED: No write access to project directory
+    INVALID_OPERATION: Specified operation is not supported
 """
 
 import json
@@ -197,7 +299,7 @@ async def adn_content(
     - Replace Fail: find_replace operation did not find the target text.
     """
     # Parameter aliasing for compatibility with standalone tools
-    # results_per_page → page_size (for compatibility with search_notes tool)
+    # results_per_page -> page_size (for compatibility with search_notes tool)
     if results_per_page is not None and page_size == 10:  # Only if default value
         page_size = results_per_page
         logger.debug(f"Using 'results_per_page' alias as page_size: {page_size}")
@@ -271,7 +373,42 @@ async def adn_content(
     # Get the active project
     active_project = get_active_project(project)
     if not active_project:
-        return "# Error\n\nNo active project found. Please switch to a project first."
+        return {
+            "success": False,
+            "operation": operation,
+            "error": "No active project session found",
+            "error_code": "NO_ACTIVE_PROJECT",
+            "summary": "Content operation failed - no active project",
+            "message": "To work with notes, you need an active project context to know where to store and find your knowledge.",
+            "recovery_options": [
+                "Use adn_project tool to switch to an existing project",
+                "Create a new project with adn_project tool",
+                "List available projects with adn_project list"
+            ],
+            "clarification_options": {
+                "project_name": {
+                    "description": "Which project would you like to work in?",
+                    "type": "string"
+                }
+            },
+            "diagnostic_info": {"active_project": None},
+            "alternative_solutions": [
+                "Use adn_project to create a new project first",
+                "Switch to an existing project context"
+            ],
+            "estimated_resolution_time": "< 1 minute",
+            "urgency": "high",
+            "suggestions": [
+                "Always establish a project context before working with notes",
+                "Use meaningful project names for organization"
+            ],
+            "follow_up_questions": [
+                "Do you want me to help you create a new project?",
+                "Which existing project would you like to switch to?",
+                "Can you tell me what you're trying to accomplish?"
+            ],
+            "context": {"operation_requires_project": True}
+        }
 
     # Route to appropriate operation handler
     if operation == "write":
@@ -499,7 +636,7 @@ adn_content("quick", content="Your note content here...")
 The `quick` operation automatically:
 - Generates a title from your content (first line or first few words)
 - Saves to the "inbox" folder
-- Extracts relevant tags from content (e.g., "butterflies" → adds "butterflies", "biology", "insects")
+- Extracts relevant tags from content (e.g., "butterflies" -> adds "butterflies", "biology", "insects")
 - Adds timestamp and "quick-capture" tag
 - Perfect for quick note capture without specifying all details
 
