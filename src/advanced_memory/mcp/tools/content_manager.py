@@ -176,7 +176,7 @@ async def adn_content(
     new_string: str | None = None,  # DEPRECATED: Use 'content' instead
     replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
-) -> str:
+) -> dict[str, Any]:
     """
     Comprehensive content management tool for Advanced Memory knowledge base.
 
