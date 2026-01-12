@@ -289,7 +289,7 @@ $rubbishFiles = @()
 
 # Common rubbish patterns
 $rubbishPatterns = @(
-    "*.mcpb",
+    "*.dxt",
     "*.old",
     "*.bak",
     "*.tmp",
