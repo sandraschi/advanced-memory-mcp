@@ -2,6 +2,7 @@
 
 import json
 import datetime
+from typing import Optional
 UTC = datetime.timezone.utc
 
 from loguru import logger

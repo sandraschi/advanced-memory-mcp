@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 import datetime
+from typing import Optional
 UTC = datetime.timezone.utc
 
 from loguru import logger
@@ -89,7 +90,7 @@ class ContextService:
         memory_url: MemoryUrl | None = None,
         types: list[SearchItemType] | None = None,
         depth: int = 1,
-        since: datetime | None = None,
+        since: Optional[datetime.datetime] = None,
         limit: int = 10,
         offset: int = 0,
         max_related: int = 10,
@@ -208,7 +209,7 @@ class ContextService:
         self,
         type_id_pairs: list[tuple[str, int]],
         max_depth: int = 1,
-        since: datetime | None = None,
+        since: Optional[datetime.datetime] = None,
         max_results: int = 10,
     ) -> list[ContextResultRow]:
         """Find items connected through relations.
