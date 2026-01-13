@@ -107,6 +107,11 @@ else:
     from .canvas import canvas
     from .content_manager import adn_content
     from .help import help
+    from .inter_server_tools import (
+        orchestrate_batch_content_operation,
+        chain_server_operations,
+        server_federation_status,
+    )
     from .project_manager import adn_project
     from .typora_control import typora_control
     from .view_note_rendered import view_note_rendered
@@ -131,4 +136,7 @@ __all__ = [
     "adn_navigation",
     "adn_project",
     "adn_inbox",
+    "orchestrate_batch_content_operation",
+    "chain_server_operations",
+    "server_federation_status",
 ]
