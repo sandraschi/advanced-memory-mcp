@@ -123,6 +123,28 @@ from advanced_memory.utils import parse_tags, validate_project_path
 TagType = list[str] | str | None
 
 
+# FastMCP 2.14.1+ Conversational Response Builders
+def build_success_response(operation: str, summary: str, **kwargs) -> dict:
+    """Build structured success response for MCP clients."""
+    return {
+        "success": True,
+        "operation": operation,
+        "summary": summary,
+        **kwargs
+    }
+
+
+def build_error_response(error: str, error_code: str, message: str, **kwargs) -> dict:
+    """Build structured error response with recovery guidance for MCP clients."""
+    return {
+        "success": False,
+        "error": error,
+        "error_code": error_code,
+        "message": message,
+        **kwargs
+    }
+
+
 @mcp.tool
 async def adn_content(
     operation: Literal[
@@ -174,127 +196,24 @@ async def adn_content(
     new_string: str | None = None,  # DEPRECATED: Use 'content' instead
     replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
-) -> str:
+) -> dict:
     """
-    Comprehensive content management tool for Advanced Memory knowledge base.
+    Knowledge content management with conversational responses.
 
-    This point-of-entry tool consolidates all zettelkasten content operations including
-    creation, retrieval, visualization, targeted editing, and intelligent enhancement.
-    It serves as the primary interface for interacting with knowledge entities.
+    OPERATIONS:
+    - write: Create/update notes (requires: identifier, content)
+    - read: Get note content (requires: identifier)
+    - view: Display formatted note (requires: identifier)
+    - edit: Modify existing notes (requires: identifier, edit_operation)
+    - quick: Fast note creation (requires: content)
+    - daily: Add to today's journal (requires: content)
+    - delete: Remove notes (requires: identifier)
 
-    ---------------------------------------------------------------------------
-    [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 15+ content operations into one tool to:
-    - Prevent tool explosion (15 tools -> 1 tool) while maintaining full functionality.
-    - Improve discoverability by grouping related operations together.
-    - Reduce cognitive load and saving tokens by centralizing context.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "message": "...", "recovery_options": [...]}
 
-    ---------------------------------------------------------------------------
-    [PARAMETER DESIGN]
-    The 'identifier' parameter is intentionally flexible:
-    - For write operations: Pass the note title (e.g., "My Meeting Notes").
-      Advanced Memory will automatically generate the permalink from the title.
-    - For read/view operations: Can pass Title, Permalink, or memory:// URL.
-      This flexibility allows reading notes in multiple ways.
-
-    ---------------------------------------------------------------------------
-    [TIP FOR CLAUDE]
-    When using this tool, always specify the operation first (write, read, edit, etc.),
-    then provide the required parameters. The documentation below shows what each operation needs.
-
-    ---------------------------------------------------------------------------
-    [SUPPORTED OPERATIONS]
-    - write: Create new notes or update existing ones with semantic processing.
-    - read: Retrieve complete note content with intelligent lookup strategies.
-    - view: Display notes as formatted artifacts for better readability.
-    - view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams.
-    - edit: Perform targeted edits (append, prepend, find_replace, replace_section, insert_mermaid, etc.).
-    - edit_tags: Edit tags (add, remove, replace, clear) without full note edits.
-    - quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags).
-    - daily: Create or append to today's daily journal note.
-    - move: Relocate notes while preserving relationships and updating references.
-    - delete: Remove notes from knowledge base with relationship cleanup.
-    - suggest_tags: LLM-powered semantic tag suggestions for notes.
-    - summarize: LLM-powered note summarization.
-    - enhance: LLM-powered note enhancement (structure, clarity, completeness).
-    - generate: LLM-powered content generation for new notes.
-
-    ---------------------------------------------------------------------------
-    [OPERATIONS DETAIL]
-    - write: Requires 'identifier' (title) and 'content'. Optional 'folder' (default: "inbox").
-    - read/view: Requires 'identifier'. Supports Title, Permalink, or memory:// URL.
-    - edit: Requires 'identifier', 'edit_operation', and relevant payload ('content', 'section', 'find_text').
-    - edit_tags: Requires 'identifier', 'tag_operation', and 'tags'.
-    - quick: Requires 'content'. Automatically generates title and folder.
-    - daily: Requires 'content'. Manages today's journal entry.
-    - move: Requires 'identifier' and 'destination_path'.
-    - delete: Requires 'identifier'.
-
-    ---------------------------------------------------------------------------
-    [SKILL SUPPORT (AUTO-DETECTION)]
-    When writing to skills/ folder, adn_content automatically:
-    - Detects missing Claude Skills frontmatter.
-    - Auto-generates YAML frontmatter with name, description, metadata.
-    - Extracts category from folder path (skills/developer -> category: developer).
-    - Sets entity_type to 'skill' automatically.
-
-    ---------------------------------------------------------------------------
-    [PREREQUISITES]
-    - Active project session established via adn_project tool.
-    - Write access to the local filesystem for project storage.
-
-    ---------------------------------------------------------------------------
-    [PARAMETERS]
-    - operation: The content operation to perform (write, read, edit, etc.)
-    - identifier: Note Title, Permalink, or memory:// URL (Required for most operations)
-    - content: Markdown content or edit payload (Required for write/edit/quick/daily)
-    - folder: Target folder path relative to project root (Optional, default: "inbox")
-    - tags: Tags for categorization (string, list, or None)
-    - entity_type: The type of document being created (Default: "note")
-    - destination_path: New path for move operations
-    - edit_operation: Operation type for edits (append, prepend, find_replace, replace_section, insert_*)
-    - tag_operation: Operation type for editing tags (add, remove, replace, clear)
-    - find_text: Text to search for during find_replace operations
-    - expected_replacements: Number of expected replacements for validation (Default: 1)
-    - use_regex: Whether to treat find_text as a regular expression (Default: False)
-    - section: Section header to target for replace_section or title for insertions
-    - page: Page number for paginated results (Default: 1)
-    - page_size: Number of items per page (Default: 10)
-    - results_per_page: Alias for page_size
-    - project: Optional override for active project name
-
-    ---------------------------------------------------------------------------
-    [USAGE]
-    This tool is the primary entry point for managing knowledge content. It handles everything
-    from manual note writing to automatic skill processing. Use it for all CRUD operations
-    on notes and entities within your knowledge base.
-
-    ---------------------------------------------------------------------------
-    [EXAMPLES]
-
-    - Write a new note with explicit folder:
-      result = await adn_content("write", identifier="SOTA Standards", content="# Standard...", folder="specs")
-      # Returns: Created note summary for specs/sota-standards.md
-
-    - Edit an existing note by appending content:
-      result = await adn_content("edit", identifier="SOTA Standards", edit_operation="append", content="\n## Updated")
-      # Returns: Updated summary for SOTA Standards
-
-    - Quickly capture a thought without title:
-      result = await adn_content("quick", content="Important thought about MCP...")
-      # Returns: Created note summary in inbox/
-
-    - Error handling (missing parameter):
-      result = await adn_content("write", identifier="Missing Content")
-      # Returns: # Error: Missing Required Parameters
-
-    ---------------------------------------------------------------------------
-    [ERRORS]
-    - Missing Parameters: Required fields for specific operations were not provided.
-    - Note Not Found: The specified identifier does not resolve to an existing note.
-    - Invalid Path: The specified folder or destination is outside project boundaries.
-    - Replace Fail: find_replace operation did not find the target text.
+    For errors, check recovery_options for next steps. Use adn_project first to set context.
     """
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)
@@ -371,7 +290,17 @@ async def adn_content(
     # Get the active project
     active_project = get_active_project(project)
     if not active_project:
-        return "# Error: No Active Project\n\nTo work with notes, you need an active project context.\nUse 'adn_project' tool to switch to or create a project first."
+        return build_error_response(
+            error="No active project context",
+            error_code="NO_ACTIVE_PROJECT",
+            message="You need an active project to work with notes",
+            recovery_options=[
+                "Use adn_project('list') to see available projects",
+                "Use adn_project('switch', project_name='your-project') to switch projects",
+                "Use adn_project('create', project_name='new-project', project_path='/path') to create one"
+            ],
+            urgency="high"
+        )
 
     # Route to appropriate operation handler
     if operation == "write":
@@ -631,7 +560,16 @@ adn_content("write",
 
     elif operation == "daily":
         if not content:
-            return "# Error: Missing Content\n\nThe daily operation requires a content parameter."
+            return build_error_response(
+                error="Missing content for daily note",
+                error_code="MISSING_CONTENT",
+                message="Daily operation requires content parameter",
+                recovery_options=[
+                    "Provide content parameter with your daily note text",
+                    "Use quick operation if you want auto-generated title"
+                ],
+                urgency="medium"
+            )
         return await _daily_note_operation(active_project, content, tags)
 
     elif operation == "dictate" or operation == "speak":
@@ -653,11 +591,30 @@ pip install advanced-memory[voice]
 
     elif operation == "move":
         if identifier is None or destination_path is None:
-            return "# Error: Missing Parameters\n\nThe move operation requires identifier and destination_path parameters."
+            return build_error_response(
+                error="Missing move parameters",
+                error_code="MISSING_MOVE_PARAMS",
+                message="Move operation requires both identifier and destination_path",
+                recovery_options=[
+                    "Specify identifier (note title or permalink)",
+                    "Specify destination_path (new folder location)",
+                    "Use read operation first to verify note exists"
+                ],
+                urgency="medium"
+            )
         return await _move_operation(active_project, identifier, destination_path)
     elif operation == "delete":
         if identifier is None:
-            return "# Error: Missing Identifier\n\nThe delete operation requires an identifier parameter."
+            return build_error_response(
+                error="Missing identifier for delete",
+                error_code="MISSING_IDENTIFIER",
+                message="Delete operation requires identifier parameter",
+                recovery_options=[
+                    "Provide note title, permalink, or memory:// URL",
+                    "Use read operation first to verify note exists"
+                ],
+                urgency="medium"
+            )
         return await _delete_operation(active_project, identifier)
 
     elif operation == "suggest_tags":
@@ -681,7 +638,21 @@ pip install advanced-memory[voice]
         return await _generate_operation(active_project, content, folder, tags, entity_type)
 
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance, generate\n\nNote: Audio operations (dictate, speak) are now in adn_audio tool"
+        return build_error_response(
+            error="Invalid operation",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported",
+            recovery_options=[
+                "Use supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete",
+                "For audio operations (dictate, speak), use the adn_audio tool instead",
+                "Check operation spelling and try again"
+            ],
+            diagnostic_info={
+                "provided_operation": operation,
+                "supported_operations": ["write", "read", "view", "view_rendered", "edit", "edit_tags", "quick", "daily", "move", "delete", "suggest_tags", "summarize", "enhance", "generate"]
+            },
+            urgency="low"
+        )
 
 
 async def _write_operation(
@@ -694,7 +665,17 @@ async def _write_operation(
 ) -> str:
     """Handle write operation with auto-skill detection."""
     if not identifier or not content or not folder:
-        return "# Error: Missing Required Parameters\n\nThe write operation requires: identifier, content, and folder parameters."
+        return build_error_response(
+            error="Missing write parameters",
+            error_code="MISSING_WRITE_PARAMS",
+            message="Write operation requires identifier and content",
+            recovery_options=[
+                "Provide identifier (note title)",
+                "Provide content (markdown text)",
+                "Use folder parameter to specify location (optional, defaults to inbox)"
+            ],
+            urgency="medium"
+        )
 
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home
@@ -704,7 +685,21 @@ async def _write_operation(
             folder=folder,
             project=active_project.name,
         )
-        return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
+        return build_error_response(
+            error="Invalid folder path",
+            error_code="INVALID_PATH",
+            message=f"Folder path '{folder}' is not allowed",
+            recovery_options=[
+                "Use relative paths within project boundaries",
+                "Avoid '..' or absolute paths",
+                "Default folder is 'inbox' if not specified"
+            ],
+            diagnostic_info={
+                "folder": folder,
+                "project_path": str(project_path)
+            },
+            urgency="medium"
+        )
 
     # AUTO-DETECT SKILLS: If writing to skills/ folder, ensure proper frontmatter
     from advanced_memory.mcp.tools.skill_helpers import (
@@ -853,35 +848,61 @@ The API request failed with status code {response.status_code}.
         logger.info(
             f"MCP tool response: tool=content_manager operation=write action={action} permalink={result.permalink} observations_count={len(result.observations)} relations_count={len(result.relations)} resolved_relations={resolved} unresolved_relations={unresolved} status_code={response.status_code}"
         )
-        return "\n".join(summary)
+        return build_success_response(
+            operation="write",
+            summary=f"Note '{identifier}' {'created' if action == 'created' else 'updated'} successfully",
+            result={
+                "title": identifier,
+                "permalink": result.permalink,
+                "folder": folder,
+                "observations_count": len(result.observations),
+                "relations_count": len(result.relations),
+                "resolved_relations": resolved,
+                "unresolved_relations": unresolved,
+                "tags": tag_list
+            },
+            next_steps=[
+                "Read the note to verify content" if action == "created" else "Review the updated content",
+                "Add related notes or concepts",
+                "Consider enhancing with AI suggestions"
+            ]
+        )
     except Exception as e:
         logger.error(f"Error creating/updating note: {e}", exc_info=True)
-        return f"""# Error: Failed to Create/Update Note
-
-An error occurred while trying to create or update the note.
-
-**Details:**
-- **Title:** {identifier}
-- **Folder:** {folder}
-- **Error:** {str(e)}
-
-**Possible causes:**
-- Network connectivity issue
-- Server not responding
-- Invalid parameters
-- Project configuration error
-
-**Troubleshooting:**
-1. Check that the project is active and accessible
-2. Verify the folder path is valid
-3. Try again in a moment if it's a temporary network issue
-"""
+        return build_error_response(
+            error="Failed to create/update note",
+            error_code="WRITE_FAILED",
+            message=f"Could not create or update note '{identifier}'",
+            recovery_options=[
+                "Check project is active with adn_project('list')",
+                "Verify folder path is valid and within project boundaries",
+                "Try again if it was a temporary network issue",
+                "Check server logs for detailed error information"
+            ],
+            diagnostic_info={
+                "title": identifier,
+                "folder": folder,
+                "error_details": str(e),
+                "project": active_project.name if active_project else None
+            },
+            urgency="medium"
+        )
 
 
-async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> str:
+async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> dict:
     """Handle read operation."""
     if not identifier:
-        return "# Error: Missing Identifier\n\nThe read operation requires an identifier parameter."
+        return build_error_response(
+            error="Missing identifier for read",
+            error_code="MISSING_IDENTIFIER",
+            message="Read operation requires identifier parameter",
+            recovery_options=[
+                "Provide note title, permalink, or memory:// URL",
+                "Use adn_search to find available notes",
+                "Use read_latest to get the most recent note"
+            ],
+            urgency="medium"
+        )
 
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
@@ -947,7 +968,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
     return identifier, None
 
 
-async def _read_latest_operation(active_project) -> str:
+async def _read_latest_operation(active_project) -> dict:
     """Handle read_latest operation - read the single most recent note."""
     identifier, error_message = await _get_latest_identifier(active_project)
     if not identifier:
@@ -958,14 +979,14 @@ async def _read_latest_operation(active_project) -> str:
     return await read_note.fn(identifier=identifier, project=active_project.name)
 
 
-async def _view_operation(active_project, identifier: str) -> str:
+async def _view_operation(active_project, identifier: str) -> dict:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
 
     return await view_note.fn(identifier=identifier, project=active_project.name)
 
 
-async def _view_rendered_operation(active_project, identifier: str) -> str:
+async def _view_rendered_operation(active_project, identifier: str) -> dict:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
@@ -1005,7 +1026,17 @@ async def _edit_tags_operation(
 ) -> str:
     """Handle edit_tags operation."""
     if not tag_operation:
-        return "# Error: Missing Tag Operation\n\nThe edit_tags operation requires a tag_operation parameter (add, remove, replace, clear)."
+        return build_error_response(
+            error="Missing tag operation",
+            error_code="MISSING_TAG_OPERATION",
+            message="edit_tags operation requires tag_operation parameter",
+            recovery_options=[
+                "Specify tag_operation: 'add', 'remove', 'replace', or 'clear'",
+                "Provide tags parameter with tag list",
+                "Provide identifier to specify which note"
+            ],
+            urgency="medium"
+        )
 
     # Get current note to read existing tags
     project_url = active_project.project_url
@@ -1013,7 +1044,27 @@ async def _edit_tags_operation(
 
     response = await call_get(client, url)
     if response.status_code == 404:
-        return f"# Error\n\nNote not found: {identifier}\n\nPlease provide exact note title or permalink."
+        return build_error_response(
+            error="Note not found",
+            error_code="NOTE_NOT_FOUND",
+            message=f"Could not find note '{identifier}'",
+            recovery_options=[
+                "Check spelling of note title",
+                "Use permalink format (e.g., 'folder/note-title')",
+                "Use adn_search to find available notes",
+                "Use read_latest to get the most recent note"
+            ],
+            diagnostic_info={
+                "identifier": identifier,
+                "operation": "read"
+            },
+            alternative_solutions=[
+                "Use adn_search('query') to find similar notes",
+                "Use read_latest to get the most recent note",
+                "Check if note was moved or deleted"
+            ],
+            urgency="medium"
+        )
 
     current_entity = EntityResponse.model_validate(response.json())
 
@@ -1153,7 +1204,7 @@ async def _edit_tags_operation(
     return "\n".join(response_lines)
 
 
-async def _move_operation(active_project, identifier: str, destination_path: str) -> str:
+async def _move_operation(active_project, identifier: str, destination_path: str) -> dict:
     """Handle move operation."""
     from advanced_memory.mcp.tools.move_note import move_note
 
@@ -1350,7 +1401,7 @@ def _extract_content_tags(content: str, title: str) -> list[str]:
     return extracted_tags
 
 
-async def _quick_capture_operation(active_project, content: str, tags: TagType) -> str:
+async def _quick_capture_operation(active_project, content: str, tags: TagType) -> dict:
     """Handle quick capture operation - ultra-fast note creation with smart defaults."""
     from datetime import datetime
 
@@ -1397,7 +1448,7 @@ async def _quick_capture_operation(active_project, content: str, tags: TagType) 
     )
 
 
-async def _daily_note_operation(active_project, content: str, tags: TagType) -> str:
+async def _daily_note_operation(active_project, content: str, tags: TagType) -> dict:
     """Handle daily note operation - create or append to today's journal."""
     from datetime import datetime
 
@@ -1444,7 +1495,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
         )
 
 
-async def _delete_operation(active_project, identifier: str) -> str:
+async def _delete_operation(active_project, identifier: str) -> dict:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
@@ -1461,7 +1512,7 @@ async def _delete_operation(active_project, identifier: str) -> str:
         return result
 
 
-async def _suggest_tags_operation(active_project, identifier: str) -> str:
+async def _suggest_tags_operation(active_project, identifier: str) -> dict:
     """Suggest semantic tags for a note using LLM."""
     try:
         # Read the note first
@@ -1542,10 +1593,24 @@ adn_content("edit_tags",
 
     except Exception as e:
         logger.error(f"Tag suggestion error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to suggest tags: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+        return build_error_response(
+            error="LLM service unavailable",
+            error_code="LLM_UNAVAILABLE",
+            message="Could not generate tag suggestions",
+            recovery_options=[
+                "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
+                "Check LLM service is running (ollama serve, LMStudio, etc.)",
+                "Try again if it's a temporary service issue"
+            ],
+            diagnostic_info={
+                "error_details": str(e),
+                "operation": "suggest_tags"
+            },
+            urgency="medium"
+        )
 
 
-async def _summarize_operation(active_project, identifier: str) -> str:
+async def _summarize_operation(active_project, identifier: str) -> dict:
     """Summarize a note using LLM."""
     try:
         # Read the note first
@@ -1595,7 +1660,21 @@ Return the summary as plain text (not JSON)."""
 
     except Exception as e:
         logger.error(f"Summarization error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to summarize note: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+        return build_error_response(
+            error="LLM service unavailable",
+            error_code="LLM_UNAVAILABLE",
+            message="Could not generate note summary",
+            recovery_options=[
+                "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
+                "Check LLM service is running (ollama serve, LMStudio, etc.)",
+                "Try again if it's a temporary service issue"
+            ],
+            diagnostic_info={
+                "error_details": str(e),
+                "operation": "summarize"
+            },
+            urgency="medium"
+        )
 
 
 async def _enhance_operation(
@@ -1666,7 +1745,21 @@ The note has been enhanced and updated. The enhanced version includes:
 
     except Exception as e:
         logger.error(f"Enhancement error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to enhance note: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+        return build_error_response(
+            error="LLM service unavailable",
+            error_code="LLM_UNAVAILABLE",
+            message="Could not enhance note content",
+            recovery_options=[
+                "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
+                "Check LLM service is running (ollama serve, LMStudio, etc.)",
+                "Try again if it's a temporary service issue"
+            ],
+            diagnostic_info={
+                "error_details": str(e),
+                "operation": "enhance"
+            },
+            urgency="medium"
+        )
 
 
 async def _generate_operation(
@@ -1726,4 +1819,18 @@ Make it informative and useful for a knowledge base."""
 
     except Exception as e:
         logger.error(f"Content generation error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to generate content: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+        return build_error_response(
+            error="LLM service unavailable",
+            error_code="LLM_UNAVAILABLE",
+            message="Could not generate note content",
+            recovery_options=[
+                "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
+                "Check LLM service is running (ollama serve, LMStudio, etc.)",
+                "Try again if it's a temporary service issue"
+            ],
+            diagnostic_info={
+                "error_details": str(e),
+                "operation": "generate"
+            },
+            urgency="medium"
+        )

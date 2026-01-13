@@ -33,17 +33,7 @@ except AttributeError:
     from datetime import timedelta, timezone
 
     # Fallback for Python < 3.11
-    class UTC(timezone):
-        def __init__(self):
-            super().__init__(timedelta(0))
-
-        def __repr__(self):
-            return "datetime.UTC"
-
-        def __str__(self):
-            return "UTC"
-
-    UTC = UTC()
+    UTC = timezone(timedelta(0))
 
 router = APIRouter(prefix="/prompt", tags=["prompt"])
 
