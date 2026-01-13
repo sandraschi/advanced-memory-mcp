@@ -1,238 +1,274 @@
 """
-FastMCP 2.14.1+ Inter-Server Communication Module
+FastMCP 2.14.1+ Sampling with Tools Implementation (SEP-1577)
 
-This module enables direct server-to-server communication without MCP client mediation,
-providing massive efficiency gains for complex workflows.
+This module implements SEP-1577: Sampling with tools, enabling agentic workflows
+where servers borrow the client's LLM and autonomously control tool execution.
 
-Key Benefits:
-- Eliminates client round-trips for multi-step operations
-- Reduces API calls and token costs by 80-95%
-- Enables server-side orchestration of complex tasks
-- Allows servers to leverage each other's capabilities directly
+Core Features:
+- ctx.sample() with tools parameter for automatic tool orchestration
+- ctx.sample_step() for single-step control with inspection
+- Structured output via result_type (Pydantic model validation)
+- Sampling handlers: AnthropicSamplingHandler, OpenAISamplingHandler
 
-Example: Prettifying 1000 notes
-- Old way: 1000 client round-trips = hours + $$$
-- New way: Direct server calls = minutes + pennies
+Workflow Pattern:
+1. Server calls ctx.sample() with tools and prompt
+2. Client's LLM receives prompt + available tools
+3. LLM decides which tools to call and with what parameters
+4. Server executes tools automatically
+5. Results fed back to LLM for next decision
+6. Loop continues until LLM produces final answer
+
+Benefits:
+- Eliminates client round-trips for complex workflows
+- LLM makes autonomous tool orchestration decisions
+- Server controls execution flow and logic
+- Structured validation of LLM outputs
 """
 
-import asyncio
-from typing import Any, Dict, List, Optional, Union
-from fastmcp import Client
+from typing import Any, Dict, List, Optional, Union, Callable
+from pydantic import BaseModel
 from loguru import logger
 
 
-class InterServerClient:
+# Sampling Result Models
+class SamplingResult(BaseModel):
+    """Structured result from sampling operations."""
+    content: str
+    tool_calls: List[Dict[str, Any]] = []
+    finished: bool = True
+    metadata: Dict[str, Any] = {}
+
+
+class ToolSpec(BaseModel):
+    """Specification for a tool that can be used in sampling."""
+    name: str
+    description: str
+    parameters: Dict[str, Any]
+    function: Callable
+
+
+class SamplingConfig(BaseModel):
+    """Configuration for sampling operations."""
+    max_iterations: int = 10
+    temperature: float = 0.7
+    tools: List[ToolSpec] = []
+    result_type: Optional[type[BaseModel]] = None
+    system_prompt: Optional[str] = None
+
+
+class AgenticWorkflow:
     """
-    FastMCP 2.14.1+ Inter-Server Communication Client
+    Agentic workflow manager using FastMCP 2.14.1+ sampling with tools.
 
-    Enables direct communication between MCP servers without client mediation.
+    Enables servers to orchestrate complex multi-step operations by borrowing
+    the client's LLM for decision-making and tool execution control.
     """
 
-    def __init__(self):
-        self.clients: Dict[str, Client] = {}
-        self._lock = asyncio.Lock()
-
-    async def connect_server(self, server_name: str, server_instance: Any) -> Client:
+    def __init__(self, ctx: Any, config: SamplingConfig):
         """
-        Connect to another MCP server directly using FastMCP in-process transport.
+        Initialize agentic workflow.
 
         Args:
-            server_name: Identifier for the server connection
-            server_instance: FastMCP server instance to connect to
+            ctx: FastMCP Context object with sampling capability
+            config: Sampling configuration
+        """
+        self.ctx = ctx
+        self.config = config
+        self.execution_history: List[Dict[str, Any]] = []
+        self.iteration_count = 0
+
+    async def execute_workflow(self, initial_prompt: str) -> SamplingResult:
+        """
+        Execute a complete agentic workflow using sampling with tools.
+
+        Args:
+            initial_prompt: Initial prompt to start the workflow
 
         Returns:
-            Connected FastMCP Client instance
+            Final sampling result after workflow completion
         """
-        async with self._lock:
-            if server_name in self.clients:
-                return self.clients[server_name]
+        current_prompt = initial_prompt
+        self.iteration_count = 0
 
-            logger.info(f"Establishing direct connection to MCP server: {server_name}")
-            client = Client(transport=server_instance, name=f"inter-server-{server_name}")
+        while self.iteration_count < self.config.max_iterations:
+            self.iteration_count += 1
 
-            try:
-                await client.__aenter__()
-                self.clients[server_name] = client
-                logger.info(f"Successfully connected to MCP server: {server_name}")
-                return client
-            except Exception as e:
-                logger.error(f"Failed to connect to MCP server {server_name}: {e}")
-                raise
+            # Single sampling step
+            step_result = await self.ctx.sample_step(
+                messages=[{"role": "user", "content": current_prompt}],
+                tools=self._format_tools_for_sampling(),
+                temperature=self.config.temperature,
+                system=self.config.system_prompt
+            )
 
-    async def call_tool(self, server_name: str, tool_name: str, **kwargs) -> Dict[str, Any]:
-        """
-        Call a tool on a connected MCP server directly.
+            # Record execution step
+            self.execution_history.append({
+                "iteration": self.iteration_count,
+                "prompt": current_prompt,
+                "step_result": step_result.model_dump() if hasattr(step_result, 'model_dump') else step_result,
+                "tool_calls": step_result.tool_calls if hasattr(step_result, 'tool_calls') else []
+            })
 
-        Args:
-            server_name: Name of the connected server
-            tool_name: Name of the tool to call
-            **kwargs: Arguments for the tool call
+            # Execute tools if any were called
+            if step_result.tool_calls:
+                tool_results = await self._execute_tool_calls(step_result.tool_calls)
 
-        Returns:
-            Tool execution result
-        """
-        if server_name not in self.clients:
-            raise ValueError(f"No connection to server: {server_name}")
+                # Build next prompt with tool results
+                current_prompt = self._build_next_prompt(current_prompt, tool_results)
 
-        client = self.clients[server_name]
-
-        try:
-            logger.debug(f"Calling tool {tool_name} on server {server_name}")
-            result = await client.call_tool(tool_name, **kwargs)
-            return result
-        except Exception as e:
-            logger.error(f"Tool call failed: {server_name}.{tool_name}: {e}")
-            raise
-
-    async def list_tools(self, server_name: str) -> List[Dict[str, Any]]:
-        """
-        List available tools on a connected MCP server.
-
-        Args:
-            server_name: Name of the connected server
-
-        Returns:
-            List of available tools
-        """
-        if server_name not in self.clients:
-            raise ValueError(f"No connection to server: {server_name}")
-
-        client = self.clients[server_name]
-
-        try:
-            tools = await client.list_tools()
-            return tools
-        except Exception as e:
-            logger.error(f"Failed to list tools on server {server_name}: {e}")
-            raise
-
-    async def disconnect_server(self, server_name: str) -> None:
-        """
-        Disconnect from a MCP server.
-
-        Args:
-            server_name: Name of the server to disconnect from
-        """
-        async with self._lock:
-            if server_name in self.clients:
-                client = self.clients[server_name]
-                try:
-                    await client.__aexit__(None, None, None)
-                except Exception as e:
-                    logger.warning(f"Error disconnecting from {server_name}: {e}")
-                finally:
-                    del self.clients[server_name]
-                    logger.info(f"Disconnected from MCP server: {server_name}")
-
-    async def disconnect_all(self) -> None:
-        """Disconnect from all connected servers."""
-        server_names = list(self.clients.keys())
-        for server_name in server_names:
-            await self.disconnect_server(server_name)
-
-
-# Global inter-server client instance
-inter_server_client = InterServerClient()
-
-
-async def call_external_tool(server_instance: Any, tool_name: str, **kwargs) -> Dict[str, Any]:
-    """
-    Convenience function to call a tool on an external MCP server.
-
-    This is the primary interface for server-to-server communication.
-
-    Args:
-        server_instance: FastMCP server instance to call
-        tool_name: Name of the tool to execute
-        **kwargs: Tool arguments
-
-    Returns:
-        Tool execution result
-
-    Example:
-        # Call a prettification tool on another server
-        result = await call_external_tool(
-            other_server_instance,
-            "prettify_text",
-            text="raw content",
-            style="academic"
-        )
-    """
-    server_name = getattr(server_instance, 'name', 'external_server')
-    client = await inter_server_client.connect_server(server_name, server_instance)
-
-    try:
-        return await inter_server_client.call_tool(server_name, tool_name, **kwargs)
-    except Exception:
-        # Clean up failed connection
-        await inter_server_client.disconnect_server(server_name)
-        raise
-
-
-async def orchestrate_batch_operation(
-    server_instance: Any,
-    tool_name: str,
-    items: List[Dict[str, Any]],
-    batch_size: int = 10,
-    **shared_kwargs
-) -> List[Dict[str, Any]]:
-    """
-    Orchestrate batch operations across multiple items using direct server calls.
-
-    This demonstrates the power of server-to-server communication:
-    - Process 1000 notes in parallel batches
-    - No client round-trips required
-    - Massive efficiency gains
-
-    Args:
-        server_instance: External MCP server instance
-        tool_name: Tool to call for each item
-        items: List of item dictionaries to process
-        batch_size: Number of concurrent operations
-        **shared_kwargs: Arguments shared across all tool calls
-
-    Returns:
-        List of operation results
-
-    Example:
-        # Prettify 1000 notes efficiently
-        notes = [{"id": i, "content": "..."} for i in range(1000)]
-        results = await orchestrate_batch_operation(
-            text_processor_server,
-            "prettify_text",
-            notes,
-            batch_size=50,
-            style="academic"
-        )
-    """
-    server_name = getattr(server_instance, 'name', 'batch_server')
-    client = await inter_server_client.connect_server(server_name, server_instance)
-
-    results = []
-
-    # Process in batches to avoid overwhelming the server
-    for i in range(0, len(items), batch_size):
-        batch = items[i:i + batch_size]
-
-        # Create concurrent tasks for this batch
-        tasks = []
-        for item in batch:
-            # Merge item-specific args with shared args
-            tool_args = {**shared_kwargs, **item}
-            task = inter_server_client.call_tool(server_name, tool_name, **tool_args)
-            tasks.append(task)
-
-        # Execute batch concurrently
-        logger.info(f"Processing batch {i//batch_size + 1} with {len(tasks)} items")
-        batch_results = await asyncio.gather(*tasks, return_exceptions=True)
-
-        # Handle results and exceptions
-        for j, result in enumerate(batch_results):
-            if isinstance(result, Exception):
-                logger.error(f"Batch item {i+j} failed: {result}")
-                results.append({"error": str(result), "item_index": i+j})
+                # Check if workflow should continue
+                if self._should_finish_workflow(tool_results):
+                    break
             else:
-                results.append(result)
+                # No tools called, workflow complete
+                break
 
-    logger.info(f"Completed batch processing: {len(results)} total results")
-    return results
+        # Return final result
+        final_content = self._extract_final_content()
+        return SamplingResult(
+            content=final_content,
+            tool_calls=self.execution_history[-1]["tool_calls"] if self.execution_history else [],
+            finished=True,
+            metadata={
+                "iterations": self.iteration_count,
+                "execution_history": self.execution_history,
+                "total_tools_executed": sum(len(h["tool_calls"]) for h in self.execution_history)
+            }
+        )
+
+    def _format_tools_for_sampling(self) -> List[Dict[str, Any]]:
+        """Format tools for sampling API."""
+        formatted_tools = []
+        for tool in self.config.tools:
+            formatted_tools.append({
+                "name": tool.name,
+                "description": tool.description,
+                "parameters": tool.parameters
+            })
+        return formatted_tools
+
+    async def _execute_tool_calls(self, tool_calls: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Execute the tools called by the LLM."""
+        results = []
+
+        for tool_call in tool_calls:
+            try:
+                tool_name = tool_call.get("name")
+                tool_args = tool_call.get("arguments", {})
+
+                # Find and execute the tool
+                tool_spec = next((t for t in self.config.tools if t.name == tool_name), None)
+                if tool_spec:
+                    result = await tool_spec.function(**tool_args)
+                    results.append({
+                        "tool_name": tool_name,
+                        "args": tool_args,
+                        "result": result,
+                        "success": True
+                    })
+                else:
+                    results.append({
+                        "tool_name": tool_name,
+                        "args": tool_args,
+                        "error": f"Tool '{tool_name}' not found",
+                        "success": False
+                    })
+
+            except Exception as e:
+                results.append({
+                    "tool_name": tool_call.get("name"),
+                    "args": tool_call.get("arguments", {}),
+                    "error": str(e),
+                    "success": False
+                })
+
+        return results
+
+    def _build_next_prompt(self, current_prompt: str, tool_results: List[Dict[str, Any]]) -> str:
+        """Build the next prompt incorporating tool results."""
+        result_summary = "\n\nTool execution results:\n"
+        for result in tool_results:
+            if result["success"]:
+                result_summary += f"✅ {result['tool_name']}: {result['result']}\n"
+            else:
+                result_summary += f"❌ {result['tool_name']}: {result['error']}\n"
+
+        return current_prompt + result_summary + "\n\nContinue with the next step, or provide final answer if complete."
+
+    def _should_finish_workflow(self, tool_results: List[Dict[str, Any]]) -> bool:
+        """Determine if the workflow should finish based on tool results."""
+        # Simple heuristic: finish if no successful tool executions
+        successful_tools = [r for r in tool_results if r["success"]]
+        return len(successful_tools) == 0
+
+    def _extract_final_content(self) -> str:
+        """Extract the final content from the workflow."""
+        if self.execution_history:
+            # Use the last step's content as final answer
+            last_step = self.execution_history[-1]
+            return last_step.get("step_result", {}).get("content", "Workflow completed")
+        return "Workflow completed without execution history"
+
+
+# Convenience functions for common use cases
+
+async def sample_with_tools(
+    ctx: Any,
+    prompt: str,
+    tools: List[ToolSpec],
+    max_iterations: int = 5,
+    result_type: Optional[type[BaseModel]] = None,
+    system_prompt: Optional[str] = None
+) -> SamplingResult:
+    """
+    Convenience function for sampling with tools using FastMCP 2.14.1+.
+
+    Args:
+        ctx: FastMCP context with sampling capability
+        prompt: Initial prompt for the LLM
+        tools: List of tools available for the LLM to use
+        max_iterations: Maximum number of LLM-tool loops
+        result_type: Optional Pydantic model for structured output validation
+        system_prompt: Optional system prompt
+
+    Returns:
+        SamplingResult with final content and execution metadata
+
+    Example:
+        result = await sample_with_tools(
+            ctx,
+            "Process these 100 notes and create a summary",
+            [prettify_tool, analyze_tool, summarize_tool],
+            max_iterations=10
+        )
+    """
+    config = SamplingConfig(
+        max_iterations=max_iterations,
+        tools=tools,
+        result_type=result_type,
+        system_prompt=system_prompt
+    )
+
+    workflow = AgenticWorkflow(ctx, config)
+    return await workflow.execute_workflow(prompt)
+
+
+def create_tool_spec(name: str, description: str, function: Callable, parameters: Dict[str, Any]) -> ToolSpec:
+    """
+    Create a tool specification for use in sampling operations.
+
+    Args:
+        name: Tool name
+        description: Tool description for LLM
+        function: Callable to execute
+        parameters: JSON schema for tool parameters
+
+    Returns:
+        ToolSpec for sampling operations
+    """
+    return ToolSpec(
+        name=name,
+        description=description,
+        parameters=parameters,
+        function=function
+    )

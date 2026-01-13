@@ -108,9 +108,9 @@ else:
     from .content_manager import adn_content
     from .help import help
     from .inter_server_tools import (
-        orchestrate_batch_content_operation,
-        chain_server_operations,
-        server_federation_status,
+        agentic_content_workflow,
+        intelligent_batch_processor,
+        sampling_capabilities_status,
     )
     from .project_manager import adn_project
     from .typora_control import typora_control
@@ -136,7 +136,7 @@ __all__ = [
     "adn_navigation",
     "adn_project",
     "adn_inbox",
-    "orchestrate_batch_content_operation",
-    "chain_server_operations",
-    "server_federation_status",
+    "agentic_content_workflow",
+    "intelligent_batch_processor",
+    "sampling_capabilities_status",
 ]
