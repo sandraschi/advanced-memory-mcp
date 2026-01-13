@@ -1,4 +1,0 @@
-2026-01-02 05:34:05.714 | DEBUG    | advanced_memory.api.template_loader:__init__:236 - Initialized template loader with directory: D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\templates
-2026-01-02 05:34:10.227 | DEBUG    | advanced_memory.mcp.async_client:create_client:23 - Creating ASGI client for local Advanced Memory API
-Scanning tools in D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\mcp\tools
-Testing import of advanced_memory.mcp.tools.adn_audio...

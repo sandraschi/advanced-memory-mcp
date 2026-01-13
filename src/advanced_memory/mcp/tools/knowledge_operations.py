@@ -30,11 +30,7 @@ async def adn_knowledge(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 18+ knowledge operations into one tool to:
-    - Prevent tool explosion (18 tools -> 1 tool) while maintaining deep functionality.
-    - Improve discoverability by grouping related knowledge maintenance tasks.
-    - Centralize research orchestration and AI-powered content analysis.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 18+ knowledge operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

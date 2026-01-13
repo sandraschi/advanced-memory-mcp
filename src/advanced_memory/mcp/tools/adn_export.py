@@ -40,11 +40,7 @@ async def adn_export(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 10+ export operations into one tool to:
-    - Prevent tool explosion (10+ tools -> 1 tool) while maintaining deep functionality.
-    - Improve discoverability by grouping related data egress tasks.
-    - Centralize export logic, formatting standards, and path resolution.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 10+ export operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

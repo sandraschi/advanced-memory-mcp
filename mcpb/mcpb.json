@@ -1,12 +1,12 @@
 {
   "name": "advanced-memory-mcp",
-  "version": "1.0.0b7",
+  "version": "1.1.0b2",
   "description": "Advanced Memory MCP - A powerful knowledge management system with portmanteau tools for Cursor IDE compatibility",
   "author": "Advanced Memory Team",
   "license": "MIT",
-  "outputDir": "dist",
+  "outputDir": "../dist",
   "mcp": {
-    "version": "2.12.0",
+    "version": "2.14.3",
     "server": {
       "command": "python",
       "args": ["-m", "advanced_memory.mcp.server"],

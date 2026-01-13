@@ -30,11 +30,7 @@ async def adn_import(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 10+ import operations into one tool to:
-    - Prevent tool explosion (10+ tools -> 1 tool) while maintaining deep functionality.
-    - Improve discoverability by grouping related data ingestion tasks.
-    - Centralize import logic, error handling, and project routing.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 10+ import operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

@@ -49,11 +49,7 @@ async def adn_project(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 8 project management operations into one tool to:
-    - Prevent tool explosion (8 tools -> 1 tool) while maintaining deep functionality.
-    - Improve discoverability by grouping related project lifecycle tasks.
-    - Centralize context switching and AI-powered project detection.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 8 project management operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

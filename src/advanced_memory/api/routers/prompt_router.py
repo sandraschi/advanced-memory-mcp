@@ -5,7 +5,6 @@ It centralizes all prompt formatting logic that was previously in the MCP prompt
 """
 
 import datetime
-UTC = datetime.timezone.utc
 
 from fastapi import APIRouter, HTTPException, status
 from loguru import logger
@@ -26,6 +25,25 @@ from advanced_memory.schemas.prompt import (
     SearchPromptRequest,
 )
 from advanced_memory.schemas.search import SearchItemType, SearchQuery
+
+# Python 3.10 compatibility - UTC was added in 3.11
+try:
+    UTC = datetime.UTC
+except AttributeError:
+    from datetime import timedelta, timezone
+
+    # Fallback for Python < 3.11
+    class UTC(timezone):
+        def __init__(self):
+            super().__init__(timedelta(0))
+
+        def __repr__(self):
+            return "datetime.UTC"
+
+        def __str__(self):
+            return "UTC"
+
+    UTC = UTC()
 
 router = APIRouter(prefix="/prompt", tags=["prompt"])
 

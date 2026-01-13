@@ -45,11 +45,7 @@ async def adn_navigation(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 6 navigation and diagnostic operations into one tool to:
-    - Prevent tool explosion (6 tools -> 1 tool) while maintaining full functionality.
-    - Improve discoverability by grouping related operations together.
-    - Reduce cognitive load when working with navigation and health tasks.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 6 navigation operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

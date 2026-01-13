@@ -45,11 +45,7 @@ async def adn_search(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 5 search operations into one tool to:
-    - Prevent tool explosion (5 tools -> 1 tool) while maintaining full functionality.
-    - Improve discoverability by grouping related operations together.
-    - Provide a consistent search experience across different data sources.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 5 search operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [PARAMETER DESIGN]

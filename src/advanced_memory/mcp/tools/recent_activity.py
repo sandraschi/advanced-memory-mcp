@@ -1,7 +1,6 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
 import datetime
-UTC = datetime.timezone.utc
 from typing import Any
 
 from loguru import logger
@@ -13,6 +12,25 @@ from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
+
+# Python 3.10 compatibility - UTC was added in 3.11
+try:
+    UTC = datetime.UTC
+except AttributeError:
+    from datetime import timedelta, timezone
+
+    # Fallback for Python < 3.11
+    class UTC(timezone):
+        def __init__(self):
+            super().__init__(timedelta(0))
+
+        def __repr__(self):
+            return "datetime.UTC"
+
+        def __str__(self):
+            return "UTC"
+
+    UTC = UTC()
 
 
 @mcp.tool

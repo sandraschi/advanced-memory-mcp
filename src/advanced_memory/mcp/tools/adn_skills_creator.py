@@ -47,10 +47,7 @@ async def adn_skills_creator(
     """Create, validate, and package Claude skills using the gold-standard workflow.
 
     PORTMANTEAU PATTERN RATIONALE:
-    This tool mirrors Anthropic's skill-creator methodology while enforcing Advanced Memory's
-    modular requirements (modules, research checklist, metadata). It acts as the central
-    manufacturing plant for skills: scaffolding, validating, packaging, inspecting, and upgrading.
-    Consolidates 5 distinct CLI operations into one unified agentic tool.
+    Consolidates 5 skill creation operations into one tool to centralize skill manufacturing workflow.
 
     SUPPORTED OPERATIONS:
     - scaffold: Initialize a new skill with modular structure and templates

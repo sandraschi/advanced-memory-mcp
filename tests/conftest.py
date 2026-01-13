@@ -10,7 +10,20 @@ from textwrap import dedent
 try:
     from datetime import UTC
 except ImportError:
-    UTC = UTC
+    from datetime import timedelta, timezone
+
+    # Fallback for Python < 3.11
+    class UTC(timezone):
+        def __init__(self):
+            super().__init__(timedelta(0))
+
+        def __repr__(self):
+            return "datetime.UTC"
+
+        def __str__(self):
+            return "UTC"
+
+    UTC = UTC()
 
 import pytest
 import pytest_asyncio

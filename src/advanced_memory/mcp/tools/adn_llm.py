@@ -44,12 +44,7 @@ async def adn_llm(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Instead of separate tools for each LLM provider or operation, this tool consolidates
-    the entire LLM lifecycle management. This design:
-    - Unifies configuration across disparate providers (Ollama, LM Studio, OpenAI)
-    - Centralizes model selection and persistence logic
-    - Provides consistent health check and status reporting
-    - Simplifies switching between local and hosted models
+    Consolidates LLM lifecycle management into one tool to unify configuration across disparate providers.
 
     ---------------------------------------------------------------------------
     [SUPPORTED OPERATIONS]

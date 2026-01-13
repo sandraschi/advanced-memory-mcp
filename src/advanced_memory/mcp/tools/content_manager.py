@@ -1,9 +1,7 @@
 """Content Manager portmanteau tool for Advanced Memory MCP server.
 
 PORTMANTEAU PATTERN RATIONALE:
-Instead of creating 7 separate tools (write_note, read_note, view_note, edit_note, edit_tags, move_note, delete_note),
-this tool consolidates all content operations into a single interface. Prevents tool explosion (7 tools -> 1 tool)
-while maintaining full functionality and improving discoverability. Follows FastMCP 2.14.1+ SOTA standards.
+Consolidates 7 content operations into one tool to prevent tool explosion while maintaining full functionality.
 
 Supported Operations:
 - write: Create new notes with semantic processing and relations
@@ -696,7 +694,7 @@ async def _write_operation(
 ) -> str:
     """Handle write operation with auto-skill detection."""
     if not identifier or not content or not folder:
-            return "# Error: Missing Required Parameters\n\nThe write operation requires: identifier, content, and folder parameters."
+        return "# Error: Missing Required Parameters\n\nThe write operation requires: identifier, content, and folder parameters."
 
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home

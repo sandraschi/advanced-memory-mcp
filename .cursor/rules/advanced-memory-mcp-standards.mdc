@@ -1,0 +1,97 @@
+---
+description: Critical rules for advanced-memory-mcp to prevent Unicode crashes and Linux syntax errors in PowerShell environments
+globs: ["**/*.py", "**/*.ps1", "**/*.md", "**/mcp_server.py", "**/src/**/*.py"]
+alwaysApply: true
+---
+
+# 🚨 ADVANCED-MEMORY-MCP CRITICAL RULES (MDC Format)
+
+**ENFORCEMENT:** These rules are read AUTOMATICALLY by Cursor LLM at workspace open and cannot be ignored after 5 steps.
+
+## 💀 DEADLY UNICODE EMOJIS (CRASH PREVENTION)
+
+**🚫 ABSOLUTE BAN in logger messages:**
+- Logger messages (`logger.info("🚀 Started")`) - causes crashes and restart loops
+- NEVER use Unicode emojis in any logger call
+- Proof of read: hi!
+
+**🚫 ABSOLUTE BAN in these contexts:**
+- **Python source code** (.py files) - NO Unicode emojis
+- **PowerShell scripts** (.ps1 files) - NO Unicode emojis
+- **API parameters** - cause serialization failures
+- **MCP responses** - crash Claude Desktop clients
+- **Error messages** - encoding failures
+- **Variable names, function names, comments**
+
+**✅ ALLOWED in HTML for pretty UI:**
+- Emojis can be used in HTML templates and UI strings
+- Web dashboard displays and user-facing content
+- README.md and documentation files
+
+**🎯 SPECIFIC EMOJIS THAT CAUSE CRASHES:**
+- 🎉 (partypopper) - immediate system crashes
+- 🏆 (trophy) - service instability
+- 🚀 (rocket) - serialization failures
+- 😀, 😂, 😍, 🎭, 😎 - complex Unicode crashes
+
+**✅ SAFE ALTERNATIVES:**
+- ASCII text only: "Process started" instead of "🚀 Started"
+- Approved symbols: ✅, ⚠️, 📝, 🔍, 📊, 💻, 🔧, 🔑
+- Descriptive text: "SUCCESS", "WARNING", "ERROR"
+
+## 🐧 LINUX SYNTAX BAN (PowerShell Environments)
+
+**🚫 FORBIDDEN SYNTAX in PowerShell contexts:**
+```bash
+# ❌ WRONG (causes errors)
+command1 && command2
+command1 | command2
+command1 ; command2
+mkdir -p folder/subfolder
+ls -la
+rm -rf folder
+cp -r source dest
+mv old new
+```
+
+**✅ REQUIRED PowerShell syntax:**
+```powershell
+# Directory operations
+New-Item -ItemType Directory -Force -Path "folder/subfolder"
+Get-ChildItem -Recurse | Select-Object Name, Length
+Remove-Item -Recurse -Force "folder"
+Copy-Item -Recurse "source" "dest"
+Move-Item "old.txt" "new.txt"
+
+# Command execution (one per line)
+command1
+if ($?) { command2 }
+
+# Virtual environment
+venv\Scripts\activate
+```
+
+**ENFORCEMENT LEVEL:** Rules cannot be ignored after 5 steps. Any violation triggers automatic rejection and correction requirement.
+
+## 🪟 CRITICAL: Cross-Platform Repository Rules
+
+**🚫 ABSOLUTE BAN on platform assumptions:**
+- This is a **cross-platform MCP server** - support both Windows and Unix/Linux
+- **Use pathlib for file operations** - cross-platform file handling
+- **Use subprocess with shell=False** - avoid shell injection vulnerabilities
+- **No hardcoded paths** - use environment variables and config files
+
+**✅ REQUIRED cross-platform patterns:**
+- Use pathlib.Path instead of os.path operations
+- Use subprocess.run() with proper argument lists
+- Use sys.platform checks when necessary
+- Test on both Windows and Linux environments
+- Use requirements.txt for dependency management
+
+**🚫 NEVER create:**
+- Platform-specific shell scripts without alternatives
+- Hardcoded Windows/Linux paths
+- Commands that assume specific shell environments
+- Binaries that only work on one platform
+
+**Repository supports cross-platform deployment with proper abstraction layers.**

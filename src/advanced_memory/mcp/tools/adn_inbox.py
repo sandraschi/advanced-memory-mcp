@@ -28,12 +28,7 @@ async def adn_inbox(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Instead of multiple tools for file ingestion, this tool consolidates the entire
-    ingestion pipeline. This design:
-    - Centralizes file type detection and conversion logic.
-    - Provides atomic processing state (inbox vs. converted).
-    - Manages background watching and conversion.
-    - Simplifies the user interface for drop-and-process workflows.
+    Consolidates file ingestion pipeline into one tool to centralize file type detection and conversion logic.
 
     ---------------------------------------------------------------------------
     [SUPPORTED OPERATIONS]

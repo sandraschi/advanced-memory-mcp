@@ -101,12 +101,7 @@ async def adn_skills(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 20+ Claude Skills operations into one tool to:
-    - Prevent tool explosion (20+ tools -> 1 tool) while maintaining deep functionality.
-    - Improve discoverability by grouping related skill lifecycle tasks.
-    - Centralize format validation, import/export logic, and activation management.
-    - Enable "THE DOOR" pattern for staged loading of skills into context.
-    - Follow FastMCP 2.13+ SOTA documentation and architectural standards.
+    Consolidates 20+ Claude Skills operations into one tool to prevent tool explosion while maintaining full functionality.
 
     ---------------------------------------------------------------------------
     [SUPPORTED OPERATIONS]

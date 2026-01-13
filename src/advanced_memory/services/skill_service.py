@@ -1,9 +1,7 @@
 """Skill service for Claude Skills management."""
 
-import json
 import datetime
-from typing import Optional
-UTC = datetime.timezone.utc
+import json
 
 from loguru import logger
 from sqlalchemy import select
@@ -11,6 +9,25 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from advanced_memory.models import Skill
 from advanced_memory.repository.repository import Repository
+
+# Python 3.10 compatibility - UTC was added in 3.11
+try:
+    UTC = datetime.UTC
+except AttributeError:
+    from datetime import timedelta, timezone
+
+    # Fallback for Python < 3.11
+    class UTC(timezone):
+        def __init__(self):
+            super().__init__(timedelta(0))
+
+        def __repr__(self):
+            return "datetime.UTC"
+
+        def __str__(self):
+            return "UTC"
+
+    UTC = UTC()
 
 
 class SkillService:

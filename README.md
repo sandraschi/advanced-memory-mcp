@@ -8,7 +8,7 @@
 
 A Model Context Protocol server that integrates personal knowledge management with Claude Desktop. Features include knowledge graphs, zettelkasten note-taking, and experimental Claude Skills integration.
 
-**New in v1.1.0b1**: SOTA docstring scannability overhaul across all core tools, Audio Soul 2026 upgrade, ADN LLM integration, and critical stdio mode stability fixes.
+**New in v1.1.0b2**: Complete repository modernization to SOTA MCP Standards v12.0, extensive AI prompt templates, MCPB build system overhaul, and comprehensive documentation restructuring. See [Repository Modernization Progress](zettelkasten/2026-01-13-repository-modernization-progress.md) for full details.
 
 [Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
 

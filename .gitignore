@@ -70,3 +70,6 @@ zettelkasten/converted/*
 
 # Private documentation (internal dev notes, not for public)
 docs-private/
+
+# Deprecated files and directories
+deprecated/

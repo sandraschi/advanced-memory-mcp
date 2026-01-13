@@ -43,9 +43,7 @@ async def adn_zettelmaker(
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
-    This tool consolidates the entire zettelkasten scaffolding workflow into one interface.
-    Instead of separate tools for generation, analysis, and expansion, this unifies
-    the cognitive pipeline: Analyze -> Suggest -> Generate -> Expand -> Connect.
+    Consolidates zettelkasten scaffolding workflow into one tool to unify cognitive pipeline operations.
 
     The 10-category taxonomy provides a comprehensive structure for professional knowledge work,
     from development to creative arts.
