@@ -73,3 +73,6 @@ docs-private/
 
 # Deprecated files and directories
 deprecated/
+
+# Notes folder (irrelevant content)
+notes/
