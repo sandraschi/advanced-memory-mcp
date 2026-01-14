@@ -10,6 +10,7 @@ from typing import Literal
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 from advanced_memory.schemas.memory import GraphContext
 
 
@@ -36,12 +37,18 @@ async def adn_navigation(
     level: Literal["basic", "intermediate", "advanced"] | None = "basic",
     focus: str | None = None,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Comprehensive navigation management tool for Advanced Memory knowledge base.
 
     This point-of-entry tool provides high-level navigation, diagnostic, and
     context-building operations. It is used to traverse the knowledge graph,
     monitor system health, and browse the physical file organization.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
@@ -144,22 +151,22 @@ async def adn_navigation(
     # Route to appropriate operation
     if operation == "build_context":
         if not url:
-            return """# Error: Missing Required Parameter
-
-**Operation:** build_context
-
-**Missing:** url parameter
-
-The build_context operation requires a memory:// URL to start from.
-
-**Example:**
-```
-adn_navigation(
-    operation="build_context",
-    url="memory://projects/my-project",
-    depth=2
-)
-```"""
+            return build_error_response(
+                error="Missing required parameter",
+                error_code="MISSING_URL",
+                message="build_context operation requires a url parameter with memory:// URL",
+                recovery_options=[
+                    "Provide url parameter starting with memory://",
+                    "Use memory://projects/project-name or memory://notes/note-name",
+                    "Check URL format and try again",
+                ],
+                example={
+                    "operation": "build_context",
+                    "url": "memory://projects/my-project",
+                    "depth": 2,
+                },
+                urgency="medium",
+            )
         return await _build_context_operation(
             url, depth, timeframe, page, page_size, max_related, project
         )
@@ -172,22 +179,18 @@ adn_navigation(
         return await _list_directory_operation(dir_name, depth, file_name_glob, project)
     elif operation == "backlinks":
         if not identifier:
-            return """# Error: Missing Required Parameter
-
-**Operation:** backlinks
-
-**Missing:** identifier parameter
-
-The backlinks operation finds all notes that reference a specific note.
-You must provide the note's title, permalink, or identifier.
-
-**Example:**
-```
-adn_navigation(
-    operation="backlinks",
-    identifier="Python Basics"
-)
-```"""
+            return build_error_response(
+                error="Missing required parameter",
+                error_code="MISSING_IDENTIFIER",
+                message="backlinks operation requires an identifier parameter (note title, permalink, or memory:// URL)",
+                recovery_options=[
+                    "Provide identifier parameter with note title or permalink",
+                    "Use adn_content('read') to find the correct identifier first",
+                    "Check identifier spelling and try again",
+                ],
+                example={"operation": "backlinks", "identifier": "Python Basics"},
+                urgency="medium",
+            )
         return await _backlinks_operation(identifier, max_related, project)
     elif operation == "status":
         return await _status_operation(level, focus)
@@ -296,36 +299,78 @@ async def _recent_activity_operation(
                 "adn_navigation_recent_activity_invalid_payload",
                 payload_type=type(raw_result),
             )
-            return (
-                "# Error\n\n"
-                "recent_activity returned data in an unexpected format. "
-                "Please retry or check server logs."
+            return build_error_response(
+                error="Invalid response format",
+                error_code="INVALID_RESPONSE_FORMAT",
+                message="recent_activity returned data in an unexpected format",
+                recovery_options=[
+                    "Try the operation again",
+                    "Check server logs for more details",
+                    "Contact support if the issue persists",
+                ],
+                diagnostic_info={
+                    "payload_type": str(type(raw_result)),
+                    "operation": "recent_activity",
+                },
+                urgency="low",
             )
 
-    # Convert GraphContext to markdown string
-    output = ["# Recent Activity\n"]
-
+    # Prepare structured recent activity results
+    activity_items = []
     if hasattr(result, "results") and result.results:
-        output.append(f"**Found {len(result.results)} recent items**\n")
         for ctx_result in result.results:
             # Each result has a primary_result nested inside
             item = (
                 ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             )
-            title = getattr(item, "title", getattr(item, "name", "Unknown"))
-            item_type = getattr(item, "type", "item")
-            permalink = getattr(item, "permalink", "")
-            output.append(f"- **{title}** ({item_type}) - `{permalink}`")
-    else:
-        output.append("No recent activity found.\n")
+            activity_items.append(
+                {
+                    "title": getattr(item, "title", getattr(item, "name", "Unknown")),
+                    "type": getattr(item, "type", "item"),
+                    "permalink": getattr(item, "permalink", ""),
+                    "timestamp": getattr(item, "timestamp", None),
+                    "content_preview": getattr(item, "content", "")[:100]
+                    if getattr(item, "content", "")
+                    else None,
+                }
+            )
 
+    metadata = {}
     if hasattr(result, "metadata"):
-        metadata = result.metadata
-        output.append(f"\n**Timeframe**: {getattr(metadata, 'timeframe', 'N/A')}")
-        if hasattr(metadata, "total_results"):
-            output.append(f"**Total results**: {metadata.total_results}")
+        result_metadata = result.metadata
+        metadata = {
+            "timeframe": getattr(result_metadata, "timeframe", "N/A"),
+            "total_results": getattr(result_metadata, "total_results", len(activity_items)),
+            "query_time": getattr(result_metadata, "query_time", None),
+        }
 
-    return "\n".join(output)
+    if not activity_items:
+        return build_success_response(
+            operation="recent_activity",
+            summary="No recent activity found",
+            result={"timeframe": timeframe, "total_results": 0, "items": [], "metadata": metadata},
+            next_steps=[
+                "Try a different timeframe",
+                "Check if there are any notes in the project",
+                "Use adn_content() to add some content first",
+            ],
+        )
+
+    return build_success_response(
+        operation="recent_activity",
+        summary=f"Found {len(activity_items)} recent items",
+        result={
+            "timeframe": timeframe,
+            "total_results": len(activity_items),
+            "items": activity_items,
+            "metadata": metadata,
+        },
+        next_steps=[
+            "Use adn_content('read', identifier='permalink') to read specific items",
+            "Use adn_navigation() with different parameters to explore more",
+            "Consider using adn_search() for content-based queries",
+        ],
+    )
 
 
 async def _list_directory_operation(

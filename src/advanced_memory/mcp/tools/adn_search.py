@@ -2,6 +2,12 @@
 
 This tool consolidates all search operations: notes, obsidian, joplin, notion, evernote.
 It reduces the number of MCP tools while maintaining full functionality.
+
+RESPONSES:
+Success: {"success": true, "operation": "...", "summary": "...", "results": [...], "metadata": {...}}
+Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+For errors, check recovery_options for next steps. Use adn_project first to set context.
 """
 
 import re
@@ -10,6 +16,7 @@ from typing import Literal
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 from advanced_memory.utils import parse_tags
 
 
@@ -36,12 +43,16 @@ async def adn_search(
     notebook_filter: str | None = None,
     tag_filter: str | None = None,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Comprehensive search management tool for Advanced Memory knowledge base.
 
     This point-of-entry tool provides a unified interface for full-text search,
     pattern matching, and metadata filtering. It can search both the internal
     knowledge base (Advanced Memory) and external vault formats.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "search", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
@@ -282,28 +293,32 @@ async def adn_search(
             max_results,
         )
     else:
-        return f"""# Error: Invalid Search Operation
-
-**You provided:** operation="{operation}"
-
-**Valid search operations are:**
-- "notes" - Search Advanced Memory knowledge base (use this for most searches)
-- "obsidian" - Search external Obsidian vault (requires source_path)
-- "joplin" - Search external Joplin export (requires source_path)
-- "notion" - Search external Notion export (requires source_path)
-- "evernote" - Search external Evernote export (requires source_path)
-
-**Example for searching your notes:**
-```
-adn_search(
-    operation="notes",
-    query="german shepherd",
-    tags=["dog"],
-    after_date="spring 2024"
-)
-```
-
-**Check your operation parameter spelling and try again.**"""
+        return build_error_response(
+            error="Invalid search operation",
+            error_code="INVALID_OPERATION",
+            message=f"You provided operation='{operation}'. Valid operations: notes, obsidian, joplin, notion, evernote",
+            recovery_options=[
+                "Use operation='notes' to search your knowledge base",
+                "Use operation='obsidian' with source_path to search external vaults",
+                "Use operation='joplin' with source_path to search Joplin exports",
+                "Use operation='notion' with source_path to search Notion exports",
+                "Use operation='evernote' with source_path to search Evernote exports",
+            ],
+            examples=[
+                {
+                    "operation": "notes",
+                    "query": "german shepherd",
+                    "tags": ["dog"],
+                    "after_date": "spring 2024",
+                },
+                {
+                    "operation": "obsidian",
+                    "query": "meeting notes",
+                    "source_path": "/path/to/vault",
+                },
+            ],
+            urgency="medium",
+        )
 
 
 async def _notes_search(
@@ -317,7 +332,7 @@ async def _notes_search(
     before_date: str | None,
     tags: list[str] | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Handle Advanced Memory notes search operation."""
     from advanced_memory.mcp.tools.search import search_notes
 
@@ -341,40 +356,76 @@ async def _notes_search(
     if isinstance(result, str):
         return result
 
-    # Format SearchResponse as markdown string
-    output = [f"# Search Results: {len(result.results)} matches\n"]
-
-    if not result.results:
-        output.append("No results found for your query.\n")
-        output.append("**Suggestions:**")
-        output.append("- Try broader terms")
-        output.append("- Check spelling")
-        output.append("- Use fewer search terms")
-        return "\n".join(output)
-
+    # Prepare structured search results
+    formatted_results = []
     for idx, item in enumerate(result.results, 1):
         title = item.title or "Untitled"
         permalink = item.permalink or ""
         item_type = item.type.value if hasattr(item.type, "value") else str(item.type)
 
-        output.append(f"## {idx}. {title}")
-        output.append(f"**Type:** {item_type}")
-        output.append(f"**Permalink:** `{permalink}`")
-        output.append(f"**Score:** {item.score:.2f}")
+        result_item = {
+            "index": idx,
+            "title": title,
+            "type": item_type,
+            "permalink": permalink,
+            "score": round(item.score, 2),
+            "content_preview": None,
+        }
 
         # Add content snippet if available
         if item.content:
             snippet = item.content[:200] + "..." if len(item.content) > 200 else item.content
-            output.append(f"**Preview:** {snippet}")
+            result_item["content_preview"] = snippet
 
-        output.append("")
+        formatted_results.append(result_item)
 
-    # Add pagination info
-    output.append(
-        f"**Page:** {result.current_page} of {((len(result.results) // result.page_size) + 1 if result.results else 1)}"
+    # Calculate pagination info
+    total_pages = ((len(result.results) // result.page_size) + 1) if result.results else 1
+
+    if not result.results:
+        return build_success_response(
+            operation="search",
+            summary=f"No results found for query '{query}' in notes search",
+            result={
+                "query": query,
+                "operation": "notes",
+                "total_results": 0,
+                "results": [],
+                "current_page": result.current_page,
+                "total_pages": total_pages,
+                "page_size": result.page_size,
+            },
+            suggestions=[
+                "Try broader search terms",
+                "Check spelling and try again",
+                "Use fewer search terms for broader results",
+                "Consider different search types (title, text, permalink)",
+            ],
+            next_steps=[
+                f"Try a broader search: adn_search(operation='notes', query='{query.split()[0]}')",
+                "Use different search parameters or filters",
+                "Check your query syntax and try again",
+            ],
+        )
+
+    return build_success_response(
+        operation="search",
+        summary=f"Found {len(result.results)} matches for '{query}' in notes search",
+        result={
+            "query": query,
+            "operation": "notes",
+            "total_results": len(result.results),
+            "results": formatted_results,
+            "current_page": result.current_page,
+            "total_pages": total_pages,
+            "page_size": result.page_size,
+        },
+        next_steps=[
+            "View a specific result: adn_content('read', identifier='result_permalink')",
+            "Refine search with additional filters or different query",
+            "Use results to continue with knowledge operations",
+        ],
     )
-
-    return "\n".join(output)
 
 
 async def _obsidian_search(
@@ -383,26 +434,25 @@ async def _obsidian_search(
     search_type: str,
     max_results: int,
     include_content: bool,
-) -> str:
+) -> dict:
     """Handle Obsidian vault search operation."""
     if not source_path:
-        return """# Error: Missing Required Parameter
-
-**Operation:** obsidian
-
-**Missing:** source_path parameter
-
-The obsidian operation searches an external Obsidian vault.
-You must provide the path to the vault directory.
-
-**Example:**
-```
-adn_search(
-    operation="obsidian",
-    query="meeting notes",
-    source_path="/path/to/vault"
-)
-```"""
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_SOURCE_PATH",
+            message="The obsidian operation requires a source_path to the vault directory",
+            recovery_options=[
+                "Provide source_path parameter pointing to your Obsidian vault",
+                "Check that the vault directory exists and is accessible",
+                "Use absolute paths for reliability",
+            ],
+            example={
+                "operation": "obsidian",
+                "query": "meeting notes",
+                "source_path": "/path/to/vault",
+            },
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
 
@@ -417,26 +467,25 @@ async def _joplin_search(
     search_type: str,
     max_results: int,
     include_content: bool,
-) -> str:
+) -> dict:
     """Handle Joplin export search operation."""
     if not source_path:
-        return """# Error: Missing Required Parameter
-
-**Operation:** joplin
-
-**Missing:** source_path parameter
-
-The joplin operation searches an external Joplin export directory.
-You must provide the path to the export folder.
-
-**Example:**
-```
-adn_search(
-    operation="joplin",
-    query="project notes",
-    source_path="/path/to/joplin-export"
-)
-```"""
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_SOURCE_PATH",
+            message="The joplin operation requires a source_path to the export directory",
+            recovery_options=[
+                "Provide source_path parameter pointing to your Joplin export folder",
+                "Check that the export directory exists and contains Joplin data",
+                "Use absolute paths for reliability",
+            ],
+            example={
+                "operation": "joplin",
+                "query": "project notes",
+                "source_path": "/path/to/joplin-export",
+            },
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
 
@@ -449,28 +498,25 @@ async def _notion_search(
     case_sensitive: bool,
     file_type: str | None,
     max_results: int,
-) -> str:
+) -> dict:
     """Handle Notion export search operation."""
     if not source_path:
-        return """# Error: Missing Required Parameter
-
-**Operation:** notion
-
-**Missing:** source_path parameter
-
-The notion operation searches an external Notion export directory.
-You must provide the path to the export folder.
-
-**Example:**
-```
-adn_search(
-    operation="notion",
-    query="project notes",
-    source_path="/path/to/notion-export"
-)
-```
-
-**Provide the source_path parameter and try again.**"""
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_SOURCE_PATH",
+            message="The notion operation requires a source_path to the export directory",
+            recovery_options=[
+                "Provide source_path parameter pointing to your Notion export folder",
+                "Check that the export directory exists and contains Notion data",
+                "Use absolute paths for reliability",
+            ],
+            example={
+                "operation": "notion",
+                "query": "project notes",
+                "source_path": "/path/to/notion-export",
+            },
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
 
@@ -485,28 +531,25 @@ async def _evernote_search(
     notebook_filter: str | None,
     tag_filter: str | None,
     max_results: int,
-) -> str:
+) -> dict:
     """Handle Evernote export search operation."""
     if not source_path:
-        return """# Error: Missing Required Parameter
-
-**Operation:** evernote
-
-**Missing:** source_path parameter
-
-The evernote operation searches an external Evernote export directory.
-You must provide the path to the export folder containing .enex files.
-
-**Example:**
-```
-adn_search(
-    operation="evernote",
-    query="meeting notes",
-    source_path="/path/to/evernote-export"
-)
-```
-
-**Provide the source_path parameter and try again.**"""
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_SOURCE_PATH",
+            message="The evernote operation requires a source_path to the export directory containing .enex files",
+            recovery_options=[
+                "Provide source_path parameter pointing to your Evernote export folder",
+                "Check that the export directory exists and contains .enex files",
+                "Use absolute paths for reliability",
+            ],
+            example={
+                "operation": "evernote",
+                "query": "meeting notes",
+                "source_path": "/path/to/evernote-export",
+            },
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
 

@@ -642,3 +642,20 @@ def sanitize_unicode_content(content: str) -> str:
             char if ord(char) < 128 or char.isspace() else "?" for char in sanitized
         )
     return sanitized
+
+
+# FastMCP 2.14.1+ Conversational Response Builders
+def build_success_response(operation: str, summary: str, **kwargs) -> dict:
+    """Build structured success response for MCP clients."""
+    return {"success": True, "operation": operation, "summary": summary, **kwargs}
+
+
+def build_error_response(error: str, error_code: str, message: str, **kwargs) -> dict:
+    """Build structured error response with recovery guidance for MCP clients."""
+    return {
+        "success": False,
+        "error": error,
+        "error_code": error_code,
+        "message": message,
+        **kwargs,
+    }

@@ -12,8 +12,15 @@ from loguru import logger
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.project_session import add_project_metadata, session
-from advanced_memory.mcp.tools.utils import call_delete, call_get, call_post, call_put
+from advanced_memory.mcp.project_session import session
+from advanced_memory.mcp.tools.utils import (
+    build_error_response,
+    build_success_response,
+    call_delete,
+    call_get,
+    call_post,
+    call_put,
+)
 from advanced_memory.schemas import ProjectInfoResponse
 from advanced_memory.schemas.project_info import (
     ProjectInfoRequest,
@@ -40,12 +47,18 @@ async def adn_project(
     project_path: str | None = None,
     set_default: bool = False,
     ctx: Context | None = None,
-) -> str:
+) -> dict:
     """
     Comprehensive project management tool for Advanced Memory knowledge base.
 
     This point-of-entry tool provides a unified interface for project operations,
     context switching, and AI-managed project detection.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
@@ -145,7 +158,28 @@ async def adn_project(
     elif operation == "detect":
         return await _detect_operation(ctx)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: create, switch, delete, set_default, get_current, list, sync, status, detect"
+        return build_error_response(
+            error="Invalid operation",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported",
+            recovery_options=[
+                "Use one of: create, switch, delete, set_default, get_current, list, sync, status, detect",
+                "Check operation spelling and try again",
+                "Use adn_project('list') to see available operations",
+            ],
+            supported_operations=[
+                "create",
+                "switch",
+                "delete",
+                "set_default",
+                "get_current",
+                "list",
+                "sync",
+                "status",
+                "detect",
+            ],
+            urgency="medium",
+        )
 
 
 async def _create_operation(
@@ -153,7 +187,7 @@ async def _create_operation(
     project_path: str | None,
     set_default: bool,
     ctx: Context | None,
-) -> str:
+) -> dict:
     """Handle create operation."""
     missing = []
     if not project_name:
@@ -161,7 +195,23 @@ async def _create_operation(
     if not project_path:
         missing.append("project_path")
     if missing:
-        return f'# Error\n\nCreate operation requires the following parameters:\n- {", ".join(missing)}\n\n**Example:**\n```python\nadn_project("create",\n    project_name="my-research",\n    project_path="~/Documents/research")\n```'
+        return build_error_response(
+            error="Missing required parameters",
+            error_code="MISSING_PARAMETERS",
+            message=f"Create operation requires: {', '.join(missing)}",
+            recovery_options=[
+                "Provide all required parameters",
+                "Check parameter names and values",
+                "Use absolute paths for project_path",
+            ],
+            required_parameters=["project_name", "project_path"],
+            example={
+                "operation": "create",
+                "project_name": "my-research",
+                "project_path": "~/Documents/research",
+            },
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Creating project: {project_name} at {project_path}")
@@ -175,29 +225,50 @@ async def _create_operation(
     response = await call_post(client, "/projects/projects", json=project_request.model_dump())
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"✓ {status_response.message}\n\n"
-
-    if status_response.new_project:
-        result += "Project Details:\n"
-        result += f"📁 Name: {status_response.new_project.name}\n"
-        result += f"📁 Path: {status_response.new_project.path}\n"
-
-        if set_default:
-            result += "⭐ Set as default project\n"
-
-    result += "\nProject is now available for use.\n"
-
     # If project was set as default, update session
     if set_default:
         session.set_current_project(project_name)
 
-    return add_project_metadata(result, session.get_current_project())
+    project_details = None
+    if status_response.new_project:
+        project_details = {
+            "name": status_response.new_project.name,
+            "path": status_response.new_project.path,
+            "set_as_default": set_default,
+        }
+
+    return build_success_response(
+        operation="create",
+        summary=status_response.message,
+        result={
+            "project_created": bool(status_response.new_project),
+            "project_details": project_details,
+            "set_as_default": set_default,
+            "message": status_response.message,
+        },
+        next_steps=[
+            f"Switch to the new project: adn_project('switch', project_name='{project_name}')",
+            "Start adding content to your project",
+            "Configure project settings if needed",
+        ],
+    )
 
 
-async def _switch_operation(project_name: str | None, ctx: Context | None) -> str:
+async def _switch_operation(project_name: str | None, ctx: Context | None) -> dict:
     """Handle switch operation."""
     if not project_name:
-        return '# Error\n\nSwitch operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("switch", project_name="work-project")\n```'
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_PROJECT_NAME",
+            message="Switch operation requires project_name parameter",
+            recovery_options=[
+                "Provide project_name parameter",
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+            ],
+            example={"operation": "switch", "project_name": "work-project"},
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Switching to project: {project_name}")
@@ -224,7 +295,18 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
 
         if not target_project:
             available_projects = [p.name for p in project_list.projects]
-            return f"Error: Project '{project_name}' not found. Available projects: {', '.join(available_projects)}"
+            return build_error_response(
+                error="Project not found",
+                error_code="PROJECT_NOT_FOUND",
+                message=f"Project '{project_name}' does not exist",
+                recovery_options=[
+                    "Use adn_project('list') to see available projects",
+                    "Check project name spelling",
+                    "Create the project first with adn_project('create', ...)",
+                ],
+                available_projects=available_projects,
+                urgency="medium",
+            )
 
         # Switch to the project using the canonical name from database
         canonical_name = target_project.name
@@ -241,19 +323,42 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
             )
             project_info = ProjectInfoResponse.model_validate(response.json())
 
-            result = f"✓ Switched to {canonical_name} project\n\n"
-            result += "Project Summary:\n"
-            result += f"📊 {project_info.statistics.total_entities} entities\n"
-            result += f"📊 {project_info.statistics.total_observations} observations\n"
-            result += f"📊 {project_info.statistics.total_relations} relations\n"
+            return build_success_response(
+                operation="switch",
+                summary=f"Successfully switched to project '{canonical_name}'",
+                result={
+                    "project_name": canonical_name,
+                    "project_permalink": target_project.permalink,
+                    "statistics": {
+                        "total_entities": project_info.statistics.total_entities,
+                        "total_observations": project_info.statistics.total_observations,
+                        "total_relations": project_info.statistics.total_relations,
+                    },
+                },
+                next_steps=[
+                    "Start working with content in this project",
+                    "Use adn_content() to add or search for notes",
+                    "Use other tools with this project's context",
+                ],
+            )
 
         except Exception as e:
             # If we can't get project info, still confirm the switch
             logger.warning(f"Could not get project info for {canonical_name}: {e}")
-            result = f"✓ Switched to {canonical_name} project\n\n"
-            result += "Project summary unavailable.\n"
-
-        return add_project_metadata(result, canonical_name)
+            return build_success_response(
+                operation="switch",
+                summary=f"Successfully switched to project '{canonical_name}'",
+                result={
+                    "project_name": canonical_name,
+                    "project_permalink": target_project.permalink,
+                    "statistics": None,  # Could not retrieve
+                },
+                next_steps=[
+                    "Project switched successfully",
+                    "Statistics temporarily unavailable",
+                    "Try adn_project('get_current') for project details",
+                ],
+            )
 
     except Exception as e:
         logger.error(f"Error switching to project {project_name}: {e}")
@@ -284,10 +389,21 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
             """).strip()
 
 
-async def _delete_operation(project_name: str | None, ctx: Context | None) -> str:
+async def _delete_operation(project_name: str | None, ctx: Context | None) -> dict:
     """Handle delete operation."""
     if not project_name:
-        return '# Error\n\nDelete operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("delete", project_name="old-project")\n```'
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_PROJECT_NAME",
+            message="Delete operation requires project_name parameter",
+            recovery_options=[
+                "Provide project_name parameter",
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+            ],
+            example={"operation": "delete", "project_name": "old-project"},
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Deleting project: {project_name}")
@@ -296,7 +412,18 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> st
 
     # Check if trying to delete current project
     if project_name == current_project:
-        return f"# Error\n\nCannot delete the currently active project '{project_name}'. Switch to a different project first using `project_manager('switch', project_name='other-project')`."
+        return build_error_response(
+            error="Cannot delete active project",
+            error_code="CANNOT_DELETE_ACTIVE_PROJECT",
+            message=f"Cannot delete the currently active project '{project_name}'",
+            recovery_options=[
+                "Switch to a different project first",
+                "Use adn_project('switch', project_name='other-project')",
+                "Then retry the delete operation",
+            ],
+            current_project=current_project,
+            urgency="medium",
+        )
 
     # Get project info before deletion to validate it exists
     response = await call_get(client, "/projects/projects")
@@ -306,30 +433,62 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> st
     project_exists = any(p.name == project_name for p in project_list.projects)
     if not project_exists:
         available_projects = [p.name for p in project_list.projects]
-        return f"# Error\n\nProject '{project_name}' not found. Available projects: {', '.join(available_projects)}"
+        return build_error_response(
+            error="Project not found",
+            error_code="PROJECT_NOT_FOUND",
+            message=f"Project '{project_name}' does not exist",
+            recovery_options=[
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+                "Create the project first with adn_project('create', ...)",
+            ],
+            available_projects=available_projects,
+            urgency="medium",
+        )
 
     # Call API to delete project
     response = await call_delete(client, f"/projects/{project_name}")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"✓ {status_response.message}\n\n"
-
+    deleted_project = None
     if status_response.old_project:
-        result += "Removed project details:\n"
-        result += f"📁 Name: {status_response.old_project.name}\n"
-        if hasattr(status_response.old_project, "path"):
-            result += f"📁 Path: {status_response.old_project.path}\n"
+        deleted_project = {
+            "name": status_response.old_project.name,
+            "path": getattr(status_response.old_project, "path", None),
+        }
 
-    result += "Files remain on disk but project is no longer tracked by Advanced Memory.\n"
-    result += "Re-add the project to access its content again.\n"
+    return build_success_response(
+        operation="delete",
+        summary=status_response.message,
+        result={
+            "project_deleted": bool(status_response.old_project),
+            "deleted_project": deleted_project,
+            "message": status_response.message,
+            "files_preserved": True,
+        },
+        next_steps=[
+            "Files remain on disk at the original location",
+            "Re-create the project if you want to access the content again",
+            "Use adn_project('create', ...) to re-add the project",
+        ],
+    )
 
-    return add_project_metadata(result, session.get_current_project())
 
-
-async def _set_default_operation(project_name: str | None, ctx: Context | None) -> str:
+async def _set_default_operation(project_name: str | None, ctx: Context | None) -> dict:
     """Handle set_default operation."""
     if not project_name:
-        return '# Error\n\nSet_default operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("set_default", project_name="personal-notes")\n```'
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_PROJECT_NAME",
+            message="Set_default operation requires project_name parameter",
+            recovery_options=[
+                "Provide project_name parameter",
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+            ],
+            example={"operation": "set_default", "project_name": "personal-notes"},
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Setting default project to: {project_name}")
@@ -338,23 +497,33 @@ async def _set_default_operation(project_name: str | None, ctx: Context | None) 
     response = await call_put(client, f"/projects/{project_name}/default")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
-    result = f"✓ {status_response.message}\n\n"
-    result += "Restart Advanced Memory for this change to take effect:\n"
-    result += "basic-memory mcp\n"
-
+    previous_default = None
     if status_response.old_project:
-        result += f"\nPrevious default: {status_response.old_project.name}\n"
+        previous_default = status_response.old_project.name
 
-    return add_project_metadata(result, session.get_current_project())
+    return build_success_response(
+        operation="set_default",
+        summary=status_response.message,
+        result={
+            "new_default_project": project_name,
+            "previous_default_project": previous_default,
+            "message": status_response.message,
+            "restart_required": True,
+        },
+        next_steps=[
+            "Restart Advanced Memory for changes to take effect",
+            "Run: basic-memory mcp",
+            "The new default project will be loaded automatically",
+        ],
+    )
 
 
-async def _get_current_operation(ctx: Context | None) -> str:
+async def _get_current_operation(ctx: Context | None) -> dict:
     """Handle get_current operation."""
     if ctx:  # pragma: no cover
         await ctx.info("Getting current project information")
 
     current_project = session.get_current_project()
-    result = f"Current project: {current_project}\n\n"
 
     # get project stats (use permalink in URL path)
     current_project_permalink = generate_permalink(current_project)
@@ -365,18 +534,31 @@ async def _get_current_operation(ctx: Context | None) -> str:
     )
     project_info = ProjectInfoResponse.model_validate(response.json())
 
-    result += f"[UNICODE] {project_info.statistics.total_entities} entities\n"
-    result += f"[UNICODE] {project_info.statistics.total_observations} observations\n"
-    result += f"[UNICODE] {project_info.statistics.total_relations} relations\n"
-
     default_project = session.get_default_project()
-    if current_project != default_project:
-        result += f"[UNICODE] Default project: {default_project}\n"
 
-    return add_project_metadata(result, current_project)
+    return build_success_response(
+        operation="get_current",
+        summary=f"Current project is '{current_project}'",
+        result={
+            "current_project": current_project,
+            "project_permalink": current_project_permalink,
+            "statistics": {
+                "total_entities": project_info.statistics.total_entities,
+                "total_observations": project_info.statistics.total_observations,
+                "total_relations": project_info.statistics.total_relations,
+            },
+            "default_project": default_project,
+            "is_default": current_project == default_project,
+        },
+        next_steps=[
+            "Use adn_content() to add or search for notes in this project",
+            "Use other tools with this project's context",
+            "Switch to a different project if needed",
+        ],
+    )
 
 
-async def _list_operation(ctx: Context | None) -> str:
+async def _list_operation(ctx: Context | None) -> dict:
     """Handle list operation."""
     if ctx:  # pragma: no cover
         await ctx.info("Listing all available projects")
@@ -387,8 +569,7 @@ async def _list_operation(ctx: Context | None) -> str:
 
     current = session.get_current_project()
 
-    result = "Available projects:\n"
-
+    projects = []
     for project in project_list.projects:
         indicators = []
         if project.name == current:
@@ -396,18 +577,42 @@ async def _list_operation(ctx: Context | None) -> str:
         if project.is_default:
             indicators.append("default")
 
-        if indicators:
-            result += f"[UNICODE] {project.name} ({', '.join(indicators)})\n"
-        else:
-            result += f"[UNICODE] {project.name}\n"
+        projects.append(
+            {
+                "name": project.name,
+                "permalink": project.permalink,
+                "indicators": indicators,
+                "is_current": project.name == current,
+                "is_default": project.is_default,
+            }
+        )
 
-    return add_project_metadata(result, current)
+    return build_success_response(
+        operation="list",
+        summary=f"Found {len(projects)} available projects",
+        result={"projects": projects, "current_project": current, "total_projects": len(projects)},
+        next_steps=[
+            "Use adn_project('switch', project_name='name') to switch to a project",
+            "Use adn_project('get_current') to see details of current project",
+        ],
+    )
 
 
-async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
+async def _sync_operation(project_name: str | None, ctx: Context | None) -> dict:
     """Handle sync operation - sync a specific project without changing default."""
     if not project_name:
-        return '# Error\n\nSync operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("sync", project_name="my-project")\n```'
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_PROJECT_NAME",
+            message="Sync operation requires project_name parameter",
+            recovery_options=[
+                "Provide project_name parameter",
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+            ],
+            example={"operation": "sync", "project_name": "my-project"},
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Syncing project: {project_name}")
@@ -417,21 +622,52 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
         response = await call_post(client, f"/projects/{project_name}/sync")
         sync_response = response.json()
 
-        result = f"✅ Project '{project_name}' synced successfully\n\n"
-        result += f"Files processed: {sync_response.get('files_synced', 'N/A')}\n"
-
-        return add_project_metadata(result, session.get_current_project())
+        return build_success_response(
+            operation="sync",
+            summary=f"Project '{project_name}' synced successfully",
+            result={
+                "project_synced": project_name,
+                "files_processed": sync_response.get("files_synced", 0),
+                "sync_details": sync_response,
+            },
+            next_steps=[
+                "Project content is now up to date",
+                "Use adn_content() to work with synced content",
+                "Check sync status if needed",
+            ],
+        )
 
     except Exception as e:
-        result = f"❌ Error syncing project '{project_name}': {str(e)}\n\n"
-        result += "Make sure the project exists. Use adn_project('list') to see all projects.\n"
-        return add_project_metadata(result, session.get_current_project())
+        return build_error_response(
+            error="Sync failed",
+            error_code="SYNC_ERROR",
+            message=f"Failed to sync project '{project_name}': {str(e)}",
+            recovery_options=[
+                "Verify the project exists",
+                "Use adn_project('list') to see available projects",
+                "Check project path and permissions",
+                "Try syncing again",
+            ],
+            diagnostic_info={"project_name": project_name, "error_details": str(e)},
+            urgency="medium",
+        )
 
 
-async def _status_operation(project_name: str | None, ctx: Context | None) -> str:
+async def _status_operation(project_name: str | None, ctx: Context | None) -> dict:
     """Handle status operation - get detailed statistics for a specific project."""
     if not project_name:
-        return '# Error\n\nStatus operation requires: project_name parameter\n\n**Example:**\n```python\nadn_project("status", project_name="my-project")\n```'
+        return build_error_response(
+            error="Missing required parameter",
+            error_code="MISSING_PROJECT_NAME",
+            message="Status operation requires project_name parameter",
+            recovery_options=[
+                "Provide project_name parameter",
+                "Use adn_project('list') to see available projects",
+                "Check project name spelling",
+            ],
+            example={"operation": "status", "project_name": "my-project"},
+            urgency="medium",
+        )
 
     if ctx:  # pragma: no cover
         await ctx.info(f"Getting status for project: {project_name}")
@@ -446,28 +682,46 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> st
         )
         project_info = ProjectInfoResponse.model_validate(response.json())
 
-        result = f"📊 Project: {project_info.name}\n\n"
-        result += f"📁 Path: {project_info.path}\n"
-        result += f"🔗 Permalink: {project_info.permalink}\n\n"
-
-        result += "Statistics:\n"
-        result += f"  📄 {project_info.statistics.total_entities} entities\n"
-        result += f"  🔍 {project_info.statistics.total_observations} observations\n"
-        result += f"  🔗 {project_info.statistics.total_relations} relations\n\n"
-
-        if project_info.is_default:
-            result += "⭐ This is the default project\n"
-
-        return add_project_metadata(result, session.get_current_project())
+        return build_success_response(
+            operation="status",
+            summary=f"Project '{project_name}' status retrieved",
+            result={
+                "project": {
+                    "name": project_info.name,
+                    "path": project_info.path,
+                    "permalink": project_info.permalink,
+                    "is_default": project_info.is_default,
+                },
+                "statistics": {
+                    "total_entities": project_info.statistics.total_entities,
+                    "total_observations": project_info.statistics.total_observations,
+                    "total_relations": project_info.statistics.total_relations,
+                },
+            },
+            next_steps=[
+                "Use adn_content() to work with project content",
+                "Use adn_project('switch') to switch to this project",
+                "Check sync status if needed",
+            ],
+        )
 
     except Exception as e:
-        return add_project_metadata(
-            f"❌ Error getting status for project '{project_name}': {str(e)}",
-            session.get_current_project(),
+        return build_error_response(
+            error="Status retrieval failed",
+            error_code="STATUS_ERROR",
+            message=f"Failed to get status for project '{project_name}': {str(e)}",
+            recovery_options=[
+                "Verify the project exists",
+                "Use adn_project('list') to see available projects",
+                "Check project permissions",
+                "Try again later",
+            ],
+            diagnostic_info={"project_name": project_name, "error_details": str(e)},
+            urgency="medium",
         )
 
 
-async def _detect_operation(ctx: Context | None) -> str:
+async def _detect_operation(ctx: Context | None) -> dict:
     """Handle detect operation - AI-managed project detection.
 
     This operation analyzes conversation context to detect which project
@@ -502,96 +756,39 @@ async def _detect_operation(ctx: Context | None) -> str:
     reason = detection["reason"]
     should_switch = detection["should_switch"]
 
-    result_lines = [
-        "# 🤖 AI-Managed Project Detection",
-        "",
-        f"**Current Project**: {current_project}",
-        "",
-    ]
+    detection_result = {
+        "current_project": current_project,
+        "suggested_project": suggested_project,
+        "confidence": confidence,
+        "reason": reason,
+        "should_switch": should_switch,
+        "auto_switched": False,
+        "switch_error": None,
+    }
 
     if suggested_project:
-        result_lines.extend(
-            [
-                f"**Suggested Project**: {suggested_project}",
-                f"**Confidence**: {confidence:.0%}",
-                f"**Reason**: {reason}",
-                "",
-            ]
-        )
-
         if should_switch and suggested_project != current_project:
             # Auto-switch if confidence is high enough
             try:
                 switch_result = await _switch_operation(suggested_project, ctx)
-                result_lines.extend(
-                    [
-                        "## ✅ Auto-Switched Project",
-                        "",
-                        f"I've automatically switched to **{suggested_project}** project based on context.",
-                        "",
-                        switch_result.split("\n\n")[-1]
-                        if "\n\n" in switch_result
-                        else switch_result,
-                    ]
-                )
+                detection_result["auto_switched"] = True
+                detection_result["switch_result"] = switch_result
             except Exception as e:
-                result_lines.extend(
-                    [
-                        "## ⚠️ Auto-Switch Failed",
-                        "",
-                        f"Could not automatically switch: {e}",
-                        "",
-                        f"You can manually switch: `adn_project('switch', project_name='{suggested_project}')`",
-                    ]
-                )
+                detection_result["switch_error"] = str(e)
         elif suggested_project == current_project:
-            result_lines.extend(
-                [
-                    "## ✓ Already on Correct Project",
-                    "",
-                    f"You're already on the **{suggested_project}** project. No switch needed.",
-                ]
-            )
-        else:
-            result_lines.extend(
-                [
-                    "## 💡 Project Suggestion",
-                    "",
-                    f"Based on context, you might want to switch to **{suggested_project}** project.",
-                    "",
-                    f"**Confidence**: {confidence:.0%} (threshold: 60% for auto-switch)",
-                    "",
-                    f"To switch manually: `adn_project('switch', project_name='{suggested_project}')`",
-                ]
-            )
+            detection_result["already_on_project"] = True
     else:
-        result_lines.extend(
-            [
-                "## ℹ️ No Clear Project Detected",
-                "",
-                "Could not detect a specific project from the context.",
-                "",
-                "**Available projects**:",
-            ]
-        )
+        # No clear project detected, provide available projects
         projects = await detector._get_all_projects()
-        for proj in projects:
-            marker = "⭐ " if proj["name"] == current_project else "  "
-            result_lines.append(f"{marker}- {proj['name']}")
+        detection_result["available_projects"] = projects
 
-    result_lines.extend(
-        [
-            "",
-            "## How It Works",
-            "",
-            "The AI analyzes your queries for:",
-            "- Explicit project name mentions (e.g., 'work project', 'private notes')",
-            "- Folder/path references that match project names",
-            "- Search results that contain project metadata",
-            "- File paths that belong to specific projects",
-            "",
-            "**Auto-switch happens when confidence ≥ 60%**",
-        ]
+    return build_success_response(
+        operation="detect",
+        summary="AI-managed project detection completed",
+        result=detection_result,
+        next_steps=[
+            "Continue working in the detected/suggested project",
+            "Use adn_project('switch') if you want to change projects manually",
+            "The AI will continue to detect project context from your queries",
+        ],
     )
-
-    return add_project_metadata("\n".join(result_lines), current_project)

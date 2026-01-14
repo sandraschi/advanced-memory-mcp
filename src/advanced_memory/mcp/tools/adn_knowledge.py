@@ -24,12 +24,18 @@ async def adn_knowledge(
     dry_run: bool = True,
     limit: int = 100,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Comprehensive knowledge management tool for Advanced Memory knowledge base.
 
     This point-of-entry tool provides a unified interface for complex knowledge
     operations, including bulk management, tag maintenance, content validation,
     and LLM-powered research orchestration.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     PORTMANTEAU PATTERN RATIONALE:
     Consolidates 18+ knowledge operations into one tool to prevent tool explosion while maintaining full functionality.

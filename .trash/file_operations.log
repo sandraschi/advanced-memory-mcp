@@ -78729,3 +78729,23 @@ AttributeError: 'str' object has no attribute 'results'
 2026-01-04 20:13:53 | INFO     | Loaded 4 templates for category 'uiux-designer'
 2026-01-04 20:13:53 | INFO     | Loaded 3 templates for category 'writer'
 2026-01-04 20:13:53 | INFO     | Loaded all templates: 12 categories, 46 topics, 62 total templates
+2026-01-13 22:52:34 | INFO     | Using in-memory SQLite database
+2026-01-13 22:52:34 | INFO     | Initializing search index
+2026-01-13 22:52:34 | INFO     | Initializing search index
+2026-01-13 22:52:34 | INFO     | Initialized project session with default project: test-project
+2026-01-13 22:52:34 | INFO     | Switched project context: test-project -> test-project
+2026-01-13 22:53:15 | INFO     | Using in-memory SQLite database
+2026-01-13 22:53:15 | INFO     | Initializing search index
+2026-01-13 22:53:15 | INFO     | Initializing search index
+2026-01-13 22:53:15 | INFO     | Initialized project session with default project: test-project
+2026-01-13 22:53:15 | INFO     | Switched project context: test-project -> test-project
+2026-01-13 22:53:37 | INFO     | Using in-memory SQLite database
+2026-01-13 22:53:37 | INFO     | Initializing search index
+2026-01-13 22:53:37 | INFO     | Initializing search index
+2026-01-13 22:53:37 | INFO     | Initialized project session with default project: test-project
+2026-01-13 22:53:37 | INFO     | Switched project context: test-project -> test-project
+2026-01-13 22:54:20 | INFO     | Using in-memory SQLite database
+2026-01-13 22:54:20 | INFO     | Initializing search index
+2026-01-13 22:54:20 | INFO     | Initializing search index
+2026-01-13 22:54:20 | INFO     | Initialized project session with default project: test-project
+2026-01-13 22:54:20 | INFO     | Switched project context: test-project -> test-project

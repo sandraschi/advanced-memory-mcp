@@ -2,6 +2,12 @@
 
 This tool consolidates voice operations: dictate (speech-to-text) and speak (text-to-speech).
 Extracted from content_manager.py for better separation of concerns and optional dependencies.
+
+RESPONSES:
+Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+For errors, check recovery_options for next steps.
 """
 
 import threading
@@ -11,6 +17,7 @@ from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
+from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 from advanced_memory.utils import parse_tags
 
 # Define TagType
@@ -58,7 +65,7 @@ async def adn_audio(
     command: str | None = None,
     query: str | None = None,
     project: str | None = None,
-) -> str:
+) -> dict:
     """
     Voice and audio management for Advanced Memory.
 
@@ -197,22 +204,30 @@ async def adn_audio(
 
 async def _dictate_operation(
     active_project, audio_path: str | None, record_duration: int | None, tags: TagType
-) -> str:
+) -> dict:
     """Handle dictate operation - speech-to-text note creation."""
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        return """# Voice Features Not Available
-
-Speech-to-text (dictate) requires optional voice dependencies.
-
-INSTALL:
-pip install kokoro faster-whisper onnxruntime-gpu sounddevice soundfile
-
-Or install manually:
-pip install faster-whisper kokoro onnxruntime-gpu sounddevice soundfile
-
-Then restart and try again!"""
+        return build_error_response(
+            error="voice_features_unavailable",
+            error_code="MISSING_VOICE_DEPENDENCIES",
+            message="Speech-to-text (dictate) requires optional voice dependencies",
+            recovery_options=[
+                "Install voice dependencies: pip install advanced-memory[voice]",
+                "Or manually: pip install faster-whisper kokoro onnxruntime-gpu sounddevice soundfile",
+                "Restart the MCP server after installation",
+                "Try the operation again",
+            ],
+            required_packages=[
+                "faster-whisper",
+                "kokoro",
+                "onnxruntime-gpu",
+                "sounddevice",
+                "soundfile",
+            ],
+            urgency="medium",
+        )
 
     from pathlib import Path
 
@@ -320,20 +335,25 @@ async def _speak_operation(
     speed: float,
     volume: int,
     save_audio: bool,
-) -> str:
+) -> dict:
     """Handle speak operation - text-to-speech note reading."""
     try:
         import sounddevice as sd
         from kokoro import KPipeline
     except ImportError:
-        return """# Voice Features Not Available
-
-Text-to-speech (speak) requires optional voice dependencies (Kokoro).
-
-INSTALL:
-pip install kokoro onnxruntime-gpu sounddevice soundfile
-
-Then restart and try again!"""
+        return build_error_response(
+            error="voice_features_unavailable",
+            error_code="MISSING_VOICE_DEPENDENCIES",
+            message="Text-to-speech (speak) requires optional voice dependencies (Kokoro)",
+            recovery_options=[
+                "Install voice dependencies: pip install advanced-memory[voice]",
+                "Or manually: pip install kokoro onnxruntime-gpu sounddevice soundfile",
+                "Restart the MCP server after installation",
+                "Try the operation again",
+            ],
+            required_packages=["kokoro", "onnxruntime-gpu", "sounddevice", "soundfile"],
+            urgency="medium",
+        )
 
     from datetime import datetime
 
@@ -395,7 +415,7 @@ Then restart and try again!"""
         generator = pipeline(text_to_speak, voice=kokoro_voice, speed=speed, split_pattern=r"\n+")
 
         audio_segments = []
-        for gs, ps, audio in generator:
+        for _gs, _ps, audio in generator:
             audio_segments.append(audio)
 
         import numpy as np
@@ -416,16 +436,25 @@ Then restart and try again!"""
             # Kokoro output is 24kHz
             sf.write(str(audio_file), full_audio, 24000)
 
-            return f"""# Audio Saved (Kokoro 2026)
-
-**Note:** {identifier}
-**Audio file:** {audio_file}
-**Voice:** {kokoro_voice}
-**Duration:** ~{len(text_to_speak.split()) // 150} minutes
-**Speed:** {speed}x
-**Volume:** {volume}/10
-
-[SUCCESS] High-fidelity Kokoro synthesis complete!"""
+            return build_success_response(
+                operation="speak",
+                summary=f"Audio saved for note '{identifier}' using Kokoro voice synthesis",
+                result={
+                    "note_title": identifier,
+                    "audio_file": str(audio_file),
+                    "voice": kokoro_voice,
+                    "estimated_duration_minutes": len(text_to_speak.split()) // 150,
+                    "speed": speed,
+                    "volume": f"{volume}/10",
+                    "audio_format": "WAV",
+                    "sample_rate": 24000,
+                },
+                next_steps=[
+                    "Play the audio file to verify quality",
+                    "Adjust voice/speed/volume parameters if needed",
+                    "Use the audio for presentations or accessibility",
+                ],
+            )
 
         else:
             # Play audio directly using sounddevice
@@ -433,16 +462,25 @@ Then restart and try again!"""
             sd.play(full_audio, 24000)
             sd.wait()
 
-            return f"""# Note Spoken (Kokoro 2026)
-
-**Note:** {identifier}
-**Voice:** {kokoro_voice}
-**Word count:** {len(text_to_speak.split())}
-**Duration:** ~{len(text_to_speak.split()) // 150} minutes
-**Speed:** {speed}x
-**Volume:** {volume}/10
-
-[SUCCESS] High-fidelity Kokoro playback complete!"""
+            return build_success_response(
+                operation="speak",
+                summary=f"Note '{identifier}' spoken using Kokoro voice synthesis",
+                result={
+                    "note_title": identifier,
+                    "voice": kokoro_voice,
+                    "word_count": len(text_to_speak.split()),
+                    "estimated_duration_minutes": len(text_to_speak.split()) // 150,
+                    "speed": speed,
+                    "volume": f"{volume}/10",
+                    "playback_method": "sounddevice",
+                    "sample_rate": 24000,
+                },
+                next_steps=[
+                    "Adjust voice/speed/volume for better results",
+                    "Use save_audio=True to save audio files",
+                    "Try different voices for variety",
+                ],
+            )
 
     except Exception as e:
         logger.error(f"Kokoro TTS error: {e}")
@@ -458,18 +496,50 @@ Then restart and try again!"""
             engine.setProperty("volume", volume_normalized)
             engine.say(text_to_speak)
             engine.runAndWait()
-            return f"# Note Spoken (Fallback)\n\nKokoro synthesis failed, used system fallback (pyttsx3).\n\nError: {str(e)}"
+            return build_success_response(
+                operation="speak",
+                summary="Text spoken using system fallback (pyttsx3) after Kokoro failure",
+                result={
+                    "method": "fallback_pyttsx3",
+                    "kokoro_error": str(e),
+                    "fallback_success": True,
+                },
+                next_steps=[
+                    "Install Kokoro dependencies for better quality",
+                    "Consider adjusting audio settings",
+                ],
+            )
         except Exception as _:
-            return f"# Text-to-Speech Failed\n\nBoth Kokoro and fallback (pyttsx3) failed.\n\nError: {str(e)}"
-
-    except Exception as e:
-        logger.error(f"TTS error: {e}")
-        return f"# Text-to-Speech Failed\n\nError: {str(e)}\n\nCheck pyttsx3 installation and audio drivers."
+            return build_error_response(
+                error="text_to_speech_failed",
+                error_code="TTS_ALL_METHODS_FAILED",
+                message="Both Kokoro and fallback (pyttsx3) text-to-speech failed",
+                recovery_options=[
+                    "Install voice dependencies: pip install advanced-memory[voice]",
+                    "Check audio drivers and system audio",
+                    "Try with different voice parameters",
+                    "Restart the MCP server",
+                ],
+                diagnostic_info={"kokoro_error": str(e)},
+                urgency="medium",
+            )
+            error="text_to_speech_failed",
+            error_code="TTS_ERROR",
+            message=f"Text-to-speech failed: {str(e)}",
+            recovery_options=[
+                "Check pyttsx3 installation",
+                "Verify audio drivers are working",
+                "Try with save_audio=True to test audio output",
+                "Check system audio settings",
+            ],
+            diagnostic_info={"error": str(e)},
+            urgency="medium",
+        )
 
 
 async def _listen_command_operation(
     active_project, audio_path: str | None, record_duration: int | None
-) -> str:
+) -> dict:
     """Handle listen operation - voice command input with intelligent parsing.
 
     Records voice, transcribes it, parses the command intent, and executes it.
@@ -478,14 +548,19 @@ async def _listen_command_operation(
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        return """# Voice Features Not Available
-
-Voice command (listen) requires optional voice dependencies (faster-whisper).
-
-INSTALL:
-pip install faster-whisper onnxruntime-gpu sounddevice soundfile
-
-Then restart and try again!"""
+        return build_error_response(
+            error="voice_features_unavailable",
+            error_code="MISSING_VOICE_DEPENDENCIES",
+            message="Voice command (listen) requires optional voice dependencies (faster-whisper)",
+            recovery_options=[
+                "Install voice dependencies: pip install advanced-memory[voice]",
+                "Or manually: pip install faster-whisper onnxruntime-gpu sounddevice soundfile",
+                "Restart the MCP server after installation",
+                "Try the operation again",
+            ],
+            required_packages=["faster-whisper", "onnxruntime-gpu", "sounddevice", "soundfile"],
+            urgency="medium",
+        )
 
     from pathlib import Path
 
@@ -542,7 +617,7 @@ Then restart and try again!"""
         return f"# Voice Command Failed\n\nError: {str(e)}\n\nTry again or check your audio setup."
 
 
-async def _parse_and_execute_command(active_project, command_text: str) -> str:
+async def _parse_and_execute_command(active_project, command_text: str) -> dict:
     """Parse voice command and execute appropriate action.
 
     Uses intelligent rule-based parsing with LLM fallback for complex commands.
@@ -692,46 +767,57 @@ async def _parse_and_execute_command(active_project, command_text: str) -> str:
         return await _parse_command_with_llm(active_project, command_text)
     except Exception as e:
         logger.debug(f"LLM command parsing failed: {e}, falling back to suggestions")
-        return f"""# Voice Command Recognized
+        return build_success_response(
+            operation="listen",
+            summary=f"Voice command transcribed but not recognized: '{command_text}'",
+            result={
+                "transcribed_text": command_text,
+                "command_recognized": False,
+                "available_commands": [
+                    {"pattern": "Create a note about [topic]", "description": "Create a new note"},
+                    {"pattern": "Read my latest note", "description": "Read most recent note"},
+                    {"pattern": "Read [note title]", "description": "Read specific note"},
+                    {"pattern": "Search for [query]", "description": "Search notes"},
+                    {"pattern": "Find [query]", "description": "Search notes"},
+                    {"pattern": "What's the weather", "description": "Get current weather"},
+                    {
+                        "pattern": "Weather in [city]",
+                        "description": "Get weather for specific location",
+                    },
+                    {"pattern": "Set alarm for 7 AM", "description": "Set an alarm"},
+                    {"pattern": "Set timer for 5 minutes", "description": "Set a timer"},
+                    {"pattern": "Play music", "description": "Start playing music"},
+                    {"pattern": "Play [song/artist]", "description": "Play specific music"},
+                    {"pattern": "Pause music", "description": "Pause playback"},
+                    {"pattern": "Next song", "description": "Skip to next track"},
+                ],
+                "example_commands": [
+                    "Create a note about butterflies",
+                    "Read my latest note",
+                    "Search for epstein scandal",
+                    "What's the weather in Vienna",
+                    "Set alarm for 8:30 AM",
+                    "Set timer for 10 minutes",
+                    "Play music",
+                    "Play Pink Floyd",
+                    "Pause music",
+                ],
+            },
+            next_steps=[
+                "Try rephrasing using one of the example patterns",
+                "Use the dictate operation to create a note from your speech",
+                "Speak more clearly for better recognition",
+                "Try shorter, simpler commands first",
+            ],
+            suggestions=[
+                "Use 'dictate' operation for creating notes from speech",
+                "Try speaking more slowly and clearly",
+                "Use specific note titles when reading",
+            ],
+        )
 
-**Transcribed:** "{command_text}"
 
-**Status:** Command not recognized
-
-**Available Commands:**
-- "Create a note about [topic]" - Create a new note
-- "Read my latest note" - Read most recent note
-- "Read [note title]" - Read specific note
-- "Search for [query]" - Search notes
-- "Find [query]" - Search notes
-- "What's the weather" - Get current weather
-- "Weather in [city]" - Get weather for specific location
-- "Set alarm for 7 AM" - Set an alarm
-- "Set timer for 5 minutes" - Set a timer
-- "Play music" - Start playing music
-- "Play [song/artist]" - Play specific music
-- "Pause music" - Pause playback
-- "Next song" - Skip to next track
-
-**What you said:** {command_text}
-
-**Suggestions:**
-Try rephrasing your command using one of the patterns above, or use the `dictate` operation to create a note from your speech.
-
-**Example commands:**
-- "Create a note about butterflies"
-- "Read my latest note"
-- "Search for epstein scandal"
-- "What's the weather in Vienna"
-- "Set alarm for 8:30 AM"
-- "Set timer for 10 minutes"
-- "Play music"
-- "Play Pink Floyd"
-- "Pause music"
-"""
-
-
-async def _parse_command_with_llm(active_project, command_text: str) -> str:
+async def _parse_command_with_llm(active_project, command_text: str) -> dict:
     """Parse voice command using LLM when rule-based parsing fails.
 
     Uses the selected LLM provider to understand complex or ambiguous commands.
@@ -831,7 +917,7 @@ If the command is unclear or doesn't match any operation, use "unknown"."""
         raise
 
 
-async def _get_weather(location: str | None = None) -> str:
+async def _get_weather(location: str | None = None) -> dict:
     """Get weather information for a location.
 
     Uses wttr.in API (free, no API key required) to fetch weather data.
@@ -894,29 +980,50 @@ async def _get_weather(location: str | None = None) -> str:
 
                 location_str = f"{area_name}, {country}" if country else area_name
 
-                return f"""# Weather Report
-
-**Location:** {location_str}
-**Time:** {current.get("localObsDateTime", "N/A")}
-
-## Current Conditions
-
-**Temperature:** {temp_c}°C ({temp_f}°F)
-**Feels Like:** {feels_like_c}°C ({feels_like_f}°F)
-**Condition:** {condition}
-**Humidity:** {humidity}%
-**Wind:** {wind_speed} km/h {wind_dir}
-
-## Today's Forecast
-
-**High:** {max_temp_c}°C ({max_temp_f}°F)
-**Low:** {min_temp_c}°C ({min_temp_f}°F)
-
----
-*Weather data from wttr.in*
-"""
+                return build_success_response(
+                    operation="weather",
+                    summary=f"Current weather for {location_str}",
+                    result={
+                        "location": location_str,
+                        "observation_time": current.get("localObsDateTime", "N/A"),
+                        "current_conditions": {
+                            "temperature_c": temp_c,
+                            "temperature_f": temp_f,
+                            "feels_like_c": feels_like_c,
+                            "feels_like_f": feels_like_f,
+                            "condition": condition,
+                            "humidity_percent": humidity,
+                            "wind_speed_kmh": wind_speed,
+                            "wind_direction": wind_dir,
+                        },
+                        "today_forecast": {
+                            "high_c": max_temp_c,
+                            "low_c": min_temp_c,
+                            "high_f": max_temp_f,
+                            "low_f": min_temp_f,
+                        },
+                        "data_source": "wttr.in",
+                    },
+                    next_steps=[
+                        "Weather data is current as of observation time",
+                        "Use location parameter to check weather in other cities",
+                        "Forecast covers today's high and low temperatures",
+                    ],
+                )
             else:
-                return f"# Weather Error\n\nCould not fetch weather data. Status: {response.status_code}\n\nTry again or specify a different location."
+                return build_error_response(
+                    error="weather_fetch_failed",
+                    error_code="WEATHER_API_ERROR",
+                    message=f"Could not fetch weather data. HTTP status: {response.status_code}",
+                    recovery_options=[
+                        "Try again in a few moments",
+                        "Check the location spelling",
+                        "Try a different location",
+                        "Verify internet connectivity",
+                    ],
+                    diagnostic_info={"http_status": response.status_code},
+                    urgency="low",
+                )
 
     except httpx.RequestError as e:
         logger.error(f"Weather API error: {e}", exc_info=True)
@@ -928,7 +1035,7 @@ async def _get_weather(location: str | None = None) -> str:
         )
 
 
-async def _set_alarm(time_str: str) -> str:
+async def _set_alarm(time_str: str) -> dict:
     """Set an alarm for a specific time.
 
     Parses time strings like "7 AM", "8:30 PM", "14:00", etc. and sets an alarm.
@@ -1006,7 +1113,17 @@ Could not parse time: "{time_str}"
         seconds_until = (alarm_time - now).total_seconds()
 
         if seconds_until < 0:
-            return "# Alarm Error\n\nTime has already passed today. Please specify a future time."
+            return build_error_response(
+                error="alarm_time_past",
+                error_code="ALARM_TIME_PASSED",
+                message="The specified alarm time has already passed today",
+                recovery_options=[
+                    "Specify a future time for the alarm",
+                    "Use 24-hour format (e.g., '14:30' for 2:30 PM)",
+                    "Check current time and add hours if needed",
+                ],
+                urgency="low",
+            )
 
         # Create alarm ID
         _alarm_counter += 1
@@ -1054,21 +1171,42 @@ Could not parse time: "{time_str}"
             "thread": thread,
         }
 
-        return f"""# Alarm Set
-
-**Alarm ID:** {alarm_id}
-**Time:** {time_display}
-**Time until:** {hours_until} hours, {minutes_until} minutes
-
-The alarm will sound at {time_display} and announce the time.
-"""
+        return build_success_response(
+            operation="alarm",
+            summary=f"Alarm set for {time_display} ({alarm_id})",
+            result={
+                "alarm_id": alarm_id,
+                "alarm_time": time_display,
+                "hours_until": hours_until,
+                "minutes_until": minutes_until,
+                "total_seconds_until": seconds_until,
+                "status": "active",
+            },
+            next_steps=[
+                "Alarm will sound at the specified time",
+                "Use alarm ID to manage this alarm if needed",
+                "Alarm will announce the time when triggered",
+            ],
+        )
 
     except Exception as e:
         logger.error(f"Alarm error: {e}", exc_info=True)
-        return f"# Alarm Error\n\nFailed to set alarm: {str(e)}\n\nPlease try again with a valid time format."
+        return build_error_response(
+            error="alarm_setup_failed",
+            error_code="ALARM_ERROR",
+            message=f"Failed to set alarm: {str(e)}",
+            recovery_options=[
+                "Check time format (use HH:MM or descriptive like '7 AM')",
+                "Ensure time is in the future",
+                "Try again with a different time",
+                "Check system audio settings",
+            ],
+            diagnostic_info={"error": str(e)},
+            urgency="medium",
+        )
 
 
-async def _set_timer(duration_str: str) -> str:
+async def _set_timer(duration_str: str) -> dict:
     """Set a timer for a specific duration.
 
     Parses duration strings like "5 minutes", "30 seconds", "1 hour", etc. and sets a timer.
@@ -1119,10 +1257,31 @@ Could not parse duration: "{duration_str}"
         elif unit in ["hour", "hr"]:
             seconds = value * 3600
         else:
-            return f"# Timer Error\n\nUnknown time unit: {unit}"
+            return build_error_response(
+                error="invalid_time_unit",
+                error_code="TIMER_INVALID_UNIT",
+                message=f"Unknown time unit: {unit}",
+                recovery_options=[
+                    "Use supported units: seconds, minutes, hours",
+                    "Examples: '5 minutes', '30 seconds', '1 hour'",
+                    "Use singular or plural forms",
+                ],
+                supported_units=["second", "sec", "minute", "min", "hour", "hr"],
+                urgency="low",
+            )
 
         if seconds <= 0:
-            return "# Timer Error\n\nDuration must be greater than 0."
+            return build_error_response(
+                error="invalid_duration",
+                error_code="TIMER_ZERO_DURATION",
+                message="Timer duration must be greater than 0",
+                recovery_options=[
+                    "Specify a positive duration",
+                    "Use formats like '5 minutes' or '30 seconds'",
+                    "Minimum duration is 1 second",
+                ],
+                urgency="low",
+            )
 
         # Create timer ID
         _timer_counter += 1
@@ -1179,21 +1338,40 @@ Could not parse duration: "{duration_str}"
             "thread": thread,
         }
 
-        return f"""# Timer Set
-
-**Timer ID:** {timer_id}
-**Duration:** {display}
-**Status:** Running
-
-The timer will sound after {display} and announce completion.
-"""
+        return build_success_response(
+            operation="timer",
+            summary=f"Timer set for {display} ({timer_id})",
+            result={
+                "timer_id": timer_id,
+                "duration_display": display,
+                "duration_seconds": seconds,
+                "status": "running",
+            },
+            next_steps=[
+                "Timer will sound after the specified duration",
+                "Use timer ID to manage this timer if needed",
+                "Timer will announce completion when triggered",
+            ],
+        )
 
     except Exception as e:
         logger.error(f"Timer error: {e}", exc_info=True)
-        return f"# Timer Error\n\nFailed to set timer: {str(e)}\n\nPlease try again with a valid duration format."
+        return build_error_response(
+            error="timer_setup_failed",
+            error_code="TIMER_ERROR",
+            message=f"Failed to set timer: {str(e)}",
+            recovery_options=[
+                "Check duration format (use '5 minutes', '30 seconds', etc.)",
+                "Ensure duration is greater than 0",
+                "Try again with a different duration",
+                "Check system audio settings",
+            ],
+            diagnostic_info={"error": str(e)},
+            urgency="medium",
+        )
 
 
-async def _control_music(command: str, query: str | None = None) -> str:
+async def _control_music(command: str, query: str | None = None) -> dict:
     """Control music playback using available music player.
 
     Supports multiple backends:
@@ -1262,7 +1440,7 @@ async def _control_music(command: str, query: str | None = None) -> str:
         return f"# Music Control Error\n\nFailed to control music: {str(e)}\n\nPlease check your music player configuration."
 
 
-async def _control_music_plex(command: str, query: str | None) -> str:
+async def _control_music_plex(command: str, query: str | None) -> dict:
     """Control music using Plex Media Server API (controls Plexamp and other Plex clients)."""
     try:
         import os
@@ -1432,7 +1610,7 @@ Went to previous track.
         return f"# Music Error\n\nFailed to control Plex: {str(e)}\n\nMake sure Plex Media Server is running and accessible."
 
 
-async def _control_music_windows(command: str, query: str | None) -> str:
+async def _control_music_windows(command: str, query: str | None) -> dict:
     """Control music using Windows Media Player COM interface."""
     try:
         import win32com.client
@@ -1535,7 +1713,7 @@ pip install pywin32
         return f"# Music Error\n\nFailed to control Windows Media Player: {str(e)}\n\nTry using Plexamp CLI instead."
 
 
-async def _wake_word_operation(active_project, wake_word: str, record_duration: int) -> str:
+async def _wake_word_operation(active_project, wake_word: str, record_duration: int) -> dict:
     """Handle wake word operation - continuously listens for wake word, then records and executes command.
 
     Monitors audio input for the wake word (e.g., "memorizer"), and when detected,
@@ -1630,7 +1808,7 @@ Then restart and try again!"""
         return f"# Wake Word Error\n\nError: {str(e)}\n\nCheck your audio setup and try again."
 
 
-async def _wake_start_operation(active_project, wake_word: str, record_duration: int) -> str:
+async def _wake_start_operation(active_project, wake_word: str, record_duration: int) -> dict:
     """Start wake word listener in background thread."""
     global _wake_listener_thread, _wake_listener_stop_event, _wake_listener_running
 
@@ -1695,7 +1873,7 @@ The listener will continue running until you stop it.
 """
 
 
-async def _wake_stop_operation() -> str:
+async def _wake_stop_operation() -> dict:
     """Stop the running wake word listener."""
     global _wake_listener_thread, _wake_listener_stop_event, _wake_listener_running
 
@@ -1725,7 +1903,7 @@ The wake word listener has been stopped.
 """
 
 
-async def _wake_status_operation() -> str:
+async def _wake_status_operation() -> dict:
     """Check wake word listener status."""
     global _wake_listener_running, _wake_listener_thread
 

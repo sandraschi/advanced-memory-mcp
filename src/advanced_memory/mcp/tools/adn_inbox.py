@@ -20,11 +20,17 @@ async def adn_inbox(
     operation: Literal["status", "process", "info", "watch"],
     file_name: str | None = None,
     ctx: Context | None = None,
-) -> str:
+) -> dict:
     """Inbox portmanteau for Advanced Memory.
 
     This tool consolidates the entire file ingestion pipeline, handling
     detection, conversion, and ingestion of external documents.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]

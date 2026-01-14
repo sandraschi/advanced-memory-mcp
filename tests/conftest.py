@@ -9,21 +9,11 @@ from textwrap import dedent
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
     from datetime import UTC
-except ImportError:
+except (ImportError, AttributeError):
     from datetime import timedelta, timezone
 
     # Fallback for Python < 3.11
-    class UTC(timezone):
-        def __init__(self):
-            super().__init__(timedelta(0))
-
-        def __repr__(self):
-            return "datetime.UTC"
-
-        def __str__(self):
-            return "UTC"
-
-    UTC = UTC()
+    UTC = timezone(timedelta(0))
 
 import pytest
 import pytest_asyncio

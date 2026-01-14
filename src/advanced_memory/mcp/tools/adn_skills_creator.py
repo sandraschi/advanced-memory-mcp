@@ -46,6 +46,12 @@ async def adn_skills_creator(
 ) -> dict[str, Any]:
     """Create, validate, and package Claude skills using the gold-standard workflow.
 
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
+
     PORTMANTEAU PATTERN RATIONALE:
     Consolidates 5 skill creation operations into one tool to centralize skill manufacturing workflow.
 

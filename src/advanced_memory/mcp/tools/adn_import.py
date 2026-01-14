@@ -22,11 +22,17 @@ async def adn_import(
     restore_mode: str = "overwrite",
     backup_existing: bool = True,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Comprehensive import management for Advanced Memory knowledge base.
 
     This point-of-entry tool provides a unified interface for importing content
     from various external sources into the Advanced Memory ecosystem.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]

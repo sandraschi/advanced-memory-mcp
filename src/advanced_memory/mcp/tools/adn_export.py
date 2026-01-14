@@ -9,6 +9,7 @@ from pathlib import Path
 from loguru import logger  # pyright: ignore[reportMissingImports]
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response
 from advanced_memory.utils.export_paths import format_export_path
 
 
@@ -32,11 +33,17 @@ async def adn_export(
     search_query: str | None = None,
     combine_into_one: bool = False,
     make_toc: bool = True,
-) -> str:
+) -> dict:
     """Comprehensive export management tool for Advanced Memory knowledge base.
 
     This point-of-entry tool provides a unified interface for exporting content
     from the Advanced Memory ecosystem to various external formats and services.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
@@ -337,22 +344,19 @@ async def _pandoc_export(
     """Handle Pandoc export operation."""
     # Reject PDF format - use native PDF export instead
     if format_type == "pdf":
-        return """# PDF Export Moved to Native Tool
-
-PDF export is now handled by the native PDF export tool (fpdf2) - no LaTeX needed!
-
-**Use this instead:**
-```python
-adn_export("pdf", export_path="...")
-```
-
-Or specify a different format for Pandoc:
-- docx: Word documents
-- html: HTML pages
-- epub: eBooks
-- odt: OpenDocument Text
-- rtf: Rich Text Format
-"""
+        return build_error_response(
+            error="pandoc_pdf_deprecated",
+            error_code="PDF_FORMAT_DEPRECATED",
+            message="PDF format in pandoc operation is deprecated - use native PDF export instead",
+            recovery_options=[
+                "Use operation='pdf' for native PDF export (no LaTeX required)",
+                "For other formats with pandoc, use: docx, html, epub, odt, rtf",
+                "Native PDF export uses fpdf2 for better performance",
+            ],
+            alternative_operations=["pdf"],
+            supported_pandoc_formats=["docx", "html", "epub", "odt", "rtf"],
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.export_pandoc import export_pandoc
 
@@ -449,7 +453,18 @@ async def _pdf_book_export(
 ) -> str:
     """Handle PDF book export operation."""
     if not book_title:
-        return '# Error\n\nPDF book export requires: book_title parameter\n\n**Example:**\n```python\nadn_export("pdf_book", book_title="Research Papers")\n```'
+        return build_error_response(
+            error="missing_book_title",
+            error_code="BOOK_TITLE_REQUIRED",
+            message="PDF book export requires book_title parameter",
+            recovery_options=[
+                "Provide book_title parameter with your desired book title",
+                "Book title will be used as the PDF filename and title page",
+                "Example: book_title='My Research Notes'",
+            ],
+            example={"operation": "pdf_book", "book_title": "Research Papers"},
+            urgency="medium",
+        )
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
 
@@ -494,11 +509,17 @@ async def _repo_export(export_path: str, repo_path: str | None, show_after_expor
         from pathspec import PathSpec  # pyright: ignore[reportMissingImports]
         from pathspec.patterns import GitWildMatchPattern  # pyright: ignore[reportMissingImports]
     except ImportError:
-        return (
-            "[UNICODE] **Error: pathspec not installed**\n\n"
-            "Repository export requires the `pathspec` package.\n"
-            "Install it with: `pip install pathspec>=0.12.0`\n"
-            "Or install Advanced Memory with all dependencies."
+        return build_error_response(
+            error="missing_dependency",
+            error_code="PATHSPEC_NOT_INSTALLED",
+            message="Repository export requires the pathspec package for .gitignore support",
+            recovery_options=[
+                "Install pathspec: pip install pathspec>=0.12.0",
+                "Install all dependencies: pip install advanced-memory[all]",
+                "Use alternative export methods without repository features",
+            ],
+            required_package="pathspec>=0.12.0",
+            urgency="medium",
         )
 
     # Determine repository root
@@ -776,7 +797,17 @@ async def _claude_skills_export(
     current_project = await repo.get_project_by_name(project_config.name)
 
     if not current_project:
-        return "# Error\n\nCurrent project not found in database."
+        return build_error_response(
+            error="project_not_found",
+            error_code="CURRENT_PROJECT_NOT_FOUND",
+            message="Current project not found in database",
+            recovery_options=[
+                "Use adn_project('list') to see available projects",
+                "Use adn_project('switch', project_name='...') to switch to a valid project",
+                "Create a new project if needed",
+            ],
+            urgency="high",
+        )
 
     # Create export directory
     export_dir = Path(export_path).expanduser()

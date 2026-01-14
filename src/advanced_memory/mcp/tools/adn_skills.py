@@ -17,6 +17,7 @@ from advanced_memory.mcp.tools.adn_skills_operations_new import (
     _distill_from_wikipedia_operation,
     _import_from_github_operation,
 )
+from advanced_memory.mcp.tools.utils import build_error_response
 from advanced_memory.utils import generate_permalink
 
 # Session state for active skills (module-level tracking)
@@ -92,9 +93,15 @@ async def adn_skills(
     # Staged loading parameters
     section: str | None = None,  # Section header to load (e.g., "## Decorators")
     resource: str | None = None,  # Resource path to load (e.g., "scripts/linter.py")
-) -> str:
+) -> dict:
     """
     Claude Skills management portmanteau for Advanced Memory.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     This comprehensive tool consolidates skill management operations to provide a
     unified interface for creating, managing, and distributing Claude Skills (Anthropic Skills).
@@ -383,30 +390,27 @@ async def _create_operation(
     difficulty: str | None,
     metadata: dict | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Create new skill using skill-creator init pattern."""
     if not skill_name or not description:
-        return """# Error: Missing Required Parameters
-
-**Operation:** create
-
-**Missing:** skill_name and/or description
-
-The create operation requires both:
-- **skill_name**: Hyphen-case name (e.g., "python-expert", "my-skill")
-- **description**: When Claude should use this skill
-
-**Example:**
-```
-adn_skills(
-    operation="create",
-    skill_name="python-expert",
-    description="Expert Python guidance for advanced patterns and best practices",
-    category="developer"
-)
-```
-
-**Provide both required parameters and try again.**"""
+        return build_error_response(
+            error="missing_required_parameters",
+            error_code="MISSING_SKILL_NAME_OR_DESCRIPTION",
+            message="Create operation requires both skill_name and description parameters",
+            recovery_options=[
+                "Provide both skill_name (hyphen-case) and description parameters",
+                "Skill name should be hyphen-case (e.g., 'python-expert')",
+                "Description should explain when Claude should use this skill",
+            ],
+            required_parameters=["skill_name", "description"],
+            example={
+                "operation": "create",
+                "skill_name": "python-expert",
+                "description": "Expert Python guidance",
+                "category": "developer",
+            },
+            urgency="medium",
+        )
 
     active_project = get_active_project(project)
 
@@ -599,26 +603,21 @@ Files used in output (templates, boilerplate, etc.).
 ✅ Skill created following Anthropic skill-creator pattern!"""
 
 
-async def _read_operation(identifier: str | None, project: str | None) -> str:
+async def _read_operation(identifier: str | None, project: str | None) -> dict:
     """Read skill in SKILL.md format."""
     if not identifier:
-        return """# Error: Missing Required Parameter
-
-**Operation:** read
-
-**Missing:** identifier parameter
-
-The read operation requires the skill's name or identifier.
-
-**Example:**
-```
-adn_skills(
-    operation="read",
-    identifier="python-expert"
-)
-```
-
-**Provide the skill identifier and try again.**"""
+        return build_error_response(
+            error="missing_required_parameter",
+            error_code="MISSING_IDENTIFIER",
+            message="Read operation requires identifier parameter (skill name or permalink)",
+            recovery_options=[
+                "Provide identifier parameter with skill name or permalink",
+                "Use adn_skills('list') to see available skills",
+                "Check skill name spelling",
+            ],
+            example={"operation": "read", "identifier": "python-expert"},
+            urgency="medium",
+        )
 
     # Read note content
     from advanced_memory.mcp.tools.read_note import read_note
@@ -633,7 +632,7 @@ async def _update_operation(
     category: str | None,
     metadata: dict | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Update existing skill."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -683,7 +682,7 @@ adn_skills(
 **Provide the content parameter and try again.**"""
 
 
-async def _delete_operation(identifier: str | None, project: str | None) -> str:
+async def _delete_operation(identifier: str | None, project: str | None) -> dict:
     """Delete skill."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -712,7 +711,7 @@ adn_skills(
 
 async def _list_operation(
     filters: dict | None, page: int, page_size: int, project: str | None
-) -> str:
+) -> dict:
     """List all skills with optional filtering."""
 
     skills_root = Path("skills")
@@ -861,7 +860,7 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
     return "\n".join(lines)
 
 
-async def _validate_operation(identifier: str | None, project: str | None) -> str:
+async def _validate_operation(identifier: str | None, project: str | None) -> dict:
     """Validate skill format compliance with repair suggestions."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -964,7 +963,7 @@ async def _export_operation(
     package_format: str,
     filters: dict | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Export skills to Claude Skills format."""
     if not export_path:
         return """# Error: Missing Required Parameter
@@ -1012,7 +1011,7 @@ For now, use:
 **Coming soon:** Full automatic export with package_format support!"""
 
 
-async def _import_operation(source_path: str | None, project: str | None) -> str:
+async def _import_operation(source_path: str | None, project: str | None) -> dict:
     """Import Claude Skills from folders."""
     if not source_path:
         return """# Error: Missing Required Parameter
@@ -1190,7 +1189,7 @@ description: When to use this skill
 
 async def _package_operation(
     identifier: str | None, export_path: str | None, project: str | None
-) -> str:
+) -> dict:
     """Package skill as distributable .zip."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -1234,7 +1233,7 @@ async def _from_zettel_operation(
     category: str | None,
     metadata: dict | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Convert zettelkasten note to Claude Skill."""
     if not identifier or not description:
         return """# Error: Missing Required Parameters
@@ -1328,7 +1327,7 @@ adn_skills(
 ✅ Works in both Advanced Memory and Claude.ai"""
 
 
-async def _to_zettel_operation(identifier: str | None, project: str | None) -> str:
+async def _to_zettel_operation(identifier: str | None, project: str | None) -> dict:
     """Convert Claude Skill back to regular note."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -1433,7 +1432,7 @@ description: When to use
 ✅ Now a regular zettelkasten note!"""
 
 
-async def _validate_operation(identifier: str | None, project: str | None) -> str:
+async def _validate_operation(identifier: str | None, project: str | None) -> dict:
     """Validate skill format (already implemented above)."""
     if not identifier:
         return "# Error\n\nValidate requires: identifier parameter"
@@ -1516,7 +1515,7 @@ async def _activate_operation(
     identifier: str | None,
     scope: str | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Activate a skill - load TOC into context (staged loading).
 
     THE DOOR: This is what was missing from the entire Skills ecosystem.
@@ -1703,7 +1702,7 @@ async def _deactivate_operation(
     identifier: str | None,
     deactivate_all: bool,
     project: str | None,
-) -> str:
+) -> dict:
     """Deactivate a skill - remove it from active context."""
     global _active_skills
 
@@ -1771,7 +1770,7 @@ adn_skills("active")
 async def _active_operation(
     verbose: bool,
     project: str | None,
-) -> str:
+) -> dict:
     """List currently active skills."""
     global _active_skills
 
@@ -1849,7 +1848,7 @@ adn_skills("list")
     return "\n".join(lines)
 
 
-def _format_duration(activated_at: datetime | None) -> str:
+def _format_duration(activated_at: datetime | None) -> dict:
     """Format duration since activation."""
     if not activated_at:
         return "unknown"
@@ -1869,7 +1868,7 @@ async def _load_section_operation(
     identifier: str | None,
     section: str | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Load a specific section from an active skill (staged loading)."""
     global _active_skills
 
@@ -2002,7 +2001,7 @@ async def _load_resource_operation(
     identifier: str | None,
     resource: str | None,
     project: str | None,
-) -> str:
+) -> dict:
     """Load a resource file from an active skill's directories (scripts/, references/, assets/)."""
     global _active_skills
 

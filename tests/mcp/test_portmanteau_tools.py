@@ -2,6 +2,12 @@
 
 This module tests the consolidated portmanteau tools that reduce the MCP tool count
 from 40+ individual tools to just 8 consolidated tools for Cursor IDE compatibility.
+
+Tests verify:
+- Tool registration and signatures
+- Structured response format (FastMCP 2.14.1+ compliance)
+- Error handling with recovery options
+- Parameter validation
 """
 
 import pytest
@@ -195,16 +201,26 @@ class TestAdnContentBasic:
         import asyncio
 
         result = asyncio.run(adn_content_fn(operation="invalid"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
     def test_adn_content_missing_parameters(self):
         """Test adn_content with missing required parameters."""
         import asyncio
 
         result = asyncio.run(adn_content_fn(operation="write"))
-        assert "Error" in result
-        assert "requires" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "requires" in result["message"]
 
 
 class TestAdnProjectBasic:
@@ -215,16 +231,26 @@ class TestAdnProjectBasic:
         import asyncio
 
         result = asyncio.run(adn_project_fn(operation="invalid"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
     def test_adn_project_missing_parameters(self):
         """Test adn_project with missing required parameters."""
         import asyncio
 
         result = asyncio.run(adn_project_fn(operation="create"))
-        assert "Error" in result
-        assert "requires" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "requires" in result["message"]
 
 
 class TestAdnExportBasic:
@@ -235,8 +261,13 @@ class TestAdnExportBasic:
         import asyncio
 
         result = asyncio.run(adn_export_fn(operation="invalid", export_path="/tmp/test"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
     @pytest.mark.skip(reason="FunctionTool API changed - needs test refactor")
     def test_adn_export_missing_parameters(self):
@@ -255,8 +286,13 @@ class TestAdnImportBasic:
         import asyncio
 
         result = asyncio.run(adn_import_fn(operation="invalid", source_path="/tmp/test"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
     def test_adn_import_missing_parameters(self):
         """Test adn_import with missing required parameters."""
@@ -274,8 +310,13 @@ class TestAdnSearchBasic:
         import asyncio
 
         result = asyncio.run(adn_search_fn(operation="invalid", query="test"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
     def test_adn_search_missing_parameters(self):
         """Test adn_search with missing required parameters."""
@@ -293,8 +334,13 @@ class TestAdnKnowledgeBasic:
         import asyncio
 
         result = asyncio.run(adn_knowledge_fn(operation="invalid"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
 
 class TestAdnNavigationBasic:
@@ -305,8 +351,13 @@ class TestAdnNavigationBasic:
         import asyncio
 
         result = asyncio.run(adn_navigation_fn(operation="invalid"))
-        assert "Error" in result
-        assert "Invalid operation" in result
+        assert isinstance(result, dict)
+        assert result["success"] is False
+        assert "error" in result
+        assert "error_code" in result
+        assert "message" in result
+        assert "recovery_options" in result
+        assert "Invalid operation" in result["message"]
 
 
 class TestAdnEditorBasic:
@@ -317,3 +368,152 @@ class TestAdnEditorBasic:
         """Test adn_editor with invalid operation."""
         # Note: adn_editor is deprecated, skip this test
         pass
+
+
+class TestStructuredResponses:
+    """Test FastMCP 2.14.1+ structured response format compliance.
+
+    All portmanteau tools must return structured dict responses with:
+    - success: bool
+    - operation: str (for successful operations)
+    - summary: str (for successful operations)
+    - result: dict (for successful operations)
+    - error: str (for failed operations)
+    - error_code: str (for failed operations)
+    - message: str (for failed operations)
+    - recovery_options: list (for failed operations)
+    """
+
+    def _assert_success_response(self, result: dict, expected_operation: str):
+        """Assert that a response follows the success format."""
+        assert isinstance(result, dict), f"Response should be dict, got {type(result)}"
+        assert result["success"] is True, f"Success should be True, got {result.get('success')}"
+        assert "operation" in result, "Success response should have 'operation' field"
+        assert result["operation"] == expected_operation, (
+            f"Operation should be '{expected_operation}'"
+        )
+        assert "summary" in result, "Success response should have 'summary' field"
+        assert "result" in result, "Success response should have 'result' field"
+        assert isinstance(result["result"], dict), "Result field should be a dict"
+
+    def _assert_error_response(self, result: dict):
+        """Assert that a response follows the error format."""
+        assert isinstance(result, dict), f"Response should be dict, got {type(result)}"
+        assert result["success"] is False, f"Success should be False, got {result.get('success')}"
+        assert "error" in result, "Error response should have 'error' field"
+        assert "error_code" in result, "Error response should have 'error_code' field"
+        assert "message" in result, "Error response should have 'message' field"
+        assert "recovery_options" in result, "Error response should have 'recovery_options' field"
+        assert isinstance(result["recovery_options"], list), "recovery_options should be a list"
+
+    async def _test_tool_error_response(self, tool_fn, **kwargs):
+        """Helper to test error response format."""
+        result = await tool_fn(**kwargs)
+        self._assert_error_response(result)
+        return result
+
+    def test_adn_content_structured_error_responses(self):
+        """Test adn_content returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(adn_content_fn, operation="invalid_operation")
+        )
+        assert "Invalid operation" in result["message"]
+
+        # Test missing parameters
+        result = asyncio.run(self._test_tool_error_response(adn_content_fn, operation="write"))
+        assert "requires" in result["message"]
+
+    def test_adn_project_structured_error_responses(self):
+        """Test adn_project returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(adn_project_fn, operation="invalid_operation")
+        )
+        assert "Invalid operation" in result["message"]
+
+        # Test missing parameters
+        result = asyncio.run(self._test_tool_error_response(adn_project_fn, operation="create"))
+        assert "requires" in result["message"]
+
+    def test_adn_export_structured_error_responses(self):
+        """Test adn_export returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(
+                adn_export_fn, operation="invalid_operation", export_path="/tmp/test"
+            )
+        )
+        assert "Invalid operation" in result["message"]
+
+    def test_adn_import_structured_error_responses(self):
+        """Test adn_import returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(
+                adn_import_fn, operation="invalid_operation", source_path="/tmp/test"
+            )
+        )
+        assert "Invalid operation" in result["message"]
+
+    def test_adn_search_structured_error_responses(self):
+        """Test adn_search returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(
+                adn_search_fn, operation="invalid_operation", query="test"
+            )
+        )
+        assert "Invalid operation" in result["message"]
+
+    def test_adn_knowledge_structured_error_responses(self):
+        """Test adn_knowledge returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(adn_knowledge_fn, operation="invalid_operation")
+        )
+        assert "Invalid operation" in result["message"]
+
+    def test_adn_navigation_structured_error_responses(self):
+        """Test adn_navigation returns structured error responses."""
+        import asyncio
+
+        # Test invalid operation
+        result = asyncio.run(
+            self._test_tool_error_response(adn_navigation_fn, operation="invalid_operation")
+        )
+        assert "Invalid operation" in result["message"]
+
+    def test_all_tools_return_dict_responses(self):
+        """Test that all tools return dict responses (not strings)."""
+        import asyncio
+
+        tools_to_test = [
+            (adn_content_fn, {"operation": "invalid"}),
+            (adn_project_fn, {"operation": "invalid"}),
+            (adn_export_fn, {"operation": "invalid", "export_path": "/tmp"}),
+            (adn_import_fn, {"operation": "invalid", "source_path": "/tmp"}),
+            (adn_search_fn, {"operation": "invalid", "query": "test"}),
+            (adn_knowledge_fn, {"operation": "invalid"}),
+            (adn_navigation_fn, {"operation": "invalid"}),
+            (adn_llm_fn, {"operation": "invalid"}),
+        ]
+
+        for tool_fn, kwargs in tools_to_test:
+            result = asyncio.run(tool_fn(**kwargs))
+            assert isinstance(result, dict), (
+                f"{tool_fn.__name__} should return dict, got {type(result)}"
+            )
+            assert "success" in result, f"{tool_fn.__name__} response should have 'success' field"

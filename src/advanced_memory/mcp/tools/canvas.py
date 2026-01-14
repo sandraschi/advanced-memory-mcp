@@ -21,11 +21,17 @@ async def canvas(
     title: str,
     folder: str,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Create an Obsidian canvas file to visualize concepts and connections.
 
     This tool creates a .canvas file compatible with Obsidian's Canvas feature,
     allowing visualization of relationships between concepts or documents.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "canvas", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     For the full JSON Canvas 1.0 specification, see the 'spec://canvas' resource.
 

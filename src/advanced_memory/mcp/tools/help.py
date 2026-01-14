@@ -1,14 +1,21 @@
 """Help and system information tool for Advanced Memory MCP server."""
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
 @mcp.tool
-async def help(level: str = "basic", topic: str | None = None) -> str:
+async def help(level: str = "basic", topic: str | None = None) -> dict:
     """Comprehensive help system for Advanced Memory with multiple knowledge levels.
 
     This tool provides contextual assistance and documentation for Advanced Memory features,
     organized by knowledge levels from basic usage to advanced technical details.
+
+    RESPONSES:
+    Success: {"success": true, "operation": "help", "summary": "...", "result": {...}}
+    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+    For errors, check recovery_options for next steps.
 
     LEVELS:
     - basic: Quick start guide and essential commands
@@ -55,28 +62,55 @@ async def help(level: str = "basic", topic: str | None = None) -> str:
     """
 
     if topic:
-        return _get_topic_help(topic, level)
+        content = _get_topic_help(topic, level)
+        return build_success_response(
+            operation="help",
+            summary=f"Help for topic '{topic}' at {level} level",
+            result={"help_content": content, "topic": topic, "level": level},
+        )
 
     if level == "basic":
-        return _get_basic_help()
+        content = _get_basic_help()
+        return build_success_response(
+            operation="help",
+            summary="Basic help - getting started guide",
+            result={"help_content": content, "level": "basic"},
+        )
     elif level == "intermediate":
-        return _get_intermediate_help()
+        content = _get_intermediate_help()
+        return build_success_response(
+            operation="help",
+            summary="Intermediate help - detailed tool reference",
+            result={"help_content": content, "level": "intermediate"},
+        )
     elif level == "advanced":
-        return _get_advanced_help()
+        content = _get_advanced_help()
+        return build_success_response(
+            operation="help",
+            summary="Advanced help - technical architecture",
+            result={"help_content": content, "level": "advanced"},
+        )
     elif level == "expert":
-        return _get_expert_help()
+        content = _get_expert_help()
+        return build_success_response(
+            operation="help",
+            summary="Expert help - development and troubleshooting",
+            result={"help_content": content, "level": "expert"},
+        )
     else:
-        return f"""# Help - Invalid Level
-
-Unknown help level: "{level}"
-
-Available levels:
-- **basic**: Quick overview and getting started
-- **intermediate**: Detailed tool descriptions and workflows
-- **advanced**: Technical details and architecture
-- **expert**: Development and troubleshooting
-
-Try: `help("basic")`"""
+        return build_error_response(
+            error="invalid_help_level",
+            error_code="UNKNOWN_HELP_LEVEL",
+            message=f"Unknown help level: {level}",
+            recovery_options=[
+                "Use 'basic' for getting started",
+                "Use 'intermediate' for detailed tool reference",
+                "Use 'advanced' for technical architecture",
+                "Use 'expert' for development and troubleshooting",
+            ],
+            available_levels=["basic", "intermediate", "advanced", "expert"],
+            urgency="low",
+        )
 
 
 def _get_topic_help(topic: str, level: str) -> str:

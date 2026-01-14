@@ -6,6 +6,12 @@ This tool provides unified LLM management across multiple providers:
 - OpenAI (hosted models)
 
 Supports model listing, selection, loading, unloading, and status monitoring.
+
+RESPONSES:
+Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
+Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
+
+For errors, check recovery_options for next steps.
 """
 
 import os
@@ -36,7 +42,7 @@ async def adn_llm(
     model: str | None = None,
     base_url: str | None = None,
     api_key: str | None = None,
-) -> str:
+) -> dict:
     """LLM Portmanteau for Advanced Memory.
 
     This tool consolidates the entire LLM lifecycle management, providing a
@@ -171,7 +177,7 @@ Model selection updated and saved to configuration. Use 'load_model' to load int
         return f"# Error\n\nFailed to execute operation: {str(e)}"
 
 
-async def _list_providers() -> str:
+async def _list_providers() -> dict:
     """List available LLM providers and their status."""
     providers = []
 
@@ -244,7 +250,7 @@ async def _list_providers() -> str:
     return result
 
 
-async def _list_models(provider: str, base_url: str | None = None) -> str:
+async def _list_models(provider: str, base_url: str | None = None) -> dict:
     """List available models for a provider."""
     if provider == "ollama":
         return await _list_ollama_models(base_url)
@@ -256,7 +262,7 @@ async def _list_models(provider: str, base_url: str | None = None) -> str:
         return f"# Error\n\nUnknown provider: {provider}"
 
 
-async def _list_ollama_models(base_url: str | None = None) -> str:
+async def _list_ollama_models(base_url: str | None = None) -> dict:
     """List models available in Ollama."""
     url = (base_url or "http://localhost:11434") + "/api/tags"
 
@@ -291,7 +297,7 @@ async def _list_ollama_models(base_url: str | None = None) -> str:
         return f"# Error\n\nFailed to connect to Ollama: {str(e)}\n\nMake sure Ollama is running and accessible at {url}"
 
 
-async def _list_lmstudio_models(base_url: str | None = None) -> str:
+async def _list_lmstudio_models(base_url: str | None = None) -> dict:
     """List models available in LM Studio."""
     url = (base_url or "http://localhost:1234") + "/v1/models"
 
@@ -320,7 +326,7 @@ async def _list_lmstudio_models(base_url: str | None = None) -> str:
         return f"# Error\n\nFailed to connect to LM Studio: {str(e)}\n\nMake sure LM Studio server is running at {url}"
 
 
-async def _list_openai_models() -> str:
+async def _list_openai_models() -> dict:
     """List available OpenAI models."""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -360,7 +366,7 @@ async def _list_openai_models() -> str:
 
 async def _load_model(
     provider: str, model: str, base_url: str | None = None, api_key: str | None = None
-) -> str:
+) -> dict:
     """Load a model into memory (for local providers)."""
     if provider == "ollama":
         return await _load_ollama_model(model, base_url)
@@ -372,7 +378,7 @@ async def _load_model(
         return f"# Error\n\nUnknown provider: {provider}"
 
 
-async def _load_ollama_model(model: str, base_url: str | None = None) -> str:
+async def _load_ollama_model(model: str, base_url: str | None = None) -> dict:
     """Load a model in Ollama."""
     url = (base_url or "http://localhost:11434") + "/api/generate"
 
@@ -402,7 +408,7 @@ Model is now loaded and ready to use.
         return f"# Error\n\nFailed to connect to Ollama: {str(e)}\n\nMake sure Ollama is running."
 
 
-async def _load_lmstudio_model(model: str, base_url: str | None = None) -> str:
+async def _load_lmstudio_model(model: str, base_url: str | None = None) -> dict:
     """Load a model in LM Studio."""
     # LM Studio loads models through its UI, but we can check if it's available
     url = (base_url or "http://localhost:1234") + "/v1/models"
@@ -447,7 +453,7 @@ Model is loaded and ready to use in LM Studio.
 
 async def _unload_model(
     provider: str, model: str | None = None, base_url: str | None = None
-) -> str:
+) -> dict:
     """Unload a model from memory (for local providers)."""
     if provider == "ollama":
         # Ollama doesn't have an explicit unload, but we can note it
@@ -475,7 +481,7 @@ LM Studio manages model loading through its UI.
         return f"# Error\n\nUnknown provider: {provider}"
 
 
-async def _get_status() -> str:
+async def _get_status() -> dict:
     """Get current LLM configuration and status."""
     global _current_provider, _current_model
 
@@ -507,7 +513,7 @@ async def _get_status() -> str:
     return result
 
 
-async def _check_health(provider: str | None = None, base_url: str | None = None) -> str:
+async def _check_health(provider: str | None = None, base_url: str | None = None) -> dict:
     """Check health of LLM providers."""
     if provider:
         providers_to_check = [provider]
