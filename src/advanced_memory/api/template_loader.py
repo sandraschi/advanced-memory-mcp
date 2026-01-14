@@ -5,10 +5,10 @@ templates directory, providing a consistent interface for all prompt-related
 formatting needs.
 """
 
-import datetime
 import json
 import textwrap
 from collections.abc import Callable
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +32,7 @@ def _date_helper(this, *args) -> pybars.strlist:  # type: ignore[no-untyped-def]
         result = timestamp.strftime(format_str)
     elif isinstance(timestamp, str):
         try:
-            dt = datetime.datetime.fromisoformat(timestamp)
+            dt = datetime.fromisoformat(timestamp)
             result = dt.strftime(format_str)
         except ValueError:
             result = timestamp

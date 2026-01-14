@@ -1,6 +1,6 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-import datetime
+from datetime import UTC, datetime, timedelta, timezone
 from typing import Any
 
 from loguru import logger
@@ -15,10 +15,8 @@ from advanced_memory.schemas.search import SearchItemType
 
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
-    UTC = datetime.UTC
+    UTC = UTC
 except AttributeError:
-    from datetime import timedelta, timezone
-
     # Fallback for Python < 3.11
     UTC = timezone(timedelta(0))
 

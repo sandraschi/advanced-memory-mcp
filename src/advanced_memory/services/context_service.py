@@ -1,7 +1,7 @@
 """Service for building rich context from the knowledge graph."""
 
-import datetime
 from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta, timezone
 
 from loguru import logger
 from sqlalchemy import text
@@ -15,10 +15,8 @@ from advanced_memory.utils import generate_permalink
 
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
-    UTC = datetime.UTC
+    UTC = UTC
 except AttributeError:
-    from datetime import timedelta, timezone
-
     # Fallback for Python < 3.11
     UTC = timezone(timedelta(0))
 
@@ -97,7 +95,7 @@ class ContextService:
         memory_url: MemoryUrl | None = None,
         types: list[SearchItemType] | None = None,
         depth: int = 1,
-        since: datetime.datetime | None = None,
+        since: datetime | None = None,
         limit: int = 10,
         offset: int = 0,
         max_related: int = 10,
@@ -216,7 +214,7 @@ class ContextService:
         self,
         type_id_pairs: list[tuple[str, int]],
         max_depth: int = 1,
-        since: datetime.datetime | None = None,
+        since: datetime | None = None,
         max_results: int = 10,
     ) -> list[ContextResultRow]:
         """Find items connected through relations.
