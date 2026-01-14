@@ -38,16 +38,12 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 
 ### 🔄 Next Priority Candidates
 
-#### 5. OCR MCP - Agentic Document Processing
-**Potential Impact**: HIGH
-**Key Workflows**:
-- "Process all invoices this month" → autonomous document batch processing
-- "Digitize all documents" → intelligent workflow routing and quality assessment
-- "Extract data from forms" → multi-document analysis pipeline
-
-**Why Priority**: Document processing is naturally batch-oriented
-**Complexity**: Medium (7 OCR backends already integrated)
-**Conversational Value**: High (natural document workflows)
+#### 6. OCR MCP - Agentic Document Processing
+**Focus**: Document processing and OCR automation
+**Key Workflow**: "Process all invoices this month" → autonomous document batch processing, quality assessment
+**Tools**: `agentic_document_workflow` with 7 OCR backends and document analysis tools
+**Impact**: Eliminates complex multi-document processing round-trips
+**Status**: ✅ Implemented and registered
 
 #### 5. OCR MCP - Agentic Document Processing
 **Potential Impact**: HIGH
@@ -91,9 +87,9 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 ```
 HIGH IMPACT    |   HIGH COMPLEXITY
 ---------------|-------------------
-OCR MCP        |   Virtualization MCP
-Tapo Camera*   |   OCR MCP
+Tapo Camera*   |   Virtualization MCP
 Docker*        |   Robotics MCP*
+OCR*           |   OCR MCP
 ---------------|-------------------
 LOW COMPLEXITY |   LOW IMPACT
 ```
@@ -168,6 +164,7 @@ build_success_response(
 | Robotics | 80-90% | High | Critical |
 | Tapo Camera | 85-95% | Very High | Critical |
 | Docker | 85-95% | High | Medium |
+| OCR | 75-85% | Medium | Medium |
 | Docker | 70-85% | High | Medium |
 | OCR | 60-80% | Medium | Medium |
 
@@ -202,22 +199,29 @@ Assistant: I'll orchestrate the security workflow autonomously.
 
 ## Next Implementation Priority
 
-**CURRENT STATUS**: Docker MCP completed - OCR MCP next
+**CURRENT STATUS**: OCR MCP completed - 4 of 7 MCP servers now support SEP-1577
 
-### Next Priority: OCR MCP
+### Major Milestone Achieved
+**4/7 MCP Servers** now support autonomous agentic workflows:
+- ✅ Robotics MCP: Manufacturing automation
+- ✅ Tapo Camera MCP: Security orchestration
+- ✅ Docker MCP: Container deployment
+- ✅ OCR MCP: Document processing
+
+### Next Priority: Filesystem MCP
 
 ### Rationale
-1. **High Impact**: Document processing workflows are naturally batch-oriented
-2. **Medium Complexity**: 7 OCR backends already integrated
-3. **High Conversational Value**: Natural document workflows ("process all invoices")
-4. **User Benefit**: Automates tedious document processing tasks
-5. **Foundation**: Builds on existing OCR pipeline infrastructure
+1. **Foundation Layer**: File operations are fundamental to all other workflows
+2. **High User Impact**: File management is done constantly by all users
+3. **Medium Complexity**: Existing file tools are well-structured
+4. **Conversational Value**: Natural file workflows ("organize my project files")
+5. **Foundation**: Builds on core filesystem operations
 
 ### Implementation Plan
-1. Create `agentic_document_workflow` tool
-2. Integrate with existing OCR/document processing tools
-3. Add batch processing orchestration capabilities
-4. Test with real document processing workflows
+1. Create `agentic_file_workflow` tool
+2. Integrate with existing filesystem management tools
+3. Add intelligent file organization and cleanup capabilities
+4. Test with real file management workflows
 5. Document with ADN content notes
 
 ## Conclusion
