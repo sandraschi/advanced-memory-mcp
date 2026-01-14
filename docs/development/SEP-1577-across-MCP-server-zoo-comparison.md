@@ -38,23 +38,19 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 
 ### 🔄 Next Priority Candidates
 
-#### 6. OCR MCP - Agentic Document Processing
+#### 5. OCR MCP - Agentic Document Processing
 **Focus**: Document processing and OCR automation
 **Key Workflow**: "Process all invoices this month" → autonomous document batch processing, quality assessment
 **Tools**: `agentic_document_workflow` with 7 OCR backends and document analysis tools
 **Impact**: Eliminates complex multi-document processing round-trips
 **Status**: ✅ Implemented and registered
 
-#### 5. OCR MCP - Agentic Document Processing
-**Potential Impact**: HIGH
-**Key Workflows**:
-- "Process all invoices this month" → autonomous document batch processing
-- "Digitize all documents" → intelligent workflow routing and quality assessment
-- "Extract data from forms" → multi-document analysis pipeline
-
-**Why Priority**: Document processing is naturally batch-oriented
-**Complexity**: Medium (7 OCR backends already integrated)
-**Conversational Value**: High (natural document workflows)
+#### 6. Filesystem MCP - Agentic File Management
+**Focus**: File system management and organization automation
+**Key Workflow**: "Organize my project files" → autonomous file categorization, backup, cleanup
+**Tools**: `agentic_file_workflow` with 10 portmanteau file system tool categories
+**Impact**: Eliminates complex multi-file operation round-trips
+**Status**: ✅ Implemented and registered
 
 ### 📋 Future Candidates
 
@@ -87,9 +83,9 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 ```
 HIGH IMPACT    |   HIGH COMPLEXITY
 ---------------|-------------------
-Tapo Camera*   |   Virtualization MCP
-Docker*        |   Robotics MCP*
-OCR*           |   OCR MCP
+Filesystem*    |   Virtualization MCP
+Tapo Camera*   |   Robotics MCP*
+Docker*        |   OCR MCP*
 ---------------|-------------------
 LOW COMPLEXITY |   LOW IMPACT
 ```
@@ -165,6 +161,7 @@ build_success_response(
 | Tapo Camera | 85-95% | Very High | Critical |
 | Docker | 85-95% | High | Medium |
 | OCR | 75-85% | Medium | Medium |
+| Filesystem | 80-90% | High | Medium |
 | Docker | 70-85% | High | Medium |
 | OCR | 60-80% | Medium | Medium |
 
@@ -199,29 +196,30 @@ Assistant: I'll orchestrate the security workflow autonomously.
 
 ## Next Implementation Priority
 
-**CURRENT STATUS**: OCR MCP completed - 4 of 7 MCP servers now support SEP-1577
+**CURRENT STATUS**: Filesystem MCP completed - 5 of 7 MCP servers now support SEP-1577
 
 ### Major Milestone Achieved
-**4/7 MCP Servers** now support autonomous agentic workflows:
+**5/7 MCP Servers** now support autonomous agentic workflows:
 - ✅ Robotics MCP: Manufacturing automation
 - ✅ Tapo Camera MCP: Security orchestration
 - ✅ Docker MCP: Container deployment
 - ✅ OCR MCP: Document processing
+- ✅ Filesystem MCP: File management automation
 
-### Next Priority: Filesystem MCP
+### Next Priority: System Admin MCP
 
 ### Rationale
-1. **Foundation Layer**: File operations are fundamental to all other workflows
-2. **High User Impact**: File management is done constantly by all users
-3. **Medium Complexity**: Existing file tools are well-structured
-4. **Conversational Value**: Natural file workflows ("organize my project files")
-5. **Foundation**: Builds on core filesystem operations
+1. **Infrastructure Foundation**: System administration is the backbone of all IT operations
+2. **High Operational Impact**: System management affects all other services
+3. **Complex Orchestration**: Multi-system coordination and monitoring
+4. **Conversational Value**: Natural system workflows ("prepare server for production")
+5. **Foundation**: Builds on core system administration operations
 
 ### Implementation Plan
-1. Create `agentic_file_workflow` tool
-2. Integrate with existing filesystem management tools
-3. Add intelligent file organization and cleanup capabilities
-4. Test with real file management workflows
+1. Create `agentic_system_workflow` tool
+2. Integrate with existing system administration tools
+3. Add intelligent system configuration and monitoring capabilities
+4. Test with real system administration workflows
 5. Document with ADN content notes
 
 ## Conclusion
