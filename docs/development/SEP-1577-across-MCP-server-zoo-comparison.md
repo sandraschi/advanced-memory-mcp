@@ -29,18 +29,25 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 **Impact**: Eliminates client mediation for complex knowledge workflows
 **Status**: ✅ Implemented (existing)
 
+#### 4. Docker MCP - Agentic Container Orchestration
+**Focus**: Container orchestration and deployment automation
+**Key Workflow**: "Deploy microservices stack" → autonomous container deployment, networking, service orchestration
+**Tools**: `agentic_container_workflow` with 80+ Docker/container tools
+**Impact**: Eliminates complex multi-container orchestration round-trips
+**Status**: ✅ Implemented and registered
+
 ### 🔄 Next Priority Candidates
 
-#### 4. Docker MCP - Agentic Container Orchestration
-**Potential Impact**: VERY HIGH
+#### 5. OCR MCP - Agentic Document Processing
+**Potential Impact**: HIGH
 **Key Workflows**:
-- "Deploy microservices stack" → autonomous container deployment and networking
-- "Set up development environment" → multi-service orchestration
-- "Scale application cluster" → intelligent resource allocation
+- "Process all invoices this month" → autonomous document batch processing
+- "Digitize all documents" → intelligent workflow routing and quality assessment
+- "Extract data from forms" → multi-document analysis pipeline
 
-**Why Priority**: Developer productivity workflows are perfect for SEP-1577
-**Complexity**: Medium (existing container tools are well-structured)
-**Conversational Value**: High (natural dev workflows)
+**Why Priority**: Document processing is naturally batch-oriented
+**Complexity**: Medium (7 OCR backends already integrated)
+**Conversational Value**: High (natural document workflows)
 
 #### 5. OCR MCP - Agentic Document Processing
 **Potential Impact**: HIGH
@@ -84,12 +91,14 @@ SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosy
 ```
 HIGH IMPACT    |   HIGH COMPLEXITY
 ---------------|-------------------
-Docker MCP     |   Virtualization MCP
-OCR MCP        |   Robotics MCP*
+OCR MCP        |   Virtualization MCP
 Tapo Camera*   |   OCR MCP
+Docker*        |   Robotics MCP*
 ---------------|-------------------
 LOW COMPLEXITY |   LOW IMPACT
 ```
+
+*Implemented
 
 *Already implemented
 
@@ -158,6 +167,7 @@ build_success_response(
 |--------|---------------------|-------------------|----------------|
 | Robotics | 80-90% | High | Critical |
 | Tapo Camera | 85-95% | Very High | Critical |
+| Docker | 85-95% | High | Medium |
 | Docker | 70-85% | High | Medium |
 | OCR | 60-80% | Medium | Medium |
 
@@ -192,20 +202,22 @@ Assistant: I'll orchestrate the security workflow autonomously.
 
 ## Next Implementation Priority
 
-**RECOMMENDATION**: Docker MCP next
+**CURRENT STATUS**: Docker MCP completed - OCR MCP next
+
+### Next Priority: OCR MCP
 
 ### Rationale
-1. **High Impact**: Developer productivity workflows
-2. **Medium Complexity**: Well-structured existing tools
-3. **High Conversational Value**: Natural dev workflows
-4. **User Benefit**: Significant time savings for development tasks
-5. **Foundation**: Builds on existing robust container tooling
+1. **High Impact**: Document processing workflows are naturally batch-oriented
+2. **Medium Complexity**: 7 OCR backends already integrated
+3. **High Conversational Value**: Natural document workflows ("process all invoices")
+4. **User Benefit**: Automates tedious document processing tasks
+5. **Foundation**: Builds on existing OCR pipeline infrastructure
 
 ### Implementation Plan
-1. Create `agentic_container_workflow` tool
-2. Integrate with existing Docker/container management tools
-3. Add deployment orchestration capabilities
-4. Test with real container workflows
+1. Create `agentic_document_workflow` tool
+2. Integrate with existing OCR/document processing tools
+3. Add batch processing orchestration capabilities
+4. Test with real document processing workflows
 5. Document with ADN content notes
 
 ## Conclusion
