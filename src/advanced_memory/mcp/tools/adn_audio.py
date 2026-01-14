@@ -523,18 +523,6 @@ async def _speak_operation(
                 diagnostic_info={"kokoro_error": str(e)},
                 urgency="medium",
             )
-            error="text_to_speech_failed",
-            error_code="TTS_ERROR",
-            message=f"Text-to-speech failed: {str(e)}",
-            recovery_options=[
-                "Check pyttsx3 installation",
-                "Verify audio drivers are working",
-                "Try with save_audio=True to test audio output",
-                "Check system audio settings",
-            ],
-            diagnostic_info={"error": str(e)},
-            urgency="medium",
-        )
 
 
 async def _listen_command_operation(
