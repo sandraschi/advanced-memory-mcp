@@ -646,16 +646,68 @@ def sanitize_unicode_content(content: str) -> str:
 
 # FastMCP 2.14.1+ Conversational Response Builders
 def build_success_response(operation: str, summary: str, **kwargs) -> dict:
-    """Build structured success response for MCP clients."""
-    return {"success": True, "operation": operation, "summary": summary, **kwargs}
+    """Build conversational success response for MCP clients."""
+    return {
+        "success": True,
+        "message": f"Perfect! {summary}",
+        "operation": operation,
+        "technical_summary": summary,  # Keep technical details for programmatic use
+        **kwargs,
+    }
 
 
 def build_error_response(error: str, error_code: str, message: str, **kwargs) -> dict:
-    """Build structured error response with recovery guidance for MCP clients."""
+    """Build conversational error response with friendly guidance for MCP clients."""
+    # Add conversational prefix based on error type
+    conversational_message = _make_conversational_error(error, message)
+
     return {
         "success": False,
-        "error": error,
+        "message": conversational_message,
+        "technical_details": error,  # Keep technical error for debugging
         "error_code": error_code,
-        "message": message,
+        "original_message": message,  # Keep original message for reference
         **kwargs,
     }
+
+
+def _make_conversational_error(error: str, message: str) -> str:
+    """Convert technical errors into friendly, conversational messages."""
+    error_lower = error.lower()
+    message_lower = message.lower()
+
+    # Connection/authentication issues
+    if any(word in error_lower for word in ["connection", "connect", "network", "timeout"]):
+        return "Oops, I couldn't connect to the service right now. Please check your internet connection and try again. If the problem persists, the service might be temporarily unavailable."
+    elif "unauthorized" in error_lower or "auth" in error_lower:
+        return "Looks like we need to get you authenticated first. Please make sure you're logged in and have the right permissions."
+    elif "permission" in error_lower or "access" in error_lower:
+        return "Sorry, you don't have permission to do that right now. Please check with your administrator or try a different operation."
+
+    # Data/project issues
+    elif "project" in error_lower and "not found" in message_lower:
+        return "I couldn't find that project. Make sure the project name is spelled correctly and exists. You can list available projects with the project management tools."
+    elif "note" in error_lower and "not found" in message_lower:
+        return "That note doesn't seem to exist. Try searching for it with different keywords, or check if you have the right project selected."
+
+    # Input validation issues
+    elif "required" in error_lower or "missing" in error_lower:
+        return "I need a bit more information to help you. Could you please provide the missing details? I'll guide you through what I need."
+    elif "invalid" in error_lower or "format" in error_lower:
+        return "That format doesn't look quite right. Let me help you get it formatted correctly. Check the examples in my documentation."
+
+    # Search/query issues
+    elif "search" in error_lower or "query" in error_lower:
+        return "I couldn't find anything matching that search. Try using different keywords or being more specific. I can help you refine your search terms."
+    elif "empty" in error_lower or "no results" in message_lower:
+        return "No results found for that query. Try broadening your search or using different keywords. I'm here to help you find what you need."
+
+    # File/system issues
+    elif "file" in error_lower or "path" in error_lower:
+        return "There seems to be an issue with that file or path. Make sure the file exists and you have permission to access it."
+    elif "write" in error_lower or "save" in error_lower:
+        return "I couldn't save that right now. Please check your permissions and available disk space, then try again."
+
+    # General fallback with helpful tone
+    else:
+        return f"Something unexpected happened! 😅 Don't worry, let's try again. Here's what went wrong: {message}. If you need help, I'm here to guide you through it."

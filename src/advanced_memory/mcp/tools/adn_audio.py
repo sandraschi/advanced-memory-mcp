@@ -152,17 +152,17 @@ async def adn_audio(
     # Get the active project
     active_project = get_active_project(project)
     if not active_project:
-        return "# Error\n\nNo active project found. Please switch to a project first."
+        return "# Let's get you set up!\n\nI don't see an active project right now. Let's switch to one first so I can help you with audio operations. You can use the project management tools to see available projects and switch to one."
 
     # Route to appropriate operation handler
     if operation == "dictate":
         return await _dictate_operation(active_project, audio_path, record_duration, tags)
     elif operation == "speak":
         if not identifier:
-            return "# Error\n\nSpeak operation requires: identifier parameter"
+            return "# Tell me what to say!\n\nI'd love to help you speak some content, but I need to know which note or text you'd like me to read. Just give me the title or identifier."
         # Validate volume range
         if volume < 1 or volume > 10:
-            return "# Error\n\nVolume must be between 1 and 10 (default: 5)"
+            return "# Volume adjustment needed!\n\nLet's keep the volume between 1 and 10 (it defaults to 5). This helps ensure great audio quality without being too loud or quiet."
         return await _speak_operation(active_project, identifier, voice, speed, volume, save_audio)
     elif operation == "listen":
         # Default to 5 seconds if not specified
@@ -188,7 +188,7 @@ async def adn_audio(
         return await _get_weather(location)
     elif operation == "timer":
         if not duration:
-            return "# Error\n\nTimer operation requires: duration parameter"
+            return "# Set a timer!\n\nI'd be happy to set a timer for you, but I need to know how long you'd like it to run. Try something like '5 minutes' or '1 hour'."
         return await _set_timer(duration)
     elif operation == "alarm":
         if not time_str:
