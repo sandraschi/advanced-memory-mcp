@@ -48,6 +48,10 @@ ENV/
 # obsidian docs:
 /docs/.obsidian/
 /examples/.obsidian/
+
+# Rust build artifacts (for Zed extensions)
+/target/
+/Cargo.lock
 /examples/.basic-memory/
 
 
