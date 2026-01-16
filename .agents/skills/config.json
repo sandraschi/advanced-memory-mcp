@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "name": "Antigravity IDE Skills Configuration",
+  "description": "Configuration for Claude Skills integration with Antigravity IDE",
+
+  "skills_directory": ".agents/skills",
+  "auto_discovery": true,
+  "validation_on_load": true,
+
+  "categories": {
+    "technical": {
+      "enabled": true,
+      "description": "Programming, development, and technical skills",
+      "priority": "high"
+    },
+    "creative": {
+      "enabled": true,
+      "description": "Content creation, design, and artistic skills",
+      "priority": "medium"
+    },
+    "scientific": {
+      "enabled": true,
+      "description": "Science, research, and analytical skills",
+      "priority": "medium"
+    },
+    "linguistic": {
+      "enabled": true,
+      "description": "Language learning and communication skills",
+      "priority": "low"
+    },
+    "culinary": {
+      "enabled": false,
+      "description": "Cooking and food-related skills",
+      "priority": "low"
+    },
+    "philosophical": {
+      "enabled": false,
+      "description": "Philosophy and critical thinking skills",
+      "priority": "low"
+    },
+    "nonsense": {
+      "enabled": false,
+      "description": "Esoteric and pseudoscientific skills",
+      "priority": "low"
+    }
+  },
+
+  "validation_rules": {
+    "require_name": true,
+    "require_description": true,
+    "require_license": false,
+    "allow_custom_categories": true,
+    "max_skill_size_mb": 10,
+    "check_yaml_syntax": true,
+    "validate_markdown": true
+  },
+
+  "sync_settings": {
+    "source": "advanced_memory",
+    "auto_sync": false,
+    "sync_interval_seconds": 3600,
+    "sync_on_startup": false,
+    "backup_before_sync": true
+  },
+
+  "performance": {
+    "max_loaded_skills": 50,
+    "lazy_loading": true,
+    "cache_enabled": true,
+    "memory_limit_mb": 500
+  },
+
+  "advanced_memory_integration": {
+    "mcp_server_url": "localhost:3000",
+    "export_command": "adn_export",
+    "sync_command": "adn_export",
+    "validation_command": "adn_skills_creator"
+  }
+}
