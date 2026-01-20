@@ -12,9 +12,9 @@ from __future__ import annotations
 
 import asyncio
 import os
-from pathlib import Path
-from typing import Any, Dict, Optional
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from fastmcp import Client
 from fastmcp.client.transports import StdioTransport
@@ -28,7 +28,7 @@ def _validate_skeleton_key_request(
     server_path: str,
     tool_name: str,
     tool_params: dict[str, Any] | None,
-    security_context: str | None
+    security_context: str | None,
 ) -> dict[str, Any]:
     """Security validation for skeleton key requests."""
 
@@ -39,52 +39,67 @@ def _validate_skeleton_key_request(
     ALLOWED_SERVER_TOOLS = {
         # Weather servers - only safe weather operations
         "D:\\Dev\\repos\\weather-mcp\\": {
-            "get_weather", "get_forecast", "get_current_weather",
-            "get_weather_history", "get_weather_alerts"
+            "get_weather",
+            "get_forecast",
+            "get_current_weather",
+            "get_weather_history",
+            "get_weather_alerts",
         },
-
         # Brightdata search - only search operations
         "D:\\Dev\\repos\\brightdata-mcp\\": {
-            "search_engine", "search_engine_batch", "web_search",
-            "scrape_as_markdown", "search_engine_batch"
+            "search_engine",
+            "search_engine_batch",
+            "web_search",
+            "scrape_as_markdown",
         },
-
         # VRChat monitoring - only status checks
         "D:\\Dev\\repos\\vrchat-mcp\\": {
-            "get_server_status", "get_world_info", "check_vrchat_api_direct",
-            "get_vrchat_server_status", "get_user_status"
+            "get_server_status",
+            "get_world_info",
+            "check_vrchat_api_direct",
+            "get_vrchat_server_status",
+            "get_user_status",
         },
-
         # Plex media - only read operations
         "D:\\Dev\\repos\\plex-mcp\\": {
-            "search", "browse", "get_details", "get_recent",
-            "get_library_stats", "get_user_activity"
+            "search",
+            "browse",
+            "get_details",
+            "get_recent",
+            "get_library_stats",
+            "get_user_activity",
         },
-
         # Advanced Memory ecosystem - controlled operations
         "D:\\Dev\\repos\\advanced-memory-mcp\\": {
-            "adn_search", "read_note", "view_note_rendered",
-            "adn_knowledge", "adn_navigation"
+            "adn_search",
+            "read_note",
+            "view_note_rendered",
+            "adn_knowledge",
+            "adn_navigation",
         },
-
         # MyAI dashboard - status monitoring only
         "D:\\Dev\\repos\\myai\\": {
-            "get_server_status", "get_health", "get_service_status",
-            "list_containers", "get_container_logs"
+            "get_server_status",
+            "get_health",
+            "get_service_status",
+            "list_containers",
+            "get_container_logs",
         },
-
         # Robotics - safe monitoring only
         "D:\\Dev\\repos\\robotics-mcp\\": {
-            "get_status", "get_lidar", "get_camera_feed",
-            "robot_control"  # Only safe control operations
+            "get_status",
+            "get_lidar",
+            "get_camera_feed",
+            "robot_control",  # Only safe control operations
         },
-
         # Vienna Life Assistant - personal data access (careful!)
         "D:\\Dev\\repos\\vienna-life-assistant\\": {
-            "get_weather", "get_transit_schedule", "get_calendar_events",
-            "search_notes", "read_note"
+            "get_weather",
+            "get_transit_schedule",
+            "get_calendar_events",
+            "search_notes",
+            "read_note",
         },
-
         # FILESYSTEM SERVERS - EXPLICITLY BLOCKED (DANGEROUS!)
         # "D:\\Dev\\repos\\filesystem-mcp\\": set(),  # BLOCKED - too dangerous
         # "D:\\Dev\\repos\\file-mcp\\": set(),        # BLOCKED - too dangerous
@@ -93,8 +108,17 @@ def _validate_skeleton_key_request(
 
     # EXPLICITLY BLOCKED SERVER TYPES - These can NEVER be called via skeleton key
     BLOCKED_SERVERS = {
-        "filesystem", "file-system", "filemanager", "system", "shell",
-        "execution", "process", "admin", "sudo", "root", "kernel"
+        "filesystem",
+        "file-system",
+        "filemanager",
+        "system",
+        "shell",
+        "execution",
+        "process",
+        "admin",
+        "sudo",
+        "root",
+        "kernel",
     }
 
     # LEGACY SIMPLE TOOL LIST - DEPRECATED (too permissive)
@@ -102,17 +126,40 @@ def _validate_skeleton_key_request(
 
     # BLOCKED PARAMETERS - Prevent dangerous parameter injection
     BLOCKED_PARAMS = [
-        "exec", "eval", "system", "shell", "cmd", "command",
-        "script", "code", "python", "bash", "powershell",
-        "delete", "remove", "drop", "truncate",
-        "admin", "root", "sudo", "privilege",
-        "password", "secret", "key", "token",
+        "exec",
+        "eval",
+        "system",
+        "shell",
+        "cmd",
+        "command",
+        "script",
+        "code",
+        "python",
+        "bash",
+        "powershell",
+        "delete",
+        "remove",
+        "drop",
+        "truncate",
+        "admin",
+        "root",
+        "sudo",
+        "privilege",
+        "password",
+        "secret",
+        "key",
+        "token",
     ]
 
     # SECURITY CONTEXTS - Must specify valid context
     VALID_CONTEXTS = [
-        "research", "monitoring", "weather", "search",
-        "status_check", "safe_discovery", "read_only"
+        "research",
+        "monitoring",
+        "weather",
+        "search",
+        "status_check",
+        "safe_discovery",
+        "read_only",
     ]
 
     errors = []
@@ -125,7 +172,9 @@ def _validate_skeleton_key_request(
     server_path_lower = server_path.lower()
     for blocked_type in BLOCKED_SERVERS:
         if blocked_type in server_path_lower:
-            errors.append(f"SECURITY BLOCK: Server type '{blocked_type}' is explicitly blocked. Path: {server_path}")
+            errors.append(
+                f"SECURITY BLOCK: Server type '{blocked_type}' is explicitly blocked. Path: {server_path}"
+            )
             break
 
     # 2b. Validate server path against allowed list
@@ -144,11 +193,15 @@ def _validate_skeleton_key_request(
             if tool_name in allowed_tools:
                 tool_allowed = True
             else:
-                errors.append(f"Tool '{tool_name}' not allowed on server '{server_path}'. Allowed tools: {', '.join(allowed_tools)}")
+                errors.append(
+                    f"Tool '{tool_name}' not allowed on server '{server_path}'. Allowed tools: {', '.join(allowed_tools)}"
+                )
             break
 
     if not matching_server:
-        errors.append(f"Server '{server_path}' not in granular security matrix. Allowed servers: {', '.join(ALLOWED_SERVER_TOOLS.keys())}")
+        errors.append(
+            f"Server '{server_path}' not in granular security matrix. Allowed servers: {', '.join(ALLOWED_SERVER_TOOLS.keys())}"
+        )
 
     # Overall validation
     if not tool_allowed:
@@ -164,13 +217,15 @@ def _validate_skeleton_key_request(
             # Check for dangerous parameter values (basic string check)
             if isinstance(param_value, str):
                 if any(blocked in param_value.lower() for blocked in BLOCKED_PARAMS):
-                    errors.append(f"Potentially dangerous parameter value in '{param_name}': {param_value[:50]}...")
+                    errors.append(
+                        f"Potentially dangerous parameter value in '{param_name}': {param_value[:50]}..."
+                    )
 
     if errors:
         return {
             "valid": False,
             "errors": errors,
-            "message": f"Security validation failed: {'; '.join(errors)}"
+            "message": f"Security validation failed: {'; '.join(errors)}",
         }
 
     return {"valid": True}
@@ -199,7 +254,7 @@ async def skeleton_key(
     server_path: str,
     tool_name: str,
     tool_params: dict[str, Any] | None = None,
-    security_context: str | None = None
+    security_context: str | None = None,
 ) -> dict[str, Any]:
     """Skeleton Key: Universal MCP Server Tool Caller.
 
@@ -264,8 +319,8 @@ async def skeleton_key(
                     "Use a valid security_context from: research, monitoring, weather, search, status_check, safe_discovery, read_only",
                     "Ensure server_path is in the allowed server list",
                     "Use only tools from the allowed tools list",
-                    "Avoid blocked parameters and dangerous values"
-                ]
+                    "Avoid blocked parameters and dangerous values",
+                ],
             )
 
         # Sanitize the server path
@@ -273,8 +328,7 @@ async def skeleton_key(
             sanitized_path = _sanitize_path(server_path)
         except ValueError as e:
             return build_error_response(
-                "PATH_SANITIZATION_FAILED",
-                f"Path sanitization failed: {str(e)}"
+                "PATH_SANITIZATION_FAILED", f"Path sanitization failed: {str(e)}"
             )
 
         # Create client for the target server
@@ -296,7 +350,7 @@ async def skeleton_key(
             "tool_name": tool_name,
             "tool_params": params,
             "result": result,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
@@ -308,8 +362,8 @@ async def skeleton_key(
                 "Verify the server_path points to a valid MCP server",
                 "Check that the tool_name exists on the target server",
                 "Ensure tool parameters are correctly formatted",
-                "Verify the target server is running and accessible"
-            ]
+                "Verify the target server is running and accessible",
+            ],
         )
 
 
@@ -341,14 +395,13 @@ async def discover_mcp_server_tools(server_path: str) -> dict[str, Any]:
             "server_path": server_path,
             "tools": tools,
             "tool_count": len(tools),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
         logger.error(f"Tool discovery failed: {str(e)}")
         return build_error_response(
-            "DISCOVERY_FAILED",
-            f"Failed to discover tools on server '{server_path}': {str(e)}"
+            "DISCOVERY_FAILED", f"Failed to discover tools on server '{server_path}': {str(e)}"
         )
 
 
@@ -367,8 +420,8 @@ class ExternalMCPClient:
         self.server_path = Path(server_path)
         self.server_name = server_name
         self.timeout = timeout
-        self.transport: Optional[StdioTransport] = None
-        self.client: Optional[Client] = None
+        self.transport: StdioTransport | None = None
+        self.client: Client | None = None
         self._is_connected = False
 
     async def connect(self) -> bool:
@@ -379,14 +432,14 @@ class ExternalMCPClient:
         try:
             # Verify server path exists
             if not self.server_path.exists():
-                logger.warning(f"{self.server_name}: Server path does not exist: {self.server_path}")
+                logger.warning(
+                    f"{self.server_name}: Server path does not exist: {self.server_path}"
+                )
                 return False
 
             # Create stdio transport
             self.transport = StdioTransport(
-                command="python",
-                args=[str(self.server_path)],
-                env=os.environ.copy()
+                command="python", args=[str(self.server_path)], env=os.environ.copy()
             )
 
             # Create FastMCP client
@@ -396,7 +449,9 @@ class ExternalMCPClient:
             async with self.client:
                 await self.client.initialize()
                 tools = await self.client.list_tools()
-                logger.info(f"{self.server_name}: Connected via stdio ({len(tools)} tools available)")
+                logger.info(
+                    f"{self.server_name}: Connected via stdio ({len(tools)} tools available)"
+                )
 
             self._is_connected = True
             return True
@@ -406,7 +461,7 @@ class ExternalMCPClient:
             await self.close()
             return False
 
-    async def call_tool(self, tool_name: str, **kwargs) -> Dict[str, Any]:
+    async def call_tool(self, tool_name: str, **kwargs) -> dict[str, Any]:
         """
         Call a tool on the external MCP server.
 
@@ -420,35 +475,29 @@ class ExternalMCPClient:
         if not self._is_connected or not self.client:
             if not await self.connect():
                 return build_error_response(
-                    "CONNECTION_FAILED",
-                    f"{self.server_name} not connected"
+                    "CONNECTION_FAILED", f"{self.server_name} not connected"
                 )
 
         try:
             async with self.client:
                 result = await asyncio.wait_for(
-                    self.client.call_tool(tool_name, **kwargs),
-                    timeout=self.timeout
+                    self.client.call_tool(tool_name, **kwargs), timeout=self.timeout
                 )
                 return {
                     "success": True,
                     "result": result,
                     "server": self.server_name,
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return build_error_response(
-                "TIMEOUT",
-                f"Tool {tool_name} timed out after {self.timeout}s"
+                "TIMEOUT", f"Tool {tool_name} timed out after {self.timeout}s"
             )
         except Exception as e:
             logger.error(f"{self.server_name}: Error calling {tool_name}: {e}")
-            return build_error_response(
-                "TOOL_ERROR",
-                f"Error calling {tool_name}: {str(e)}"
-            )
+            return build_error_response("TOOL_ERROR", f"Error calling {tool_name}: {str(e)}")
 
-    async def list_tools(self) -> list[Dict[str, Any]]:
+    async def list_tools(self) -> list[dict[str, Any]]:
         """List available tools from the external MCP server."""
         if not self._is_connected or not self.client:
             if not await self.connect():
@@ -461,7 +510,7 @@ class ExternalMCPClient:
                     {
                         "name": tool.name,
                         "description": tool.description,
-                        "inputSchema": tool.inputSchema
+                        "inputSchema": tool.inputSchema,
                     }
                     for tool in tools
                 ]
@@ -481,23 +530,23 @@ class MCPClientManager:
     """Manage connections to multiple external MCP servers."""
 
     def __init__(self):
-        self.clients: Dict[str, ExternalMCPClient] = {}
+        self.clients: dict[str, ExternalMCPClient] = {}
         self._server_configs = {
             "brightdata": {
                 "path": os.getenv("BRIGHTDATA_MCP_PATH", "D:/Dev/repos/brightdata-mcp/server.py"),
-                "name": "BrightData MCP"
+                "name": "BrightData MCP",
             },
             "vrchat": {
                 "path": os.getenv("VRCHAT_MCP_PATH", "D:/Dev/repos/vrchat-mcp/server.py"),
-                "name": "VRChat MCP"
+                "name": "VRChat MCP",
             },
             "plex": {
                 "path": os.getenv("PLEX_MCP_PATH", "D:/Dev/repos/plex-mcp/src/plex_mcp/server.py"),
-                "name": "Plex MCP"
-            }
+                "name": "Plex MCP",
+            },
         }
 
-    async def get_client(self, server_name: str) -> Optional[ExternalMCPClient]:
+    async def get_client(self, server_name: str) -> ExternalMCPClient | None:
         """Get or create client for specified server."""
         if server_name not in self.clients:
             if server_name not in self._server_configs:
@@ -506,8 +555,7 @@ class MCPClientManager:
 
             config = self._server_configs[server_name]
             self.clients[server_name] = ExternalMCPClient(
-                server_path=config["path"],
-                server_name=config["name"]
+                server_path=config["path"], server_name=config["name"]
             )
 
         return self.clients[server_name]
@@ -526,6 +574,7 @@ mcp_client_manager = MCPClientManager()
 # ============================================================================
 # WEATHER TOOLS
 # ============================================================================
+
 
 @mcp.tool()
 async def get_weather_report(location: str, source: str = "brightdata") -> dict[str, Any]:
@@ -548,15 +597,14 @@ async def get_weather_report(location: str, source: str = "brightdata") -> dict[
             brightdata_client = await mcp_client_manager.get_client("brightdata")
             if not brightdata_client:
                 return build_error_response(
-                    "CLIENT_UNAVAILABLE",
-                    "BrightData MCP client not available"
+                    "CLIENT_UNAVAILABLE", "BrightData MCP client not available"
                 )
 
             # Search for weather information
             search_result = await brightdata_client.call_tool(
                 "mcp_brightdata_search_engine",
                 query=f"current weather in {location}",
-                engine="google"
+                engine="google",
             )
 
             if not search_result.get("success"):
@@ -570,20 +618,16 @@ async def get_weather_report(location: str, source: str = "brightdata") -> dict[
             return await _get_weather_direct(location)
 
         else:
-            return build_error_response(
-                "INVALID_SOURCE",
-                f"Unsupported weather source: {source}"
-            )
+            return build_error_response("INVALID_SOURCE", f"Unsupported weather source: {source}")
 
     except Exception as e:
         logger.error(f"Weather report failed for {location}: {e}")
         return build_error_response(
-            "WEATHER_ERROR",
-            f"Failed to get weather for {location}: {str(e)}"
+            "WEATHER_ERROR", f"Failed to get weather for {location}: {str(e)}"
         )
 
 
-async def _parse_weather_from_search(search_result: Dict[str, Any]) -> Dict[str, Any]:
+async def _parse_weather_from_search(search_result: dict[str, Any]) -> dict[str, Any]:
     """Parse weather information from search results."""
     try:
         # Extract weather data from search results
@@ -592,8 +636,7 @@ async def _parse_weather_from_search(search_result: Dict[str, Any]) -> Dict[str,
 
         if not results:
             return build_error_response(
-                "NO_RESULTS",
-                "No weather information found in search results"
+                "NO_RESULTS", "No weather information found in search results"
             )
 
         # Mock parsing - in real implementation, parse actual weather data
@@ -604,17 +647,14 @@ async def _parse_weather_from_search(search_result: Dict[str, Any]) -> Dict[str,
             "condition": "Sunny",
             "humidity": "45%",
             "source": "brightdata_search",
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
-        return build_error_response(
-            "PARSE_ERROR",
-            f"Failed to parse weather from search: {str(e)}"
-        )
+        return build_error_response("PARSE_ERROR", f"Failed to parse weather from search: {str(e)}")
 
 
-async def _get_weather_direct(location: str) -> Dict[str, Any]:
+async def _get_weather_direct(location: str) -> dict[str, Any]:
     """Get weather using direct API calls."""
     try:
         import httpx
@@ -625,8 +665,7 @@ async def _get_weather_direct(location: str) -> Dict[str, Any]:
 
             if response.status_code != 200:
                 return build_error_response(
-                    "API_ERROR",
-                    f"Weather API returned status {response.status_code}"
+                    "API_ERROR", f"Weather API returned status {response.status_code}"
                 )
 
             weather_data = response.json()
@@ -639,19 +678,17 @@ async def _get_weather_direct(location: str) -> Dict[str, Any]:
                 "condition": current.get("weatherDesc", [{}])[0].get("value", "Unknown"),
                 "humidity": f"{current.get('humidity', 'N/A')}%",
                 "source": "wttr.in",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
 
     except Exception as e:
-        return build_error_response(
-            "DIRECT_API_ERROR",
-            f"Direct weather API failed: {str(e)}"
-        )
+        return build_error_response("DIRECT_API_ERROR", f"Direct weather API failed: {str(e)}")
 
 
 # ============================================================================
 # VRCHAT STATUS TOOLS
 # ============================================================================
+
 
 @mcp.tool()
 async def get_vrchat_server_status() -> dict[str, Any]:
@@ -667,10 +704,7 @@ async def get_vrchat_server_status() -> dict[str, Any]:
     try:
         vrchat_client = await mcp_client_manager.get_client("vrchat")
         if not vrchat_client:
-            return build_error_response(
-                "CLIENT_UNAVAILABLE",
-                "VRChat MCP client not available"
-            )
+            return build_error_response("CLIENT_UNAVAILABLE", "VRChat MCP client not available")
 
         # Get server status
         status_result = await vrchat_client.call_tool("vrchat_server_status")
@@ -683,10 +717,7 @@ async def get_vrchat_server_status() -> dict[str, Any]:
             users_result = {"result": {"count": "unknown"}}
 
         # Get popular worlds
-        worlds_result = await vrchat_client.call_tool(
-            "vrchat_popular_worlds",
-            limit=5
-        )
+        worlds_result = await vrchat_client.call_tool("vrchat_popular_worlds", limit=5)
         if not worlds_result.get("success"):
             worlds_result = {"result": []}
 
@@ -696,15 +727,12 @@ async def get_vrchat_server_status() -> dict[str, Any]:
             "online_users": users_result["result"].get("count", 0),
             "popular_worlds": worlds_result["result"],
             "source": "vrchat_mcp",
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
         logger.error(f"VRChat status check failed: {e}")
-        return build_error_response(
-            "VRCHAT_ERROR",
-            f"Failed to get VRChat status: {str(e)}"
-        )
+        return build_error_response("VRCHAT_ERROR", f"Failed to get VRChat status: {str(e)}")
 
 
 @mcp.tool()
@@ -729,9 +757,16 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
 
                 # Try to get some basic instance data (may require auth)
                 try:
-                    instances_response = await client.get("https://api.vrchat.cloud/api/1/instances")
-                    instance_count = len(instances_response.json()) if instances_response.status_code == 200 else 0
-                except:
+                    instances_response = await client.get(
+                        "https://api.vrchat.cloud/api/1/instances"
+                    )
+                    instance_count = (
+                        len(instances_response.json())
+                        if instances_response.status_code == 200
+                        else 0
+                    )
+                except Exception as e:
+                    logger.warning(f"Failed to get instance count: {e}")
                     instance_count = "unknown"
 
                 return {
@@ -740,7 +775,7 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
                     "client_version": config_data.get("clientApiKey", "unknown"),
                     "active_instances": instance_count,
                     "source": "direct_api",
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
             else:
                 return {
@@ -748,25 +783,21 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
                     "api_status": "offline",
                     "http_status": config_response.status_code,
                     "source": "direct_api",
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
 
     except Exception as e:
-        return build_error_response(
-            "DIRECT_API_ERROR",
-            f"Direct VRChat API check failed: {str(e)}"
-        )
+        return build_error_response("DIRECT_API_ERROR", f"Direct VRChat API check failed: {str(e)}")
 
 
 # ============================================================================
 # GENERIC EXTERNAL MCP TOOL CALLER
 # ============================================================================
 
+
 @mcp.tool()
 async def call_external_mcp_tool(
-    server_name: str,
-    tool_name: str,
-    tool_params: dict[str, Any] | None = None
+    server_name: str, tool_name: str, tool_params: dict[str, Any] | None = None
 ) -> dict[str, Any]:
     """
     Call any tool on any configured external MCP server.
@@ -786,8 +817,7 @@ async def call_external_mcp_tool(
         client = await mcp_client_manager.get_client(server_name)
         if not client:
             return build_error_response(
-                "UNKNOWN_SERVER",
-                f"Unknown or unavailable server: {server_name}"
+                "UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}"
             )
 
         # Call the tool with provided parameters
@@ -800,7 +830,7 @@ async def call_external_mcp_tool(
                 "server": server_name,
                 "tool": tool_name,
                 "params": params,
-                "called_at": datetime.now().isoformat()
+                "called_at": datetime.now().isoformat(),
             }
 
         return result
@@ -808,8 +838,7 @@ async def call_external_mcp_tool(
     except Exception as e:
         logger.error(f"External MCP tool call failed: {server_name}.{tool_name}: {e}")
         return build_error_response(
-            "EXTERNAL_CALL_ERROR",
-            f"Failed to call {tool_name} on {server_name}: {str(e)}"
+            "EXTERNAL_CALL_ERROR", f"Failed to call {tool_name} on {server_name}: {str(e)}"
         )
 
 
@@ -828,8 +857,7 @@ async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
         client = await mcp_client_manager.get_client(server_name)
         if not client:
             return build_error_response(
-                "UNKNOWN_SERVER",
-                f"Unknown or unavailable server: {server_name}"
+                "UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}"
             )
 
         tools = await client.list_tools()
@@ -839,11 +867,10 @@ async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
             "server": server_name,
             "tools": tools,
             "count": len(tools),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
         return build_error_response(
-            "LIST_TOOLS_ERROR",
-            f"Failed to list tools from {server_name}: {str(e)}"
+            "LIST_TOOLS_ERROR", f"Failed to list tools from {server_name}: {str(e)}"
         )

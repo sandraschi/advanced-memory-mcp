@@ -3,7 +3,7 @@
   "packaged_at": "2026-01-15T20:45:38.949085Z",
   "source_path": "C:\\Users\\sandr\\skills\\windsurf-ide-integration",
   "archive": "D:\\Dev\\repos\\advanced-memory-mcp\\skill-zips\\windsurf-ide-integration.zip",
-  "sha256": "0cd72fb9b31b6694ceba689bc32f253cde9ac3e6ea1af924358723181a53f024",
+  "sha256": "0cd72fb9b31b6694ceba689bc32f253cde9ac3e6ea1af924358723181a53f024", // pragma: allowlist secret
   "metadata": {
     "name": "windsurf-ide-integration",
     "description": "Expert guidance for integrating Advanced Memory skills with WindSurf IDE and Antigravity IDE",

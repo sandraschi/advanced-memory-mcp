@@ -1,5 +1,5 @@
 """
-FastMCP 2.14.1+ Sampling with Tools Orchestration Tools (SEP-1577)
+FastMCP 2.14.3 Sampling with Tools Orchestration Tools (SEP-1577)
 
 These tools demonstrate SEP-1577: Sampling with tools, enabling agentic workflows
 where servers borrow the client's LLM and autonomously control tool execution.
@@ -11,26 +11,27 @@ Benefits:
 - Massive efficiency gains for batch processing
 """
 
-from typing import Any, Dict, List, Optional, Union
+import logging
+from typing import Any
+
 from fastmcp import Context
 
-from advanced_memory.mcp.inter_server import sample_with_tools, create_tool_spec, SamplingResult
-from advanced_memory.mcp.tools.content_manager import build_success_response, build_error_response
+from advanced_memory.mcp.inter_server import create_tool_spec, sample_with_tools
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.content_manager import build_error_response, build_success_response
 
-import logging
 logger = logging.getLogger(__name__)
 
 
 @mcp.tool
 async def agentic_content_workflow(
     workflow_prompt: str,
-    available_tools: List[str],
+    available_tools: list[str],
     max_iterations: int = 5,
-    context: Optional[Context] = None
+    context: Context | None = None,
 ) -> dict:
     """
-    Execute agentic content workflows using FastMCP 2.14.1+ sampling with tools.
+    Execute agentic content workflows using FastMCP 2.14.3 sampling with tools.
 
     This tool demonstrates SEP-1577 by enabling the server's LLM to autonomously
     orchestrate complex content operations without client round-trips.
@@ -65,9 +66,9 @@ async def agentic_content_workflow(
                 message="workflow_prompt is required to guide the agentic workflow",
                 recovery_options=[
                     "Provide a clear description of the workflow to execute",
-                    "Include specific goals and available tools"
+                    "Include specific goals and available tools",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
 
         if not available_tools:
@@ -77,23 +78,23 @@ async def agentic_content_workflow(
                 message="available_tools list cannot be empty",
                 recovery_options=[
                     "Specify which tools the LLM can use",
-                    "Include at least one tool for the workflow"
+                    "Include at least one tool for the workflow",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
 
         # Check if context has sampling capability
-        if not hasattr(context, 'sample_step'):
+        if not hasattr(context, "sample_step"):
             return build_error_response(
                 error="Sampling not available",
                 error_code="SAMPLING_UNAVAILABLE",
                 message="FastMCP context does not support sampling with tools",
                 recovery_options=[
-                    "Ensure FastMCP 2.14.1+ is installed",
+                    "Ensure FastMCP 2.14.3 is installed",
                     "Check that sampling handlers are configured",
-                    "Verify LLM provider supports tool calling"
+                    "Verify LLM provider supports tool calling",
                 ],
-                urgency="high"
+                urgency="high",
             )
 
         logger.info(f"Starting agentic workflow: {workflow_prompt[:50]}...")
@@ -107,14 +108,14 @@ async def agentic_content_workflow(
             tool_spec = create_tool_spec(
                 name=tool_name,
                 description=f"Execute {tool_name} operation",
-                function=lambda **kwargs: f"Executed {tool_name} with {kwargs}",
+                function=lambda tool_name=tool_name, **kwargs: f"Executed {tool_name} with {kwargs}",
                 parameters={
                     "type": "object",
                     "properties": {
                         "input": {"type": "string", "description": "Input content"},
-                        "options": {"type": "object", "description": "Additional options"}
-                    }
-                }
+                        "options": {"type": "object", "description": "Additional options"},
+                    },
+                },
             )
             tool_specs.append(tool_spec)
 
@@ -124,7 +125,7 @@ async def agentic_content_workflow(
             prompt=workflow_prompt,
             tools=tool_specs,
             max_iterations=max_iterations,
-            system_prompt="You are an intelligent content processing agent. Use available tools to complete the requested workflow efficiently."
+            system_prompt="You are an intelligent content processing agent. Use available tools to complete the requested workflow efficiently.",
         )
 
         return build_success_response(
@@ -135,13 +136,13 @@ async def agentic_content_workflow(
                 "iterations": result.metadata.get("iterations", 0),
                 "tools_executed": result.metadata.get("total_tools_executed", 0),
                 "execution_history": result.metadata.get("execution_history", []),
-                "tool_calls": result.tool_calls
+                "tool_calls": result.tool_calls,
             },
             next_steps=[
                 "Review workflow results",
                 "Analyze tool execution patterns",
-                "Consider optimizing tool availability for future workflows"
-            ]
+                "Consider optimizing tool availability for future workflows",
+            ],
         )
 
     except Exception as e:
@@ -154,28 +155,28 @@ async def agentic_content_workflow(
                 "Check LLM provider connectivity",
                 "Verify sampling handlers are configured",
                 "Reduce max_iterations if timing out",
-                "Check tool specifications are valid"
+                "Check tool specifications are valid",
             ],
             diagnostic_info={
                 "workflow_prompt": workflow_prompt,
                 "available_tools": available_tools,
                 "max_iterations": max_iterations,
-                "error_details": str(e)
+                "error_details": str(e),
             },
-            urgency="medium"
+            urgency="medium",
         )
 
 
 @mcp.tool
 async def intelligent_batch_processor(
-    items: List[Dict[str, Any]],
+    items: list[dict[str, Any]],
     processing_goal: str,
-    available_operations: List[str],
+    available_operations: list[str],
     batch_strategy: str = "parallel",
-    context: Optional[Context] = None
+    context: Context | None = None,
 ) -> dict:
     """
-    Intelligent batch processing using FastMCP 2.14.1+ sampling with tools.
+    Intelligent batch processing using FastMCP 2.14.3 sampling with tools.
 
     This tool uses the client's LLM to intelligently decide how to process batches
     of items, choosing the right operations and sequencing for optimal results.
@@ -210,11 +211,8 @@ async def intelligent_batch_processor(
                 error="No items to process",
                 error_code="EMPTY_ITEMS",
                 message="items list cannot be empty",
-                recovery_options=[
-                    "Provide items to process",
-                    "Ensure items have required fields"
-                ],
-                urgency="medium"
+                recovery_options=["Provide items to process", "Ensure items have required fields"],
+                urgency="medium",
             )
 
         if not processing_goal:
@@ -224,16 +222,16 @@ async def intelligent_batch_processor(
                 message="processing_goal is required to guide intelligent processing",
                 recovery_options=[
                     "Specify what you want to achieve",
-                    "Be specific about desired outcomes"
+                    "Be specific about desired outcomes",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
 
         # Create intelligent workflow prompt
         workflow_prompt = f"""
         Process these {len(items)} items with the goal: {processing_goal}
 
-        Available operations: {', '.join(available_operations)}
+        Available operations: {", ".join(available_operations)}
         Batch strategy: {batch_strategy}
 
         For each item, analyze its content and determine the optimal sequence of operations.
@@ -251,16 +249,16 @@ async def intelligent_batch_processor(
             tool_spec = create_tool_spec(
                 name=f"execute_{op_name}",
                 description=f"Execute {op_name} operation on content",
-                function=lambda content, **kwargs: f"Applied {op_name} to: {content[:50]}...",
+                function=lambda op_name=op_name, content="", **kwargs: f"Applied {op_name} to: {content[:50]}...",
                 parameters={
                     "type": "object",
                     "properties": {
                         "content": {"type": "string", "description": "Content to process"},
                         "item_id": {"type": "string", "description": "Item identifier"},
-                        "options": {"type": "object", "description": "Operation-specific options"}
+                        "options": {"type": "object", "description": "Operation-specific options"},
                     },
-                    "required": ["content"]
-                }
+                    "required": ["content"],
+                },
             )
             tool_specs.append(tool_spec)
 
@@ -274,9 +272,12 @@ async def intelligent_batch_processor(
                 "properties": {
                     "strategy": {"type": "string", "description": "Processing strategy"},
                     "items_count": {"type": "integer", "description": "Number of items"},
-                    "parallel_groups": {"type": "array", "description": "Parallel processing groups"}
-                }
-            }
+                    "parallel_groups": {
+                        "type": "array",
+                        "description": "Parallel processing groups",
+                    },
+                },
+            },
         )
         tool_specs.append(batch_tool)
 
@@ -288,7 +289,7 @@ async def intelligent_batch_processor(
             system_prompt=f"""You are an expert batch processing orchestrator using strategy: {batch_strategy}.
             Analyze each item carefully and choose the most appropriate operations.
             Optimize for efficiency while maintaining quality.
-            Use parallel processing when beneficial, sequential when dependencies exist."""
+            Use parallel processing when beneficial, sequential when dependencies exist.""",
         )
 
         return build_success_response(
@@ -302,13 +303,13 @@ async def intelligent_batch_processor(
                 "final_result": result.content,
                 "iterations": result.metadata.get("iterations", 0),
                 "tools_used": result.metadata.get("total_tools_executed", 0),
-                "execution_summary": result.metadata.get("execution_history", [])
+                "execution_summary": result.metadata.get("execution_history", []),
             },
             next_steps=[
                 "Review processing results",
                 "Validate output quality",
-                "Consider refining processing goals for future batches"
-            ]
+                "Consider refining processing goals for future batches",
+            ],
         )
 
     except Exception as e:
@@ -321,23 +322,23 @@ async def intelligent_batch_processor(
                 "Check LLM provider connectivity",
                 "Simplify processing goal",
                 "Reduce number of available operations",
-                "Use simpler batch strategy"
+                "Use simpler batch strategy",
             ],
             diagnostic_info={
                 "item_count": len(items),
                 "processing_goal": processing_goal,
                 "available_operations": available_operations,
                 "batch_strategy": batch_strategy,
-                "error_details": str(e)
+                "error_details": str(e),
             },
-            urgency="medium"
+            urgency="medium",
         )
 
 
 @mcp.tool
-async def sampling_capabilities_status(context: Optional[Context] = None) -> dict:
+async def sampling_capabilities_status(context: Context | None = None) -> dict:
     """
-    Check FastMCP 2.14.1+ sampling with tools capabilities and status.
+    Check FastMCP 2.14.3 sampling with tools capabilities and status.
 
     This tool reports on SEP-1577 implementation status and available features
     for agentic workflows using sampling with tools.
@@ -347,7 +348,7 @@ async def sampling_capabilities_status(context: Optional[Context] = None) -> dic
     """
     try:
         capabilities = {
-            "fastmcp_version": "2.14.1+",
+            "fastmcp_version": "2.14.3",
             "sep_1577_implemented": True,
             "sampling_with_tools": True,
             "agentic_workflows": True,
@@ -362,29 +363,29 @@ async def sampling_capabilities_status(context: Optional[Context] = None) -> dic
                 "Multi-iteration workflows",
                 "Progress reporting",
                 "Error recovery",
-                "Batch processing coordination"
+                "Batch processing coordination",
             ],
             "performance_benefits": {
                 "client_roundtrip_elimination": "95% reduction",
                 "api_cost_reduction": "80-95% for batch operations",
                 "processing_speed": "5-10x faster for complex workflows",
-                "scalability": "Handles thousands of items efficiently"
-            }
+                "scalability": "Handles thousands of items efficiently",
+            },
         }
 
         # Test actual sampling capability
-        sampling_available = hasattr(context, 'sample_step') if context else False
+        sampling_available = hasattr(context, "sample_step") if context else False
         capabilities["sampling_available"] = sampling_available
 
         return build_success_response(
             operation="sampling_status",
-            summary="FastMCP 2.14.1+ sampling with tools capabilities are fully operational",
+            summary="FastMCP 2.14.3 sampling with tools capabilities are fully operational",
             result=capabilities,
             next_steps=[
                 "Use agentic_content_workflow for complex operations",
                 "Try intelligent_batch_processor for bulk processing",
-                "Configure sampling handlers for your LLM provider"
-            ]
+                "Configure sampling handlers for your LLM provider",
+            ],
         )
 
     except Exception as e:
@@ -394,9 +395,9 @@ async def sampling_capabilities_status(context: Optional[Context] = None) -> dic
             error_code="CAPABILITIES_CHECK_ERROR",
             message=f"Could not retrieve sampling capabilities: {str(e)}",
             recovery_options=[
-                "Ensure FastMCP 2.14.1+ is installed",
+                "Ensure FastMCP 2.14.3 is installed",
                 "Check sampling handler configuration",
-                "Verify context provides sampling methods"
+                "Verify context provides sampling methods",
             ],
-            urgency="low"
+            urgency="low",
         )

@@ -2,7 +2,7 @@
 
 ## Overview
 
-SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosystem, demonstrating the revolutionary agentic workflow capabilities enabled by FastMCP 2.14.1+.
+SEP-1577 (Sampling with Tools) implementation status across the MCP server ecosystem, demonstrating the revolutionary agentic workflow capabilities enabled by FastMCP 2.14.3.
 
 ## Implementation Status
 

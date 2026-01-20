@@ -5,7 +5,7 @@ from 40+ individual tools to just 8 consolidated tools for Cursor IDE compatibil
 
 Tests verify:
 - Tool registration and signatures
-- Structured response format (FastMCP 2.14.1+ compliance)
+- Structured response format (FastMCP 2.14.3 compliance)
 - Error handling with recovery options
 - Parameter validation
 """
@@ -371,7 +371,7 @@ class TestAdnEditorBasic:
 
 
 class TestStructuredResponses:
-    """Test FastMCP 2.14.1+ structured response format compliance.
+    """Test FastMCP 2.14.3 structured response format compliance.
 
     All portmanteau tools must return structured dict responses with:
     - success: bool

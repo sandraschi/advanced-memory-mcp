@@ -15,7 +15,7 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 
 ### **The Three Pillars of SOTA Compliance**
 
-1. **Architecture**: FastMCP 2.14.1+ Cooperative pattern with portmanteau tool consolidation
+1. **Architecture**: FastMCP 2.14.3 Cooperative pattern with portmanteau tool consolidation
 2. **Behavior**: AI-optimized docstrings and conversational response patterns
 3. **Operations**: Complete lifecycle management with persistent SQLite storage
 
@@ -62,13 +62,13 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 
 **Standardized locations for agentic IDE configuration and diagnostic data:**
 
-| IDE | Configuration Folder | MCP Config File | Log Folder |
-| --- | --- | --- | --- |
-| **Antigravity** | `%USERPROFILE%\.gemini\antigravity` | `mcp_config.json` | `%APPDATA%\Antigravity\logs` |
-| **Claude Desktop** | `%APPDATA%\Claude` | `claude_desktop_config.json` | `%APPDATA%\Claude\logs` |
-| **Windsurf** | `%APPDATA%\Windsurf` | `mcp_config.json` | `%APPDATA%\Windsurf\logs` |
-| **Cursor** | `%APPDATA%\Cursor\User\globalStorage\cursor-storage` | `mcp_config.json` | `%APPDATA%\Cursor\logs` |
-| **Zed** | `%APPDATA%\Zed` | `settings.json` | `%LOCALAPPDATA%\Zed\logs` |
+| IDE | Configuration Folder | MCP Config File | Log Folder | Installation Notes |
+| --- | --- | --- | --- | --- |
+| **Antigravity** | `%USERPROFILE%\.gemini\antigravity` | `mcp_config.json` | `%APPDATA%\Antigravity\logs` | - |
+| **Claude Desktop** | `%APPDATA%\Claude` | `claude_desktop_config.json` | `%APPDATA%\Claude\logs` | Drag .mcpb file into Extensions |
+| **Windsurf** | `%APPDATA%\Windsurf` | `mcp_config.json` | `%APPDATA%\Windsurf\logs` | - |
+| **Cursor** | `%APPDATA%\Cursor\User\globalStorage\cursor-storage` | `mcp_config.json` | `%APPDATA%\Cursor\logs` | Use deeplinks or MCPB packages |
+| **Zed** | `%APPDATA%\Zed` | `settings.json` | `%LOCALAPPDATA%\Zed\logs` | Install extension from PyPI: `pip install advanced-memory-mcp` |
 
 > **Note**: `%APPDATA%` resolves to `C:\Users\<user>\AppData\Roaming`
 
@@ -76,11 +76,11 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 
 ---
 
-## FastMCP 2.14.1+ Compliance
+## FastMCP 2.14.3 Compliance
 
 ### SEP-1577: Sampling with Tools - The Game Changer
 
-Advanced Memory implements **SEP-1577: Sampling with Tools**, FastMCP 2.14.1+'s revolutionary agentic workflow capability. This transforms MCP from a traditional client-server protocol into an intelligent, autonomous processing framework.
+Advanced Memory implements **SEP-1577: Sampling with Tools**, FastMCP 2.14.3's revolutionary agentic workflow capability. This transforms MCP from a traditional client-server protocol into an intelligent, autonomous processing framework.
 
 #### The Paradigm Shift
 
@@ -494,7 +494,7 @@ collaborative_result = await intelligent_batch_processor(
 
 #### Prerequisites
 ```bash
-pip install fastmcp>=2.14.1
+pip install fastmcp>=2.14.3
 # Configure sampling handlers in your MCP server
 ```
 
@@ -529,13 +529,13 @@ result = await agentic_content_workflow(
 
 This implementation represents the cutting edge of MCP technology, enabling autonomous, intelligent, and highly efficient server-side processing workflows that were previously impossible.
 
-## FastMCP 2.14.1+ Compliance Standards
+## FastMCP 2.14.3 Compliance Standards
 
 ### Tool Documentation Requirements
 
-**Advanced Memory MCP uses FastMCP 2.14.1+ standards for SOTA compliance:**
+**Advanced Memory MCP uses FastMCP 2.14.3 standards for SOTA compliance:**
 
-- ✅ **FastMCP 2.14.1+** minimum version required
+- ✅ **FastMCP 2.14.3** minimum version required
 - ✅ **Conversational Response Patterns** for rich AI dialogue
 - ✅ **Portmanteau Tool Consolidation** to prevent tool explosion
 - ✅ **Cooperative Architecture** for complex server interactions
@@ -558,7 +558,7 @@ async def tool_name(parameters) -> ResponseType:
         another_param: Additional parameter documentation.
 
     Returns:
-        FastMCP 2.14.1+ conversational response structure with:
+        FastMCP 2.14.3 conversational response structure with:
         - success: Operation status
         - operation: What was performed
         - summary: Human-readable description
@@ -808,7 +808,7 @@ mypy src/
 
 ### SOTA Audit Checklist
 
-- [ ] **Architecture**: FastMCP 2.14.1+ Cooperative pattern
+- [ ] **Architecture**: FastMCP 2.14.3 Cooperative pattern
 - [ ] **Behavior**: AI-optimized docstrings and responses
 - [ ] **Operations**: Complete lifecycle management
 - [ ] **Documentation**: Complete coverage, clear, correct

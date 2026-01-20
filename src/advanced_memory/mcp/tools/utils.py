@@ -644,7 +644,7 @@ def sanitize_unicode_content(content: str) -> str:
     return sanitized
 
 
-# FastMCP 2.14.1+ Conversational Response Builders
+# FastMCP 2.14.3 Conversational Response Builders
 def build_success_response(operation: str, summary: str, **kwargs) -> dict:
     """Build conversational success response for MCP clients."""
     return {

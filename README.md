@@ -8,7 +8,7 @@
 
 A Model Context Protocol server that integrates personal knowledge management with Claude Desktop. Features include knowledge graphs, zettelkasten note-taking, and experimental Claude Skills integration.
 
-**New in v1.1.0b2**: Complete repository modernization to SOTA MCP Standards v12.0, extensive AI prompt templates, MCPB build system overhaul, and comprehensive documentation restructuring. See [Repository Modernization Progress](zettelkasten/2026-01-13-repository-modernization-progress.md) for full details.
+**New in v1.1.0b3**: FastMCP 2.14.3 advanced features with SEP-1577 sampling implementation, conversational response patterns, Zed IDE support, and Claude Skills January 2026 standardization. Complete MCP ecosystem expansion with multi-IDE compatibility.
 
 [Quick Start](#quick-start) | [Tools Reference](docs/TOOLS_REFERENCE.md) | [Documentation](docs/) | [Technical Docs](TECHNICAL.md)
 
@@ -68,9 +68,19 @@ adn_llm("select_model", provider="ollama", model="llama3.2:3b")
 ### 5. Audio Soul 2026 (New!)
 
 High-performance, soulful voice stack built with SOTA FOSS components:
+
+#### 🎯 Dual STT Architecture (ikubaysan Integration)
+- **Revolutionary Pipeline**: Sphinx wake-word detection + Google Cloud accurate transcription
+- **Character State Machine**: Wandering → Conversing → Performing Actions
+- **Multi-Provider LLM**: Local (Ollama) + Cloud (OpenAI, Anthropic, Gemini)
+- **Advanced Voice Commands**: `adn_audio_dual_stt()` with enhanced capabilities
+
+#### Core Audio Features
 - **High-Fidelity TTS**: Integrated Kokoro for expressive, human-like speech.
 - **Rapid Transcription**: Accelerated faster-whisper for near-instant STT.
 - **GPU Optimized**: Powered by `onnxruntime-gpu` for peak efficiency on modern hardware.
+- **Background Listening**: Wake word detection for hands-free operation.
+- **Voice Commands**: Intelligent parsing with LLM fallback for complex commands.
 
 ### 6. Cursor IDE Compatible - Tool Mode Selection
 
@@ -569,6 +579,22 @@ Deeplinks automatically configure the MCP connection in your IDE.
 - Install via `pip install advanced-memory-mcp`
 - Add configuration to `claude_desktop_config.json`
 - See [installation guide](INSTALLATION.md) for details
+
+### For Zed IDE
+
+**Zed Extension Installation** (Required for Zed IDE):
+```bash
+pip install advanced-memory-mcp
+```
+
+The Zed extension is distributed via PyPI. After installing the Python package:
+
+1. Open Zed IDE
+2. Go to Extensions → Install Dev Extension
+3. Select the repository directory containing `Cargo.toml`
+4. The extension will build and install automatically
+
+**Alternative**: Download the compiled extension from [Releases](https://github.com/sandraschi/advanced-memory-mcp/releases) if available.
 
 ### For Other MCP Clients
 

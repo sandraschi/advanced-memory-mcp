@@ -54,7 +54,7 @@ Instead of individual tools for each operation, Advanced Memory uses consolidate
 ## Quality Standards
 
 ### Response Format
-All tool responses follow FastMCP 2.14.1+ conversational patterns:
+All tool responses follow FastMCP 2.14.3 conversational patterns:
 ```json
 {
   "success": true,

@@ -1,7 +1,7 @@
 # Advanced Memory MCP Documentation
-**Version**: 1.1.0b1
-**Last Updated**: 2026-01-13
-**Status**: SOTA Active
+**Version**: 1.1.0b2
+**Last Updated**: 2025-12-20
+**Status**: SOTA Active - Dual STT Integration
 
 ---
 
@@ -15,7 +15,7 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 
 ### **The Three Pillars of SOTA Compliance**
 
-1. **Architecture**: FastMCP 2.14.1+ Cooperative pattern with portmanteau tool consolidation
+1. **Architecture**: FastMCP 2.14.3 Cooperative pattern with portmanteau tool consolidation
 2. **Behavior**: AI-optimized docstrings and conversational response patterns
 3. **Operations**: Complete lifecycle management with persistent storage
 
@@ -52,7 +52,7 @@ System design and technical architecture:
 
 #### [development/](development/)
 Contributing and development guides:
-- FastMCP 2.14.1 migration guide
+- FastMCP 2.14.3 migration guide
 - Testing strategies and patterns
 - Code standards and linting
 - CI/CD pipeline documentation
@@ -68,8 +68,12 @@ Comprehensive testing documentation:
 
 #### [integrations/](integrations/)
 External service integrations:
+- **Dual STT Architecture**: ikubaysan voice pipeline integration
+- **Multi-Provider LLM**: Ollama, LM Studio, OpenAI, Anthropic, Gemini
+- **MyVRWorlds**: React Tailwind VR control center
+- **VR MCP Ecosystem**: Avatar, Blender, VRChat, Resonite, OSC, Unity
 - Claude Skills ecosystem
-- Audio processing (Kokoro, faster-whisper)
+- Audio processing (Kokoro, faster-whisper, Google Cloud Speech)
 - Export formats (PDF, HTML, Docsify)
 - Import sources (Evernote, Notion, OneNote)
 

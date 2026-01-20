@@ -484,7 +484,7 @@ collaborative_result = await intelligent_batch_processor(
 
 ### Prerequisites
 ```bash
-pip install fastmcp>=2.14.1
+pip install fastmcp>=2.14.3
 # Ensure sampling handlers are configured
 ```
 

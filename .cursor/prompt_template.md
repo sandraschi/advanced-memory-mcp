@@ -6,7 +6,7 @@ You are working on **Advanced Memory**, a local-first knowledge management syste
 - **Name**: Advanced Memory MCP Server
 - **Purpose**: Personal knowledge graph management via MCP protocol
 - **Platform**: Cross-platform (Windows, macOS, Linux)
-- **Architecture**: FastMCP 2.14.1+ portmanteau pattern
+- **Architecture**: FastMCP 2.14.3 portmanteau pattern
 - **Storage**: SQLite for indexing, files as source of truth
 
 ## 🏗️ Architecture Overview
@@ -25,7 +25,7 @@ FastAPI Server → MCP Tools → Knowledge Graph → Markdown Files
 ### ✅ **Portmanteau Pattern**
 - **Consolidate** related operations into single tools
 - **Prevent tool explosion** (e.g., 7 content ops → 1 tool)
-- **Follow FastMCP 2.14.1+** standards
+- **Follow FastMCP 2.14.3** standards
 - **Maintain full functionality** while improving discoverability
 
 ### 📋 **Code Patterns**

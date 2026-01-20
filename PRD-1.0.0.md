@@ -1,8 +1,8 @@
-# Advanced Memory 1.0.0 - Product Requirements Document
+# Advanced Memory 1.1.0 - Product Requirements Document
 
-**Status:** 🚧 **1.0.0 Beta** - Feature Complete, Quality Assurance Phase
-**Release Date:** TBD (Target: Q1 2025)
-**Version:** 1.0.0b1
+**Status:** 🚧 **1.1.0 Beta** - Dual STT & VR Integration Phase
+**Release Date:** TBD (Target: Q1 2026)
+**Version:** 1.1.0b1
 
 ---
 
@@ -78,6 +78,22 @@ Advanced Memory 1.0.0 represents a major milestone as the first stable release o
 - **Privacy Controls:** User-controlled data sharing
 - **Security Scanning:** Automated vulnerability detection
 - **Access Control:** Configurable project permissions
+
+#### 🎯 **Dual STT Architecture (v1.1.0)**
+- **Revolutionary Voice Pipeline:** ikubaysan-inspired dual STT system
+- **Sphinx Wake Detection:** Always-on, low-CPU wake word monitoring (~1-2% CPU)
+- **Google Cloud Transcription:** High-accuracy command processing (95%+ accuracy)
+- **Character State Machine:** Wandering/Conversing/Performing behavioral states
+- **Multi-Provider LLM:** Local (Ollama/LM Studio) + Cloud (OpenAI/Anthropic/Gemini)
+- **Structured AI Responses:** TYPE_* response classification for avatar behaviors
+- **Performance:** 10x CPU reduction while improving accuracy
+
+#### 🌐 **MyVRWorlds Web Interface (v1.1.0)**
+- **Unified VR Control Center:** React Tailwind application for all VR MCPs
+- **Real-time Voice Control:** Integrated dual STT pipeline with VR characters
+- **Multi-MCP Management:** Avatar, Blender, VRChat, Resonite, OSC, Unity integration
+- **LLM Provider Switching:** Runtime configuration of AI providers
+- **VR-Themed UI:** Cyberpunk aesthetic optimized for VR control sessions
 
 ## 🏗️ Architecture & Technical Specifications
 

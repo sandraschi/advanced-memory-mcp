@@ -63,7 +63,7 @@ Args:
     page_size (int): Items per page. Default: 10.
 
 Returns:
-    FastMCP 2.14.1+ Conversational Response Structure:
+    FastMCP 2.14.3 Conversational Response Structure:
 
     Success Response:
     - success (bool): True if operation succeeded
@@ -123,15 +123,10 @@ from advanced_memory.utils import parse_tags, validate_project_path
 TagType = list[str] | str | None
 
 
-# FastMCP 2.14.1+ Conversational Response Builders
+# FastMCP 2.14.3 Conversational Response Builders
 def build_success_response(operation: str, summary: str, **kwargs) -> dict:
     """Build structured success response for MCP clients."""
-    return {
-        "success": True,
-        "operation": operation,
-        "summary": summary,
-        **kwargs
-    }
+    return {"success": True, "operation": operation, "summary": summary, **kwargs}
 
 
 def build_error_response(error: str, error_code: str, message: str, **kwargs) -> dict:
@@ -141,7 +136,7 @@ def build_error_response(error: str, error_code: str, message: str, **kwargs) ->
         "error": error,
         "error_code": error_code,
         "message": message,
-        **kwargs
+        **kwargs,
     }
 
 
@@ -297,9 +292,9 @@ async def adn_content(
             recovery_options=[
                 "Use adn_project('list') to see available projects",
                 "Use adn_project('switch', project_name='your-project') to switch projects",
-                "Use adn_project('create', project_name='new-project', project_path='/path') to create one"
+                "Use adn_project('create', project_name='new-project', project_path='/path') to create one",
             ],
-            urgency="high"
+            urgency="high",
         )
 
     # Route to appropriate operation handler
@@ -566,9 +561,9 @@ adn_content("write",
                 message="Daily operation requires content parameter",
                 recovery_options=[
                     "Provide content parameter with your daily note text",
-                    "Use quick operation if you want auto-generated title"
+                    "Use quick operation if you want auto-generated title",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
         return await _daily_note_operation(active_project, content, tags)
 
@@ -598,9 +593,9 @@ pip install advanced-memory[voice]
                 recovery_options=[
                     "Specify identifier (note title or permalink)",
                     "Specify destination_path (new folder location)",
-                    "Use read operation first to verify note exists"
+                    "Use read operation first to verify note exists",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
         return await _move_operation(active_project, identifier, destination_path)
     elif operation == "delete":
@@ -611,9 +606,9 @@ pip install advanced-memory[voice]
                 message="Delete operation requires identifier parameter",
                 recovery_options=[
                     "Provide note title, permalink, or memory:// URL",
-                    "Use read operation first to verify note exists"
+                    "Use read operation first to verify note exists",
                 ],
-                urgency="medium"
+                urgency="medium",
             )
         return await _delete_operation(active_project, identifier)
 
@@ -645,13 +640,28 @@ pip install advanced-memory[voice]
             recovery_options=[
                 "Use supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete",
                 "For audio operations (dictate, speak), use the adn_audio tool instead",
-                "Check operation spelling and try again"
+                "Check operation spelling and try again",
             ],
             diagnostic_info={
                 "provided_operation": operation,
-                "supported_operations": ["write", "read", "view", "view_rendered", "edit", "edit_tags", "quick", "daily", "move", "delete", "suggest_tags", "summarize", "enhance", "generate"]
+                "supported_operations": [
+                    "write",
+                    "read",
+                    "view",
+                    "view_rendered",
+                    "edit",
+                    "edit_tags",
+                    "quick",
+                    "daily",
+                    "move",
+                    "delete",
+                    "suggest_tags",
+                    "summarize",
+                    "enhance",
+                    "generate",
+                ],
             },
-            urgency="low"
+            urgency="low",
         )
 
 
@@ -672,9 +682,9 @@ async def _write_operation(
             recovery_options=[
                 "Provide identifier (note title)",
                 "Provide content (markdown text)",
-                "Use folder parameter to specify location (optional, defaults to inbox)"
+                "Use folder parameter to specify location (optional, defaults to inbox)",
             ],
-            urgency="medium"
+            urgency="medium",
         )
 
     # Validate folder path to prevent path traversal attacks
@@ -692,13 +702,10 @@ async def _write_operation(
             recovery_options=[
                 "Use relative paths within project boundaries",
                 "Avoid '..' or absolute paths",
-                "Default folder is 'inbox' if not specified"
+                "Default folder is 'inbox' if not specified",
             ],
-            diagnostic_info={
-                "folder": folder,
-                "project_path": str(project_path)
-            },
-            urgency="medium"
+            diagnostic_info={"folder": folder, "project_path": str(project_path)},
+            urgency="medium",
         )
 
     # AUTO-DETECT SKILLS: If writing to skills/ folder, ensure proper frontmatter
@@ -859,13 +866,15 @@ The API request failed with status code {response.status_code}.
                 "relations_count": len(result.relations),
                 "resolved_relations": resolved,
                 "unresolved_relations": unresolved,
-                "tags": tag_list
+                "tags": tag_list,
             },
             next_steps=[
-                "Read the note to verify content" if action == "created" else "Review the updated content",
+                "Read the note to verify content"
+                if action == "created"
+                else "Review the updated content",
                 "Add related notes or concepts",
-                "Consider enhancing with AI suggestions"
-            ]
+                "Consider enhancing with AI suggestions",
+            ],
         )
     except Exception as e:
         logger.error(f"Error creating/updating note: {e}", exc_info=True)
@@ -877,15 +886,15 @@ The API request failed with status code {response.status_code}.
                 "Check project is active with adn_project('list')",
                 "Verify folder path is valid and within project boundaries",
                 "Try again if it was a temporary network issue",
-                "Check server logs for detailed error information"
+                "Check server logs for detailed error information",
             ],
             diagnostic_info={
                 "title": identifier,
                 "folder": folder,
                 "error_details": str(e),
-                "project": active_project.name if active_project else None
+                "project": active_project.name if active_project else None,
             },
-            urgency="medium"
+            urgency="medium",
         )
 
 
@@ -899,9 +908,9 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
             recovery_options=[
                 "Provide note title, permalink, or memory:// URL",
                 "Use adn_search to find available notes",
-                "Use read_latest to get the most recent note"
+                "Use read_latest to get the most recent note",
             ],
-            urgency="medium"
+            urgency="medium",
         )
 
     # Delegate to read_note tool
@@ -1033,9 +1042,9 @@ async def _edit_tags_operation(
             recovery_options=[
                 "Specify tag_operation: 'add', 'remove', 'replace', or 'clear'",
                 "Provide tags parameter with tag list",
-                "Provide identifier to specify which note"
+                "Provide identifier to specify which note",
             ],
-            urgency="medium"
+            urgency="medium",
         )
 
     # Get current note to read existing tags
@@ -1052,18 +1061,15 @@ async def _edit_tags_operation(
                 "Check spelling of note title",
                 "Use permalink format (e.g., 'folder/note-title')",
                 "Use adn_search to find available notes",
-                "Use read_latest to get the most recent note"
+                "Use read_latest to get the most recent note",
             ],
-            diagnostic_info={
-                "identifier": identifier,
-                "operation": "read"
-            },
+            diagnostic_info={"identifier": identifier, "operation": "read"},
             alternative_solutions=[
                 "Use adn_search('query') to find similar notes",
                 "Use read_latest to get the most recent note",
-                "Check if note was moved or deleted"
+                "Check if note was moved or deleted",
             ],
-            urgency="medium"
+            urgency="medium",
         )
 
     current_entity = EntityResponse.model_validate(response.json())
@@ -1600,13 +1606,10 @@ adn_content("edit_tags",
             recovery_options=[
                 "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
                 "Check LLM service is running (ollama serve, LMStudio, etc.)",
-                "Try again if it's a temporary service issue"
+                "Try again if it's a temporary service issue",
             ],
-            diagnostic_info={
-                "error_details": str(e),
-                "operation": "suggest_tags"
-            },
-            urgency="medium"
+            diagnostic_info={"error_details": str(e), "operation": "suggest_tags"},
+            urgency="medium",
         )
 
 
@@ -1667,13 +1670,10 @@ Return the summary as plain text (not JSON)."""
             recovery_options=[
                 "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
                 "Check LLM service is running (ollama serve, LMStudio, etc.)",
-                "Try again if it's a temporary service issue"
+                "Try again if it's a temporary service issue",
             ],
-            diagnostic_info={
-                "error_details": str(e),
-                "operation": "summarize"
-            },
-            urgency="medium"
+            diagnostic_info={"error_details": str(e), "operation": "summarize"},
+            urgency="medium",
         )
 
 
@@ -1752,13 +1752,10 @@ The note has been enhanced and updated. The enhanced version includes:
             recovery_options=[
                 "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
                 "Check LLM service is running (ollama serve, LMStudio, etc.)",
-                "Try again if it's a temporary service issue"
+                "Try again if it's a temporary service issue",
             ],
-            diagnostic_info={
-                "error_details": str(e),
-                "operation": "enhance"
-            },
-            urgency="medium"
+            diagnostic_info={"error_details": str(e), "operation": "enhance"},
+            urgency="medium",
         )
 
 
@@ -1826,11 +1823,8 @@ Make it informative and useful for a knowledge base."""
             recovery_options=[
                 "Configure an LLM provider using adn_llm('select_model', provider='ollama', model='llama3')",
                 "Check LLM service is running (ollama serve, LMStudio, etc.)",
-                "Try again if it's a temporary service issue"
+                "Try again if it's a temporary service issue",
             ],
-            diagnostic_info={
-                "error_details": str(e),
-                "operation": "generate"
-            },
-            urgency="medium"
+            diagnostic_info={"error_details": str(e), "operation": "generate"},
+            urgency="medium",
         )

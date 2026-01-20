@@ -17,7 +17,7 @@ Completed comprehensive repository modernization to achieve SOTA (State Of The A
 - **SOTA Standards Integration**: Replaced outdated documentation with MCP Standards v12.0 compliant structure
 - **Three Pillars Compliance**: Achieved Architecture, Behavior, and Operations SOTA requirements
 - **Professional Structure**: Implemented hierarchical documentation with clear navigation
-- **FastMCP 2.14.1+ Standards**: Updated all references to latest framework standards
+- **FastMCP 2.14.3 Standards**: Updated all references to latest framework standards
 
 ### Repository Structure Cleanup
 - **Deprecated Folder**: Created organized archive for outdated files (40+ files moved)
@@ -70,7 +70,7 @@ Completed comprehensive repository modernization to achieve SOTA (State Of The A
 - **Maintenance**: Simplified tool registration and updates
 - **Performance**: Reduced MCP protocol overhead
 
-### FastMCP 2.14.1+ Compliance
+### FastMCP 2.14.3 Compliance
 - **Conversational Responses**: Enhanced error handling and user feedback
 - **Cooperative Architecture**: Improved inter-tool communication
 - **Lifespan Management**: Better resource cleanup and state management

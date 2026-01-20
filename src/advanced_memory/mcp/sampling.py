@@ -1,6 +1,6 @@
-"""MCP 2.14.1+ Sampling Client Integration for LLM Interrogation.
+"""MCP 2.14.3 Sampling Client Integration for LLM Interrogation.
 
-This module provides unified access to FastMCP 2.14.1+ sampling capabilities,
+This module provides unified access to FastMCP 2.14.3 sampling capabilities,
 enabling MCP servers to interrogate client LLMs for intelligent content generation,
 validation, and enhancement.
 
@@ -20,6 +20,7 @@ from pydantic import BaseModel
 
 class SamplingConfig(BaseModel):
     """Configuration for LLM sampling."""
+
     provider: Literal["anthropic", "openai", "auto"] = "auto"
     model: str | None = None
     temperature: float = 0.7
@@ -29,7 +30,7 @@ class SamplingConfig(BaseModel):
 
 
 class SamplingClient:
-    """Unified sampling client for MCP 2.14.1+ LLM interrogation."""
+    """Unified sampling client for MCP 2.14.3 LLM interrogation."""
 
     def __init__(self, config: SamplingConfig):
         self.config = config
@@ -42,9 +43,9 @@ class SamplingClient:
             # Import FastMCP sampling components
             from advanced_memory.mcp.mcp_instance import mcp
 
-            # Check if sampling is available (FastMCP 2.14.1+)
-            if not hasattr(mcp, 'ctx') or not hasattr(mcp.ctx, 'sample'):
-                logger.warning("FastMCP 2.14.1+ sampling not available")
+            # Check if sampling is available (FastMCP 2.14.3)
+            if not hasattr(mcp, "ctx") or not hasattr(mcp.ctx, "sample"):
+                logger.warning("FastMCP 2.14.3 sampling not available")
                 return False
 
             self._client = mcp.ctx
@@ -66,7 +67,7 @@ class SamplingClient:
         response_format: dict[str, Any] | None = None,
         max_tokens: int | None = None,
         temperature: float | None = None,
-        **kwargs
+        **kwargs,
     ) -> SamplingResult:
         """Execute sampling request using MCP context."""
 
@@ -85,29 +86,21 @@ class SamplingClient:
                 response_format=response_format,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                **kwargs
+                **kwargs,
             )
 
             return SamplingResult(
                 success=True,
                 content=result.content,
-                usage=result.usage if hasattr(result, 'usage') else None,
-                finish_reason=result.finish_reason if hasattr(result, 'finish_reason') else None
+                usage=result.usage if hasattr(result, "usage") else None,
+                finish_reason=result.finish_reason if hasattr(result, "finish_reason") else None,
             )
 
         except Exception as e:
             logger.error(f"Sampling request failed: {e}")
-            return SamplingResult(
-                success=False,
-                error=str(e),
-                content=""
-            )
+            return SamplingResult(success=False, error=str(e), content="")
 
-    async def sample_step(
-        self,
-        messages: list[dict[str, Any]],
-        **kwargs
-    ) -> SamplingResult:
+    async def sample_step(self, messages: list[dict[str, Any]], **kwargs) -> SamplingResult:
         """Execute single sampling step for fine control."""
 
         if not self._initialized or not self._client:
@@ -115,29 +108,23 @@ class SamplingClient:
 
         try:
             # Use sample_step for fine-grained control
-            result = await self._client.sample_step(
-                messages=messages,
-                **kwargs
-            )
+            result = await self._client.sample_step(messages=messages, **kwargs)
 
             return SamplingResult(
                 success=True,
                 content=result.content,
-                usage=result.usage if hasattr(result, 'usage') else None,
-                finish_reason=result.finish_reason if hasattr(result, 'finish_reason') else None
+                usage=result.usage if hasattr(result, "usage") else None,
+                finish_reason=result.finish_reason if hasattr(result, "finish_reason") else None,
             )
 
         except Exception as e:
             logger.error(f"Sampling step failed: {e}")
-            return SamplingResult(
-                success=False,
-                error=str(e),
-                content=""
-            )
+            return SamplingResult(success=False, error=str(e), content="")
 
 
 class SamplingResult(BaseModel):
     """Result of a sampling operation."""
+
     success: bool
     content: str
     usage: dict[str, Any] | None = None
@@ -173,7 +160,7 @@ def _auto_configure_sampling() -> SamplingConfig:
         return SamplingConfig(
             provider="anthropic",
             api_key=anthropic_key,
-            model=os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022")
+            model=os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022"),
         )
 
     # Check for OpenAI
@@ -182,13 +169,13 @@ def _auto_configure_sampling() -> SamplingConfig:
         return SamplingConfig(
             provider="openai",
             api_key=openai_key,
-            model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+            model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview"),
         )
 
     # Default fallback
     return SamplingConfig(
         provider="auto",
-        model="claude-3-5-sonnet-20241022"  # Assume Anthropic by default
+        model="claude-3-5-sonnet-20241022",  # Assume Anthropic by default
     )
 
 
@@ -206,27 +193,21 @@ async def sample_with_llm(
     messages: list[dict[str, Any]],
     tools: list[dict[str, Any]] | None = None,
     config: SamplingConfig | None = None,
-    **kwargs
+    **kwargs,
 ) -> SamplingResult:
     """Convenience function for one-off sampling requests."""
 
     client = get_sampling_client(config)
 
     if not client:
-        return SamplingResult(
-            success=False,
-            error="Sampling client not available",
-            content=""
-        )
+        return SamplingResult(success=False, error="Sampling client not available", content="")
 
     # Ensure initialized
     if not client._initialized:
         initialized = await client.initialize()
         if not initialized:
             return SamplingResult(
-                success=False,
-                error="Failed to initialize sampling client",
-                content=""
+                success=False, error="Failed to initialize sampling client", content=""
             )
 
     return await client.sample(messages, tools, **kwargs)
@@ -237,28 +218,23 @@ async def validate_sampling_availability() -> dict[str, Any]:
 
     try:
         # Test basic sampling
-        result = await sample_with_llm([
-            {"role": "user", "content": "Hello, test message for sampling validation."}
-        ])
+        result = await sample_with_llm(
+            [{"role": "user", "content": "Hello, test message for sampling validation."}]
+        )
 
         return {
             "available": True,
             "test_successful": result.success,
             "error": result.error if not result.success else None,
-            "version": "2.14.1+",
+            "version": "2.14.3",
             "features": [
                 "ctx.sample()",
                 "ctx.sample_step()",
                 "Structured output",
                 "Tool calling",
-                "Multi-iteration workflows"
-            ]
+                "Multi-iteration workflows",
+            ],
         }
 
     except Exception as e:
-        return {
-            "available": False,
-            "error": str(e),
-            "version": None,
-            "features": []
-        }
+        return {"available": False, "error": str(e), "version": None, "features": []}
