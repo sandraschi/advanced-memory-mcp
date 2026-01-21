@@ -34,17 +34,24 @@ _FULL_TOOLS_MODE = os.getenv("ADVANCED_MEMORY_FULL_TOOLS_MODE", "false").lower()
 
 if _FULL_TOOLS_MODE:
     # FULL MODE: Import ALL tools (~56 total)
+    from .adn_arxiv_research import adn_arxiv_research
     from .adn_audio import adn_audio
+    from .adn_document_ingest import adn_document_ingest
     from .adn_editor import adn_editor
     from .adn_export import adn_export
+    from .adn_github_research import adn_github_research
     from .adn_import import adn_import
     from .adn_inbox import adn_inbox
     from .adn_knowledge import adn_knowledge
     from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
+    from .adn_rag import adn_rag
     from .adn_search import adn_search
     from .adn_skills import adn_skills
     from .adn_skills_creator import adn_skills_creator
+    from .adn_skills_reader import adn_skills_reader
+    from .adn_tvtropes_research import adn_tvtropes_research
+    from .adn_web_search import adn_web_search
     from .build_context import build_context
     from .canvas import canvas
     from .content_manager import adn_content
@@ -66,6 +73,7 @@ if _FULL_TOOLS_MODE:
     from .load_notion_export import load_notion_export
     from .load_obsidian_vault import load_obsidian_vault
     from .make_pdf_book import make_pdf_book
+    from .make_skill_advanced import make_skill_advanced
     from .move_note import move_note
     from .project_management import (
         create_memory_project,
@@ -94,16 +102,23 @@ if _FULL_TOOLS_MODE:
     from .zettelmaker import adn_zettelmaker
 else:
     # PORTMANTEAU MODE (default): Import ONLY 15 portmanteau tools
+    from .adn_arxiv_research import adn_arxiv_research
     from .adn_audio import adn_audio
+    from .adn_document_ingest import adn_document_ingest
     from .adn_export import adn_export
+    from .adn_github_research import adn_github_research
     from .adn_import import adn_import
     from .adn_inbox import adn_inbox
     from .adn_knowledge import adn_knowledge
     from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
+    from .adn_rag import adn_rag
     from .adn_search import adn_search
     from .adn_skills import adn_skills
     from .adn_skills_creator import adn_skills_creator
+    from .adn_skills_reader import adn_skills_reader
+    from .adn_tvtropes_research import adn_tvtropes_research
+    from .adn_web_search import adn_web_search
     from .canvas import canvas
     from .content_manager import adn_content
     from .help import help
@@ -112,6 +127,7 @@ else:
         intelligent_batch_processor,
         sampling_capabilities_status,
     )
+    from .make_skill_advanced import make_skill_advanced
     from .project_manager import adn_project
     from .typora_control import typora_control
     from .view_note_rendered import view_note_rendered
@@ -133,6 +149,14 @@ __all__ = [
     "adn_zettelmaker",
     "adn_skills",
     "adn_skills_creator",
+    "adn_skills_reader",
+    "adn_web_search",
+    "adn_document_ingest",
+    "adn_rag",
+    "adn_github_research",
+    "adn_arxiv_research",
+    "adn_tvtropes_research",
+    "make_skill_advanced",
     "adn_navigation",
     "adn_project",
     "adn_inbox",

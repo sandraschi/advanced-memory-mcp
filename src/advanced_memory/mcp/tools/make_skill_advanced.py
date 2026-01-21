@@ -55,6 +55,7 @@ async def make_skill_advanced(
         "enhance_skill",
         "create_complete_skill",
         "iterative_improvement",
+        "research_driven_skill",
     ],
     topic: str | None = None,
     requirements: str | None = None,  # JSON string of SkillRequirements
@@ -63,6 +64,11 @@ async def make_skill_advanced(
     max_iterations: int = 3,
     enhancement_focus: list[str] | None = None,  # ["examples", "theory", "practical", "references"]
     output_path: str | None = None,
+    enable_web_search: bool = False,
+    web_search_provider: Literal["duckduckgo", "serpapi", "bing", "auto"] = "auto",
+    web_search_time_filter: Literal["any", "day", "week", "month", "year"] = "month",
+    web_sources_filter: list[str] | None = None,
+    source_documents: list[str] | None = None,
 ) -> dict[str, Any]:
     """
     Advanced Skill Creation using MCP 2.14.3 LLM Sampling Integration.
@@ -100,6 +106,11 @@ async def make_skill_advanced(
     - Uses sampling to iteratively improve skills through multiple LLM passes
     - Each iteration enhances different aspects based on previous validation
 
+    research_driven_skill: Web search-powered skill creation
+    - Performs structured web searches for time-critical and specialized information
+    - Integrates current research, news, and real-time data into skill content
+    - Perfect for medical, political, and conspiracy analysis topics
+
     MCP 2.14.3 FEATURES USED:
     - ctx.sample() with tools for intelligent content generation
     - Structured output validation with Pydantic models
@@ -120,6 +131,11 @@ async def make_skill_advanced(
         max_iterations: Maximum iterations for iterative improvement (1-5)
         enhancement_focus: Areas to focus enhancement on
         output_path: Where to save the created/enhanced skill
+        enable_web_search: Enable web search for research-driven skills
+        web_search_provider: Web search provider for research
+        web_search_time_filter: Time filter for web search results
+        web_sources_filter: Domain filters for web search results
+        source_documents: List of document paths (books, PDFs, papers) for deep research
 
     Returns:
         Operation-specific results with generated content, validation scores, and improvement suggestions
@@ -150,6 +166,60 @@ async def make_skill_advanced(
             operation="iterative_improvement",
             existing_skill_path="/path/to/skill",
             max_iterations=3
+        )
+
+        # Research-driven skill creation with web search
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="brain tumor glioblastoma expert",
+            web_search_provider="auto",
+            web_search_time_filter="year",
+            web_sources_filter=["nih.gov", "mayo.edu", "cancer.gov"]
+        )
+
+        # Current events political analysis
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="Trump Greenland complications expert",
+            web_search_provider="bing",
+            web_search_time_filter="month",
+            web_sources_filter=["reuters.com", "bbc.com", "wsj.com"]
+        )
+
+        # Conspiracy debunking with current research
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="Kennedy assassination mahadebunking expert",
+            web_search_provider="serpapi",
+            web_search_time_filter="any",
+            web_sources_filter=["snopes.com", "factcheck.org", "wikipedia.org"]
+        )
+
+        # Daniel Paul Schreber expert with primary source
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="Daniel Paul Schreber psychological analysis expert",
+            source_documents=["/books/schreber-memoirs.pdf"],
+            focus_topics=["delusions", "paranoia", "divine_mission"]
+        )
+
+        # Malleus Maleficarum expert with original text
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="Malleus Maleficarum historical witchcraft expert",
+            source_documents=["/books/malleus-maleficarum.pdf"],
+            web_search_provider="auto",
+            web_search_time_filter="any"
+        )
+
+        # Transformer AI expert with original paper
+        result = await make_skill_advanced(
+            operation="research_driven_skill",
+            topic="Transformer neural networks expert",
+            source_documents=["/papers/attention-is-all-you-need.pdf"],
+            web_search_provider="auto",
+            web_search_time_filter="year",
+            web_sources_filter=["arxiv.org", "neuralips.cc"]
         )
     """
 
@@ -224,6 +294,19 @@ async def make_skill_advanced(
         elif operation == "iterative_improvement":
             return await _iterative_improvement_operation(
                 sampling_client, existing_skill_path, max_iterations, enhancement_focus or []
+            )
+
+        elif operation == "research_driven_skill":
+            return await _research_driven_skill_operation(
+                sampling_client,
+                topic,
+                target_quality,
+                web_search_provider,
+                web_search_time_filter,
+                web_sources_filter,
+                source_documents,
+                output_path,
+                enable_web_search,
             )
 
         else:
@@ -618,7 +701,8 @@ async def _iterative_improvement_operation(
     if not skill_md_path.exists():
         return build_error_response("SKILL_NOT_FOUND", f"SKILL.md not found: {skill_md_path}")
 
-    current_content = skill_md_path.read_text(encoding="utf-8")
+    # Read current content (placeholder for future use)
+    _ = skill_md_path.read_text(encoding="utf-8")
     iteration_results = []
 
     for iteration in range(1, max_iterations + 1):
@@ -714,4 +798,1266 @@ def _apply_enhancements(original_content: str, enhancement: SkillEnhancement) ->
         for reference in enhancement.cross_references:
             enhanced_content += f"- See also: {reference}\n"
 
-    return enhanced_content
+        return enhanced_content
+
+
+async def _process_source_documents_rag(source_documents: list[str], topic: str) -> dict[str, Any]:
+    """Process source documents using RAG system for better retrieval."""
+
+    try:
+        from .adn_rag import adn_rag
+
+        processed_documents = []
+
+        for doc_path in source_documents:
+            logger.info(f"Ingesting document into RAG: {doc_path}")
+
+            # Ingest document into RAG system
+            ingest_result = await adn_rag(
+                operation="ingest_document",
+                document_path=doc_path,
+                chunk_method="fixed",  # Use fixed chunking for consistency
+            )
+
+            if ingest_result.get("rag_result", {}).get("success"):
+                processed_documents.append(ingest_result)
+
+                # Query for topic-relevant content
+                topic_query = f"{topic} key concepts important details"
+                query_result = await adn_rag(
+                    operation="query_knowledge",
+                    query=topic_query,
+                    document_filter=[ingest_result["document_id"]],
+                    max_results=10,
+                )
+
+                if query_result.get("results", {}).get("success"):
+                    ingest_result["relevant_chunks"] = query_result["results"]["results"]
+            else:
+                logger.warning(f"Failed to ingest document {doc_path}: {ingest_result}")
+
+        return {
+            "success": True,
+            "documents_processed": len(processed_documents),
+            "total_documents": len(source_documents),
+            "document_results": processed_documents,
+            "processing_timestamp": "2025-12-02",
+            "method": "rag",
+        }
+
+    except Exception as e:
+        logger.error(f"RAG document processing failed: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "documents_processed": 0,
+            "total_documents": len(source_documents),
+            "method": "rag",
+            "suggestions": [
+                "Check RAG system initialization",
+                "Verify ChromaDB installation",
+                "Ensure embedding model is available",
+            ],
+        }
+
+
+async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: str) -> str:
+    """Format RAG-processed documents for skill generation."""
+
+    if not document_data or not document_data.get("success"):
+        return "No primary source documents available for analysis."
+
+    document_results = document_data.get("document_results", [])
+
+    if not document_results:
+        return "No document analysis results available."
+
+    formatted_docs = "## Primary Source Documents Analysis (RAG-Enhanced)\n\n"
+
+    for i, doc_result in enumerate(document_results, 1):
+        rag_result = doc_result.get("rag_result", {})
+        document_path = doc_result.get("document_path", "Unknown")
+        document_id = doc_result.get("document_id", "Unknown")
+
+        formatted_docs += f"### Document {i}: {document_path}\n\n"
+
+        if rag_result.get("success"):
+            formatted_docs += f"**Document ID**: {document_id}\n"
+            formatted_docs += f"**Chunks Added**: {rag_result.get('chunks_added', 0)}\n"
+            formatted_docs += f"**Total Characters**: {rag_result.get('total_characters', 0):,}\n\n"
+
+            # Include relevant chunks found during ingestion
+            relevant_chunks = doc_result.get("relevant_chunks", [])
+            if relevant_chunks:
+                formatted_docs += "**Key Relevant Passages**:\n\n"
+                for j, chunk in enumerate(relevant_chunks[:5], 1):  # Limit to top 5
+                    content = chunk.get("content", "")
+                    score = chunk.get("score", 0)
+                    formatted_docs += f"**Passage {j}** (Relevance: {score:.2f}):\n"
+                    # Truncate very long passages
+                    if len(content) > 500:
+                        content = content[:500] + "..."
+                    formatted_docs += f"```\n{content}\n```\n\n"
+        else:
+            formatted_docs += (
+                f"**Processing Failed**: {rag_result.get('error', 'Unknown error')}\n\n"
+            )
+
+    # Add topic-specific RAG query results
+    try:
+        from .adn_rag import adn_rag
+
+        # Query across all ingested documents for topic-relevant content
+        topic_query = f"{topic} essential concepts core ideas important details"
+        query_result = await adn_rag(
+            operation="query_knowledge",
+            query=topic_query,
+            max_results=8,
+        )
+
+        if query_result.get("results", {}).get("success"):
+            results = query_result["results"]["results"]
+            if results:
+                formatted_docs += f"## Topic-Specific Analysis: {topic}\n\n"
+                formatted_docs += "Based on semantic search across all source documents:\n\n"
+
+                for j, result in enumerate(results[:6], 1):  # Top 6 results
+                    content = result.get("content", "")
+                    score = result.get("score", 0)
+                    doc_id = result.get("document_id", "Unknown")
+
+                    formatted_docs += f"**Key Finding {j}** (Score: {score:.2f}):\n"
+                    # Truncate for readability
+                    if len(content) > 400:
+                        content = content[:400] + "..."
+                    formatted_docs += f"```\n{content}\n```\n"
+                    formatted_docs += f"*Source: {doc_id}*\n\n"
+
+    except Exception as e:
+        logger.warning(f"Failed to add topic-specific RAG analysis: {e}")
+        formatted_docs += (
+            "\n*Note: Topic-specific analysis unavailable due to RAG query error.*\n\n"
+        )
+
+    formatted_docs += "\n*RAG-enhanced document analysis completed on: 2025-12-02*"
+    formatted_docs += f"\n*Documents processed: {len(document_results)}*"
+
+    return formatted_docs
+
+
+async def _research_driven_skill_operation(
+    sampling_client,
+    topic: str,
+    quality: str,
+    web_search_provider: str,
+    web_search_time_filter: str,
+    web_sources_filter: list[str] | None,
+    source_documents: list[str] | None,
+    output_path: str | None,
+    enable_web_search: bool = False,
+) -> dict[str, Any]:
+    """Create skill with web research integration for time-critical topics."""
+
+    logger.info(f"Starting research-driven skill creation for: {topic}")
+
+    # Step 1: Process source documents if provided
+    document_data = None
+    if source_documents:
+        logger.info(f"Processing {len(source_documents)} source documents with RAG")
+        document_data = await _process_source_documents_rag(source_documents, topic)
+        if not document_data["success"]:
+            logger.warning("Document processing failed, continuing with web research only")
+
+    # Step 2: Perform web research based on topic
+    research_data = await _perform_topic_research(
+        topic, web_search_provider, web_search_time_filter, web_sources_filter
+    )
+
+    # Step 3: Perform GitHub research for code and repository insights
+    github_data = None
+    if web_search_provider:  # Always perform GitHub research if web provider is specified
+        logger.info(f"Performing GitHub research for: {topic}")
+        github_data = await _perform_github_research(topic)
+
+    # Step 4: Perform arXiv research for academic papers and research
+    arxiv_data = None
+    if web_search_provider:  # Always perform arXiv research if web provider is specified
+        logger.info(f"Performing arXiv research for: {topic}")
+        arxiv_data = await _perform_arxiv_research(topic)
+
+    # Step 5: Perform TV Tropes research for narrative patterns (if creative writing related)
+    tropes_data = None
+    if web_search_provider and _is_narrative_topic(topic):
+        logger.info(f"Performing TV Tropes research for: {topic}")
+        tropes_data = await _perform_tvtropes_research(topic)
+
+    if not research_data["success"] and not document_data and not github_data:
+        return research_data  # Return error if all research methods failed
+
+    # Step 3: Generate skill content with research integration
+    research_context = _format_research_for_skill(research_data)
+    document_context = (
+        await _format_documents_for_skill_rag(document_data, topic) if document_data else ""
+    )
+    github_context = _format_github_for_skill(github_data) if github_data else ""
+    arxiv_context = _format_arxiv_for_skill(arxiv_data) if arxiv_data else ""
+    tropes_context = _format_tvtropes_for_skill(tropes_data) if tropes_data else ""
+
+    generation_prompt = f"""
+    Create a comprehensive Claude Skill about "{topic}" using the latest research, current information, primary source documents, GitHub code analysis, academic arXiv papers, and narrative patterns from TV Tropes.
+
+    RESEARCH CONTEXT (gathered from web searches):
+    {research_context}
+
+    PRIMARY SOURCE DOCUMENTS:
+    {document_context}
+
+    GITHUB CODE ANALYSIS:
+    {github_context}
+
+    ACADEMIC RESEARCH (from arXiv):
+    {arxiv_context}
+
+    NARRATIVE PATTERNS (from TV Tropes research):
+    {tropes_context}
+
+    Create a SKILL.md file that incorporates this current information and research findings.
+    Focus on practical, up-to-date knowledge that reflects the latest developments in the field.
+
+    Quality Level: {quality}
+
+    Generate a complete skill with:
+    1. Accurate, current information based on the research provided
+    2. Proper YAML frontmatter (name, description, category, etc.)
+    3. Comprehensive sections covering key aspects of the topic
+    4. Practical examples and current best practices
+    5. References to the latest research and developments
+    6. Analysis of recent trends and future directions
+
+    The skill should be immediately valuable and reflect current state-of-the-art knowledge.
+    When primary source documents are provided, include direct quotes and passages from the original texts to demonstrate deep understanding and authenticity.
+    When GitHub research is available, incorporate insights from real-world implementations, recent code patterns, and community approaches to show practical, production-ready knowledge.
+
+    When arXiv research is available, integrate findings from peer-reviewed academic papers, theoretical foundations, and cutting-edge research to provide deep scholarly understanding and establish credibility through academic rigor.
+
+    When TV Tropes research is available, incorporate narrative patterns, character archetypes, and storytelling techniques to provide comprehensive understanding of creative writing conventions, audience expectations, and narrative design principles.
+    """
+
+    # Use sampling for research-informed content generation
+    content_result = await sampling_client.sample(
+        messages=[{"role": "user", "content": generation_prompt}],
+        tools=[],  # Content generation doesn't need tools
+        max_tokens=5000,  # Allow for comprehensive content
+    )
+
+    skill_content = content_result.content.strip()
+
+    # Ensure proper frontmatter
+    if not skill_content.startswith("---"):
+        skill_name = topic.lower().replace(" ", "-").replace("_", "-")
+        skill_content = f"""---
+name: {skill_name}
+description: Current expert knowledge on {topic} based on latest research
+category: specialized
+version: 1.0.0
+last_researched: 2025-12-02
+research_sources: {len(research_data.get("results", []))}
+---
+
+# {topic.title()}
+
+Comprehensive, research-backed guide to {topic} incorporating the latest developments and findings.
+
+## Current Research & Developments
+
+{skill_content}
+"""
+
+    # Step 3: Save the skill
+    if output_path:
+        output_path_obj = Path(output_path)
+        output_path_obj.parent.mkdir(parents=True, exist_ok=True)
+        output_path_obj.write_text(skill_content, encoding="utf-8")
+    else:
+        # Default to skills directory
+        output_base = Path("skills") / "research-driven"
+        output_base.mkdir(parents=True, exist_ok=True)
+        output_file = output_base / f"{topic.lower().replace(' ', '-')}.md"
+        output_file.write_text(skill_content, encoding="utf-8")
+        output_path = str(output_file)
+
+    return {
+        "success": True,
+        "operation": "research_driven_skill",
+        "topic": topic,
+        "quality_level": quality,
+        "research_data": research_data,
+        "document_data": document_data,
+        "github_data": github_data,
+        "arxiv_data": arxiv_data,
+        "tvtropes_data": tropes_data,
+        "generated_content": skill_content,
+        "output_path": output_path,
+        "content_length": len(skill_content),
+        "research_sources_used": len(research_data.get("results", [])) if research_data else 0,
+        "document_sources_used": len(source_documents) if source_documents else 0,
+        "github_sources_used": len(github_data.get("repositories", []))
+        + len(github_data.get("code_results", []))
+        if github_data
+        else 0,
+        "arxiv_sources_used": len(arxiv_data.get("papers", [])) if arxiv_data else 0,
+        "tvtropes_sources_used": len(tropes_data.get("results", []))
+        if tropes_data and "results" in tropes_data
+        else 0,
+        "web_search_provider": web_search_provider,
+        "time_filter": web_search_time_filter,
+        "sources_filter": web_sources_filter,
+        "source_documents": source_documents,
+        "creation_timestamp": "2025-12-02",
+    }
+
+
+async def _perform_topic_research(
+    topic: str,
+    provider: str,
+    time_filter: str,
+    sources_filter: list[str] | None,
+) -> dict[str, Any]:
+    """Perform web research for the given topic."""
+
+    try:
+        # Import the web search tool
+        from .adn_web_search import adn_web_search
+
+        # Craft research-focused search queries
+        search_queries = _generate_research_queries(topic)
+
+        all_results = []
+
+        # Execute multiple targeted searches
+        for query in search_queries[:3]:  # Limit to 3 searches to avoid overwhelming
+            logger.info(f"Researching: {query}")
+
+            search_result = await adn_web_search(
+                query=query,
+                provider=provider,
+                max_results=8,
+                time_filter=time_filter,
+                include_news=True,
+                relevance_threshold=0.3,
+                sources_filter=sources_filter,
+            )
+
+            if search_result["success"]:
+                all_results.extend(search_result.get("results", []))
+
+        # Remove duplicates and sort by relevance
+        seen_urls = set()
+        unique_results = []
+        for result in all_results:
+            if result["url"] not in seen_urls:
+                seen_urls.add(result["url"])
+                unique_results.append(result)
+
+        unique_results.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
+
+        return {
+            "success": True,
+            "topic": topic,
+            "search_queries": search_queries,
+            "total_results": len(unique_results),
+            "results": unique_results[:15],  # Limit to top 15 most relevant
+            "provider": provider,
+            "time_filter": time_filter,
+            "sources_filtered": sources_filter is not None,
+        }
+
+    except Exception as e:
+        logger.error(f"Research failed for topic '{topic}': {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "topic": topic,
+            "suggestions": [
+                "Check web search provider configuration",
+                "Verify network connectivity",
+                "Try a different search provider",
+                "Simplify the topic if it's too complex",
+            ],
+        }
+
+
+def _generate_research_queries(topic: str) -> list[str]:
+    """Generate targeted research queries for different aspects of the topic."""
+
+    # Convert topic to lowercase for processing
+    topic_lower = topic.lower()
+
+    # Base queries for all topics
+    queries = [
+        f"{topic} latest research developments 2024 2025",
+        f"{topic} current best practices and methods",
+        f"{topic} recent advancements and breakthroughs",
+    ]
+
+    # Specialized queries based on topic content
+    if any(
+        word in topic_lower for word in ["medical", "health", "disease", "treatment", "clinical"]
+    ):
+        queries.extend(
+            [
+                f"{topic} clinical trials latest results",
+                f"{topic} new treatment options 2024",
+                f"{topic} medical research breakthroughs recent",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["political", "government", "policy", "election"]):
+        queries.extend(
+            [
+                f"{topic} current developments news",
+                f"{topic} policy changes recent updates",
+                f"{topic} political analysis latest reports",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["conspiracy", "debunk", "myth", "theory"]):
+        queries.extend(
+            [
+                f"{topic} debunking evidence latest research",
+                f"{topic} fact checking current analysis",
+                f"{topic} conspiracy theory analysis recent",
+            ]
+        )
+
+    # Greenland/Trump specific example
+    if "greenland" in topic_lower and "trump" in topic_lower:
+        queries.extend(
+            [
+                "Trump Greenland complications latest news 2024",
+                "Greenland Trump real estate issues current status",
+                "Trump Greenland investment problems recent developments",
+            ]
+        )
+
+    # Brain tumor specific example
+    if any(word in topic_lower for word in ["brain", "tumor", "cancer", "glioblastoma"]):
+        queries.extend(
+            [
+                "brain tumor glioblastoma latest treatments 2024",
+                "glioblastoma clinical trials new drugs 2025",
+                "brain cancer immunotherapy advances current",
+            ]
+        )
+
+    # Kennedy specific example
+    if "kennedy" in topic_lower:
+        queries.extend(
+            [
+                "Kennedy assassination conspiracy debunking evidence",
+                "JFK assassination latest research and analysis",
+                "Kennedy conspiracy theories fact checking current",
+            ]
+        )
+
+    return queries[:6]  # Limit to 6 most relevant queries
+
+
+def _format_research_for_skill(research_data: dict[str, Any]) -> str:
+    """Format web research results for inclusion in skill content."""
+
+    if not research_data.get("success"):
+        return "No research data available - proceeding with general knowledge."
+
+    results = research_data.get("results", [])
+
+    if not results:
+        return "Limited research data found - skill will be based on general knowledge."
+
+    # Format top research findings
+    formatted_research = "## Latest Research & Current Developments\n\n"
+
+    # Group by source type for better organization
+    medical_sources = []
+    news_sources = []
+    academic_sources = []
+    other_sources = []
+
+    for result in results[:10]:  # Top 10 most relevant
+        url = result.get("url", "").lower()
+        title = result.get("title", "")
+        snippet = result.get("snippet", "")
+
+        if any(domain in url for domain in [".edu", ".gov", "nih.gov", "mayo.edu", "hopkins.edu"]):
+            academic_sources.append(f"**{title}**\n{snippet}\n*Source: {result.get('url')}*\n")
+        elif any(domain in url for domain in ["news", "bbc", "cnn", "reuters", "apnews"]):
+            news_sources.append(f"**{title}**\n{snippet}\n*Source: {result.get('url')}*\n")
+        elif any(word in url for word in ["medical", "health", "clinic", "hospital"]):
+            medical_sources.append(f"**{title}**\n{snippet}\n*Source: {result.get('url')}*\n")
+        else:
+            other_sources.append(f"**{title}**\n{snippet}\n*Source: {result.get('url')}*\n")
+
+    # Add sections for each category
+    if academic_sources:
+        formatted_research += "### Academic & Research Findings\n\n"
+        formatted_research += "\n\n".join(academic_sources[:3])  # Top 3
+
+    if medical_sources:
+        formatted_research += "\n### Medical & Clinical Updates\n\n"
+        formatted_research += "\n\n".join(medical_sources[:3])
+
+    if news_sources:
+        formatted_research += "\n### Recent News & Developments\n\n"
+        formatted_research += "\n\n".join(news_sources[:3])
+
+    if other_sources:
+        formatted_research += "\n### Additional Resources\n\n"
+        formatted_research += "\n\n".join(other_sources[:2])
+
+    formatted_research += "\n\n*Research conducted on: 2025-12-02*"
+    formatted_research += f"\n*Sources analyzed: {len(results)}*"
+
+    return formatted_research
+
+
+async def _process_source_documents(source_documents: list[str]) -> dict[str, Any]:
+    """Process primary source documents for research."""
+
+    try:
+        from .adn_document_ingest import adn_document_ingest
+
+        processed_documents = []
+
+        for doc_path in source_documents:
+            logger.info(f"Processing document: {doc_path}")
+
+            result = await adn_document_ingest(
+                file_path=doc_path,
+                analysis_type="full",
+                extract_quotes=True,
+                max_pages=None,  # Process all pages
+            )
+
+            if result["success"]:
+                processed_documents.append(result)
+            else:
+                logger.warning(f"Failed to process document {doc_path}: {result.get('error')}")
+
+        return {
+            "success": True,
+            "documents_processed": len(processed_documents),
+            "total_documents": len(source_documents),
+            "document_analyses": processed_documents,
+            "processing_timestamp": "2025-12-02",
+        }
+
+    except Exception as e:
+        logger.error(f"Document processing failed: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "documents_processed": 0,
+            "total_documents": len(source_documents),
+            "suggestions": [
+                "Check document file paths",
+                "Ensure documents are in supported formats (PDF, TXT, EPUB)",
+                "Verify file permissions",
+            ],
+        }
+
+
+def _format_documents_for_skill(document_data: dict[str, Any]) -> str:
+    """Format processed documents for inclusion in skill generation."""
+
+    if not document_data or not document_data.get("success"):
+        return "No primary source documents available for analysis."
+
+    analyses = document_data.get("document_analyses", [])
+
+    if not analyses:
+        return "No document analyses available."
+
+    formatted_docs = "## Primary Source Documents Analyzed\n\n"
+
+    for i, analysis in enumerate(analyses, 1):
+        doc_info = analysis.get("analysis", {})
+
+        formatted_docs += f"### Document {i}: {doc_info.get('title', 'Unknown Title')}\n\n"
+
+        if doc_info.get("author"):
+            formatted_docs += f"**Author**: {doc_info['author']}\n\n"
+
+        formatted_docs += f"**Type**: {doc_info.get('document_type', 'unknown')}\n"
+        formatted_docs += f"**Word Count**: {doc_info.get('word_count', 0):,}\n"
+        formatted_docs += f"**Key Themes**: {', '.join(doc_info.get('key_themes', []))}\n\n"
+
+        # Include summary
+        if doc_info.get("summary"):
+            formatted_docs += f"**Summary**: {doc_info['summary']}\n\n"
+
+        # Include key quotes
+        quotes = doc_info.get("extracted_quotes", [])
+        if quotes:
+            formatted_docs += "**Key Passages**:\n"
+            for j, quote in enumerate(quotes[:5], 1):  # Limit to 5 quotes per document
+                formatted_docs += f'{j}. "{quote}"\n'
+            formatted_docs += "\n"
+
+        # Include document chunks for detailed analysis
+        chunks = doc_info.get("chunks", [])
+        if chunks:
+            formatted_docs += "**Detailed Content Analysis**:\n\n"
+            # Include first few chunks as examples
+            for chunk in chunks[:3]:
+                content_preview = chunk.get("content", "")[:500]  # First 500 chars
+                if content_preview:
+                    formatted_docs += f"```\n{content_preview}...\n```\n\n"
+
+    formatted_docs += "\n*Primary source analysis completed on: 2025-12-02*"
+    formatted_docs += f"\n*Documents analyzed: {len(analyses)}*"
+
+    return formatted_docs
+
+
+async def _perform_github_research(topic: str) -> dict[str, Any]:
+    """Perform GitHub research for the given topic."""
+
+    try:
+        from .adn_github_research import adn_github_research
+
+        # Generate research queries based on topic
+        queries = _generate_github_queries(topic)
+
+        all_repositories = []
+        all_code_results = []
+
+        # Search for repositories
+        for query in queries[:2]:  # Limit to 2 repo searches
+            logger.info(f"Searching GitHub repos: {query}")
+
+            repo_result = await adn_github_research(
+                operation="search_repositories",
+                query=query,
+                sort="stars",
+                max_results=5,
+            )
+
+            if repo_result.get("repositories"):
+                all_repositories.extend(repo_result["repositories"])
+
+        # Search for code implementations
+        code_query = f"{topic} implementation example"
+        logger.info(f"Searching GitHub code: {code_query}")
+
+        code_result = await adn_github_research(
+            operation="search_code",
+            query=code_query,
+            max_results=8,
+        )
+
+        if code_result.get("code_results"):
+            all_code_results.extend(code_result["code_results"])
+
+        # Remove duplicates
+        seen_repos = set()
+        unique_repositories = []
+        for repo in all_repositories:
+            repo_id = repo.get("full_name")
+            if repo_id and repo_id not in seen_repos:
+                seen_repos.add(repo_id)
+                unique_repositories.append(repo)
+
+        return {
+            "success": True,
+            "topic": topic,
+            "repositories": unique_repositories[:10],  # Top 10 repos
+            "code_results": all_code_results[:10],  # Top 10 code results
+            "total_repositories_found": len(unique_repositories),
+            "total_code_results_found": len(all_code_results),
+            "search_timestamp": "2025-12-02",
+        }
+
+    except Exception as e:
+        logger.error(f"GitHub research failed for topic '{topic}': {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "topic": topic,
+            "suggestions": [
+                "Check GITHUB_TOKEN environment variable",
+                "Verify GitHub API is accessible",
+                "Try with simpler search terms",
+            ],
+        }
+
+
+def _generate_github_queries(topic: str) -> list[str]:
+    """Generate targeted GitHub search queries for a topic."""
+
+    topic_lower = topic.lower()
+
+    # Base queries
+    queries = [
+        f"{topic} implementation",
+        f"{topic} example project",
+        f"{topic} tutorial",
+    ]
+
+    # Specialized queries based on topic
+    if any(
+        word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]
+    ):
+        queries.extend(
+            [
+                f"{topic} pytorch",
+                f"{topic} tensorflow",
+                f"{topic} huggingface",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["web", "frontend", "backend", "api"]):
+        queries.extend(
+            [
+                f"{topic} react",
+                f"{topic} node.js",
+                f"{topic} fastapi",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["security", "cryptography", "encryption"]):
+        queries.extend(
+            [
+                f"{topic} openssl",
+                f"{topic} cryptography library",
+            ]
+        )
+
+    # Always include language-agnostic searches
+    queries.append(f"{topic} best practices")
+    queries.append(f"{topic} production")
+
+    return queries[:5]  # Limit to 5 queries
+
+
+def _format_github_for_skill(github_data: dict[str, Any]) -> str:
+    """Format GitHub research results for skill generation."""
+
+    if not github_data or not github_data.get("success"):
+        return "No GitHub research data available for analysis."
+
+    repositories = github_data.get("repositories", [])
+    code_results = github_data.get("code_results", [])
+
+    if not repositories and not code_results:
+        return "No GitHub repositories or code examples found for analysis."
+
+    formatted_github = "## GitHub Code Analysis and Community Insights\n\n"
+
+    # Add repository analysis
+    if repositories:
+        formatted_github += "### Notable Repositories and Projects\n\n"
+        formatted_github += f"Found {len(repositories)} relevant repositories on GitHub:\n\n"
+
+        for i, repo in enumerate(repositories[:8], 1):  # Top 8 repos
+            formatted_github += f"**{i}. {repo.get('full_name', 'Unknown Repo')}**\n"
+            if repo.get("description"):
+                formatted_github += f"   {repo['description']}\n"
+            formatted_github += (
+                f"   - ⭐ {repo.get('stars', 0)} stars, 🍴 {repo.get('forks', 0)} forks\n"
+            )
+            if repo.get("language"):
+                formatted_github += f"   - Language: {repo['language']}\n"
+            if repo.get("topics"):
+                topics_str = ", ".join(repo["topics"][:5])  # Limit topics
+                formatted_github += f"   - Topics: {topics_str}\n"
+            formatted_github += "\n"
+
+    # Add code analysis
+    if code_results:
+        formatted_github += "### Code Implementation Patterns\n\n"
+        formatted_github += f"Found {len(code_results)} relevant code examples:\n\n"
+
+        # Group by repository for better organization
+        repo_groups = {}
+        for result in code_results:
+            repo = result.get("repository", "Unknown")
+            if repo not in repo_groups:
+                repo_groups[repo] = []
+            repo_groups[repo].append(result)
+
+        for repo_name, results in list(repo_groups.items())[:5]:  # Top 5 repos with code
+            formatted_github += f"**Repository: {repo_name}**\n\n"
+
+            for result in results[:3]:  # Top 3 files per repo
+                # file_name = result.get("name", "Unknown")  # Unused for now
+                file_path = result.get("path", "")
+                score = result.get("score", 0)
+
+                formatted_github += f"- `{file_path}` (Relevance: {score:.2f})\n"
+
+                # Include code preview if available
+                if result.get("content_preview"):
+                    content = result["content_preview"]
+                    # Truncate for readability
+                    if len(content) > 300:
+                        content = content[:300] + "..."
+                    formatted_github += f"  ```\n{content}\n  ```\n"
+
+            formatted_github += "\n"
+
+    # Add insights section
+    formatted_github += "### Community Implementation Insights\n\n"
+
+    if repositories:
+        # Analyze technology trends
+        languages = {}
+        total_stars = 0
+
+        for repo in repositories:
+            lang = repo.get("language")
+            if lang:
+                languages[lang] = languages.get(lang, 0) + 1
+            total_stars += repo.get("stars", 0)
+
+        if languages:
+            top_languages = sorted(languages.items(), key=lambda x: x[1], reverse=True)[:3]
+            formatted_github += f"**Popular Languages**: {', '.join([f'{lang} ({count} repos)' for lang, count in top_languages])}\n\n"
+
+        if total_stars > 0:
+            formatted_github += f"**Community Interest**: {total_stars} total stars across analyzed repositories\n\n"
+
+    formatted_github += "*GitHub analysis conducted on: 2025-12-02*\n"
+    formatted_github += f"*Repositories analyzed: {len(repositories)}*\n"
+    formatted_github += f"*Code examples found: {len(code_results)}*\n"
+
+    return formatted_github
+
+
+async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
+    """Perform arXiv research for the given topic."""
+
+    try:
+        from .adn_arxiv_research import adn_arxiv_research
+
+        # Generate research queries based on topic
+        queries = _generate_arxiv_queries(topic)
+
+        all_papers = []
+
+        # Search for academic papers
+        for query in queries[:3]:  # Limit to 3 searches
+            logger.info(f"Searching arXiv: {query}")
+
+            paper_result = await adn_arxiv_research(
+                operation="search_papers",
+                query=query,
+                max_results=5,
+                sort_by="relevance",
+            )
+
+            if paper_result.get("papers"):
+                all_papers.extend(paper_result["papers"])
+
+        # Remove duplicates based on arXiv ID
+        seen_ids = set()
+        unique_papers = []
+        for paper in all_papers:
+            paper_id = paper.get("arxiv_id")
+            if paper_id and paper_id not in seen_ids:
+                seen_ids.add(paper_id)
+                unique_papers.append(paper)
+
+        return {
+            "success": True,
+            "topic": topic,
+            "papers": unique_papers[:15],  # Top 15 most relevant papers
+            "total_papers_found": len(unique_papers),
+            "search_timestamp": "2025-12-02",
+        }
+
+    except Exception as e:
+        logger.error(f"arXiv research failed for topic '{topic}': {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "topic": topic,
+            "suggestions": [
+                "Check arXiv API availability",
+                "Try simpler search terms",
+                "Verify network connectivity",
+            ],
+        }
+
+
+def _generate_arxiv_queries(topic: str) -> list[str]:
+    """Generate targeted arXiv search queries for a topic."""
+
+    topic_lower = topic.lower()
+
+    # Base queries
+    queries = [
+        f'"{topic}"',
+        f"{topic} review",
+        f"{topic} survey",
+    ]
+
+    # Specialized queries based on topic
+    if any(
+        word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]
+    ):
+        queries.extend(
+            [
+                f"{topic} transformer",
+                f"{topic} neural network",
+                f"{topic} deep learning",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["quantum", "physics", "chemistry", "biology"]):
+        queries.extend(
+            [
+                f"{topic} quantum",
+                f"{topic} computational",
+                f"{topic} theoretical",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["math", "mathematics", "algorithm"]):
+        queries.extend(
+            [
+                f"{topic} algorithm",
+                f"{topic} mathematical",
+                f"{topic} proof",
+            ]
+        )
+
+    elif any(word in topic_lower for word in ["security", "cryptography", "privacy"]):
+        queries.extend(
+            [
+                f"{topic} cryptographic",
+                f"{topic} security",
+                f"{topic} privacy",
+            ]
+        )
+
+    # Always include recent research
+    queries.append(f"{topic} 2024")
+    queries.append(f"{topic} 2025")
+
+    return queries[:5]  # Limit to 5 queries
+
+
+def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
+    """Format arXiv research results for skill generation."""
+
+    if not arxiv_data or not arxiv_data.get("success"):
+        return "No arXiv research data available for analysis."
+
+    papers = arxiv_data.get("papers", [])
+
+    if not papers:
+        return "No arXiv papers found for analysis."
+
+    formatted_arxiv = "## Academic Research & Scholarly Analysis (arXiv)\n\n"
+
+    # Group papers by recency and relevance
+    recent_papers = []
+    foundational_papers = []
+    review_papers = []
+
+    for paper in papers:
+        title_lower = paper.get("title", "").lower()
+        abstract_lower = paper.get("abstract", "").lower()
+
+        # Classify papers
+        if any(word in title_lower for word in ["survey", "review", "overview", "comprehensive"]):
+            review_papers.append(paper)
+        elif any(
+            word in abstract_lower for word in ["we propose", "we present", "we introduce", "novel"]
+        ):
+            recent_papers.append(paper)
+        else:
+            foundational_papers.append(paper)
+
+    # Add review/survey papers first (most comprehensive)
+    if review_papers:
+        formatted_arxiv += "### Comprehensive Reviews & Surveys\n\n"
+        for i, paper in enumerate(review_papers[:3], 1):
+            formatted_arxiv += f"**{i}. {paper.get('title', 'Unknown Title')}**\n"
+            formatted_arxiv += f"   Authors: {', '.join(paper.get('authors', [])[:3])}\n"
+
+            abstract = paper.get("abstract", "")
+            if len(abstract) > 300:
+                abstract = abstract[:300] + "..."
+            formatted_arxiv += f"   Abstract: {abstract}\n"
+
+            if paper.get("arxiv_id"):
+                formatted_arxiv += (
+                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
+                )
+
+            categories = paper.get("categories", [])
+            if categories:
+                formatted_arxiv += f"   Categories: {', '.join(categories[:3])}\n"
+
+            formatted_arxiv += "\n"
+
+    # Add recent research papers
+    if recent_papers:
+        formatted_arxiv += "### Recent Research & Advances\n\n"
+        for i, paper in enumerate(recent_papers[:4], 1):
+            formatted_arxiv += f"**{i}. {paper.get('title', 'Unknown Title')}**\n"
+            formatted_arxiv += f"   Authors: {', '.join(paper.get('authors', [])[:3])}\n"
+
+            abstract = paper.get("abstract", "")
+            if len(abstract) > 250:
+                abstract = abstract[:250] + "..."
+            formatted_arxiv += f"   Abstract: {abstract}\n"
+
+            if paper.get("arxiv_id"):
+                formatted_arxiv += (
+                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
+                )
+
+            formatted_arxiv += "\n"
+
+    # Add foundational papers
+    if foundational_papers:
+        formatted_arxiv += "### Foundational & Theoretical Work\n\n"
+        for i, paper in enumerate(foundational_papers[:3], 1):
+            formatted_arxiv += f"**{i}. {paper.get('title', 'Unknown Title')}**\n"
+            formatted_arxiv += f"   Authors: {', '.join(paper.get('authors', [])[:3])}\n"
+
+            abstract = paper.get("abstract", "")
+            if len(abstract) > 200:
+                abstract = abstract[:200] + "..."
+            formatted_arxiv += f"   Abstract: {abstract}\n"
+
+            if paper.get("arxiv_id"):
+                formatted_arxiv += (
+                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
+                )
+
+            formatted_arxiv += "\n"
+
+    # Add research insights
+    formatted_arxiv += "### Research Insights & Patterns\n\n"
+
+    # Analyze publication patterns
+    if papers:
+        # Count papers by primary category
+        categories = {}
+        total_authors = 0
+        author_counts = []
+
+        for paper in papers:
+            primary_cat = paper.get("primary_category", "")
+            if primary_cat:
+                categories[primary_cat] = categories.get(primary_cat, 0) + 1
+
+            authors = paper.get("authors", [])
+            total_authors += len(authors)
+            author_counts.append(len(authors))
+
+        if categories:
+            top_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:3]
+            formatted_arxiv += f"**Active Research Areas**: {', '.join([f'{cat} ({count} papers)' for cat, count in top_categories])}\n\n"
+
+        if author_counts:
+            avg_authors = sum(author_counts) / len(author_counts)
+            formatted_arxiv += (
+                f"**Collaboration Patterns**: Average {avg_authors:.1f} authors per paper\n\n"
+            )
+
+    formatted_arxiv += "*arXiv research analysis conducted on: 2025-12-02*\n"
+    formatted_arxiv += f"*Academic papers analyzed: {len(papers)}*\n"
+
+    return formatted_arxiv
+
+
+async def _perform_tvtropes_research(topic: str) -> dict[str, Any]:
+    """Perform TV Tropes research for narrative patterns."""
+
+    try:
+        from .adn_tvtropes_research import adn_tvtropes_research
+
+        # Determine the most appropriate research type based on topic
+        research_type = _determine_tvtropes_research_type(topic)
+
+        if research_type == "character_archetypes":
+            result = await adn_tvtropes_research(
+                operation="character_archetypes", query=topic, max_results=5
+            )
+        elif research_type == "plot_structures":
+            result = await adn_tvtropes_research(
+                operation="plot_structures", query=topic, max_results=5
+            )
+        elif research_type == "narrative_analysis":
+            result = await adn_tvtropes_research(
+                operation="narrative_analysis", query=topic, max_results=5
+            )
+        else:
+            result = await adn_tvtropes_research(
+                operation="search_tropes", query=topic, max_results=5
+            )
+
+        return {
+            "success": True,
+            "topic": topic,
+            "research_type": research_type,
+            "tvtropes_data": result,
+            "search_timestamp": "2025-12-02",
+            "compliance_note": "TV Tropes research respects terms of service. Manual verification recommended.",
+        }
+
+    except Exception as e:
+        logger.error(f"TV Tropes research failed for topic '{topic}': {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "topic": topic,
+            "suggestion": "TV Tropes research failed. Visit tvtropes.org manually for narrative research.",
+        }
+
+
+def _is_narrative_topic(topic: str) -> bool:
+    """Determine if a topic is related to narrative/writing/creative content."""
+
+    topic_lower = topic.lower()
+
+    narrative_keywords = [
+        "writing",
+        "story",
+        "narrative",
+        "character",
+        "plot",
+        "storytelling",
+        "creative",
+        "fiction",
+        "novel",
+        "screenplay",
+        "script",
+        "literature",
+        "archetype",
+        "trope",
+        "genre",
+        "myth",
+        "hero",
+        "villain",
+        "protagonist",
+        "narrative",
+        "structure",
+        "pacing",
+        "tension",
+        "conflict",
+        "resolution",
+        "media",
+        "film",
+        "tv",
+        "television",
+        "cinema",
+        "book",
+        "author",
+    ]
+
+    return any(keyword in topic_lower for keyword in narrative_keywords)
+
+
+def _determine_tvtropes_research_type(topic: str) -> str:
+    """Determine the most appropriate TV Tropes research type for a topic."""
+
+    topic_lower = topic.lower()
+
+    if any(word in topic_lower for word in ["character", "archetype", "personality", "role"]):
+        return "character_archetypes"
+    elif any(word in topic_lower for word in ["plot", "structure", "story", "narrative"]):
+        return "plot_structures"
+    elif any(word in topic_lower for word in ["writing", "creative", "fiction", "storytelling"]):
+        return "narrative_analysis"
+    else:
+        return "search_tropes"
+
+
+def _format_tvtropes_for_skill(tvtropes_data: dict[str, Any]) -> str:
+    """Format TV Tropes research results for skill generation."""
+
+    if not tvtropes_data or not tvtropes_data.get("success"):
+        return "No TV Tropes research data available for analysis."
+
+    research_type = tvtropes_data.get("research_type", "general")
+    tvtropes_result = tvtropes_data.get("tvtropes_data", {})
+
+    formatted_tropes = "## Narrative Patterns & Storytelling Insights (TV Tropes Research)\n\n"
+
+    formatted_tropes += f"**Research Focus**: {research_type.replace('_', ' ').title()}\n\n"
+
+    # Add strong compliance disclaimer
+    formatted_tropes += (
+        "⚠️ **COMPLIANCE NOTICE**: TV Tropes content cannot be scraped or reproduced. "
+    )
+    formatted_tropes += "This analysis provides research guidance only. Visit TV Tropes directly for complete information.\n\n"
+
+    # Format based on research type
+    if research_type == "character_archetypes":
+        archetypes = tvtropes_result.get("character_archetypes", [])
+        if archetypes:
+            formatted_tropes += "### Character Archetypes & Personality Patterns\n\n"
+            for archetype in archetypes[:5]:
+                formatted_tropes += f"**{archetype.get('archetype', 'Unknown')}**\n"
+                formatted_tropes += f"   {archetype.get('description', '')}\n"
+                traits = archetype.get("traits", [])
+                if traits:
+                    formatted_tropes += f"   *Key Traits*: {', '.join(traits)}\n"
+                examples = archetype.get("examples", [])
+                if examples:
+                    formatted_tropes += f"   *Examples*: {', '.join(examples[:3])}\n"
+                formatted_tropes += "\n"
+
+    elif research_type == "plot_structures":
+        structures = tvtropes_result.get("plot_structures", [])
+        if structures:
+            formatted_tropes += "### Plot Structures & Story Frameworks\n\n"
+            for structure in structures[:5]:
+                formatted_tropes += f"**{structure.get('structure', 'Unknown')}**\n"
+                formatted_tropes += f"   {structure.get('description', '')}\n"
+                formatted_tropes += f"   *Acts*: {structure.get('acts', 'N/A')}\n"
+                applications = structure.get("applications", [])
+                if applications:
+                    formatted_tropes += f"   *Commonly Used In*: {', '.join(applications)}\n"
+                formatted_tropes += "\n"
+
+    elif research_type == "narrative_analysis":
+        analysis = tvtropes_result.get("narrative_analysis", {})
+        patterns = analysis.get("patterns_found", [])
+        if patterns:
+            formatted_tropes += "### Narrative Patterns & Techniques\n\n"
+            for pattern in patterns[:5]:
+                formatted_tropes += f"**{pattern.get('pattern', 'Unknown')}**\n"
+                formatted_tropes += f"   {pattern.get('description', '')}\n"
+                applications = pattern.get("applications", [])
+                if applications:
+                    formatted_tropes += f"   *Applications*: {', '.join(applications)}\n"
+                formatted_tropes += "\n"
+
+    else:  # general search
+        results = tvtropes_result.get("results", [])
+        if results:
+            formatted_tropes += "### Relevant Tropes & Concepts\n\n"
+            for result in results[:5]:
+                formatted_tropes += f"**{result.get('name', 'Unknown Trope')}**\n"
+                formatted_tropes += f"   {result.get('description', '')}\n"
+                formatted_tropes += f"   *Category*: {result.get('category', 'General')}\n"
+                formatted_tropes += f"   *Relevance*: {result.get('relevance_score', 0):.2f}\n\n"
+
+    # Add research methodology note
+    formatted_tropes += "### Research Methodology Notes\n\n"
+    formatted_tropes += "- TV Tropes research conducted with respect for terms of service\n"
+    formatted_tropes += "- Rate limiting and human-like delays implemented\n"
+    formatted_tropes += "- No content scraping or automated extraction performed\n"
+    formatted_tropes += "- Results provided as research guidance and inspiration\n"
+    formatted_tropes += "- Manual verification at tvtropes.org strongly recommended\n\n"
+
+    formatted_tropes += "*TV Tropes research conducted on: 2025-12-02*\n"
+    formatted_tropes += "*All analysis respects TV Tropes terms of service*\n"
+
+    return formatted_tropes

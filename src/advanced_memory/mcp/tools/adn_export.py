@@ -18,6 +18,7 @@ async def adn_export(
     operation: str,
     export_path: str | None = None,
     format_type: str = "pdf",
+    skills_format: str = "anthropic",  # New parameter for skills export format
     source_folder: str = "/",
     include_subfolders: bool = True,
     site_title: str | None = None,
@@ -74,7 +75,7 @@ async def adn_export(
     - joplin: Joplin-compatible Markdown export.
     - evernote: Evernote ENEX compatible export.
     - notion: Notion-compatible Markdown/CSV export.
-    - claude_skills: Anthropic agent skills export.
+    - skills: Anthropic agent skills export (format: "anthropic" or "antigravity").
 
     System & Data:
     - archive: Full system backup.
@@ -195,9 +196,13 @@ async def adn_export(
                         show_after_export,
                         proj_name,
                     )
-                elif operation == "claude_skills":
-                    result = await _claude_skills_export(
-                        proj_export_path, source_folder, include_subfolders, proj_name
+                elif operation == "skills":
+                    result = await _skills_export(
+                        proj_export_path,
+                        source_folder,
+                        include_subfolders,
+                        proj_name,
+                        skills_format,
                     )
                 elif operation == "archive":
                     result = await _archive_export(proj_export_path, show_after_export, proj_name)
@@ -299,12 +304,12 @@ async def adn_export(
         return await _notion_export(
             resolved_export_path, source_folder, include_subfolders, project
         )
-    elif operation == "claude_skills":
-        return await _claude_skills_export(
-            resolved_export_path, source_folder, include_subfolders, project
+    elif operation == "skills":
+        return await _skills_export(
+            resolved_export_path, source_folder, include_subfolders, project, skills_format
         )
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, skills"
 
 
 async def _pdf_export(
@@ -765,8 +770,12 @@ async def _notion_export(
     return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
 
 
-async def _claude_skills_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
+async def _skills_export(
+    export_path: str,
+    source_folder: str,
+    include_subfolders: bool,
+    project: str | None,
+    skills_format: str = "anthropic",
 ) -> str:
     """Export zettelkasten templates to Claude Skills format.
 
@@ -775,6 +784,7 @@ async def _claude_skills_export(
         source_folder: Source folder in Advanced Memory
         include_subfolders: Recursively include subfolders
         project: Optional project name
+        skills_format: Format for exported skills ("anthropic" or "antigravity")
 
     Returns:
         Export summary with skill counts and usage instructions
@@ -861,10 +871,15 @@ async def _claude_skills_export(
                 errors.append(f"{entity.title}: {error_msg}")
                 continue
 
-            # Create skill directory structure
-            if category:
-                skill_dir = export_dir / category / skills_fm.name
+            # Create skill directory structure based on format
+            if skills_format == "antigravity":
+                # Antigravity IDE format: category/name/
+                if category:
+                    skill_dir = export_dir / category / skills_fm.name
+                else:
+                    skill_dir = export_dir / skills_fm.name
             else:
+                # Anthropic format: name/ (flat structure)
                 skill_dir = export_dir / skills_fm.name
 
             skill_dir.mkdir(parents=True, exist_ok=True)

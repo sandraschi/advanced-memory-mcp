@@ -57,7 +57,8 @@ async def adn_import(
     - onenote: Import OneNote pages from HTML JSON.
 
     AI Assistants:
-    - claude_skills: Import Anthropic agent skills (SKILL.md).
+    - claude_skills: Import Anthropic agent skills from local directory (SKILL.md).
+    - anthropic_skills: Import official Anthropic skills from GitHub repository.
     - claude_conversations: Import Claude.ai data export.
     - claude_projects: Import Claude.ai project artifacts.
     - chatgpt: Import ChatGPT data export.
@@ -152,6 +153,10 @@ async def adn_import(
         return await _claude_skills_import(
             source_path, destination_folder, preserve_structure, project
         )
+    elif operation == "anthropic_skills":
+        return await _anthropic_skills_import(
+            source_path, destination_folder, preserve_structure, project
+        )
     elif operation == "claude_conversations":
         return await _claude_conversations_import(source_path, destination_folder, project)
     elif operation == "claude_projects":
@@ -161,7 +166,7 @@ async def adn_import(
     elif operation == "gemini":
         return await _gemini_import(source_path, destination_folder, project)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: obsidian, joplin, notion, evernote, onenote, archive, canvas, claude_skills, claude_conversations, claude_projects, chatgpt, gemini"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: obsidian, joplin, notion, evernote, onenote, archive, canvas, claude_skills, anthropic_skills, claude_conversations, claude_projects, chatgpt, gemini"
 
 
 async def _obsidian_import(
@@ -692,4 +697,174 @@ async def _gemini_import(source_path: str, destination_folder: str, project: str
         return f"# Error\n\nInvalid JSON file: {source_path}\n\nError: {e}\n\n**Expected format**: Array of conversation objects or object with 'conversations' array. Each conversation should have 'title'/'name', 'messages' array, and timestamp fields"
     except Exception as e:
         logger.exception("Gemini import failed")
+        return f"# Error\n\nImport failed: {e}"
+
+
+async def _anthropic_skills_import(
+    source_path: str,
+    destination_folder: str,
+    preserve_structure: bool,
+    project: str | None,
+) -> str:
+    """Import official Anthropic skills from GitHub repository.
+
+    Args:
+        source_path: Anthropic skills repository URL or local path
+        destination_folder: Destination folder in Advanced Memory
+        preserve_structure: Maintain folder hierarchy
+        project: Optional project name
+
+    Returns:
+        Import summary with skill counts and details
+    """
+    from pathlib import Path
+
+    import httpx
+
+    from advanced_memory.mcp.tools.content_manager import adn_content
+    from advanced_memory.services.skills_converter import SkillsConverter
+
+    logger.info(f"Starting Anthropic Skills import: {source_path} → {destination_folder}")
+
+    # Handle GitHub URLs
+    if source_path.startswith("https://github.com"):
+        # Extract repo path from GitHub URL
+        repo_path = (
+            source_path.replace("https://github.com/", "")
+            .replace("/tree/main/", "/")
+            .replace("/blob/main/", "/")
+        )
+        if "/official/" in repo_path:
+            # Extract specific skill path
+            skill_path = repo_path.split("/official/")[-1]
+            api_url = f"https://raw.githubusercontent.com/anthropics/skills/main/official/{skill_path}/SKILL.md"
+        else:
+            # Import all official skills
+            api_url = "https://api.github.com/repos/anthropics/skills/contents/official"
+    elif source_path.startswith("http"):
+        # Direct URL to skill file
+        api_url = source_path
+    else:
+        # Local path
+        source_dir = Path(source_path).expanduser()
+        if not source_dir.exists():
+            return f"# Error\n\nSource path not found: {source_path}"
+        return await _claude_skills_import(
+            source_path, destination_folder, preserve_structure, project
+        )
+
+    try:
+        async with httpx.AsyncClient() as client:
+            if "contents/official" in api_url:
+                # Fetch directory listing
+                response = await client.get(api_url)
+                response.raise_for_status()
+                items = response.json()
+
+                skills_imported = 0
+                errors = []
+
+                for item in items:
+                    if item["type"] == "dir":
+                        skill_name = item["name"]
+                        skill_url = f"https://raw.githubusercontent.com/anthropics/skills/main/official/{skill_name}/SKILL.md"
+
+                        try:
+                            # Fetch individual skill
+                            skill_response = await client.get(skill_url)
+                            skill_response.raise_for_status()
+                            content = skill_response.text
+
+                            # Parse and import
+                            skills_fm, skills_content = SkillsConverter.parse_skill_frontmatter(
+                                content
+                            )
+                            zettel_fm = SkillsConverter.skill_to_zettel(skills_fm)
+
+                            # Create note
+                            note_content = f"# {skills_fm.name}\n\n{skills_content}"
+
+                            result = await adn_content(
+                                operation="create",
+                                content=note_content,
+                                folder_path=destination_folder,
+                                title=skills_fm.name,
+                                metadata=zettel_fm,
+                                project=project,
+                            )
+
+                            if result.get("success"):
+                                skills_imported += 1
+                                logger.info(f"Imported Anthropic skill: {skill_name}")
+                            else:
+                                errors.append(
+                                    f"Failed to import {skill_name}: {result.get('error', 'Unknown error')}"
+                                )
+
+                        except Exception as e:
+                            errors.append(f"Failed to fetch {skill_name}: {e}")
+
+                # Build error section outside f-string to avoid backslash issues
+                error_section = ""
+                if errors:
+                    error_section = "## Errors\n" + "\n".join(f"- {error}" for error in errors)
+
+                summary = f"""# Anthropic Skills Import Complete
+
+**Skills imported**: {skills_imported}
+**Errors**: {len(errors)}
+
+## Successfully Imported Skills
+{f"Imported {skills_imported} skills from Anthropic repository." if skills_imported > 0 else "No skills were imported."}
+
+{error_section}
+
+## Usage
+Use `adn_content("search", query="anthropic skills")` to find imported skills.
+"""
+                return summary
+
+            else:
+                # Fetch single skill file
+                response = await client.get(api_url)
+                response.raise_for_status()
+                content = response.text
+
+                # Parse and import
+                skills_fm, skills_content = SkillsConverter.parse_skill_frontmatter(content)
+                zettel_fm = SkillsConverter.skill_to_zettel(skills_fm)
+
+                # Create note
+                note_content = f"# {skills_fm.name}\n\n{skills_content}"
+
+                result = await adn_content(
+                    operation="create",
+                    content=note_content,
+                    folder_path=destination_folder,
+                    title=skills_fm.name,
+                    metadata=zettel_fm,
+                    project=project,
+                )
+
+                if result.get("success"):
+                    return f"""# Anthropic Skill Import Complete
+
+**Skill imported**: {skills_fm.name}
+**Description**: {skills_fm.description}
+
+## Content
+{skills_content[:500]}...
+
+## Usage
+Use `adn_content("read", identifier="{skills_fm.name}")` to access this skill.
+"""
+                else:
+                    return (
+                        f"# Error\n\nFailed to import skill: {result.get('error', 'Unknown error')}"
+                    )
+
+    except httpx.HTTPStatusError as e:
+        return f"# Error\n\nHTTP error fetching Anthropic skills: {e.response.status_code} - {e.response.text}"
+    except Exception as e:
+        logger.exception("Anthropic skills import failed")
         return f"# Error\n\nImport failed: {e}"

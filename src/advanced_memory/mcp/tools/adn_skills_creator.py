@@ -15,7 +15,6 @@ from advanced_memory.services.skill_creator import (
     upgrade_skill,
     validate_skill,
 )
-from advanced_memory.services.skill_creator.scaffolder import ConfidenceLevel
 
 
 def _load_metadata(skill_path: Path) -> dict[str, Any]:
@@ -40,11 +39,12 @@ async def adn_skills_creator(
     skill_name: str | None = None,
     skill_path: str | None = None,
     output_dir: str | None = None,
-    category: str = "general",
-    confidence: ConfidenceLevel = "low",
+    license_: str | None = None,
+    allowed_tools: list[str] | None = None,
+    metadata: dict[str, str] | None = None,
     overwrite: bool = False,
 ) -> dict[str, Any]:
-    """Create, validate, and package Claude skills using the gold-standard workflow.
+    """Create, validate, and package Claude skills following Anthropic's official specification.
 
     RESPONSES:
     Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
@@ -56,17 +56,17 @@ async def adn_skills_creator(
     Consolidates 5 skill creation operations into one tool to centralize skill manufacturing workflow.
 
     SUPPORTED OPERATIONS:
-    - scaffold: Initialize a new skill with modular structure and templates
-    - validate: Enforce Anthropic & Advanced Memory compliance checks
+    - scaffold: Initialize a new skill following Anthropic skills spec
+    - validate: Enforce Anthropic compliance checks
     - package: Create distributable .zip archives for sharing
     - inspect: Read and parse skill metadata without modifying files
-    - upgrade: Convert legacy single-file skills to the new modular layout
+    - upgrade: Convert legacy skills to Anthropic specification
 
     OPERATIONS DETAIL:
 
     scaffold: Creation Engine
-    - Parameters: skill_name (required), category (optional)
-    - Effect: Creates skills/<category>/<skill_name>/ with SKILL.md and folders
+    - Parameters: skill_name (required), license_ (optional), allowed_tools (optional), metadata (optional)
+    - Effect: Creates skills/<skill_name>/ with SKILL.md following Anthropic spec
     - Use when: Starting a new skill from scratch
 
     validate: Quality Assurance
@@ -103,8 +103,9 @@ async def adn_skills_creator(
             Required for 'validate', 'package', 'inspect', and 'upgrade'.
         output_dir (str | None): Destination directory for new scaffolds or archives.
             Defaults to current working directory when omitted.
-        category (str): Metadata category inserted during scaffold. Default: "general".
-        confidence (str): Initial confidence level for metadata ("low", "medium", "high").
+        license_ (str, optional): License for the skill (e.g., "MIT", "Apache-2.0").
+        allowed_tools (list[str], optional): Pre-approved tools for Claude Code.
+        metadata (dict[str, str], optional): Custom metadata key-value pairs.
             Default: "low".
         overwrite (bool): When True, existing scaffold directory will be replaced.
             Default: False.
@@ -127,7 +128,7 @@ async def adn_skills_creator(
         await adn_skills_creator(
             operation="scaffold",
             skill_name="brand-guidelines",
-            category="enterprise"
+            license_="MIT"
         )
 
         # Validate a skill
@@ -158,8 +159,9 @@ async def adn_skills_creator(
             path = scaffold_skill(
                 skill_name,
                 target_dir,
-                category=category,
-                confidence=confidence,
+                license_=license_,
+                allowed_tools=allowed_tools,
+                metadata=metadata,
                 overwrite=overwrite,
             )
             return {

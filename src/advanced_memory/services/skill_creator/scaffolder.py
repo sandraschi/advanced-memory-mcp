@@ -1,25 +1,13 @@
-"""Scaffolding utilities for creating modular Claude skills."""
+"""Scaffolding utilities for creating Anthropic-compliant Claude skills."""
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Literal
 
 from loguru import logger
 
-from .templates import (
-    render_core_guidance,
-    render_example_asset,
-    render_example_reference,
-    render_example_script,
-    render_known_gaps,
-    render_research_checklist,
-    render_skill_markdown,
-    render_toc,
-)
-
-ConfidenceLevel = Literal["low", "medium", "high"]
+from .templates import render_skill_markdown
 
 
 def slugify_skill_name(name: str) -> str:
@@ -44,11 +32,12 @@ def scaffold_skill(
     skill_name: str,
     output_dir: str | Path,
     *,
-    category: str = "general",
-    confidence: ConfidenceLevel = "low",
     overwrite: bool = False,
+    license_: str | None = None,
+    allowed_tools: list[str] | None = None,
+    metadata: dict[str, str] | None = None,
 ) -> Path:
-    """Create a new modular skill directory with Advanced Memory defaults."""
+    """Create a new skill directory following Anthropic's official skills specification."""
 
     slug = slugify_skill_name(skill_name)
     title = title_from_slug(slug)
@@ -71,38 +60,18 @@ def scaffold_skill(
     else:
         skill_dir.mkdir(parents=True, exist_ok=True)
 
-    modules_dir = skill_dir / "modules"
-    modules_dir.mkdir(exist_ok=True)
-    (skill_dir / "scripts").mkdir(exist_ok=True)
-    (skill_dir / "references").mkdir(exist_ok=True)
-    (skill_dir / "assets").mkdir(exist_ok=True)
-
-    # Write primary files
+    # Write the SKILL.md file following Anthropic spec
     (skill_dir / "SKILL.md").write_text(
         render_skill_markdown(
             name=slug,
             title=title,
             description="",
-            category=category,
-            confidence=confidence,
-            status="Draft scaffold – complete research checklist before use",
-            confidence_note="Legacy content pending validation",
+            license_=license_,
+            allowed_tools=allowed_tools,
+            metadata=metadata,
         ),
         encoding="utf-8",
     )
-    (skill_dir / "_toc.md").write_text(render_toc(), encoding="utf-8")
-    (modules_dir / "core-guidance.md").write_text(render_core_guidance(), encoding="utf-8")
-    (modules_dir / "known-gaps.md").write_text(render_known_gaps(), encoding="utf-8")
-    (modules_dir / "research-checklist.md").write_text(
-        render_research_checklist(), encoding="utf-8"
-    )
 
-    # Placeholders for resources
-    (skill_dir / "scripts" / "example.py").write_text(render_example_script(slug), encoding="utf-8")
-    (skill_dir / "references" / "example.md").write_text(
-        render_example_reference(title), encoding="utf-8"
-    )
-    (skill_dir / "assets" / "example.txt").write_text(render_example_asset(), encoding="utf-8")
-
-    logger.info("Skill scaffolded at %s", skill_dir)
+    logger.info("Scaffolded Anthropic-compliant skill at %s", skill_dir)
     return skill_dir

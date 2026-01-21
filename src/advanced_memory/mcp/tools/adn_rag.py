@@ -1,0 +1,276 @@
+"""RAG (Retrieval Augmented Generation) MCP Tool.
+
+Provides comprehensive RAG capabilities for document ingestion, vector storage,
+and semantic retrieval to enhance skill generation with deep document understanding.
+"""
+
+from __future__ import annotations
+
+from typing import Any, Literal
+
+from loguru import logger
+
+from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.rag.system import get_rag_system
+
+
+@mcp.tool()
+async def adn_rag(
+    operation: Literal[
+        "ingest_document",
+        "query_knowledge",
+        "list_documents",
+        "get_document_info",
+        "delete_document",
+        "search_similar",
+    ],
+    document_path: str | None = None,
+    query: str | None = None,
+    document_id: str | None = None,
+    chunk_method: Literal["fixed", "semantic", "sentence"] = "fixed",
+    max_results: int = 5,
+    document_filter: list[str] | None = None,
+) -> dict[str, Any]:
+    """
+    RAG (Retrieval Augmented Generation) system for deep document analysis and knowledge retrieval.
+
+    PORTMANTEAU PATTERN RATIONALE:
+    Consolidates document chunking, vector storage, and semantic retrieval into one tool
+    for comprehensive RAG capabilities that enhance skill generation with primary sources.
+
+    SUPPORTED OPERATIONS:
+
+    ingest_document: Process and store a document in the vector database
+    - Chunks documents intelligently and creates vector embeddings
+    - Enables semantic search across large documents
+    - Required: document_path
+
+    query_knowledge: Search for relevant information across all documents
+    - Performs semantic similarity search using vector embeddings
+    - Returns most relevant chunks with similarity scores
+    - Required: query
+
+    list_documents: Show all documents in the knowledge base
+    - Lists stored documents with metadata and chunk counts
+
+    get_document_info: Get detailed information about a specific document
+    - Shows document metadata, summary, and processing statistics
+    - Required: document_id
+
+    delete_document: Remove a document and all its chunks
+    - Cleans up vector database and frees storage
+    - Required: document_id
+
+    search_similar: Find documents similar to query or example text
+    - Uses embeddings to find semantically similar content
+    - Useful for discovering related information
+
+    RAG ENHANCEMENT:
+    This tool enables processing documents larger than LLM context windows,
+    providing persistent knowledge storage and intelligent retrieval for:
+    - Academic papers and research
+    - Historical texts and primary sources
+    - Technical documentation
+    - Books and lengthy manuscripts
+
+    Args:
+        operation: The RAG operation to perform
+        document_path: Path to document file (for ingest_document)
+        query: Search query (for query_knowledge, search_similar)
+        document_id: Document identifier (for get_document_info, delete_document)
+        chunk_method: Chunking strategy (fixed, semantic, sentence)
+        max_results: Maximum results to return
+        document_filter: Limit search to specific documents
+
+    Returns:
+        Operation-specific results with document/chunk data and metadata
+
+    Examples:
+        # Ingest Schreber's memoirs for deep psychological analysis
+        await adn_rag("ingest_document", document_path="/books/schreber-memoirs.pdf")
+
+        # Query for delusional content across all documents
+        await adn_rag("query_knowledge", query="divine mission delusions")
+
+        # Find Transformer architecture details in the original paper
+        await adn_rag("query_knowledge", query="attention mechanism equations")
+
+        # Search within specific documents
+        await adn_rag(
+            "query_knowledge",
+            query="witchcraft theology",
+            document_filter=["malleus-maleficarum"]
+        )
+
+        # Get document processing statistics
+        await adn_rag("get_document_info", document_id="attention-is-all-you-need")
+    """
+
+    try:
+        rag_system = get_rag_system()
+
+        if operation == "ingest_document":
+            if not document_path:
+                return {
+                    "error": "document_path required for ingest_document operation",
+                    "operation": operation,
+                }
+
+            # Use the document ingestion tool to process the file
+            from .adn_document_ingest import adn_document_ingest
+
+            # First, analyze the document
+            doc_result = await adn_document_ingest(
+                file_path=document_path,
+                analysis_type="full",
+                extract_quotes=True,
+            )
+
+            if not doc_result["success"]:
+                return doc_result
+
+            # Extract full text content
+            analysis = doc_result.get("analysis", {})
+            chunks = analysis.get("chunks", [])
+
+            if not chunks:
+                return {
+                    "error": "No text chunks extracted from document",
+                    "document_path": document_path,
+                }
+
+            # Reconstruct full content from chunks
+            full_content = "\n\n".join([chunk.get("content", "") for chunk in chunks])
+
+            # Generate document ID from path
+            doc_id = str(document_path).replace("/", "_").replace("\\", "_").replace(".", "_")
+
+            # Add to RAG system
+            rag_result = rag_system.add_document(
+                document_id=doc_id,
+                content=full_content,
+                metadata={
+                    "source_path": document_path,
+                    "analysis": analysis,
+                    "ingested_at": "2025-12-02",
+                },
+                chunk_method=chunk_method,
+            )
+
+            return {
+                "operation": operation,
+                "document_path": document_path,
+                "document_id": doc_id,
+                "rag_result": rag_result,
+                "chunks_processed": len(chunks),
+                "total_characters": len(full_content),
+            }
+
+        elif operation == "query_knowledge":
+            if not query:
+                return {
+                    "error": "query required for query_knowledge operation",
+                    "operation": operation,
+                }
+
+            rag_result = rag_system.query(
+                query=query,
+                n_results=max_results,
+                document_filter=document_filter,
+                include_metadata=True,
+            )
+
+            return {
+                "operation": operation,
+                "query": query,
+                "results": rag_result,
+                "max_results": max_results,
+                "document_filter": document_filter,
+            }
+
+        elif operation == "list_documents":
+            rag_result = rag_system.list_documents()
+
+            return {
+                "operation": operation,
+                "documents": rag_result,
+            }
+
+        elif operation == "get_document_info":
+            if not document_id:
+                return {
+                    "error": "document_id required for get_document_info operation",
+                    "operation": operation,
+                }
+
+            rag_result = rag_system.get_document_info(document_id)
+
+            return {
+                "operation": operation,
+                "document_id": document_id,
+                "info": rag_result,
+            }
+
+        elif operation == "delete_document":
+            if not document_id:
+                return {
+                    "error": "document_id required for delete_document operation",
+                    "operation": operation,
+                }
+
+            rag_result = rag_system.delete_document(document_id)
+
+            return {
+                "operation": operation,
+                "document_id": document_id,
+                "result": rag_result,
+            }
+
+        elif operation == "search_similar":
+            if not query:
+                return {
+                    "error": "query required for search_similar operation",
+                    "operation": operation,
+                }
+
+            # For similarity search, we can use the same query method
+            rag_result = rag_system.query(
+                query=query,
+                n_results=max_results,
+                document_filter=document_filter,
+                include_metadata=True,
+            )
+
+            return {
+                "operation": operation,
+                "query": query,
+                "similar_documents": rag_result,
+                "max_results": max_results,
+            }
+
+        else:
+            return {
+                "error": f"Unsupported operation: {operation}",
+                "supported_operations": [
+                    "ingest_document",
+                    "query_knowledge",
+                    "list_documents",
+                    "get_document_info",
+                    "delete_document",
+                    "search_similar",
+                ],
+            }
+
+    except Exception as exc:  # noqa: BLE001
+        logger.error("adn_rag_error: %s", exc, exc_info=True)
+        return {
+            "success": False,
+            "error": str(exc),
+            "operation": operation,
+            "suggestions": [
+                "Check RAG system initialization",
+                "Verify document paths exist",
+                "Ensure ChromaDB dependencies are installed",
+                "Check embedding model availability",
+            ],
+        }

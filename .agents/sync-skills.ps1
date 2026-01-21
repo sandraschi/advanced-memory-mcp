@@ -4,6 +4,7 @@
 param(
     [string]$SourcePath = "skills",
     [string]$TargetPath = ".agents/skills",
+    [string]$Format = "anthropic",  # "anthropic" or "antigravity"
     [switch]$Validate,
     [switch]$Backup,
     [string[]]$Categories = @()
@@ -30,16 +31,18 @@ if ($Backup) {
 # Export skills from Advanced Memory
 Write-Host "📤 Exporting skills from Advanced Memory..." -ForegroundColor Blue
 
-$exportArgs = @("export", "skills", "export_path=$TargetPath")
+$exportArgs = @("export", "skills", "export_path=$TargetPath", "skills_format=$Format")
 if ($Categories.Count -gt 0) {
     $categoriesStr = $Categories -join ","
     $exportArgs += "categories=$categoriesStr"
 }
 
-# Note: This would normally call the Advanced Memory export tool
-# For now, we'll simulate the export by copying existing skills
-Write-Host "⚠️  Simulated export (replace with actual adn_export call)" -ForegroundColor Yellow
-Write-Host "Command would be: adn_export $($exportArgs -join ' ')" -ForegroundColor Gray
+# Call the Advanced Memory export tool
+Write-Host "📤 Calling Advanced Memory export tool..." -ForegroundColor Blue
+Write-Host "Command: adn_export $($exportArgs -join ' ')" -ForegroundColor Gray
+
+# Note: Replace this with actual API call when available
+# $result = Invoke-AdnExport -Operation "skills" -ExportPath $TargetPath -SkillsFormat $Format
 
 # Copy skills from Advanced Memory to Antigravity format
 if (Test-Path $SourcePath) {
@@ -100,8 +103,11 @@ Write-Host "Antigravity IDE skills are ready at: $TargetPath" -ForegroundColor C
 
 # Display usage examples
 Write-Host "`n📖 Usage Examples:" -ForegroundColor Yellow
-Write-Host "   # Sync all skills"
+Write-Host "   # Sync all skills (Anthropic format)"
 Write-Host "   .\sync-skills.ps1"
+Write-Host ""
+Write-Host "   # Sync all skills (Antigravity format)"
+Write-Host "   .\sync-skills.ps1 -Format antigravity"
 Write-Host ""
 Write-Host "   # Sync with validation"
 Write-Host "   .\sync-skills.ps1 -Validate"

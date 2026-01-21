@@ -78749,3 +78749,8 @@ AttributeError: 'str' object has no attribute 'results'
 2026-01-13 22:54:20 | INFO     | Initializing search index
 2026-01-13 22:54:20 | INFO     | Initialized project session with default project: test-project
 2026-01-13 22:54:20 | INFO     | Switched project context: test-project -> test-project
+2026-01-20 18:45:19 | INFO     | Scaffolded Anthropic-compliant skill at %s
+2026-01-20 19:05:57 | INFO     | Scaffolded Anthropic-compliant skill at %s
+2026-01-20 19:24:18 | INFO     | Scaffolded Anthropic-compliant skill at %s
+2026-01-20 19:49:32 | INFO     | Scaffolded Anthropic-compliant skill at %s
+2026-01-20 20:57:43 | INFO     | Scaffolded Anthropic-compliant skill at %s
