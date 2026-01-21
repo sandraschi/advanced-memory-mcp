@@ -57,6 +57,34 @@ Skill discovery and parsing system:
 - Skill discovery algorithms
 - Error handling and validation
 
+#### [SKILL_MAKING_GUIDE.md](SKILL_MAKING_GUIDE.md)
+Complete skill creation workflow:
+- Skill planning and development
+- Content standards and best practices
+- Distribution across IDE environments
+- Quality assurance and maintenance
+
+#### [SKILL_DISCOVERY_GUIDE.md](SKILL_DISCOVERY_GUIDE.md)
+Skill search and access methods:
+- Webapp and IDE integration
+- Search, filtering, and browsing
+- Quality assessment and recommendations
+- Cross-platform skill access
+
+#### [SKILL_STANDARDS.md](SKILL_STANDARDS.md)
+Skill quality and compatibility standards:
+- File format and structure requirements
+- Content quality guidelines
+- Validation and compliance procedures
+- Maintenance and evolution standards
+
+#### [SKILL_UPTAKE_2026.md](SKILL_UPTAKE_2026.md)
+Current state of skill adoption in agentic IDEs:
+- Adoption statistics and trends (Jan 2026)
+- IDE integration patterns and capabilities
+- Industry adoption and business impact
+- Future outlook and predictions
+
 #### [development/](development/)
 Contributing and development guides:
 - FastMCP 2.14.3 migration guide

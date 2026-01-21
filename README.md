@@ -48,16 +48,28 @@ advanced-memory setup  # Interactive configuration
 
 The webapp automatically detects and starts the ADN MCP server when you access the Notes page.
 
-### Skill Locations
+### Skill System
 
-**CRITICAL: Skill directories are located in user home, NOT in this repository:**
+Advanced Memory MCP includes a comprehensive Claude Skills ecosystem with multi-IDE support.
+
+#### Skill Locations
+
+**CRITICAL: Skill directories are located in user home directories, NOT in this repository:**
 
 - **Cursor Skills**: `C:\Users\[username]\.cursor\skills-cursor`
 - **Windsurf Skills**: `C:\Users\[username]\.codeium\windsurf\skills`
 - **ADN Skills**: `D:\Dev\repos\advanced-memory-mcp\skills` (this repository)
 - **Antigravity Skills**: `C:\Users\[username]\.gemini\antigravity\skills`
 
-The webapp scans these directories for `SKILL.md` files in subdirectories and displays them in the Skills page.
+#### Skill Documentation
+
+- **[Skill Making Guide](docs/SKILL_MAKING_GUIDE.md)**: Complete workflow for creating and distributing skills
+- **[Skill Discovery Guide](docs/SKILL_DISCOVERY_GUIDE.md)**: Finding and accessing skills across IDEs
+- **[Skill Standards](docs/SKILL_STANDARDS.md)**: Quality and compatibility requirements
+- **[Skill Uptake 2026](docs/SKILL_UPTAKE_2026.md)**: Current adoption trends and statistics
+- **[Skill Parsing Architecture](docs/SKILL_PARSING_ARCHITECTURE.md)**: Technical implementation details
+
+The webapp scans these directories for `SKILL.md` files in subdirectories and displays them in the Skills page with full search, filtering, and creation capabilities.
 
 ### Manual Web Application Setup
 ```bash
