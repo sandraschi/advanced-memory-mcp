@@ -16,6 +16,18 @@ Use this checklist to audit any MCP server repo before marking it production-rea
 - [ ] **Error response standardization** - consistent error format across all tools
 - [ ] `prompts/` folder with comprehensive prompt templates
 
+## 🎯 SKILL SYSTEM INTEGRATION (Advanced Memory MCP)
+
+- [ ] **Skill Directory Configuration** - Correct paths documented in README.md
+- [ ] **Cursor Skills**: `C:\Users\[username]\.cursor\skills-cursor`
+- [ ] **Windsurf Skills**: `C:\Users\[username]\.codeium\windsurf\skills`
+- [ ] **ADN Skills**: `D:\Dev\repos\advanced-memory-mcp\skills`
+- [ ] **Antigravity Skills**: `C:\Users\[username]\.gemini\antigravity\skills`
+- [ ] **Skill Parsing Architecture** documented in `docs/SKILL_PARSING_ARCHITECTURE.md`
+- [ ] **YAML Frontmatter Parsing** - proper extraction of name, description, tags
+- [ ] **Skill Discovery** - automatic scanning of configured directories
+- [ ] **Skill Validation** - proper error handling for malformed skills
+
 ## 🔧 MODERN MCP REQUIREMENTS
 
 - [ ] **Tool parameter validation** - all parameters validated with proper error messages

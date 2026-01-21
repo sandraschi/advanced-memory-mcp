@@ -19,26 +19,26 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
     {
       name: 'ollama',
       type: 'local',
-      status: 'available',
+      status: 'not_configured',
       url: 'http://localhost:11434',
       description: 'Local models via Ollama',
-      models: ['llama3:8b', 'llama3:70b', 'codellama:13b']
+      models: []
     },
     {
       name: 'lmstudio',
       type: 'local',
-      status: 'available',
+      status: 'not_configured',
       url: 'http://localhost:1234',
       description: 'Local models via LM Studio (OpenAI-compatible)',
-      models: ['local-model-1', 'local-model-2']
+      models: []
     },
     {
       name: 'openai',
       type: 'hosted',
-      status: 'configured',
+      status: 'not_configured',
       url: 'https://api.openai.com/v1',
       description: 'Hosted models via OpenAI API',
-      models: ['gpt-4o', 'gpt-4-turbo', 'gpt-3.5-turbo']
+      models: []
     }
   ])
 
@@ -49,24 +49,123 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
 
   const currentProvider = providers.find(p => p.name === selectedProvider)
 
+  // Auto-refresh providers on component mount
+  useEffect(() => {
+    handleRefreshProviders()
+  }, [])
+
+  // Query Ollama API for available models
+  const queryOllamaModels = async (url: string): Promise<string[]> => {
+    try {
+      const response = await fetch(`${url}/api/tags`)
+      if (!response.ok) throw new Error('Failed to fetch Ollama models')
+
+      const data = await response.json()
+      return data.models?.map((model: any) => model.name) || []
+    } catch (error) {
+      console.error('Failed to query Ollama:', error)
+      return []
+    }
+  }
+
+  // Query LM Studio API for available models (OpenAI-compatible)
+  const queryLMStudioModels = async (url: string): Promise<string[]> => {
+    try {
+      const response = await fetch(`${url}/v1/models`)
+      if (!response.ok) throw new Error('Failed to fetch LM Studio models')
+
+      const data = await response.json()
+      return data.data?.map((model: any) => model.id) || []
+    } catch (error) {
+      console.error('Failed to query LM Studio:', error)
+      return []
+    }
+  }
+
+  // Query OpenAI API for available models
+  const queryOpenAIModels = async (url: string, apiKey?: string): Promise<string[]> => {
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`
+      }
+
+      const response = await fetch(`${url}/models`, { headers })
+      if (!response.ok) throw new Error('Failed to fetch OpenAI models')
+
+      const data = await response.json()
+      return data.data?.map((model: any) => model.id) || []
+    } catch (error) {
+      console.error('Failed to query OpenAI:', error)
+      return []
+    }
+  }
+
+  const checkProviderStatus = async (provider: Provider): Promise<'available' | 'unavailable'> => {
+    try {
+      if (provider.type === 'local') {
+        // For local providers, try to fetch models
+        let models: string[] = []
+        if (provider.name === 'ollama') {
+          models = await queryOllamaModels(provider.url)
+        } else if (provider.name === 'lmstudio') {
+          models = await queryLMStudioModels(provider.url)
+        }
+        return models.length > 0 ? 'available' : 'unavailable'
+      } else {
+        // For hosted providers, check if API key is configured
+        // In a real implementation, you'd check local storage or config
+        return 'configured' // Assume configured for demo
+      }
+    } catch (error) {
+      return 'unavailable'
+    }
+  }
+
   const handleRefreshProviders = async () => {
     setIsLoading(true)
     setLastAction('Refreshing provider status...')
 
     try {
-      // Simulate API call to check provider status
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const updatedProviders = await Promise.all(
+        providers.map(async (provider) => {
+          let models: string[] = []
+          let status: Provider['status'] = 'not_configured'
 
-      // Mock updated status
-      setProviders(prev => prev.map(p => ({
-        ...p,
-        status: Math.random() > 0.2 ? 'available' : 'unavailable' as const
-      })))
+          if (provider.type === 'local') {
+            if (provider.name === 'ollama') {
+              models = await queryOllamaModels(provider.url)
+              status = models.length > 0 ? 'available' : 'unavailable'
+            } else if (provider.name === 'lmstudio') {
+              models = await queryLMStudioModels(provider.url)
+              status = models.length > 0 ? 'available' : 'unavailable'
+            }
+          } else if (provider.type === 'hosted') {
+            // For hosted providers, try to fetch models (will fail without API key, but we can detect availability)
+            try {
+              models = await queryOpenAIModels(provider.url)
+              status = models.length > 0 ? 'configured' : 'not_configured'
+            } catch {
+              status = 'not_configured'
+            }
+          }
 
+          return {
+            ...provider,
+            status,
+            models
+          }
+        })
+      )
+
+      setProviders(updatedProviders)
       setLastAction('Provider status refreshed')
       setTimeout(() => setLastAction(''), 3000)
     } catch (error) {
       setLastAction('Failed to refresh providers')
+      setTimeout(() => setLastAction(''), 3000)
     } finally {
       setIsLoading(false)
     }

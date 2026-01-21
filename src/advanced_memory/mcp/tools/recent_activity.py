@@ -1,6 +1,12 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
+
+# UTC is available in Python 3.11+, for older versions use timezone.utc
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = UTC
 from typing import Any
 
 from loguru import logger

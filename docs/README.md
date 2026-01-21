@@ -50,6 +50,13 @@ System design and technical architecture:
 - Audio Soul 2026 architecture
 - Claude Skills integration patterns
 
+#### [SKILL_PARSING_ARCHITECTURE.md](SKILL_PARSING_ARCHITECTURE.md)
+Skill discovery and parsing system:
+- IDE skill directory locations
+- YAML frontmatter parsing
+- Skill discovery algorithms
+- Error handling and validation
+
 #### [development/](development/)
 Contributing and development guides:
 - FastMCP 2.14.3 migration guide

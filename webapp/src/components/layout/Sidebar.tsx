@@ -4,24 +4,31 @@ import {
   Settings,
   HelpCircle,
   Terminal,
-  X
+  Network,
+  FileText,
+  Code,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 
 interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isCollapsed: boolean
+  onToggleCollapse: () => void
   onOpenLogger: () => void
   onOpenHelp: () => void
 }
 
 export default function Sidebar({
-  isOpen,
-  onClose,
+  isCollapsed,
+  onToggleCollapse,
   onOpenLogger,
   onOpenHelp
 }: SidebarProps) {
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
+    { name: 'Notes', href: '/notes', icon: FileText },
+    { name: 'Skills', href: '/skills', icon: Code },
+    { name: 'Knowledge Graph', href: '/knowledge-graph', icon: Network },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
@@ -36,81 +43,83 @@ export default function Sidebar({
   }
 
   return (
-    <>
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
-        </div>
-      )}
-
-      {/* Sidebar */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 lg:static lg:inset-0
-      `}>
-        <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="flex h-16 items-center justify-between px-4 border-b border-border">
-            <h1 className="text-lg font-semibold">Advanced Memory</h1>
-            <button
-              onClick={onClose}
-              className="lg:hidden p-2 rounded-md hover:bg-muted transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-2 py-4">
-            {navigation.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.href}
-                className={({ isActive }) => `
-                  group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors
-                  ${isActive
-                    ? 'bg-accent text-accent-foreground'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                  }
-                `}
-                onClick={onClose}
-              >
-                <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
-                {item.name}
-              </NavLink>
-            ))}
-
-            {/* Action buttons */}
-            <div className="pt-4 border-t border-border">
-              <button
-                onClick={handleLoggerClick}
-                className="w-full group flex items-center px-2 py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <Terminal className="mr-3 h-5 w-5 flex-shrink-0" />
-                Logger
-              </button>
-
-              <button
-                onClick={handleHelpClick}
-                className="w-full group flex items-center px-2 py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <HelpCircle className="mr-3 h-5 w-5 flex-shrink-0" />
-                Help
-              </button>
-            </div>
-          </nav>
-
-          {/* Footer */}
-          <div className="p-4 border-t border-border">
-            <div className="text-xs text-muted-foreground">
-              <div className="font-medium">Advanced Memory MCP</div>
-              <div>v1.2.0</div>
-            </div>
-          </div>
-        </div>
+    <div className={`
+      bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out
+      ${isCollapsed ? 'w-16' : 'w-64'}
+    `}>
+      {/* Header */}
+      <div className="flex h-16 items-center justify-between px-4 border-b border-border">
+        {!isCollapsed && (
+          <h1 className="text-lg font-semibold">Advanced Memory</h1>
+        )}
+        <button
+          onClick={onToggleCollapse}
+          className="p-2 rounded-md hover:bg-muted transition-colors ml-auto"
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5" />
+          ) : (
+            <ChevronLeft className="h-5 w-5" />
+          )}
+        </button>
       </div>
-    </>
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 px-2 py-4">
+        {navigation.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.href}
+            className={({ isActive }) => {
+              const baseClasses = `group flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-2'} py-2 text-sm font-medium rounded-md transition-colors`;
+              const activeClasses = isActive
+                ? 'bg-accent text-accent-foreground'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground';
+              return `${baseClasses} ${activeClasses}`;
+            }}
+            title={isCollapsed ? item.name : undefined}
+          >
+            <item.icon className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            {!isCollapsed && <span>{item.name}</span>}
+          </NavLink>
+        ))}
+
+        {/* Action buttons */}
+        <div className="pt-4 border-t border-border">
+          <button
+            onClick={handleLoggerClick}
+            className={`w-full group flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-2'} py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors`}
+            title={isCollapsed ? 'Logger' : undefined}
+          >
+            <Terminal className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            {!isCollapsed && <span>Logger</span>}
+          </button>
+
+          <button
+            onClick={handleHelpClick}
+            className={`w-full group flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-2'} py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors`}
+            title={isCollapsed ? 'Help' : undefined}
+          >
+            <HelpCircle className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            {!isCollapsed && <span>Help</span>}
+          </button>
+        </div>
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-border">
+        {isCollapsed ? (
+          <div className="text-center">
+            <div className="text-xs text-muted-foreground font-medium">AM</div>
+          </div>
+        ) : (
+          <div className="text-xs text-muted-foreground">
+            <div className="font-medium">Advanced Memory MCP</div>
+            <div>v1.3.0</div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

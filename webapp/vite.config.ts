@@ -5,9 +5,21 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
-    host: true,
+    port: 17770,
+    host: '0.0.0.0', // Bind to all interfaces for Tailnet access
     strictPort: true,
+    allowedHosts: [
+      '*', // Allow all hosts for Tailnet
+      'goliath' // Allow goliath hostname for Tailnet access
+    ],
+    cors: {
+      origin: true, // Allow all origins for Tailnet
+      credentials: true
+    },
+    hmr: {
+      host: '0.0.0.0', // HMR over Tailnet
+      port: 24678
+    }
   },
   build: {
     outDir: 'dist',

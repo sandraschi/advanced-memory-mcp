@@ -1,0 +1,13 @@
+{
+  "name": "adn-mcp-bridge",
+  "version": "1.0.0",
+  "description": "Bridge server for ADN MCP stdio to HTTP communication",
+  "main": "bridge-server.js",
+  "scripts": {
+    "start": "node bridge-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

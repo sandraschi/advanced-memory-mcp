@@ -8,7 +8,13 @@ from textwrap import dedent
 
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
-    from datetime import UTC
+    # UTC is available in Python 3.11+, for older versions use timezone.utc
+    try:
+        from datetime import UTC
+    except ImportError:
+        from datetime import timezone
+
+        UTC = UTC
 except (ImportError, AttributeError):
     from datetime import timedelta, timezone
 

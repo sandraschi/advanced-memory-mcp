@@ -5,6 +5,29 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Skill Directory Configuration (2026-01-21)
+
+### 🔧 **Technical Fixes**
+
+#### Fixed - Skill Directory Locations
+- **Corrected IDE Skill Paths**: Fixed skill scanning to use user home directories instead of project directory
+- **Cursor Skills**: `C:\Users\[username]\.cursor\skills-cursor`
+- **Windsurf Skills**: `C:\Users\[username]\.codeium\windsurf\skills`
+- **Antigravity Skills**: `C:\Users\[username]\.gemini\antigravity\skills`
+- **ADN Skills**: `D:\Dev\repos\advanced-memory-mcp\skills` (unchanged)
+
+#### Added - Documentation Updates
+- **Skill Locations**: Added prominent skill directory documentation to README.md
+- **Skill Parsing Guide**: New document explaining skill parsing from IDE directories
+- **Technical Readmes**: Updated documentation with current architecture
+
+### 📚 **Documentation**
+
+#### Added - Skill System Documentation
+- **Skill Parsing Architecture**: Comprehensive guide to how skills are discovered and parsed
+- **IDE Integration**: Documentation of skill discovery from Cursor, Windsurf, and Antigravity
+- **Skill Format Standards**: YAML frontmatter and markdown content parsing specifications
+
 ## [1.3.0] - Monorepo Architecture & Web Interface (2026-01-20)
 
 ### 🚀 **Monorepo Architecture**

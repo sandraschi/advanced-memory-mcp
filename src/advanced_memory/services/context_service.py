@@ -1,7 +1,13 @@
 """Service for building rich context from the knowledge graph."""
 
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
+
+# UTC is available in Python 3.11+, for older versions use timezone.utc
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = UTC
 
 from loguru import logger
 from sqlalchemy import text

@@ -48,6 +48,34 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 - Clear navigation and cross-linking
 - Comprehensive table of contents
 - Searchable content structure
+
+---
+
+## 🎯 SKILL SYSTEM STANDARDS
+
+### Skill Directory Locations
+
+**CRITICAL: These paths must be documented and never forgotten:**
+
+- **Cursor Skills**: `C:\Users\[username]\.cursor\skills-cursor`
+- **Windsurf Skills**: `C:\Users\[username]\.codeium\windsurf\skills`
+- **ADN Skills**: `D:\Dev\repos\advanced-memory-mcp\skills`
+- **Antigravity Skills**: `C:\Users\[username]\.gemini\antigravity\skills`
+
+### Skill Format Standards
+
+- **YAML Frontmatter**: Required fields (name, description, tags, created, modified)
+- **Markdown Content**: Full skill documentation below frontmatter
+- **Directory Structure**: `SKILL.md` + optional `modules/`, `assets/`, `references/`, `scripts/`
+- **Parsing**: Robust frontmatter extraction with fallback defaults
+- **Validation**: Graceful handling of malformed skills
+
+### Skill Discovery
+
+- **Automatic Scanning**: All configured directories scanned on startup
+- **Real-time Updates**: Skills available immediately when created in IDEs
+- **Error Resilience**: Missing directories don't break the system
+- **Performance**: Efficient directory traversal and file parsing
 - Proper heading hierarchy
 
 ### 6. Professional

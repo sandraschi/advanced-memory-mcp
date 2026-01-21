@@ -17,6 +17,7 @@ Advanced Memory MCP builds upon the foundational work of [Basic Memory MCP](http
 - **Document Intelligence**: PDF/EPUB processing with RAG vector search for large document analysis
 - **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
 - **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
+- **Production Observability**: State-of-the-art monitoring with Grafana dashboards, Prometheus metrics, Loki logs
 - **Cross-Platform Support**: Compatible with Claude Desktop, Cursor IDE, Windsurf, and other MCP clients
 - **Web Interface**: Standalone React application for direct usage without MCP client requirements
 
@@ -39,10 +40,35 @@ pip install advanced-memory-mcp
 advanced-memory setup  # Interactive configuration
 ```
 
-### Web Application
+### Standalone Web Application (Automatic Startup)
+```powershell
+# Start everything automatically - no manual server setup required!
+.\run-webapp.bat  # Opens http://localhost:17770
+```
+
+The webapp automatically detects and starts the ADN MCP server when you access the Notes page.
+
+### Skill Locations
+
+**CRITICAL: Skill directories are located in user home, NOT in this repository:**
+
+- **Cursor Skills**: `C:\Users\[username]\.cursor\skills-cursor`
+- **Windsurf Skills**: `C:\Users\[username]\.codeium\windsurf\skills`
+- **ADN Skills**: `D:\Dev\repos\advanced-memory-mcp\skills` (this repository)
+- **Antigravity Skills**: `C:\Users\[username]\.gemini\antigravity\skills`
+
+The webapp scans these directories for `SKILL.md` files in subdirectories and displays them in the Skills page.
+
+### Manual Web Application Setup
 ```bash
-cd webapp
-npm install && npm run dev  # http://localhost:3000
+# Install dependencies
+npm install
+cd webapp && npm install
+
+# Start services
+node auto-start-service.js    # Service orchestrator
+node startup-service.js       # Bridge server manager
+cd webapp && npm run dev      # Web UI on http://localhost:17770
 ```
 
 ## Documentation
@@ -54,6 +80,7 @@ npm install && npm run dev  # http://localhost:3000
 | [**Research Guide**](docs/RESEARCH_DRIVEN_SKILLS.md) | Multi-source research capabilities |
 | [**API Reference**](docs/PORTMANTEAU_TOOLS_REFERENCE.md) | MCP tools and parameters |
 | [**Web Interface**](webapp/README.md) | React application documentation |
+| [**Observability**](docs/OBSERVABILITY.md) | Monitoring with Prometheus, Grafana, Loki |
 | [**Evolution**](docs/EVOLUTION.md) | Development from Basic Memory MCP |
 | [**Architecture**](docs/ARCHITECTURE_DEEP_DIVE.md) | System design and data flow |
 | [**Troubleshooting**](docs/TROUBLESHOOTING_GUIDE.md) | Common issues and solutions |
@@ -79,4 +106,4 @@ AGPL-3.0-or-later
 
 ---
 
-**Advanced Memory MCP** - Enterprise-grade research platform for AI assistants, evolved from Basic Memory MCP with expanded research capabilities and production reliability.
+**Advanced Memory MCP** - Enterprise-grade research platform for AI assistants with state-of-the-art observability, evolved from Basic Memory MCP with expanded research capabilities and production reliability.

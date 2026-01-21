@@ -45,7 +45,7 @@
   }
 
   .card {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+    @apply rounded-lg border bg-card text-foreground shadow-sm;
   }
 
   .card-gold {
