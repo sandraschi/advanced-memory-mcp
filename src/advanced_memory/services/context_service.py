@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 try:
     from datetime import UTC
 except ImportError:
+    # For Python < 3.11, use timezone.utc
     UTC = UTC
 
 from loguru import logger

@@ -211,7 +211,7 @@ from fastmcp import FastMCP
 
 from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.services.initialization import initialize_app
+from advanced_memory.services.initialization import initialize_app_lightweight
 
 
 @dataclass
@@ -243,8 +243,19 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
         pass
 
     app_config = ConfigManager().config
-    # Initialize on startup (now returns migration_manager)
-    migration_manager = await initialize_app(app_config)
+    # Use lightweight initialization for fast MCP startup
+    await initialize_app_lightweight(app_config)
+    migration_manager = None  # Not needed for lightweight mode
+
+    # Initialize MCP resources now that we're in server mode
+    try:
+        from advanced_memory.mcp.mcp_instance import initialize_mcp_resources
+
+        initialize_mcp_resources()
+        logger.info("MCP resources initialized")
+    except NameError:
+        # initialize_mcp_resources might not exist if not in stdio mode
+        logger.info("MCP resources already initialized")
 
     # Initialize project session with default project
     session.initialize(app_config.default_project)
@@ -254,19 +265,44 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
     if app_config.sync_changes:
         from advanced_memory.services.initialization import initialize_file_sync
 
-        # Start watch service as a background task
-        watch_task = asyncio.create_task(initialize_file_sync(app_config))
+        # Start watch service as a background task with proper exception handling
+        watch_task = asyncio.create_task(initialize_file_sync(app_config), name="mcp-file-watcher")
+
+        # Add callback to handle task completion/errors
+        def watch_task_done_callback(task):
+            try:
+                if task.exception() is not None:
+                    logger.error(f"File watcher task failed: {task.exception()}")
+            except asyncio.CancelledError:
+                logger.info("File watcher task cancelled")
+
+        watch_task.add_done_callback(watch_task_done_callback)
 
     try:
         yield AppContext(watch_task=watch_task, migration_manager=migration_manager)
     finally:
-        # Cleanup on shutdown
+        # Cleanup on shutdown - ensure proper task cancellation
         if watch_task and not watch_task.done():
+            logger.info("Cancelling file watcher task")
             watch_task.cancel()
             try:
-                await watch_task
+                # Wait for cancellation with timeout to prevent hanging
+                await asyncio.wait_for(watch_task, timeout=5.0)
+            except TimeoutError:
+                logger.warning("File watcher task did not cancel within timeout")
             except asyncio.CancelledError:
-                pass
+                logger.info("File watcher task cancelled successfully")
+            except Exception as e:
+                logger.error(f"Error during file watcher cleanup: {e}")
+
+        # Additional cleanup for any remaining resources
+        try:
+            # Force cleanup of any remaining file watchers or connections
+            import gc
+
+            gc.collect()
+        except Exception as e:
+            logger.error(f"Error during garbage collection: {e}")
 
 
 # Logging is now configured at the top of the file before any imports
@@ -277,6 +313,9 @@ from advanced_memory.mcp import tools  # noqa: E402, F401
 
 # Use the shared MCP instance as the server
 server = mcp
+
+# Set the lifespan on the server instance (not during module import to avoid slow startup)
+server.lifespan = app_lifespan
 
 # Add stdio runner for MCP protocol
 if __name__ == "__main__":

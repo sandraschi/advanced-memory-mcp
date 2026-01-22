@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs').promises;
 
 const app = express();
-const PORT = 8001; // Different from main server port 8000
+const PORT = 8003; // Different from main server port 8000, Docker 8001, and 8002
 
 app.use(cors());
 app.use(express.json());
@@ -1079,6 +1079,7 @@ function startMCPProcess() {
       client.startServer().then(() => {
         mcpClients.set('adn', client);
         console.log('ADN MCP client fully initialized with tools and prompts');
+        console.log(`ADN client has ${client.tools ? client.tools.length : 0} tools and ${client.prompts ? client.prompts.length : 0} prompts`);
         resolve(client);
       }).catch((error) => {
         console.error('Failed to start ADN MCP client:', error);
@@ -1142,37 +1143,59 @@ async function sendMCPRequest(toolName, params = {}) {
 // Removed mock responses - now using real MCP communication
 
 // API Routes
+
+// Test route to verify Express is working
+app.get('/test', (req, res) => {
+  console.log('Test route called from:', req.ip, req.path);
+  res.json({ status: 'ok', message: 'Express server is working', timestamp: new Date().toISOString() });
+});
+
 app.get('/health', async (req, res) => {
   console.log('Health endpoint called');
 
-  // Ensure ADN MCP is initialized if not already
-  await ensureMCPInitialized();
+  try {
+    // Ensure ADN MCP is initialized if not already
+    await ensureMCPInitialized();
 
-  // Wait a bit for ADN initialization to complete
-  if (!mcpClients.has('adn')) {
-    console.log('Waiting for ADN MCP initialization...');
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
+    // Wait a bit for ADN initialization to complete
+    if (!mcpClients.has('adn')) {
+      console.log('Waiting for ADN MCP initialization...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
 
-  const servers = {};
-  for (const [name, client] of mcpClients) {
-    servers[name] = {
-      initialized: client.initialized,
-      tools: client.tools ? client.tools.length : 0,
-      prompts: client.prompts ? client.prompts.length : 0
+    const servers = {};
+    for (const [name, client] of mcpClients) {
+      servers[name] = {
+        initialized: client.initialized,
+        tools: client.tools ? client.tools.length : 0,
+        prompts: client.prompts ? client.prompts.length : 0
+      };
+    }
+
+    const response = {
+      status: 'ok',
+      bridge: 'running',
+      servers: servers,
+      total_servers: mcpClients.size,
+      timestamp: new Date().toISOString()
     };
+
+    console.log('Health response data:', JSON.stringify(response, null, 2));
+
+    // Send response
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(response);
+
+    console.log('Health response sent successfully');
+  } catch (error) {
+    console.error('Health endpoint error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Health check failed',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
-
-  const response = {
-    status: 'ok',
-    bridge: 'running',
-    servers: servers,
-    total_servers: mcpClients.size,
-    timestamp: new Date().toISOString()
-  };
-
-  console.log('Health response:', JSON.stringify(response, null, 2));
-  res.json(response);
 });
 
 // MCP Capabilities endpoints
@@ -1520,6 +1543,8 @@ app.get('/api/v1/skills', async (req, res) => {
 
 // Initialize MCP servers on first request
 async function ensureMCPInitialized() {
+  console.log('ensureMCPInitialized called. Current MCP clients:', Array.from(mcpClients.keys()));
+
   // Initialize external MCP servers first (they're more reliable)
   if (!mcpClients.has('brightdata') || !mcpClients.has('fetch')) {
     console.log('Initializing external MCP clients...');
@@ -1528,14 +1553,19 @@ async function ensureMCPInitialized() {
 
   // Initialize ADN server asynchronously (don't block server startup)
   if (!mcpClients.has('adn')) {
-    console.log('Starting ADN MCP client initialization in background...');
-    startMCPProcess().then(() => {
+    console.log('Starting ADN MCP client initialization...');
+    try {
+      await startMCPProcess();
       console.log('ADN MCP client initialized successfully');
-    }).catch((error) => {
+    } catch (error) {
       console.error('Failed to initialize ADN MCP client:', error);
       console.log('Continuing without ADN MCP client - external MCP servers still available');
-    });
+    }
+  } else {
+    console.log('ADN MCP client already exists');
   }
+
+  console.log('ensureMCPInitialized completed. Final MCP clients:', Array.from(mcpClients.keys()));
 }
 
 // Start server
@@ -1546,10 +1576,21 @@ async function startServer() {
   console.log('Initializing external MCP servers on startup...');
   await initializeExternalMCPServers();
 
-  // Start HTTP server - bind to all interfaces for Tailnet access
+  // Log that routes should be registered
+console.log('Routes should be registered now');
+
+// Start HTTP server - bind to all interfaces for Tailnet access
   const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`ADN MCP Bridge Server running on http://0.0.0.0:${PORT} (Tailnet accessible)`);
-    console.log('External MCP servers initialized. ADN MCP server will be initialized on first request');
+    console.log('External MCP servers initialized. Initializing ADN MCP server...');
+
+    // Initialize ADN MCP server immediately on startup
+    startMCPProcess().then(() => {
+      console.log('ADN MCP server initialized successfully on startup');
+    }).catch((error) => {
+      console.error('Failed to initialize ADN MCP server on startup:', error);
+      console.log('ADN MCP routes will not be available');
+    });
   });
 
   // Handle server errors gracefully

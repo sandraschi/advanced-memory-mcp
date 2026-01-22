@@ -143,15 +143,14 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> No
 async def initialize_file_sync(
     app_config: AdvancedMemoryConfig,
 ) -> None:
-    """Initialize file synchronization services. This function starts the watch service and does not return
+    """Initialize file synchronization services for MCP server startup.
+
+    For MCP server startup, we only start the watch service without doing
+    expensive full sync operations. Sync happens lazily on-demand.
 
     Args:
         app_config: The Advanced Memory project configuration
-
-    Returns:
-        The watch service task that's monitoring file changes
     """
-
     # delay import
     from advanced_memory.sync import WatchService
 
@@ -170,10 +169,50 @@ async def initialize_file_sync(
         quiet=True,
     )
 
+    # Start the watch service in the background immediately
+    # Don't do expensive full sync during MCP server startup
+    logger.info("Starting watch service for all projects (fast startup mode)")
+    try:
+        # Start watch service as a background task - it will run indefinitely
+        # This is much faster than doing full sync during startup
+        watch_task = asyncio.create_task(watch_service.run(), name="mcp-file-watcher")
+
+        # Store reference to prevent garbage collection
+        # The task will be cancelled when the MCP server lifespan ends
+        global _background_watch_task
+        _background_watch_task = watch_task
+
+        logger.info("Watch service started successfully (fast startup mode)")
+    except Exception as e:  # pragma: no cover
+        logger.error(f"Error starting watch service: {e}")
+        raise
+
+
+async def initialize_file_sync_full(
+    app_config: AdvancedMemoryConfig,
+) -> None:
+    """Initialize file synchronization with full sync (for CLI usage).
+
+    This does the expensive full sync operation that's used by CLI commands
+    but not needed for MCP server startup.
+
+    Args:
+        app_config: The Advanced Memory project configuration
+    """
+    # delay import
+
+    # Load app configuration - migrations handled centrally
+    _, session_maker = await db.get_or_create_db(
+        db_path=app_config.database_path,
+        db_type=db.DatabaseType.FILESYSTEM,
+        ensure_migrations=False,
+    )
+    project_repository = ProjectRepository(session_maker)
+
     # Get active projects
     active_projects = await project_repository.get_active_projects()
 
-    # First, sync all projects sequentially
+    # Sync all projects sequentially (expensive operation)
     for project in active_projects:
         # avoid circular imports
         from advanced_memory.cli.commands.sync import get_sync_service
@@ -208,7 +247,9 @@ async def initialize_file_sync(
     except Exception as e:  # pragma: no cover
         logger.error(f"Error starting watch service: {e}")
 
-    return None
+
+# Global reference to prevent garbage collection of background task
+_background_watch_task = None
 
 
 async def initialize_app(
@@ -233,6 +274,26 @@ async def initialize_app(
     await reconcile_projects_with_config(app_config)
 
     logger.info("App initialization completed (migration running in background if needed)")
+
+
+async def initialize_app_lightweight(
+    app_config: AdvancedMemoryConfig,
+) -> None:
+    """Lightweight initialization for MCP server startup.
+
+    This skips expensive operations and just ensures the database is ready.
+    Full initialization happens lazily as needed.
+
+    Args:
+        app_config: The Advanced Memory project configuration
+    """
+    logger.info("Lightweight MCP initialization...")
+
+    # Only initialize database - skip expensive project reconciliation for now
+    await initialize_database(app_config)
+
+    # Mark that we're in lightweight mode - full init will happen on first request
+    logger.info("MCP server ready (lightweight mode)")
 
 
 def ensure_initialization(app_config: AdvancedMemoryConfig) -> None:

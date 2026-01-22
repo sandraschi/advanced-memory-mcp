@@ -159,9 +159,8 @@ if _is_stdio_mode:
 
         if "loguru" not in sys.modules:
             sys.modules["loguru"] = type("Module", (), {"logger": NoOpLogger()})()
-        from loguru import logger
 
-        # Force replace the logger instance
+        # Use no-op logger for stdio mode
         logger = NoOpLogger()
     except Exception:
         # If anything fails, create a no-op logger anyway
@@ -257,9 +256,9 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
 
 
 # Create a shared MCP instance that tools can import
+# Note: lifespan is set later in server.py to avoid expensive initialization during import
 mcp = FastMCP(
     name="Advanced Memory MCP",
-    lifespan=app_lifespan,
 )
 
 # Store references to prompts and resources to prevent garbage collection
@@ -312,5 +311,35 @@ def _initialize_prompts_and_resources() -> None:
     ]
 
 
-# Initialize prompts and resources when module is imported
-_initialize_prompts_and_resources()
+# For MCP server mode, we need prompts available immediately but can delay resources
+_is_stdio_mode = (
+    not sys.stdout.isatty()
+    or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
+    or "stdio" in sys.argv
+)
+
+if _is_stdio_mode:
+    # For MCP stdio mode, load prompts immediately but delay resource loading
+    # Import individual prompt modules to register them via decorators
+    try:
+        import advanced_memory.mcp.prompts.continue_conversation  # noqa: F401
+        import advanced_memory.mcp.prompts.recent_activity  # noqa: F401
+        import advanced_memory.mcp.prompts.search  # noqa: F401
+    except ImportError:
+        # If there are import issues, continue anyway
+        pass
+
+    # Resources will be loaded later when server starts
+    def initialize_mcp_resources():
+        """Initialize MCP resources - call this when MCP server starts."""
+        try:
+            # Import resources module to register all resources via __init__.py
+            # Also import the ai_assistant_guide which is a resource in prompts
+            import advanced_memory.mcp.prompts.ai_assistant_guide  # noqa: F401
+            import advanced_memory.mcp.resources  # noqa: F401
+        except ImportError:
+            pass
+
+else:
+    # For CLI/non-MCP usage, initialize everything immediately
+    _initialize_prompts_and_resources()

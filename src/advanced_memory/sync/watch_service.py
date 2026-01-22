@@ -90,13 +90,24 @@ class WatchServiceState(BaseModel):
             error=error,
         )
         self.recent_events.insert(0, event)
-        self.recent_events = self.recent_events[:100]  # Keep last 100
+        # Keep only last 50 events to prevent memory accumulation
+        self.recent_events = self.recent_events[:50]
         return event
 
     def record_error(self, error: str) -> None:
         self.error_count += 1
         self.add_event(path="", action="sync", status="error", error=error)
         self.last_error = datetime.now()
+
+        # If we have too many errors in a short time, it might indicate instability
+        if self.error_count > 10:
+            logger.warning(f"High error count detected: {self.error_count} errors")
+            # Reset error count periodically to prevent false positives
+            # but keep track of the pattern
+            if self.last_error and (datetime.now() - self.last_error).seconds > 3600:  # 1 hour
+                self.error_count = max(
+                    1, self.error_count // 2
+                )  # Reduce but don't reset completely
 
 
 class WatchService:
@@ -153,14 +164,26 @@ class WatchService:
                     for project, changes in project_changes.items()
                 ]
 
-                # process changes
-                await asyncio.gather(*change_handlers)
+                # process changes with error isolation - don't let one project crash the whole service
+                if change_handlers:
+                    try:
+                        await asyncio.gather(*change_handlers, return_exceptions=True)
+                    except Exception as e:
+                        logger.error(f"Error processing file changes: {e}")
+                        self.state.record_error(f"Change processing error: {e}")
 
-        except (OSError, PermissionError, asyncio.CancelledError) as e:
-            logger.exception("Watch service error", error=str(e))
-
-            self.state.record_error(str(e))
-            await self.write_status()
+        except asyncio.CancelledError:
+            # Clean cancellation - this is expected when the service is shut down
+            logger.info("Watch service cancelled")
+            raise
+        except (OSError, PermissionError) as e:
+            logger.exception("Watch service filesystem error", error=str(e))
+            self.state.record_error(f"Filesystem error: {e}")
+            raise
+        except Exception as e:
+            # Catch any other unexpected errors to prevent service crash
+            logger.exception("Watch service unexpected error", error=str(e))
+            self.state.record_error(f"Unexpected error: {e}")
             raise
 
         finally:

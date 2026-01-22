@@ -334,6 +334,64 @@ async def _get_diagnostic_status() -> str:
     except Exception as e:
         status_lines.append(f"- **Activity Summary**: Error - {e}")
 
+    # Watch service health monitoring
+    status_lines.extend(["", "## Watch Service Health"])
+    try:
+        from pathlib import Path
+
+        from advanced_memory.config import WATCH_STATUS_JSON
+
+        watch_status_file = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON
+        if watch_status_file.exists():
+            import json
+            from datetime import datetime
+
+            with open(watch_status_file) as f:
+                watch_data = json.load(f)
+
+            # Check if watch service is running
+            pid = watch_data.get("pid")
+            running = watch_data.get("running", False)
+            error_count = watch_data.get("error_count", 0)
+            start_time_str = watch_data.get("start_time")
+
+            status_lines.append(f"- **Watch Service**: {'Running' if running else 'Stopped'}")
+            status_lines.append(f"- **Process ID**: {pid or 'None'}")
+            status_lines.append(f"- **Error Count**: {error_count}")
+
+            if start_time_str:
+                try:
+                    # Parse ISO format datetime
+                    start_time = datetime.fromisoformat(start_time_str.replace("Z", "+00:00"))
+                    uptime_seconds = (datetime.now() - start_time).total_seconds()
+                    uptime_str = f"{uptime_seconds / 3600:.1f} hours"
+                    status_lines.append(f"- **Uptime**: {uptime_str}")
+                except Exception:
+                    status_lines.append(f"- **Start Time**: {start_time_str}")
+
+            # Check for stability issues
+            if error_count > 5:
+                status_lines.append(f"- **⚠️ Stability Issue**: High error count ({error_count})")
+            if not running and pid:
+                status_lines.append("- **⚠️ Stability Issue**: Service stopped unexpectedly")
+
+            # Recent events
+            recent_events = watch_data.get("recent_events", [])
+            if recent_events:
+                status_lines.append(f"- **Recent Events**: {len(recent_events)} events")
+                # Show last 3 events
+                for event in recent_events[-3:]:
+                    timestamp = event.get("timestamp", "Unknown")
+                    action = event.get("action", "Unknown")
+                    status = event.get("status", "Unknown")
+                    path = event.get("path", "")[:50]  # Truncate long paths
+                    status_lines.append(f"  - {timestamp[:19]}: {action} {path} ({status})")
+        else:
+            status_lines.append("- **Watch Status File**: Not found")
+
+    except Exception as e:
+        status_lines.append(f"- **Watch Service Health**: Error reading status - {e}")
+
     # Troubleshooting tips
     status_lines.extend(["", "## Troubleshooting Tips"])
     status_lines.extend(

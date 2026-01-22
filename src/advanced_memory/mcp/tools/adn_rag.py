@@ -6,6 +6,7 @@ and semantic retrieval to enhance skill generation with deep document understand
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Literal
 
 from loguru import logger
@@ -116,31 +117,56 @@ async def adn_rag(
                     "operation": operation,
                 }
 
-            # Use the document ingestion tool to process the file
-            from .adn_document_ingest import adn_document_ingest
+            # Read and extract text content from the document file directly
+            try:
+                import fitz  # PyMuPDF for PDF files
 
-            # First, analyze the document
-            doc_result = await adn_document_ingest(
-                file_path=document_path,
-                analysis_type="full",
-                extract_quotes=True,
-            )
+                file_path_obj = Path(document_path)
+                if not file_path_obj.exists():
+                    return {
+                        "success": False,
+                        "error": f"Document file not found: {document_path}",
+                    }
 
-            if not doc_result["success"]:
-                return doc_result
+                # Extract text content based on file type
+                if file_path_obj.suffix.lower() == ".pdf":
+                    # PDF extraction
+                    doc = fitz.open(str(file_path_obj))
+                    full_content = ""
+                    for page_num in range(min(50, len(doc))):  # Limit to first 50 pages for RAG
+                        page = doc.load_page(page_num)
+                        full_content += page.get_text() + "\n\n"
+                    doc.close()
+                elif file_path_obj.suffix.lower() in [".txt", ".md", ".py", ".js", ".html", ".css"]:
+                    # Text-based files
+                    with open(file_path_obj, encoding="utf-8", errors="ignore") as f:
+                        full_content = f.read()
+                else:
+                    return {
+                        "success": False,
+                        "error": f"Unsupported file format: {file_path_obj.suffix}. Supported: PDF, TXT, MD, PY, JS, HTML, CSS",
+                        "document_path": document_path,
+                    }
 
-            # Extract full text content
-            analysis = doc_result.get("analysis", {})
-            chunks = analysis.get("chunks", [])
+                if not full_content.strip():
+                    return {
+                        "success": False,
+                        "error": "No text content extracted from document",
+                        "document_path": document_path,
+                    }
 
-            if not chunks:
+            except ImportError:
                 return {
-                    "error": "No text chunks extracted from document",
+                    "success": False,
+                    "error": "Document processing dependencies not available. Install PyMuPDF for PDF support.",
                     "document_path": document_path,
                 }
-
-            # Reconstruct full content from chunks
-            full_content = "\n\n".join([chunk.get("content", "") for chunk in chunks])
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"Failed to read document: {str(e)}",
+                    "document_path": document_path,
+                }
 
             # Generate document ID from path
             doc_id = str(document_path).replace("/", "_").replace("\\", "_").replace(".", "_")
@@ -150,9 +176,12 @@ async def adn_rag(
                 document_id=doc_id,
                 content=full_content,
                 metadata={
-                    "source_path": document_path,
-                    "analysis": analysis,
+                    "source_path": str(document_path),
+                    "file_size": Path(document_path).stat().st_size
+                    if Path(document_path).exists()
+                    else 0,
                     "ingested_at": "2025-12-02",
+                    "chunk_method": chunk_method,
                 },
                 chunk_method=chunk_method,
             )
