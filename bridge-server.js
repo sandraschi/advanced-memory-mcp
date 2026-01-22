@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs').promises;
 
 const app = express();
-const PORT = 8003; // Different from main server port 8000, Docker 8001, and 8002
+const PORT = 8001; // Different from main server port 8000
 
 app.use(cors());
 app.use(express.json());
