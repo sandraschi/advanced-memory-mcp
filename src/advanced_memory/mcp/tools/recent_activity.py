@@ -7,8 +7,6 @@ try:
     from datetime import UTC
 except ImportError:
     # For Python < 3.11, use timezone.utc
-    from datetime import timezone
-
     UTC = UTC
 from typing import Any
 

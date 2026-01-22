@@ -17,6 +17,7 @@ Advanced Memory MCP builds upon the foundational work of [Basic Memory MCP](http
 - **Document Intelligence**: PDF/EPUB processing with RAG vector search for large document analysis
 - **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
 - **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
+- **Conversational AI** *(Planned)*: Natural language interaction with ADN tools and knowledge graph *(FREE - uses local Ollama)* → [Extension Plan](./CONVERSATIONAL_AI_README.md)
 - **Production Observability**: State-of-the-art monitoring with Grafana dashboards, Prometheus metrics, Loki logs
 - **Cross-Platform Support**: Compatible with Claude Desktop, Cursor IDE, Windsurf, and other MCP clients
 - **Web Interface**: Standalone React application for direct usage without MCP client requirements
@@ -42,9 +43,21 @@ advanced-memory setup  # Interactive configuration
 
 ### Standalone Web Application (Automatic Startup)
 ```powershell
-# Start everything automatically - no manual server setup required!
+# RECOMMENDED: Clean startup (kills zombies, prevents port conflicts)
+.\run-webapp-clean.bat  # Opens http://localhost:17770
+
+# Alternative: Standard startup
 .\run-webapp.bat  # Opens http://localhost:17770
+
+# Check port usage and zombie processes
+.\check-webapp-port.ps1  # Diagnose port conflicts
+
+# Graceful remote shutdown
+.\shutdown-adn.ps1 "Maintenance shutdown"  # Graceful shutdown via API
+.\shutdown-adn.bat "System update"         # Batch version
 ```
+
+**Important:** Webapp runs on **port 17770** (strict port, no hopping allowed). Always use `run-webapp-clean.bat` to kill zombie processes before restart. Use graceful exit endpoint for remote shutdown.
 
 The webapp automatically detects and starts the ADN MCP server when you access the Notes page.
 
@@ -155,6 +168,7 @@ POST /api/v1/fetch              # HTTP fetch operations
 | [**Research Guide**](docs/RESEARCH_DRIVEN_SKILLS.md) | Multi-source research capabilities |
 | [**API Reference**](docs/PORTMANTEAU_TOOLS_REFERENCE.md) | MCP tools and parameters |
 | [**Web Interface**](webapp/README.md) | React application documentation |
+| [**Conversational AI**](./CONVERSATIONAL_AI_README.md) | Planned extension for chat with ADN tools |
 | [**Observability**](docs/OBSERVABILITY.md) | Monitoring with Prometheus, Grafana, Loki |
 | [**Evolution**](docs/EVOLUTION.md) | Development from Basic Memory MCP |
 | [**Architecture**](docs/ARCHITECTURE_DEEP_DIVE.md) | System design and data flow |
@@ -175,6 +189,22 @@ POST /api/v1/fetch              # HTTP fetch operations
 - Python 3.11+
 - Node.js 18+ (for web interface)
 - Compatible MCP client (Claude Desktop, Cursor, etc.)
+
+## Future Developments
+
+### Conversational AI Extension *(Low Priority, 8 weeks)*
+
+Transform the webapp into a Claude-like conversational assistant with natural language interaction, tool orchestration, and conversation memory stored in the ADN knowledge graph.
+
+**Key Features:**
+- Natural language queries instead of manual navigation
+- Automatic ADN tool discovery and execution
+- Context-aware responses using knowledge graph
+- Conversation persistence as searchable knowledge
+- Real-time tool execution visualization
+- **💰 100% FREE** - Uses local Ollama, no API costs
+
+**[📋 Detailed Plan](./CONVERSATIONAL_AI_README.md)** | **[🧠 ADN Note](./zettelkasten/2026-01-23-conversational-ai-extension-plan.md)**
 
 ## License
 

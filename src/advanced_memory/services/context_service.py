@@ -1,7 +1,7 @@
 """Service for building rich context from the knowledge graph."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
 # UTC is available in Python 3.11+, for older versions use timezone.utc
 try:
@@ -22,10 +22,10 @@ from advanced_memory.utils import generate_permalink
 
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
-    UTC = UTC
-except AttributeError:
+    from datetime import UTC
+except ImportError:
     # Fallback for Python < 3.11
-    UTC = timezone(timedelta(0))
+    UTC = UTC
 
 
 @dataclass

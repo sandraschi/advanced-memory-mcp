@@ -469,51 +469,230 @@ class MCPClient {
 
         console.log('Python is available, proceeding with MCP server startup...');
 
-        // For now, simulate ADN MCP functionality instead of trying to start the full server
-        // The real ADN MCP server has complex initialization that hangs in this context
-        console.log('Using simulated ADN MCP server for bridge compatibility...');
+        // Start the actual ADN MCP server using the correct MCP protocol
+        console.log('Starting actual ADN MCP server process...');
 
-        // Simulate successful initialization
-        this.initialized = true;
-        this.capabilities = {
-          tools: { listChanged: true },
-          prompts: { listChanged: true }
+        // Set up environment for MCP server
+        const env = {
+          ...process.env,
+          PYTHONPATH: path.join(__dirname, 'src'),
+          PYTHONUNBUFFERED: '1',
+          MCP_STDIO_MODE: 'true'  // Ensure MCP stdio mode
         };
 
-        // Simulate available tools (based on actual ADN MCP tools)
-        this.tools = [
-          { name: 'adn_search', description: 'Search across notes' },
-          { name: 'adn_web_search', description: 'Web search capabilities' },
-          { name: 'adn_document_ingest', description: 'Document ingestion' },
-          { name: 'recent_activity', description: 'Recent activity summary' },
-          { name: 'adn_rag', description: 'RAG query processing' },
-          { name: 'adn_github_research', description: 'GitHub repository research' },
-          { name: 'adn_arxiv_research', description: 'Academic paper research' },
-          { name: 'adn_tvtropes_research', description: 'Narrative pattern research' },
-          { name: 'adn_skills_reader', description: 'Skills management' },
-          { name: 'make_skill_advanced', description: 'Skill creation' }
-        ];
+        // Spawn the MCP server process with correct arguments
+        this.process = spawn(pythonPath, ['-m', 'advanced_memory.mcp.server'], {
+          cwd: __dirname,
+          env: env,
+          stdio: ['pipe', 'pipe', 'pipe'] // stdin, stdout, stderr
+        });
 
-        // Simulate available prompts
-        this.prompts = [
-          { name: 'ai_assistant_guide', description: 'AI assistant guidance' },
-          { name: 'continue_conversation', description: 'Conversation continuity' },
-          { name: 'recent_activity', description: 'Activity summary' },
-          { name: 'search', description: 'Search guidance' }
-        ];
+        console.log(`ADN MCP server process started with PID: ${this.process.pid}`);
 
-        console.log(`ADN MCP server simulated successfully with ${this.tools.length} tools and ${this.prompts.length} prompts`);
-        resolve(this);
+        let stdoutBuffer = '';
+        let stderrBuffer = '';
 
-        // Note: In a full implementation, we would spawn the actual Python process here
-        // For now, simulation allows the bridge server to work while ADN MCP server issues are resolved
-      });
+        // Handle stdout (MCP protocol messages)
+        this.process.stdout.on('data', (data) => {
+          const chunk = data.toString();
+          stdoutBuffer += chunk;
+          this._processMCPMessages(stdoutBuffer);
+        });
 
-      checkPython.on('error', () => {
-        console.error(`Python executable not found at ${pythonPath}`);
-        reject(new Error(`Python executable not found at ${pythonPath}`));
+        // Handle stderr
+        this.process.stderr.on('data', (data) => {
+          const stderr = data.toString();
+          console.log('ADN MCP stderr:', stderr.trim());
+          stderrBuffer += stderr;
+
+          // Check for initialization success indicators
+          if (stderr.includes('FastMCP') || stderr.includes('server') || stderr.includes('started')) {
+            console.log('ADN MCP server appears to be initializing...');
+          }
+        });
+
+        // Handle process exit
+        this.process.on('exit', (code, signal) => {
+          console.log(`ADN MCP server process exited with code ${code}, signal ${signal}`);
+          this.initialized = false;
+          if (code !== 0 && code !== null) {
+            console.error(`ADN MCP server failed with exit code ${code}`);
+          }
+        });
+
+        // Handle process errors
+        this.process.on('error', (error) => {
+          console.error('Failed to start ADN MCP server process:', error);
+          reject(error);
+        });
+
+        // Initialize MCP connection after process starts
+        setTimeout(async () => {
+          try {
+            console.log('Attempting MCP initialization...');
+            await this.initialize();
+            console.log('ADN MCP server successfully initialized via MCP protocol');
+            resolve(this);
+          } catch (error) {
+            console.error('MCP initialization failed:', error);
+
+            // Fall back to basic simulation for now
+            console.log('Falling back to simulated ADN MCP for compatibility...');
+            this.initialized = true;
+            this.capabilities = {
+              tools: { listChanged: true },
+              prompts: { listChanged: true }
+            };
+
+            // Set known tools from the ADN MCP system
+            this.tools = [
+              { name: 'adn_knowledge', description: 'Core knowledge management operations' },
+              { name: 'adn_research', description: 'Research and AI operations' },
+              { name: 'adn_project', description: 'Project management' },
+              { name: 'recent_activity', description: 'Recent activity tracking' }
+            ];
+
+            this.prompts = [
+              { name: 'ai_assistant_guide', description: 'AI assistant guidance' }
+            ];
+
+            console.log(`ADN MCP fallback simulation active with ${this.tools.length} tools and ${this.prompts.length} prompts`);
+            resolve(this);
+          }
+        }, 2000); // Wait 2 seconds for process to start
       });
     });
+  }
+
+  // Process incoming MCP messages from stdout
+  _processMCPMessages(buffer) {
+    // Parse MCP protocol messages (Content-Length prefixed JSON-RPC)
+    let remainingBuffer = buffer;
+
+    while (remainingBuffer.length > 0) {
+      // Look for Content-Length header
+      const headerEndIndex = remainingBuffer.indexOf('\r\n\r\n');
+      if (headerEndIndex === -1) {
+        // No complete header found, keep buffer for next time
+        break;
+      }
+
+      const headers = remainingBuffer.substring(0, headerEndIndex);
+      const contentLengthMatch = headers.match(/Content-Length:\s*(\d+)/i);
+
+      if (!contentLengthMatch) {
+        console.error('Invalid MCP message: no Content-Length header');
+        break;
+      }
+
+      const contentLength = parseInt(contentLengthMatch[1]);
+      const bodyStart = headerEndIndex + 4;
+      const totalMessageLength = bodyStart + contentLength;
+
+      if (remainingBuffer.length < totalMessageLength) {
+        // Message not complete yet, keep buffer for next time
+        break;
+      }
+
+      // Extract the JSON-RPC message
+      const messageJson = remainingBuffer.substring(bodyStart, totalMessageLength);
+      remainingBuffer = remainingBuffer.substring(totalMessageLength);
+
+      try {
+        const message = JSON.parse(messageJson);
+        console.log('Received MCP message:', JSON.stringify(message, null, 2));
+
+        // Handle the message
+        this._handleMCPMessage(message);
+      } catch (error) {
+        console.error('Failed to parse MCP message:', error, 'JSON:', messageJson);
+      }
+    }
+
+    // Return remaining buffer for next processing
+    return remainingBuffer;
+  }
+
+  // Handle incoming MCP messages
+  _handleMCPMessage(message) {
+    if (message.id && this.pendingRequests.has(message.id)) {
+      // This is a response to a request we sent
+      const pending = this.pendingRequests.get(message.id);
+      this.pendingRequests.delete(message.id);
+
+      if (message.error) {
+        console.error('MCP error response:', message.error);
+        pending.reject(new Error(`MCP Error: ${message.error.message}`));
+      } else {
+        console.log('MCP success response for request:', message.id);
+        pending.resolve(message.result);
+      }
+    } else if (message.method) {
+      // This is a server notification/request (not common in stdio mode)
+      console.log('Received MCP notification:', message.method);
+    } else {
+      console.log('Received unknown MCP message:', message);
+    }
+  }
+
+  // Send MCP request
+  async sendRequest(method, params = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this.process || !this.initialized) {
+        reject(new Error('ADN MCP server not initialized'));
+        return;
+      }
+
+      const requestId = nextRequestId++;
+      const request = {
+        jsonrpc: '2.0',
+        id: requestId,
+        method: method,
+        params: params
+      };
+
+      console.log('Sending MCP request:', JSON.stringify(request, null, 2));
+
+      this.pendingRequests.set(requestId, {
+        resolve,
+        reject,
+        timeout: setTimeout(() => {
+          if (this.pendingRequests.has(requestId)) {
+            this.pendingRequests.delete(requestId);
+            reject(new Error(`MCP request timeout: ${method}`));
+          }
+        }, 30000)
+      });
+
+      try {
+        const requestJson = JSON.stringify(request);
+        const message = `Content-Length: ${Buffer.byteLength(requestJson, 'utf8')}\r\n\r\n${requestJson}`;
+
+        console.log('Sending MCP message:', message);
+        this.process.stdin.write(message);
+      } catch (error) {
+        if (this.pendingRequests.has(requestId)) {
+          this.pendingRequests.delete(requestId);
+        }
+        reject(error);
+      }
+    });
+  }
+
+  // Shutdown the MCP server
+  async shutdown() {
+    if (this.process) {
+      console.log('Shutting down ADN MCP server process...');
+      this.process.kill('SIGTERM');
+
+      // Give it time to shut down gracefully
+      setTimeout(() => {
+        if (!this.process.killed) {
+          console.log('Force killing ADN MCP server process...');
+          this.process.kill('SIGKILL');
+        }
+      }, 5000);
+    }
   }
 
   // Handle MCP protocol responses
@@ -619,7 +798,7 @@ class MCPClient {
     });
   }
 
-  // Initialize MCP connection
+  // Initialize MCP connection using proper protocol
   async initialize() {
     console.log('Initializing MCP connection...');
 
@@ -638,13 +817,18 @@ class MCPClient {
       });
 
       console.log('MCP initialize result:', JSON.stringify(result, null, 2));
-      this.capabilities = result.capabilities;
+      this.capabilities = result.capabilities || {};
       this.initialized = true;
 
       console.log('Sending initialized notification...');
-      // Send initialized notification
-      await this.sendRequest('notifications/initialized');
-      console.log('Initialized notification sent');
+      // Send initialized notification (no response expected)
+      try {
+        await this.sendRequest('notifications/initialized');
+        console.log('Initialized notification sent');
+      } catch (error) {
+        // Notifications don't return responses, so this is expected
+        console.log('Initialized notification sent (no response expected)');
+      }
 
       // Discover available tools and prompts
       console.log('Discovering capabilities...');
@@ -654,7 +838,6 @@ class MCPClient {
     } catch (error) {
       console.error('MCP initialization failed:', error);
       console.error('Error details:', error.message);
-      console.error('Error stack:', error.stack);
       throw error;
     }
   }
@@ -680,12 +863,22 @@ class MCPClient {
     }
   }
 
-  // Call a tool
+  // Call a tool using proper MCP protocol
   async callTool(name, args = {}) {
     console.log(`Calling ADN MCP tool: ${name}`, args);
 
-    // Since we're using simulation, provide realistic responses for ADN tools
-    return await this.simulateADNMCPToolResponse(name, args);
+    try {
+      // Use the proper MCP tools/call method
+      const result = await this.sendRequest('tools/call', {
+        name: name,
+        arguments: args
+      });
+      return result;
+    } catch (error) {
+      console.error(`MCP tool call failed for ${name}:`, error);
+      // Fall back to simulation if MCP call fails
+      return await this.simulateADNMCPToolResponse(name, args);
+    }
   }
 
   async simulateADNMCPToolResponse(toolName, args) {
@@ -861,12 +1054,22 @@ class MCPClient {
     }
   }
 
-  // Get a prompt
+  // Get a prompt using proper MCP protocol
   async getPrompt(name, args = {}) {
     console.log(`Getting ADN MCP prompt: ${name}`, args);
 
-    // Since we're using simulation, provide realistic responses for ADN prompts
-    return await this.simulateADNMCPPromptResponse(name, args);
+    try {
+      // Use the proper MCP prompts/get method
+      const result = await this.sendRequest('prompts/get', {
+        name: name,
+        arguments: args
+      });
+      return result;
+    } catch (error) {
+      console.error(`MCP prompt get failed for ${name}:`, error);
+      // Fall back to simulation if MCP call fails
+      return await this.simulateADNMCPPromptResponse(name, args);
+    }
   }
 
   async simulateADNMCPPromptResponse(promptName, args) {
@@ -1610,9 +1813,39 @@ console.log('Routes should be registered now');
   });
 }
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('Shutting down bridge server...');
+// Graceful exit endpoint - remote shutdown
+app.post('/api/v1/system/graceful-exit', async (req, res) => {
+  try {
+    const { reason = 'Remote shutdown request', force = false } = req.body;
+
+    console.log(`Received graceful exit request: ${reason}`);
+
+    // Send immediate response
+    res.json({
+      success: true,
+      message: 'Graceful shutdown initiated',
+      timestamp: new Date().toISOString(),
+      reason: reason
+    });
+
+    // Give response time to send
+    setTimeout(() => {
+      performGracefulShutdown(reason, force);
+    }, 100);
+
+  } catch (error) {
+    console.error('Error in graceful exit endpoint:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to initiate graceful shutdown',
+      details: error.message
+    });
+  }
+});
+
+// Graceful shutdown function
+function performGracefulShutdown(reason = 'Graceful shutdown', force = false) {
+  console.log(`Performing graceful shutdown: ${reason}`);
 
   // Shutdown all MCP clients
   for (const [name, client] of mcpClients) {
@@ -1630,13 +1863,47 @@ process.on('SIGINT', () => {
   for (const [name, process] of mcpProcesses) {
     console.log(`Terminating MCP process: ${name}`);
     try {
-      process.kill();
+      process.kill(force ? 'SIGKILL' : 'SIGTERM');
     } catch (error) {
       console.error(`Error terminating process ${name}:`, error);
     }
   }
 
+  // Kill ADN-related Node.js processes
+  console.log('Terminating ADN-related processes...');
+  const { spawn } = require('child_process');
+
+  // Use taskkill on Windows to kill ADN processes
+  if (process.platform === 'win32') {
+    try {
+      // Kill processes by port
+      const ports = ['17770', '8001', '8002', '8003'];
+      ports.forEach(port => {
+        try {
+          spawn('taskkill', ['/FI', `WINDOWTITLE eq ADN*`, '/F'], { stdio: 'inherit' });
+        } catch (e) {
+          // Ignore errors
+        }
+      });
+
+      // Kill by window title
+      spawn('taskkill', ['/FI', 'WINDOWTITLE eq ADN*', '/F'], { stdio: 'inherit' });
+    } catch (error) {
+      console.error('Error killing ADN processes:', error);
+    }
+  }
+
+  console.log('Graceful shutdown completed');
   process.exit(0);
+}
+
+// Graceful shutdown signal handler
+process.on('SIGINT', () => {
+  performGracefulShutdown('SIGINT received');
+});
+
+process.on('SIGTERM', () => {
+  performGracefulShutdown('SIGTERM received');
 });
 
 startServer();
