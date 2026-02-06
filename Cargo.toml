@@ -1,5 +1,5 @@
 [package]
-name = "AdvancedMemoryKnowledgeBase"
+name = "advanced_memory_knowledge_base"
 version = "0.1.0"
 edition = "2021"
 authors = ["Sandra <sandraschipal@hotmail.com>"]
