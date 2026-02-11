@@ -28,14 +28,6 @@ interface ResearchResult {
   content?: string
 }
 
-interface SkillResult {
-  id: string
-  title: string
-  description: string
-  sources: number
-  created: string
-  content?: string
-}
 
 interface NoteResult {
   id: string
@@ -61,18 +53,20 @@ interface SkillResult {
   modified: string
   content: string
   filePath: string
+  sources: number
 }
 
 class ApiService {
   private client: AxiosInstance
 
   constructor() {
-    // Configure axios client for ADN bridge server (stdio to HTTP bridge)
+    // Configure axios client for ADN bridge server (stdio to HTTP bridge).
+    // Override via VITE_API_URL (e.g. in Docker or .env).
+    const baseURL =
+      import.meta.env.VITE_API_URL || 'http://localhost:10705/api/v1'
     this.client = axios.create({
-      baseURL: process.env.NODE_ENV === 'production'
-        ? 'http://localhost:8001/api/v1'  // Production bridge
-        : 'http://localhost:8001/api/v1', // Development bridge
-      timeout: 30000,
+      baseURL,
+      timeout: 12000,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -232,7 +226,7 @@ class ApiService {
   }
 
   // Skill Operations
-  async createSkill(topic: string, researchSources: string[]): Promise<ApiResponse<SkillResult>> {
+  async generateSkill(topic: string, researchSources: string[]): Promise<ApiResponse<SkillResult>> {
     try {
       const response = await this.client.post('/skills/create', {
         topic,
@@ -414,31 +408,6 @@ class ApiService {
     }
   }
 
-  // Error handling utilities
-  private handleApiError(error: any): ApiResponse {
-    if (error.response) {
-      // Server responded with error status
-      return {
-        success: false,
-        error: error.response.data?.message || `Server error: ${error.response.status}`,
-        message: error.response.data?.details
-      }
-    } else if (error.request) {
-      // Request was made but no response received
-      return {
-        success: false,
-        error: 'No response from server',
-        message: 'Check if the Advanced Memory MCP server is running'
-      }
-    } else {
-      // Something else happened
-      return {
-        success: false,
-        error: 'Request failed',
-        message: error.message
-      }
-    }
-  }
 }
 
 // Export singleton instance

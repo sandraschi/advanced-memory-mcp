@@ -64,74 +64,69 @@ Detailed instructions and guidance for the skill...
 
 ### 1. Directory Discovery
 
-The system scans configured directories for skills:
+The system resolves skill roots as absolute paths via `path.resolve`. User-based dirs (Cursor, WindSurf, Antigravity) require `USERPROFILE` or `HOME`; if missing, `getSkillDirectory` returns `null` for those folders.
 
 ```javascript
 function getSkillDirectory(folderName) {
-  const userHome = process.env.USERPROFILE || process.env.HOME;
-
+  const userHome = process.env.USERPROFILE || process.env.HOME || '';
+  if (!userHome && ['cursor-skills','windsurf-skills','antigravity-skills'].includes(folderName))
+    return null;
+  let dir;
   switch (folderName) {
-    case 'cursor-skills':
-      return path.join(userHome, '.cursor', 'skills-cursor');
-    case 'windsurf-skills':
-      return path.join(userHome, '.codeium', 'windsurf', 'skills');
-    case 'adn-skills':
-      return path.join(__dirname, 'skills');
-    case 'antigravity-skills':
-      return path.join(userHome, '.gemini', 'antigravity', 'skills');
+    case 'cursor-skills':   dir = path.join(userHome, '.cursor', 'skills-cursor'); break;
+    case 'windsurf-skills': dir = path.join(userHome, '.codeium', 'windsurf', 'skills'); break;
+    case 'adn-skills':      dir = path.join(__dirname, 'skills'); break;
+    case 'antigravity-skills': dir = path.join(userHome, '.gemini', 'antigravity', 'skills'); break;
+    default: return null;
   }
+  return path.resolve(dir);
 }
 ```
 
 ### 2. Directory Scanning
 
+Scanning is **recursive** so both flat layouts (e.g. WindSurf/Antigravity `skills/<skill-name>/SKILL.md`) and nested layouts (e.g. ADN `skills/<category>/<skill-name>/SKILL.md`) are supported.
+
 For each configured directory:
 
 1. **Existence Check**: Verify directory exists
-2. **Content Listing**: Get all subdirectories
-3. **SKILL.md Verification**: Check for `SKILL.md` in each subdirectory
-4. **File Reading**: Read content of valid SKILL.md files
+2. **Recursive Walk**: For each subdirectory, look for `SKILL.md` in that directory; if not found, recurse into its children
+3. **File Reading**: Read content of each `SKILL.md` found
+4. **filePath**: Use `path.relative` to repo root when same drive; on Windows cross-drive (e.g. skills under `C:\` vs repo on `D:\`), use fallback `folderName/dirName/SKILL.md` via `safeFilePath`
 
 ### 3. Frontmatter Parsing
 
-The system uses regex to extract YAML frontmatter:
+The system uses a relaxed regex to extract YAML frontmatter (`^\s*---\s*\n...\n---\s*\n`). Content is trimmed before parsing. Only **top-level** key/value lines are parsed; indented lines (e.g. `allowed-tools:`, `metadata:` blocks) are skipped to avoid malformed metadata.
+
+If **no frontmatter** is found, a skill is still created: `title` is derived from the directory name (`dirName`), `description` is empty, and the full file content is used as `content`. The parser accepts an optional third argument `dirName` for this fallback.
 
 ```javascript
-function parseSkillFrontmatter(content, folderName) {
-  // Match content between --- markers
-  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+// Simplified logic; see bridge-server.js for full implementation
+function parseSkillFrontmatter(content, folderName, dirName) {
+  const frontmatterMatch = content.match(/^\s*---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  let title = dirName ? dirName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Untitled Skill';
+  let description = '', tags = [], body = content;
 
-  if (!frontmatterMatch) {
-    return null; // No frontmatter found
-  }
-
-  const frontmatter = frontmatterMatch[1];
-  const body = frontmatterMatch[2];
-
-  // Parse YAML-like key-value pairs
-  const metadata = {};
-  const lines = frontmatter.split('\n');
-
-  for (const line of lines) {
-    const colonIndex = line.indexOf(':');
-    if (colonIndex > 0) {
-      const key = line.substring(0, colonIndex).trim();
-      const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
-      metadata[key] = value;
+  if (frontmatterMatch) {
+    const frontmatter = frontmatterMatch[1], lines = frontmatter.split('\n');
+    const metadata = {};
+    for (const line of lines) {
+      if (line.match(/^\s+/)) continue; // skip indented YAML
+      const colonIndex = line.indexOf(':');
+      if (colonIndex > 0) {
+        const key = line.substring(0, colonIndex).trim();
+        const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
+        metadata[key] = value;
+      }
     }
+    title = metadata.name || metadata.title || title;
+    description = metadata.description || '';
+    tags = metadata.tags ? metadata.tags.split(',').map(t => t.trim()) : [];
+    body = frontmatterMatch[2].trim();
   }
 
-  // Construct skill data object
-  return {
-    id: Date.now() + Math.random(),
-    title: metadata.name || metadata.title || 'Untitled Skill',
-    description: metadata.description || '',
-    folder: folderName,
-    tags: metadata.tags ? metadata.tags.split(',').map(t => t.trim()) : [],
-    created: metadata.created || new Date().toISOString(),
-    modified: metadata.modified || new Date().toISOString(),
-    content: body.trim()
-  };
+  return { id: Date.now() + Math.random(), title, description, folder: folderName, tags,
+           created: new Date().toISOString(), modified: new Date().toISOString(), content: body };
 }
 ```
 
@@ -183,9 +178,9 @@ GET /api/v1/skills?folder=cursor-skills
 
 ### Frontmatter Parsing Issues
 
-- **Missing Frontmatter**: Returns null, skill not included
-- **Malformed YAML**: Attempts basic key-value parsing
-- **Missing Fields**: Uses defaults (Untitled Skill, empty description, etc.)
+- **Missing Frontmatter**: A skill is still emitted; `title` from directory name, `description` empty, full file as `content`
+- **Malformed YAML**: Top-level key/value parsing only; indented blocks skipped
+- **Missing Fields**: Uses defaults (dirName-derived title, empty description, etc.)
 
 ## Integration with Webapp
 
@@ -193,7 +188,7 @@ GET /api/v1/skills?folder=cursor-skills
 
 The React webapp displays skills in a searchable, filterable interface:
 
-- **Folder Selection**: Dropdown to select skill source
+- **Folder Selection**: Dropdown to select skill source; **All collections** shows Cursor, WindSurf, Antigravity, and ADN together
 - **Search**: Filter by title, description, or tags
 - **Skill Cards**: Display skill metadata and preview content
 - **Skill Creation**: Modal for creating new skills
@@ -226,8 +221,9 @@ The React webapp displays skills in a searchable, filterable interface:
 ### Common Issues
 
 1. **Skills Not Showing**
-   - Check directory paths exist
-   - Verify SKILL.md files are properly formatted
+   - Ensure `USERPROFILE` / `HOME` are set when bridge runs (user-based dirs)
+   - Check directory paths exist (e.g. `~/.codeium/windsurf/skills`, `~/.gemini/antigravity/skills`)
+   - Verify `SKILL.md` exists in each skill subdir; use **All collections** to include every folder
    - Check browser console for errors
 
 2. **Parsing Errors**

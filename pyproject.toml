@@ -123,6 +123,10 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "E402"]  # Allow imports after code in __init__.py files
+"src/advanced_memory/mcp/mcp_instance.py" = ["E402"]  # Logger setup before imports
+"src/advanced_memory/mcp/server.py" = ["E402", "F811"]  # Logger setup before imports
+"src/advanced_memory/services/initialization.py" = ["E402"]  # Conditional logger/db imports
+"tests/**" = ["F841"]  # Unused result in tests (assertions on side effects)
 
 [tool.ruff.format]
 quote-style = "double"

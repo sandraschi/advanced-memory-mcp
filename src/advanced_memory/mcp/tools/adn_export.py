@@ -325,7 +325,7 @@ async def _pdf_export(
     """Handle native PDF export using fpdf2 (no LaTeX, no weasyprint!)."""
     from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
 
-    return await export_pdf_native(
+    return await export_pdf_native.fn(
         export_path,
         source_folder,
         include_subfolders,

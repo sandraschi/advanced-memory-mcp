@@ -148,6 +148,7 @@ async def edit_note(
                   - "prepend": Add content to the beginning of the note
                   - "find_replace": Replace occurrences of find_text with content
                   - "replace_section": Replace content under a specific markdown header
+                  - "replace_body": Replace entire body (preserves frontmatter; for LLM-enhanced content)
                   - "insert_mermaid": Insert a Mermaid diagram (content: diagram type "flowchart"/"sequence"/"gantt"/"mindmap"/"er" OR custom Mermaid code, section: optional title)
                   - "insert_ascii_art": Insert ASCII art (content: art type: "cat", "dog", "robot", "heart", "star", "tree")
                   - "insert_kilroy": Insert classic Kilroy ASCII art (content: optional custom message)
@@ -359,7 +360,7 @@ async def edit_note(
     logger.info("MCP tool call", tool="edit_note", identifier=identifier, operation=operation)
 
     # Validate operation with helpful error message
-    valid_operations = ["append", "prepend", "find_replace", "replace_section"]
+    valid_operations = ["append", "prepend", "find_replace", "replace_section", "replace_body"]
     if operation not in valid_operations:
         return f"""# Edit Failed - Invalid Operation
 
@@ -370,6 +371,7 @@ async def edit_note(
 - `prepend` - Add content to the beginning of the note
 - `find_replace` - Find and replace specific text
 - `replace_section` - Replace an entire markdown section
+- `replace_body` - Replace entire body (preserves frontmatter)
 - `insert_mermaid` - Insert a Mermaid diagram
 - `insert_ascii_art` - Insert ASCII art
 - `insert_kilroy` - Insert classic Kilroy ASCII art
@@ -408,19 +410,18 @@ edit_note(
     if operation == "replace_section" and not section:
         return f"""# Edit Failed - Missing Parameter
 
-**Operation:** `replace_section`
-**Missing:** `section` parameter
+**Reason:** `replace_section` requires a `section` parameter (the markdown heading whose content to replace). None was provided.
 
-The replace_section operation requires a `section` name (the markdown heading to replace).
+**Try again with one of these options:**
 
-**Example:**
+1. **If replacing a specific section** - provide the section header:
 ```
-edit_note(
-    identifier="{identifier}",
-    operation="replace_section",
-    section="## Introduction",
-    content="New introduction content"
-)
+edit_note(identifier="{identifier}", operation="replace_section", section="## Introduction", content="New content")
+```
+
+2. **If replacing the entire note body** - use `replace_body` instead (preserves frontmatter):
+```
+edit_note(identifier="{identifier}", operation="replace_body", content="Full new content")
 ```"""
 
     # Use the PATCH endpoint to edit the entity
@@ -468,6 +469,8 @@ edit_note(
             summary.append("operation: Find and replace operation completed")
         elif operation == "replace_section":
             summary.append(f"operation: Replaced content under section '{section}'")
+        elif operation == "replace_body":
+            summary.append("operation: Replaced entire document body (frontmatter preserved)")
         elif operation == "insert_mermaid":
             diagram_type = content if content else "flowchart"
             summary.append(f"operation: Inserted Mermaid {diagram_type} diagram")

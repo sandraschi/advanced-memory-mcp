@@ -103,26 +103,6 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
     }
   }
 
-  const checkProviderStatus = async (provider: Provider): Promise<'available' | 'unavailable'> => {
-    try {
-      if (provider.type === 'local') {
-        // For local providers, try to fetch models
-        let models: string[] = []
-        if (provider.name === 'ollama') {
-          models = await queryOllamaModels(provider.url)
-        } else if (provider.name === 'lmstudio') {
-          models = await queryLMStudioModels(provider.url)
-        }
-        return models.length > 0 ? 'available' : 'unavailable'
-      } else {
-        // For hosted providers, check if API key is configured
-        // In a real implementation, you'd check local storage or config
-        return 'configured' // Assume configured for demo
-      }
-    } catch (error) {
-      return 'unavailable'
-    }
-  }
 
   const handleRefreshProviders = async () => {
     setIsLoading(true)
@@ -318,13 +298,12 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  provider.status === 'available' || provider.status === 'configured'
-                    ? 'bg-green-500/10 text-green-400'
-                    : provider.status === 'unavailable'
+                <span className={`text-xs px-2 py-1 rounded-full ${provider.status === 'available' || provider.status === 'configured'
+                  ? 'bg-green-500/10 text-green-400'
+                  : provider.status === 'unavailable'
                     ? 'bg-red-500/10 text-red-400'
                     : 'bg-yellow-500/10 text-yellow-400'
-                }`}>
+                  }`}>
                   {provider.status.replace('_', ' ')}
                 </span>
 

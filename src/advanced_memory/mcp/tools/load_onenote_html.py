@@ -60,8 +60,7 @@ async def load_onenote_html(
         # Import directory of HTML files
         load_onenote_html(source_path="onenote-export/", folder="imported/onenote")
     """
-    active_project = get_active_project(project)
-    project_url = active_project.project_url
+    get_active_project(project)
 
     # Validate inputs
     if not source_path and not html_content:
@@ -156,7 +155,7 @@ async def load_onenote_html(
                 readable_text = f"# {page_title}\n\n(Content extraction resulted in empty text)"
 
             # Create note in Advanced Memory
-            result = await adn_content(
+            await adn_content(
                 operation="write",
                 identifier=page_title,
                 content=readable_text,

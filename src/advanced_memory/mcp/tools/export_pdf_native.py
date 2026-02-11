@@ -51,7 +51,6 @@ if FPDF_AVAILABLE:
             lines = md_content.split("\n")
             in_code_block = False
             code_lines = []
-            code_language = ""
 
             for line in lines:
                 # Code blocks
@@ -68,7 +67,6 @@ if FPDF_AVAILABLE:
                     else:
                         # Start code block
                         in_code_block = True
-                        code_language = line.strip()[3:].strip()
                     continue
 
                 if in_code_block:
@@ -130,7 +128,7 @@ else:
             raise ImportError("fpdf2 is not installed. Run: pip install fpdf2")
 
 
-@mcp.tool()
+@mcp.tool
 async def export_pdf_native(
     export_path: str,
     source_folder: str = "/",
@@ -404,7 +402,7 @@ async def _export_combined_pdf(
         # Insert TOC placeholder if requested (will be populated after sections are added)
         if make_toc:
             toc = TableOfContents()
-            toc_page = pdf.page_no()
+            pdf.page_no()
             pdf.insert_toc_placeholder(toc.render_toc, pages=1)
 
         # Add each note as a section with bookmark

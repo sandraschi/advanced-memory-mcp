@@ -1,7 +1,7 @@
 import { Clock, CheckCircle, Loader } from 'lucide-react'
 
 interface Research {
-  id: number
+  id: string
   title: string
   sources: string[]
   status: 'completed' | 'in_progress' | 'failed'

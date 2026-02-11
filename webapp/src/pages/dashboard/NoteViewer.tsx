@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, FileText, Tag, Calendar, Eye, Download, Share, MoreVertical, Filter, X } from 'lucide-react'
+import { Search, FileText, Eye, Download, Share, MoreVertical, Filter, X } from 'lucide-react'
 import { apiService } from '../../services/api'
 
 interface Note {
@@ -14,7 +14,7 @@ interface Note {
 }
 
 interface NoteViewerProps {
-  selectedNoteId?: string
+  selectedNoteId?: string | undefined
   onNoteSelect?: (noteId: string) => void
 }
 
@@ -317,7 +317,7 @@ Sustainable energy transition requires coordinated efforts across technology, po
     try {
       setServerStatus('checking')
       // Try to ping the bridge server
-      const response = await fetch('http://localhost:8001/api/v1/health', {
+      const response = await fetch('http://localhost:10705/api/v1/health', {
         method: 'GET',
         signal: AbortSignal.timeout(2000) // 2 second timeout
       })
@@ -331,56 +331,58 @@ Sustainable energy transition requires coordinated efforts across technology, po
     }
   }
 
-  const startServer = async (): Promise<boolean> => {
-    try {
-      setServerStatus('starting')
-      setServerError('')
+  /*
+    const _startServer = async (): Promise<boolean> => {
+      try {
+        setServerStatus('starting')
+        setServerError('')
 
-      console.log('Attempting to start ADN MCP server...')
+        console.log('Attempting to start ADN MCP server...')
 
-      // Try to start the server by opening a terminal/command prompt
-      // This will open a new terminal window with the server start command
+        // Try to start the server by opening a terminal/command prompt
+        // This will open a new terminal window with the server start command
 
-      // For Windows PowerShell
-      const command = 'Start-Process powershell -ArgumentList "cd D:\\Dev\\repos\\advanced-memory-mcp; python -m advanced_memory.mcp.server" -WindowStyle Normal'
+        // For Windows PowerShell
+        const _command = 'Start-Process powershell -ArgumentList "cd D:\\Dev\\repos\\advanced-memory-mcp; python -m advanced_memory.mcp.server" -WindowStyle Normal'
 
-      // Execute the command (this opens a new PowerShell window)
-      // Note: This is a simplified approach. In production, you'd want better error handling
-      // and possibly use a service manager or background process
+        // Execute the command (this opens a new PowerShell window)
+        // Note: This is a simplified approach. In production, you'd want better error handling
+        // and possibly use a service manager or background process
 
-      if (window && window.open) {
-        // Alternative approach: try to open a command prompt
-        // This is more reliable for starting background processes
-        const shellCommand = `cmd.exe /c start cmd.exe /k "cd /d D:\\Dev\\repos\\advanced-memory-mcp && python -m advanced_memory.mcp.server && pause"`
+        if (typeof window !== 'undefined') {
+          // Alternative approach: try to open a command prompt
+          // This is more reliable for starting background processes
+          const _shellCommand = `cmd.exe /c start cmd.exe /k "cd /d D:\\Dev\\repos\\advanced-memory-mcp && python -m advanced_memory.mcp.server && pause"`
 
-        // Use a hidden iframe or similar to execute system commands
-        // For now, we'll provide instructions to the user
-        setServerError('Please start the ADN MCP server manually by running: python -m advanced_memory.mcp.server')
+          // Use a hidden iframe or similar to execute system commands
+          // For now, we'll provide instructions to the user
+          setServerError('Please start the ADN MCP server manually by running: python -m advanced_memory.mcp.server')
 
-        // Wait a bit and check again
-        setTimeout(async () => {
-          const isRunning = await checkServerStatus()
-          if (isRunning) {
-            setServerError('')
-            loadNotes() // Reload notes once server is running
-          }
-        }, 5000)
+          // Wait a bit and check again
+          setTimeout(async () => {
+            const isRunning = await checkServerStatus()
+            if (isRunning) {
+              setServerError('')
+              loadNotes() // Reload notes once server is running
+            }
+          }, 5000)
 
-        return false // Indicate manual intervention needed
+          return false // Indicate manual intervention needed
+        }
+
+        return false
+      } catch (error) {
+        console.error('Error starting server:', error)
+        setServerError('Failed to start server. Please start it manually.')
+        setServerStatus('stopped')
+        return false
       }
-
-      return false
-    } catch (error) {
-      console.error('Error starting server:', error)
-      setServerError('Failed to start server. Please start it manually.')
-      setServerStatus('stopped')
-      return false
     }
-  }
+  */
 
   const checkStartupService = async (): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:8002/health', {
+      const response = await fetch('http://localhost:10733/health', {
         method: 'GET',
         signal: AbortSignal.timeout(1000)
       })
@@ -390,23 +392,25 @@ Sustainable energy transition requires coordinated efforts across technology, po
     }
   }
 
-  const startStartupService = async (): Promise<boolean> => {
-    try {
-      console.log('Attempting to start startup service...')
+  /*
+    const _startStartupService = async (): Promise<boolean> => {
+      try {
+        console.log('Attempting to start startup service...')
 
-      // Since we can't directly execute from browser, we'll try to use a web-based approach
-      // For now, we'll assume the startup service should be running and proceed
-      console.log('Startup service check/attempt completed')
+        // Since we can't directly execute from browser, we'll try to use a web-based approach
+        // For now, we'll assume the startup service should be running and proceed
+        console.log('Startup service check/attempt completed')
 
-      // Small delay to allow for any startup
-      await new Promise(resolve => setTimeout(resolve, 500))
+        // Small delay to allow for any startup
+        await new Promise(resolve => setTimeout(resolve, 500))
 
-      return await checkStartupService()
-    } catch (error) {
-      console.error('Error checking startup service:', error)
-      return false
+        return await checkStartupService()
+      } catch (error) {
+        console.error('Error checking startup service:', error)
+        return false
+      }
     }
-  }
+  */
 
   const startAllServices = async (): Promise<boolean> => {
     try {
@@ -416,7 +420,7 @@ Sustainable energy transition requires coordinated efforts across technology, po
       console.log('Attempting to auto-start all services...')
 
       // Try to start everything via the auto-start service
-      const response = await fetch('http://localhost:8003/start-all', {
+      const response = await fetch('http://localhost:10735/start-all', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
@@ -424,21 +428,25 @@ Sustainable energy transition requires coordinated efforts across technology, po
       if (response.ok) {
         console.log('All services start initiated')
 
-        // Wait for services to start up
+        // Wait for services (incl. bridge via start-bridge) to start up
         await new Promise(resolve => setTimeout(resolve, 5000))
 
-        // Check if bridge server is now running
-        const isRunning = await checkServerStatus()
+        let isRunning = await checkServerStatus()
         if (isRunning) {
           setServerError('')
           console.log('All services started successfully')
           return true
-        } else {
-          console.log('Services started but bridge server not responding')
-          setServerError('Services started but bridge server not responding. Using demo data.')
-          setServerStatus('stopped')
-          return false
         }
+
+        // Bridge may still be starting; try explicit start-bridge then retry
+        console.log('Bridge not up after start-all, trying start-bridge...')
+        isRunning = await startBridgeServer()
+        if (isRunning) return true
+
+        console.log('Services started but bridge server not responding')
+        setServerError('Services started but bridge server not responding. Using demo data.')
+        setServerStatus('stopped')
+        return false
       } else {
         console.log('Auto-start service not available, trying manual startup...')
         return await startBridgeServer()
@@ -453,6 +461,8 @@ Sustainable energy transition requires coordinated efforts across technology, po
 
   const startBridgeServer = async (): Promise<boolean> => {
     try {
+      setServerStatus('starting')
+      setServerError('')
       console.log('Attempting manual bridge server startup...')
 
       // First ensure startup service is available
@@ -461,7 +471,7 @@ Sustainable energy transition requires coordinated efforts across technology, po
         console.log('Startup service not running, attempting to start it...')
         // Try to use auto-start service for startup service
         try {
-          await fetch('http://localhost:8003/start-all', {
+          await fetch('http://localhost:10735/start-all', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
           })
@@ -480,7 +490,7 @@ Sustainable energy transition requires coordinated efforts across technology, po
       }
 
       // Try to start the bridge server via the startup service
-      const response = await fetch('http://localhost:8002/start-bridge', {
+      const response = await fetch('http://localhost:10733/start-bridge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
@@ -711,11 +721,10 @@ Sustainable energy transition requires coordinated efforts across technology, po
               {filteredNotes.length} of {notes.length} notes
             </div>
             <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${
-                serverStatus === 'running' ? 'bg-green-500' :
+              <div className={`w-2 h-2 rounded-full ${serverStatus === 'running' ? 'bg-green-500' :
                 serverStatus === 'starting' ? 'bg-yellow-500 animate-pulse' :
-                'bg-red-500'
-              }`}></div>
+                  'bg-red-500'
+                }`}></div>
               <span className="text-xs text-muted-foreground capitalize">
                 {serverStatus === 'checking' ? 'Checking...' : serverStatus}
               </span>
@@ -741,11 +750,10 @@ Sustainable energy transition requires coordinated efforts across technology, po
                           setSelectedTags([...selectedTags, tag])
                         }
                       }}
-                      className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                        selectedTags.includes(tag)
-                          ? 'bg-accent text-accent-foreground border-accent'
-                          : 'bg-background hover:bg-muted border-border'
-                      }`}
+                      className={`px-3 py-1 text-xs rounded-full border transition-colors ${selectedTags.includes(tag)
+                        ? 'bg-accent text-accent-foreground border-accent'
+                        : 'bg-background hover:bg-muted border-border'
+                        }`}
                     >
                       {tag}
                     </button>
@@ -833,11 +841,11 @@ Sustainable energy transition requires coordinated efforts across technology, po
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent"></div>
                 <span className="ml-2 text-muted-foreground">
                   {serverStatus === 'starting' ? 'Starting server...' :
-                   serverStatus === 'checking' ? 'Checking server status...' :
-                   'Loading notes...'}
+                    serverStatus === 'checking' ? 'Checking server status...' :
+                      'Loading notes...'}
                 </span>
               </div>
-            ) : serverStatus === 'stopped' ? (
+            ) : (serverStatus === 'stopped' || serverStatus === 'starting') ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
@@ -855,14 +863,20 @@ Sustainable energy transition requires coordinated efforts across technology, po
                 )}
                 <div className="space-y-2">
                   <button
-                    onClick={startServer}
+                    onClick={async () => {
+                      const ok = await startBridgeServer()
+                      if (ok) loadNotes()
+                    }}
                     disabled={serverStatus === 'starting'}
                     className="btn btn-primary"
                   >
-                    {serverStatus === 'starting' ? 'Starting Server...' : 'Start Server'}
+                    {serverStatus === 'starting' ? 'Starting Bridge...' : 'Start Bridge'}
                   </button>
                   <button
-                    onClick={checkServerStatus}
+                    onClick={async () => {
+                      await checkServerStatus()
+                      loadNotes()
+                    }}
                     className="btn btn-outline"
                   >
                     Check Status
@@ -870,14 +884,8 @@ Sustainable energy transition requires coordinated efforts across technology, po
                 </div>
                 <div className="mt-4 p-3 bg-muted/50 rounded-md max-w-md mx-auto">
                   <p className="text-xs text-muted-foreground">
-                    <strong>Start Bridge Server:</strong> Run the script:<br />
-                    <code className="bg-background px-1 py-0.5 rounded text-xs">
-                      .\start-bridge.ps1
-                    </code>
-                    <br /><br />
-                    Or manually: <code className="bg-background px-1 py-0.5 rounded text-xs">
-                      node bridge-server.js
-                    </code>
+                    <strong>Start Bridge:</strong> Use the button above (via startup service on 10733).<br />
+                    Or run <code className="bg-background px-1 py-0.5 rounded text-xs">node bridge-server.js</code> in the repo root.
                   </p>
                 </div>
               </div>
@@ -922,9 +930,8 @@ Sustainable energy transition requires coordinated efforts across technology, po
                   <div
                     key={note.id}
                     onClick={() => handleNoteSelect(note)}
-                    className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors ${
-                      selectedNote?.id === note.id ? 'bg-accent/10 border-l-4 border-accent' : ''
-                    }`}
+                    className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors ${selectedNote?.id === note.id ? 'bg-accent/10 border-l-4 border-accent' : ''
+                      }`}
                   >
                     <h3 className="font-medium text-sm mb-2 line-clamp-2">{note.title}</h3>
                     <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{note.content}</p>

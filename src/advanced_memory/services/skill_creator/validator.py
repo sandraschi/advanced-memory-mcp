@@ -266,3 +266,62 @@ def validate_skill(skill_path: str | Path) -> tuple[bool, list[SkillValidationIs
 
     is_valid = len(issues) == 0
     return is_valid, issues
+
+
+def validate_skill_agentskills(skill_path: str | Path) -> tuple[bool, list[str], dict[str, bool]]:
+    """Validate agentskills.io baseline (name, description, structure).
+
+    Returns:
+        (spec_compliant, warnings, agentskills_checks)
+    """
+    path = Path(skill_path).expanduser().resolve()
+    warnings: list[str] = []
+    checks: dict[str, bool] = {
+        "name_present": False,
+        "name_length_1_64": False,
+        "name_hyphen_case": False,
+        "name_matches_directory": False,
+        "description_present": False,
+        "description_length_1_1024": False,
+    }
+
+    if not path.exists() or not path.is_dir():
+        return False, ["Skill path does not exist or is not a directory."], checks
+
+    skill_md = path / "SKILL.md"
+    if not skill_md.exists():
+        return False, ["SKILL.md missing."], checks
+
+    try:
+        data, _ = _read_frontmatter(skill_md)
+    except ValueError:
+        return False, ["Invalid or missing YAML frontmatter."], checks
+
+    name = data.get("name")
+    if name and isinstance(name, str):
+        checks["name_present"] = True
+        checks["name_length_1_64"] = 1 <= len(name) <= 64
+        checks["name_hyphen_case"] = bool(re.fullmatch(r"[a-z0-9-]+", name))
+        checks["name_matches_directory"] = name == path.name
+        if not checks["name_length_1_64"]:
+            warnings.append(f"Name length {len(name)} outside 1-64 chars (agentskills.io)")
+        if not checks["name_hyphen_case"]:
+            warnings.append("Name must be lowercase, digits, hyphens only")
+        if not checks["name_matches_directory"]:
+            warnings.append(f"Name '{name}' does not match directory '{path.name}'")
+    else:
+        warnings.append("Missing 'name' in frontmatter")
+
+    description = data.get("description")
+    if description and isinstance(description, str):
+        checks["description_present"] = True
+        checks["description_length_1_1024"] = 1 <= len(description) <= 1024
+        if not checks["description_length_1_1024"]:
+            warnings.append(
+                f"Description length {len(description)} outside 1-1024 chars (agentskills.io)"
+            )
+    else:
+        warnings.append("Missing or empty 'description' in frontmatter")
+
+    spec_compliant = all(checks.values())
+    return spec_compliant, warnings, checks

@@ -31,8 +31,8 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [currentFolder, setCurrentFolder] = useState('cursor-skills')
-  const [availableFolders, setAvailableFolders] = useState<string[]>(['cursor-skills', 'windsurf-skills', 'adn-skills', 'antigravity-skills'])
+  const [currentFolder, setCurrentFolder] = useState('all')
+  const [availableFolders, setAvailableFolders] = useState<string[]>(['all', 'cursor-skills', 'windsurf-skills', 'adn-skills', 'antigravity-skills'])
   const [showCreateModal, setShowCreateModal] = useState(false)
 
   // Real skills from multiple IDE collections
@@ -788,33 +788,41 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
   const loadSkills = async () => {
     setIsLoading(true)
     try {
-      // Try to fetch real skills from bridge server
-      const response = await apiService.getSkills(currentFolder)
+      const folderParam = currentFolder === 'all' ? undefined : currentFolder
+      const response = await apiService.getSkills(folderParam)
       if (response.success && response.data?.skills) {
         const skillsData = response.data.skills
         setSkills(skillsData)
         setFilteredSkills(skillsData)
 
-        // Update available folders if provided
-        if (response.data.folders) {
-          setAvailableFolders(response.data.folders)
+        if (response.data.folders && response.data.folders.length > 0) {
+          setAvailableFolders((prev) => {
+            const fromApi = response.data!.folders as string[]
+            if (prev[0] === 'all') return ['all', ...fromApi]
+            return fromApi
+          })
         }
+        setIsLoading(false)
         return
       }
 
-      // Bridge server not available - show mock data for demo
       console.log('Bridge server not available - showing mock skills for demo')
       setTimeout(() => {
-        const folderSkills = mockSkills[currentFolder] || []
+        const folderSkills =
+          currentFolder === 'all'
+            ? ([] as Skill[]).concat(...Object.values(mockSkills))
+            : mockSkills[currentFolder] || []
         setSkills(folderSkills)
         setFilteredSkills(folderSkills)
         setIsLoading(false)
       }, 500)
     } catch (error) {
       console.error('Failed to load skills from API, showing mock data:', error)
-      // Show mock data as fallback
       setTimeout(() => {
-        const folderSkills = mockSkills[currentFolder] || []
+        const folderSkills =
+          currentFolder === 'all'
+            ? ([] as Skill[]).concat(...Object.values(mockSkills))
+            : mockSkills[currentFolder] || []
         setSkills(folderSkills)
         setFilteredSkills(folderSkills)
         setIsLoading(false)
@@ -888,9 +896,9 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
               onChange={(e) => setCurrentFolder(e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
             >
-              {availableFolders.map(folder => (
+              {availableFolders.map((folder) => (
                 <option key={folder} value={folder}>
-                  {folder.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  {folder === 'all' ? 'All collections' : folder.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
                 </option>
               ))}
             </select>
@@ -927,11 +935,10 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
                 <div
                   key={skill.id}
                   onClick={() => handleSkillSelect(skill)}
-                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${
-                    selectedSkill?.id === skill.id
+                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${selectedSkill?.id === skill.id
                       ? 'bg-gold-600 border-gold-500'
                       : 'bg-gray-700 border-gray-600 hover:bg-gray-650'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -1094,8 +1101,10 @@ function CreateSkillModal({ onClose }: { onClose: () => void }) {
 
   const updateModule = (index: number, field: keyof SkillModule, value: string) => {
     const updatedModules = [...modules]
-    updatedModules[index][field] = value
-    setModules(updatedModules)
+    if (updatedModules[index]) {
+      updatedModules[index][field] = value
+      setModules(updatedModules)
+    }
   }
 
   const generateSkillContent = async () => {

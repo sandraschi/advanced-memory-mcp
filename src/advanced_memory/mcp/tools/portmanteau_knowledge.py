@@ -8,15 +8,12 @@ for basic knowledge management tasks.
 
 from typing import Annotated, Literal
 
-from loguru import logger
 from pydantic import Field
 
-from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
-@mcp.tool
-async def adn_knowledge(
+async def adn_knowledge_portmanteau(
     operation: Annotated[
         Literal[
             "create",
@@ -97,135 +94,134 @@ async def adn_knowledge(
         # Get recent activity
         adn_knowledge("activity", timeframe="1 week")
     """
-    try:
-        if operation == "create":
-            if not title:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Title required for note creation"
-                )
-            if not content:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Content required for note creation"
-                )
-
-            # Import here to avoid circular imports
-            from advanced_memory.mcp.tools.write_note import write_note
-
-            result = await write_note(
-                title=title,
-                content=content,
-                folder=folder or "",
-                tags=tags or [],
-                entity_type=entity_type or "note",
+    if operation == "create":
+        if not title:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Title required for note creation"
             )
-            return build_success_response("create", result)
+        if not content:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Content required for note creation"
+            )
 
-        elif operation == "read":
-            if not identifier:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note reading"
-                )
+        from advanced_memory.mcp.tools.write_note import write_note
 
-            from advanced_memory.mcp.tools.read_note import read_note
+        result = await write_note.fn(
+            title=title,
+            content=content,
+            folder=folder or "",
+            tags=tags or [],
+            entity_type=entity_type or "note",
+        )
+        return build_success_response("create", result)
 
-            result = await read_note(identifier)
-            return build_success_response("read", result)
+    elif operation == "read":
+        if not identifier:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note reading"
+            )
 
-        elif operation == "update":
-            if not identifier:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note update"
-                )
+        from advanced_memory.mcp.tools.read_note import read_note
 
-            from advanced_memory.mcp.tools.edit_note import edit_note
+        result = await read_note.fn(identifier)
+        return build_success_response("read", result)
 
-            result = await edit_note(identifier, "replace", content or "")
-            return build_success_response("update", result)
+    elif operation == "update":
+        if not identifier:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note update"
+            )
 
-        elif operation == "delete":
-            if not identifier:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note deletion"
-                )
+        from advanced_memory.mcp.tools.edit_note import edit_note
 
-            from advanced_memory.mcp.tools.delete_note import delete_note
+        result = await edit_note.fn(identifier, "replace", content or "")
+        return build_success_response("update", result)
 
-            result = await delete_note(identifier)
-            return build_success_response("delete", result)
+    elif operation == "delete":
+        if not identifier:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note deletion"
+            )
 
-        elif operation == "move":
-            if not identifier or not folder:
-                return build_error_response(
-                    "VALIDATION_ERROR",
-                    "MISSING_PARAMETER",
-                    "Identifier and folder required for move operation",
-                )
+        from advanced_memory.mcp.tools.delete_note import delete_note
 
-            from advanced_memory.mcp.tools.move_note import move_note
+        result = await delete_note.fn(identifier)
+        return build_success_response("delete", result)
 
-            result = await move_note(identifier, folder)
-            return build_success_response("move", result)
+    elif operation == "move":
+        if not identifier or not folder:
+            return build_error_response(
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier and folder required for move operation",
+            )
 
-        elif operation == "search":
-            if not query:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for search operation"
-                )
+        from advanced_memory.mcp.tools.move_note import move_note
 
-            from advanced_memory.mcp.tools.search import search_notes
+        result = await move_note.fn(identifier, folder)
+        return build_success_response("move", result)
 
-            result = await search_notes(query, page=1, page_size=20)
-            return build_success_response("search", result)
+    elif operation == "search":
+        if not query:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for search operation"
+            )
 
-        elif operation == "list":
+        from advanced_memory.mcp.tools.search import search_notes
+
+        result = await search_notes.fn(query, page=1, results_per_page=20)
+        return build_success_response("search", result)
+
+    elif operation == "list":
+        try:
             from advanced_memory.mcp.tools.list_directory import list_directory
 
-            result = await list_directory(path or "", depth=depth or 1)
+            result = await list_directory.fn(path or "", depth=depth or 1)
             return build_success_response("list", result)
-
-        elif operation == "navigate":
-            if not identifier:
-                return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for navigation"
-                )
-
-            from advanced_memory.mcp.tools.build_context import build_context
-
-            result = await build_context(identifier, depth=depth or 2)
-            return build_success_response("navigate", result)
-
-        elif operation == "context":
-            if not identifier:
-                return build_error_response(
-                    "VALIDATION_ERROR",
-                    "MISSING_PARAMETER",
-                    "Identifier required for context building",
-                )
-
-            from advanced_memory.mcp.tools.build_context import build_context
-
-            result = await build_context(identifier, depth=depth or 2)
-            return build_success_response("context", result)
-
-        elif operation == "activity":
-            from advanced_memory.mcp.tools.recent_activity import recent_activity
-
-            result = await recent_activity("all", depth=10, timeframe=timeframe or "1d")
-            return build_success_response("activity", result)
-
-        elif operation == "status":
-            from advanced_memory.mcp.tools.status import status
-
-            result = await status("basic")
-            return build_success_response("status", result)
-
-        else:
+        except Exception as e:
             return build_error_response(
-                "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown operation: {operation}"
+                "LIST_FAILED",
+                "LIST_FAILED",
+                f"List operation failed internal: {type(e).__name__}: {str(e)}",
             )
 
-    except Exception as e:
-        logger.error(f"Knowledge operation '{operation}' failed: {e}")
+    elif operation == "navigate":
+        if not identifier:
+            return build_error_response(
+                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for navigation"
+            )
+
+        from advanced_memory.mcp.tools.build_context import build_context
+
+        result = await build_context.fn(identifier, depth=depth or 2)
+        return build_success_response("navigate", result)
+
+    elif operation == "context":
+        if not identifier:
+            return build_error_response(
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier required for context building",
+            )
+
+        from advanced_memory.mcp.tools.build_context import build_context
+
+        result = await build_context.fn(identifier, depth=depth or 2)
+        return build_success_response("context", result)
+
+    elif operation == "activity":
+        from advanced_memory.mcp.tools.recent_activity import recent_activity
+
+        result = await recent_activity.fn("all", depth=10, timeframe=timeframe or "1d")
+        return build_success_response("activity", result)
+
+    elif operation == "status":
+        from advanced_memory.mcp.tools.status import status
+
+        result = await status.fn("basic")
+        return build_success_response("status", result)
+
+    else:
         return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
+            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown operation: {operation}"
         )

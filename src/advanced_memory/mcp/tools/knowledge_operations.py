@@ -1,5 +1,7 @@
 """Knowledge Operations - Swiss Army Knife tool for bulk operations and content management."""
 
+import asyncio
+import json
 from collections import Counter
 from typing import Any
 
@@ -9,12 +11,12 @@ from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_post
+from advanced_memory.mcp.tools.utils import call_get, call_post
 from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(name="adn_knowledge")
-async def adn_knowledge(
+@mcp.tool(name="adn_knowledge_bulk")
+async def adn_knowledge_bulk(
     operation: str,
     filters: dict[str, Any] | None = None,
     action: dict[str, Any] | None = None,
@@ -23,75 +25,9 @@ async def adn_knowledge(
     project: str | None = None,
 ) -> str:
     """Comprehensive knowledge management tool for Advanced Memory knowledge base.
-
-    This point-of-entry tool provides a unified interface for complex knowledge
-    operations, including bulk management, tag maintenance, content validation,
-    and LLM-powered research orchestration.
-
-    ---------------------------------------------------------------------------
-    [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 18+ knowledge operations into one tool to prevent tool explosion while maintaining full functionality.
-
-    ---------------------------------------------------------------------------
-    [PARAMETER DESIGN]
-    The parameters are categorized by operation type:
-    - Maintenance (bulk_*): Uses 'filters' to select notes and 'action' to apply changes.
-    - Tags (tag_*): Handles analytics, consolidation, and cleanup.
-    - Research (research_*): Topic-based planning and structured methodology.
-    - AI Analysis (analyze_*): LLM-powered insights, gap discovery, and clustering.
-
-    ---------------------------------------------------------------------------
-    [SUPPORTED OPERATIONS]
-
-    Maintenance & Bulk Operations:
-    - bulk_update: Batch update multiple notes (tags, content, metadata).
-    - bulk_move: Relocate multiple notes between folders.
-    - bulk_delete: Remove multiple notes (non-destructive by default).
-    - find_duplicates: Identify similar content for consolidation.
-    - validate_content: Check note quality, broken links, and formatting.
-
-    Tag Management:
-    - tag_analytics: Analyze tag usage patterns and statistics.
-    - consolidate_tags: Merge semantically similar tags into canonical forms.
-    - tag_maintenance: Clean up duplicates and standardize casing.
-
-    ---------------------------------------------------------------------------
-    [PREREQUISITES]
-    - Active project session for all operations.
-    - Configured LLM provider (via adn_llm) for AI operations.
-
-    ---------------------------------------------------------------------------
-    [PARAMETERS]
-    - operation (str): The knowledge operation to perform (Required).
-    - filters (dict): Filtering criteria (e.g., {"tags": ["draft"], "folder": "notes"}).
-    - action (dict): Action parameters (e.g., {"add_tags": ["final"], "destination": "archive"}).
-    - dry_run (bool): Preview changes without applying them (Default: True).
-    - limit (int): Maximum items to process/analyze (Default: 100).
-    - project (str): Optional override for active project name.
-
-    ---------------------------------------------------------------------------
-    [USAGE]
-    Use this tool for high-level knowledge maintenance and research planning.
-    Always use 'dry_run=True' for bulk updates to preview changes.
-
-    ---------------------------------------------------------------------------
-    [EXAMPLES]
-
-    - Analyze tag usage across the project:
-      adn_knowledge(operation="tag_analytics")
-
-    - Bulk move draft notes to archive (dry run):
-      adn_knowledge(operation="bulk_move", filters={"tags": ["draft"]}, action={"destination": "archive"})
-
-    - Find duplicate content in the 'inbox':
-      adn_knowledge(operation="find_duplicates", filters={"folder": "inbox"})
-
-    ---------------------------------------------------------------------------
-    [ERRORS]
-    - Missing Parameter: Required filters or action for specific operations.
-    - LLM Unavailable: AI operations failed due to lack of configured LLM client.
-    - Invalid Operation: The specified operation is not supported.
+    (Bulk operations, maintenance, and analytics)
     """
+
     try:
         ConfigManager()
 
@@ -116,8 +52,12 @@ async def adn_knowledge(
             return await _handle_bulk_move(filters or {}, action or {}, dry_run, limit, project)
         elif operation == "bulk_delete":
             return await _handle_bulk_delete(filters or {}, dry_run, limit, project)
+        elif operation == "find_runts":
+            return await _handle_find_runts(filters or {}, limit, project)
+        elif operation == "find_junk":
+            return await _handle_find_junk(filters or {}, action or {}, limit, project)
         else:
-            return f"[UNICODE] Unknown operation: {operation}\n\nAvailable operations: tag_analytics, consolidate_tags, tag_maintenance, bulk_update, validate_content, project_stats, find_duplicates, bulk_move, bulk_delete"
+            return f"[UNICODE] Unknown operation: {operation}\n\nAvailable operations: tag_analytics, consolidate_tags, tag_maintenance, bulk_update, validate_content, project_stats, find_duplicates, bulk_move, bulk_delete, find_runts, find_junk"
 
     except Exception as e:
         logger.error(f"Error in knowledge_operations: {e}")
@@ -127,15 +67,12 @@ async def adn_knowledge(
 async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> str:
     """Analyze tag usage and provide statistics."""
     try:
-        # Get all entities from search API
-        search_query = SearchQuery(
-            text="*",  # Get all content
-            types=["note"],
-        )
+        active = get_active_project(project)
+        search_query = SearchQuery(text="*", types=["note"])
 
         response = await call_post(
             client,
-            "/api/search",
+            f"{active.project_url}/search",
             params={"page": 1, "page_size": 1000},
             json=search_query.model_dump(),
         )
@@ -418,17 +355,13 @@ async def _handle_content_validation(
 
 async def _handle_project_stats(action: dict[str, Any], project: str | None) -> str:
     """Generate comprehensive project statistics."""
-    target_project = project or get_active_project().name
-
-    # Get project data
-    search_query = SearchQuery(
-        text="*",  # All content
-        types=["note"],
-    )
+    active = get_active_project(project)
+    target_project = active.name
+    search_query = SearchQuery(text="*", types=["note"])
 
     response = await call_post(
         client,
-        "/api/search",
+        f"{active.project_url}/search",
         params={"page": 1, "page_size": 1000},
         json=search_query.model_dump(),
     )
@@ -625,11 +558,133 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 """
 
 
+async def _handle_find_runts(filters: dict[str, Any], limit: int, project: str | None) -> str:
+    """Find short/runt notes that could benefit from enhance with expand_sections."""
+    max_len = int(filters.get("max_content_length", 500))
+    notes = await _find_notes_with_filters(filters, min(limit * 2, 200), project)
+    if not notes:
+        return "**Find Runts**\n\nNo notes found matching filters."
+
+    active = get_active_project(project)
+    base = active.project_url
+    runts: list[dict[str, Any]] = []
+
+    async def fetch_length(note: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        permalink = note.get("permalink") or note.get("file_path", "")
+        if not permalink:
+            return note, -1
+        try:
+            url = f"{base}/resource/{permalink}"
+            resp = await call_get(client, url)
+            if resp.status_code == 200:
+                content = resp.text
+                return note, len(content)
+        except Exception:
+            pass
+        return note, -1
+
+    tasks = [fetch_length(n) for n in notes[: limit * 2]]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    for r in results:
+        if isinstance(r, Exception):
+            continue
+        note, length = r
+        if 0 <= length <= max_len:
+            runts.append({**note, "content_length": length})
+
+    runts = runts[:limit]
+    lines = [
+        f"- `{r.get('permalink', r.get('title', ''))}` ({r.get('content_length', 0)} chars)"
+        for r in runts
+    ]
+    return f"""**Find Runts** (content <= {max_len} chars)
+
+**Filters:** {filters}
+**Found:** {len(runts)} runt note(s)
+
+**Identifiers for adn_content enhance:**
+{chr(10).join(lines) if lines else "(none)"}
+
+**Example:** adn_content("enhance", identifier="content/note-id", expand_sections=True)
+"""
+
+
+async def _handle_find_junk(
+    filters: dict[str, Any], action: dict[str, Any], limit: int, project: str | None
+) -> str:
+    """LLM quality assessment of notes. Returns narrative or structured JSON."""
+    notes = await _find_notes_with_filters(filters, min(limit, 20), project)
+    if not notes:
+        return "**Find Junk**\n\nNo notes found matching filters."
+
+    format_type = (action.get("format") or "narrative").lower()
+    if format_type not in ("narrative", "structured", "json"):
+        format_type = "narrative"
+
+    active = get_active_project(project)
+    base = active.project_url
+
+    assessments: list[dict[str, Any] | str] = []
+
+    try:
+        from advanced_memory.services.llm_client import get_llm_client
+
+        llm = get_llm_client()
+    except Exception as e:
+        return (
+            f"**Find Junk**\n\nLLM unavailable: {e}. Configure adn_llm or start Ollama/LM Studio."
+        )
+
+    for note in notes[:limit]:
+        permalink = note.get("permalink") or note.get("file_path", "")
+        if not permalink:
+            continue
+        try:
+            url = f"{base}/resource/{permalink}"
+            resp = await call_get(client, url)
+            if resp.status_code != 200:
+                assessments.append({"permalink": permalink, "error": f"HTTP {resp.status_code}"})
+                continue
+            content = resp.text[:3000]
+        except Exception as e:
+            assessments.append({"permalink": permalink, "error": str(e)})
+            continue
+
+        system = """You are a note quality assessor. Evaluate the note on: clarity, completeness, structure, factual_accuracy, outdated_tech, needs_expansion. Be concise."""
+        prompt = f"""Assess this note (permalink: {permalink}):
+
+{content}
+
+Return {"valid JSON only" if format_type == "structured" else "a brief 1-3 sentence assessment"}. For structured: {{"permalink":"...","overall":"good|fair|poor","criteria":{{"clarity":1-5,"completeness":1-5,"structure":1-5,"needs_expansion":bool}},"summary":"..."}}"""
+
+        try:
+            if format_type == "structured":
+                raw = await llm.generate_json(prompt, system, max_tokens=300, temperature=0.2)
+                if isinstance(raw, dict):
+                    raw["permalink"] = permalink
+                assessments.append(
+                    raw if isinstance(raw, dict) else {"permalink": permalink, "raw": str(raw)}
+                )
+            else:
+                out = await llm.generate(prompt, system, max_tokens=200, temperature=0.2)
+                assessments.append(f"**{permalink}**: {out.strip()}")
+        except Exception as e:
+            assessments.append({"permalink": permalink, "error": str(e)})
+
+    if format_type == "structured":
+        return f"**Find Junk** (structured)\n\n```json\n{json.dumps(assessments, indent=2)}\n```"
+    return f"**Find Junk** (narrative)\n\n{chr(10).join(str(a) for a in assessments)}"
+
+
 async def _find_notes_with_filters(
     filters: dict[str, Any], limit: int, project: str | None
 ) -> list[dict[str, Any]]:
     """Find notes matching the given filters."""
     try:
+        active = get_active_project(project)
+        base = active.project_url
+
         # Build search query from filters
         search_text = "*"
 
@@ -638,9 +693,10 @@ async def _find_notes_with_filters(
 
         search_query = SearchQuery(text=search_text, types=["note"])
 
+        search_url = f"{base}/search"
         response = await call_post(
             client,
-            "/api/search",
+            search_url,
             params={"page": 1, "page_size": min(limit, 1000)},
             json=search_query.model_dump(),
         )
@@ -649,19 +705,28 @@ async def _find_notes_with_filters(
             return []
 
         response_data = response.json()
-        if not hasattr(response_data, "results") or not response_data.results:
+        results = (
+            response_data.get("results", [])
+            if isinstance(response_data, dict)
+            else getattr(response_data, "results", []) or []
+        )
+        if not results:
             return []
+
+        def _g(o: Any, k: str, d: Any = "") -> Any:
+            return o.get(k, d) if isinstance(o, dict) else getattr(o, k, d)
 
         # Apply additional filters
         filtered_results = []
-        for result in response_data.results:
+        for result in results:
             if _matches_filters(result, filters):
                 filtered_results.append(
                     {
-                        "id": getattr(result, "id", ""),
-                        "title": getattr(result, "title", ""),
-                        "file_path": getattr(result, "file_path", ""),
-                        "type": getattr(result, "type", ""),
+                        "id": _g(result, "id", ""),
+                        "title": _g(result, "title", ""),
+                        "file_path": _g(result, "file_path", ""),
+                        "permalink": _g(result, "permalink", ""),
+                        "type": _g(result, "type", ""),
                     }
                 )
 
@@ -672,11 +737,16 @@ async def _find_notes_with_filters(
         return []
 
 
-def _matches_filters(result, filters: dict[str, Any]) -> bool:
+def _matches_filters(result: Any, filters: dict[str, Any]) -> bool:
     """Check if a result matches the given filters."""
+    file_path = (
+        result.get("file_path", "")
+        if isinstance(result, dict)
+        else getattr(result, "file_path", "")
+    )
+
     # Folder filter
     if "folder" in filters:
-        file_path = getattr(result, "file_path", "")
         if not file_path.startswith(filters["folder"]):
             return False
 

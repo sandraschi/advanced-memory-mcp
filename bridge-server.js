@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs').promises;
 
 const app = express();
-const PORT = 8001; // Different from main server port 8000
+const PORT = parseInt(process.env.ADN_BRIDGE_PORT, 10) || 10705;
 
 app.use(cors());
 app.use(express.json());
@@ -21,128 +21,115 @@ const mcpProcesses = new Map();
 const mcpClients = new Map(); // Map of server names to MCP clients
 let nextRequestId = 1;
 
-// Get skill directory path for a given folder
+// Get skill directory path for a given folder (absolute, resolved)
 function getSkillDirectory(folderName) {
-  // Skills are in the folders you specified
-  const userHome = process.env.USERPROFILE || process.env.HOME;
-  console.log(`Getting skill directory for ${folderName}, userHome: ${userHome}`);
-
+  const userHome = process.env.USERPROFILE || process.env.HOME || '';
+  if (!userHome && (folderName === 'cursor-skills' || folderName === 'windsurf-skills' || folderName === 'antigravity-skills')) {
+    return null;
+  }
+  let dir;
   switch (folderName) {
     case 'cursor-skills':
-      return path.join(userHome, '.cursor', 'skills-cursor');
+      dir = path.join(userHome, '.cursor', 'skills-cursor');
+      break;
     case 'windsurf-skills':
-      return path.join(userHome, '.codeium', 'windsurf', 'skills');
+      dir = path.join(userHome, '.codeium', 'windsurf', 'skills');
+      break;
     case 'adn-skills':
-      return path.join(__dirname, 'skills');
+      dir = path.join(__dirname, 'skills');
+      break;
     case 'antigravity-skills':
-      return path.join(userHome, '.gemini', 'antigravity', 'skills');
+      dir = path.join(userHome, '.gemini', 'antigravity', 'skills');
+      break;
     default:
       return null;
   }
+  return path.resolve(dir);
 }
 
-// Scan skill directory for SKILL.md files
+// Scan skill directory for SKILL.md files (recursive for nested layouts e.g. adn skills/creative/<skill>/SKILL.md)
 async function scanSkillDirectory(skillDir, folderName) {
   const skills = [];
 
-  try {
-    console.log(`Attempting to access skill directory: ${skillDir}`);
-    // Check if directory exists
-    await fs.access(skillDir);
-    console.log(`Directory ${skillDir} exists, reading contents...`);
-
-    // Read directory contents
-    const entries = await fs.readdir(skillDir, { withFileTypes: true });
-    console.log(`Found ${entries.length} entries in ${skillDir}`);
-
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        const skillPath = path.join(skillDir, entry.name);
-        const skillMdPath = path.join(skillPath, 'SKILL.md');
-        console.log(`Checking skill: ${entry.name} at ${skillMdPath}`);
-
-        try {
-          // Check if SKILL.md exists
-          await fs.access(skillMdPath);
-          console.log(`Found SKILL.md for ${entry.name}`);
-
-          // Read SKILL.md content
-          const content = await fs.readFile(skillMdPath, 'utf8');
-          console.log(`Read ${content.length} characters from ${skillMdPath}`);
-
-          // Parse frontmatter (simple parsing)
-          const skillData = parseSkillFrontmatter(content, folderName);
-          if (skillData) {
-            skillData.filePath = path.relative(__dirname, skillMdPath);
-            skills.push(skillData);
-            console.log(`Successfully parsed skill: ${skillData.title}`);
-          } else {
-            console.log(`Failed to parse skill data for ${entry.name}`);
-          }
-        } catch (error) {
-          console.log(`SKILL.md not found or unreadable for ${entry.name}:`, error.message);
-          continue;
-        }
-      } else {
-        console.log(`Skipping non-directory entry: ${entry.name}`);
-      }
-    }
-  } catch (error) {
-    // Directory doesn't exist or can't be read
-    console.log(`Skill directory ${skillDir} not accessible:`, error.message);
+  function safeFilePath(skillMdPath, dirName) {
+    try {
+      const rel = path.relative(__dirname, skillMdPath);
+      if (!rel.startsWith('..') && !path.isAbsolute(rel)) return rel;
+    } catch (_) { /* cross-drive etc. */ }
+    return path.join(folderName, dirName, 'SKILL.md');
   }
 
-  console.log(`Returning ${skills.length} skills from ${skillDir}`);
+  async function scanDir(dir) {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch (e) {
+      return;
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const skillPath = path.join(dir, entry.name);
+      const skillMdPath = path.join(skillPath, 'SKILL.md');
+      try {
+        await fs.access(skillMdPath);
+        const raw = await fs.readFile(skillMdPath, 'utf8');
+        const content = raw.trimStart();
+        const skillData = parseSkillFrontmatter(content, folderName, entry.name);
+        if (skillData) {
+          skillData.filePath = safeFilePath(skillMdPath, entry.name);
+          skills.push(skillData);
+        }
+      } catch {
+        await scanDir(skillPath);
+      }
+    }
+  }
+
+  try {
+    await fs.access(skillDir);
+    await scanDir(skillDir);
+  } catch (_) { }
   return skills;
 }
 
-// Parse SKILL.md frontmatter and content
-function parseSkillFrontmatter(content, folderName) {
+// Parse SKILL.md frontmatter and content; dirName fallback when no frontmatter
+function parseSkillFrontmatter(content, folderName, dirName) {
   try {
-    console.log('Parsing skill content, length:', content.length);
+    const frontmatterMatch = content.match(/^\s*---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+    let title = dirName ? dirName.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Untitled Skill';
+    let description = '';
+    let tags = [];
+    let body = content;
 
-    // Simple frontmatter parsing (between --- markers)
-    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-
-    if (!frontmatterMatch) {
-      console.log('No frontmatter found, returning null');
-      return null;
-    }
-
-    const frontmatter = frontmatterMatch[1];
-    const body = frontmatterMatch[2];
-    console.log('Frontmatter:', frontmatter.substring(0, 100));
-    console.log('Body length:', body.length);
-
-    // Parse YAML-like frontmatter
-    const metadata = {};
-    const lines = frontmatter.split('\n');
-
-    for (const line of lines) {
-      const colonIndex = line.indexOf(':');
-      if (colonIndex > 0) {
-        const key = line.substring(0, colonIndex).trim();
-        const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
-        metadata[key] = value;
-        console.log(`Parsed metadata: ${key} = ${value}`);
+    if (frontmatterMatch) {
+      const frontmatter = frontmatterMatch[1];
+      body = frontmatterMatch[2].trim();
+      const metadata = {};
+      const lines = frontmatter.split('\n');
+      for (const line of lines) {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > 0 && !line.match(/^\s+/)) {
+          const key = line.substring(0, colonIndex).trim();
+          const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
+          metadata[key] = value;
+        }
       }
+      title = metadata.name || metadata.title || title;
+      description = metadata.description || '';
+      tags = metadata.tags ? metadata.tags.split(',').map((t) => t.trim()) : [];
     }
 
-    const skillData = {
-      id: Date.now() + Math.random(), // Simple ID generation
-      title: metadata.name || metadata.title || 'Untitled Skill',
-      description: metadata.description || '',
+    return {
+      id: Date.now() + Math.random(),
+      title,
+      description,
       folder: folderName,
-      tags: metadata.tags ? metadata.tags.split(',').map(t => t.trim()) : [],
-      created: metadata.created || new Date().toISOString(),
-      modified: metadata.modified || new Date().toISOString(),
-      content: body.trim()
+      tags,
+      created: new Date().toISOString(),
+      modified: new Date().toISOString(),
+      content: body
     };
-
-    console.log('Returning skill data:', skillData.title);
-    return skillData;
   } catch (error) {
-    console.error('Error parsing skill frontmatter:', error);
     return null;
   }
 }
@@ -489,14 +476,14 @@ class MCPClient {
 
         console.log(`ADN MCP server process started with PID: ${this.process.pid}`);
 
-        let stdoutBuffer = '';
+        this.stdoutBuffer = '';
         let stderrBuffer = '';
 
         // Handle stdout (MCP protocol messages)
         this.process.stdout.on('data', (data) => {
           const chunk = data.toString();
-          stdoutBuffer += chunk;
-          this._processMCPMessages(stdoutBuffer);
+          this.stdoutBuffer += chunk;
+          this.stdoutBuffer = this._processMCPMessages(this.stdoutBuffer);
         });
 
         // Handle stderr
@@ -821,13 +808,14 @@ class MCPClient {
       this.initialized = true;
 
       console.log('Sending initialized notification...');
-      // Send initialized notification (no response expected)
+      // Notifications have no id and no response - send fire-and-forget to avoid 30s timeout
       try {
-        await this.sendRequest('notifications/initialized');
+        const notif = { jsonrpc: '2.0', method: 'notifications/initialized' };
+        const body = JSON.stringify(notif);
+        this.process.stdin.write(`Content-Length: ${Buffer.byteLength(body, 'utf8')}\r\n\r\n${body}`);
         console.log('Initialized notification sent');
-      } catch (error) {
-        // Notifications don't return responses, so this is expected
-        console.log('Initialized notification sent (no response expected)');
+      } catch (err) {
+        console.log('Initialized notification send error (non-fatal):', err.message);
       }
 
       // Discover available tools and prompts
@@ -1332,6 +1320,20 @@ async function initializeExternalMCPServers() {
   }
 }
 
+// Unwrap MCP tools/call result: server may return { content: [ { type: "text", text: "<json>" } ] }
+function unwrapMCPToolResult(mcpResult) {
+  if (!mcpResult) return mcpResult;
+  const first = mcpResult.content && mcpResult.content[0];
+  if (first && typeof first.text === 'string') {
+    try {
+      return JSON.parse(first.text);
+    } catch (e) {
+      return mcpResult;
+    }
+  }
+  return mcpResult;
+}
+
 // MCP communication helper - uses proper MCP client
 async function sendMCPRequest(toolName, params = {}) {
   const adnClient = mcpClients.get('adn');
@@ -1351,6 +1353,12 @@ async function sendMCPRequest(toolName, params = {}) {
 app.get('/test', (req, res) => {
   console.log('Test route called from:', req.ip, req.path);
   res.json({ status: 'ok', message: 'Express server is working', timestamp: new Date().toISOString() });
+});
+
+// Lightweight health for webapp (no MCP init). Webapp checks this to detect bridge up.
+app.get('/api/v1/health', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(200).json({ status: 'ok', bridge: 'running', timestamp: new Date().toISOString() });
 });
 
 app.get('/health', async (req, res) => {
@@ -1595,34 +1603,87 @@ app.post('/api/v1/mcp/external/:server/:tool', async (req, res) => {
 });
 
 // Notes routes - now using real MCP communication
+const MCP_INIT_TIMEOUT_MS = 8000;
+
 app.get('/api/v1/notes', async (req, res) => {
   try {
-    // Ensure MCP is initialized
-    await ensureMCPInitialized();
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('MCP init timeout')), MCP_INIT_TIMEOUT_MS)
+    );
+    try {
+      await Promise.race([ensureMCPInitialized(), timeout]);
+    } catch (e) {
+      if (e && e.message === 'MCP init timeout') {
+        console.warn('Notes: MCP init timeout, returning empty notes');
+        return res.json({
+          success: true,
+          data: { notes: [], total: 0, page: 1, pages: 1 }
+        });
+      }
+      throw e;
+    }
 
-    console.log('Fetching notes via MCP...');
-    const mcpResponse = await sendMCPRequest('adn_search', {
-      operation: 'notes',
-      query: req.query.query || '',
-      page: parseInt(req.query.page) || 1,
-      page_size: parseInt(req.query.limit) || 10
-    });
+    const query = (req.query.query || '').trim();
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.limit) || 50;
 
-    console.log('MCP search response:', mcpResponse);
+    // For empty query: use recent_activity to list notes (adn_search returns nothing for empty query)
+    let rawResults = [];
+    let resultMeta = { total_results: 0, current_page: page, total_pages: 1, page_size: pageSize };
 
-    // Format MCP response for webapp
+    if (!query) {
+      console.log('Fetching notes via recent_activity (empty query)...', { page, page_size: pageSize });
+      const activityResponse = await sendMCPRequest('adn_navigation', {
+        operation: 'recent_activity',
+        type_filter: 'entity',
+        timeframe: '365d',
+        page,
+        page_size: pageSize
+      });
+      const payload = unwrapMCPToolResult(activityResponse);
+      const ctx = payload?.result;
+      const ctxItems = ctx?.items || ctx?.results || [];
+      rawResults = Array.isArray(ctxItems) ? ctxItems.map((r) => ({
+        title: r.title || r.primary_result?.title || 'Untitled',
+        permalink: r.permalink || r.primary_result?.permalink || '',
+        content_preview: r.content_preview || r.content || ''
+      })) : [];
+      resultMeta = { total_results: ctx?.total_results ?? rawResults.length, current_page: page, total_pages: 1, page_size: pageSize };
+    } else {
+      console.log('Fetching notes via MCP adn_search...', { query, page, page_size: pageSize });
+      const mcpResponse = await sendMCPRequest('adn_search', {
+        operation: 'notes',
+        query,
+        page,
+        page_size: pageSize
+      });
+      const payload = unwrapMCPToolResult(mcpResponse);
+      rawResults = payload?.result?.results || [];
+      resultMeta = payload?.result || { total_results: rawResults.length, current_page: page, total_pages: 1, page_size: pageSize };
+    }
+
+    console.log('MCP notes response:', rawResults.length, 'items');
+
+    // resultMeta already set above
+    const total = resultMeta.total_results ?? (Array.isArray(rawResults) ? rawResults.length : 0);
+    const totalPages = resultMeta.total_pages ?? 1;
+    const currentPage = resultMeta.current_page ?? page;
+
     const notes = [];
-    if (mcpResponse && Array.isArray(mcpResponse)) {
-      mcpResponse.forEach(item => {
+    if (Array.isArray(rawResults)) {
+      rawResults.forEach((item) => {
         if (item && typeof item === 'object') {
+          const permalink = item.permalink || item.id;
           notes.push({
-            id: item.id || item.permalink || item.title?.toLowerCase().replace(/\s+/g, '-'),
+            id: permalink || item.title?.toLowerCase?.()?.replace(/\s+/g, '-') || `note-${notes.length}`,
             title: item.title || 'Untitled',
-            content: item.content || item.summary || '',
+            content: item.content_preview || item.content || item.summary || '',
             tags: Array.isArray(item.tags) ? item.tags : [],
             created: item.created || item.date || new Date().toISOString(),
             modified: item.modified || item.updated || new Date().toISOString(),
-            permalink: item.permalink || item.id
+            wordCount: item.wordCount ?? (item.content_preview ? item.content_preview.split(/\s+/).length : 0),
+            connections: item.connections ?? 0,
+            permalink
           });
         }
       });
@@ -1631,10 +1692,10 @@ app.get('/api/v1/notes', async (req, res) => {
     res.json({
       success: true,
       data: {
-        notes: notes,
-        total: notes.length,
-        page: 1,
-        pages: 1
+        notes,
+        total,
+        page: currentPage,
+        pages: totalPages
       }
     });
   } catch (error) {
@@ -1647,30 +1708,66 @@ app.get('/api/v1/notes', async (req, res) => {
   }
 });
 
-app.get('/api/v1/notes/:id', async (req, res) => {
+// Use param to capture permalinks with slashes (e.g. specs/search-spec)
+app.get('/api/v1/notes/:path(.*)', async (req, res) => {
+  const noteId = req.params.path || req.path.replace(/^\/api\/v1\/notes\/?/, '') || '';
+  if (!noteId) {
+    return res.status(400).json({ success: false, error: 'Note ID required' });
+  }
   try {
-    // Ensure MCP is initialized
-    await ensureMCPInitialized();
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('MCP init timeout')), MCP_INIT_TIMEOUT_MS)
+    );
+    try {
+      await Promise.race([ensureMCPInitialized(), timeout]);
+    } catch (e) {
+      if (e && e.message === 'MCP init timeout') {
+        return res.status(503).json({ success: false, error: 'MCP initializing' });
+      }
+      throw e;
+    }
 
-    console.log(`Fetching note ${req.params.id} via MCP...`);
+    console.log(`Fetching note ${noteId} via MCP...`);
     const mcpResponse = await sendMCPRequest('adn_content', {
       operation: 'read',
-      identifier: req.params.id
+      identifier: noteId
     });
+    const payload = unwrapMCPToolResult(mcpResponse);
 
-    console.log('MCP content response:', mcpResponse);
+    console.log('MCP content response:', payload ? (typeof payload === 'string' ? 'string' : 'object') : 'null');
 
-    if (mcpResponse && typeof mcpResponse === 'object') {
-      const noteData = {
-        id: mcpResponse.id || req.params.id,
-        title: mcpResponse.title || 'Untitled',
-        content: mcpResponse.content || mcpResponse.text || '',
-        tags: Array.isArray(mcpResponse.tags) ? mcpResponse.tags : [],
-        created: mcpResponse.created || mcpResponse.date || new Date().toISOString(),
-        modified: mcpResponse.modified || mcpResponse.updated || new Date().toISOString(),
-        permalink: mcpResponse.permalink || mcpResponse.id
+    // adn_content read returns either: (a) raw markdown string, or (b) build_success_response dict with result
+    let noteData = null;
+    if (typeof payload === 'string' && payload.length > 0) {
+      // Raw markdown - extract title from first # heading
+      const titleMatch = payload.match(/^#\s+(.+)$/m);
+      noteData = {
+        id: noteId,
+        title: titleMatch ? titleMatch[1].trim() : noteId.replace(/-/g, ' '),
+        content: payload,
+        tags: [],
+        created: new Date().toISOString(),
+        modified: new Date().toISOString(),
+        wordCount: payload.split(/\s+/).filter(Boolean).length,
+        connections: 0,
+        permalink: noteId
       };
+    } else if (payload && typeof payload === 'object') {
+      const r = payload.result || payload;
+      noteData = {
+        id: r.id || r.permalink || noteId,
+        title: r.title || 'Untitled',
+        content: r.content || r.text || (typeof r === 'string' ? r : ''),
+        tags: Array.isArray(r.tags) ? r.tags : [],
+        created: r.created || r.date || new Date().toISOString(),
+        modified: r.modified || r.updated || new Date().toISOString(),
+        wordCount: r.wordCount ?? (r.content ? r.content.split(/\s+/).length : 0),
+        connections: r.connections ?? 0,
+        permalink: r.permalink || r.id || noteId
+      };
+    }
 
+    if (noteData) {
       res.json({ success: true, data: noteData });
     } else {
       res.status(404).json({ success: false, error: 'Note not found' });

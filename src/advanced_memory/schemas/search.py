@@ -7,14 +7,14 @@ The search system supports three primary modes:
 """
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, field_validator
 
 from advanced_memory.schemas.base import Permalink
 
 
-class SearchItemType(str, Enum):
+class SearchItemType(StrEnum):
     """Types of searchable items."""
 
     ENTITY = "entity"

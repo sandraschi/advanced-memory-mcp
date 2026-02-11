@@ -9,9 +9,11 @@ Advanced Memory MCP uses **portmanteau tools** to consolidate 50+ individual too
 
 ---
 
-## adn_content - Content Management
+## adn_content - Content Management (Primary for Notes)
 
-**Consolidates:** write_note, read_note, edit_note, move_note, delete_note, view_note
+**Consolidates:** write_note, read_note, edit_note, move_note, delete_note, view_note, quick, daily, suggest_tags, summarize, enhance, generate
+
+**Available in all modes.** Primary tool for creating, reading, and editing notes with full semantic processing.
 
 ### Operations
 
@@ -19,7 +21,7 @@ Advanced Memory MCP uses **portmanteau tools** to consolidate 50+ individual too
 Create or update a note.
 
 ```python
-adn_content("write",
+adn_content(operation="write",
     identifier="Meeting Notes",
     content="# Meeting\n\n## Attendees\n- Alice\n- Bob",
     folder="meetings",
@@ -39,83 +41,209 @@ adn_content("write",
 Read a note by identifier.
 
 ```python
-adn_content("read", identifier="Meeting Notes")
-adn_content("read", identifier="memory://meetings/meeting-notes")
+adn_content(operation="read", identifier="Meeting Notes")
+adn_content(operation="read", identifier="memory://meetings/meeting-notes")
 ```
 
-**Parameters:**
-- `identifier` (str): Title, permalink, or memory:// URL
-
-#### edit
-Edit a note incrementally.
+#### quick
+Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags).
 
 ```python
-# Append content
-adn_content("edit",
-    identifier="Meeting Notes",
-    operation="append",
-    content="\n\n## Action Items\n- [ ] Task 1")
-
-# Prepend content
-adn_content("edit",
-    identifier="Meeting Notes",
-    operation="prepend",
-    content="# Updated Meeting\n\n")
-
-# Find and replace
-adn_content("edit",
-    identifier="Meeting Notes",
-    operation="find_replace",
-    find_text="old text",
-    content="new text")
-
-# Replace section
-adn_content("edit",
-    identifier="Meeting Notes",
-    operation="replace_section",
-    section="## Summary",
-    content="## Summary\n\nUpdated summary content")
+adn_content(operation="quick", content="Quick thought or capture...")
 ```
 
-**Parameters:**
-- `identifier` (str): Note identifier
-- `operation` (str): "append", "prepend", "find_replace", "replace_section"
-- `content` (str): New content
-- `find_text` (str, optional): Text to find for find_replace
-- `section` (str, optional): Section header for replace_section
+#### daily
+Create or append to today's daily journal note.
+
+```python
+adn_content(operation="daily", content="Today's journal entry...")
+```
+
+#### edit
+Edit a note incrementally (append, prepend, find_replace, replace_section).
+
+```python
+adn_content(operation="edit",
+    identifier="Meeting Notes",
+    edit_operation="append",
+    content="\n\n## Action Items\n- [ ] Task 1")
+
+adn_content(operation="edit",
+    identifier="Meeting Notes",
+    edit_operation="find_replace",
+    find_text="old text",
+    content="new text")
+```
 
 #### move
 Move a note to a new location.
 
 ```python
-adn_content("move",
+adn_content(operation="move",
     identifier="Meeting Notes",
-    destination="archive/meetings/meeting-notes.md")
+    destination_path="archive/meetings/meeting-notes")
 ```
-
-**Parameters:**
-- `identifier` (str): Note identifier
-- `destination` (str): New file path
 
 #### delete
 Delete a note from the knowledge base.
 
 ```python
-adn_content("delete", identifier="Meeting Notes")
+adn_content(operation="delete", identifier="Meeting Notes")
 ```
 
-**Parameters:**
-- `identifier` (str): Note identifier
-
-#### view
+#### view / view_rendered
 Display a note as a formatted artifact.
 
 ```python
-adn_content("view", identifier="Meeting Notes")
+adn_content(operation="view", identifier="Meeting Notes")
+```
+
+#### enhance
+LLM-powered note enhancement. Batch-upgrade weak-LLM notes with a SOTA LLM. Supports typos, factual errors, biographical updates, structure, and targeted expansion.
+
+```python
+# Default: fix typos, factual errors, biographical death dates, improve style
+adn_content(operation="enhance", identifier="strawberry-facts")
+
+# Expand runt notes with examples and context
+adn_content(operation="enhance", identifier="outline",
+    add_examples=True, add_context=True, expand_sections=True)
+
+# Update stale tech notes (e.g. FastMCP 2.10 -> 2.14)
+adn_content(operation="enhance", identifier="fastmcp-guide",
+    update_stale_tech=True)
+
+# Custom instruction via content param (powerful)
+adn_content(operation="enhance", identifier="biography",
+    content="Person died 2024-03-15, add that")
+adn_content(operation="enhance", identifier="tech-note",
+    content="We use FastMCP 2.14.3, Python 3.13")
 ```
 
 **Parameters:**
-- `identifier` (str): Note identifier
+- `update_content` (bool, default True): Fix typos, factual errors, biographical updates (e.g. death dates)
+- `update_style` (bool, default True): Improve clarity, structure, readability
+- `add_bibliography` (bool, default False): Add References/Bibliography section
+- `add_examples` (bool, default False): Add concrete examples, illustrations, case studies
+- `add_context` (bool, default False): Add background, definitions, "why it matters"
+- `expand_sections` (bool, default False): Turn bullet points into full paragraphs; runt -> full notes
+- `update_stale_tech` (bool, default False): Update outdated lib/tool versions; flag uncertainty
+- `content` (str, optional): Custom instruction passed to LLM (scope, facts, version lock, tone)
+
+#### suggest_tags
+LLM-powered semantic tag suggestions.
+
+```python
+adn_content(operation="suggest_tags", identifier="Meeting Notes")
+```
+
+#### summarize
+LLM-powered note summarization.
+
+```python
+adn_content(operation="summarize", identifier="Long Report")
+```
+
+#### generate
+LLM-powered content generation for new notes.
+
+```python
+adn_content(operation="generate", content="Python async patterns", folder="learning")
+```
+
+#### find_runts
+Find short/runt notes (content under max_content_length chars) for batch enhancement.
+
+```python
+# Default: notes under 500 chars
+adn_content(operation="find_runts")
+
+# Custom threshold and folder
+adn_content(operation="find_runts", max_content_length=800, folder="content")
+```
+
+**Parameters:** `max_content_length` (default 500), `folder` (optional)
+
+#### find_junk
+LLM quality assessment of notes. Returns narrative or structured JSON.
+
+```python
+# Narrative (default)
+adn_content(operation="find_junk", folder="content")
+
+# Structured JSON with criteria scores
+adn_content(operation="find_junk", assessment_format="structured", folder="content")
+```
+
+**Parameters:** `assessment_format` ("narrative" | "structured"), `folder` (optional)
+
+**Structured output:** `{"permalink", "overall": "good|fair|poor", "criteria": {"clarity", "completeness", "structure", "needs_expansion"}, "summary"}`
+
+---
+
+## adn_knowledge - Knowledge Operations
+
+**Consolidates:** search_notes, list_directory, build_context, recent_activity, status, plus basic create/read/update/delete/move
+
+Complementary to adn_content. Use for search, list, context building, activity, and status.
+
+### Operations
+
+#### create
+Create a note (alternative to adn_content write; simpler interface).
+
+```python
+adn_knowledge(operation="create",
+    title="Meeting Notes",
+    content="# Meeting\n\nContent...",
+    folder="meetings",
+    tags=["work"])
+```
+
+#### read
+Read a note by identifier.
+
+```python
+adn_knowledge(operation="read", identifier="Meeting Notes")
+```
+
+#### update / delete / move
+Same as adn_content but with different parameter names.
+
+#### search
+Search notes.
+
+```python
+adn_knowledge(operation="search", query="machine learning")
+```
+
+#### list
+List directory contents.
+
+```python
+adn_knowledge(operation="list", path="research/", depth=2)
+```
+
+#### navigate / context
+Build context from a note (knowledge graph).
+
+```python
+adn_knowledge(operation="context", identifier="AI Fundamentals", depth=2)
+```
+
+#### activity
+Get recent activity.
+
+```python
+adn_knowledge(operation="activity", timeframe="1 week")
+```
+
+#### status
+Get system status.
+
+```python
+adn_knowledge(operation="status")
+```
 
 ---
 

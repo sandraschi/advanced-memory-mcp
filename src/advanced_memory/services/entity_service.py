@@ -541,6 +541,9 @@ class EntityService(BaseService[EntityModel]):
                 raise ValueError("section cannot be empty or whitespace only")
             return self.replace_section_content(current_content, section, content)
 
+        elif operation == "replace_body":
+            return self._replace_body_preserving_frontmatter(current_content, content)
+
         elif operation == "insert_mermaid":
             # Generate Mermaid diagram and append it
             # content can be: "flowchart", "sequence", "gantt", "mindmap", "er", or custom Mermaid code
@@ -772,6 +775,17 @@ class EntityService(BaseService[EntityModel]):
                 f"Regex replacement failed: {e}. "
                 "This may indicate a problematic pattern. Try simplifying the pattern or use simple string replacement."
             ) from e
+
+    def _replace_body_preserving_frontmatter(self, current_content: str, new_body: str) -> str:
+        """Replace the document body while preserving frontmatter if present."""
+        if has_frontmatter(current_content):
+            try:
+                frontmatter_data = parse_frontmatter(current_content)
+                yaml_fm = yaml.dump(frontmatter_data, sort_keys=False, allow_unicode=True)
+                return f"---\n{yaml_fm}---\n\n{new_body.strip()}"
+            except Exception as e:
+                logger.warning(f"Failed to preserve frontmatter during replace_body: {e}")
+        return new_body
 
     def _prepend_after_frontmatter(self, current_content: str, content: str) -> str:
         """Prepend content after frontmatter, preserving frontmatter structure."""

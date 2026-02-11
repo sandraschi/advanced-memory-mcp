@@ -575,7 +575,47 @@ export LOG_LEVEL=DEBUG
 # Restart MCP server
 ```
 
+## research_first_create (Research-Chain-First)
+
+**research_first_create** uses the chained research pipeline (adn_skills_research) plus LLMClient to create skills without MCP sampling. Flow: run_chain -> LLM SKILL.md -> scaffold_skill + scaffold_references_from_research -> validate_skill_agentskills.
+
+### Parameters
+- **topic** (required): Research topic
+- **skill_name** (optional): Hyphen-case name; derived from topic if omitted
+- **output_path** (optional): Directory or parent path for skill output
+- **research_sources**: ["web", "arxiv", "github", "rag"] (default)
+- **max_research_iterations**: 1-5 (default 3)
+- **enable_review_loop**: If true and spec validation fails, LLM attempts one fix pass
+
+### Example
+```javascript
+const result = await make_skill_advanced({
+  operation: "research_first_create",
+  topic: "FastMCP 2.14 agentic workflows",
+  skill_name: "fastmcp-agentic-workflows",
+  research_sources: ["web", "arxiv", "github", "rag"],
+  max_research_iterations: 3,
+  enable_review_loop: true,
+  output_path: "./skills"
+});
+
+console.log("Skill path:", result.skill_path);
+console.log("Spec compliant:", result.spec_compliant);
+```
+
+### Output
+Returns: success, skill_path, skill_name, references_path, spec_compliant, spec_warnings, agentskills_checks, review_loop_applied, coverage_score, iteration_count, sources_used.
+
 ## Future Enhancements
+
+### Implementation Plan
+
+See [ADN_SKILLS_DEEP_RESEARCH_IMPLEMENTATION_PLAN.md](https://github.com/sandraschi/mcp-central-docs/blob/main/docs/skills/ADN_SKILLS_DEEP_RESEARCH_IMPLEMENTATION_PLAN.md) in mcp-central-docs for the detailed plan. Implemented:
+- Research chaining (arxiv, github, rag, web in configurable pipelines)
+- LLM-guided loop (gap analysis, next-source decisions along the path)
+- Reference scaffolding (auto-populate references/ from research)
+- Spec validation (agentskills.io compliance)
+- Research-first creator mode (research_first_create operation)
 
 ### Planned Features
 - **Multi-LLM Comparison**: Generate skills using multiple LLMs for comparison

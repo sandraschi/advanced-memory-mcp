@@ -7,7 +7,7 @@ import pytest
 
 # Check if fpdf2 is available for testing
 try:
-    from fpdf import FPDF
+    from fpdf import FPDF  # noqa: F401
 
     FPDF_AVAILABLE = True
 except ImportError:
@@ -468,7 +468,7 @@ class TestExportPDFNative:
         ) as mock_get:
             mock_get.return_value = [sample_note]
 
-            result = await export_pdf_native(
+            await export_pdf_native(
                 export_path=str(export_path),
                 source_folder="/",
                 include_subfolders=False,

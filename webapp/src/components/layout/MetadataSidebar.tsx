@@ -4,7 +4,6 @@ import {
   ChevronRight,
   FileText,
   Tag,
-  Calendar,
   Link,
   Download,
   Share,
@@ -32,9 +31,9 @@ interface MetadataSidebarProps {
   isOpen: boolean
   onToggle: () => void
   note?: NoteMetadata | null
-  onExport?: (format: string, noteId: string) => Promise<void>
-  onEdit?: () => void
-  onDelete?: () => void
+  onExport?: ((format: string, noteId: string) => Promise<void>) | undefined
+  onEdit?: (() => void) | undefined
+  onDelete?: (() => void) | undefined
 }
 
 export default function MetadataSidebar({
@@ -115,11 +114,10 @@ export default function MetadataSidebar({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`flex-1 flex items-center justify-center p-3 text-sm font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? 'bg-accent text-accent-foreground border-b-2 border-accent'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
+                className={`flex-1 flex items-center justify-center p-3 text-sm font-medium transition-colors ${activeTab === tab.id
+                  ? 'bg-accent text-accent-foreground border-b-2 border-accent'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  }`}
               >
                 <tab.icon className="h-4 w-4 mr-2" />
                 {tab.label}
@@ -210,9 +208,8 @@ export default function MetadataSidebar({
                 <div className="space-y-3">
                   {mockConnections.map((connection) => (
                     <div key={connection.id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer">
-                      <div className={`w-2 h-2 rounded-full ${
-                        connection.type === 'outgoing' ? 'bg-green-500' : 'bg-blue-500'
-                      }`} />
+                      <div className={`w-2 h-2 rounded-full ${connection.type === 'outgoing' ? 'bg-green-500' : 'bg-blue-500'
+                        }`} />
                       <div className="flex-1">
                         <p className="text-sm font-medium truncate">{connection.title}</p>
                         <p className="text-xs text-muted-foreground capitalize">{connection.type}</p>
@@ -267,11 +264,10 @@ export default function MetadataSidebar({
                     Export Note
                   </h3>
                   {exportMessage && (
-                    <div className={`mb-3 p-2 rounded-md text-sm ${
-                      exportMessage.includes('Failed') || exportMessage.includes('Error')
-                        ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                        : 'bg-green-500/10 text-green-400 border border-green-500/20'
-                    }`}>
+                    <div className={`mb-3 p-2 rounded-md text-sm ${exportMessage.includes('Failed') || exportMessage.includes('Error')
+                      ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      : 'bg-green-500/10 text-green-400 border border-green-500/20'
+                      }`}>
                       {exportMessage}
                     </div>
                   )}

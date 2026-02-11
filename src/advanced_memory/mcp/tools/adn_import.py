@@ -181,7 +181,7 @@ async def _obsidian_import(
     """Handle Obsidian import operation."""
     from advanced_memory.mcp.tools.load_obsidian_vault import load_obsidian_vault
 
-    return await load_obsidian_vault(
+    return await load_obsidian_vault.fn(
         source_path,
         destination_folder,
         preserve_structure,
@@ -203,7 +203,7 @@ async def _joplin_import(
     """Handle Joplin import operation."""
     from advanced_memory.mcp.tools.load_joplin_vault import load_joplin_vault
 
-    return await load_joplin_vault(
+    return await load_joplin_vault.fn(
         source_path,
         destination_folder,
         preserve_structure,
@@ -222,7 +222,7 @@ async def _notion_import(
     """Handle Notion import operation."""
     from advanced_memory.mcp.tools.load_notion_export import load_notion_export
 
-    return await load_notion_export(source_path, destination_folder, preserve_structure, project)  # type: ignore[operator,no-any-return]
+    return await load_notion_export.fn(source_path, destination_folder, preserve_structure, project)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_import(
@@ -235,7 +235,7 @@ async def _evernote_import(
     """Handle Evernote import operation."""
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
 
-    return await load_evernote_export(
+    return await load_evernote_export.fn(
         source_path,
         destination_folder,
         preserve_structure,
@@ -252,7 +252,7 @@ async def _onenote_import(
     """Handle OneNote import operation."""
     from advanced_memory.mcp.tools.load_onenote_html import load_onenote_html
 
-    return await load_onenote_html(
+    return await load_onenote_html.fn(
         source_path=source_path,
         folder=destination_folder,
         project=project,

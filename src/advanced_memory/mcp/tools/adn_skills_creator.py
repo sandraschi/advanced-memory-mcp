@@ -14,6 +14,7 @@ from advanced_memory.services.skill_creator import (
     scaffold_skill,
     upgrade_skill,
     validate_skill,
+    validate_skill_agentskills,
 )
 
 
@@ -33,7 +34,7 @@ def _load_metadata(skill_path: Path) -> dict[str, Any]:
     return frontmatter
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_skills_creator(
     operation: Literal["scaffold", "validate", "package", "inspect", "upgrade"],
     skill_name: str | None = None,
@@ -177,13 +178,17 @@ async def adn_skills_creator(
 
             if operation == "validate":
                 ok, issues = validate_skill(path)
+                spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(path)
                 return {
                     "success": ok,
                     "data": {
                         "issues": [
                             {"path": issue.path, "issue": issue.issue, "fix": issue.fix}
                             for issue in issues
-                        ]
+                        ],
+                        "spec_compliant": spec_compliant,
+                        "warnings": spec_warnings,
+                        "agentskills_checks": agentskills_checks,
                     },
                     "metadata": {"operation": operation, "skill_path": str(path)},
                 }

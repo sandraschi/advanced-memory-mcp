@@ -108,7 +108,9 @@ async def agentic_content_workflow(
             tool_spec = create_tool_spec(
                 name=tool_name,
                 description=f"Execute {tool_name} operation",
-                function=lambda tool_name=tool_name, **kwargs: f"Executed {tool_name} with {kwargs}",
+                function=lambda tool_name=tool_name, **kwargs: (
+                    f"Executed {tool_name} with {kwargs}"
+                ),
                 parameters={
                     "type": "object",
                     "properties": {
@@ -249,7 +251,9 @@ async def intelligent_batch_processor(
             tool_spec = create_tool_spec(
                 name=f"execute_{op_name}",
                 description=f"Execute {op_name} operation on content",
-                function=lambda op_name=op_name, content="", **kwargs: f"Applied {op_name} to: {content[:50]}...",
+                function=lambda op_name=op_name, content="", **kwargs: (
+                    f"Applied {op_name} to: {content[:50]}..."
+                ),
                 parameters={
                     "type": "object",
                     "properties": {
@@ -266,7 +270,9 @@ async def intelligent_batch_processor(
         batch_tool = create_tool_spec(
             name="coordinate_batch",
             description="Coordinate processing of multiple items",
-            function=lambda **kwargs: f"Coordinated batch processing with strategy: {batch_strategy}",
+            function=lambda **kwargs: (
+                f"Coordinated batch processing with strategy: {batch_strategy}"
+            ),
             parameters={
                 "type": "object",
                 "properties": {

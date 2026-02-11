@@ -37,7 +37,7 @@ class DocumentAnalysis(BaseModel):
     extracted_quotes: list[str]
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_document_ingest(
     file_path: str,
     analysis_type: Literal["full", "summary", "quotes", "themes"] = "full",

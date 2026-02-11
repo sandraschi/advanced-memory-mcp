@@ -337,8 +337,6 @@ async def _get_diagnostic_status() -> str:
     # Watch service health monitoring
     status_lines.extend(["", "## Watch Service Health"])
     try:
-        from pathlib import Path
-
         from advanced_memory.config import WATCH_STATUS_JSON
 
         watch_status_file = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON

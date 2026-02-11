@@ -343,10 +343,9 @@ async def _export_combined_html(
 
         # Collect all headings for TOC
         toc_items = []
-        combined_content = []
         note_sections = []
 
-        for idx, note_info in enumerate(notes_data):
+        for _idx, note_info in enumerate(notes_data):
             note_title = note_info.get("title", "Untitled")
             note_content = note_info.get("content", "")
 

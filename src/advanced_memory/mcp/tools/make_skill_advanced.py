@@ -46,7 +46,7 @@ class SkillEnhancement(BaseModel):
     cross_references: list[str] = Field(description="Related skills to reference")
 
 
-@mcp.tool()
+@mcp.tool
 async def make_skill_advanced(
     operation: Literal[
         "analyze_requirements",
@@ -56,6 +56,7 @@ async def make_skill_advanced(
         "create_complete_skill",
         "iterative_improvement",
         "research_driven_skill",
+        "research_first_create",
     ],
     topic: str | None = None,
     requirements: str | None = None,  # JSON string of SkillRequirements
@@ -69,6 +70,10 @@ async def make_skill_advanced(
     web_search_time_filter: Literal["any", "day", "week", "month", "year"] = "month",
     web_sources_filter: list[str] | None = None,
     source_documents: list[str] | None = None,
+    skill_name: str | None = None,
+    research_sources: list[str] | None = None,
+    max_research_iterations: int = 3,
+    enable_review_loop: bool = False,
 ) -> dict[str, Any]:
     """
     Advanced Skill Creation using MCP 2.14.3 LLM Sampling Integration.
@@ -110,6 +115,11 @@ async def make_skill_advanced(
     - Performs structured web searches for time-critical and specialized information
     - Integrates current research, news, and real-time data into skill content
     - Perfect for medical, political, and conspiracy analysis topics
+
+    research_first_create: Research-chain-first skill creation (no sampling)
+    - Runs adn_skills_research chain (arxiv, github, rag, web) with LLM gap analysis
+    - Generates SKILL.md via LLMClient, scaffolds skill dir and references/
+    - Runs spec validation; optional review loop to fix validation issues
 
     MCP 2.14.3 FEATURES USED:
     - ctx.sample() with tools for intelligent content generation
@@ -224,6 +234,21 @@ async def make_skill_advanced(
     """
 
     try:
+        # research_first_create: uses adn_skills_research + LLMClient, no sampling needed
+        if operation == "research_first_create":
+            if not topic:
+                return build_error_response(
+                    "MISSING_TOPIC", "topic required for research_first_create"
+                )
+            return await _research_first_create_operation(
+                topic=topic.strip(),
+                skill_name=skill_name,
+                output_path=output_path,
+                research_sources=research_sources or ["web", "arxiv", "github", "rag"],
+                max_research_iterations=max_research_iterations,
+                enable_review_loop=enable_review_loop,
+            )
+
         # Validate operation-specific prerequisites
         if operation in ["analyze_requirements", "generate_content"] and not topic:
             return build_error_response(
@@ -813,7 +838,7 @@ async def _process_source_documents_rag(source_documents: list[str], topic: str)
             logger.info(f"Ingesting document into RAG: {doc_path}")
 
             # Ingest document into RAG system
-            ingest_result = await adn_rag(
+            ingest_result = await adn_rag.fn(
                 operation="ingest_document",
                 document_path=doc_path,
                 chunk_method="fixed",  # Use fixed chunking for consistency
@@ -824,7 +849,7 @@ async def _process_source_documents_rag(source_documents: list[str], topic: str)
 
                 # Query for topic-relevant content
                 topic_query = f"{topic} key concepts important details"
-                query_result = await adn_rag(
+                query_result = await adn_rag.fn(
                     operation="query_knowledge",
                     query=topic_query,
                     document_filter=[ingest_result["document_id"]],
@@ -909,7 +934,7 @@ async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: 
 
         # Query across all ingested documents for topic-relevant content
         topic_query = f"{topic} essential concepts core ideas important details"
-        query_result = await adn_rag(
+        query_result = await adn_rag.fn(
             operation="query_knowledge",
             query=topic_query,
             max_results=8,
@@ -1117,6 +1142,181 @@ Comprehensive, research-backed guide to {topic} incorporating the latest develop
     }
 
 
+async def _research_first_create_operation(
+    topic: str,
+    skill_name: str | None,
+    output_path: str | None,
+    research_sources: list[str],
+    max_research_iterations: int,
+    enable_review_loop: bool,
+) -> dict[str, Any]:
+    """Create skill via research chain: run_chain -> LLM SKILL.md -> scaffold -> validate."""
+    import re
+
+    from advanced_memory.services.llm_client import get_llm_client
+    from advanced_memory.services.skill_creator import (
+        scaffold_references_from_research,
+        scaffold_skill,
+        validate_skill_agentskills,
+    )
+    from advanced_memory.services.skill_research_chain import run_chain
+
+    logger.info("research_first_create: starting chain for topic=%s", topic)
+
+    valid_sources = ["arxiv", "github", "rag", "web"]
+    sources = [s for s in research_sources if s in valid_sources] or valid_sources
+    max_iter = max(1, min(5, max_research_iterations))
+
+    try:
+        bundle = await run_chain(
+            topic=topic,
+            sources=sources,
+            max_iterations=max_iter,
+            coverage_threshold=0.85,
+        )
+    except Exception as exc:
+        logger.exception("research_first_create: run_chain failed")
+        return build_error_response(
+            "RESEARCH_CHAIN_FAILED",
+            str(exc),
+            recovery_options=[
+                "Check arxiv/github/rag/web tool availability",
+                "Retry with fewer sources",
+            ],
+        )
+
+    slug = skill_name
+    if not slug:
+        slug = re.sub(r"[^a-z0-9]+", "-", topic.strip().lower())[:64].strip("-")
+    if not slug:
+        slug = "skill"
+    slug = re.sub(r"-+", "-", slug).strip("-")
+
+    output_base = Path.cwd() / "skills"
+    if output_path:
+        p = Path(output_path).expanduser().resolve()
+        if p.is_dir():
+            output_base = p
+        else:
+            output_base = p.parent
+
+    try:
+        skill_dir = scaffold_skill(slug, output_base, overwrite=True)
+    except Exception as exc:
+        logger.exception("research_first_create: scaffold_skill failed")
+        return build_error_response(
+            "SCAFFOLD_FAILED",
+            str(exc),
+            recovery_options=["Check output_path permissions", "Use different skill_name"],
+        )
+
+    scaffold_references_from_research(skill_dir, bundle, include_sources_md=True)
+
+    snippets_text = "\n\n".join(
+        s.get("content", str(s))[:800] for s in (bundle.snippets or [])[:25]
+    )
+    synthesis = bundle.synthesis or "No synthesis available."
+    gaps = "\n".join(f"- {g}" for g in (bundle.gaps_remaining or [])[:10])
+
+    system_prompt = """You generate Anthropic-compliant Claude SKILL.md files.
+Output ONLY valid Markdown with YAML frontmatter. Frontmatter MUST include:
+- name: hyphen-case (1-64 chars, lowercase, hyphens)
+- description: 1-1024 chars
+No other frontmatter required. Body: Overview, Usage, Content sections."""
+
+    prompt = f"""Create a SKILL.md for a Claude skill about: {topic}
+
+RESEARCH SYNTHESIS:
+{synthesis}
+
+KEY SNIPPETS:
+{snippets_text[:6000]}
+
+GAPS REMAINING:
+{gaps}
+
+Requirements:
+1. name: {slug}
+2. description: 1-2 sentences, max 200 chars
+3. Body: Overview, Usage Instructions, Content (use research to fill)
+Output the complete SKILL.md only, no preamble."""
+
+    try:
+        llm = get_llm_client()
+        skill_content = await llm.generate(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            max_tokens=4000,
+            temperature=0.5,
+        )
+    except Exception as exc:
+        logger.exception("research_first_create: LLM generate failed")
+        return build_error_response(
+            "LLM_GENERATE_FAILED",
+            str(exc),
+            recovery_options=["Check Ollama/LM Studio/OpenAI is running", "Configure LLM provider"],
+        )
+
+    skill_content = skill_content.strip()
+    if not skill_content.startswith("---"):
+        skill_content = f"""---
+name: {slug}
+description: Expert knowledge on {topic} based on chained research
+---
+
+# {topic}
+
+{skill_content}
+"""
+
+    (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
+
+    spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(skill_dir)
+
+    review_done: bool = False
+    if enable_review_loop and not spec_compliant and spec_warnings:
+        try:
+            fix_prompt = f"""Fix this SKILL.md to pass agentskills validation.
+Warnings: {spec_warnings}
+Checks: {agentskills_checks}
+Current content:
+{skill_content}
+
+Output the corrected full SKILL.md only."""
+
+            fixed = await llm.generate(
+                prompt=fix_prompt,
+                system_prompt=system_prompt,
+                max_tokens=4000,
+                temperature=0.3,
+            )
+            fixed = fixed.strip()
+            if fixed.startswith("---"):
+                (skill_dir / "SKILL.md").write_text(fixed, encoding="utf-8")
+                spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(
+                    skill_dir
+                )
+                review_done = True
+        except Exception as exc:
+            logger.warning("research_first_create: review loop failed: %s", exc)
+
+    return {
+        "success": True,
+        "operation": "research_first_create",
+        "topic": topic,
+        "skill_path": str(skill_dir),
+        "skill_name": slug,
+        "references_path": str(skill_dir / "references"),
+        "spec_compliant": spec_compliant,
+        "spec_warnings": spec_warnings,
+        "agentskills_checks": agentskills_checks,
+        "review_loop_applied": review_done,
+        "coverage_score": bundle.coverage_score,
+        "iteration_count": bundle.iteration_count,
+        "sources_used": bundle.sources_used,
+    }
+
+
 async def _perform_topic_research(
     topic: str,
     provider: str,
@@ -1138,7 +1338,7 @@ async def _perform_topic_research(
         for query in search_queries[:3]:  # Limit to 3 searches to avoid overwhelming
             logger.info(f"Researching: {query}")
 
-            search_result = await adn_web_search(
+            search_result = await adn_web_search.fn(
                 query=query,
                 provider=provider,
                 max_results=8,
@@ -1331,7 +1531,7 @@ async def _process_source_documents(source_documents: list[str]) -> dict[str, An
         for doc_path in source_documents:
             logger.info(f"Processing document: {doc_path}")
 
-            result = await adn_document_ingest(
+            result = await adn_document_ingest.fn(
                 file_path=doc_path,
                 analysis_type="full",
                 extract_quotes=True,
@@ -1435,7 +1635,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         for query in queries[:2]:  # Limit to 2 repo searches
             logger.info(f"Searching GitHub repos: {query}")
 
-            repo_result = await adn_github_research(
+            repo_result = await adn_github_research.fn(
                 operation="search_repositories",
                 query=query,
                 sort="stars",
@@ -1449,7 +1649,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         code_query = f"{topic} implementation example"
         logger.info(f"Searching GitHub code: {code_query}")
 
-        code_result = await adn_github_research(
+        code_result = await adn_github_research.fn(
             operation="search_code",
             query=code_query,
             max_results=8,
@@ -1648,7 +1848,7 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
         for query in queries[:3]:  # Limit to 3 searches
             logger.info(f"Searching arXiv: {query}")
 
-            paper_result = await adn_arxiv_research(
+            paper_result = await adn_arxiv_research.fn(
                 operation="search_papers",
                 query=query,
                 max_results=5,
@@ -1885,19 +2085,19 @@ async def _perform_tvtropes_research(topic: str) -> dict[str, Any]:
         research_type = _determine_tvtropes_research_type(topic)
 
         if research_type == "character_archetypes":
-            result = await adn_tvtropes_research(
+            result = await adn_tvtropes_research.fn(
                 operation="character_archetypes", query=topic, max_results=5
             )
         elif research_type == "plot_structures":
-            result = await adn_tvtropes_research(
+            result = await adn_tvtropes_research.fn(
                 operation="plot_structures", query=topic, max_results=5
             )
         elif research_type == "narrative_analysis":
-            result = await adn_tvtropes_research(
+            result = await adn_tvtropes_research.fn(
                 operation="narrative_analysis", query=topic, max_results=5
             )
         else:
-            result = await adn_tvtropes_research(
+            result = await adn_tvtropes_research.fn(
                 operation="search_tropes", query=topic, max_results=5
             )
 

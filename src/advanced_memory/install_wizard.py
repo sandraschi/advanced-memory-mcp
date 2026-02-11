@@ -12,6 +12,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from .transport import run_server
+
 
 def clear_screen() -> None:
     """Clear the terminal screen."""
@@ -19,9 +21,9 @@ def clear_screen() -> None:
     import subprocess
 
     if os.name == "nt":
-        subprocess.run(["cmd", "/c", "cls"], check=False)
+        run_server(subprocess, server_name="advanced-memory-mcp")
     else:
-        subprocess.run(["clear"], check=False)
+        run_server(subprocess, server_name="advanced-memory-mcp")
 
 
 def print_banner() -> None:

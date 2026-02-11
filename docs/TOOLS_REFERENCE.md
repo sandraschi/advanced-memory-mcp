@@ -45,7 +45,7 @@ Consolidated tools that combine multiple related operations into a single powerf
 
 ### 1. `adn_content` - Content Management
 
-**Consolidates**: `write_note`, `read_note`, `view_note`, `view_note_rendered`, `edit_note`, `move_note`, `delete_note`
+**Consolidates**: `write_note`, `read_note`, `view_note`, `view_note_rendered`, `edit_note`, `move_note`, `delete_note`, `suggest_tags`, `summarize`, `enhance`, `generate`
 
 **Purpose**: Complete content lifecycle management
 
@@ -174,6 +174,30 @@ adn_content("delete", identifier="Project Plan")
 - Relationship cleanup
 - Reference integrity maintenance
 - Safety checks
+
+##### `enhance` - LLM-Powered Note Enhancement
+
+```python
+# Default: fix typos, facts, biographical updates, improve style
+adn_content("enhance", identifier="note")
+
+# Expand runt notes
+adn_content("enhance", identifier="outline",
+    add_examples=True, add_context=True, expand_sections=True)
+
+# Update stale tech (e.g. FastMCP 2.10 -> 2.14)
+adn_content("enhance", identifier="fastmcp-guide", update_stale_tech=True)
+
+# Custom instruction (powerful)
+adn_content("enhance", identifier="biography",
+    content="Person died 2024-03-15, add that")
+```
+
+**Parameters**: `update_content`, `update_style`, `add_bibliography`, `add_examples`, `add_context`, `expand_sections`, `update_stale_tech`, `content` (custom instruction). See [Portmanteau Tools Reference](PORTMANTEAU_TOOLS_REFERENCE.md) for full details.
+
+##### `suggest_tags` / `summarize` / `generate`
+
+LLM-powered tag suggestions, summarization, and content generation. See Portmanteau reference.
 
 ---
 

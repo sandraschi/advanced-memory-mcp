@@ -317,23 +317,28 @@ server = mcp
 # Set the lifespan on the server instance (not during module import to avoid slow startup)
 server.lifespan = app_lifespan
 
-# Add stdio runner for MCP protocol
+# Add dual-standard runner: stdio (default, for IDEs) or HTTP/SSE (for web/remote)
 if __name__ == "__main__":
-    import argparse
+    # Use unified transport module for CLI parsing
+    from advanced_memory.transport import create_argument_parser, resolve_transport
 
-    parser = argparse.ArgumentParser(description="Advanced Memory MCP Server")
-    parser.add_argument(
-        "--transport",
-        type=str,
-        default="stdio",
-        choices=["stdio"],
-        help="Transport protocol (only stdio supported)",
-    )
+    parser = create_argument_parser("advanced-memory-mcp")
     args = parser.parse_args()
+
+    # Resolve transport from args/env (supports --stdio, --http, --sse, MCP_TRANSPORT)
+    transport = resolve_transport(args)
+
+    # Override host/port defaults for advanced-memory-mcp
+    host = args.host or os.environ.get("MCP_HOST", "0.0.0.0")
+    port = args.port or int(os.environ.get("MCP_HTTP_PORT", os.environ.get("MCP_PORT", "10732")))
+
+    # For HTTP/SSE, restore stdout so server logs are visible (no stdio JSON-RPC)
+    if transport in ("http", "sse") and hasattr(sys, "_original_stdout"):
+        sys.stdout = sys._original_stdout
 
     # CRITICAL: Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
     # But ensure it's completely clean and in binary mode for Antigravity IDE compatibility
-    if _is_stdio_mode and hasattr(sys, "_original_stdout"):
+    if transport == "stdio" and _is_stdio_mode and hasattr(sys, "_original_stdout"):
         # Restore original stdout
         # sys.stdout = sys._original_stdout
 
@@ -454,7 +459,14 @@ if __name__ == "__main__":
         except ImportError:
             pass
 
-    # FastMCP automatically uses stdio when run as module
-    # The run() method handles transport automatically
+    # FastMCP 2.14.4+: stdio (default for IDEs) or http/sse for web/remote
     # CRITICAL: show_banner=False prevents FastMCP from writing banner to stdout
-    server.run(show_banner=False)
+    if transport == "stdio":
+        server.run(show_banner=False)
+    else:
+        server.run(
+            transport=transport,
+            host=host,
+            port=port,
+            show_banner=False,
+        )

@@ -39,6 +39,17 @@ advanced-memory-mcp/
 ```bash
 pip install advanced-memory-mcp
 advanced-memory setup  # Interactive configuration
+
+## 📦 Packaging & Distribution
+
+This repository is SOTA 2026 compliant and uses the officially validated `@anthropic-ai/mcpb` workflow for distribution.
+
+### Pack Extension
+To generate a `.mcpb` distribution bundle with complete source code and automated build exclusions:
+```bash
+# SOTA 2026 standard pack command
+mcpb pack . dist/advanced-memory-mcp.mcpb
+```
 ```
 
 ### Standalone Web Application (Automatic Startup)
@@ -58,6 +69,8 @@ advanced-memory setup  # Interactive configuration
 ```
 
 **Important:** Webapp runs on **port 17770** (strict port, no hopping allowed). Always use `run-webapp-clean.bat` to kill zombie processes before restart. Use graceful exit endpoint for remote shutdown.
+
+**Restart all:** Run `.\kill-adn-zombies.bat`, then `.\run-webapp-clean.bat`. Alternatively, start `node auto-start-service.js`, wait a few seconds, then `POST http://localhost:8003/start-all` to bring up startup, bridge, and webapp.
 
 The webapp automatically detects and starts the ADN MCP server when you access the Notes page.
 
@@ -82,7 +95,7 @@ Advanced Memory MCP includes a comprehensive Claude Skills ecosystem with multi-
 - **[Skill Uptake 2026](docs/SKILL_UPTAKE_2026.md)**: Current adoption trends and statistics
 - **[Skill Parsing Architecture](docs/SKILL_PARSING_ARCHITECTURE.md)**: Technical implementation details
 
-The webapp scans these directories for `SKILL.md` files in subdirectories and displays them in the Skills page with full search, filtering, and creation capabilities.
+The webapp scans these directories recursively for `SKILL.md` files (including nested layouts such as `skills/category/skill-name/SKILL.md`) and displays them in the Skills page. Use **All collections** to show Cursor, WindSurf, Antigravity, and ADN skills together; you can also filter by folder.
 
 ### Manual Web Application Setup
 ```bash
@@ -95,6 +108,15 @@ node auto-start-service.js    # Service orchestrator
 node startup-service.js       # Bridge server manager
 cd webapp && npm run dev      # Web UI on http://localhost:17770
 ```
+
+### Docker (webapp)
+```powershell
+# Build and run the webapp container (port 17770)
+docker compose build webapp
+docker compose up -d webapp
+# Open http://localhost:17770
+```
+The webapp container serves the React UI only. Run the bridge and MCP server on the host (e.g. `.\run-webapp-clean.bat`) for full API access, or use the MCP Docker service (SSE on 8000) and configure `VITE_API_URL` if your setup differs.
 
 ## MCP Integration
 

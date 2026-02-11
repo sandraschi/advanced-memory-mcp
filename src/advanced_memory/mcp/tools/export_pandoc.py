@@ -22,7 +22,7 @@ from advanced_memory.schemas.search import SearchQuery
 from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
-@mcp.tool()
+@mcp.tool
 async def export_pandoc(
     export_path: str,
     format_type: str = "pdf",

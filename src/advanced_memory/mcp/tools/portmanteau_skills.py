@@ -28,6 +28,7 @@ async def adn_skills(
             "advanced_create",
             "creator",
             "operations",
+            "research",
         ],
         Field(description="Skill operation to perform"),
     ],
@@ -91,7 +92,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
 
-            result = await adn_skills("create", name=name, content=content, tags=tags or [])
+            result = await adn_skills.fn("create", name=name, content=content, tags=tags or [])
             return build_success_response("create", result)
 
         elif operation == "read":
@@ -102,13 +103,13 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills_reader import adn_skills_reader
 
-            result = await adn_skills_reader(name)
+            result = await adn_skills_reader.fn(name)
             return build_success_response("read", result)
 
         elif operation == "list":
             from advanced_memory.mcp.tools.adn_skills import adn_skills
 
-            result = await adn_skills("list")
+            result = await adn_skills.fn("list")
             return build_success_response("list", result)
 
         elif operation == "search":
@@ -119,7 +120,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
 
-            result = await adn_skills("search", query=query)
+            result = await adn_skills.fn("search", query=query)
             return build_success_response("search", result)
 
         elif operation == "update":
@@ -137,7 +138,7 @@ async def adn_skills(
                 update_params["tags"] = tags
             update_params.update(parameters)
 
-            result = await adn_skills("update", **update_params)
+            result = await adn_skills.fn("update", **update_params)
             return build_success_response("update", result)
 
         elif operation == "delete":
@@ -148,7 +149,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
 
-            result = await adn_skills("delete", name=name)
+            result = await adn_skills.fn("delete", name=name)
             return build_success_response("delete", result)
 
         elif operation == "advanced_create":
@@ -161,7 +162,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.make_skill_advanced import make_skill_advanced
 
-            result = await make_skill_advanced(name, content or "", **parameters)
+            result = await make_skill_advanced.fn(name, content or "", **parameters)
             return build_success_response("advanced_create", result)
 
         elif operation == "creator":
@@ -174,14 +175,40 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills_creator import adn_skills_creator
 
-            result = await adn_skills_creator(content, **parameters)
+            result = await adn_skills_creator.fn(content, **parameters)
             return build_success_response("creator", result)
 
         elif operation == "operations":
             from advanced_memory.mcp.tools.adn_skills_operations_new import adn_skills_operations
 
-            result = await adn_skills_operations("list")
+            result = await adn_skills_operations.fn("list")
             return build_success_response("operations", result)
+
+        elif operation == "research":
+            topic = query or parameters.get("topic") or (content[:200] if content else None)
+            if not topic:
+                return build_error_response(
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "query or parameters.topic required for skills research",
+                )
+            from advanced_memory.mcp.tools.adn_skills_research import adn_skills_research
+
+            result = await adn_skills_research.fn(
+                topic=str(topic),
+                sources=parameters.get("sources"),
+                max_iterations=parameters.get("max_iterations", 3),
+                coverage_threshold=parameters.get("coverage_threshold", 0.85),
+                output_format=parameters.get("output_format", "bundle"),
+                output_path=parameters.get("output_path"),
+            )
+            if not result.get("success"):
+                return build_error_response(
+                    "SKILLS_RESEARCH_ERROR",
+                    result.get("error_code", "UNKNOWN"),
+                    result.get("error", "Research failed"),
+                )
+            return build_success_response("research", result)
 
         else:
             return build_error_response(

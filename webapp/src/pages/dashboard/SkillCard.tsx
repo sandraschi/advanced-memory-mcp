@@ -1,7 +1,7 @@
 import { Brain, FileText, Calendar } from 'lucide-react'
 
 interface Skill {
-  id: number
+  id: string
   title: string
   description: string
   sources: number

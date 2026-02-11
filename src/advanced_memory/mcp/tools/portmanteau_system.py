@@ -82,13 +82,13 @@ async def adn_system(
         if operation == "status":
             from advanced_memory.mcp.tools.status import status
 
-            result = await status(level or "basic", focus)
+            result = await status.fn(level or "basic", focus)
             return build_success_response("status", result)
 
         elif operation == "sync_status":
             from advanced_memory.mcp.tools.sync_status import sync_status
 
-            result = await sync_status()
+            result = await sync_status.fn()
             return build_success_response("sync_status", result)
 
         elif operation == "external_call":
@@ -101,7 +101,7 @@ async def adn_system(
 
             from advanced_memory.mcp.tools.external_mcp_clients import external_mcp_clients
 
-            result = await external_mcp_clients(
+            result = await external_mcp_clients.fn(
                 operation="call",
                 server_name=server_name,
                 tool_name=tool_name,
@@ -119,13 +119,13 @@ async def adn_system(
 
             from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
 
-            result = await agentic_content_workflow(topic)
+            result = await agentic_content_workflow.fn(topic)
             return build_success_response("inter_server", result)
 
         elif operation == "sampling_status":
             from advanced_memory.mcp.tools.inter_server_tools import sampling_capabilities_status
 
-            result = await sampling_capabilities_status()
+            result = await sampling_capabilities_status.fn()
             return build_success_response("sampling_status", result)
 
         elif operation == "batch_process":
@@ -136,7 +136,7 @@ async def adn_system(
 
             from advanced_memory.mcp.tools.inter_server_tools import intelligent_batch_processor
 
-            result = await intelligent_batch_processor(topic)
+            result = await intelligent_batch_processor.fn(topic)
             return build_success_response("batch_process", result)
 
         elif operation == "workflow":
@@ -149,13 +149,13 @@ async def adn_system(
 
             from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
 
-            result = await agentic_content_workflow(topic)
+            result = await agentic_content_workflow.fn(topic)
             return build_success_response("workflow", result)
 
         elif operation == "help":
             from advanced_memory.mcp.tools.help import help
 
-            result = await help(level or "basic", topic)
+            result = await help.fn(level or "basic", topic)
             return build_success_response("help", result)
 
         else:

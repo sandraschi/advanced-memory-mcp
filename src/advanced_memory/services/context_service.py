@@ -7,7 +7,6 @@ from datetime import datetime
 try:
     from datetime import UTC
 except ImportError:
-    # For Python < 3.11, use timezone.utc
     UTC = UTC
 
 from loguru import logger
@@ -19,13 +18,6 @@ from advanced_memory.repository.search_repository import SearchIndexRow, SearchR
 from advanced_memory.schemas.memory import MemoryUrl, memory_url_path
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import generate_permalink
-
-# Python 3.10 compatibility - UTC was added in 3.11
-try:
-    from datetime import UTC
-except ImportError:
-    # Fallback for Python < 3.11
-    UTC = UTC
 
 
 @dataclass

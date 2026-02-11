@@ -84,7 +84,7 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import create_memory_project
 
-            result = await create_memory_project(
+            result = await create_memory_project.fn(
                 name, path, description or "", set_default or False
             )
             return build_success_response("create", result)
@@ -97,13 +97,13 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import delete_project
 
-            result = await delete_project(name)
+            result = await delete_project.fn(name)
             return build_success_response("delete", result)
 
         elif operation == "list":
             from advanced_memory.mcp.tools.project_management import list_memory_projects
 
-            result = await list_memory_projects()
+            result = await list_memory_projects.fn()
             return build_success_response("list", result)
 
         elif operation == "switch":
@@ -114,13 +114,13 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import switch_project
 
-            result = await switch_project(name)
+            result = await switch_project.fn(name)
             return build_success_response("switch", result)
 
         elif operation == "current":
             from advanced_memory.mcp.tools.project_management import get_current_project
 
-            result = await get_current_project()
+            result = await get_current_project.fn()
             return build_success_response("current", result)
 
         elif operation == "set_default":
@@ -133,25 +133,25 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import set_default_project
 
-            result = await set_default_project(name)
+            result = await set_default_project.fn(name)
             return build_success_response("set_default", result)
 
         elif operation == "sync":
             from advanced_memory.mcp.tools.sync_status import sync_status
 
-            result = await sync_status()
+            result = await sync_status.fn()
             return build_success_response("sync", result)
 
         elif operation == "status":
             from advanced_memory.mcp.tools.status import status
 
-            result = await status("intermediate", "projects")
+            result = await status.fn("intermediate", "projects")
             return build_success_response("status", result)
 
         elif operation == "inbox":
             from advanced_memory.mcp.tools.adn_inbox import adn_inbox
 
-            result = await adn_inbox("status")
+            result = await adn_inbox.fn("status")
             return build_success_response("inbox", result)
 
         else:

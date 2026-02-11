@@ -260,7 +260,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "with-toc.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -279,7 +279,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "no-toc.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=False)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=False)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -293,7 +293,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "anchors.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -338,7 +338,7 @@ class TestCombinedHTMLExport:
         ]
 
         export_path = export_dir / "mermaid.html"
-        result = await _export_combined_html(notes_with_mermaid, export_path, "Test", make_toc=True)
+        await _export_combined_html(notes_with_mermaid, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -351,7 +351,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "no-extension"
 
-        result = await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
+        await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
 
         # Should create file with .html extension
         html_file = export_path.with_suffix(".html")
@@ -373,7 +373,7 @@ class TestCombinedHTMLExport:
         ]
 
         export_path = export_dir / "empty.html"
-        result = await _export_combined_html(empty_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(empty_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         assert html_file.exists()
@@ -515,7 +515,7 @@ class TestExportHTMLNotesIntegration:
         ) as mock_get:
             mock_get.return_value = multiple_notes
 
-            result = await export_html_notes.fn(
+            await export_html_notes.fn(
                 export_path=str(export_path),
                 combine_into_one=True,
                 make_toc=True,
@@ -551,9 +551,7 @@ class TestExportHTMLNotesIntegration:
 
             from advanced_memory.mcp.tools.export_html_notes import _export_combined_html
 
-            result = await _export_combined_html(
-                notes_with_headings, export_path, "Test", make_toc=True
-            )
+            await _export_combined_html(notes_with_headings, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -573,7 +571,7 @@ class TestCombinedHTMLStructure:
 
         export_path = export_dir / "structure.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -597,7 +595,7 @@ class TestCombinedHTMLStructure:
 
         export_path = export_dir / "css-test.html"
 
-        result = await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
+        await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -611,7 +609,7 @@ class TestCombinedHTMLStructure:
 
         export_path = export_dir / "responsive.html"
 
-        result = await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
+        await _export_combined_html([sample_note], export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -628,7 +626,7 @@ class TestCombinedHTMLTOC:
 
         export_path = export_dir / "sticky-toc.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -641,7 +639,7 @@ class TestCombinedHTMLTOC:
 
         export_path = export_dir / "toc-links.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -659,7 +657,7 @@ class TestCombinedHTMLTOC:
 
         export_path = export_dir / "toc-entries.html"
 
-        result = await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(multiple_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -704,7 +702,7 @@ class TestExportEdgeCases:
         ]
 
         export_path = export_dir / "special.html"
-        result = await _export_combined_html(special_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(special_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
@@ -727,7 +725,7 @@ class TestExportEdgeCases:
         ]
 
         export_path = export_dir / "long.html"
-        result = await _export_combined_html(long_note, export_path, "Test", make_toc=True)
+        await _export_combined_html(long_note, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         assert html_file.exists()
@@ -748,7 +746,7 @@ class TestExportEdgeCases:
         ]
 
         export_path = export_dir / "unicode.html"
-        result = await _export_combined_html(unicode_notes, export_path, "Test", make_toc=True)
+        await _export_combined_html(unicode_notes, export_path, "Test", make_toc=True)
 
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")

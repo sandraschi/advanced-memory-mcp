@@ -93,7 +93,7 @@ async def adn_external(
                         "MISSING_PARAMETER",
                         "Path or content required for dictation",
                     )
-                result = await adn_audio("dictate", path=path, content=content)
+                result = await adn_audio.fn("dictate", path=path, content=content)
             elif sub_op == "speak":
                 if not content:
                     return build_error_response(
@@ -101,9 +101,9 @@ async def adn_external(
                         "MISSING_CONTENT",
                         "Content required for speech synthesis",
                     )
-                result = await adn_audio("speak", content=content)
+                result = await adn_audio.fn("speak", content=content)
             else:
-                result = await adn_audio("status")
+                result = await adn_audio.fn("status")
 
             return build_success_response("audio", result)
 
@@ -115,7 +115,7 @@ async def adn_external(
 
             from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
 
-            result = await agentic_content_workflow(content)
+            result = await agentic_content_workflow.fn(content)
             return build_success_response("workflow", result)
 
         elif operation == "batch":
@@ -128,13 +128,13 @@ async def adn_external(
 
             from advanced_memory.mcp.tools.inter_server_tools import intelligent_batch_processor
 
-            result = await intelligent_batch_processor(content)
+            result = await intelligent_batch_processor.fn(content)
             return build_success_response("batch", result)
 
         elif operation == "canvas":
             from advanced_memory.mcp.tools.canvas import canvas
 
-            result = await canvas(content or "", **parameters)
+            result = await canvas.fn(content or "", **parameters)
             return build_success_response("canvas", result)
 
         elif operation == "typora":
@@ -142,11 +142,11 @@ async def adn_external(
             from advanced_memory.mcp.tools.typora_control import typora_control
 
             if sub_op == "open" and path:
-                result = await typora_control("open", path)
+                result = await typora_control.fn("open", path)
             elif sub_op == "close":
-                result = await typora_control("close")
+                result = await typora_control.fn("close")
             else:
-                result = await typora_control("status")
+                result = await typora_control.fn("status")
 
             return build_success_response("typora", result)
 
@@ -160,7 +160,7 @@ async def adn_external(
 
             from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
-            result = await adn_zettelmaker(content, **parameters)
+            result = await adn_zettelmaker.fn(content, **parameters)
             return build_success_response("zettel", result)
 
         elif operation == "content_workflow":
@@ -171,13 +171,13 @@ async def adn_external(
 
             from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
 
-            result = await agentic_content_workflow(content)
+            result = await agentic_content_workflow.fn(content)
             return build_success_response("content_workflow", result)
 
         elif operation == "sampling":
             from advanced_memory.mcp.tools.inter_server_tools import sampling_capabilities_status
 
-            result = await sampling_capabilities_status()
+            result = await sampling_capabilities_status.fn()
             return build_success_response("sampling", result)
 
         elif operation == "restart_watch":

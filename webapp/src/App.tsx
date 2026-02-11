@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { apiService } from './services/api'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Dashboard from './pages/dashboard/Dashboard'
@@ -52,14 +53,16 @@ function App() {
     })
   }
 
-  const handleMetadataExport = async (format: string, noteId: string) => {
+  const handleMetadataExport = async (format: string) => {
+    if (!selectedNoteId) return
+
     try {
-      const response = await apiService.exportNote(noteId, format)
+      const response = await apiService.exportNote(selectedNoteId, format)
       if (response.success && response.data?.url) {
         // Trigger download
         const link = document.createElement('a')
         link.href = response.data.url
-        link.download = `note-${noteId}.${format}`
+        link.download = `note-${selectedNoteId}.${format}`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)

@@ -5,9 +5,74 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Skills Factory (2026-02-10)
+
+### Added - Skills Factory (Research Chaining + LLM-Guided Loop)
+
+#### skill_research_chain.py (2026-02-10)
+- **ResearchChainService**: Chains arxiv, github, rag, web research with LLM-guided gap analysis
+- **ResearchBundle** dataclass: topic, snippets, citations, synthesis, gaps_remaining, coverage_score, iteration_count, sources_used
+- **ResearchGapAnalysis** Pydantic model: synthesis, gaps, next_sources, coverage_score, should_continue
+- **run_chain()**: Runs research sources in batches; after each batch, LLM analyzes findings and decides next sources; loops until coverage >= threshold or max_iterations
+
+#### adn_skills_research MCP tool (2026-02-10)
+- New tool: topic, sources, max_iterations, coverage_threshold, output_format (bundle|skill_draft)
+- Exposed via adn_skills(operation="research") in portmanteau mode
+- Exposed as adn_skills_research in FULL tools mode
+
+#### Documentation (2026-02-10)
+- mcp-central-docs: SKILLS_FACTORY_RESEARCH_DARK_APP_PATTERN.md, ADN_CONTENT_NOTE_SKILLS_FACTORY.md, SKILLS_FACTORY_TODO.md, ADN_CONTENT_STATUS_SKILLS_FACTORY.md
+- advanced-memory-mcp: docs/SKILLS_FACTORY_TODO.md
+- Pattern inspired by Dark App Factory specialist council
+
+#### reference_scaffolder.py (2026-02-10)
+- **scaffold_references_from_research()**: Creates references/REFERENCE.md (synthesis, gaps, citations) and references/SOURCES.md (bib-style)
+- **Integration**: adn_skills_research(output_format="skill_draft", output_path=...) scaffolds references/ automatically
+
+#### validate_skill_agentskills (2026-02-10)
+- **validate_skill_agentskills()**: agentskills.io baseline checks (name 1-64 chars, description 1-1024, hyphen-case, name matches directory)
+- **adn_skills_creator(validate)**: Returns spec_compliant, warnings, agentskills_checks in data
+
+#### research_first_create operation (2026-02-10)
+- **make_skill_advanced(operation="research_first_create")**: Research-chain-first skill creation
+- Flow: run_chain -> LLM SKILL.md -> scaffold_skill + scaffold_references_from_research -> validate_skill_agentskills
+- Params: topic, skill_name?, research_sources, max_research_iterations, enable_review_loop, output_path
+- Uses LLMClient (no sampling); optional review loop to fix spec validation issues
+
+---
+
 ## [Unreleased] - Skill Directory Configuration (2026-01-21)
 
+### 🚀 **Content Enhancement**
+
+#### Added - find_runts and find_junk (2026-01-31)
+- **find_runts**: Find short/runt notes (content under max_content_length) for batch enhancement. Available via adn_content and adn_knowledge_bulk.
+- **find_junk**: LLM quality assessment of notes. Returns narrative (default) or structured JSON with criteria: clarity, completeness, structure, factual_accuracy, outdated_tech, needs_expansion. Available via adn_content and adn_knowledge_bulk.
+
+#### Added - adn_content enhance Tool (2026-01-31)
+- **replace_body operation**: Fixed bug where enhanced content was not persisted. Added `replace_body` edit operation that replaces entire note body while preserving frontmatter.
+- **Enhance parameters**: Granular control over enhancement behavior:
+  - `update_content` (default True): Fix typos, factual errors, biographical updates (e.g. death dates)
+  - `update_style` (default True): Improve clarity, structure, readability
+  - `add_bibliography` (default False): Add References/Bibliography section
+  - `add_examples` (default False): Add concrete examples, illustrations, case studies
+  - `add_context` (default False): Add background, definitions, "why it matters"
+  - `expand_sections` (default False): Turn bullet points into full paragraphs; runt notes into full notes
+  - `update_stale_tech` (default False): Update outdated lib/tool versions (e.g. FastMCP 2.10 -> 2.14); flags uncertainty
+  - `content` (optional): Custom instruction passed to LLM (scope, facts, version lock, tone)
+- **Biographical updates**: When `update_content=True`, adds death dates and life events for persons who died after the note was written.
+- **Structured responses**: Enhance now returns dict (not string) for MCP client compatibility.
+- **edit_note replace_section**: Clearer error message when section is missing; suggests `replace_body` for full replacement.
+- **Documentation**: PORTMANTEAU_TOOLS_REFERENCE.md and TOOLS_REFERENCE.md updated with full enhance docs.
+
 ### 🔧 **Technical Fixes**
+
+#### Fixed - Windsurf/Antigravity Skills Not Loading (2026-01-28)
+- **Recursive skill scan**: Bridge now discovers `SKILL.md` in nested directories (e.g. `skills/category/skill-name/SKILL.md`, WindSurf/Antigravity flat layout).
+- **Path resolution**: Skill roots use `path.resolve`; `USERPROFILE`/`HOME` required for user-based dirs; `getSkillDirectory` returns `null` when missing.
+- **Cross-drive `filePath`**: On Windows, `path.relative` can fail for paths on different drives. Added `safeFilePath` fallback using `folderName/dirName/SKILL.md` when relative path is cross-drive or absolute.
+- **Frontmatter fallback**: If `SKILL.md` has no valid frontmatter, a skill is still emitted with `title` from directory name and full file as `content` (no longer skipped).
+- **Robust frontmatter parsing**: Relaxed regex (`^\s*---`), trim leading content; only parse top-level key/value lines (skip indented YAML such as `allowed-tools:`, `metadata:` blocks) to avoid malformed metadata.
 
 #### Fixed - Skill Directory Locations
 - **Corrected IDE Skill Paths**: Fixed skill scanning to use user home directories instead of project directory
@@ -20,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Skill Locations**: Added prominent skill directory documentation to README.md
 - **Skill Parsing Guide**: New document explaining skill parsing from IDE directories
 - **Technical Readmes**: Updated documentation with current architecture
+- **Skill parsing docs**: `docs/SKILL_PARSING_ARCHITECTURE.md` updated for recursive scanning, path resolution, frontmatter fallback, and "Restart all" in README.
 
 #### Added - External MCP Server Integration
 - **BrightData MCP Server**: Implemented full integration with anti-bot web scraping capabilities

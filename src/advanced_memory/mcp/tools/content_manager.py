@@ -17,7 +17,7 @@ Supported Operations:
 - delete: Remove notes from knowledge base with relationship cleanup
 - suggest_tags: LLM-powered semantic tag suggestions for notes
 - summarize: LLM-powered note summarization
-- enhance: LLM-powered note enhancement (structure, clarity, completeness)
+- enhance: LLM-powered note enhancement (update_content, update_style, add_examples, add_context, expand_sections, add_bibliography)
 - generate: LLM-powered content generation for new notes
 
 Prerequisites:
@@ -158,6 +158,8 @@ async def adn_content(
         "summarize",
         "enhance",
         "generate",
+        "find_runts",
+        "find_junk",
     ],
     identifier: str | None = None,
     content: str | None = None,
@@ -187,6 +189,17 @@ async def adn_content(
     results_per_page: int
     | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
+    # Enhance operation options (batch-upgrade weak-LLM notes with SOTA LLM)
+    update_content: bool = True,  # Fix typos, factual errors, biographical updates (death dates)
+    update_style: bool = True,  # Improve clarity, structure, readability
+    add_bibliography: bool = False,  # Add references/sources section if applicable
+    add_examples: bool = False,  # Add concrete examples, illustrations
+    add_context: bool = False,  # Add background, definitions, "why it matters"
+    expand_sections: bool = False,  # Turn bullet points into full paragraphs
+    update_stale_tech: bool = False,  # Update outdated lib/tool versions; flag uncertainty
+    # find_runts / find_junk (adn_knowledge_bulk delegates)
+    max_content_length: int = 500,  # find_runts: notes under this char count
+    assessment_format: Literal["narrative", "structured"] = "narrative",  # find_junk output
     # Parameter aliases for common mistakes (deprecated, will map to content)
     new_string: str | None = None,  # DEPRECATED: Use 'content' instead
     replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
@@ -625,12 +638,44 @@ pip install advanced-memory[voice]
     elif operation == "enhance":
         if identifier is None:
             return '# Error\n\nEnhance operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("enhance", identifier="My Note")\n```'
-        return await _enhance_operation(active_project, identifier, content)
+        return await _enhance_operation(
+            active_project,
+            identifier,
+            content,
+            update_content,
+            update_style,
+            add_bibliography,
+            add_examples,
+            add_context,
+            expand_sections,
+            update_stale_tech,
+        )
 
     elif operation == "generate":
         if not content:
             return '# Error\n\nGenerate operation requires: content parameter (topic/prompt)\n\n**Example:**\n```python\nadn_content("generate", content="Python functions tutorial", folder="tutorials")\n```'
         return await _generate_operation(active_project, content, folder, tags, entity_type)
+
+    elif operation == "find_runts":
+        from advanced_memory.mcp.tools.knowledge_operations import _handle_find_runts
+
+        filters = {"max_content_length": max_content_length}
+        if folder:
+            filters["folder"] = folder
+        result = await _handle_find_runts(filters, 50, project)
+        return build_success_response(
+            "find_runts", result, content=result, max_content_length=max_content_length
+        )
+
+    elif operation == "find_junk":
+        from advanced_memory.mcp.tools.knowledge_operations import _handle_find_junk
+
+        filters = {}
+        if folder:
+            filters["folder"] = folder
+        action = {"format": assessment_format}
+        result = await _handle_find_junk(filters, action, 20, project)
+        return build_success_response("find_junk", result, content=result, format=assessment_format)
 
     else:
         return build_error_response(
@@ -638,7 +683,7 @@ pip install advanced-memory[voice]
             error_code="INVALID_OPERATION",
             message=f"Operation '{operation}' is not supported",
             recovery_options=[
-                "Use supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete",
+                "Use supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance, generate, find_runts, find_junk",
                 "For audio operations (dictate, speak), use the adn_audio tool instead",
                 "Check operation spelling and try again",
             ],
@@ -1678,9 +1723,18 @@ Return the summary as plain text (not JSON)."""
 
 
 async def _enhance_operation(
-    active_project, identifier: str, enhancement_instruction: str | None
+    active_project,
+    identifier: str,
+    enhancement_instruction: str | None,
+    update_content: bool = True,
+    update_style: bool = True,
+    add_bibliography: bool = False,
+    add_examples: bool = False,
+    add_context: bool = False,
+    expand_sections: bool = False,
+    update_stale_tech: bool = False,
 ) -> str:
-    """Enhance a note using LLM."""
+    """Enhance a note using LLM. Supports batch-upgrading weak-LLM notes with SOTA LLM."""
     try:
         # Read the note first
         from advanced_memory.mcp.tools.read_note import read_note
@@ -1688,60 +1742,134 @@ async def _enhance_operation(
         note_content = await read_note.fn(identifier=identifier, project=active_project.name)
 
         if not note_content or note_content.startswith("# Error"):
-            return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
+            return build_error_response(
+                error="Could not read note",
+                error_code="NOTE_NOT_FOUND",
+                message=f"Failed to read note '{identifier}' before enhancement",
+                recovery_options=[
+                    "Verify identifier with adn_content('read', identifier='...')",
+                    "Use full permalink if note is in a folder",
+                ],
+                diagnostic_info={"identifier": identifier},
+                urgency="medium",
+            )
 
         # Use LLM to enhance
         from advanced_memory.services.llm_client import get_llm_client
 
         llm = get_llm_client()
 
-        instruction = (
-            enhancement_instruction
-            or "Improve the structure, clarity, and completeness of this note while preserving all original content and meaning."
-        )
+        from datetime import datetime
 
-        system_prompt = """You are a content enhancement assistant. Enhance notes by:
-1. Improving structure and organization
-2. Adding clarity and readability
-3. Ensuring completeness
-4. Preserving all original content and meaning
-5. Maintaining the original writing style and tone
+        instruction = enhancement_instruction or ""
+        enhancement_tasks = []
+        if update_content:
+            enhancement_tasks.append(
+                "Fix typos, spelling, and factual errors (e.g. Paris is capital of France not Spain)"
+            )
+            enhancement_tasks.append(
+                "Update biographical info if relevant: if the note mentions a person who died after "
+                "the note was written, add their death date and any notable later-life events"
+            )
+        if update_style:
+            enhancement_tasks.append("Improve structure, clarity, readability, and organization")
+        if add_examples:
+            enhancement_tasks.append(
+                "Add concrete examples, illustrations, or case studies where relevant"
+            )
+        if add_context:
+            enhancement_tasks.append(
+                "Add background, definitions, and explain why the topic matters"
+            )
+        if expand_sections:
+            enhancement_tasks.append(
+                "Expand bullet points and skeletal sections into full paragraphs; turn outlines into complete notes"
+            )
+        if update_stale_tech:
+            enhancement_tasks.append(
+                "Stale tech/version check: if the note references specific software versions (e.g. FastMCP 2.10, "
+                "Python 3.11) that you know are outdated, update version references and add a brief migration note "
+                "for breaking changes. If uncertain, add a prominent callout: 'Note: verify against current docs.' "
+                "Prefer flagging uncertainty over guessing version numbers."
+            )
+        if add_bibliography:
+            enhancement_tasks.append(
+                "Add a References/Bibliography section with relevant sources if applicable"
+            )
+        if not enhancement_tasks:
+            enhancement_tasks.append(
+                "Improve the note while preserving all original content and meaning"
+            )
+        if instruction:
+            enhancement_tasks.append(f"Additional instruction: {instruction}")
 
-Return the enhanced note content in markdown format."""
+        today = datetime.now().strftime("%Y-%m-%d")
+        system_prompt = f"""You are a content enhancement assistant. Today's date: {today}. Enhance notes by:
+{chr(10).join(f"{i + 1}. {t}" for i, t in enumerate(enhancement_tasks))}
+
+Always preserve the original meaning and key information. For biographical updates, use current knowledge (today is {today}) to add death dates or life events that occurred after the note was written. Return the enhanced note body in markdown format (no frontmatter)."""
 
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         note_preview = note_content[:4000]
-        prompt = f"Enhance this note:\n\n{note_preview}\n\nEnhancement instruction: {instruction}\n\nReturn the complete enhanced note content."
+        custom_instruction = f"\n\nCustom instruction: {instruction}" if instruction else ""
+        prompt = f"Enhance this note:\n\n{note_preview}{custom_instruction}\n\nReturn the complete enhanced note body (markdown, no YAML frontmatter)."
 
         enhanced_content = await llm.generate(
             prompt, system_prompt, max_tokens=4000, temperature=0.5
         )
 
-        # Update the note with enhanced content
+        # Strip frontmatter from LLM response if present (we preserve existing frontmatter)
+        from advanced_memory.file_utils import has_frontmatter, remove_frontmatter
+
+        if has_frontmatter(enhanced_content):
+            try:
+                enhanced_content = remove_frontmatter(enhanced_content)
+            except Exception:
+                pass  # Use as-is if parse fails
+
+        # Update the note with enhanced content (replace_body preserves frontmatter)
         from advanced_memory.mcp.tools.edit_note import edit_note
 
-        await edit_note.fn(
+        edit_result = await edit_note.fn(
             identifier=identifier,
-            operation="replace_section",
-            section="",  # Replace entire content
+            operation="replace_body",
             content=enhanced_content,
             project=active_project.name,
         )
 
-        return f"""# Note Enhanced
+        # edit_note returns error string on failure (does not raise)
+        if isinstance(edit_result, str) and (
+            edit_result.startswith("# Edit Failed") or edit_result.startswith("# Error")
+        ):
+            return build_error_response(
+                error="Could not persist enhanced content",
+                error_code="EDIT_FAILED",
+                message=f"LLM generated enhanced content ({len(enhanced_content)} chars) but edit_note failed to write it",
+                recovery_options=[
+                    "Check the note exists with adn_content('read', identifier='...')",
+                    "Use full permalink (e.g. content/strawberry-facts-test)",
+                    "Restart MCP server to ensure replace_body fix is loaded",
+                ],
+                diagnostic_info={"identifier": identifier, "edit_error": edit_result[:500]},
+                urgency="medium",
+            )
+
+        return build_success_response(
+            operation="enhance",
+            summary=f"Note '{identifier}' enhanced and updated ({len(note_content)} -> {len(enhanced_content)} chars)",
+            content=f"""# Note Enhanced
 
 **Note:** {identifier}
 
-**Enhancement:** {instruction}
-
-The note has been enhanced and updated. The enhanced version includes:
-- Improved structure and organization
-- Enhanced clarity and readability
-- Preserved original content and meaning
+The note has been enhanced and updated with improved structure, clarity, and readability.
 
 **Original length:** {len(note_content)} characters
 **Enhanced length:** {len(enhanced_content)} characters
-"""
+""",
+            identifier=identifier,
+            original_length=len(note_content),
+            enhanced_length=len(enhanced_content),
+        )
 
     except Exception as e:
         logger.error(f"Enhancement error: {e}", exc_info=True)

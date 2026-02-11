@@ -577,8 +577,9 @@ async def wait_for_migration_or_return_status(
             return None
 
         # Wait briefly for sync to complete
-        start_time = asyncio.get_event_loop().time()
-        while (asyncio.get_event_loop().time() - start_time) < timeout:
+        loop = asyncio.get_running_loop()
+        start_time = loop.time()
+        while (loop.time() - start_time) < timeout:
             if is_ready():
                 return None
             # Configurable polling interval
@@ -708,6 +709,6 @@ def _make_conversational_error(error: str, message: str) -> str:
     elif "write" in error_lower or "save" in error_lower:
         return "I couldn't save that right now. Please check your permissions and available disk space, then try again."
 
-    # General fallback with helpful tone
+    # General fallback: surface the actual error, no vague wrapper
     else:
-        return f"Something unexpected happened! 😅 Don't worry, let's try again. Here's what went wrong: {message}. If you need help, I'm here to guide you through it."
+        return f"{message}. Check recovery_options for next steps."

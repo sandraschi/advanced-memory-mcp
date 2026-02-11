@@ -52,8 +52,20 @@ app.post('/start-all', (req, res) => {
       })
     }
 
-    // Give startup service time to start, then start webapp
-    setTimeout(() => {
+    // Give startup service time to listen, then start bridge via 10733/start-bridge, then webapp
+    setTimeout(async () => {
+      try {
+        console.log('Starting bridge via startup service...')
+        const bridgeRes = await fetch('http://localhost:10733/start-bridge', { method: 'POST' })
+        if (bridgeRes.ok) {
+          console.log('Bridge start initiated')
+        } else {
+          console.warn('Bridge start returned', bridgeRes.status)
+        }
+      } catch (e) {
+        console.warn('Could not start bridge via 10733:', e.message)
+      }
+
       console.log('Starting webapp...')
       const webappProcess = spawn('npm', ['run', 'dev'], {
         cwd: path.join(__dirname, 'webapp'),
@@ -104,7 +116,7 @@ app.post('/stop-all', (req, res) => {
 })
 
 // Start the auto-start service - bind to all interfaces for Tailnet access
-const PORT = 8003
+const PORT = parseInt(process.env.ADN_AUTOSTART_PORT, 10) || 10735
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`ADN Auto-Start Service running on http://0.0.0.0:${PORT} (Tailnet accessible)`)
   console.log(`POST /start-all to start all services`)

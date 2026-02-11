@@ -31,7 +31,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_tvtropes_research(
     operation: Literal[
         "search_tropes",

@@ -1,5 +1,6 @@
 """Service for syncing files between filesystem and database."""
 
+import asyncio
 import os
 import time
 from collections.abc import Sequence
@@ -477,9 +478,20 @@ class SyncService:
 
         file_path = self.entity_parser.base_path / path
 
-        # Check file size before reading to prevent hanging on huge files
+        # Run blocking file I/O in thread pool - prevents sync from blocking event loop
+        # so API writes can complete without hanging
+        def _read_file() -> str:
+            try:
+                return file_path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                logger.warning(f"UTF-8 decode failed for {path}, trying with error handling")
+                return file_path.read_text(encoding="utf-8", errors="replace")
+
+        def _stat_size() -> int:
+            return file_path.stat().st_size
+
         try:
-            file_size = file_path.stat().st_size
+            file_size = await asyncio.to_thread(_stat_size)
             if file_size > 10 * 1024 * 1024:  # 10MB limit
                 logger.warning(f"File too large to sync: {path} ({file_size / 1024 / 1024:.2f} MB)")
                 raise ValueError(f"File exceeds 10MB limit: {path}")
@@ -487,16 +499,11 @@ class SyncService:
             logger.error(f"Cannot access file: {path}, error: {e}")
             raise
 
-        # Read file with encoding error handling
         try:
-            file_content = file_path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            logger.warning(f"UTF-8 decode failed for {path}, trying with error handling")
-            try:
-                file_content = file_path.read_text(encoding="utf-8", errors="replace")
-            except Exception as e:
-                logger.error(f"Cannot read file {path}: {e}")
-                raise ValueError(f"File is unreadable: {path}") from e
+            file_content = await asyncio.to_thread(_read_file)
+        except Exception as e:
+            logger.error(f"Cannot read file {path}: {e}")
+            raise ValueError(f"File is unreadable: {path}") from e
 
         file_contains_frontmatter = has_frontmatter(file_content)
 

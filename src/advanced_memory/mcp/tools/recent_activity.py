@@ -1,12 +1,11 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
 # UTC is available in Python 3.11+, for older versions use timezone.utc
 try:
     from datetime import UTC
 except ImportError:
-    # For Python < 3.11, use timezone.utc
     UTC = UTC
 from typing import Any
 
@@ -19,13 +18,6 @@ from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
-
-# Python 3.10 compatibility - UTC was added in 3.11
-try:
-    UTC = UTC
-except AttributeError:
-    # Fallback for Python < 3.11
-    UTC = timezone(timedelta(0))
 
 
 @mcp.tool

@@ -1,11 +1,11 @@
 # Check webapp port usage and zombie processes
-Write-Host "Checking ADN Webapp port 17770..." -ForegroundColor Cyan
+Write-Host "Checking ADN Webapp port 10704..." -ForegroundColor Cyan
 
-# Check if port 17770 is in use
-$port17770 = netstat -ano | findstr ":17770"
-if ($port17770) {
-    Write-Host "Port 17770 is in use:" -ForegroundColor Yellow
-    $port17770 | ForEach-Object {
+# Check if port 10704 is in use
+$port10704 = netstat -ano | findstr ":10704"
+if ($port10704) {
+    Write-Host "Port 10704 is in use:" -ForegroundColor Yellow
+    $port10704 | ForEach-Object {
         $line = $_ -split '\s+'
         $processId = $line[-1]
         $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
@@ -16,7 +16,7 @@ if ($port17770) {
         }
     }
 } else {
-    Write-Host "Port 17770 is free" -ForegroundColor Green
+    Write-Host "Port 10704 is free" -ForegroundColor Green
 }
 
 # Check for ADN-related processes

@@ -47,7 +47,7 @@ if _FULL_TOOLS_MODE:
     from .adn_github_research import adn_github_research
     from .adn_import import adn_import
     from .adn_inbox import adn_inbox
-    from .adn_knowledge import adn_knowledge
+    from .adn_knowledge import adn_knowledge_legacy
     from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
     from .adn_rag import adn_rag
@@ -55,6 +55,7 @@ if _FULL_TOOLS_MODE:
     from .adn_skills import adn_skills
     from .adn_skills_creator import adn_skills_creator
     from .adn_skills_reader import adn_skills_reader
+    from .adn_skills_research import adn_skills_research
     from .adn_tvtropes_research import adn_tvtropes_research
     from .adn_web_search import adn_web_search
     from .build_context import build_context
@@ -70,7 +71,7 @@ if _FULL_TOOLS_MODE:
     from .export_to_archive import export_to_archive
     from .help import help
     from .import_from_archive import import_from_archive
-    from .knowledge_operations import knowledge_operations
+    from .knowledge_operations import adn_knowledge_bulk
     from .list_directory import list_directory
     from .load_canvas import load_obsidian_canvas
     from .load_evernote_export import load_evernote_export
@@ -106,21 +107,29 @@ if _FULL_TOOLS_MODE:
     from .write_note import write_note
     from .zettelmaker import adn_zettelmaker
 else:
-    # PORTMANTEAU MODE (default): Import ONLY 7 portmanteau tools (+ help + status)
+    # PORTMANTEAU MODE (default): 8 portmanteau tools (+ help + status)
+    # adn_content is REQUIRED - primary tool for note write/read/edit (quick, daily, etc.)
+    from advanced_memory.mcp.mcp_instance import mcp
+
+    from .content_manager import adn_content
     from .help import help
     from .portmanteau_external import adn_external
     from .portmanteau_import_export import adn_import_export
-    from .portmanteau_knowledge import adn_knowledge
+    from .portmanteau_knowledge import adn_knowledge_portmanteau
     from .portmanteau_project import adn_project
     from .portmanteau_research import adn_research
     from .portmanteau_skills import adn_skills
     from .portmanteau_system import adn_system
     from .status import status
 
-# PORTMANTEAU MODE: Only 9 tools total (7 portmanteaus + 2 essentials)
+    # Manual registration to avoid decorator-related issues
+    mcp.tool(name="adn_knowledge")(adn_knowledge_portmanteau)
+
+# PORTMANTEAU MODE: 10 tools total (8 portmanteaus + 2 essentials)
 __all__ = [
-    # 7 Portmanteau Tools (meet MCP standards <30 tools)
-    "adn_knowledge",  # Core CRUD operations (25+ tools consolidated)
+    # 8 Portmanteau Tools (meet MCP standards <30 tools)
+    "adn_content",  # Primary content CRUD: write, read, quick, daily, edit, move, delete
+    "adn_knowledge",  # Core CRUD + search, list, context, activity
     "adn_research",  # AI research & RAG (15+ tools consolidated)
     "adn_import_export",  # Import/export operations (20+ tools consolidated)
     "adn_project",  # Project management (8+ tools consolidated)

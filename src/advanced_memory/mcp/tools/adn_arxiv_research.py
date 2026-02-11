@@ -12,7 +12,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_arxiv_research(
     operation: Literal[
         "search_papers",
@@ -291,7 +291,7 @@ async def adn_arxiv_research(
 
             # This is a simplified version - in practice, you'd need citation data
             # For now, we'll find papers with similar titles/abstracts
-            paper_details = await adn_arxiv_research(
+            paper_details = await adn_arxiv_research.fn(
                 operation="get_paper_details", paper_id=paper_id
             )
 
@@ -309,7 +309,7 @@ async def adn_arxiv_research(
             # Exclude the original paper
             full_query = f"({related_query}) NOT {paper_id}"
 
-            related_results = await adn_arxiv_research(
+            related_results = await adn_arxiv_research.fn(
                 operation="search_papers",
                 query=full_query,
                 max_results=max_results,

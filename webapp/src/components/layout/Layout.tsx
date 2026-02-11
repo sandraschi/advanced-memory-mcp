@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import MetadataSidebar from './MetadataSidebar'
@@ -10,7 +9,7 @@ interface LayoutProps {
   children: React.ReactNode
   showMetadataSidebar?: boolean
   selectedNoteMetadata?: any
-  onMetadataExport?: (format: string) => void
+  onMetadataExport?: (format: string, noteId: string) => Promise<void>
   onMetadataEdit?: () => void
   onMetadataDelete?: () => void
 }
@@ -38,8 +37,8 @@ export default function Layout({
         onOpenHelp={() => setHelpOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
+      {/* Main Content Area - no ml; sidebar already reserves space in flex flow */}
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
         <Topbar
           onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}

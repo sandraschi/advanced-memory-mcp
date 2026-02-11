@@ -11,7 +11,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_github_research(
     operation: Literal[
         "search_repositories",

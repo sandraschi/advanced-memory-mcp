@@ -145,7 +145,7 @@ async def _scan_vault_files(
                 att_files = []
 
                 try:
-                    dir_contents = await list_directory(current_path)
+                    dir_contents = await list_directory.fn(current_path)
 
                     lines = dir_contents.split("\n")
                     for line in lines:

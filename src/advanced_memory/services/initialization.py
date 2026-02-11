@@ -240,7 +240,13 @@ async def initialize_file_sync_full(
 
     # Then start the watch service in the background
     logger.info("Starting watch service for all projects")
-    # run the watch service
+    from advanced_memory.sync import WatchService
+
+    watch_service = WatchService(
+        app_config=app_config,
+        project_repository=ProjectRepository(session_maker),
+        quiet=True,
+    )
     try:
         await watch_service.run()
         logger.info("Watch service started")

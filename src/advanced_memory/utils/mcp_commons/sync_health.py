@@ -13,7 +13,7 @@ Usage:
     sync_monitor.start()
 
     # In your MCP tool:
-    @mcp.tool()
+    @mcp.tool
     async def sync_health():
         return sync_monitor.get_health_report()
 """

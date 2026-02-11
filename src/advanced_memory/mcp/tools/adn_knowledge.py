@@ -11,8 +11,8 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool
-async def adn_knowledge(
+@mcp.tool(name="adn_knowledge_legacy")
+async def adn_knowledge_legacy(
     operation: str,
     filters: dict[str, Any] | None = None,
     action: dict[str, Any] | None = None,
@@ -25,98 +25,8 @@ async def adn_knowledge(
     limit: int = 100,
     project: str | None = None,
 ) -> dict:
-    """Comprehensive knowledge management tool for Advanced Memory knowledge base.
+    """Legacy knowledge management and research orchestration tool."""
 
-    This point-of-entry tool provides a unified interface for complex knowledge
-    operations, including bulk management, tag maintenance, content validation,
-    and LLM-powered research orchestration.
-
-    RESPONSES:
-    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps.
-
-    PORTMANTEAU PATTERN RATIONALE:
-    Consolidates 18+ knowledge operations into one tool to prevent tool explosion while maintaining full functionality.
-
-    PARAMETER DESIGN:
-    The parameters are categorized by operation type:
-    - Maintenance (bulk_*): Uses 'filters' to select notes and 'action' to apply changes.
-    - Tags (tag_*): Handles analytics, consolidation, and cleanup.
-    - Research (research_*): Topic-based planning and structured methodology.
-    - AI Analysis (analyze_*): LLM-powered insights, gap discovery, and clustering.
-
-    SUPPORTED OPERATIONS:
-
-    Maintenance & Bulk Operations:
-    - bulk_update: Batch update multiple notes (tags, content, metadata).
-    - bulk_move: Relocate multiple notes between folders.
-    - bulk_delete: Remove multiple notes (non-destructive by default).
-    - find_duplicates: Identify similar content for consolidation.
-    - validate_content: Check note quality, broken links, and formatting.
-
-    Tag Management:
-    - tag_analytics: Analyze tag usage patterns and statistics.
-    - consolidate_tags: Merge semantically similar tags into canonical forms.
-    - tag_maintenance: Clean up duplicates and standardize casing.
-
-    Research Orchestration:
-    - research_plan: Create a structured research roadmap with methodology.
-    - research_methodology: Get proven research approaches for specific topics.
-    - research_questions: Generate focused sub-questions for deep dives.
-    - note_blueprint: Design optimal note structures for research findings.
-    - research_workflow: Execute a step-by-step research guide.
-
-    AI Content Analysis:
-    - analyze_quality: LLM-powered readability and completeness analysis.
-    - suggest_relationships: Semantic relationship discovery between notes.
-    - find_gaps: Identification of missing subtopics and coverage gaps.
-    - cluster_content: Semantic clustering of notes by theme.
-    - extract_insights: High-level insight extraction from note collections.
-
-    Prerequisites:
-    - Active project session for all operations.
-    - Configured LLM provider (via adn_llm) for 'AI Analysis' operations.
-
-    Parameters:
-        operation: The knowledge operation to perform (Required).
-        filters: Filtering criteria (e.g., {"tags": ["draft"], "folder": "notes"}).
-        action: Action parameters (e.g., {"add_tags": ["final"], "destination": "archive"}).
-        topic: Specific topic for research operations (e.g., "quantum computing").
-        topic_type: Type of research topic (e.g., "technical", "academic").
-        research_type: Methodology type (e.g., "exploratory", "comparative").
-        step: Specific workflow step to execute (1-5).
-        parameters: Additional metadata for research/AI operations.
-        dry_run: Preview changes without applying them (Default: True).
-        limit: Maximum items to process/analyze (Default: 100).
-        project: Optional override for active project name.
-
-    Returns:
-        Markdown string containing operation summary, statistics, or AI-generated insights.
-
-    Usage:
-    Use this tool for high-level knowledge maintenance and research planning.
-    Always use 'dry_run=True' for bulk updates to preview changes.
-
-    Examples:
-        Analyze tag usage across the project:
-            adn_knowledge("tag_analytics")
-
-        Bulk move draft notes to archive (dry run):
-            adn_knowledge("bulk_move", filters={"tags": ["draft"]}, action={"destination": "archive"})
-
-        Generate a research plan for a new topic:
-            adn_knowledge("research_plan", topic="Advanced AI Safety")
-
-        Find knowledge gaps in your research:
-            adn_knowledge("find_gaps", filters={"topics": ["robotics", "embedded-systems"]})
-
-    Errors:
-        - Required Parameter: Missing 'filters', 'action', or 'topic' for specific operations.
-        - LLM Unavailable: AI operations failed due to lack of configured LLM client.
-        - Invalid operation: The specified operation is not supported.
-    """
     logger.info(f"MCP tool call tool=adn_knowledge operation={operation}")
 
     # Route to appropriate operation
@@ -163,9 +73,9 @@ async def _knowledge_operations(
     project: str | None,
 ) -> str:
     """Handle knowledge operations."""
-    from advanced_memory.mcp.tools.knowledge_operations import knowledge_operations
+    from advanced_memory.mcp.tools.knowledge_operations import adn_knowledge_bulk
 
-    return await knowledge_operations.fn(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
+    return await adn_knowledge_bulk.fn(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(
@@ -179,7 +89,7 @@ async def _research_orchestrator(
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
 
-    return await research_orchestrator(
+    return await research_orchestrator.fn(
         operation, topic, topic_type, research_type, step, parameters
     )  # type: ignore[operator,no-any-return]
 

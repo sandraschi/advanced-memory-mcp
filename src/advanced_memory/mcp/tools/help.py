@@ -568,7 +568,7 @@ User Query [UNICODE] Search Engine [UNICODE] Graph Traversal [UNICODE] Result Ra
 ### Async Processing
 ```python
 # All tools are async for non-blocking operation
-@mcp.tool()
+@mcp.tool
 async def search_notes(query: str) -> SearchResponse:
     # Async database queries
     # Async file operations
@@ -1509,7 +1509,7 @@ async def tool_name(params) -> Result:
 ### Async Processing
 ```python
 # All tools are async for non-blocking operation
-@mcp.tool()
+@mcp.tool
 async def search_notes(query: str) -> SearchResponse:
     # Async database queries
     # Async file operations

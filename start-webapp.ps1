@@ -1,5 +1,9 @@
-# Start ADN Webapp with all required services
-# This script starts the startup service and then the webapp
+# Start ADN Webapp with all required services (reservoir ports 10704, 10733 per WEBAPP_PORTS.md)
+# Clears ports, then starts startup service and webapp
+
+$WebPort = 10704
+$StartupPort = 10733
+try { Set-Location webapp; npx --yes kill-port $WebPort $StartupPort 2>$null; Set-Location $PSScriptRoot } catch { Set-Location $PSScriptRoot }
 
 Write-Host "Starting ADN Webapp..." -ForegroundColor Green
 Write-Host "This will start all required services automatically" -ForegroundColor Gray
@@ -37,31 +41,39 @@ if (!(Test-Path "node_modules")) {
     }
 }
 
-Write-Host "Starting ADN Startup Service (port 8002)..." -ForegroundColor Green
+Write-Host "Starting ADN Startup Service (port 10733)..." -ForegroundColor Green
 $startupService = Start-Process -FilePath "node" -ArgumentList "startup-service.js" -NoNewWindow -PassThru
 
 # Wait a moment for startup service to start
 Start-Sleep -Seconds 2
 
-Write-Host "Starting ADN Webapp (port 17770)..." -ForegroundColor Green
-Push-Location webapp
-$webappProcess = Start-Process -FilePath "npm" -ArgumentList "run dev" -NoNewWindow -PassThru
-Pop-Location
+Write-Host "Starting ADN Webapp (port 10704)..." -ForegroundColor Green
+$webappDir = Join-Path $PSScriptRoot "webapp"
+$webappProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "npm run dev" -NoNewWindow -PassThru -WorkingDirectory $webappDir
 
 Write-Host "" -ForegroundColor Green
 Write-Host "ADN Webapp started successfully!" -ForegroundColor Green
-Write-Host "Webapp: http://localhost:17770" -ForegroundColor Cyan
-Write-Host "Startup Service: http://localhost:8002" -ForegroundColor Cyan
+Write-Host "Webapp: http://localhost:10704" -ForegroundColor Cyan
+Write-Host "Startup Service: http://localhost:10733" -ForegroundColor Cyan
 Write-Host "" -ForegroundColor Gray
 Write-Host "The webapp will automatically start the bridge server when needed." -ForegroundColor Gray
 Write-Host "Press Ctrl+C to stop all services" -ForegroundColor Gray
 
 # Wait for user to stop
 try {
-    Wait-Process -Id $webappProcess.Id
+    if ($webappProcess -and $webappProcess.Id) {
+        Wait-Process -Id $webappProcess.Id
+    } else {
+        Write-Host "Webapp process did not start. Press Enter to exit." -ForegroundColor Yellow
+        Read-Host
+    }
 } finally {
     Write-Host "Stopping services..." -ForegroundColor Yellow
-    Stop-Process -Id $webappProcess.Id -ErrorAction SilentlyContinue
-    Stop-Process -Id $startupService.Id -ErrorAction SilentlyContinue
+    if ($webappProcess -and $webappProcess.Id) {
+        Stop-Process -Id $webappProcess.Id -ErrorAction SilentlyContinue
+    }
+    if ($startupService -and $startupService.Id) {
+        Stop-Process -Id $startupService.Id -ErrorAction SilentlyContinue
+    }
     Write-Host "All services stopped." -ForegroundColor Green
 }

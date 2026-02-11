@@ -134,7 +134,7 @@ def test_portmanteau_tool_docstring_clarity(tool_name, tool):
         if pattern_section:
             pattern_text = pattern_section.group(1)
             # Should be concise (not more than 3 lines)
-            pattern_lines = [l.strip() for l in pattern_text.split("\n") if l.strip()]
+            pattern_lines = [line.strip() for line in pattern_text.split("\n") if line.strip()]
             assert len(pattern_lines) <= 3, (
                 f"{tool_name} PORTMANTEAU PATTERN section is too verbose ({len(pattern_lines)} lines)"
             )
@@ -192,7 +192,7 @@ def test_portmanteau_pattern_sections_are_concise():
             )
             if pattern_match:
                 pattern_text = pattern_match.group(1)
-                pattern_lines = [l.strip() for l in pattern_text.split("\n") if l.strip()]
+                pattern_lines = [line.strip() for line in pattern_text.split("\n") if line.strip()]
                 if len(pattern_lines) > 3:
                     issues.append(
                         f"{tool_name}: PORTMANTEAU PATTERN section has {len(pattern_lines)} lines (should be ≤3)"

@@ -15,7 +15,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.rag.system import get_rag_system
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_rag(
     operation: Literal[
         "ingest_document",
@@ -191,7 +191,7 @@ async def adn_rag(
                 "document_path": document_path,
                 "document_id": doc_id,
                 "rag_result": rag_result,
-                "chunks_processed": len(chunks),
+                "chunks_processed": rag_result.get("chunks_added", 0),
                 "total_characters": len(full_content),
             }
 

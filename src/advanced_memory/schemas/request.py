@@ -70,6 +70,7 @@ class EditEntityRequest(BaseModel):
         "prepend",
         "find_replace",
         "replace_section",
+        "replace_body",
         "insert_mermaid",
         "insert_ascii_art",
         "insert_kilroy",

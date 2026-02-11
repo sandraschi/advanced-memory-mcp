@@ -25,17 +25,45 @@ class LLMClient:
             model: Model name. If None, uses default for provider.
             base_url: Custom base URL (for ollama/lmstudio).
         """
+        if provider and not self._check_provider_available(provider):
+            logger.warning(
+                f"Configured provider '{provider}' unavailable, falling back to auto-detect"
+            )
+            provider = None
+            model = None  # Reset model when falling back to different provider
         self.provider = provider or self._auto_detect_provider()
         self.model = model or self._get_default_model()
         self.base_url = base_url
 
-    def _auto_detect_provider(self) -> str:
-        """Auto-detect available provider."""
-        # Try Ollama first
-        try:
-            import httpx
+    def _check_provider_available(self, provider: str) -> bool:
+        """Check if a provider is reachable."""
+        if provider == "ollama":
+            try:
+                with httpx.Client(timeout=2.0) as client:
+                    r = client.get("http://localhost:11434/api/tags")
+                    return r.status_code == 200
+            except Exception:
+                return False
+        elif provider == "lmstudio":
+            try:
+                with httpx.Client(timeout=2.0) as client:
+                    r = client.get("http://localhost:1234/v1/models")
+                    if r.status_code != 200:
+                        return False
+                    data = r.json()
+                    models = data.get("data", [])
+                    return len(models) > 0  # LM Studio needs a model loaded
+            except Exception:
+                return False
+        elif provider == "openai":
+            return bool(os.getenv("OPENAI_API_KEY"))
+        return False
 
-            with httpx.Client(timeout=1.0) as client:
+    def _auto_detect_provider(self) -> str:
+        """Auto-detect available provider. Prefer Ollama over LM Studio when both exist."""
+        # Try Ollama first (most common for local dev)
+        try:
+            with httpx.Client(timeout=2.0) as client:
                 response = client.get("http://localhost:11434/api/tags")
                 if response.status_code == 200:
                     return "ollama"
@@ -44,10 +72,12 @@ class LLMClient:
 
         # Try LM Studio
         try:
-            with httpx.Client(timeout=1.0) as client:
+            with httpx.Client(timeout=2.0) as client:
                 response = client.get("http://localhost:1234/v1/models")
                 if response.status_code == 200:
-                    return "lmstudio"
+                    data = response.json()
+                    if data.get("data"):  # Has at least one model loaded
+                        return "lmstudio"
         except Exception:
             pass
 
@@ -55,7 +85,6 @@ class LLMClient:
         if os.getenv("OPENAI_API_KEY"):
             return "openai"
 
-        # Default to ollama (user can configure)
         return "ollama"
 
     def _get_default_model(self) -> str:

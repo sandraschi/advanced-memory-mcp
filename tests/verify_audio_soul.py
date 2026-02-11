@@ -29,7 +29,7 @@ try:
 
     generator = pipeline(test_text, voice="af_heart", speed=1.0)
     audio_segments = []
-    for gs, ps, audio in generator:
+    for _gs, _ps, audio in generator:
         audio_segments.append(audio)
 
     full_audio = np.concatenate(audio_segments)

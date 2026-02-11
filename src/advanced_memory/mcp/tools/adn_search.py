@@ -456,7 +456,7 @@ async def _obsidian_search(
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
 
-    return await search_obsidian_vault(
+    return await search_obsidian_vault.fn(
         source_path, query, search_type, max_results, include_content
     )  # type: ignore[operator,no-any-return]
 
@@ -489,7 +489,9 @@ async def _joplin_search(
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
 
-    return await search_joplin_vault(source_path, query, search_type, max_results, include_content)  # type: ignore[operator,no-any-return]
+    return await search_joplin_vault.fn(
+        source_path, query, search_type, max_results, include_content
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _notion_search(
@@ -520,7 +522,7 @@ async def _notion_search(
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
 
-    return await search_notion_vault(source_path, query, case_sensitive, file_type, max_results)  # type: ignore[operator,no-any-return]
+    return await search_notion_vault.fn(source_path, query, case_sensitive, file_type, max_results)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_search(
@@ -553,7 +555,7 @@ async def _evernote_search(
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
 
-    return await search_evernote_vault(
+    return await search_evernote_vault.fn(
         source_path,
         query,
         case_sensitive,

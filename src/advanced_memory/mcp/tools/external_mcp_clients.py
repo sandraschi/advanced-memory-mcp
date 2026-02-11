@@ -249,7 +249,7 @@ def _sanitize_path(path: str) -> str:
     return normalized
 
 
-@mcp.tool()
+@mcp.tool
 async def skeleton_key(
     server_path: str,
     tool_name: str,
@@ -367,7 +367,7 @@ async def skeleton_key(
         )
 
 
-@mcp.tool()
+@mcp.tool
 async def discover_mcp_server_tools(server_path: str) -> dict[str, Any]:
     """Discover all available tools on any MCP server.
 
@@ -576,7 +576,7 @@ mcp_client_manager = MCPClientManager()
 # ============================================================================
 
 
-@mcp.tool()
+@mcp.tool
 async def get_weather_report(location: str, source: str = "brightdata") -> dict[str, Any]:
     """
     Get weather report for a location using external MCP services.
@@ -690,7 +690,7 @@ async def _get_weather_direct(location: str) -> dict[str, Any]:
 # ============================================================================
 
 
-@mcp.tool()
+@mcp.tool
 async def get_vrchat_server_status() -> dict[str, Any]:
     """
     Get VRChat server status using VRChat MCP server.
@@ -735,7 +735,7 @@ async def get_vrchat_server_status() -> dict[str, Any]:
         return build_error_response("VRCHAT_ERROR", f"Failed to get VRChat status: {str(e)}")
 
 
-@mcp.tool()
+@mcp.tool
 async def check_vrchat_api_direct() -> dict[str, Any]:
     """
     Check VRChat API status directly (fallback method).
@@ -795,7 +795,7 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
 # ============================================================================
 
 
-@mcp.tool()
+@mcp.tool
 async def call_external_mcp_tool(
     server_name: str, tool_name: str, tool_params: dict[str, Any] | None = None
 ) -> dict[str, Any]:
@@ -842,7 +842,7 @@ async def call_external_mcp_tool(
         )
 
 
-@mcp.tool()
+@mcp.tool
 async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
     """
     List all available tools from an external MCP server.

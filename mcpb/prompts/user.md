@@ -33,77 +33,76 @@ Enhance writing: "Improve this note about quantum computing"
 ## Tool Categories & Use Cases
 
 ### 📝 Content Management (`adn_content`)
-**Best for**: Creating, reading, editing, and organizing notes
+**Best for**: Creating, reading, editing, and organizing notes. **Primary tool for note operations. Available in all modes.**
 
 #### Common Patterns:
 ```
-"Create a daily journal entry for today"
-"Read my meeting notes from last week"
-"Edit the conclusion section of my research paper"
-"Add tags 'important' and 'review' to this note"
-"Move this note to the 'archive' folder"
+"Create a note about machine learning basics"   -> adn_content(operation="write", identifier="...", content="...", folder="...")
+"Read my meeting notes"                         -> adn_content(operation="read", identifier="...")
+"Create a quick capture"                        -> adn_content(operation="quick", content="...")
+"Create today's daily journal entry"            -> adn_content(operation="daily", content="...")
+"Append to this note"                           -> adn_content(operation="edit", identifier="...", edit_operation="append", content="...")
+"Find and replace in this note"                 -> adn_content(operation="edit", identifier="...", edit_operation="find_replace", find_text="...", content="...")
+"Move this note to archive"                     -> adn_content(operation="move", identifier="...", destination_path="...")
 ```
 
 #### Advanced Usage:
 ```
 "Create a note with title 'Project Planning' and content about quarterly goals"
-"Find and replace 'old-term' with 'new-term' in all notes tagged 'draft'"
-"Show me notes created in the last 7 days"
+"Replace the summary section of my research note"
+"View this note as a formatted artifact"
 ```
 
-### 🔍 Search & Discovery (`adn_search`)
+### 🔍 Search & Discovery (`adn_knowledge` search, `adn_research`)
 **Best for**: Finding specific information across your knowledge base
 
 #### Common Patterns:
 ```
-"Search for notes about climate change"
-"Find all notes tagged with 'urgent'"
-"Show me notes mentioning 'machine learning'"
-"Search for content created this month"
+"Search for notes about climate change"           -> adn_knowledge(operation="search", query="climate change")
+"Show me notes mentioning 'machine learning'"     -> adn_knowledge(operation="search", query="machine learning")
+"Search the web for AI news"                      -> adn_research(operation="web_search", query="...")
 ```
 
 #### Advanced Usage:
 ```
-"Find notes about quantum physics in the 'research' folder"
-"Show me notes that link to 'artificial intelligence'"
-"Search for notes with both 'python' and 'data-science' tags"
+"Find notes about quantum physics"                -> adn_knowledge(operation="search", query="quantum physics")
+"Search arXiv for papers"                         -> adn_research(operation="arxiv", query="...")
 ```
 
-### 🧭 Navigation & Context (`adn_navigation`)
+### 🧭 Navigation & Context (`adn_knowledge` navigate, context, activity, list)
 **Best for**: Understanding relationships and building context
 
 #### Common Patterns:
 ```
-"Show me recent activity in my knowledge base"
-"Build context around my current project"
-"List all folders in my workspace"
-"Show me what's changed in the last 24 hours"
+"Show me recent activity in my knowledge base"    -> adn_knowledge(operation="activity", timeframe="1 week")
+"Build context around my current project"         -> adn_knowledge(operation="context", identifier="...", depth=2)
+"List all folders in my workspace"                -> adn_knowledge(operation="list", path="")
+"Show me what's changed in the last 24 hours"     -> adn_knowledge(operation="activity", timeframe="1d")
 ```
 
 #### Advanced Usage:
 ```
 "Build a 2-level context network around 'machine learning'"
-"Show me the backlinks to my main research note"
-"List directory contents with file details"
+"Navigate from my main research note"
+"List directory contents with depth"
 ```
 
-### 🧠 Knowledge Operations (`adn_knowledge`)
-**Best for**: Analysis, enhancement, and bulk operations
+### 🧠 Research & Analysis (`adn_research`)
+**Best for**: Web search, RAG, document ingestion, LLM generation, research orchestration
 
 #### Common Patterns:
 ```
-"Summarize my research on renewable energy"
-"Suggest tags for this new note"
-"Enhance the clarity of my technical documentation"
-"Generate a table of contents for this document"
+"Search the web for machine learning transformers"
+"Generate content about AI safety considerations"
+"Create a research plan for quantum computing"
+"Ingest this document into my knowledge base"
 ```
 
 #### Advanced Usage:
 ```
-"Analyze the relationships in my knowledge graph"
-"Create a research plan for quantum computing"
-"Bulk update all notes in the 'draft' folder"
-"Generate content about AI safety considerations"
+"Search arXiv for neural network papers"
+"Query my RAG knowledge base"
+"Configure LLM provider and generate content"
 ```
 
 ### 📊 Project Management (`adn_project`)
@@ -202,31 +201,20 @@ Enhance writing: "Improve this note about quantum computing"
 
 ### Research Project Workflow
 ```
-1. "Create a new project called 'quantum-research'"
-2. "Create a note about quantum entanglement basics"
-3. "Search for existing notes about quantum physics"
-4. "Build context around quantum computing"
-5. "Generate a research plan for the topic"
-6. "Export findings to HTML documentation"
-```
-
-### Daily Journal Workflow
-```
-1. "Create today's daily journal entry"
-2. "Add notes about today's meetings and tasks"
-3. "Search for similar past entries"
-4. "Analyze patterns in my work habits"
-5. "Generate insights from the past week"
+1. adn_project(operation="create", name="quantum-research", path="...")
+2. adn_content(operation="write", identifier="Quantum Entanglement Basics", content="...", folder="research")
+3. adn_knowledge(operation="search", query="quantum physics")
+4. adn_knowledge(operation="context", identifier="quantum computing", depth=2)
+5. adn_research(operation="research_orchestrate", topic="quantum computing")
+6. adn_import_export(operation="export", format="html", destination="...")
 ```
 
 ### Content Creation Workflow
 ```
-1. "Create outline for technical article"
-2. "Research related topics in knowledge base"
-3. "Generate detailed content sections"
-4. "Enhance writing clarity and flow"
-5. "Add appropriate tags and links"
-6. "Export to final format"
+1. adn_content(operation="write", identifier="Technical Article Outline", content="...", folder="drafts")
+2. adn_knowledge(operation="search", query="related topics")
+3. adn_content(operation="edit", identifier="...", edit_operation="replace_section", section="...", content="...")
+4. adn_import_export(operation="export", format="pdf", destination="...")
 ```
 
 ## Best Practices

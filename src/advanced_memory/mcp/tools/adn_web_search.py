@@ -90,7 +90,7 @@ SEARCH_PROVIDERS = {
 }
 
 
-@mcp.tool()
+@mcp.tool
 async def adn_web_search(
     query: str,
     provider: Literal["duckduckgo", "serpapi", "bing", "auto"] = "auto",

@@ -58,3 +58,7 @@ tmp/
 temp/
 *.tmp
 *.log
+
+# Exclude heavy directories irrelevant to backend
+webapp/
+**/node_modules/
