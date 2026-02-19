@@ -15,13 +15,13 @@ usage: |
 ---
 .SYNOPSIS
     Automated repository backup using Windows native compression with SOTA error handling
-    
+
 .DESCRIPTION
     Creates a compressed ZIP backup of the repository and saves to:
     1. Desktop\repo backup\
     2. N:\backup\dev\repos\
     3. OneDrive\repo-backups\
-    
+
     Features:
     - Individual error handling per backup location
     - Retry logic with exponential backoff
@@ -31,7 +31,7 @@ usage: |
     - Detailed error logging
     - Integrity verification after creation
     - Graceful cleanup on failures
-    
+
     Excludes:
     - .venv/ (virtual environments)
     - __pycache__/ (Python cache)
@@ -41,7 +41,7 @@ usage: |
     - VirtualBox files (*.vdi, *.vmdk, *.vbox)
     - Test artifacts (MagicMock/, sandboxes/, quarantine/)
     - Logs (*.log)
-    
+
 .PARAMETER IncludeBuild
     Include dist/ and build/ folders (default: false)
 
@@ -50,21 +50,21 @@ usage: |
 
 .PARAMETER McpOnly
     Require folder to look like an MCP server (name contains mcp, or mcp in pyproject.toml/package.json); exit if not (default: false)
-    
+
 .PARAMETER MaxRetries
     Maximum number of retry attempts for failed operations (default: 3)
-    
+
 .PARAMETER RetryDelaySeconds
     Initial delay between retries in seconds (default: 2)
-    
+
 .EXAMPLE
     .\scripts\backup-repo.ps1
     # Creates backup in Desktop\repo backup, N:\backup\dev\repos, and OneDrive
-    
+
 .EXAMPLE
     .\scripts\backup-repo.ps1 -IncludeBuild
     # Creates backup including build artifacts
-    
+
 .EXAMPLE
     .\scripts\backup-repo.ps1 -MaxRetries 5 -RetryDelaySeconds 5
     # Custom retry configuration for unreliable network drives
@@ -133,7 +133,7 @@ function Write-ErrorLog {
         }
     }
     $script:ErrorLog += $logEntry
-    
+
     if ($script:OutputFormat -eq 'text') {
         Write-Host $logEntry -ForegroundColor $(if ($Category -eq "Error") { "Red" } elseif ($Category -eq "Warning") { "Yellow" } else { "Gray" })
     }
@@ -144,29 +144,29 @@ function Show-BackupHistory {
         [string]$RepoName,
         [string[]]$BackupDirs
     )
-    
+
     Write-Host "`n+-------------------------------------------------------+" -ForegroundColor Cyan
     Write-Host "|        Backup History: $RepoName               |" -ForegroundColor Cyan
     Write-Host "+-------------------------------------------------------+`n" -ForegroundColor Cyan
-    
+
     foreach ($backupDir in $BackupDirs) {
         if (-not (Test-Path $backupDir)) {
             Write-Host "[WARN] Location: $backupDir (not found)`n" -ForegroundColor Yellow
             continue
         }
-        
+
         $backups = Get-ChildItem -Path $backupDir -Filter "*.zip" -File | Sort-Object LastWriteTime -Descending
         $locationName = Split-Path $backupDir -Leaf
         $parentDir = Split-Path $backupDir -Parent | Split-Path -Leaf
-        
+
         Write-Host "  $parentDir\$locationName" -ForegroundColor White
         Write-Host "   Total backups: $($backups.Count)" -ForegroundColor Gray
-        
+
         if ($backups.Count -gt 0) {
             $oldest = $backups[-1]
             $newest = $backups[0]
             $totalSize = ($backups | Measure-Object -Property Length -Sum).Sum / 1MB
-            
+
             Write-Host "   Oldest:       $($oldest.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss'))" -ForegroundColor Gray
             Write-Host "   Newest:       $($newest.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss'))" -ForegroundColor Gray
             Write-Host "   Total size:   $([math]::Round($totalSize, 2)) MB" -ForegroundColor Cyan
@@ -177,7 +177,7 @@ function Show-BackupHistory {
         }
         Write-Host ""
     }
-    
+
     exit 0
 }
 
@@ -210,23 +210,23 @@ function Test-BackupDuplicate {
         [string]$BackupDir,
         [switch]$Verbose
     )
-    
+
     if (-not (Test-Path $NewBackupPath)) {
         return $false
     }
-    
+
     # Get all previous backups, sorted by creation time (newest first)
-    $previousBackups = Get-ChildItem -Path $BackupDir -Filter "*.zip" -File | 
-    Where-Object { $_.FullName -ne $NewBackupPath } | 
+    $previousBackups = Get-ChildItem -Path $BackupDir -Filter "*.zip" -File |
+    Where-Object { $_.FullName -ne $NewBackupPath } |
     Sort-Object LastWriteTime -Descending
-    
+
     if ($previousBackups.Count -eq 0) {
         if ($Verbose) {
             Write-Host "  [INFO] No previous backup found for comparison" -ForegroundColor DarkGray
         }
         return $false
     }
-    
+
     # Compare with most recent backup (hashes; streams closed in Get-FileHashSHA256 finally)
     $previousBackup = $previousBackups[0]
     if ($Verbose) {
@@ -261,7 +261,7 @@ function Test-DiskSpace {
         $drive = (Get-Item $Path).PSDrive.Name
         $driveInfo = Get-PSDrive $drive -ErrorAction Stop
         $availableBytes = $driveInfo.Free
-        
+
         if ($availableBytes -lt $RequiredBytes) {
             Write-ErrorLog "Insufficient disk space on $drive`: Available: $([math]::Round($availableBytes / 1MB, 2)) MB, Required: $([math]::Round($RequiredBytes / 1MB, 2)) MB" "Warning"
             return $false
@@ -285,7 +285,7 @@ function Test-PathAccess {
             Write-ErrorLog "Parent directory does not exist: $parentPath" "Error"
             return $false
         }
-        
+
         # Test write access by creating a temporary file
         if ($Operation -eq "Write") {
             $testFile = Join-Path $parentPath ".backup-test-$(Get-Random).tmp"
@@ -313,10 +313,10 @@ function Invoke-WithRetry {
         [int]$MaxRetries = 3,
         [int]$InitialDelaySeconds = 2
     )
-    
+
     $attempt = 0
     $delay = $InitialDelaySeconds
-    
+
     while ($attempt -le $MaxRetries) {
         try {
             return & $ScriptBlock
@@ -327,7 +327,7 @@ function Invoke-WithRetry {
                 Write-ErrorLog "Operation '$OperationName' failed after $MaxRetries retries" "Error" $_
                 throw
             }
-            
+
             Write-ErrorLog "Operation '$OperationName' failed (attempt $attempt/$MaxRetries). Retrying in $delay seconds..." "Warning" $_
             Start-Sleep -Seconds $delay
             $delay = [math]::Min($delay * 2, 60) # Exponential backoff, max 60 seconds
@@ -342,48 +342,48 @@ function New-BackupZip {
         [string]$RepoRoot,
         [string]$BackupName
     )
-    
+
     $zip = $null
     $filesAdded = 0
     $filesFailed = 0
-    
+
     try {
         # Remove existing backup if present
         if (Test-Path $ZipPath) {
             Write-Host "    Removing existing backup file..." -ForegroundColor Gray
             Remove-Item $ZipPath -Force -ErrorAction Stop
         }
-        
+
         # Create ZIP archive
         $zip = [System.IO.Compression.ZipFile]::Open($ZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
-        
+
         $totalFiles = $Files.Count
         $processedFiles = 0
-        
+
         foreach ($file in $Files) {
             $processedFiles++
             $script:TotalFilesProcessed++
-            
+
             # Progress reporting for large backups
             if ($totalFiles -gt 100 -and $processedFiles % 100 -eq 0) {
                 $percent = [math]::Round(($processedFiles / $totalFiles) * 100, 1)
                 Write-Host "    Progress: $percent% ($processedFiles/$totalFiles files)" -ForegroundColor Gray
             }
-            
+
             try {
                 # Get relative path from repo root
                 $relativePath = $file.FullName.Substring($repoRoot.Length + 1)
                 # Use forward slashes for ZIP standard
                 $zipEntryPath = $relativePath -replace '\\', '/'
-                
+
                 # Add file to archive with full path
                 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
-                    $zip, 
-                    $file.FullName, 
-                    $zipEntryPath, 
+                    $zip,
+                    $file.FullName,
+                    $zipEntryPath,
                     [System.IO.Compression.CompressionLevel]::Optimal
                 ) | Out-Null
-                
+
                 $filesAdded++
             }
             catch {
@@ -393,27 +393,27 @@ function New-BackupZip {
                 # Continue with next file instead of failing entire backup
             }
         }
-        
+
         # Dispose ZIP archive
         $zip.Dispose()
         $zip = $null
-        
+
         # Verify backup file was created and is valid
         if (-not (Test-Path $ZipPath)) {
             throw "Backup file was not created: $ZipPath"
         }
-        
+
         $backupSize = (Get-Item $ZipPath).Length
         if ($backupSize -eq 0) {
             throw "Backup file is empty: $ZipPath"
         }
-        
+
         # Verify ZIP integrity by attempting to open it
         try {
             $verifyZip = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
             $entryCount = $verifyZip.Entries.Count
             $verifyZip.Dispose()
-            
+
             if ($entryCount -eq 0) {
                 throw "Backup file contains no entries: $ZipPath"
             }
@@ -421,14 +421,14 @@ function New-BackupZip {
         catch {
             throw "Backup file integrity check failed: $($_.Message)"
         }
-        
+
         return @{
             Success     = $true
             FilesAdded  = $filesAdded
             FilesFailed = $filesFailed
             BackupSize  = $backupSize
         }
-        
+
     }
     catch {
         Write-ErrorLog "Failed to create backup ZIP: $ZipPath" "Error" $_
@@ -440,7 +440,7 @@ function New-BackupZip {
                 Write-ErrorLog "Failed to dispose ZIP archive" "Warning" $_
             }
         }
-        
+
         # Cleanup partial backup file
         if (Test-Path $ZipPath) {
             try {
@@ -450,7 +450,7 @@ function New-BackupZip {
                 Write-ErrorLog "Failed to cleanup partial backup file: $ZipPath" "Warning" $_
             }
         }
-        
+
         throw
     }
 }
@@ -465,7 +465,7 @@ function Save-ErrorLog {
         $logContent += "Duration: $((Get-Date) - $script:StartTime)`n"
         $logContent += "`nErrors:`n"
         $logContent += ($script:ErrorLog -join "`n`n")
-        
+
         $logContent | Out-File -FilePath $LogPath -Encoding UTF8 -ErrorAction Stop
         Write-Host "`n[LOG] Error log saved to: $LogPath" -ForegroundColor Cyan
     }
@@ -541,7 +541,7 @@ if ($List) {
     $desktopDir = Join-Path (Join-Path ([Environment]::GetFolderPath("Desktop")) "repo backup") $repoName
     $nDriveDir = Join-Path "N:\backup\dev\repo-backups" $repoName
     $oneDriveDir = Join-Path (Join-Path (Join-Path $env:OneDrive "Backup") "repo-backups") $repoName
-    
+
     Show-BackupHistory -RepoName $repoName -BackupDirs @($desktopDir, $nDriveDir, $oneDriveDir)
     exit 0 # Exit after listing
 }
@@ -607,7 +607,7 @@ try {
     $nDriveBackup = Join-Path "N:\backup\dev\repo-backups" $repoName
     $oneDriveRoot = Join-Path (Join-Path $env:OneDrive "Backup") "repo-backups"
     $oneDriveBackup = Join-Path $oneDriveRoot $repoName
-    
+
     $backupDestinations = @(
         @{ Name = "Desktop"; Path = $desktopBackup; BackupPath = (Join-Path $desktopBackup $backupName); Enabled = $true }
         @{ Name = "N: Drive"; Path = $nDriveBackup; BackupPath = (Join-Path $nDriveBackup $backupName); Enabled = $true }
@@ -634,14 +634,14 @@ foreach ($dest in $backupDestinations) {
             Write-Host "  Creating directory: $($dest.Path)" -ForegroundColor Gray
             New-Item -ItemType Directory -Path $dest.Path -Force | Out-Null
         }
-        
+
         # Test write access (skip in dry-run)
         if (-not $WhatIf -and -not (Test-PathAccess -Path $dest.BackupPath -Operation "Write")) {
             Write-ErrorLog "No write access to $($dest.Name) backup location: $($dest.Path)" "Error"
             $dest.Enabled = $false
             continue
         }
-        
+
         Write-Host "  [OK] $($dest.Name): $($dest.Path)" -ForegroundColor Green
     } catch {
         Write-ErrorLog "Failed to setup $($dest.Name) backup location: $($dest.Path)" "Error" $_

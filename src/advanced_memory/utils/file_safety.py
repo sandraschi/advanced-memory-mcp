@@ -7,10 +7,10 @@ This module provides safe alternatives to standard file operations that:
 4. Support recovery of deleted files
 """
 
+import shutil
 from datetime import datetime
 from fnmatch import fnmatch
 from pathlib import Path
-import shutil
 
 from loguru import logger
 

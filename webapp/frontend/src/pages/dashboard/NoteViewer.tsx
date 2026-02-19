@@ -63,28 +63,28 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       try {
         setServerStatus('starting')
         setServerError('')
-  
+
         console.log('Attempting to start ADN MCP server...')
-  
+
         // Try to start the server by opening a terminal/command prompt
         // This will open a new terminal window with the server start command
-  
+
         // For Windows PowerShell
         const _command = 'Start-Process powershell -ArgumentList "cd D:\\Dev\\repos\\advanced-memory-mcp; python -m advanced_memory.mcp.server" -WindowStyle Normal'
-  
+
         // Execute the command (this opens a new PowerShell window)
         // Note: This is a simplified approach. In production, you'd want better error handling
         // and possibly use a service manager or background process
-  
+
         if (typeof window !== 'undefined') {
           // Alternative approach: try to open a command prompt
           // This is more reliable for starting background processes
           const _shellCommand = `cmd.exe /c start cmd.exe /k "cd /d D:\\Dev\\repos\\advanced-memory-mcp && python -m advanced_memory.mcp.server && pause"`
-  
+
           // Use a hidden iframe or similar to execute system commands
           // For now, we'll provide instructions to the user
           setServerError('Please start the ADN MCP server manually by running: python -m advanced_memory.mcp.server')
-  
+
           // Wait a bit and check again
           setTimeout(async () => {
             const isRunning = await checkServerStatus()
@@ -93,10 +93,10 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               loadNotes() // Reload notes once server is running
             }
           }, 5000)
-  
+
           return false // Indicate manual intervention needed
         }
-  
+
         return false
       } catch (error) {
         console.error('Error starting server:', error)
@@ -123,14 +123,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     const _startStartupService = async (): Promise<boolean> => {
       try {
         console.log('Attempting to start startup service...')
-  
+
         // Since we can't directly execute from browser, we'll try to use a web-based approach
         // For now, we'll assume the startup service should be running and proceed
         console.log('Startup service check/attempt completed')
-  
+
         // Small delay to allow for any startup
         await new Promise(resolve => setTimeout(resolve, 500))
-  
+
         return await checkStartupService()
       } catch (error) {
         console.error('Error checking startup service:', error)

@@ -2,7 +2,7 @@
 <#
 .SYNOPSIS
     Automated repository backup using Windows native compression
-    
+
 .DESCRIPTION
     Creates a compressed ZIP backup of the repository excluding:
     - .venv/ (virtual environments)
@@ -13,17 +13,17 @@
     - VirtualBox files (*.vdi, *.vmdk, *.vbox)
     - Test artifacts (MagicMock/, sandboxes/, quarantine/)
     - Logs (*.log)
-    
+
 .PARAMETER OutputPath
     Where to save the backup (default: parent directory)
-    
+
 .PARAMETER IncludeBuild
     Include dist/ and build/ folders (default: false)
-    
+
 .EXAMPLE
     .\scripts\backup-repo.ps1
     # Creates backup in parent directory
-    
+
 .EXAMPLE
     .\scripts\backup-repo.ps1 -OutputPath "D:\Backups" -IncludeBuild
     # Creates backup in D:\Backups including build artifacts
@@ -118,7 +118,7 @@ $totalSize = ($allFiles | Measure-Object -Property Length -Sum).Sum / 1MB
 $backupFiles = $allFiles | Where-Object {
     $file = $_
     $shouldExclude = $false
-    
+
     foreach ($excl in $exclusions) {
         $pattern = $excl -replace '\*', '.*' -replace '\.', '\.'
         if ($file.FullName -match $pattern -or $file.FullName -match [regex]::Escape($excl)) {
@@ -126,7 +126,7 @@ $backupFiles = $allFiles | Where-Object {
             break
         }
     }
-    
+
     -not $shouldExclude
 }
 
@@ -144,12 +144,12 @@ Write-Host "­ƒöä Creating backup with Windows Compress-Archive..." -Foregrou
 try {
     # Compress-Archive with exclusions
     $tempList = $backupFiles | ForEach-Object { $_.FullName }
-    
+
     # Use Compress-Archive (native Windows PowerShell)
     Compress-Archive -Path $tempList -DestinationPath $backupPath -CompressionLevel Optimal -Force
-    
+
     Write-Host "Ô£à Backup created successfully!`n" -ForegroundColor Green
-    
+
 } catch {
     Write-Host "ÔØî Error creating backup: $_" -ForegroundColor Red
     exit 1
@@ -159,7 +159,7 @@ try {
 if (Test-Path $backupPath) {
     $finalSize = (Get-Item $backupPath).Length / 1MB
     $compressionRatio = ($finalSize / $backupSize) * 100
-    
+
     Write-Host ""
     Write-Host "ÔòöÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòù" -ForegroundColor Green
     Write-Host "Ôòæ              ­ƒôª Backup Complete! ­ƒôª                     Ôòæ" -ForegroundColor Green
@@ -174,16 +174,15 @@ if (Test-Path $backupPath) {
     Write-Host "  Space saved:    $([math]::Round($totalSize - $finalSize, 2)) MB" -ForegroundColor Green
     Write-Host "  Method:         Windows native (Compress-Archive)" -ForegroundColor Green
     Write-Host ""
-    
+
     # Restore instructions
     Write-Host "­ƒÆí To restore:" -ForegroundColor Cyan
     Write-Host "  Expand-Archive -Path `"$backupPath`" -DestinationPath `"destination-folder`"" -ForegroundColor Gray
     Write-Host ""
-    
+
 } else {
     Write-Host "ÔØî Error: Backup file not found at $backupPath" -ForegroundColor Red
     exit 1
 }
 
 Write-Host "Ô£à Done!`n" -ForegroundColor Green
-
