@@ -5,6 +5,34 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.4.0] - Ecosystem Integration & Advanced Collaboration (2026-02-17)
+
+### 🚀 **Ecosystem Observability**
+
+#### Added - Apps Hub (Fleet Discovery)
+- **Fleet Scanning**: Implementation of `AppsHub.tsx` for real-time monitoring of active MCP instances across the reserved port range (10700–10800+).
+- **Service Detection**: Automated discovery of Robotics MCP, GroxTools, and Security services with status indicators and port analysis.
+- **Search & Filtering**: Fleet-wide search for active services by name, type, or port.
+
+#### Added - Agent Control Room
+- **Live Observability**: Implementation of `ControlRoom.tsx` for real-time monitoring of agent execution steps via a simulated terminal feed.
+- **Audit Logging**: Detailed session history tracking tool calls, token utilization, and substrate telemetry.
+- **Session Management**: Capability to monitor and audit active agentic sessions with high-fidelity telemetry.
+
+#### Added - Intelligence Panel & Hardware API
+- **Sidebar Integration**: Persistent `IntelligencePanel.tsx` widget integrated into the global sidebar.
+- **Substrate Telemetry**: Real-time tracking of GPU (RTX 4094), CPU (24-core), and System Memory utilization.
+- **Hardware Optimization**: Native `api.ts` methods for substrate detection (`detectHardware`) and model parameter optimization (`optimizeModelParams`).
+
+### 🔧 **UI/UX Enhancements**
+
+- **Navigation Integration**: Added "Apps Hub" and "Control Room" to the main application routing and sidebar navigation.
+- **Visual Polish**: Glassmorphism and micro-animations applied to all Phase 4 components for SOTA-compliant aesthetic.
+- **Linting & Type Safety**: Resolved all linting warnings and type mismatches in the newly implemented frontend stack.
+
+---
+
 ## [Unreleased] - Skills Factory (2026-02-10)
 
 ### Added - Skills Factory (Research Chaining + LLM-Guided Loop)

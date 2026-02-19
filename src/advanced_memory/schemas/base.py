@@ -92,8 +92,8 @@ def validate_timeframe(timeframe: str) -> str:
     days = (now - parsed).days
 
     # Could enforce reasonable limits
-    if days > 365:
-        raise ValueError("Timeframe should be <= 1 year")
+    if days > 3650:
+        raise ValueError("Timeframe should be <= 10 years")
 
     return f"{days}d"
 

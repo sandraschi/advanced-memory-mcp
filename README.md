@@ -17,6 +17,8 @@ Advanced Memory MCP builds upon the foundational work of [Basic Memory MCP](http
 - **Document Intelligence**: PDF/EPUB processing with RAG vector search for large document analysis
 - **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
 - **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
+- **Ecosystem Observability**: Real-time fleet discovery (Apps Hub) and agent session monitoring (Control Room)
+- **Hardware Telemetry**: Native substrate tracking (GPU/CPU/RAM) with RTX 4094 optimization
 - **Conversational AI** *(Planned)*: Natural language interaction with ADN tools and knowledge graph *(FREE - uses local Ollama)* → [Extension Plan](./CONVERSATIONAL_AI_README.md)
 - **Production Observability**: State-of-the-art monitoring with Grafana dashboards, Prometheus metrics, Loki logs
 - **Cross-Platform Support**: Compatible with Claude Desktop, Cursor IDE, Windsurf, and other MCP clients
@@ -198,12 +200,12 @@ POST /api/v1/fetch              # HTTP fetch operations
 
 ## Development Status
 
-**Version**: 1.3.0
+**Version**: 1.4.0
 **Status**: Production Ready
 **MCP Compatibility**: FastMCP 2.14.3+
 **Test Coverage**: 98% pass rate (1,136/1,161 tests) + 90% MCP Integration (18/20 tests)
 **Glama Rating**: Silver Tier (80/100)
-**Web Interface**: React application included
+**Web Interface**: React application included (Apps Hub, Control Room, Skill Studio)
 **MCP Ecosystem**: Full integration with BrightData, Fetch, and ADN servers
 
 ## Requirements

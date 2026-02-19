@@ -1,0 +1,12 @@
+[     354ms] [ERROR] WebSocket connection to 'ws://0.0.0.0:24678/?token=5V0QHqtCGPiA' failed: Error in connection establishment: net::ERR_ADDRESS_INVALID @ http://localhost:10704/@vite/client:801
+[     354ms] [ERROR] [vite] failed to connect to websocket (Error: WebSocket closed without opened.).  @ http://localhost:10704/@vite/client:840
+[     358ms] Error: WebSocket closed without opened.
+    at WebSocket.<anonymous> (http://localhost:10704/@vite/client:454:22)
+[     645ms] [WARNING] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. @ http://localhost:10704/node_modules/.vite/deps/react-router-dom.js?v=f4ea6eee:4435
+[     646ms] [WARNING] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. @ http://localhost:10704/node_modules/.vite/deps/react-router-dom.js?v=f4ea6eee:4435
+[    2994ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/openclaw:0
+[    2995ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/local:0
+[    3009ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/clawnews:0
+[    3240ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/openclaw:0
+[    5323ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/local:0
+[    5324ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:10705/api/v1/marketplace/clawnews:0

@@ -57,7 +57,7 @@ class SearchService:
 
     async def search(
         self, query: SearchQuery, limit: int = 10, offset: int = 0
-    ) -> list[SearchIndexRow]:
+    ) -> tuple[list[SearchIndexRow], int]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -67,7 +67,7 @@ class SearchService:
         """
         if query.no_criteria():
             logger.debug("no criteria passed to query")
-            return []
+            return [], 0
 
         logger.trace(f"Searching with query: {query}")
 
@@ -92,7 +92,7 @@ class SearchService:
         )
 
         # search
-        results = await self.repository.search(
+        results, total_count = await self.repository.search(
             search_text=query.text,
             permalink=query.permalink,
             permalink_match=query.permalink_match,
@@ -106,7 +106,7 @@ class SearchService:
             offset=offset,
         )
 
-        return results
+        return results, total_count
 
     @staticmethod
     def _generate_variants(text: str) -> set[str]:

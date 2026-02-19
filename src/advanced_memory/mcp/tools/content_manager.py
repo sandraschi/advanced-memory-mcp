@@ -318,40 +318,16 @@ async def adn_content(
         if not content:
             missing.append("content")
         if missing:
-            error_msg = f"""# Error: Missing Required Parameters
-
-The `write` operation requires the following parameters:
-- **identifier** (note title): The title of the note
-- **content**: The markdown content of the note
-- **folder** (optional): The folder path where the note should be saved (defaults to "inbox" if not specified)
-
-**Missing parameters:** {", ".join(missing)}
-
-**Example usage:**
-```python
-# With folder specified
-adn_content("write",
-    identifier="My Note Title",
-    content="# My Note\\n\\nContent here...",
-    folder="notes")
-
-# Without folder (defaults to "inbox")
-adn_content("write",
-    identifier="My Note Title",
-    content="# My Note\\n\\nContent here...")
-```
-
-**Alternative: Quick Note Creation**
-If you just want to quickly capture content without specifying title and folder, use the `quick` operation instead:
-```python
-adn_content("quick", content="Your content here...")
-```
-The `quick` operation automatically:
-- Generates a title from your content
-- Saves to the "inbox" folder
-- Adds timestamp and "quick-capture" tag
-"""
-            return error_msg
+            return build_error_response(
+                error="Missing required parameters",
+                error_code="MISSING_PARAMS",
+                message=f"The 'write' operation requires: {', '.join(missing)}",
+                recovery_options=[
+                    "Provide both identifier (title) and content",
+                    "Use 'quick' operation for auto-generated titles",
+                ],
+                diagnostic_info={"missing": missing},
+            )
         # Use default folder if not specified
         if not folder:
             folder = "inbox"
@@ -428,82 +404,48 @@ The `quick` operation automatically:
 
     elif operation == "edit":
         if identifier is None:
-            return '# Error\n\nEdit operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="\\n## New Section")\n```'
+            return build_error_response(
+                error="Missing identifier",
+                error_code="MISSING_IDENTIFIER",
+                message="Edit operation requires an identifier",
+                recovery_options=["Provide the title or permalink of the note to edit"],
+            )
         if not edit_operation:
-            return '# Error\n\nEdit operation requires: edit_operation parameter\n\n**Valid operations:** append, prepend, find_replace, replace_section\n\n**Example:**\n```python\nadn_content("edit",\n    identifier="My Note",\n    edit_operation="append",\n    content="New content")\n```'
+            return build_error_response(
+                error="Missing edit_operation",
+                error_code="MISSING_EDIT_OP",
+                message="Edit operation requires edit_operation parameter",
+                recovery_options=[
+                    "Valid operations: append, prepend, find_replace, replace_section"
+                ],
+            )
 
         # Check for find_replace specific requirements
         if edit_operation == "find_replace":
             if not find_text:
-                return """# Error: Missing Required Parameter for find_replace
-
-The `find_replace` operation requires:
-- `find_text`: The text to find (REQUIRED)
-- `content`: The replacement text (REQUIRED)
-
-**Common mistakes:**
-- Using `new_string` instead of `content` [ERROR]
-- Using `replacement` instead of `content` [ERROR]
-
-**Correct usage:**
-```python
-adn_content("edit",
-    identifier="My Note",
-    edit_operation="find_replace",
-    find_text="old text",
-    content="new text"  # [SUCCESS] Use 'content', not 'new_string'
-)
-```
-
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
-However, please use `content` directly in future calls.
-"""
+                return build_error_response(
+                    error="Missing find_text",
+                    error_code="MISSING_FIND_TEXT",
+                    message="find_replace requires find_text",
+                    recovery_options=["Provide the text you want to find and replace"],
+                )
             if not content:
-                return """# Error: Missing Required Parameter for find_replace
-
-The `find_replace` operation requires:
-- `find_text`: The text to find (REQUIRED) [PROVIDED] You provided this
-- `content`: The replacement text (REQUIRED) [MISSING] Missing
-
-**Common mistakes:**
-- Using `new_string` instead of `content` [ERROR]
-- Using `replacement` instead of `content` ❌
-
-**Correct usage:**
-```python
-adn_content("edit",
-    identifier="My Note",
-    edit_operation="find_replace",
-    find_text="old text",
-    content="new text"  # [SUCCESS] Use 'content', not 'new_string'
-)
-```
-
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
-However, please use `content` directly in future calls.
-"""
+                return build_error_response(
+                    error="Missing content",
+                    error_code="MISSING_CONTENT",
+                    message="find_replace requires content (replacement text)",
+                    recovery_options=["Provide the replacement text in the 'content' parameter"],
+                )
 
         if not content and edit_operation in ["append", "prepend", "replace_section"]:
-            return f"""# Error: Missing Required Parameter
-
-Edit operation '{edit_operation}' requires: `content` parameter
-
-**Common mistakes:**
-- Using `new_string` instead of `content` [ERROR]
-- Using `replacement` instead of `content` ❌
-
-**Correct usage:**
-```python
-adn_content("edit",
-    identifier="My Note",
-    edit_operation="{edit_operation}",
-    content="Content to {edit_operation}"  # [SUCCESS] Use 'content', not 'new_string'
-)
-```
-
-**Note:** If you used `new_string`, `replacement`, or `new_content`, these are now automatically mapped to `content`.
-However, please use `content` directly in future calls.
-"""
+            return build_error_response(
+                error="Missing content",
+                error_code="MISSING_CONTENT",
+                message=f"Edit operation '{edit_operation}' requires content",
+                recovery_options=[
+                    "Provide the content to add or replace in the 'content' parameter"
+                ],
+            )
         return await _edit_operation(
             active_project,
             identifier,
@@ -517,53 +459,29 @@ However, please use `content` directly in future calls.
 
     elif operation == "edit_tags":
         if identifier is None:
-            return '# Error\n\nEdit_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="tag1, tag2")\n```'
+            return build_error_response(
+                error="Missing identifier",
+                error_code="MISSING_IDENTIFIER",
+                message="Edit_tags requires an identifier",
+                recovery_options=["Provide the title or permalink of the note"],
+            )
         if not tag_operation:
-            return '# Error\n\nEdit_tags operation requires: tag_operation parameter\n\n**Valid operations:** add, remove, replace, clear\n\n**Example:**\n```python\nadn_content("edit_tags",\n    identifier="My Note",\n    tag_operation="add",\n    tags="important")\n```'
+            return build_error_response(
+                error="Missing tag_operation",
+                error_code="MISSING_TAG_OP",
+                message="Edit_tags requires tag_operation parameter",
+                recovery_options=["Valid operations: add, remove, replace, clear"],
+            )
         return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
     elif operation == "quick":
         if not content:
-            return """# Error: Missing Required Parameter
-
-The `quick` operation requires the `content` parameter.
-
-**Example usage:**
-```python
-adn_content("quick", content="Your note content here...")
-```
-
-The `quick` operation automatically:
-- Generates a title from your content (first line or first few words)
-- Saves to the "inbox" folder
-- Extracts relevant tags from content (e.g., "butterflies" -> adds "butterflies", "biology", "insects")
-- Adds timestamp and "quick-capture" tag
-- Perfect for quick note capture without specifying all details
-
-**Important: Include Appropriate Tags**
-While the `quick` operation auto-extracts some tags from content, you should **always include relevant tags** that match your content for better organization and searchability:
-
-```python
-# Good: Include relevant tags
-adn_content("quick",
-    content="# Butterflies\\n\\nButterflies are insects...",
-    tags="butterflies, biology, insects, nature")
-
-# Also good: Let auto-extraction work, but you can add more
-adn_content("quick",
-    content="# Python Tutorial\\n\\nLearn Python basics...",
-    tags="python, programming, tutorial")
-```
-
-**Alternative: Full Note Creation**
-If you need to specify title and folder explicitly, use the `write` operation:
-```python
-adn_content("write",
-    identifier="My Note Title",
-    content="# My Note\\n\\nContent here...",
-    folder="notes")
-```
-"""
+            return build_error_response(
+                error="Missing content",
+                error_code="MISSING_CONTENT",
+                message="Quick operation requires content",
+                recovery_options=["Provide the note text in the 'content' parameter"],
+            )
         return await _quick_capture_operation(active_project, content, tags)
 
     elif operation == "daily":
@@ -581,21 +499,15 @@ adn_content("write",
         return await _daily_note_operation(active_project, content, tags)
 
     elif operation == "dictate" or operation == "speak":
-        return f"""# Audio Operations Moved
-
-The '{operation}' operation has been moved to the adn_audio tool for better separation of concerns.
-
-**New Usage**:
-- For dictate: adn_audio("dictate", audio_path="recording.mp3", tags=["voice"])
-- For speak: adn_audio("speak", identifier="Note Title", speed=1.5)
-
-**Why the change**:
-Audio operations require heavy optional dependencies (Whisper, pyttsx3) and are better
-separated from core content operations.
-
-**Install voice dependencies** (if needed):
-pip install advanced-memory[voice]
-"""
+        return build_error_response(
+            error="Operation moved",
+            error_code="OPERATION_MOVED",
+            message=f"The '{operation}' operation has been moved to the adn_audio tool",
+            recovery_options=[
+                f"Use adn_audio('{operation}', ...)",
+                "Ensure voice dependencies are installed (pip install advanced-memory[voice])",
+            ],
+        )
 
     elif operation == "move":
         if identifier is None or destination_path is None:
@@ -627,17 +539,32 @@ pip install advanced-memory[voice]
 
     elif operation == "suggest_tags":
         if identifier is None:
-            return '# Error\n\nSuggest_tags operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("suggest_tags", identifier="My Note")\n```'
+            return build_error_response(
+                error="Missing identifier",
+                error_code="MISSING_IDENTIFIER",
+                message="Suggest_tags requires an identifier",
+                recovery_options=["Provide the title or permalink of the note"],
+            )
         return await _suggest_tags_operation(active_project, identifier)
 
     elif operation == "summarize":
         if identifier is None:
-            return '# Error\n\nSummarize operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("summarize", identifier="My Note")\n```'
+            return build_error_response(
+                error="Missing identifier",
+                error_code="MISSING_IDENTIFIER",
+                message="Summarize requires an identifier",
+                recovery_options=["Provide the title or permalink of the note"],
+            )
         return await _summarize_operation(active_project, identifier)
 
     elif operation == "enhance":
         if identifier is None:
-            return '# Error\n\nEnhance operation requires: identifier parameter\n\n**Example:**\n```python\nadn_content("enhance", identifier="My Note")\n```'
+            return build_error_response(
+                error="Missing identifier",
+                error_code="MISSING_IDENTIFIER",
+                message="Enhance requires an identifier",
+                recovery_options=["Provide the title or permalink of the note"],
+            )
         return await _enhance_operation(
             active_project,
             identifier,
@@ -653,7 +580,12 @@ pip install advanced-memory[voice]
 
     elif operation == "generate":
         if not content:
-            return '# Error\n\nGenerate operation requires: content parameter (topic/prompt)\n\n**Example:**\n```python\nadn_content("generate", content="Python functions tutorial", folder="tutorials")\n```'
+            return build_error_response(
+                error="Missing content",
+                error_code="MISSING_CONTENT",
+                message="Generate requires content (topic/prompt)",
+                recovery_options=["Provide the topic or prompt in the 'content' parameter"],
+            )
         return await _generate_operation(active_project, content, folder, tags, entity_type)
 
     elif operation == "find_runts":
@@ -961,12 +893,21 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(
+    result = await read_note.fn(
         identifier=identifier,
         page=page,
         page_size=page_size,
         project=active_project.name,
     )
+
+    # If the tool returned a raw string, wrap it in a dict to satisfy
+    # the adn_content return type constraint (dict)
+    if isinstance(result, str):
+        return build_success_response(
+            operation="read", summary=f"Read note '{identifier}'", result={"content": result}
+        )
+
+    return result
 
 
 async def _get_latest_identifier(active_project) -> tuple[str | None, str | None]:
@@ -1077,7 +1018,7 @@ async def _edit_tags_operation(
     identifier: str,
     tag_operation: str | None,
     tags: TagType,
-) -> str:
+) -> dict:
     """Handle edit_tags operation."""
     if not tag_operation:
         return build_error_response(
@@ -1144,12 +1085,23 @@ async def _edit_tags_operation(
     # Parse input tags (unless clear operation)
     if tag_operation != "clear":
         if tags is None and tag_operation != "clear":
-            return f"# Error\n\n'{tag_operation}' operation requires tags parameter.\n\nProvide tags as string or list."
+            return build_error_response(
+                error="Missing tags",
+                error_code="MISSING_TAGS",
+                message=f"'{tag_operation}' operation requires tags parameter",
+                recovery_options=["Provide tags as string or list"],
+            )
 
         new_tags = parse_tags(tags)
 
         if not new_tags and tag_operation != "clear":
-            return f"# Error\n\nNo valid tags provided.\n\nTags: {tags}"
+            return build_error_response(
+                error="No valid tags",
+                error_code="NO_VALID_TAGS",
+                message="No valid tags were provided after parsing",
+                recovery_options=["Provide a comma-separated string or a list of tag names"],
+                diagnostic_info={"provided_tags": tags},
+            )
     else:
         new_tags = []
 
@@ -1185,7 +1137,12 @@ async def _edit_tags_operation(
         operation_summary = f"Cleared all {len(current_tags)} tag(s)"
 
     else:
-        return f"# Error\n\nInvalid tag_operation: {tag_operation}\n\nSupported: add, remove, replace, clear"
+        return build_error_response(
+            error="Invalid tag operation",
+            error_code="INVALID_TAG_OP",
+            message=f"Unsupported tag operation: {tag_operation}",
+            recovery_options=["Use: add, remove, replace, clear"],
+        )
 
     # Update the entity with new tags
     metadata = current_entity.entity_metadata or {}
@@ -1195,22 +1152,23 @@ async def _edit_tags_operation(
     resource_url = f"{project_url}/resource/{current_entity.permalink}"
     resource_response = await call_get(client, resource_url)
     if resource_response.status_code != 200:
-        return (
-            "# Error\n\n"
-            f"Failed to retrieve current note content for '{identifier}'.\n"
-            "Tag update aborted to avoid overwriting content.\n"
-            f"Details: HTTP {resource_response.status_code}"
+        return build_error_response(
+            error="Content retrieval failed",
+            error_code="CONTENT_FETCH_FAILED",
+            message=f"Failed to retrieve current note content for '{identifier}'",
+            recovery_options=["Try again later", "Check note existence with read operation"],
+            diagnostic_info={"status_code": resource_response.status_code},
         )
 
     current_content = resource_response.text
 
     # Validate permalink exists
     if not current_entity.permalink:
-        return (
-            "# Error\n\n"
-            f"Entity '{identifier}' has no permalink.\n"
-            "Cannot update tags without a valid permalink.\n"
-            "This may indicate a corrupted entity in the database."
+        return build_error_response(
+            error="Missing permalink",
+            error_code="MISSING_PERMALINK",
+            message=f"Entity '{identifier}' has no permalink",
+            recovery_options=["Check if the note is correctly indexed"],
         )
 
     # Extract folder from permalink (everything except the last part)
@@ -1252,7 +1210,14 @@ async def _edit_tags_operation(
         f"MCP tool response: tool=adn_content operation=edit_tags tag_operation={tag_operation} identifier={identifier} tags_before={len(current_tags)} tags_after={len(updated_tags)}"
     )
 
-    return "\n".join(response_lines)
+    return build_success_response(
+        "edit_tags",
+        "\n".join(response_lines),
+        note=result.title,
+        permalink=result.permalink,
+        tags_before=current_tags,
+        tags_after=updated_tags,
+    )
 
 
 async def _move_operation(active_project, identifier: str, destination_path: str) -> dict:

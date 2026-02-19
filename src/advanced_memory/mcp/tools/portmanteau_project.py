@@ -101,10 +101,22 @@ async def adn_project(
             return build_success_response("delete", result)
 
         elif operation == "list":
-            from advanced_memory.mcp.tools.project_management import list_memory_projects
+            from advanced_memory.mcp.tools.project_management import (
+                ProjectList,
+                call_get,
+                client,
+                list_memory_projects,
+            )
 
-            result = await list_memory_projects.fn()
-            return build_success_response("list", result)
+            # Fetch raw data for programmatic use
+            response = await call_get(client, "/projects/projects")
+            raw_data = ProjectList.model_validate(response.json())
+
+            # Still get the formatted string for chat
+            formatted_result = await list_memory_projects.fn()
+            return build_success_response(
+                "list", formatted_result, result=raw_data.model_dump()["projects"]
+            )
 
         elif operation == "switch":
             if not name:
@@ -112,16 +124,22 @@ async def adn_project(
                     "VALIDATION_ERROR", "MISSING_PARAMETER", "Project name required for switching"
                 )
 
-            from advanced_memory.mcp.tools.project_management import switch_project
+            from advanced_memory.mcp.tools.project_management import session, switch_project
 
             result = await switch_project.fn(name)
-            return build_success_response("switch", result)
+            current_project = session.get_current_project()
+            return build_success_response(
+                "switch", result, result={"current_project": current_project}
+            )
 
         elif operation == "current":
-            from advanced_memory.mcp.tools.project_management import get_current_project
+            from advanced_memory.mcp.tools.project_management import get_current_project, session
 
             result = await get_current_project.fn()
-            return build_success_response("current", result)
+            current_project = session.get_current_project()
+            return build_success_response(
+                "current", result, result={"current_project": current_project}
+            )
 
         elif operation == "set_default":
             if not name:

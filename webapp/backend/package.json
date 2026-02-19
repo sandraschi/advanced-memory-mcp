@@ -1,0 +1,16 @@
+{
+    "name": "adn-webapp-backend",
+    "version": "1.0.0",
+    "description": "ADN Webapp Backend - Bridge server and startup services for ADN MCP",
+    "main": "bridge-server.js",
+    "scripts": {
+        "start": "node bridge-server.js",
+        "start:bridge": "node bridge-server.js",
+        "start:startup": "node startup-service.js",
+        "start:auto": "node auto-start-service.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5"
+    }
+}

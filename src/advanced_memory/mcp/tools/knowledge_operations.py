@@ -21,7 +21,7 @@ async def adn_knowledge_bulk(
     filters: dict[str, Any] | None = None,
     action: dict[str, Any] | None = None,
     dry_run: bool = True,
-    limit: int = 100,
+    limit: int = 0,
     project: str | None = None,
 ) -> str:
     """Comprehensive knowledge management tool for Advanced Memory knowledge base.

@@ -1,0 +1,6 @@
+[     353ms] [ERROR] WebSocket connection to 'ws://0.0.0.0:24678/?token=4-NvZ9BobHzN' failed: Error in connection establishment: net::ERR_ADDRESS_INVALID @ http://localhost:5173/@vite/client:801
+[     353ms] [ERROR] [vite] failed to connect to websocket (Error: WebSocket closed without opened.).  @ http://localhost:5173/@vite/client:840
+[     357ms] Error: WebSocket closed without opened.
+    at WebSocket.<anonymous> (http://localhost:5173/@vite/client:454:22)
+[     464ms] [WARNING] ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition. @ http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=f4ea6eee:4435
+[     464ms] [WARNING] ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath. @ http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=f4ea6eee:4435

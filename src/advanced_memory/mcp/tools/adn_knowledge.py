@@ -22,7 +22,7 @@ async def adn_knowledge_legacy(
     step: int | None = None,
     parameters: dict[str, Any] | None = None,
     dry_run: bool = True,
-    limit: int = 100,
+    limit: int = 0,
     project: str | None = None,
 ) -> dict:
     """Legacy knowledge management and research orchestration tool."""

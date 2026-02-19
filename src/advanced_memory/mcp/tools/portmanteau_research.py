@@ -92,7 +92,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_web_search import adn_web_search
 
-            result = await adn_web_search.fn(query, limit=limit or 10)
+            result = await adn_web_search.fn(query, max_results=limit or 10)
             return build_success_response("web_search", result)
 
         elif operation == "arxiv":
@@ -102,7 +102,9 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
 
-            result = await adn_arxiv_research.fn(query, limit=limit or 10)
+            result = await adn_arxiv_research.fn(
+                operation="search_papers", query=query, max_results=limit or 10
+            )
             return build_success_response("arxiv", result)
 
         elif operation == "github":
@@ -112,7 +114,12 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_github_research import adn_github_research
 
-            result = await adn_github_research.fn(query, language=language, limit=limit or 10)
+            result = await adn_github_research.fn(
+                operation="search_repositories",
+                query=query,
+                language=language,
+                max_results=limit or 10,
+            )
             return build_success_response("github", result)
 
         elif operation == "tvtropes":

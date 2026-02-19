@@ -50,6 +50,7 @@ if _FULL_TOOLS_MODE:
     from .adn_knowledge import adn_knowledge_legacy
     from .adn_llm import adn_llm
     from .adn_navigation import adn_navigation
+    from .adn_observability import adn_observability
     from .adn_rag import adn_rag
     from .adn_search import adn_search
     from .adn_skills import adn_skills
@@ -111,6 +112,7 @@ else:
     # adn_content is REQUIRED - primary tool for note write/read/edit (quick, daily, etc.)
     from advanced_memory.mcp.mcp_instance import mcp
 
+    from .adn_observability import adn_observability
     from .content_manager import adn_content
     from .help import help
     from .portmanteau_external import adn_external
@@ -136,6 +138,7 @@ __all__ = [
     "adn_system",  # System status & external tools (8+ tools consolidated)
     "adn_skills",  # Skill system operations (6+ tools consolidated)
     "adn_external",  # External integrations (4+ tools consolidated)
+    "adn_observability",  # AI observability & provenance (Entire.io)
     # 2 Essential Tools (always available)
     "help",  # Comprehensive help system
     "status",  # System status monitoring

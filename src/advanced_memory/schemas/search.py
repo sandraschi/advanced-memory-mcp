@@ -100,6 +100,8 @@ class SearchResult(BaseModel):
     file_path: str
 
     metadata: dict | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
     # Type-specific fields
     category: str | None = None  # For observations
@@ -114,3 +116,4 @@ class SearchResponse(BaseModel):
     results: list[SearchResult]
     current_page: int
     page_size: int
+    total_results: int

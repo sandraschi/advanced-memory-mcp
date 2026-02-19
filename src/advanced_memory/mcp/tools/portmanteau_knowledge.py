@@ -49,6 +49,14 @@ async def adn_knowledge_portmanteau(
     ] = None,
     timeframe: Annotated[str | None, Field(description="Time filter (for activity)")] = None,
     entity_type: Annotated[str | None, Field(description="Entity type filter")] = None,
+    search_type: Annotated[
+        str | None, Field(description='Search type: "text", "title", "permalink" (for search)')
+    ] = None,
+    page: Annotated[int | None, Field(description="Page number for results")] = None,
+    results_per_page: Annotated[int | None, Field(description="Number of results per page")] = None,
+    projects: Annotated[
+        str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")
+    ] = None,
 ) -> dict:
     """Unified portmanteau tool for all core knowledge management operations.
 
@@ -113,7 +121,7 @@ async def adn_knowledge_portmanteau(
             tags=tags or [],
             entity_type=entity_type or "note",
         )
-        return build_success_response("create", result)
+        return build_success_response("create", result, result=result)
 
     elif operation == "read":
         if not identifier:
@@ -124,7 +132,8 @@ async def adn_knowledge_portmanteau(
         from advanced_memory.mcp.tools.read_note import read_note
 
         result = await read_note.fn(identifier)
-        return build_success_response("read", result)
+        # result is already likely a dict or model from read_note
+        return build_success_response("read", "Note read successfully", result=result)
 
     elif operation == "update":
         if not identifier:
@@ -169,15 +178,40 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.search import search_notes
 
-        result = await search_notes.fn(query, page=1, results_per_page=20)
-        return build_success_response("search", result)
+        result = await search_notes.fn(
+            query,
+            page=page or 1,
+            results_per_page=results_per_page or 20,
+            search_type=search_type or "text",
+            projects=projects,
+            entity_types=[entity_type] if entity_type else None,
+        )
+        # search_notes returns SearchResponse object
+        return build_success_response(
+            "search",
+            "Search completed",
+            result=result.model_dump() if hasattr(result, "model_dump") else result,
+        )
 
     elif operation == "list":
         try:
-            from advanced_memory.mcp.tools.list_directory import list_directory
+            from advanced_memory.mcp.tools.list_directory import (
+                call_get,
+                client,
+                get_active_project,
+                list_directory,
+            )
 
-            result = await list_directory.fn(path or "", depth=depth or 1)
-            return build_success_response("list", result)
+            # Fetch raw nodes for programmatic use
+            active_project = get_active_project(None)
+            params = {"dir_name": path or "", "depth": str(depth or 1)}
+            response = await call_get(
+                client, f"{active_project.project_url}/directory/list", params=params
+            )
+            raw_nodes = response.json()
+
+            formatted_result = await list_directory.fn(path or "", depth=depth or 1)
+            return build_success_response("list", formatted_result, result=raw_nodes)
         except Exception as e:
             return build_error_response(
                 "LIST_FAILED",
@@ -212,8 +246,11 @@ async def adn_knowledge_portmanteau(
     elif operation == "activity":
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        result = await recent_activity.fn("all", depth=10, timeframe=timeframe or "1d")
-        return build_success_response("activity", result)
+        result = await recent_activity.fn(
+            entity_type or "entity", depth=depth or 1, timeframe=timeframe or "1d"
+        )
+        # recent_activity might return a string or object depending on implementation
+        return build_success_response("activity", "Recent activity fetched", result=result)
 
     elif operation == "status":
         from advanced_memory.mcp.tools.status import status

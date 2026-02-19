@@ -371,8 +371,12 @@ class SearchRepository:
         search_item_types: list[SearchItemType] | None = None,
         limit: int = 10,
         offset: int = 0,
-    ) -> list[SearchIndexRow]:
-        """Search across all indexed content with fuzzy matching."""
+    ) -> tuple[list[SearchIndexRow], int]:
+        """Search across all indexed content with fuzzy matching.
+
+        Returns:
+            Tuple of (list of search results, total count of all matching results)
+        """
         conditions = []
         params = {}
         order_by_clause = ""
@@ -490,12 +494,15 @@ class SearchRepository:
         params["project_id"] = self.project_id
         conditions.append("project_id = :project_id")
 
-        # set limit on search query
-        params["limit"] = limit
-        params["offset"] = offset
-
         # Build WHERE clause
         where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+        # Count total results
+        count_sql = f"SELECT count(*) FROM search_index WHERE {where_clause}"
+
+        # Results query
+        params["limit"] = limit
+        params["offset"] = offset
 
         # nosec B608 - uses parameterized query with :limit and :offset params
         sql = f"""
@@ -526,6 +533,11 @@ class SearchRepository:
         logger.trace(f"Search {sql} params: {params}")
         try:
             async with db.scoped_session(self.session_maker) as session:
+                # Run count query
+                count_result = await session.execute(text(count_sql), params)
+                total_count = count_result.scalar() or 0
+
+                # Run results query
                 result = await session.execute(text(sql), params)
                 rows = result.fetchall()
         except Exception as e:
@@ -533,7 +545,7 @@ class SearchRepository:
             if "fts5: syntax error" in str(e).lower():  # pragma: no cover
                 logger.warning(f"FTS5 syntax error for search term: {search_text}, error: {e}")
                 # Return empty results rather than crashing
-                return []
+                return [], 0
             else:
                 # Re-raise other database errors
                 logger.error(f"Database error during search: {e}")
@@ -561,13 +573,8 @@ class SearchRepository:
             for row in rows
         ]
 
-        logger.trace(f"Found {len(results)} search results")
-        for r in results:
-            logger.trace(
-                f"Search result: project_id: {r.project_id} type:{r.type} title: {r.title} permalink: {r.permalink} score: {r.score}"
-            )
-
-        return results
+        logger.trace(f"Found {len(results)} of {total_count} search results")
+        return results, total_count
 
     async def index_item(
         self,

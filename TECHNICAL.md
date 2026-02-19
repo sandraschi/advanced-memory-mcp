@@ -60,9 +60,29 @@
                      │
                      │ File I/O
                      │
-┌────────────────────▼────────────────────────────────┐
+┌─────────────────────────────────────────────────────┐
 │          User's Markdown Files                       │
 │     (~/Documents/project-name/*.md)                  │
+└───────────────────────┬─────────────────────────────┘
+                        │
+                        │ HTTP APIs
+                        │
+┌───────────────────────▼─────────────────────────────┐
+│          Ecosystem Observability Layer               │
+│                                                      │
+│  - Apps Hub (Discovery)                              │
+│  - Control Room (Audit)                              │
+│  - Intelligence Panel (Telemetry)                    │
+└───────────────────────┬─────────────────────────────┘
+                        │
+                        │ Hardware Interface
+                        │
+┌───────────────────────▼─────────────────────────────┐
+│          Substrate Overlay (Local)                   │
+│                                                      │
+│  - RTX 4094 Detection                                │
+│  - CPU/RAM Telemetry                                 │
+│  - Ollama Optimization                               │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -732,6 +752,6 @@ docker run -v ~/.advanced-memory:/root/.advanced-memory advanced-memory-mcp
 
 ---
 
-**Last Updated**: October 20, 2025
-**Version**: 1.0.0b3
+**Last Updated**: February 17, 2026
+**Version**: 1.4.0
 **Maintainer**: Sandra Schipal

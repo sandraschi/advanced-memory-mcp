@@ -15,12 +15,12 @@ def _format_error_response(
     identifier: str,
     find_text: str | None = None,
     expected_replacements: int = 1,
-) -> str:
+) -> dict:
     """Format helpful error responses for edit_note failures that guide the AI to retry successfully."""
 
     # Entity not found errors
     if "Entity not found" in error_message or "entity not found" in error_message.lower():
-        return f"""# Edit Failed - Note Not Found
+        msg = f"""# Edit Failed - Note Not Found
 
 The note with identifier '{identifier}' could not be found. Edit operations require an exact match (no fuzzy matching).
 
@@ -33,11 +33,24 @@ The note with identifier '{identifier}' could not be found. Edit operations requ
 
 ## Alternative approach:
 Use `write_note()` to create the note first, then edit it."""
+        from advanced_memory.mcp.tools.content_manager import build_error_response
+
+        return build_error_response(
+            error="Note not found",
+            error_code="NOTE_NOT_FOUND",
+            message=msg,
+            recovery_options=[
+                "Search for the note first",
+                "Try different identifier formats",
+                "Verify note exists with read_note()",
+            ],
+            diagnostic_info={"identifier": identifier, "operation": operation},
+        )
 
     # Find/replace specific errors
     if operation == "find_replace":
         if "Text to replace not found" in error_message:
-            return f"""# Edit Failed - Text Not Found
+            msg = f"""# Edit Failed - Text Not Found
 
 The text '{find_text}' was not found in the note '{identifier}'.
 
@@ -50,6 +63,19 @@ The text '{find_text}' was not found in the note '{identifier}'.
 ## Alternative approaches:
 - Use `append` or `prepend` to add new content instead
 - Use `replace_section` if you're trying to update a specific section"""
+            from advanced_memory.mcp.tools.content_manager import build_error_response
+
+            return build_error_response(
+                error="Text not found",
+                error_code="TEXT_NOT_FOUND",
+                message=msg,
+                recovery_options=[
+                    "Read the note first to verify content",
+                    "Check for exact matches (case-sensitive)",
+                    "Try a broader search",
+                ],
+                diagnostic_info={"find_text": find_text},
+            )
 
         if "Expected" in error_message and "occurrences" in error_message:
             # Extract the actual count from error message if possible
@@ -58,8 +84,7 @@ The text '{find_text}' was not found in the note '{identifier}'.
             match = re.search(r"found (\d+)", error_message)
             actual_count = match.group(1) if match else "a different number of"
 
-            # nosec B608 - This is markdown help text, not SQL
-            return f"""# Edit Failed - Wrong Replacement Count
+            msg = f"""# Edit Failed - Wrong Replacement Count
 
 Expected {expected_replacements} occurrences of '{find_text}' but found {actual_count}.
 
@@ -72,10 +97,26 @@ Expected {expected_replacements} occurrences of '{find_text}' but found {actual_
 ```
 edit_note("{identifier}", "find_replace", "new_text", find_text="{find_text}", expected_replacements={actual_count})
 ```"""
+            from advanced_memory.mcp.tools.content_manager import build_error_response
+
+            return build_error_response(
+                error="Wrong replacement count",
+                error_code="WRONG_REPLACEMENT_COUNT",
+                message=msg,
+                recovery_options=[
+                    "Read the note first to verify occurrence count",
+                    f"Update expected_replacements to {actual_count}",
+                ],
+                diagnostic_info={
+                    "find_text": find_text,
+                    "expected": expected_replacements,
+                    "actual": actual_count,
+                },
+            )
 
     # Section replacement errors
     if operation == "replace_section" and "Multiple sections" in error_message:
-        return f"""# Edit Failed - Duplicate Section Headers
+        msg = f"""# Edit Failed - Duplicate Section Headers
 
 Multiple sections found with the same header in note '{identifier}'.
 
@@ -86,12 +127,22 @@ Multiple sections found with the same header in note '{identifier}'.
 
 ## Alternative approach:
 Use `find_replace` to update specific text within the duplicate sections."""
+        from advanced_memory.mcp.tools.content_manager import build_error_response
+
+        return build_error_response(
+            error="Duplicate section headers",
+            error_code="DUPLICATE_SECTION",
+            message=msg,
+            recovery_options=[
+                "Read note to verify structure",
+                "Use more specific headers",
+                "Use find_replace instead",
+            ],
+        )
 
     # Generic server/request errors
-    if (
-        "Invalid request" in error_message or "malformed" in error_message.lower()
-    ):  # pragma: no cover
-        return f"""# Edit Failed - Request Error
+    if "Invalid request" in error_message or "malformed" in error_message.lower():
+        msg = f"""# Edit Failed - Request Error
 
 There was a problem with the edit request to note '{identifier}': {error_message}.
 
@@ -105,9 +156,21 @@ There was a problem with the edit request to note '{identifier}': {error_message
 1. Verify the note exists: `read_note("{identifier}")`
 2. If not found, search for it: `search_notes("{identifier.split("/")[-1]}")`
 3. Try again with the correct identifier from the search results"""
+        from advanced_memory.mcp.tools.content_manager import build_error_response
+
+        return build_error_response(
+            error="Request error",
+            error_code="INVALID_REQUEST",
+            message=msg,
+            recovery_options=[
+                "Verify note exists",
+                "Try different identifier formats",
+                "Check content formatting",
+            ],
+        )
 
     # Fallback for other errors
-    return f"""# Edit Failed
+    msg = f"""# Edit Failed
 
 Error editing note '{identifier}': {error_message}
 
@@ -121,6 +184,19 @@ Error editing note '{identifier}': {error_message}
 - Use `search_notes()` to find notes
 - Use `read_note()` to examine content before editing
 - Check that identifiers, section headers, and find_text match exactly"""
+    from advanced_memory.mcp.tools.content_manager import build_error_response
+
+    return build_error_response(
+        error="Edit failed",
+        error_code="EDIT_FAILED",
+        message=msg,
+        recovery_options=[
+            "Verify note exists",
+            "Check all parameters",
+            "Read note content first",
+            "Try simpler operation (append)",
+        ],
+    )
 
 
 @mcp.tool
@@ -133,7 +209,7 @@ async def edit_note(
     expected_replacements: int = 1,
     use_regex: bool = False,
     project: str | None = None,
-) -> str:
+) -> dict:
     """Edit an existing markdown note in the knowledge base.
 
     This tool allows you to make targeted changes to existing notes without rewriting the entire content.
@@ -362,67 +438,41 @@ async def edit_note(
     # Validate operation with helpful error message
     valid_operations = ["append", "prepend", "find_replace", "replace_section", "replace_body"]
     if operation not in valid_operations:
-        return f"""# Edit Failed - Invalid Operation
+        from advanced_memory.mcp.tools.content_manager import build_error_response
 
-**You provided:** `operation="{operation}"`
-
-**Valid edit operations:**
-- `append` - Add content to the end of the note
-- `prepend` - Add content to the beginning of the note
-- `find_replace` - Find and replace specific text
-- `replace_section` - Replace an entire markdown section
-- `replace_body` - Replace entire body (preserves frontmatter)
-- `insert_mermaid` - Insert a Mermaid diagram
-- `insert_ascii_art` - Insert ASCII art
-- `insert_kilroy` - Insert classic Kilroy ASCII art
-- `insert_kanban` - Insert Kanban board (markdown table format)
-- `insert_changelog` - Insert changelog entry (Keep a Changelog format)
-
-**Example (append):**
-```
-edit_note(
-    identifier="{identifier}",
-    operation="append",
-    content="\\n## Additional Notes\\nNew content here"
-)
-```
-
-**Try again with a valid operation.**"""
+        return build_error_response(
+            error="Invalid edit operation",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported for edit_note",
+            recovery_options=[
+                "Use: append, prepend, find_replace, replace_section, replace_body",
+                "Check operation spelling",
+            ],
+            diagnostic_info={"provided_operation": operation},
+        )
 
     # Validate required parameters for specific operations with helpful error messages
     if operation == "find_replace" and not find_text:
-        return f"""# Edit Failed - Missing Parameter
+        from advanced_memory.mcp.tools.content_manager import build_error_response
 
-**Operation:** `find_replace`
-**Missing:** `find_text` parameter
-
-The find_replace operation requires both `find_text` and `content` parameters.
-
-**Example:**
-```
-edit_note(
-    identifier="{identifier}",
-    operation="find_replace",
-    find_text="old text",
-    content="new text"
-)
-```"""
+        return build_error_response(
+            error="Missing find_text",
+            error_code="MISSING_FIND_TEXT",
+            message="find_replace requires both find_text and content parameters",
+            recovery_options=["Provide find_text (text to search) and content (replacement text)"],
+        )
     if operation == "replace_section" and not section:
-        return f"""# Edit Failed - Missing Parameter
+        from advanced_memory.mcp.tools.content_manager import build_error_response
 
-**Reason:** `replace_section` requires a `section` parameter (the markdown heading whose content to replace). None was provided.
-
-**Try again with one of these options:**
-
-1. **If replacing a specific section** - provide the section header:
-```
-edit_note(identifier="{identifier}", operation="replace_section", section="## Introduction", content="New content")
-```
-
-2. **If replacing the entire note body** - use `replace_body` instead (preserves frontmatter):
-```
-edit_note(identifier="{identifier}", operation="replace_body", content="Full new content")
-```"""
+        return build_error_response(
+            error="Missing section",
+            error_code="MISSING_SECTION",
+            message="replace_section requires a section parameter (the markdown heading)",
+            recovery_options=[
+                "Provide the section header (e.g., '## Notes')",
+                "Use replace_body if you want to replace everything except frontmatter",
+            ],
+        )
 
     # Use the PATCH endpoint to edit the entity
     try:
@@ -522,7 +572,18 @@ edit_note(identifier="{identifier}", operation="replace_body", content="Full new
             status_code=response.status_code,
         )
 
-        return "\n".join(summary)
+        from advanced_memory.mcp.tools.content_manager import build_success_response
+
+        return build_success_response(
+            "edit_note",
+            "\n".join(summary),
+            note=result.title,
+            permalink=result.permalink,
+            file_path=result.file_path,
+            observations_count=len(result.observations),
+            relations_count=len(result.relations),
+            content=content,  # Include edited portion in response for bridge wordcount
+        )
 
     except Exception as e:
         logger.error(f"Error editing note: {e}")

@@ -20,12 +20,13 @@ async def search(
     """Search across all knowledge and documents."""
     limit = page_size
     offset = (page - 1) * page_size
-    results = await search_service.search(query, limit=limit, offset=offset)
+    results, total_count = await search_service.search(query, limit=limit, offset=offset)
     search_results = await to_search_results(entity_service, results)
     return SearchResponse(
         results=search_results,
         current_page=page,
         page_size=page_size,
+        total_results=total_count,
     )
 
 

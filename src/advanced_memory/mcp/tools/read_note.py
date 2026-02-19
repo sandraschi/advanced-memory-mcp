@@ -49,7 +49,6 @@ async def read_note(
         # Read from specific project
         read_note("Meeting Notes", project="work-project")
     """
-
     # Get the active project first to check project-specific sync status
     active_project = get_active_project(project)
 

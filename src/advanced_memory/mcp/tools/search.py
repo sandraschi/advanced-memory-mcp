@@ -61,7 +61,7 @@ def _format_search_results_as_markdown(
         return "\n".join(output)
 
     output.append(
-        f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n"
+        f"Found {search_response.total_results} result(s) from project(s): {', '.join(projects)}\n"
     )
 
     for idx, item in enumerate(search_response.results, 1):
@@ -82,8 +82,8 @@ def _format_search_results_as_markdown(
 
     # Add pagination info
     total_pages = (
-        (len(search_response.results) // search_response.page_size) + 1
-        if search_response.results
+        (search_response.total_results + search_response.page_size - 1) // search_response.page_size
+        if search_response.total_results > 0
         else 1
     )
     output.append(f"**Page:** {search_response.current_page} of {total_pages}")
@@ -628,6 +628,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             results=all_results[:results_per_page],
             current_page=page,
             page_size=results_per_page,
+            total_results=len(all_results),
         )
         return search_response
 

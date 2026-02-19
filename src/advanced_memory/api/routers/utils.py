@@ -132,6 +132,8 @@ async def to_search_results(
                 from_entity=entities[0].permalink if entities else None,
                 to_entity=entities[1].permalink if len(entities) > 1 else None,
                 relation_type=r.relation_type,
+                created_at=r.created_at,
+                updated_at=r.updated_at,
             )
         )
     return search_results

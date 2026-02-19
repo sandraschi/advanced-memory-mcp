@@ -130,6 +130,19 @@ class EntityParser:
         if tags:
             metadata["tags"] = tags
 
+        # Prioritize frontmatter dates over file stats
+        created_val = metadata.get("created") or metadata.get("created_at")
+        modified_val = metadata.get("modified") or metadata.get("updated_at")
+
+        created_dt = self.parse_date(created_val) if created_val else None
+        modified_dt = self.parse_date(modified_val) if modified_val else None
+
+        # Fallback to file stats if not found in frontmatter
+        if not created_dt:
+            created_dt = datetime.fromtimestamp(file_stats.st_ctime)
+        if not modified_dt:
+            modified_dt = datetime.fromtimestamp(file_stats.st_mtime)
+
         # frontmatter
         entity_frontmatter = EntityFrontmatter(
             metadata=metadata,
@@ -140,6 +153,6 @@ class EntityParser:
             content=content_without_frontmatter,
             observations=entity_content.observations,
             relations=entity_content.relations,
-            created=datetime.fromtimestamp(file_stats.st_ctime),
-            modified=datetime.fromtimestamp(file_stats.st_mtime),
+            created=created_dt,
+            modified=modified_dt,
         )

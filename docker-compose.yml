@@ -69,7 +69,7 @@ services:
 
   webapp:
     build:
-      context: ./webapp
+      context: ./webapp/frontend
       dockerfile: Dockerfile
     container_name: advanced-memory-webapp
     ports:
