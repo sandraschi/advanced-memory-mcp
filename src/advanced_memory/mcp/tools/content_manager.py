@@ -205,23 +205,12 @@ async def adn_content(
     replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
 ) -> dict:
-    """
-    Knowledge content management with conversational responses.
+    """Knowledge content management with conversational responses.
 
-    OPERATIONS:
-    - write: Create/update notes (requires: identifier, content)
-    - read: Get note content (requires: identifier)
-    - view: Display formatted note (requires: identifier)
-    - edit: Modify existing notes (requires: identifier, edit_operation)
-    - quick: Fast note creation (requires: content)
-    - daily: Add to today's journal (requires: content)
-    - delete: Remove notes (requires: identifier)
+    Operations: write, read, view, edit, quick, daily, move, delete, etc.
 
-    RESPONSES:
-    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps. Use adn_project first to set context.
+    For full documentation and examples, call:
+    `help(topic="adn_content", level="intermediate")`
     """
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)
@@ -904,7 +893,9 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     # the adn_content return type constraint (dict)
     if isinstance(result, str):
         return build_success_response(
-            operation="read", summary=f"Read note '{identifier}'", result={"content": result}
+            operation="read",
+            summary=f"Read note '{identifier}'",
+            result={"content": result},
         )
 
     return result
@@ -1156,7 +1147,10 @@ async def _edit_tags_operation(
             error="Content retrieval failed",
             error_code="CONTENT_FETCH_FAILED",
             message=f"Failed to retrieve current note content for '{identifier}'",
-            recovery_options=["Try again later", "Check note existence with read operation"],
+            recovery_options=[
+                "Try again later",
+                "Check note existence with read operation",
+            ],
             diagnostic_info={"status_code": resource_response.status_code},
         )
 
@@ -1815,7 +1809,10 @@ Always preserve the original meaning and key information. For biographical updat
                     "Use full permalink (e.g. content/strawberry-facts-test)",
                     "Restart MCP server to ensure replace_body fix is loaded",
                 ],
-                diagnostic_info={"identifier": identifier, "edit_error": edit_result[:500]},
+                diagnostic_info={
+                    "identifier": identifier,
+                    "edit_error": edit_result[:500],
+                },
                 urgency="medium",
             )
 

@@ -33,28 +33,23 @@ async def adn_observability(
     ] = None,
     repo_path: Annotated[str | None, Field(description="Path to the repository")] = None,
 ) -> dict:
-    """Unified tool for AI agent observability and provenance via Entire.io Checkpoints.
+    """Unified tool for AI agent observability and provenance.
 
-    This tool wraps the @entire/checkpoints-cli to provide:
-    - Session recording and Git-linked audit trails
-    - Repository state checkpointing
-    - Workspace rewinding to known-good states
-    - Observability status monitoring
+    Operations: enable, disable, list, rewind, clean, status.
 
-    Args:
-        operation: The specific observability operation
-        checkpoint_id: Unique ID for identifying a specific state
-        repo_path: Target repository path (defaults to current)
-
-    Returns:
-        Operation result or checkpoint list
+    For full documentation and examples, call:
+    `help(topic="adn_observability", level="intermediate")`
     """
     try:
         cwd = repo_path or "."
 
         if operation == "enable":
             result = subprocess.run(
-                ["checkpoints", "enable"], cwd=cwd, capture_output=True, text=True, check=False
+                ["checkpoints", "enable"],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "ENABLE_FAILED", result.stderr)
@@ -64,7 +59,11 @@ async def adn_observability(
 
         elif operation == "disable":
             result = subprocess.run(
-                ["checkpoints", "disable"], cwd=cwd, capture_output=True, text=True, check=False
+                ["checkpoints", "disable"],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "DISABLE_FAILED", result.stderr)
@@ -77,7 +76,12 @@ async def adn_observability(
             # Real implementation would parse 'checkpoints list' (assuming it exists or reading the branch)
             # Since we are SOTA, we'll try to get real data if possible
             result = subprocess.run(
-                ["git", "log", "entire/checkpoints/v1", "--pretty=format:%H|%an|%s|%at"],
+                [
+                    "git",
+                    "log",
+                    "entire/checkpoints/v1",
+                    "--pretty=format:%H|%an|%s|%at",
+                ],
                 cwd=cwd,
                 capture_output=True,
                 text=True,
@@ -110,7 +114,9 @@ async def adn_observability(
         elif operation == "rewind":
             if not checkpoint_id:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_ID", "Checkpoint ID required for rewind"
+                    "VALIDATION_ERROR",
+                    "MISSING_ID",
+                    "Checkpoint ID required for rewind",
                 )
 
             result = subprocess.run(
@@ -128,7 +134,11 @@ async def adn_observability(
 
         elif operation == "clean":
             result = subprocess.run(
-                ["checkpoints", "clean"], cwd=cwd, capture_output=True, text=True, check=False
+                ["checkpoints", "clean"],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "CLEAN_FAILED", result.stderr)

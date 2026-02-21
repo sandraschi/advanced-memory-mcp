@@ -14,7 +14,10 @@ from sqlalchemy import text
 
 from advanced_memory.repository.entity_repository import EntityRepository
 from advanced_memory.repository.observation_repository import ObservationRepository
-from advanced_memory.repository.search_repository import SearchIndexRow, SearchRepository
+from advanced_memory.repository.search_repository import (
+    SearchIndexRow,
+    SearchRepository,
+)
 from advanced_memory.schemas.memory import MemoryUrl, memory_url_path
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import generate_permalink
@@ -110,19 +113,19 @@ class ContextService:
             # Pattern matching - use search
             if "*" in path:
                 logger.debug(f"Pattern search for '{path}'")
-                primary = await self.search_repository.search(
+                primary, _ = await self.search_repository.search(
                     permalink_match=path, limit=limit, offset=offset
                 )
 
             # Direct lookup for exact path
             else:
                 logger.debug(f"Direct lookup for '{path}'")
-                primary = await self.search_repository.search(
+                primary, _ = await self.search_repository.search(
                     permalink=path, limit=limit, offset=offset
                 )
         else:
             logger.debug(f"Build context for '{types}'")
-            primary = await self.search_repository.search(
+            primary, _ = await self.search_repository.search(
                 search_item_types=types, after_date=since, limit=limit, offset=offset
             )
 

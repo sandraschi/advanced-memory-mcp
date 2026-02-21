@@ -113,6 +113,28 @@ async def help(level: str = "basic", topic: str | None = None) -> dict:
         )
 
 
+def _get_dynamic_tool_help(topic: str) -> str | None:
+    """Attempt to load documentation from docs/tools/topic.md."""
+    from pathlib import Path
+
+    # Try different naming conventions
+    paths = [
+        Path("docs/tools") / f"{topic}.md",
+        Path("docs/tools") / f"adn_{topic}.md" if not topic.startswith("adn_") else None,
+        Path("docs/tools") / f"{topic.replace('adn_', '')}_adn.md"
+        if topic.startswith("adn_")
+        else Path("docs/tools") / f"{topic}_adn.md",
+    ]
+
+    for p in paths:
+        if p and p.exists():
+            try:
+                return p.read_text(encoding="utf-8")
+            except Exception:
+                return None
+    return None
+
+
 def _get_topic_help(topic: str, level: str) -> str:
     """Get help for a specific topic."""
 
@@ -139,6 +161,11 @@ def _get_topic_help(topic: str, level: str) -> str:
     elif topic in ["mermaid"]:
         return _get_mermaid_help(level)
     else:
+        # Try dynamic lookup in docs/tools/
+        dynamic_help = _get_dynamic_tool_help(topic)
+        if dynamic_help:
+            return dynamic_help
+
         return f"""# Help - Unknown Topic
 
 Unknown topic: "{topic}"

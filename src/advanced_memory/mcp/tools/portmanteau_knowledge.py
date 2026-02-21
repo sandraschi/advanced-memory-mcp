@@ -50,7 +50,8 @@ async def adn_knowledge_portmanteau(
     timeframe: Annotated[str | None, Field(description="Time filter (for activity)")] = None,
     entity_type: Annotated[str | None, Field(description="Entity type filter")] = None,
     search_type: Annotated[
-        str | None, Field(description='Search type: "text", "title", "permalink" (for search)')
+        str | None,
+        Field(description='Search type: "text", "title", "permalink" (for search)'),
     ] = None,
     page: Annotated[int | None, Field(description="Page number for results")] = None,
     results_per_page: Annotated[int | None, Field(description="Number of results per page")] = None,
@@ -58,58 +59,25 @@ async def adn_knowledge_portmanteau(
         str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")
     ] = None,
 ) -> dict:
-    """Unified portmanteau tool for all core knowledge management operations.
+    """Unified portmanteau for all core knowledge management operations.
 
-    This tool consolidates basic CRUD operations for knowledge management:
-    - Note creation, reading, updating, deletion
-    - Content navigation and exploration
-    - Basic search functionality
-    - Activity monitoring
-    - Directory listing
+    Operations: create, read, update, delete, move, list, search, navigate, context, activity, status.
 
-    Args:
-        operation: The specific knowledge operation to perform
-        identifier: Note/entity identifier for targeted operations
-        title: Note title for creation
-        content: Note content for creation/updates
-        folder: Target folder for organization
-        tags: Tags for categorization
-        query: Search terms
-        path: File/directory path for navigation
-        depth: Navigation depth for context building
-        timeframe: Time-based filtering
-        entity_type: Entity type filtering
-
-    Returns:
-        Operation result with appropriate data structure
-
-    Examples:
-        # Create a new note
-        adn_knowledge("create", title="My Note", content="Note content", folder="research")
-
-        # Read existing note
-        adn_knowledge("read", identifier="note-id")
-
-        # Update note content
-        adn_knowledge("update", identifier="note-id", content="Updated content")
-
-        # Search notes
-        adn_knowledge("search", query="machine learning")
-
-        # List directory
-        adn_knowledge("list", path="research/")
-
-        # Get recent activity
-        adn_knowledge("activity", timeframe="1 week")
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_knowledge")`
     """
     if operation == "create":
         if not title:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Title required for note creation"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Title required for note creation",
             )
         if not content:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Content required for note creation"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Content required for note creation",
             )
 
         from advanced_memory.mcp.tools.write_note import write_note
@@ -126,7 +94,9 @@ async def adn_knowledge_portmanteau(
     elif operation == "read":
         if not identifier:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note reading"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier required for note reading",
             )
 
         from advanced_memory.mcp.tools.read_note import read_note
@@ -138,7 +108,9 @@ async def adn_knowledge_portmanteau(
     elif operation == "update":
         if not identifier:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note update"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier required for note update",
             )
 
         from advanced_memory.mcp.tools.edit_note import edit_note
@@ -149,7 +121,9 @@ async def adn_knowledge_portmanteau(
     elif operation == "delete":
         if not identifier:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for note deletion"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier required for note deletion",
             )
 
         from advanced_memory.mcp.tools.delete_note import delete_note
@@ -173,7 +147,9 @@ async def adn_knowledge_portmanteau(
     elif operation == "search":
         if not query:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for search operation"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Query required for search operation",
             )
 
         from advanced_memory.mcp.tools.search import search_notes
@@ -222,7 +198,9 @@ async def adn_knowledge_portmanteau(
     elif operation == "navigate":
         if not identifier:
             return build_error_response(
-                "VALIDATION_ERROR", "MISSING_PARAMETER", "Identifier required for navigation"
+                "VALIDATION_ERROR",
+                "MISSING_PARAMETER",
+                "Identifier required for navigation",
             )
 
         from advanced_memory.mcp.tools.build_context import build_context

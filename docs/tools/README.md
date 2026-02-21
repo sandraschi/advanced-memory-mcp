@@ -145,6 +145,26 @@ Tools that end users of Advanced Memory can use:
 
 ---
 
+## MCP Portmanteau Tools (API Reference)
+
+These unified tools consolidate multiple operations into single interfaces for efficient AI interaction.
+
+| Tool | Purpose | Documentation | Status |
+|------|---------|---------------|--------|
+| **adn_content** | Content lifecycle management | [content_adn.md](content_adn.md) | ✅ |
+| **adn_knowledge** | Core knowledge CRUD | [knowledge_adn.md](knowledge_adn.md) | ✅ |
+| **adn_search** | Unified search manager | [search_adn.md](search_adn.md) | ✅ |
+| **adn_skills** | Skill system orchestration | [skills_adn.md](skills_adn.md) | ✅ |
+| **adn_project** | Multi-project management | [project_adn.md](project_adn.md) | ✅ |
+| **adn_system** | System status & health | [system_adn.md](system_adn.md) | ✅ |
+| **adn_navigation** | Activity & graph exploration | [navigation_adn.md](navigation_adn.md) | ✅ |
+| **adn_import_export**| Data migration portmanteau | [import_export_adn.md](import_export_adn.md) | ✅ |
+| **adn_observability** | Agent provenance & audit | [observability_adn.md](observability_adn.md) | ✅ |
+| **adn_research** | AI research & discovery | [research_adn.md](research_adn.md) | ✅ |
+| **adn_external** | System & inter-server tools | [external_adn.md](external_adn.md) | ✅ |
+
+---
+
 ## Installation Quick Reference
 
 ### Development Tools (All at Once)
@@ -239,5 +259,6 @@ choco install 7zip
 ---
 
 **Created**: October 17, 2025
+**Updated**: 2026-02-21
 **Purpose**: Centralized tool documentation
-**Status**: In progress (2 tools documented, more coming)
+**Status**: All core MCP portmanteau tools documented.

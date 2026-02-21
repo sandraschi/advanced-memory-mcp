@@ -38,99 +38,12 @@ async def adn_navigation(
     focus: str | None = None,
     project: str | None = None,
 ) -> dict:
-    """Comprehensive navigation management tool for Advanced Memory knowledge base.
+    """Comprehensive navigation management tool for Advanced Memory.
 
-    This point-of-entry tool provides high-level navigation, diagnostic, and
-    context-building operations. It is used to traverse the knowledge graph,
-    monitor system health, and browse the physical file organization.
+    Operations: build_context, recent_activity, list_directory, backlinks, status, sync_status.
 
-    RESPONSES:
-    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps.
-
-    ---------------------------------------------------------------------------
-    [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 6 navigation operations into one tool to prevent tool explosion while maintaining full functionality.
-
-    ---------------------------------------------------------------------------
-    [PARAMETER DESIGN]
-    The parameters are designed to support multiple navigation types:
-    - Knowledge Graph (build_context, backlinks): Focuses on semantic relationships.
-    - File System (list_directory): Focuses on physical structure.
-    - System Health (status, sync_status): Focuses on operational metrics.
-    - Activity Monitoring (recent_activity): Focuses on time-based changes.
-
-    ---------------------------------------------------------------------------
-    [WARNING]
-    In 'recent_activity', use 'type_filter', NOT 'type'. The parameter was named
-    specifically to avoid shadowing Python's builtin type() function and ensure
-    compatibility across all MCP client implementations.
-
-    ---------------------------------------------------------------------------
-    [SUPPORTED OPERATIONS]
-    - build_context: Navigate the knowledge graph via memory:// URLs for conversation continuity.
-    - recent_activity: Get recently updated information with specified timeframe.
-    - list_directory: Browse directory contents with filtering and depth control.
-    - backlinks: Find all notes that reference a specific note (reverse links).
-    - status: Comprehensive system status and diagnostic monitoring.
-    - sync_status: Monitor file synchronization status and background operations.
-
-    ---------------------------------------------------------------------------
-    [OPERATIONS DETAIL]
-    - build_context: Requires 'url' (memory://...). Explores relationships up to 'depth'.
-    - recent_activity: Filterable by 'type_filter' and 'timeframe'.
-    - list_directory: Browses 'dir_name'. Supports 'file_name_glob' filtering.
-    - backlinks: Requires 'identifier' as the target note title or permalink.
-    - status: Provides 'level' (basic/intermediate/advanced) of diagnostic detail.
-    - sync_status: Monitors background file processing and indexing.
-
-    ---------------------------------------------------------------------------
-    [PREREQUISITES]
-    - Active project session established via adn_project tool.
-    - Indexed knowledge base (use 'status' to verify indexing health).
-
-    ---------------------------------------------------------------------------
-    [PARAMETERS]
-    - operation (str): The navigation operation to perform. MUST be one of:
-      "build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"
-    - identifier (str): Note Title or Permalink (Required for operation="backlinks")
-    - url (str): Memory URL (memory://...) (Required for operation="build_context")
-    - dir_name (str): Directory path to list (Default: "/")
-    - depth (int): Relationship exploration depth or directory recursion depth (Default: 1)
-    - timeframe (str): Time window for activity filtering (e.g., "1d", "7d", "last week")
-    - page (int): Page number for paginated results (Default: 1)
-    - page_size (int): Number of items per page (Default: 10)
-    - max_related (int): Maximum related items to include (Default: 10)
-    - file_name_glob (str): Glob pattern for file filtering (e.g., "*.md", "*meeting*")
-    - type_filter (str): Filter for activity. One of: "entity", "observation", "relation", "" (all)
-    - level (str): Status detail level. One of: "basic", "intermediate", "advanced"
-    - focus (str): Specific area to focus on for status (e.g., "sync", "database")
-    - project (str): Optional override for active project name
-
-    ---------------------------------------------------------------------------
-    [USAGE]
-    Use this tool whenever you need to understand the "where" and "how" of your knowledge base.
-    It is essential for building context before a task and monitoring system health during
-    complex operations.
-
-    ---------------------------------------------------------------------------
-    [EXAMPLES]
-    - Build semantic context for an AI project:
-      adn_navigation("build_context", url="memory://projects/ai", depth=2)
-    - Check for recent notes from today:
-      adn_navigation("recent_activity", timeframe="1d", type_filter="entity")
-    - Find all notes referencing a core concept:
-      adn_navigation("backlinks", identifier="Python Basics")
-    - Check system health diagnostics:
-      adn_navigation("status", level="advanced", focus="database")
-
-    ---------------------------------------------------------------------------
-    [ERRORS]
-    - Missing Parameters: 'url' missing for build_context or 'identifier' missing for backlinks.
-    - Invalid Operation: The specified operation name is not recognized.
-    - Data Inconsistency: Operation returned unexpected data format (check logs).
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_navigation")`
     """
     logger.info(f"MCP tool call tool=adn_navigation operation={operation}")
 
@@ -348,7 +261,12 @@ async def _recent_activity_operation(
         return build_success_response(
             operation="recent_activity",
             summary="No recent activity found",
-            result={"timeframe": timeframe, "total_results": 0, "items": [], "metadata": metadata},
+            result={
+                "timeframe": timeframe,
+                "total_results": 0,
+                "items": [],
+                "metadata": metadata,
+            },
             next_steps=[
                 "Try a different timeframe",
                 "Check if there are any notes in the project",

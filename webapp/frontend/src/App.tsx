@@ -16,6 +16,7 @@ import SkillCreator from './pages/skills/SkillCreator'
 import SkillResearch from './pages/skills/SkillResearch'
 import SkillMarketplace from './pages/skills/SkillMarketplace'
 import ResearchLab from './pages/research/ResearchLab'
+import ZettelFlow from './pages/dashboard/ZettelFlow'
 import SearchDeep from './pages/search/SearchDeep'
 import GraphCanvas from './pages/dashboard/GraphCanvas'
 import SkillStudio from './pages/skills/SkillStudio'
@@ -26,6 +27,7 @@ import Recents from './pages/dashboard/Recents'
 import ZettelMaster from './pages/zettelkasten/ZettelMaster'
 import AudioHub from './pages/audio/AudioHub'
 import Checkpoints from './pages/checkpoints/Checkpoints'
+import Tools from './pages/dashboard/Tools'
 
 function App() {
   const [selectedNoteId, setSelectedNoteId] = useState<string | undefined>()
@@ -185,6 +187,12 @@ function App() {
         </Layout>
       } />
 
+      <Route path="/zettelflow" element={
+        <Layout>
+          <ZettelFlow />
+        </Layout>
+      } />
+
       <Route path="/research/deep" element={
         <Layout>
           <SearchDeep />
@@ -242,6 +250,12 @@ function App() {
       <Route path="/help" element={
         <Layout>
           <Help />
+        </Layout>
+      } />
+
+      <Route path="/tools" element={
+        <Layout>
+          <Tools />
         </Layout>
       } />
     </Routes>

@@ -39,45 +39,12 @@ async def adn_skills(
     skill_type: Annotated[str | None, Field(description="Skill type/category")] = None,
     parameters: Annotated[dict | None, Field(description="Additional parameters")] = None,
 ) -> dict:
-    """Unified portmanteau tool for all skill system operations.
+    """Unified portmanteau for skill system operations.
 
-    This tool consolidates skill lifecycle management:
-    - Skill creation, reading, updating, deletion
-    - Skill discovery and search
-    - Advanced skill operations
-    - Skill creator tools
-    - Skill operations management
+    Operations: create, read, list, update, delete, search, advanced_create, creator, operations, research.
 
-    Args:
-        operation: The specific skill operation to perform
-        name: Skill name for targeted operations
-        content: Skill content or description
-        tags: Skill categorization tags
-        query: Search terms for skill discovery
-        skill_type: Skill type/category filter
-        parameters: Additional operation parameters
-
-    Returns:
-        Operation result with skill information
-
-    Examples:
-        # Create a new skill
-        adn_skills("create", name="React Expert", content="Advanced React patterns...", tags=["react", "frontend"])
-
-        # Read existing skill
-        adn_skills("read", name="Python Expert")
-
-        # Search skills
-        adn_skills("search", query="machine learning")
-
-        # List all skills
-        adn_skills("list")
-
-        # Advanced skill creation
-        adn_skills("advanced_create", name="Complex Skill", parameters={"complexity": "high"})
-
-        # Use skill creator
-        adn_skills("creator", content="I need a skill for data analysis")
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_skills")`
     """
     try:
         parameters = parameters or {}
@@ -98,7 +65,9 @@ async def adn_skills(
         elif operation == "read":
             if not name:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Skill name required for reading"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Skill name required for reading",
                 )
 
             from advanced_memory.mcp.tools.adn_skills_reader import adn_skills_reader
@@ -115,7 +84,9 @@ async def adn_skills(
         elif operation == "search":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for skill search"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for skill search",
                 )
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
@@ -126,7 +97,9 @@ async def adn_skills(
         elif operation == "update":
             if not name:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Skill name required for update"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Skill name required for update",
                 )
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
@@ -144,7 +117,9 @@ async def adn_skills(
         elif operation == "delete":
             if not name:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Skill name required for deletion"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Skill name required for deletion",
                 )
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills
@@ -160,7 +135,9 @@ async def adn_skills(
                     "Skill name required for advanced creation",
                 )
 
-            from advanced_memory.mcp.tools.make_skill_advanced import make_skill_advanced
+            from advanced_memory.mcp.tools.make_skill_advanced import (
+                make_skill_advanced,
+            )
 
             result = await make_skill_advanced.fn(name, content or "", **parameters)
             return build_success_response("advanced_create", result)
@@ -179,7 +156,9 @@ async def adn_skills(
             return build_success_response("creator", result)
 
         elif operation == "operations":
-            from advanced_memory.mcp.tools.adn_skills_operations_new import adn_skills_operations
+            from advanced_memory.mcp.tools.adn_skills_operations_new import (
+                adn_skills_operations,
+            )
 
             result = await adn_skills_operations.fn("list")
             return build_success_response("operations", result)
@@ -192,7 +171,9 @@ async def adn_skills(
                     "MISSING_PARAMETER",
                     "query or parameters.topic required for skills research",
                 )
-            from advanced_memory.mcp.tools.adn_skills_research import adn_skills_research
+            from advanced_memory.mcp.tools.adn_skills_research import (
+                adn_skills_research,
+            )
 
             result = await adn_skills_research.fn(
                 topic=str(topic),
@@ -212,7 +193,9 @@ async def adn_skills(
 
         else:
             return build_error_response(
-                "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown skill operation: {operation}"
+                "VALIDATION_ERROR",
+                "VALIDATION_ERROR",
+                f"Unknown skill operation: {operation}",
             )
 
     except Exception as e:

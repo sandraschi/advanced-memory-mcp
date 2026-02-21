@@ -1633,6 +1633,80 @@ async function startServer() {
     }
   });
 
+  // --- Zettelkasten Routes ---
+
+  // Get Inbox notes (files in Inbox folder)
+  app.get('/api/v1/zettel/inbox', async (req, res) => {
+    try {
+      // Assuming 'Inbox' is a folder in the project root or specified path
+      // Using adn_knowledge list operation
+      const result = await sendMCPRequest('adn_knowledge', {
+        operation: 'list',
+        path: 'Inbox'
+      });
+      const payload = unwrapMCPToolResult(result);
+      res.json({ success: true, data: payload });
+    } catch (error) {
+      res.json({ success: false, error: error.message, data: [] });
+    }
+  });
+
+  // Link two notes (Bidirectional or Unidirectional)
+  app.post('/api/v1/zettel/link', async (req, res) => {
+    try {
+      const { source_id, target_id, type = 'bidirectional' } = req.body;
+
+      // 1. Read source note to append link
+      const sourceResult = await sendMCPRequest('adn_knowledge', { operation: 'read', identifier: source_id });
+      let sourceContent = unwrapMCPToolResult(sourceResult)?.content || '';
+
+      if (!sourceContent.includes(`[[${target_id}]]`)) {
+        const newSourceContent = sourceContent + `\n\n[[${target_id}]]`;
+        await sendMCPRequest('adn_knowledge', {
+          operation: 'update',
+          identifier: source_id,
+          content: newSourceContent
+        });
+      }
+
+      // 2. If bidirectional, read target note and append link to source
+      if (type === 'bidirectional') {
+        const targetResult = await sendMCPRequest('adn_knowledge', { operation: 'read', identifier: target_id });
+        let targetContent = unwrapMCPToolResult(targetResult)?.content || '';
+
+        if (!targetContent.includes(`[[${source_id}]]`)) {
+          const newTargetContent = targetContent + `\n\n[[${source_id}]]`;
+          await sendMCPRequest('adn_knowledge', {
+            operation: 'update',
+            identifier: target_id,
+            content: newTargetContent
+          });
+        }
+      }
+
+      res.json({ success: true, message: `Linked ${source_id} <-> ${target_id}` });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // Promote note from Inbox to Zettelkasten (Main)
+  app.post('/api/v1/zettel/promote', async (req, res) => {
+    try {
+      const { identifier, destination = 'Zettelkasten' } = req.body;
+      // Move the file
+      const result = await sendMCPRequest('adn_knowledge', {
+        operation: 'move',
+        identifier: identifier,
+        folder: destination
+      });
+      const payload = unwrapMCPToolResult(result);
+      res.json({ success: true, data: payload });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Start the server
   const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`ADN MCP Bridge Server running on http://0.0.0.0:${PORT} (Tailnet accessible)`);

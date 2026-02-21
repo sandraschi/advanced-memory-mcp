@@ -278,21 +278,19 @@ def _initialize_prompts_and_resources() -> None:
     """
     # Import prompts module to register all prompts via __init__.py
     # Import resources module to register all resources via __init__.py
+    # Import individual prompt modules to get function references
+    # Import resources to get function references
+    # Note: ai_assistant_guide is in prompts/ but is actually a resource
+    import advanced_memory.mcp.prompts.ai_assistant_guide as ai_assistant_guide
+    import advanced_memory.mcp.prompts.continue_conversation as continue_conversation
+    import advanced_memory.mcp.prompts.recent_activity as recent_activity
+    import advanced_memory.mcp.prompts.search as search
+    import advanced_memory.mcp.resources.project_info as project_info
+    import advanced_memory.mcp.resources.prompt_templates as prompt_templates
     from advanced_memory.mcp import (
         prompts,  # noqa: F401
         resources,  # noqa: F401
     )
-
-    # Import individual prompt modules to get function references
-    # Import resources to get function references
-    # Note: ai_assistant_guide is in prompts/ but is actually a resource
-    from advanced_memory.mcp.prompts import (
-        ai_assistant_guide,
-        continue_conversation,
-        recent_activity,
-        search,
-    )
-    from advanced_memory.mcp.resources import project_info, prompt_templates
 
     # Store references to prevent garbage collection
     # The actual functions are registered via decorators, but we store

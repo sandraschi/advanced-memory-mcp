@@ -70,7 +70,7 @@ async def get_resource_content(
             if "*" in identifier
             else SearchQuery(permalink=identifier)
         )
-        search_results = await search_service.search(query, limit, offset)
+        search_results, _ = await search_service.search(query, limit, offset)
         if not search_results:
             raise HTTPException(status_code=404, detail=f"Resource not found: {identifier}")
 

@@ -37,11 +37,28 @@ advanced-memory-mcp/
 
 ## Quick Start
 
-### MCP Server Installation
-```bash
-pip install advanced-memory-mcp
-advanced-memory setup  # Interactive configuration
+## 🚀 Installation
 
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/) installed (RECOMMENDED)
+- Python 3.12+
+
+### 📦 Quick Start
+Run immediately via `uvx`:
+```bash
+uvx advanced-memory
+```
+
+### 🎯 Claude Desktop Integration
+Add to your `claude_desktop_config.json`:
+```json
+"mcpServers": {
+  "advanced-memory": {
+    "command": "uv",
+    "args": ["--directory", "D:/Dev/repos/advanced-memory-mcp", "run", "advanced-memory"]
+  }
+}
+```
 ## 📦 Packaging & Distribution
 
 This repository is SOTA 2026 compliant and uses the officially validated `@anthropic-ai/mcpb` workflow for distribution.

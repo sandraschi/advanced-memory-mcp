@@ -36,42 +36,12 @@ async def adn_project(
     set_default: Annotated[bool | None, Field(description="Set as default project")] = None,
     description: Annotated[str | None, Field(description="Project description")] = None,
 ) -> dict:
-    """Unified portmanteau tool for all project management operations.
+    """Unified portmanteau for all project management operations.
 
-    This tool consolidates project lifecycle management:
-    - Project creation, deletion, and configuration
-    - Project switching and default management
-    - Project listing and status monitoring
-    - Project-specific inbox management
+    Operations: create, delete, list, switch, current, set_default, sync, status, inbox.
 
-    Args:
-        operation: The specific project operation to perform
-        name: Project name for targeted operations
-        path: Filesystem path for project creation
-        set_default: Whether to set project as default
-        description: Project description for creation
-
-    Returns:
-        Operation result with project information
-
-    Examples:
-        # Create new project
-        adn_project("create", name="research", path="/path/to/research", description="Research notes")
-
-        # List all projects
-        adn_project("list")
-
-        # Switch to different project
-        adn_project("switch", name="research")
-
-        # Get current project
-        adn_project("current")
-
-        # Set default project
-        adn_project("set_default", name="main")
-
-        # Delete project
-        adn_project("delete", name="old-project")
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_project")`
     """
     try:
         if operation == "create":
@@ -82,7 +52,9 @@ async def adn_project(
                     "Name and path required for project creation",
                 )
 
-            from advanced_memory.mcp.tools.project_management import create_memory_project
+            from advanced_memory.mcp.tools.project_management import (
+                create_memory_project,
+            )
 
             result = await create_memory_project.fn(
                 name, path, description or "", set_default or False
@@ -92,7 +64,9 @@ async def adn_project(
         elif operation == "delete":
             if not name:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Project name required for deletion"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Project name required for deletion",
                 )
 
             from advanced_memory.mcp.tools.project_management import delete_project
@@ -121,10 +95,15 @@ async def adn_project(
         elif operation == "switch":
             if not name:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Project name required for switching"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Project name required for switching",
                 )
 
-            from advanced_memory.mcp.tools.project_management import session, switch_project
+            from advanced_memory.mcp.tools.project_management import (
+                session,
+                switch_project,
+            )
 
             result = await switch_project.fn(name)
             current_project = session.get_current_project()
@@ -133,7 +112,10 @@ async def adn_project(
             )
 
         elif operation == "current":
-            from advanced_memory.mcp.tools.project_management import get_current_project, session
+            from advanced_memory.mcp.tools.project_management import (
+                get_current_project,
+                session,
+            )
 
             result = await get_current_project.fn()
             current_project = session.get_current_project()
@@ -174,7 +156,9 @@ async def adn_project(
 
         else:
             return build_error_response(
-                "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown project operation: {operation}"
+                "VALIDATION_ERROR",
+                "VALIDATION_ERROR",
+                f"Unknown project operation: {operation}",
             )
 
     except Exception as e:

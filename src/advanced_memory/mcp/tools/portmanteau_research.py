@@ -32,7 +32,8 @@ async def adn_research(
     ],
     query: Annotated[str | None, Field(description="Search query or research topic")] = None,
     provider: Annotated[
-        str | None, Field(description="Provider/service (openai, anthropic, google, etc.)")
+        str | None,
+        Field(description="Provider/service (openai, anthropic, google, etc.)"),
     ] = None,
     model: Annotated[str | None, Field(description="Model name/version")] = None,
     api_key: Annotated[str | None, Field(description="API key for service")] = None,
@@ -41,54 +42,20 @@ async def adn_research(
     path: Annotated[str | None, Field(description="File path for document ingestion")] = None,
     content: Annotated[str | None, Field(description="Content for LLM generation")] = None,
 ) -> dict:
-    """Unified portmanteau tool for AI research and knowledge discovery.
+    """Unified portmanteau for AI research and knowledge discovery.
 
-    This tool consolidates all research-related operations:
-    - Web search and academic research
-    - GitHub code exploration
-    - Document processing and ingestion
-    - RAG (Retrieval Augmented Generation) queries
-    - LLM configuration and generation
-    - Research orchestration
+    Operations: web_search, arxiv, github, document_ingest, rag_query, llm_config, llm_generate, research_orchestrate, tvtropes.
 
-    Args:
-        operation: The specific research operation to perform
-        query: Search query or research topic
-        provider: AI provider (openai, anthropic, google)
-        model: Model name/version
-        api_key: API key for authentication
-        limit: Maximum results to return
-        language: Programming language filter for GitHub search
-        path: File path for document processing
-        content: Content for LLM operations
-
-    Returns:
-        Research results or operation confirmation
-
-    Examples:
-        # Web search
-        adn_research("web_search", query="machine learning transformers")
-
-        # Academic research
-        adn_research("arxiv", query="neural networks", limit=10)
-
-        # GitHub code search
-        adn_research("github", query="react hooks", language="typescript")
-
-        # Document processing
-        adn_research("document_ingest", path="/path/to/document.pdf")
-
-        # RAG query
-        adn_research("rag_query", query="explain quantum computing")
-
-        # Configure LLM
-        adn_research("llm_config", provider="openai", model="gpt-4", api_key="your-api-key-here")  # pragma: allowlist secret
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_research")`
     """
     try:
         if operation == "web_search":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for web search"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for web search",
                 )
             from advanced_memory.mcp.tools.adn_web_search import adn_web_search
 
@@ -98,7 +65,9 @@ async def adn_research(
         elif operation == "arxiv":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for arXiv search"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for arXiv search",
                 )
             from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
 
@@ -110,9 +79,13 @@ async def adn_research(
         elif operation == "github":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for GitHub search"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for GitHub search",
                 )
-            from advanced_memory.mcp.tools.adn_github_research import adn_github_research
+            from advanced_memory.mcp.tools.adn_github_research import (
+                adn_github_research,
+            )
 
             result = await adn_github_research.fn(
                 operation="search_repositories",
@@ -125,9 +98,13 @@ async def adn_research(
         elif operation == "tvtropes":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for TV Tropes research"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for TV Tropes research",
                 )
-            from advanced_memory.mcp.tools.adn_tvtropes_research import adn_tvtropes_research
+            from advanced_memory.mcp.tools.adn_tvtropes_research import (
+                adn_tvtropes_research,
+            )
 
             result = await adn_tvtropes_research.fn(query)
             return build_success_response("tvtropes", result)
@@ -135,9 +112,13 @@ async def adn_research(
         elif operation == "document_ingest":
             if not path:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Path required for document ingestion"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Path required for document ingestion",
                 )
-            from advanced_memory.mcp.tools.adn_document_ingest import adn_document_ingest
+            from advanced_memory.mcp.tools.adn_document_ingest import (
+                adn_document_ingest,
+            )
 
             result = await adn_document_ingest.fn(path)
             return build_success_response("document_ingest", result)
@@ -145,7 +126,9 @@ async def adn_research(
         elif operation == "rag_query":
             if not query:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Query required for RAG operation"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Query required for RAG operation",
                 )
             from advanced_memory.mcp.tools.adn_rag import adn_rag
 
@@ -167,7 +150,9 @@ async def adn_research(
         elif operation == "llm_generate":
             if not content:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Content required for LLM generation"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Content required for LLM generation",
                 )
             from advanced_memory.mcp.tools.adn_llm import adn_llm
 
@@ -181,14 +166,18 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Query required for research orchestration",
                 )
-            from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
+            from advanced_memory.mcp.tools.research_orchestrator import (
+                research_orchestrator,
+            )
 
             result = await research_orchestrator.fn(query)
             return build_success_response("research_orchestrate", result)
 
         else:
             return build_error_response(
-                "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown research operation: {operation}"
+                "VALIDATION_ERROR",
+                "VALIDATION_ERROR",
+                f"Unknown research operation: {operation}",
             )
 
     except Exception as e:

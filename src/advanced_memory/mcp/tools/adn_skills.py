@@ -97,179 +97,19 @@ async def adn_skills(
     """
     Claude Skills management portmanteau for Advanced Memory.
 
-    RESPONSES:
-    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps.
-
     This comprehensive tool consolidates skill management operations to provide a
-    unified interface for creating, managing, and distributing Claude Skills (Anthropic Skills).
+    unified interface for creating, managing, and distributing Claude Skills.
 
-    ---------------------------------------------------------------------------
-    [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates 20+ Claude Skills operations into one tool to prevent tool explosion while maintaining full functionality.
+    OPERATIONS:
+    - CRUD: create, read, update, delete, list
+    - Format: validate, export, import, package
+    - Zettelkasten: from_zettel, to_zettel
+    - Distillation: import_from_github, distill_from_wikipedia, distill_from_arxiv,
+                    distill_from_textbook, distill_from_text, distill_from_expert
+    - 🚪 THE DOOR (Activation): activate, deactivate, active, load_section, load_resource
 
-    ---------------------------------------------------------------------------
-    [SUPPORTED OPERATIONS]
-
-    CRUD & Management:
-    - create: Initialize new skill with template (skill-creator pattern).
-    - read: Read skill in SKILL.md format.
-    - update: Update skill metadata or content.
-    - delete: Remove skill from knowledge base.
-    - list: List all skills with filtering.
-    - validate: Check skill format compliance (Anthropic spec).
-    - export: Export skills to Claude Skills format (folders/zips).
-    - import: Import Claude Skills from folders/zips.
-    - package: Create distributable .zip (package pattern).
-    - from_zettel: Convert zettelkasten note to Claude Skill.
-    - to_zettel: Convert Claude Skill back to regular note.
-
-    Import & Distillation:
-    - import_from_github: Import skill from GitHub repository.
-    - distill_from_wikipedia: Create skill from Wikipedia article.
-    - distill_from_arxiv: Create skill from arXiv research papers.
-    - distill_from_textbook: Create skill from textbook PDF.
-    - distill_from_text: Create skill from famous text/document.
-    - distill_from_expert: Create skill from SOTA thinker's work.
-
-    Skill Activation (THE DOOR):
-    - activate: Load skill TOC into context (staged loading - saves tokens!).
-    - deactivate: Remove skill from active context.
-    - active: List currently active skills.
-    - load_section: Load specific section from active skill (on-demand).
-    - load_resource: Load specific resource file from active skill.
-
-    ---------------------------------------------------------------------------
-    [CLAUDE SKILLS FORMAT]
-    Skills are folders containing SKILL.md with YAML frontmatter:
-    - name: (required) skill-name-in-hyphen-case
-    - description: (required) When Claude should use this skill
-    - license: (optional) License name or file
-    - allowed-tools: (optional) Pre-approved tools list
-    - metadata: (optional) Custom key-value pairs
-
-    ---------------------------------------------------------------------------
-    [OPERATIONS DETAIL]
-
-    - create: Initialize new skill with template
-      - Parameters: skill_name (required), description (required), category (optional)
-      - Returns: Created skill with folder structure and next steps
-
-    - read: Retrieve skill content
-      - Parameters: identifier or skill_name (required)
-      - Returns: Full SKILL.md content with metadata
-
-    - update: Modify existing skill
-      - Parameters: identifier (required), description/content/category (any)
-      - Returns: Updated skill confirmation
-
-    - delete: Remove skill
-      - Parameters: identifier (required)
-      - Returns: Deletion confirmation
-
-    - list: Show all skills
-      - Parameters: filters (optional), page/page_size (optional)
-      - Returns: Formatted skill list with metadata
-
-    - validate: Check format compliance
-      - Parameters: identifier (required)
-      - Returns: Validation report with errors/warnings
-
-    - export: Export to Claude Skills format
-      - Parameters: export_path (required), package_format (folder/zip)
-      - Returns: Export summary with file counts
-
-    - import: Import from Claude Skills
-      - Parameters: source_path (required)
-      - Returns: Import summary with success/failure counts
-
-    - package: Create distributable .zip
-      - Parameters: identifier (required), export_path (optional)
-      - Returns: .zip file path and validation status
-
-    - from_zettel: Convert note to skill
-      - Parameters: identifier (required), description (required), category (optional)
-      - Returns: Conversion confirmation with skill location
-
-    - to_zettel: Convert skill to note
-      - Parameters: identifier (required)
-      - Returns: Conversion confirmation with note location
-
-    - distill_*: Create skills from sources
-      - Parameters vary by source (see Args).
-      - Creates high-quality skills distilled from authoritative content.
-
-    - activate: Staged loading (The Door)
-      - Parameters: identifier (required), scope (optional)
-      - Loads TOC only to save context/tokens. Full content loaded via load_section.
-
-    ---------------------------------------------------------------------------
-    [PREREQUISITES]
-    - 'skills/' directory must exist in workspace for local skills.
-    - Appropriate Python dependencies for distillation (arxiv, wikipedia-api, etc.).
-
-    ---------------------------------------------------------------------------
-    [PARAMETERS]
-    - operation: The skills operation to perform (Required).
-    - identifier: Skill name or note identifier (Required for read/update/delete/validate).
-    - skill_name: Name for new skill (hyphen-case) (Required for create).
-    - description: Description of when to use this skill (Required for create).
-    - content: Skill instructions/markdown body (Optional for update).
-    - source_path: Path to import from (Required for import).
-    - export_path: Path to export to (Optional).
-    - category: Skill category (Optional).
-    - difficulty: Difficulty level (beginner/intermediate/advanced/expert) (Optional).
-    - metadata: Custom metadata dictionary (Optional).
-    - filters: Filtering criteria for list operation (Optional).
-    - package_format: Export format (folder/zip) (Optional).
-    - page: Pagination page (Default: 1).
-    - page_size: Results per page (Default: 20).
-    - project: Project context (Optional).
-    - repository: GitHub repo for import (Required for import_from_github).
-    - branch: Git branch (Default: "main").
-    - topic: Topic for Wikipedia distillation (Required for distill_from_wikipedia).
-    - query: Search query for arXiv (Required for distill_from_arxiv).
-    - max_papers: Max papers for arXiv (Default: 5).
-    - pdf_path: Path to textbook PDF (Required for distill_from_textbook).
-    - text_path: Path to text file (Required for distill_from_text).
-    - expert_name: Name of expert (Required for distill_from_expert).
-    - depth: Analysis depth (Default: 0).
-    - quality: Quality level (Default: "comprehensive").
-    - scope: Activation scope (message/session/persistent) (Default: "session").
-    - section: Section header to load (Required for load_section).
-    - resource: Resource path to load (Required for load_resource).
-    - verbose: Verbose output (Default: False).
-
-    ---------------------------------------------------------------------------
-    [RETURNS]
-    - Operation-specific result with skill details, status, or confirmation.
-
-    ---------------------------------------------------------------------------
-    [EXAMPLES]
-
-    - Create a new skill:
-      adn_skills("create", skill_name="python-expert", description="Expert Python guidance", category="developer")
-
-    - Convert zettel to skill:
-      adn_skills("from_zettel", identifier="Python Fundamentals", description="Teaching basics")
-
-    - List developer skills:
-      adn_skills("list", filters={"category": "developer"})
-
-    - Export all skills:
-      adn_skills("export", export_path="D:/claude-skills/", package_format="zip")
-
-    - Activate a skill (Staged Loading):
-      adn_skills("activate", identifier="python-expert")
-
-    ---------------------------------------------------------------------------
-    [ERRORS]
-    - "Missing Required Parameter": identifier parameter missing for read, update, delete, validate, or other operations.
-    - "Invalid Skills Operation": Specified operation is not supported.
-    - "Skill name must be hyphen-case": Proposed skill name violates Anthropic naming conventions (lowercase, hyphens).
-    - "Angle brackets are not allowed": Skill description contains < or > characters which cause parsing issues.
+    For detailed documentation on parameters and usage, use:
+    `help(topic="adn_skills")`
     """
     logger.info(f"MCP tool call tool=adn_skills operation={operation}")
 

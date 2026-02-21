@@ -3,7 +3,7 @@ name = "advanced-memory"
 version = "1.3.0"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = { text = "AGPL-3.0-or-later" }
 authors = [
     { name = "Advanced Memory Community", email = "hello@advanced-memory.com" }
@@ -30,7 +30,7 @@ dependencies = [
     "alembic>=1.14.1",
     "pillow>=11.1.0",
     "pybars3>=0.9.7",
-    "fastmcp>=2.14.3,<3.0.0",
+    "fastmcp>=2.14.5",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
@@ -52,11 +52,12 @@ dependencies = [
     "pdfplumber>=0.10.0",
     "beautifulsoup4>=4.12.0",
     "lxml>=5.1.0",
-    "pathspec>=0.12.0",  # .gitignore pattern matching for repo export
-    "aiohttp>=3.9.0",     # Async HTTP for web research
-    "chromadb>=0.4.0",    # Vector database for RAG
-    "sentence-transformers>=2.2.0",  # Text embeddings
-    "PyMuPDF>=1.23.0",    # PDF text extraction for research
+    "pathspec>=0.12.0", # .gitignore pattern matching for repo export
+    "aiohttp>=3.9.0", # Async HTTP for web research
+    "chromadb>=0.4.0", # Vector database for RAG
+    "sentence-transformers>=2.2.0", # Text embeddings
+    "PyMuPDF>=1.23.0", # PDF text extraction for research
+    "ruff>=0.12.2",
 ]
 
 [project.optional-dependencies]

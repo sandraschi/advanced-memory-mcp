@@ -69,7 +69,7 @@ async def continue_conversation(
     # Get data needed for template
     if request.topic:
         query = SearchQuery(text=request.topic, after_date=request.timeframe)
-        results = await search_service.search(query, limit=request.search_items_limit)
+        results, _ = await search_service.search(query, limit=request.search_items_limit)
         search_results = await to_search_results(entity_service, results)
 
         # Build context from results
@@ -227,7 +227,7 @@ async def search_prompt(
     offset = (page - 1) * page_size
 
     query = SearchQuery(text=request.query, after_date=request.timeframe)
-    results = await search_service.search(query, limit=limit, offset=offset)
+    results, _ = await search_service.search(query, limit=limit, offset=offset)
     search_results = await to_search_results(entity_service, results)
 
     template_context = {

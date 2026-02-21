@@ -37,46 +37,12 @@ async def adn_system(
     parameters: Annotated[dict | None, Field(description="Tool parameters")] = None,
     topic: Annotated[str | None, Field(description="Topic for operations")] = None,
 ) -> dict:
-    """Unified portmanteau tool for system management and external integrations.
+    """Unified portmanteau for system management and external integrations.
 
-    This tool consolidates system-level operations:
-    - System status and health monitoring
-    - External MCP server communication
-    - Inter-server tool operations
-    - Batch processing capabilities
-    - Workflow orchestration
-    - Help and documentation
+    Operations: status, sync_status, external_call, inter_server, sampling_status, batch_process, workflow, help.
 
-    Args:
-        operation: The specific system operation to perform
-        level: Status detail level (basic/intermediate/advanced/diagnostic)
-        focus: Status focus area (sync, tools, system, projects)
-        server_name: External MCP server identifier
-        tool_name: External tool name to call
-        parameters: Parameters for external tool calls
-        topic: Topic for help or workflow operations
-
-    Returns:
-        Operation result with system information
-
-    Examples:
-        # System status
-        adn_system("status", level="diagnostic")
-
-        # Sync status
-        adn_system("sync_status")
-
-        # Call external MCP tool
-        adn_system("external_call", server_name="mcp-server", tool_name="tool", parameters={"param": "value"})
-
-        # Inter-server operations
-        adn_system("inter_server", operation="workflow", topic="content")
-
-        # Batch processing
-        adn_system("batch_process", topic="documents")
-
-        # Get help
-        adn_system("help", topic="tools")
+    For full documentation on parameters and usage examples, call:
+    `help(topic="adn_system")`
     """
     try:
         if operation == "status":
@@ -99,7 +65,9 @@ async def adn_system(
                     "Server name and tool name required for external calls",
                 )
 
-            from advanced_memory.mcp.tools.external_mcp_clients import external_mcp_clients
+            from advanced_memory.mcp.tools.external_mcp_clients import (
+                external_mcp_clients,
+            )
 
             result = await external_mcp_clients.fn(
                 operation="call",
@@ -117,13 +85,17 @@ async def adn_system(
                     "Topic required for inter-server operations",
                 )
 
-            from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
+            from advanced_memory.mcp.tools.inter_server_tools import (
+                agentic_content_workflow,
+            )
 
             result = await agentic_content_workflow.fn(topic)
             return build_success_response("inter_server", result)
 
         elif operation == "sampling_status":
-            from advanced_memory.mcp.tools.inter_server_tools import sampling_capabilities_status
+            from advanced_memory.mcp.tools.inter_server_tools import (
+                sampling_capabilities_status,
+            )
 
             result = await sampling_capabilities_status.fn()
             return build_success_response("sampling_status", result)
@@ -131,10 +103,14 @@ async def adn_system(
         elif operation == "batch_process":
             if not topic:
                 return build_error_response(
-                    "VALIDATION_ERROR", "MISSING_PARAMETER", "Topic required for batch processing"
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "Topic required for batch processing",
                 )
 
-            from advanced_memory.mcp.tools.inter_server_tools import intelligent_batch_processor
+            from advanced_memory.mcp.tools.inter_server_tools import (
+                intelligent_batch_processor,
+            )
 
             result = await intelligent_batch_processor.fn(topic)
             return build_success_response("batch_process", result)
@@ -147,7 +123,9 @@ async def adn_system(
                     "Topic required for workflow operations",
                 )
 
-            from advanced_memory.mcp.tools.inter_server_tools import agentic_content_workflow
+            from advanced_memory.mcp.tools.inter_server_tools import (
+                agentic_content_workflow,
+            )
 
             result = await agentic_content_workflow.fn(topic)
             return build_success_response("workflow", result)
@@ -160,7 +138,9 @@ async def adn_system(
 
         else:
             return build_error_response(
-                "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown system operation: {operation}"
+                "VALIDATION_ERROR",
+                "VALIDATION_ERROR",
+                f"Unknown system operation: {operation}",
             )
 
     except Exception as e:

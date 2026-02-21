@@ -1,0 +1,823 @@
+2026-02-21 19:36:38.359 | DEBUG    | advanced_memory.api.template_loader:__init__:236 - Initialized template loader with directory: D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\templates
+2026-02-21 19:36:38.970 | DEBUG    | advanced_memory.mcp.async_client:create_client:27 - Creating ASGI client for local Advanced Memory API
+2026-02-21 19:36:39.044 | DEBUG    | advanced_memory.db:_create_engine_and_session:80 - Creating engine for db_url: sqlite+aiosqlite:///C:\Users\sandr\.advanced-memory\memory.db
+2026-02-21 19:36:39.059 | INFO     | advanced_memory.db:run_migrations:232 - Running database migrations...
+2026-02-21 19:36:39.078 | INFO     | advanced_memory.db:run_migrations:251 - Migrations completed successfully
+2026-02-21 19:36:39.079 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-02-21 19:36:39.109 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Entity (skip=0, limit=None)
+2026-02-21 19:36:39.339 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 2209 Entity records
+2026-02-21 19:36:39.479 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Entity (skip=0, limit=None)
+2026-02-21 19:36:39.730 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 2209 Entity records
+2026-02-21 19:36:40.393 | DEBUG    | advanced_memory.api.routers.memory_router:recent:38 - Getting recent context: `[<SearchItemType.ENTITY: 'entity'>, <SearchItemType.OBSERVATION: 'observation'>]` depth: `1` timeframe: `365d` page: `1` page_size: `1` max_related: `0`
+2026-02-21 19:36:40.394 | DEBUG    | advanced_memory.services.context_service:build_context:107 - Building context for URI: 'None' depth: '1' since: '2025-02-21 19:36:40.394598' limit: '1' offset: '0'  max_related: '0'
+2026-02-21 19:36:40.394 | DEBUG    | advanced_memory.services.context_service:build_context:127 - Build context for '[<SearchItemType.ENTITY: 'entity'>, <SearchItemType.OBSERVATION: 'observation'>]'
+C:\Users\sandr\AppData\Roaming\Python\Python313\site-packages\aiosqlite\core.py:105: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+  result = function()
+2026-02-21 19:36:40.466 | DEBUG    | advanced_memory.services.context_service:build_context:135 - found primary type_id_pairs: 1
+2026-02-21 19:36:40.466 | DEBUG    | advanced_memory.services.context_service:find_related:255 - Finding connected items for 1 entities with depth 2
+2026-02-21 19:36:40.470 | DEBUG    | advanced_memory.repository.search_repository:execute_query:651 - Query executed successfully in 0.00s.
+2026-02-21 19:36:40.471 | DEBUG    | advanced_memory.services.context_service:build_context:141 - Found 0 related results
+2026-02-21 19:36:40.475 | DEBUG    | advanced_memory.services.context_service:build_context:160 - Found observations for 0 entities
+2026-02-21 19:36:40.475 | DEBUG    | advanced_memory.api.routers.memory_router:recent:53 - Recent context: {"results":[{"primary_result":{"type":"entity","permalink":"research/ai-translation-models/qwen3-live-translate-november-2025","title":"Qwen3-LiveTranslate November 2025","content":"# Qwen3-LiveTranslate: Comprehensive Overview (November 2025)\n\n## Executive Summary\nQwen3-LiveTranslate is Alibaba's real-time multimodal translation system announced September 2025. Vision-enhanced, works offline, sub-3-second latency, handles speec","file_path":"research/ai-translation-models/Qwen3-LiveTranslate_November_2025.md","created_at":"2025-11-08T17:13:04.942158"},"observations":[],"related_results":[]}],"metadata":{"uri":null,"types":["entity","observation"],"depth":1,"timeframe":"2025-02-21T19:36:40.394598","generated_at":"2026-02-21T18:36:40.475606Z","primary_count":1,"related_count":0,"total_results":1,"total_relations":0,"total_observations":0},"page":1,"page_size":1}
+2026-02-21 19:36:40.493 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:40.494 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3A27E5400> 
+2026-02-21 19:36:40.495 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: research/ai-translation-models/qwen3-live-translate-november-2025
+2026-02-21 19:36:40.507 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: research/ai-translation-models/qwen3-live-translate-november-2025
+2026-02-21 19:36:40.519 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:40.519 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3A286CA50> 
+2026-02-21 19:36:40.546 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:40.546 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3A286F890> 
+2026-02-21 19:36:40.561 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6220, None, None]
+2026-02-21 19:36:40.561 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6220, None, None]
+2026-02-21 19:36:40.587 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:40.587 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3A2857820> 
+2026-02-21 19:36:40.647 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4492, None, None]
+2026-02-21 19:36:40.648 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4492, None, None]
+2026-02-21 19:36:40.665 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4696, None, None]
+2026-02-21 19:36:40.666 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4696, None, None]
+2026-02-21 19:36:40.675 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4697, None, None]
+2026-02-21 19:36:40.675 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4697, None, None]
+2026-02-21 19:36:40.686 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4699, None, None]
+2026-02-21 19:36:40.687 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4699, None, None]
+2026-02-21 19:36:40.695 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4700, None, None]
+2026-02-21 19:36:40.695 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4700, None, None]
+2026-02-21 19:36:40.704 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4701, None, None]
+2026-02-21 19:36:40.704 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4701, None, None]
+2026-02-21 19:36:40.713 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4702, None, None]
+2026-02-21 19:36:40.713 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4702, None, None]
+2026-02-21 19:36:40.722 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4703, None, None]
+2026-02-21 19:36:40.722 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4703, None, None]
+2026-02-21 19:36:40.733 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4704, None, None]
+2026-02-21 19:36:40.734 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4704, None, None]
+2026-02-21 19:36:40.743 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4705, None, None]
+2026-02-21 19:36:40.743 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4705, None, None]
+2026-02-21 19:36:40.754 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4706, None, None]
+2026-02-21 19:36:40.754 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4706, None, None]
+2026-02-21 19:36:40.763 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4707, None, None]
+2026-02-21 19:36:40.763 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4707, None, None]
+2026-02-21 19:36:40.776 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4708, None, None]
+2026-02-21 19:36:40.776 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4708, None, None]
+2026-02-21 19:36:40.785 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4709, None, None]
+2026-02-21 19:36:40.785 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4709, None, None]
+2026-02-21 19:36:40.793 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4710, None, None]
+2026-02-21 19:36:40.793 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4710, None, None]
+2026-02-21 19:36:40.806 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4711, None, None]
+2026-02-21 19:36:40.806 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4711, None, None]
+2026-02-21 19:36:40.812 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4712, None, None]
+2026-02-21 19:36:40.812 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4712, None, None]
+2026-02-21 19:36:40.819 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4713, None, None]
+2026-02-21 19:36:40.819 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4713, None, None]
+2026-02-21 19:36:40.825 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4714, None, None]
+2026-02-21 19:36:40.825 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4714, None, None]
+2026-02-21 19:36:40.834 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4715, None, None]
+2026-02-21 19:36:40.834 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4715, None, None]
+2026-02-21 19:36:40.840 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4717, None, None]
+2026-02-21 19:36:40.840 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4717, None, None]
+2026-02-21 19:36:40.846 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4719, None, None]
+2026-02-21 19:36:40.846 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4719, None, None]
+2026-02-21 19:36:40.852 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4720, None, None]
+2026-02-21 19:36:40.852 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4720, None, None]
+2026-02-21 19:36:40.857 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4721, None, None]
+2026-02-21 19:36:40.857 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4721, None, None]
+2026-02-21 19:36:40.862 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4722, None, None]
+2026-02-21 19:36:40.862 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4722, None, None]
+2026-02-21 19:36:40.869 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4723, None, None]
+2026-02-21 19:36:40.869 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4723, None, None]
+2026-02-21 19:36:40.876 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4724, None, None]
+2026-02-21 19:36:40.876 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4724, None, None]
+2026-02-21 19:36:40.886 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4725, None, None]
+2026-02-21 19:36:40.886 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4725, None, None]
+2026-02-21 19:36:40.892 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4727, None, None]
+2026-02-21 19:36:40.892 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4727, None, None]
+2026-02-21 19:36:40.900 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4728, None, None]
+2026-02-21 19:36:40.900 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4728, None, None]
+2026-02-21 19:36:40.906 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4729, None, None]
+2026-02-21 19:36:40.906 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4729, None, None]
+2026-02-21 19:36:40.912 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4730, None, None]
+2026-02-21 19:36:40.912 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4730, None, None]
+2026-02-21 19:36:40.922 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4732, None, None]
+2026-02-21 19:36:40.922 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4732, None, None]
+2026-02-21 19:36:40.930 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4733, None, None]
+2026-02-21 19:36:40.931 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4733, None, None]
+2026-02-21 19:36:40.937 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4735, None, None]
+2026-02-21 19:36:40.937 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4735, None, None]
+2026-02-21 19:36:40.947 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4737, None, None]
+2026-02-21 19:36:40.947 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4737, None, None]
+2026-02-21 19:36:40.953 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4738, None, None]
+2026-02-21 19:36:40.953 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4738, None, None]
+2026-02-21 19:36:40.960 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4739, None, None]
+2026-02-21 19:36:40.960 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4739, None, None]
+2026-02-21 19:36:40.967 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4740, None, None]
+2026-02-21 19:36:40.967 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4740, None, None]
+2026-02-21 19:36:40.972 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4741, None, None]
+2026-02-21 19:36:40.973 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4741, None, None]
+2026-02-21 19:36:40.982 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4742, None, None]
+2026-02-21 19:36:40.982 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4742, None, None]
+2026-02-21 19:36:40.989 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4743, None, None]
+2026-02-21 19:36:40.989 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4743, None, None]
+2026-02-21 19:36:40.999 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4744, None, None]
+2026-02-21 19:36:40.999 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4744, None, None]
+2026-02-21 19:36:41.008 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4745, None, None]
+2026-02-21 19:36:41.008 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4745, None, None]
+2026-02-21 19:36:41.015 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4746, None, None]
+2026-02-21 19:36:41.015 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4746, None, None]
+2026-02-21 19:36:41.021 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4747, None, None]
+2026-02-21 19:36:41.021 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4747, None, None]
+2026-02-21 19:36:41.031 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4748, None, None]
+2026-02-21 19:36:41.031 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4748, None, None]
+2026-02-21 19:36:41.042 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4749, None, None]
+2026-02-21 19:36:41.042 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4749, None, None]
+2026-02-21 19:36:41.049 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4750, None, None]
+2026-02-21 19:36:41.049 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4750, None, None]
+2026-02-21 19:36:41.058 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4751, None, None]
+2026-02-21 19:36:41.058 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4751, None, None]
+2026-02-21 19:36:41.065 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4752, None, None]
+2026-02-21 19:36:41.065 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4752, None, None]
+2026-02-21 19:36:41.072 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4753, None, None]
+2026-02-21 19:36:41.072 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4753, None, None]
+2026-02-21 19:36:41.078 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4754, None, None]
+2026-02-21 19:36:41.078 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4754, None, None]
+2026-02-21 19:36:41.085 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4755, None, None]
+2026-02-21 19:36:41.085 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4755, None, None]
+2026-02-21 19:36:41.090 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4756, None, None]
+2026-02-21 19:36:41.090 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4756, None, None]
+2026-02-21 19:36:41.098 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4757, None, None]
+2026-02-21 19:36:41.098 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4757, None, None]
+2026-02-21 19:36:41.108 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4758, None, None]
+2026-02-21 19:36:41.109 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4758, None, None]
+2026-02-21 19:36:41.119 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4759, None, None]
+2026-02-21 19:36:41.120 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4759, None, None]
+2026-02-21 19:36:41.128 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4760, None, None]
+2026-02-21 19:36:41.128 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4760, None, None]
+2026-02-21 19:36:41.138 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4761, None, None]
+2026-02-21 19:36:41.138 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4761, None, None]
+2026-02-21 19:36:41.146 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4762, None, None]
+2026-02-21 19:36:41.146 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4762, None, None]
+2026-02-21 19:36:41.154 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4763, None, None]
+2026-02-21 19:36:41.154 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4763, None, None]
+2026-02-21 19:36:41.161 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4764, None, None]
+2026-02-21 19:36:41.161 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4764, None, None]
+2026-02-21 19:36:41.169 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4765, None, None]
+2026-02-21 19:36:41.169 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4765, None, None]
+2026-02-21 19:36:41.175 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4766, None, None]
+2026-02-21 19:36:41.175 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4766, None, None]
+2026-02-21 19:36:41.181 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4767, None, None]
+2026-02-21 19:36:41.181 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4767, None, None]
+2026-02-21 19:36:41.186 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4768, None, None]
+2026-02-21 19:36:41.186 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4768, None, None]
+2026-02-21 19:36:41.192 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4769, None, None]
+2026-02-21 19:36:41.192 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4769, None, None]
+2026-02-21 19:36:41.199 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4770, None, None]
+2026-02-21 19:36:41.199 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4770, None, None]
+2026-02-21 19:36:41.204 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4771, None, None]
+2026-02-21 19:36:41.204 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4771, None, None]
+2026-02-21 19:36:41.213 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4772, None, None]
+2026-02-21 19:36:41.213 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4772, None, None]
+2026-02-21 19:36:41.219 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4773, None, None]
+2026-02-21 19:36:41.219 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4773, None, None]
+2026-02-21 19:36:41.224 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4774, None, None]
+2026-02-21 19:36:41.224 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4774, None, None]
+2026-02-21 19:36:41.231 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4775, None, None]
+2026-02-21 19:36:41.231 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4775, None, None]
+2026-02-21 19:36:41.237 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4776, None, None]
+2026-02-21 19:36:41.237 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4776, None, None]
+2026-02-21 19:36:41.243 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4777, None, None]
+2026-02-21 19:36:41.243 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4777, None, None]
+2026-02-21 19:36:41.248 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4778, None, None]
+2026-02-21 19:36:41.249 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4778, None, None]
+2026-02-21 19:36:41.255 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4779, None, None]
+2026-02-21 19:36:41.255 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4779, None, None]
+2026-02-21 19:36:41.262 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4780, None, None]
+2026-02-21 19:36:41.262 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4780, None, None]
+2026-02-21 19:36:41.268 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4781, None, None]
+2026-02-21 19:36:41.268 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4781, None, None]
+2026-02-21 19:36:41.283 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4782, None, None]
+2026-02-21 19:36:41.283 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4782, None, None]
+2026-02-21 19:36:41.292 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4783, None, None]
+2026-02-21 19:36:41.292 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4783, None, None]
+2026-02-21 19:36:41.301 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4784, None, None]
+2026-02-21 19:36:41.301 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4784, None, None]
+2026-02-21 19:36:41.309 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4785, None, None]
+2026-02-21 19:36:41.309 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4785, None, None]
+2026-02-21 19:36:41.318 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4787, None, None]
+2026-02-21 19:36:41.318 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4787, None, None]
+2026-02-21 19:36:41.323 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4788, None, None]
+2026-02-21 19:36:41.323 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4788, None, None]
+2026-02-21 19:36:41.330 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4789, None, None]
+2026-02-21 19:36:41.330 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4789, None, None]
+2026-02-21 19:36:41.346 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4790, None, None]
+2026-02-21 19:36:41.347 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4790, None, None]
+2026-02-21 19:36:41.354 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4791, None, None]
+2026-02-21 19:36:41.354 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4791, None, None]
+2026-02-21 19:36:41.368 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4792, None, None]
+2026-02-21 19:36:41.368 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4792, None, None]
+2026-02-21 19:36:41.375 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4793, None, None]
+2026-02-21 19:36:41.375 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4793, None, None]
+2026-02-21 19:36:41.382 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4794, None, None]
+2026-02-21 19:36:41.382 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4794, None, None]
+2026-02-21 19:36:41.388 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4795, None, None]
+2026-02-21 19:36:41.388 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4795, None, None]
+2026-02-21 19:36:41.394 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4797, None, None]
+2026-02-21 19:36:41.394 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4797, None, None]
+2026-02-21 19:36:41.402 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4798, None, None]
+2026-02-21 19:36:41.402 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4798, None, None]
+2026-02-21 19:36:41.409 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4799, None, None]
+2026-02-21 19:36:41.409 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4799, None, None]
+2026-02-21 19:36:41.415 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4800, None, None]
+2026-02-21 19:36:41.415 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4800, None, None]
+2026-02-21 19:36:41.420 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4801, None, None]
+2026-02-21 19:36:41.420 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4801, None, None]
+2026-02-21 19:36:41.426 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4802, None, None]
+2026-02-21 19:36:41.426 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4802, None, None]
+2026-02-21 19:36:41.433 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4803, None, None]
+2026-02-21 19:36:41.433 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4803, None, None]
+2026-02-21 19:36:41.890 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:41.890 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AABF8D60> 
+2026-02-21 19:36:41.892 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: integrations/claude-skills/claude-skills-integration
+2026-02-21 19:36:41.991 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:41.991 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABC81D90> 
+2026-02-21 19:36:41.993 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_online-chat-multiuser-ai/chunk_01.md
+2026-02-21 19:36:42.002 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.003 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA79CE20> 
+2026-02-21 19:36:42.004 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/analysis/ai-2027-analysis-strategic-assessment-and-implications/ai-2027-analysis-strategic-assessment-and-implications
+2026-02-21 19:36:42.040 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.040 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA7707C0> 
+2026-02-21 19:36:42.042 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmain-project-consolidation-complete
+2026-02-21 19:36:42.046 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.046 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAE29D50> 
+2026-02-21 19:36:42.048 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/General_Software_Tools/development_tools/package_managers/npm.md
+2026-02-21 19:36:42.067 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.068 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD79350> 
+2026-02-21 19:36:42.069 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-fixesnotepad-mcp-fix-python-313-compatibility-issue
+2026-02-21 19:36:42.071 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.071 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA7635C0> 
+2026-02-21 19:36:42.072 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_plex-api-key/chunk_01.md
+2026-02-21 19:36:42.074 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.074 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA71EE40> 
+2026-02-21 19:36:42.075 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/analysis/ahk-mcp-analysis-complete-2025-09-09/auto-hotkey-claude-mcp-scripts-analysis-complete-2025-09-09-17-35
+2026-02-21 19:36:42.077 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.078 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAF50130> 
+2026-02-21 19:36:42.078 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/05_control_flow.md
+2026-02-21 19:36:42.083 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.083 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA9DF850> 
+2026-02-21 19:36:42.084 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development/advanced-memory-mcp-bug-report-note-deletion-protected-path
+2026-02-21 19:36:42.088 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.089 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA657930> 
+2026-02-21 19:36:42.090 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-docs-windsurf-generated-flows-newthingy-2025-05-06-robotic-whimsy-builder
+2026-02-21 19:36:42.098 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.098 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA381B50> 
+2026-02-21 19:36:42.100 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsplexmcp-available-tools-inventory-20250907
+2026-02-21 19:36:42.103 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.103 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA382150> 
+2026-02-21 19:36:42.105 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-analysisimmich-mcp-server-deep-dive-analysis-prime-candidate-assessment-2025-08-11-2145
+2026-02-21 19:36:42.108 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.108 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB2555A0> 
+2026-02-21 19:36:42.109 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: depot/06-archive/tests/auto-hotkey-test-2025-09-04-17-12/auto-hotkey-test-2025-09-04-17-12
+2026-02-21 19:36:42.128 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.128 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB2DA410> 
+2026-02-21 19:36:42.130 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/SW_Development/frameworks/node_js/tesseract_ocr.md
+2026-02-21 19:36:42.198 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: integrations/claude-skills/claude-skills-integration
+2026-02-21 19:36:42.215 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmain-project-consolidation-complete
+2026-02-21 19:36:42.218 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/analysis/ahk-mcp-analysis-complete-2025-09-09/auto-hotkey-claude-mcp-scripts-analysis-complete-2025-09-09-17-35
+2026-02-21 19:36:42.231 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsplexmcp-available-tools-inventory-20250907
+2026-02-21 19:36:42.233 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development/advanced-memory-mcp-bug-report-note-deletion-protected-path
+2026-02-21 19:36:42.235 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-docs-windsurf-generated-flows-newthingy-2025-05-06-robotic-whimsy-builder
+2026-02-21 19:36:42.247 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-analysisimmich-mcp-server-deep-dive-analysis-prime-candidate-assessment-2025-08-11-2145
+2026-02-21 19:36:42.248 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: depot/06-archive/tests/auto-hotkey-test-2025-09-04-17-12/auto-hotkey-test-2025-09-04-17-12
+2026-02-21 19:36:42.271 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-fixesnotepad-mcp-fix-python-313-compatibility-issue
+2026-02-21 19:36:42.308 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_online-chat-multiuser-ai/chunk_01.md
+2026-02-21 19:36:42.325 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/General_Software_Tools/development_tools/package_managers/npm.md
+2026-02-21 19:36:42.335 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.335 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA9C3750> 
+2026-02-21 19:36:42.337 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development/tag-test-note
+2026-02-21 19:36:42.344 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/05_control_flow.md
+2026-02-21 19:36:42.350 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.350 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAC547D0> 
+2026-02-21 19:36:42.352 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: dev-statusgithub-mcp-fix-docker-vs-cloud-options
+2026-02-21 19:36:42.356 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/analysis/ai-2027-analysis-strategic-assessment-and-implications/ai-2027-analysis-strategic-assessment-and-implications
+2026-02-21 19:36:42.359 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_plex-api-key/chunk_01.md
+2026-02-21 19:36:42.367 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.367 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB422A80> 
+2026-02-21 19:36:42.369 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/image_and_video/veo_3.md
+2026-02-21 19:36:42.374 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.374 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD0BB50> 
+2026-02-21 19:36:42.375 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: dev-toolszed-mcp-error-improvement-plan
+2026-02-21 19:36:42.377 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.377 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA6CC650> 
+2026-02-21 19:36:42.378 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsrobot-vs-human-pursuit-tactics-traditional-response-failure
+2026-02-21 19:36:42.381 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.381 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3A2426350> 
+2026-02-21 19:36:42.383 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmagicians-apprentice-implementation-plan-next-actions
+2026-02-21 19:36:42.392 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.392 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB36A4A0> 
+2026-02-21 19:36:42.393 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-dev-scathing-blender-mcp-analysis-aug-9-2025-1903-cet
+2026-02-21 19:36:42.401 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.402 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCE99D0> 
+2026-02-21 19:36:42.403 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsgimp-mcp-tools-registration-fix-guide-2025-08-28-1152
+2026-02-21 19:36:42.420 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/SW_Development/frameworks/node_js/tesseract_ocr.md
+2026-02-21 19:36:42.425 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.425 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE7D3D0> 
+2026-02-21 19:36:42.427 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projects-vboxmcp-import-error-fix
+2026-02-21 19:36:42.458 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.459 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6CE7B0> 
+2026-02-21 19:36:42.460 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-projectsmcp-server-template-post-fix-plan-assessment-2025-08-17
+2026-02-21 19:36:42.465 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.466 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE66E10> 
+2026-02-21 19:36:42.467 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-workfastmcp-banner-issue-complete-analysis-solution
+2026-02-21 19:36:42.476 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development/tag-test-note
+2026-02-21 19:36:42.483 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.483 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6CD0D0> 
+2026-02-21 19:36:42.484 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: daily-logscalibremcp-dxt-packaging-process-in-progress
+2026-02-21 19:36:42.532 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.533 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDC1B50> 
+2026-02-21 19:36:42.535 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development/patterns/graceful-fallback-pattern-for-enum-validation
+2026-02-21 19:36:42.539 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsrobot-vs-human-pursuit-tactics-traditional-response-failure
+2026-02-21 19:36:42.542 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.542 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA915D90> 
+2026-02-21 19:36:42.544 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: veogenveogen-status-update-backend-fixed-frontend-issue-remains-aug-20-2025
+2026-02-21 19:36:42.556 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: dev-toolszed-mcp-error-improvement-plan
+2026-02-21 19:36:42.568 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsgimp-mcp-tools-registration-fix-guide-2025-08-28-1152
+2026-02-21 19:36:42.575 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: dev-statusgithub-mcp-fix-docker-vs-cloud-options
+2026-02-21 19:36:42.588 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmagicians-apprentice-implementation-plan-next-actions
+2026-02-21 19:36:42.594 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.594 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE67E30> 
+2026-02-21 19:36:42.596 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/07_advanced_topics.md
+2026-02-21 19:36:42.613 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-dev-scathing-blender-mcp-analysis-aug-9-2025-1903-cet
+2026-02-21 19:36:42.615 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-projectsmcp-server-template-post-fix-plan-assessment-2025-08-17
+2026-02-21 19:36:42.631 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.632 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AACD4590> 
+2026-02-21 19:36:42.633 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development/issues/space-key-hotkey-fix
+2026-02-21 19:36:42.649 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: daily-logscalibremcp-dxt-packaging-process-in-progress
+2026-02-21 19:36:42.650 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: veogenveogen-status-update-backend-fixed-frontend-issue-remains-aug-20-2025
+2026-02-21 19:36:42.652 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projects-vboxmcp-import-error-fix
+2026-02-21 19:36:42.663 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-workfastmcp-banner-issue-complete-analysis-solution
+2026-02-21 19:36:42.666 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.666 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B70B0> 
+2026-02-21 19:36:42.668 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsdatabase-operations-mcp-import-fix-complete
+2026-02-21 19:36:42.683 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/image_and_video/veo_3.md
+2026-02-21 19:36:42.686 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.686 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE65C70> 
+2026-02-21 19:36:42.687 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: config/firefox-profile-path-for-dbops-2025-10-10-1540
+2026-02-21 19:36:42.697 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.697 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B5670> 
+2026-02-21 19:36:42.698 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: fixesblender-mcp-fastmcp-initialization-fixed-2025-08-16-0012
+2026-02-21 19:36:42.703 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.703 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4170> 
+2026-02-21 19:36:42.705 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: referenceclaude-pro-account-status-chat-length-analysis
+2026-02-21 19:36:42.719 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.719 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B5970> 
+2026-02-21 19:36:42.721 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-analysiscalibremcp-implementation-plan-e-book-library-core
+2026-02-21 19:36:42.739 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.739 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE7D610> 
+2026-02-21 19:36:42.741 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projects-basic-memory-mcp-json-error-fix
+2026-02-21 19:36:42.752 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.752 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4290> 
+2026-02-21 19:36:42.753 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-solutionsfastmcp-terminology-clarification-import-error-fix
+2026-02-21 19:36:42.770 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.770 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABF45010> 
+2026-02-21 19:36:42.772 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsdatabase-operations-mcp-database-operations-mcp-modular-implementation-progress
+2026-02-21 19:36:42.785 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsdatabase-operations-mcp-import-fix-complete
+2026-02-21 19:36:42.787 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.788 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4B30> 
+2026-02-21 19:36:42.789 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: tech-notes/claude-desktop-mcp-config-json-comment-workarounds-2025-10-09-1430
+2026-02-21 19:36:42.794 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.794 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4710> 
+2026-02-21 19:36:42.795 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: debug-sessionsimmich-photo-server-access-session-2025-08-11-1715
+2026-02-21 19:36:42.802 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.803 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE7C050> 
+2026-02-21 19:36:42.804 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/persons/stuart_russell.md
+2026-02-21 19:36:42.823 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.823 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDE6930> 
+2026-02-21 19:36:42.825 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: daily-logsmcp-dashboard-integration-option-a-implementation-start
+2026-02-21 19:36:42.831 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: config/firefox-profile-path-for-dbops-2025-10-10-1540
+2026-02-21 19:36:42.838 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development/patterns/graceful-fallback-pattern-for-enum-validation
+2026-02-21 19:36:42.842 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: referenceclaude-pro-account-status-chat-length-analysis
+2026-02-21 19:36:42.849 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: fixesblender-mcp-fastmcp-initialization-fixed-2025-08-16-0012
+2026-02-21 19:36:42.852 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/07_advanced_topics.md
+2026-02-21 19:36:42.853 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-analysiscalibremcp-implementation-plan-e-book-library-core
+2026-02-21 19:36:42.887 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development/issues/space-key-hotkey-fix
+2026-02-21 19:36:42.889 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-solutionsfastmcp-terminology-clarification-import-error-fix
+2026-02-21 19:36:42.904 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projects-basic-memory-mcp-json-error-fix
+2026-02-21 19:36:42.905 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: debug-sessionsimmich-photo-server-access-session-2025-08-11-1715
+2026-02-21 19:36:42.913 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.914 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F42F0> 
+2026-02-21 19:36:42.915 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcp-serverslocal-llm-mcp-fixed-functionality-status-update
+2026-02-21 19:36:42.927 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.927 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE353D0> 
+2026-02-21 19:36:42.928 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development-guidespostman-and-mcp-server-integration-guide-2025-09-24
+2026-02-21 19:36:42.932 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.932 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD051F0> 
+2026-02-21 19:36:42.934 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_automated-research-papers/README.md
+2026-02-21 19:36:42.939 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: tech-notes/claude-desktop-mcp-config-json-comment-workarounds-2025-10-09-1430
+2026-02-21 19:36:42.942 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsdatabase-operations-mcp-database-operations-mcp-modular-implementation-progress
+2026-02-21 19:36:42.943 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.943 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5DF110> 
+2026-02-21 19:36:42.945 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/breakthroughs/claude-code-worktrees-documentation-complete-revolutionary-multi-terminal-development/claude-code-worktrees-documentation-complete-revolutionary-multi-terminal-development
+2026-02-21 19:36:42.953 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.954 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDE7C50> 
+2026-02-21 19:36:42.955 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsunity3d-mcpunity3d-mcp-scathing-analysis-2025-08-09
+2026-02-21 19:36:42.958 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.959 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDE78F0> 
+2026-02-21 19:36:42.960 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-01_garbage-serious-analysis/chunk_01.md
+2026-02-21 19:36:42.964 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.964 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5DFE30> 
+2026-02-21 19:36:42.965 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/SW_Development/docsify-plugin-samples/edit-link-sample.md
+2026-02-21 19:36:42.975 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: daily-logsmcp-dashboard-integration-option-a-implementation-start
+2026-02-21 19:36:42.993 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:42.994 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD07110> 
+2026-02-21 19:36:42.995 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-analysisvboxmcp-deep-dive-analysis-critical-issues-found-2025-08-11-1720
+2026-02-21 19:36:43.006 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.006 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6B24B0> 
+2026-02-21 19:36:43.007 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 03-technical-docs/standards/Security Standards.md
+2026-02-21 19:36:43.049 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.050 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDFDC10> 
+2026-02-21 19:36:43.052 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: developmentfastmcpfastmcp-context-state-management-1
+2026-02-21 19:36:43.058 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.058 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCE8170> 
+2026-02-21 19:36:43.059 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsautohotkeyautohotkey-dev-tools-chunk-1-completed
+2026-02-21 19:36:43.072 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development-guidespostman-and-mcp-server-integration-guide-2025-09-24
+2026-02-21 19:36:43.081 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/persons/stuart_russell.md
+2026-02-21 19:36:43.087 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/breakthroughs/claude-code-worktrees-documentation-complete-revolutionary-multi-terminal-development/claude-code-worktrees-documentation-complete-revolutionary-multi-terminal-development
+2026-02-21 19:36:43.092 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcp-serverslocal-llm-mcp-fixed-functionality-status-update
+2026-02-21 19:36:43.097 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.098 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE4C350> 
+2026-02-21 19:36:43.099 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/hardware/europe_ai_landscape.md
+2026-02-21 19:36:43.103 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.103 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCE8EF0> 
+2026-02-21 19:36:43.105 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: fixesgpu-docker-support-solution-rtx-4090-vllm-fix
+2026-02-21 19:36:43.107 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsunity3d-mcpunity3d-mcp-scathing-analysis-2025-08-09
+2026-02-21 19:36:43.118 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.119 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD06930> 
+2026-02-21 19:36:43.120 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: pywinauto-mcpdocsocr-fix-documentation-for-windsurf
+2026-02-21 19:36:43.203 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: developmentfastmcpfastmcp-context-state-management-1
+2026-02-21 19:36:43.207 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-analysisvboxmcp-deep-dive-analysis-critical-issues-found-2025-08-11-1720
+2026-02-21 19:36:43.215 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsautohotkeyautohotkey-dev-tools-chunk-1-completed
+2026-02-21 19:36:43.228 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.228 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AACD61B0> 
+2026-02-21 19:36:43.230 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcp-server-inventory-complete-september-2024
+2026-02-21 19:36:43.247 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.247 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6C9F70> 
+2026-02-21 19:36:43.249 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: dev-logautohotkey-ollama-chatbot-reserved-word-return-error
+2026-02-21 19:36:43.251 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.252 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAF100B0> 
+2026-02-21 19:36:43.253 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 03-technical-docs/standards/CSS Standards.md
+2026-02-21 19:36:43.258 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-01_garbage-serious-analysis/chunk_01.md
+2026-02-21 19:36:43.260 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.260 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6CB230> 
+2026-02-21 19:36:43.262 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/SW_Development/ui_libraries/react_bootstrap/README.md
+2026-02-21 19:36:43.264 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_automated-research-papers/README.md
+2026-02-21 19:36:43.270 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: fixesgpu-docker-support-solution-rtx-4090-vllm-fix
+2026-02-21 19:36:43.275 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/SW_Development/docsify-plugin-samples/edit-link-sample.md
+2026-02-21 19:36:43.289 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.290 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDFD2B0> 
+2026-02-21 19:36:43.291 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-development/2025-10-08-1645-mcp-image-support-input-output-status
+2026-02-21 19:36:43.320 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 03-technical-docs/standards/Security Standards.md
+2026-02-21 19:36:43.346 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.347 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABC9EE70> 
+2026-02-21 19:36:43.348 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcp-serversdatabase-operations-mcp-server-status-fix
+2026-02-21 19:36:43.356 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.357 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F5E50> 
+2026-02-21 19:36:43.358 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsdatabase-operations-mcp-database-operations-mcp-dxt-manifest-complete
+2026-02-21 19:36:43.375 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: pywinauto-mcpdocsocr-fix-documentation-for-windsurf
+2026-02-21 19:36:43.386 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.386 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDFF530> 
+2026-02-21 19:36:43.388 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: dev-statuscalibre-mcp-status-analysis-july-25-2025-0851
+2026-02-21 19:36:43.406 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: dev-logautohotkey-ollama-chatbot-reserved-word-return-error
+2026-02-21 19:36:43.411 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/hardware/europe_ai_landscape.md
+2026-02-21 19:36:43.417 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.417 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5DE930> 
+2026-02-21 19:36:43.418 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectstapo-camera-mcptapo-camera-mcp-extension-troubleshooting
+2026-02-21 19:36:43.429 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.430 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F5DF0> 
+2026-02-21 19:36:43.431 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/basics/transformer_models.md
+2026-02-21 19:36:43.434 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.434 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDFEFF0> 
+2026-02-21 19:36:43.436 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-07_windsurf-wave-8/chunk_02.md
+2026-02-21 19:36:43.439 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-development/2025-10-08-1645-mcp-image-support-input-output-status
+2026-02-21 19:36:43.441 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.441 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4590> 
+2026-02-21 19:36:43.443 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/persons/nick_bostrom.md
+2026-02-21 19:36:43.446 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcp-server-inventory-complete-september-2024
+2026-02-21 19:36:43.474 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.474 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA8E12B0> 
+2026-02-21 19:36:43.475 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 03-technical-docs/reference/rules/PowerShell_Rules.md
+2026-02-21 19:36:43.497 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsdatabase-operations-mcp-database-operations-mcp-dxt-manifest-complete
+2026-02-21 19:36:43.513 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcp-serversdatabase-operations-mcp-server-status-fix
+2026-02-21 19:36:43.519 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: dev-statuscalibre-mcp-status-analysis-july-25-2025-0851
+2026-02-21 19:36:43.522 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.523 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5DFE90> 
+2026-02-21 19:36:43.524 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: local-llm-mcplocal-llm-mcp-docker-vllm-01011-continue-work
+2026-02-21 19:36:43.542 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 03-technical-docs/standards/CSS Standards.md
+2026-02-21 19:36:43.548 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.549 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABC846B0> 
+2026-02-21 19:36:43.550 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsbig-three-media-servers-tier-1-reclassification
+2026-02-21 19:36:43.554 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.555 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA9142F0> 
+2026-02-21 19:36:43.556 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-05_ms-ai-toolkit-vscode/section_05_bibliography.md
+2026-02-21 19:36:43.560 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectstapo-camera-mcptapo-camera-mcp-extension-troubleshooting
+2026-02-21 19:36:43.566 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/SW_Development/ui_libraries/react_bootstrap/README.md
+2026-02-21 19:36:43.568 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.569 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD05B50> 
+2026-02-21 19:36:43.570 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcpmcp-meta-agentic-workflow-phase-3-implementation-planning
+2026-02-21 19:36:43.575 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.576 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE7F9B0> 
+2026-02-21 19:36:43.577 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: developmentthe-infinite-database-rabbit-hole-everything-is-connected-data
+2026-02-21 19:36:43.624 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.625 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA8E0D10> 
+2026-02-21 19:36:43.626 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-developmentstandards-distribution-dxt-guide-complete-hard-link-solution
+2026-02-21 19:36:43.644 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.645 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABF44E30> 
+2026-02-21 19:36:43.647 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/daily-logs/calibre-mcp-dxt-prompts-recommended-templates/calibre-mcp-dxt-prompts-recommended-templates
+2026-02-21 19:36:43.652 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: local-llm-mcplocal-llm-mcp-docker-vllm-01011-continue-work
+2026-02-21 19:36:43.669 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.669 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B7950> 
+2026-02-21 19:36:43.671 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: referenceclaude-startup-note-calibremcp-complete-next-mcp-projects
+2026-02-21 19:36:43.690 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.690 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6CADB0> 
+2026-02-21 19:36:43.692 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-analysisvirtualbox-multi-instance-gpu-analysis-2025-08-03
+2026-02-21 19:36:43.700 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.700 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6C84D0> 
+2026-02-21 19:36:43.701 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: daily-logsdbtropes-mcp-vs-database-operations-mcp-extension-2025-08-30-1115
+2026-02-21 19:36:43.714 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsbig-three-media-servers-tier-1-reclassification
+2026-02-21 19:36:43.716 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-07_windsurf-wave-8/chunk_02.md
+2026-02-21 19:36:43.721 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcpmcp-meta-agentic-workflow-phase-3-implementation-planning
+2026-02-21 19:36:43.723 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.724 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA8E39B0> 
+2026-02-21 19:36:43.725 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: depot/06-archive/imported-existing/datasets/linked-mdb-dataset-discovery-2025-08-30/linked-mdb-dataset-discovery/linked-mdb-dataset-discovery
+2026-02-21 19:36:43.728 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: developmentthe-infinite-database-rabbit-hole-everything-is-connected-data
+2026-02-21 19:36:43.735 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/persons/nick_bostrom.md
+2026-02-21 19:36:43.738 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/basics/transformer_models.md
+2026-02-21 19:36:43.744 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 03-technical-docs/reference/rules/PowerShell_Rules.md
+2026-02-21 19:36:43.762 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-developmentstandards-distribution-dxt-guide-complete-hard-link-solution
+2026-02-21 19:36:43.788 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.788 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD05C10> 
+2026-02-21 19:36:43.790 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projects-fast-search-mcp-notion-documentation-structure-plan
+2026-02-21 19:36:43.800 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-05_ms-ai-toolkit-vscode/section_05_bibliography.md
+2026-02-21 19:36:43.820 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: daily-logsdbtropes-mcp-vs-database-operations-mcp-extension-2025-08-30-1115
+2026-02-21 19:36:43.830 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.830 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6CAF30> 
+2026-02-21 19:36:43.831 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/persons/david_silver.md
+2026-02-21 19:36:43.835 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.835 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB6C9130> 
+2026-02-21 19:36:43.836 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Projects/myAIPlayground/PRD.md
+2026-02-21 19:36:43.839 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/daily-logs/calibre-mcp-dxt-prompts-recommended-templates/calibre-mcp-dxt-prompts-recommended-templates
+2026-02-21 19:36:43.845 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.845 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B5670> 
+2026-02-21 19:36:43.847 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: session-summaries/2025-10-09-plan-advanced-memory-mcp-integration
+2026-02-21 19:36:43.849 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.850 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDC3AD0> 
+2026-02-21 19:36:43.851 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcpv-studiomcp-studio-deep-analysis-comprehensive-repository-assessment-2025-08-08
+2026-02-21 19:36:43.853 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: referenceclaude-startup-note-calibremcp-complete-next-mcp-projects
+2026-02-21 19:36:43.856 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: depot/06-archive/imported-existing/datasets/linked-mdb-dataset-discovery-2025-08-30/linked-mdb-dataset-discovery/linked-mdb-dataset-discovery
+2026-02-21 19:36:43.859 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-analysisvirtualbox-multi-instance-gpu-analysis-2025-08-03
+2026-02-21 19:36:43.871 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.871 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE4CBF0> 
+2026-02-21 19:36:43.873 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/philosophy/guardrails_limits_foss_llms.md
+2026-02-21 19:36:43.875 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.876 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE4C770> 
+2026-02-21 19:36:43.877 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Miscellaneous/proposed_rules/README.md
+2026-02-21 19:36:43.882 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.882 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDC3A70> 
+2026-02-21 19:36:43.884 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: plans/tomorrows-skill-expansion-plan
+2026-02-21 19:36:43.897 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.897 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAEE9A90> 
+2026-02-21 19:36:43.898 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: sessionsunexpected-token-fix-applied-basic-memory-mcp-2025-08-07-1953
+2026-02-21 19:36:43.906 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projects-fast-search-mcp-notion-documentation-structure-plan
+2026-02-21 19:36:43.921 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.922 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B65D0> 
+2026-02-21 19:36:43.923 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/bugs/2025-04-28_buttons-hubs/ai_analysis.md
+2026-02-21 19:36:43.947 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.948 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAEEA510> 
+2026-02-21 19:36:43.949 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 03-technical-docs/standards/TypeScript Standards.md
+2026-02-21 19:36:43.961 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.961 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C39EAE1190> 
+2026-02-21 19:36:43.963 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsgimp-mcpgimp-mcp-server-bug-fix-list-tools-function
+2026-02-21 19:36:43.966 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.966 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA915190> 
+2026-02-21 19:36:43.967 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmcp-toolswindows-operations-mcp-complete-implementation
+2026-02-21 19:36:43.972 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcpv-studiomcp-studio-deep-analysis-comprehensive-repository-assessment-2025-08-08
+2026-02-21 19:36:43.998 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:43.998 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B4830> 
+2026-02-21 19:36:44.000 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/SW_Development/frameworks/fastapi.md
+2026-02-21 19:36:44.014 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.014 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5DFE30> 
+2026-02-21 19:36:44.015 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Miscellaneous/sample files/image-gallery.md
+2026-02-21 19:36:44.019 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: sessionsunexpected-token-fix-applied-basic-memory-mcp-2025-08-07-1953
+2026-02-21 19:36:44.049 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.050 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE7F710> 
+2026-02-21 19:36:44.051 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsautohotkey-v2-com-bridge-development-status
+2026-02-21 19:36:44.063 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: plans/tomorrows-skill-expansion-plan
+2026-02-21 19:36:44.083 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsgimp-mcpgimp-mcp-server-bug-fix-list-tools-function
+2026-02-21 19:36:44.098 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.098 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABDC3A70> 
+2026-02-21 19:36:44.099 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: depot/06-archive/imported-existing/daily-logs/daily-status-2025-07-27-sunday-project-launch-mega-session/daily-status-2025-07-27-sunday-project-launch-mega-session/daily-status-2025-07-27-sunday-project-launch-mega-session
+2026-02-21 19:36:44.103 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmcp-toolswindows-operations-mcp-complete-implementation
+2026-02-21 19:36:44.105 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/philosophy/guardrails_limits_foss_llms.md
+2026-02-21 19:36:44.119 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Projects/myAIPlayground/PRD.md
+2026-02-21 19:36:44.121 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/persons/david_silver.md
+2026-02-21 19:36:44.140 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Miscellaneous/proposed_rules/README.md
+2026-02-21 19:36:44.146 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.146 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAF10530> 
+2026-02-21 19:36:44.147 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Artificial_Intelligence/companies/gemini.md
+2026-02-21 19:36:44.150 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: session-summaries/2025-10-09-plan-advanced-memory-mcp-integration
+2026-02-21 19:36:44.154 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsautohotkey-v2-com-bridge-development-status
+2026-02-21 19:36:44.159 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.159 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA8E20F0> 
+2026-02-21 19:36:44.160 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsplex-mcp-server-fix-status
+2026-02-21 19:36:44.167 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 03-technical-docs/standards/TypeScript Standards.md
+2026-02-21 19:36:44.182 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/bugs/2025-04-28_buttons-hubs/ai_analysis.md
+2026-02-21 19:36:44.190 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/SW_Development/frameworks/fastapi.md
+2026-02-21 19:36:44.191 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: depot/06-archive/imported-existing/daily-logs/daily-status-2025-07-27-sunday-project-launch-mega-session/daily-status-2025-07-27-sunday-project-launch-mega-session/daily-status-2025-07-27-sunday-project-launch-mega-session
+2026-02-21 19:36:44.201 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsplex-mcp-server-fix-status
+2026-02-21 19:36:44.206 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Miscellaneous/sample files/image-gallery.md
+2026-02-21 19:36:44.218 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Artificial_Intelligence/companies/gemini.md
+2026-02-21 19:36:44.236 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:44.236 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AA8E25D0> 
+2026-02-21 19:36:44.307 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4492, None, None]
+2026-02-21 19:36:44.307 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4492, None, None]
+2026-02-21 19:36:44.324 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4696, None, None]
+2026-02-21 19:36:44.324 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4696, None, None]
+2026-02-21 19:36:44.331 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4697, None, None]
+2026-02-21 19:36:44.331 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4697, None, None]
+2026-02-21 19:36:44.342 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4699, None, None]
+2026-02-21 19:36:44.342 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4699, None, None]
+2026-02-21 19:36:44.354 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4700, None, None]
+2026-02-21 19:36:44.354 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4700, None, None]
+2026-02-21 19:36:44.364 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4701, None, None]
+2026-02-21 19:36:44.364 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4701, None, None]
+2026-02-21 19:36:44.376 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4702, None, None]
+2026-02-21 19:36:44.376 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4702, None, None]
+2026-02-21 19:36:44.387 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4703, None, None]
+2026-02-21 19:36:44.387 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4703, None, None]
+2026-02-21 19:36:44.399 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4704, None, None]
+2026-02-21 19:36:44.399 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4704, None, None]
+2026-02-21 19:36:44.412 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4705, None, None]
+2026-02-21 19:36:44.412 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4705, None, None]
+2026-02-21 19:36:44.425 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4706, None, None]
+2026-02-21 19:36:44.425 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4706, None, None]
+2026-02-21 19:36:44.440 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4707, None, None]
+2026-02-21 19:36:44.440 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4707, None, None]
+2026-02-21 19:36:44.463 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4708, None, None]
+2026-02-21 19:36:44.463 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4708, None, None]
+2026-02-21 19:36:44.476 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4709, None, None]
+2026-02-21 19:36:44.476 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4709, None, None]
+2026-02-21 19:36:44.489 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4710, None, None]
+2026-02-21 19:36:44.489 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4710, None, None]
+2026-02-21 19:36:44.512 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4711, None, None]
+2026-02-21 19:36:44.512 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4711, None, None]
+2026-02-21 19:36:44.523 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4712, None, None]
+2026-02-21 19:36:44.523 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4712, None, None]
+2026-02-21 19:36:44.535 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4713, None, None]
+2026-02-21 19:36:44.535 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4713, None, None]
+2026-02-21 19:36:44.545 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4714, None, None]
+2026-02-21 19:36:44.545 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4714, None, None]
+2026-02-21 19:36:44.557 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [4715, None, None]
+2026-02-21 19:36:44.557 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [4715, None, None]
+2026-02-21 19:36:45.047 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.048 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B5970> 
+2026-02-21 19:36:45.049 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: integrations/claude-skills/claude-skills-integration
+2026-02-21 19:36:45.074 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: integrations/claude-skills/claude-skills-integration
+2026-02-21 19:36:45.087 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.087 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCB6E10> 
+2026-02-21 19:36:45.088 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: technical-analysisimmich-mcp-server-deep-dive-analysis-prime-candidate-assessment-2025-08-11-2145
+2026-02-21 19:36:45.099 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: technical-analysisimmich-mcp-server-deep-dive-analysis-prime-candidate-assessment-2025-08-11-2145
+2026-02-21 19:36:45.111 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.112 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCB6D50> 
+2026-02-21 19:36:45.113 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/SW_Development/frameworks/node_js/tesseract_ocr.md
+2026-02-21 19:36:45.135 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/SW_Development/frameworks/node_js/tesseract_ocr.md
+2026-02-21 19:36:45.150 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.150 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5E84D0> 
+2026-02-21 19:36:45.151 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsplexmcp-available-tools-inventory-20250907
+2026-02-21 19:36:45.166 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsplexmcp-available-tools-inventory-20250907
+2026-02-21 19:36:45.178 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.178 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F76B0> 
+2026-02-21 19:36:45.180 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsmain-project-consolidation-complete
+2026-02-21 19:36:45.192 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsmain-project-consolidation-complete
+2026-02-21 19:36:45.204 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.205 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABCB6E10> 
+2026-02-21 19:36:45.206 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_online-chat-multiuser-ai/chunk_01.md
+2026-02-21 19:36:45.224 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-04-28_online-chat-multiuser-ai/chunk_01.md
+2026-02-21 19:36:45.236 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.236 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F7950> 
+2026-02-21 19:36:45.237 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/analysis/ahk-mcp-analysis-complete-2025-09-09/auto-hotkey-claude-mcp-scripts-analysis-complete-2025-09-09-17-35
+2026-02-21 19:36:45.246 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/analysis/ahk-mcp-analysis-complete-2025-09-09/auto-hotkey-claude-mcp-scripts-analysis-complete-2025-09-09-17-35
+2026-02-21 19:36:45.258 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.258 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5F77D0> 
+2026-02-21 19:36:45.259 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/General_Software_Tools/development_tools/package_managers/npm.md
+2026-02-21 19:36:45.286 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/General_Software_Tools/development_tools/package_managers/npm.md
+2026-02-21 19:36:45.302 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.302 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD06B10> 
+2026-02-21 19:36:45.304 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: depot/06-archive/tests/auto-hotkey-test-2025-09-04-17-12/auto-hotkey-test-2025-09-04-17-12
+2026-02-21 19:36:45.319 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: depot/06-archive/tests/auto-hotkey-test-2025-09-04-17-12/auto-hotkey-test-2025-09-04-17-12
+2026-02-21 19:36:45.335 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.336 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD05D90> 
+2026-02-21 19:36:45.337 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: development/advanced-memory-mcp-bug-report-note-deletion-protected-path
+2026-02-21 19:36:45.350 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: development/advanced-memory-mcp-bug-report-note-deletion-protected-path
+2026-02-21 19:36:45.365 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.365 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD07290> 
+2026-02-21 19:36:45.367 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-docs-windsurf-generated-flows-newthingy-2025-05-06-robotic-whimsy-builder
+2026-02-21 19:36:45.380 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-docs-windsurf-generated-flows-newthingy-2025-05-06-robotic-whimsy-builder
+2026-02-21 19:36:45.394 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.394 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD06B10> 
+2026-02-21 19:36:45.395 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-fixesnotepad-mcp-fix-python-313-compatibility-issue
+2026-02-21 19:36:45.409 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-fixesnotepad-mcp-fix-python-313-compatibility-issue
+2026-02-21 19:36:45.424 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.425 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5E8050> 
+2026-02-21 19:36:45.426 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_plex-api-key/chunk_01.md
+2026-02-21 19:36:45.445 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/Windsurf generated flows/research/2025-05-04_plex-api-key/chunk_01.md
+2026-02-21 19:36:45.458 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.459 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE356D0> 
+2026-02-21 19:36:45.461 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/05_control_flow.md
+2026-02-21 19:36:45.483 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:63 - Found entity with path: 06-archive/imported/docs/General_Software_Tools/automation_tools/autohotkey/05_control_flow.md
+2026-02-21 19:36:45.497 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.498 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABE35550> 
+2026-02-21 19:36:45.499 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: imported-existing/analysis/ai-2027-analysis-strategic-assessment-and-implications/ai-2027-analysis-strategic-assessment-and-implications
+2026-02-21 19:36:45.523 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: imported-existing/analysis/ai-2027-analysis-strategic-assessment-and-implications/ai-2027-analysis-strategic-assessment-and-implications
+2026-02-21 19:36:45.535 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.535 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B5D90> 
+2026-02-21 19:36:45.537 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: mcp-developmentstandards-distribution-dxt-guide-complete-hard-link-solution
+2026-02-21 19:36:45.550 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: mcp-developmentstandards-distribution-dxt-guide-complete-hard-link-solution
+2026-02-21 19:36:45.564 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.564 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAF10050> 
+2026-02-21 19:36:45.565 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: projectsdatabase-operations-mcp-import-fix-complete
+2026-02-21 19:36:45.576 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: projectsdatabase-operations-mcp-import-fix-complete
+2026-02-21 19:36:45.590 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.590 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B54F0> 
+2026-02-21 19:36:45.592 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: fixesgpu-docker-support-solution-rtx-4090-vllm-fix
+2026-02-21 19:36:45.605 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: fixesgpu-docker-support-solution-rtx-4090-vllm-fix
+2026-02-21 19:36:45.619 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.620 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AB5B56D0> 
+2026-02-21 19:36:45.621 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: config/firefox-profile-path-for-dbops-2025-10-10-1540
+2026-02-21 19:36:45.636 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: config/firefox-profile-path-for-dbops-2025-10-10-1540
+2026-02-21 19:36:45.652 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.652 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABC84530> 
+2026-02-21 19:36:45.654 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: referenceclaude-pro-account-status-chat-length-analysis
+2026-02-21 19:36:45.666 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:49 - Found exact permalink match: referenceclaude-pro-account-status-chat-length-analysis
+2026-02-21 19:36:45.682 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.683 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD05A30> 
+2026-02-21 19:36:45.684 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: test
+2026-02-21 19:36:45.855 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.855 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD06E70> 
+2026-02-21 19:36:45.866 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6442, None, None]
+2026-02-21 19:36:45.866 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6442, None, None]
+2026-02-21 19:36:45.878 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5533, None, None]
+2026-02-21 19:36:45.878 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5533, None, None]
+2026-02-21 19:36:45.887 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5405, None, None]
+2026-02-21 19:36:45.887 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5405, None, None]
+2026-02-21 19:36:45.895 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6721, None, None]
+2026-02-21 19:36:45.895 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6721, None, None]
+2026-02-21 19:36:45.904 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6230, None, None]
+2026-02-21 19:36:45.904 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6230, None, None]
+2026-02-21 19:36:45.915 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6230, None, None]
+2026-02-21 19:36:45.915 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6230, None, None]
+2026-02-21 19:36:45.924 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5021, None, None]
+2026-02-21 19:36:45.924 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5021, None, None]
+2026-02-21 19:36:45.933 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5069, None, None]
+2026-02-21 19:36:45.933 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5069, None, None]
+2026-02-21 19:36:45.940 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5229, None, None]
+2026-02-21 19:36:45.940 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5229, None, None]
+2026-02-21 19:36:45.948 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5648, None, None]
+2026-02-21 19:36:45.948 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5648, None, None]
+2026-02-21 19:36:45.968 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:45.968 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3ABC86270> 
+2026-02-21 19:36:45.969 | DEBUG    | advanced_memory.api.routers.resource_router:get_resource_content:55 - Getting content for: none/observations/test/auto-sync-test-note
+2026-02-21 19:36:45.985 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:88 - Trying to find entity with normalized path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:45.989 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:100 - No entity found with path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:45.989 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Entity (skip=0, limit=None)
+2026-02-21 19:36:46.211 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 2209 Entity records
+2026-02-21 19:36:46.219 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:88 - Trying to find entity with normalized path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:46.224 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:100 - No entity found with path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:46.224 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Entity (skip=0, limit=None)
+2026-02-21 19:36:46.889 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 2209 Entity records
+2026-02-21 19:36:46.914 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:88 - Trying to find entity with normalized path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:46.924 | DEBUG    | advanced_memory.services.link_resolver:resolve_link:100 - No entity found with path: none/observations/test/auto-sync-test-note.md
+2026-02-21 19:36:46.924 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Entity (skip=0, limit=None)
+2026-02-21 19:36:47.253 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 2209 Entity records
+2026-02-21 19:36:47.369 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6442]
+2026-02-21 19:36:47.369 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6442]
+2026-02-21 19:36:47.394 | DEBUG    | advanced_memory.deps:get_file_service:230 - Creating FileService for project: main, base_path: C:\Users\sandr
+2026-02-21 19:36:47.395 | DEBUG    | advanced_memory.deps:get_file_service:234 - Created FileService for project: <advanced_memory.services.file_service.FileService object at 0x000001C3AAD23470> 
+2026-02-21 19:36:47.440 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6445, None, None]
+2026-02-21 19:36:47.440 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6445, None, None]
+2026-02-21 19:36:47.450 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6645, None, None]
+2026-02-21 19:36:47.450 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6645, None, None]
+2026-02-21 19:36:47.459 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6645, None, None]
+2026-02-21 19:36:47.459 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6645, None, None]
+2026-02-21 19:36:47.469 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6442, None, None]
+2026-02-21 19:36:47.469 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6442, None, None]
+2026-02-21 19:36:47.478 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6774, None, None]
+2026-02-21 19:36:47.478 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6774, None, None]
+2026-02-21 19:36:47.488 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5372, None, None]
+2026-02-21 19:36:47.488 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5372, None, None]
+2026-02-21 19:36:47.503 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6770, None, None]
+2026-02-21 19:36:47.503 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6770, None, None]
+2026-02-21 19:36:47.516 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5957, None, None]
+2026-02-21 19:36:47.516 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5957, None, None]
+2026-02-21 19:36:47.531 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [5384, None, None]
+2026-02-21 19:36:47.531 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [5384, None, None]
+2026-02-21 19:36:47.545 | DEBUG    | advanced_memory.services.entity_service:get_entities_by_id:301 - Getting entities: [6645, None, None]
+2026-02-21 19:36:47.545 | DEBUG    | advanced_memory.repository.repository:find_by_ids:188 - Finding Entity by IDs: [6645, None, None]
+2026-02-21 19:36:48.241 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Project (skip=0, limit=None)
+2026-02-21 19:36:48.246 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 11 Project records
+2026-02-21 19:36:48.254 | DEBUG    | advanced_memory.repository.repository:find_all:163 - Finding all Project (skip=0, limit=None)
+2026-02-21 19:36:48.257 | DEBUG    | advanced_memory.repository.repository:find_all:176 - Found 11 Project records

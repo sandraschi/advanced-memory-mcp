@@ -18,7 +18,8 @@ import {
   Activity,
   Search,
   Globe,
-  Wand2
+  Wand2,
+  Archive
 } from 'lucide-react'
 import IntelligencePanel from './IntelligencePanel'
 
@@ -49,10 +50,12 @@ export default function Sidebar({
     { name: 'Skill Research', href: '/skills/research', icon: BookOpen },
     { name: 'Marketplace', href: '/marketplace', icon: Store },
     { name: 'Research Lab', href: '/research', icon: FlaskConical },
+    { name: 'Zettelkasten', href: '/zettelflow', icon: Archive }, // Added ZettelFlow nav item
     { name: 'Deep Search', href: '/research/deep', icon: Search },
     { name: 'Chat', href: '/chat', icon: Wand2 },
     { name: 'Apps Hub', href: '/apps-hub', icon: Globe },
     { name: 'Control Room', href: '/control-room', icon: Terminal },
+    { name: 'Tools', href: '/tools', icon: Code },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 

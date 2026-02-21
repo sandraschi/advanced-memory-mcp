@@ -109,7 +109,7 @@ class LinkResolver:
 
         # 5. Fall back to search for fuzzy matching (only if not in strict mode)
         if use_search and "*" not in clean_text:
-            results = await self.search_service.search(
+            results, _ = await self.search_service.search(
                 query=SearchQuery(text=clean_text, entity_types=[SearchItemType.ENTITY]),
             )
 
