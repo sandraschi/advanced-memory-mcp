@@ -9,7 +9,10 @@
 
 **Research-Driven Knowledge Platform** - A dual-purpose system serving as both a powerful Model Context Protocol (MCP) server and a standalone React-based web application. Transform AI assistants into comprehensive research tools with multi-source intelligence gathering, semantic search (RAG), and intelligent skill synthesis.
 
-Advanced Memory evolves from a simple memory tool into an enterprise-grade research platform, integrating a robust vector database for semantic understanding alongside its flexible note-taking core.
+> [!IMPORTANT]
+> **Dual Architecture**: MemOps is a hybrid system consisting of a high-concurrency **FastMCP Server** (for tool integration) and a premium **React Webapp** (for visual knowledge management).
+
+Advanced Memory evolves from a simple memory tool into an enterprise-grade research platform, integrating a robust vector database for semantic understanding.
 
 ## Core Capabilities
 
