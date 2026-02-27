@@ -1,0 +1,78 @@
+"""RAG Cognitive Bridge for OpenFang - Optimized Knowledge Retrieval.
+
+This tool provides a specialized interface for Agentic RAG (Retrieval Augmented Generation)
+optimized for OpenFang cognitive bridges. It leverages LanceDB with transparent
+metadata encryption and Flash Attention 2 (BGE-Reranker) for high-precision
+context retrieval within small VRAM budgets.
+"""
+
+from typing import Any
+
+from mcp.server.fastmcp import FastMCP
+
+from advanced_memory.deps import get_search_service
+from advanced_memory.mcp.tools.portmanteau_knowledge import resolve_project
+
+# Note: This tool is intended to be registered by the main server initialization
+# but can be imported and defined here for modularity.
+
+
+def register_rag_bridge(mcp: FastMCP):
+    @mcp.tool()
+    async def adn_knowledge_rag(
+        query: str,
+        limit: int = 10,
+        project: str | None = None,
+        min_score: float = 0.5,
+        include_metadata: bool = True,
+    ) -> dict[str, Any]:
+        """Specialized RAG retrieval optimized for OpenFang/Agentic cognitive bridges.
+
+        Args:
+            query: The semantic search query or context prompt
+            limit: Maximum number of high-density chunks to return (default 10)
+            project: Optional project override (defaults to current active)
+            min_score: Minimum relevance threshold (0.0 to 1.0)
+            include_metadata: Whether to include source metadata (file paths, timestamps)
+
+        Returns:
+            Dictionary containing optimized context chunks and high-density summary.
+        """
+        try:
+            target_project = resolve_project(project)
+            search_service = await get_search_service()
+
+            # Use the optimized knowledge_rag implementation from SearchService
+            # This handles FA2 reranking and transparent decryption
+            results = await search_service.knowledge_rag(
+                query=query, limit=limit, project=target_project, min_score=min_score
+            )
+
+            # Format high-density context for Agentic models
+            context_blocks = []
+            sources = []
+
+            for i, chunk in enumerate(results.get("results", [])):
+                score = chunk.get("score", 0.0)
+                text = chunk.get("text", "")
+                meta = chunk.get("metadata", {})
+                source = meta.get("path") or meta.get("filename") or "Unknown"
+
+                block = f"[Source {i + 1}: {source}] (Relevance: {score:.2f})\n{text}"
+                context_blocks.append(block)
+                sources.append(source)
+
+            formatted_context = "\n\n---\n\n".join(context_blocks)
+
+            return {
+                "success": True,
+                "query": query,
+                "project": target_project,
+                "count": len(results.get("results", [])),
+                "context": formatted_context,
+                "sources": list(set(sources)),
+                "raw_results": results.get("results", []) if include_metadata else [],
+            }
+
+        except Exception as e:
+            return {"success": False, "error": str(e)}

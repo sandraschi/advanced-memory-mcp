@@ -43,7 +43,7 @@ async def recent_activity_prompt(
     """
     logger.info(f"Getting recent activity, timeframe: {timeframe}")
 
-    raw_recent = await recent_activity.fn(
+    raw_recent = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
         timeframe=timeframe, type_filter=[SearchItemType.ENTITY.value]
     )
     recent = GraphContext.model_validate(raw_recent)

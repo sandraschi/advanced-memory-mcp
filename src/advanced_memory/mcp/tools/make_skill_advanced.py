@@ -838,7 +838,7 @@ async def _process_source_documents_rag(source_documents: list[str], topic: str)
             logger.info(f"Ingesting document into RAG: {doc_path}")
 
             # Ingest document into RAG system
-            ingest_result = await adn_rag.fn(
+            ingest_result = await (adn_rag.fn if hasattr(adn_rag, "fn") else adn_rag)(
                 operation="ingest_document",
                 document_path=doc_path,
                 chunk_method="fixed",  # Use fixed chunking for consistency
@@ -849,7 +849,7 @@ async def _process_source_documents_rag(source_documents: list[str], topic: str)
 
                 # Query for topic-relevant content
                 topic_query = f"{topic} key concepts important details"
-                query_result = await adn_rag.fn(
+                query_result = await (adn_rag.fn if hasattr(adn_rag, "fn") else adn_rag)(
                     operation="query_knowledge",
                     query=topic_query,
                     document_filter=[ingest_result["document_id"]],
@@ -934,7 +934,7 @@ async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: 
 
         # Query across all ingested documents for topic-relevant content
         topic_query = f"{topic} essential concepts core ideas important details"
-        query_result = await adn_rag.fn(
+        query_result = await (adn_rag.fn if hasattr(adn_rag, "fn") else adn_rag)(
             operation="query_knowledge",
             query=topic_query,
             max_results=8,
@@ -1338,7 +1338,7 @@ async def _perform_topic_research(
         for query in search_queries[:3]:  # Limit to 3 searches to avoid overwhelming
             logger.info(f"Researching: {query}")
 
-            search_result = await adn_web_search.fn(
+            search_result = await (adn_web_search.fn if hasattr(adn_web_search, "fn") else adn_web_search)(
                 query=query,
                 provider=provider,
                 max_results=8,
@@ -1531,7 +1531,7 @@ async def _process_source_documents(source_documents: list[str]) -> dict[str, An
         for doc_path in source_documents:
             logger.info(f"Processing document: {doc_path}")
 
-            result = await adn_document_ingest.fn(
+            result = await (adn_document_ingest.fn if hasattr(adn_document_ingest, "fn") else adn_document_ingest)(
                 file_path=doc_path,
                 analysis_type="full",
                 extract_quotes=True,
@@ -1635,7 +1635,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         for query in queries[:2]:  # Limit to 2 repo searches
             logger.info(f"Searching GitHub repos: {query}")
 
-            repo_result = await adn_github_research.fn(
+            repo_result = await (adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research)(
                 operation="search_repositories",
                 query=query,
                 sort="stars",
@@ -1649,7 +1649,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         code_query = f"{topic} implementation example"
         logger.info(f"Searching GitHub code: {code_query}")
 
-        code_result = await adn_github_research.fn(
+        code_result = await (adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research)(
             operation="search_code",
             query=code_query,
             max_results=8,
@@ -1848,7 +1848,7 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
         for query in queries[:3]:  # Limit to 3 searches
             logger.info(f"Searching arXiv: {query}")
 
-            paper_result = await adn_arxiv_research.fn(
+            paper_result = await (adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research)(
                 operation="search_papers",
                 query=query,
                 max_results=5,
@@ -2085,19 +2085,19 @@ async def _perform_tvtropes_research(topic: str) -> dict[str, Any]:
         research_type = _determine_tvtropes_research_type(topic)
 
         if research_type == "character_archetypes":
-            result = await adn_tvtropes_research.fn(
+            result = await (adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research)(
                 operation="character_archetypes", query=topic, max_results=5
             )
         elif research_type == "plot_structures":
-            result = await adn_tvtropes_research.fn(
+            result = await (adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research)(
                 operation="plot_structures", query=topic, max_results=5
             )
         elif research_type == "narrative_analysis":
-            result = await adn_tvtropes_research.fn(
+            result = await (adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research)(
                 operation="narrative_analysis", query=topic, max_results=5
             )
         else:
-            result = await adn_tvtropes_research.fn(
+            result = await (adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research)(
                 operation="search_tropes", query=topic, max_results=5
             )
 

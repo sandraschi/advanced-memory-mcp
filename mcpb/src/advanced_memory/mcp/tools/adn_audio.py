@@ -198,7 +198,7 @@ Then restart and try again!"""
         # Create the note
         from advanced_memory.mcp.tools.write_note import write_note
 
-        return await write_note.fn(
+        return await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=title,
             content=formatted_content,
             folder=folder,
@@ -246,7 +246,7 @@ Then restart and try again!"""
     # Read the note content
     from advanced_memory.mcp.tools.read_note import read_note
 
-    note_content = await read_note.fn(
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=identifier, page=1, page_size=1000, project=active_project.name
     )
 

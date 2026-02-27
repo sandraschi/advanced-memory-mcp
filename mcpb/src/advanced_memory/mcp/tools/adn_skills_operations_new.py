@@ -128,7 +128,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
         folder = f"skills/{skill_category}"
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=content,
             folder=folder,
@@ -255,7 +255,7 @@ adn_skills(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=skill_content,
             folder=folder,
@@ -377,7 +377,7 @@ adn_skills(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=skill_content,
             folder=folder,
@@ -504,7 +504,7 @@ adn_skills(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=skill_content,
             folder=folder,
@@ -633,7 +633,7 @@ adn_skills(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=skill_content,
             folder=folder,
@@ -761,7 +761,7 @@ adn_skills(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=skill_name,
             content=skill_content,
             folder=folder,

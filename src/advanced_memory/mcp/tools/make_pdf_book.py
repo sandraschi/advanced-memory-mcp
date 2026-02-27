@@ -209,7 +209,7 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await read_note.fn(identifier)
+        content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier)
         return content if content else None
 
     except Exception as e:

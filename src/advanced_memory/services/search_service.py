@@ -3,15 +3,21 @@
 import ast
 from collections.abc import Sequence
 from datetime import datetime
+from typing import Any
 
 from dateparser import parse
 from fastapi import BackgroundTasks
 from loguru import logger
 from sqlalchemy import text
 
+from advanced_memory.config import AdvancedMemoryConfig
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
-from advanced_memory.repository.search_repository import SearchIndexRow, SearchRepository
+from advanced_memory.repository.search_repository import (
+    SearchIndexRow,
+    SearchRepository,
+)
+from advanced_memory.repository.vector_repository import VectorRepository
 from advanced_memory.schemas.search import SearchItemType, SearchQuery
 from advanced_memory.services.file_service import FileService
 
@@ -29,11 +35,15 @@ class SearchService:
         self,
         search_repository: SearchRepository,
         entity_repository: EntityRepository,
+        vector_repository: VectorRepository,
         file_service: FileService,
+        app_config: AdvancedMemoryConfig,
     ):
         self.repository = search_repository
         self.entity_repository = entity_repository
+        self.vector_repository = vector_repository
         self.file_service = file_service
+        self.app_config = app_config
 
     async def init_search_index(self) -> None:
         """Create FTS5 virtual table if it doesn't exist."""
@@ -53,6 +63,7 @@ class SearchService:
         for entity in entities:
             await self.index_entity(entity, background_tasks)
 
+        # Vector indexing is handled inside index_entity
         logger.info("Reindex complete")
 
     async def search(
@@ -91,7 +102,7 @@ class SearchService:
             else None
         )
 
-        # search
+        # Perform keyword search in SQLite
         results, total_count = await self.repository.search(
             search_text=query.text,
             permalink=query.permalink,
@@ -106,7 +117,140 @@ class SearchService:
             offset=offset,
         )
 
+        # If query has text, augment with vector results or perform hybrid search
+        if query.text and not query.permalink and not query.permalink_match:
+            try:
+                # Use project filter for vector search
+                project_filter = f"metadata.project_id = {self.repository.project_id}"
+
+                # Decide if we use native hybrid search or simple vector augmentation
+                candidate_limit = (
+                    self.app_config.rag_top_k_candidates
+                    if self.app_config.rag_use_reranker
+                    else limit * 2
+                )
+
+                query_type = "hybrid" if self.app_config.rag_hybrid_search else "vector"
+
+                logger.debug(
+                    f"Performing vector/hybrid search (type={query_type}, limit={candidate_limit})"
+                )
+                vector_results = await self.vector_repository.search(
+                    query.text,
+                    limit=candidate_limit,
+                    query_type=query_type,
+                    filter=project_filter,
+                )
+
+                # Merge vector results if they are not already in FTS results
+                existing_ids = {r.entity_id for r in results}
+
+                # Convert vector results to SearchIndexRow for merging/reranking
+                merged_results = list(results)
+                for v_res in vector_results:
+                    entity_id = v_res["metadata"]["entity_id"]
+                    if entity_id not in existing_ids:
+                        row = SearchIndexRow(
+                            id=int(v_res["id"].split("_")[0])
+                            if "_" in v_res["id"]
+                            else 0,  # Fallback
+                            entity_id=entity_id,
+                            type=v_res["metadata"]["type"],
+                            title=v_res["metadata"].get("title", "Vector Match"),
+                            content_snippet=v_res["text"][:250],
+                            project_id=v_res["metadata"]["project_id"],
+                            created_at=datetime.now(),
+                            updated_at=datetime.now(),
+                            score=v_res.get("_score", 0.0),  # Native LanceDB score if available
+                        )
+                        # Store full text for reranker
+                        row.content_stems = v_res["text"]
+                        merged_results.append(row)
+                        existing_ids.add(entity_id)
+
+                # Perform reranking if enabled
+                if self.app_config.rag_use_reranker and merged_results:
+                    logger.debug(
+                        f"Reranking {len(merged_results)} candidates using {self.app_config.rag_reranker_model}"
+                    )
+
+                    # Convert SearchIndexRows to dicts for rerank method
+                    docs_to_rerank = []
+                    for r in merged_results:
+                        docs_to_rerank.append(
+                            {
+                                "text": f"Title: {r.title}\n\n{r.content_stems or r.content_snippet}",
+                                "row": r,  # Keep reference to original row
+                            }
+                        )
+
+                    reranked_docs = await self.vector_repository.rerank(
+                        query.text,
+                        docs_to_rerank,
+                        self.app_config.rag_reranker_model,
+                        attn_implementation=self.app_config.rag_attn_implementation,
+                    )
+
+                    # Extract top K final results
+                    results = [d["row"] for d in reranked_docs[: self.app_config.rag_top_k_final]]
+                    # Update scores with rerank scores
+                    for i, r in enumerate(results):
+                        r.score = reranked_docs[i]["rerank_score"]
+                else:
+                    results = merged_results[:limit]
+
+                # Update total count
+                total_count = max(total_count, len(existing_ids))
+
+            except Exception as e:
+                logger.error(f"Enhanced search failed: {e}")
+                import traceback
+
+                logger.debug(traceback.format_exc())
+
         return results, total_count
+
+    async def knowledge_rag(self, query: str, limit: int = 20) -> list[dict[str, Any]]:
+        """Optimized RAG tool for OpenFang/Agentic cognitive bridge.
+
+        Retrieves high-density knowledge context with reranking and FA2.
+        """
+        project_filter = f"metadata.project_id = {self.repository.project_id}"
+
+        # 1. Broad retrieval
+        candidate_limit = self.app_config.rag_top_k_candidates
+        vector_results = await self.vector_repository.search(
+            query,
+            limit=candidate_limit,
+            query_type="hybrid" if self.app_config.rag_hybrid_search else "vector",
+            filter=project_filter,
+        )
+
+        if not vector_results:
+            return []
+
+        # 2. Reranking with Flash Attention 2
+        reranked_docs = await self.vector_repository.rerank(
+            query,
+            vector_results,
+            self.app_config.rag_reranker_model,
+            attn_implementation=self.app_config.rag_attn_implementation,
+        )
+
+        # 3. Format for context consumption
+        final_results = reranked_docs[:limit]
+        formatted = []
+        for doc in final_results:
+            formatted.append(
+                {
+                    "content": doc["text"],
+                    "source": doc["metadata"].get("title", "Unknown"),
+                    "relevance": doc.get("rerank_score", 0.0),
+                    "type": doc["metadata"].get("type", "note"),
+                }
+            )
+
+        return formatted
 
     @staticmethod
     def _generate_variants(text: str) -> set[str]:
@@ -180,6 +324,7 @@ class SearchService:
     ) -> None:
         # delete all search index data associated with entity
         await self.repository.delete_by_entity_id(entity_id=entity.id)
+        await self.vector_repository.delete_by_entity_id(entity_id=entity.id)
 
         # reindex
         await self.index_entity_markdown(
@@ -263,7 +408,7 @@ class SearchService:
         if entity_tags:
             metadata["tags"] = entity_tags
 
-        # Index entity
+        # Index entity in FTS
         await self.repository.index_item(
             SearchIndexRow(
                 id=entity.id,
@@ -280,6 +425,41 @@ class SearchService:
                 project_id=entity.project_id,
             )
         )
+
+        # Index entity in Vector store
+        if content:
+            # Simple chunking: strategy - group by paragraphs, max 1000 chars
+            chunks = []
+            paragraphs = content.split("\n\n")
+            current_chunk = ""
+            for p in paragraphs:
+                if len(current_chunk) + len(p) < 1000:
+                    current_chunk += p + "\n\n"
+                else:
+                    if current_chunk:
+                        chunks.append(current_chunk.strip())
+                    current_chunk = p + "\n\n"
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+
+            vector_docs = []
+            for i, chunk in enumerate(chunks):
+                vector_docs.append(
+                    {
+                        "id": f"{entity.id}_{i}",
+                        "text": f"Title: {entity.title}\n\n{chunk}",
+                        "metadata": {
+                            "entity_id": entity.id,
+                            "type": SearchItemType.ENTITY.value,
+                            "project_id": entity.project_id,
+                            "title": entity.title,
+                            "chunk_index": i,
+                        },
+                    }
+                )
+
+            if vector_docs:
+                await self.vector_repository.add_documents(vector_docs)
 
         # Index each observation with permalink
         for obs in entity.observations:
@@ -373,3 +553,6 @@ class SearchService:
                 await self.delete_by_permalink(permalink)
             else:
                 await self.delete_by_entity_id(entity.id)
+
+        # Cleanup vector store
+        await self.vector_repository.delete_by_entity_id(entity.id)

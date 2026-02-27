@@ -94,7 +94,15 @@ if _is_stdio_mode:
     root_logger.handlers = []
 
     # Suppress FastMCP and other noisy loggers completely
-    for logger_name in ["fastmcp", "mcp", "httpx", "httpcore", "h11", "uvicorn", "asyncio"]:
+    for logger_name in [
+        "fastmcp",
+        "mcp",
+        "httpx",
+        "httpcore",
+        "h11",
+        "uvicorn",
+        "asyncio",
+    ]:
         log = logging.getLogger(logger_name)
         log.setLevel(logging.CRITICAL)
         log.handlers = []
@@ -221,7 +229,9 @@ class AppContext:
 
 
 @asynccontextmanager
-async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma: no cover
+async def app_lifespan(
+    server: FastMCP,
+) -> AsyncIterator[AppContext]:  # pragma: no cover
     """MCP server lifespan - handles initialization and cleanup including file watching.
 
     CRITICAL: This function runs AFTER stdout is restored for JSON-RPC communication.
@@ -308,8 +318,10 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
 # Logging is now configured at the top of the file before any imports
 
 # CRITICAL: Import tools to register them with the MCP instance
-# This must happen after mcp instance is created but before running server
 from advanced_memory.mcp import tools  # noqa: E402, F401
+
+# Register specialized RAG bridge
+tools.register_adn_knowledge_rag(mcp)
 
 # Use the shared MCP instance as the server
 server = mcp

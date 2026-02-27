@@ -75,7 +75,7 @@ async def _knowledge_operations(
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import adn_knowledge_bulk
 
-    return await adn_knowledge_bulk.fn(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
+    return await (adn_knowledge_bulk.fn if hasattr(adn_knowledge_bulk, "fn") else adn_knowledge_bulk)(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(
@@ -89,7 +89,7 @@ async def _research_orchestrator(
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
 
-    return await research_orchestrator.fn(
+    return await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)(
         operation, topic, topic_type, research_type, step, parameters
     )  # type: ignore[operator,no-any-return]
 
@@ -148,7 +148,7 @@ async def _analyze_content_quality(
 
     # Get notes to analyze
     query = filters.get("query", "") if filters else ""
-    search_result = await adn_search.fn(
+    search_result = await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(
         operation="notes", query=query, max_results=limit, project=active_project.name
     )
 
@@ -226,12 +226,12 @@ async def _suggest_relationships(
         return "# Error\n\nsuggest_relationships requires note_id in filters\n\nExample: adn_knowledge('suggest_relationships', filters={'note_id': 'My Note'})"
 
     # Read the note
-    note_content = await read_note.fn(identifier=note_id, project=active_project.name)
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=note_id, project=active_project.name)
     if not note_content or note_content.startswith("# Error"):
         return f"# Error\n\nCould not read note: {note_id}"
 
     # Get related notes
-    search_result = await adn_search.fn(
+    search_result = await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(
         operation="notes", query=note_id, max_results=20, project=active_project.name
     )
 
@@ -300,7 +300,7 @@ async def _find_knowledge_gaps(
 
     # Search for notes on these topics
     query = " OR ".join(topics)
-    search_result = await adn_search.fn(
+    search_result = await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(
         operation="notes", query=query, max_results=50, project=active_project.name
     )
 
@@ -369,7 +369,7 @@ async def _cluster_content(
     num_clusters = action.get("num_clusters", 5) if action else 5
 
     # Get notes to cluster
-    search_result = await adn_search.fn(
+    search_result = await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(
         operation="notes", query=query, max_results=limit, project=active_project.name
     )
 
@@ -438,7 +438,7 @@ async def _extract_insights(
     query = filters.get("query", "") if filters else ""
 
     # Get notes to analyze
-    search_result = await adn_search.fn(
+    search_result = await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(
         operation="notes", query=query, max_results=limit, project=active_project.name
     )
 

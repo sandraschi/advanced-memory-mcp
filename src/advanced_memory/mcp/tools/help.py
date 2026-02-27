@@ -6,59 +6,21 @@ from advanced_memory.mcp.tools.utils import build_error_response, build_success_
 
 @mcp.tool
 async def help(level: str = "basic", topic: str | None = None) -> dict:
-    """Comprehensive help system for Advanced Memory with multiple knowledge levels.
-
-    This tool provides contextual assistance and documentation for Advanced Memory features,
-    organized by knowledge levels from basic usage to advanced technical details.
-
-    RESPONSES:
-    Success: {"success": true, "operation": "help", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps.
-
-    LEVELS:
-    - basic: Quick start guide and essential commands
-    - intermediate: Detailed tool descriptions and workflows
-    - advanced: Technical architecture and implementation details
-    - expert: Development troubleshooting and system internals
-
-    TOPICS:
-    - semantic-net: Knowledge graph and entity relationships
-    - claude: AI integration patterns and best practices
-    - tools: Complete command reference with examples
-    - import: Data migration from external applications
-    - export: Content publishing and sharing options
-    - typora: Rich text editing workflows
-    - obsidian: Obsidian vault integration guide
-    - joplin: Joplin export compatibility
-    - notion: Notion HTML/Markdown import strategies
-    - evernote: Evernote ENEX file processing
-    - mermaid: Diagram creation and rendering
+    """Contextual help for Advanced Memory, organized by knowledge level.
 
     Args:
-        level (str, default="basic"): Help detail level (basic/intermediate/advanced/expert)
-        topic (str, optional): Specific topic to focus on (see list above)
+        level: Detail level — "basic" (quick start), "intermediate" (tool reference),
+            "advanced" (architecture), "expert" (internals/troubleshooting).
+        topic: Optional focus area — "semantic-net", "claude", "tools", "import",
+            "export", "typora", "obsidian", "joplin", "notion", "evernote",
+            "mermaid", "sampling", "agentic".
 
     Returns:
-        Contextual help content formatted for easy reading with examples and guidance
-
-    Examples:
-        Basic overview: help()
-        Tool reference: help("intermediate")
-        Semantic networks: help("advanced", "semantic-net")
-        Claude integration: help("intermediate", "claude")
-        Troubleshooting: help("expert")
-
-    NOTE: This is a multilevel help system providing different depths of information:
-    - Level 1 (basic): Quick overview and getting started
-    - Level 2 (intermediate): Detailed tool descriptions and workflows
-    - Level 3 (advanced): Technical details and architecture
-    - Level 4 (expert): Development and troubleshooting
+        Help content for the requested level/topic.
 
     Errors:
-        - "Unknown help level": Returned if an invalid level is provided (e.g. not basic/intermediate/advanced/expert).
-        - "Unknown topic": Returned if an invalid topic is provided.
+        - "Unknown help level": Invalid level provided.
+        - "Unknown topic": Invalid topic provided.
     """
 
     if topic:
@@ -160,6 +122,8 @@ def _get_topic_help(topic: str, level: str) -> str:
         return _get_evernote_help(level)
     elif topic in ["mermaid"]:
         return _get_mermaid_help(level)
+    elif topic in ["sampling", "agentic", "orchestration", "workflow"]:
+        return _get_sampling_help(level)
     else:
         # Try dynamic lookup in docs/tools/
         dynamic_help = _get_dynamic_tool_help(topic)
@@ -182,8 +146,134 @@ Available topics:
 - **notion**: Notion export integration
 - **evernote**: Evernote ENEX integration
 - **mermaid**: Diagram and visualization support
+- **sampling**: Agentic orchestration and sampling patterns
 
 Try: `help("tools")`"""
+
+
+def _get_sampling_help(level: str) -> str:
+    """Get detailed help about sampling and agentic operations."""
+
+    if level in ["basic", "intermediate"]:
+        return """# Agentic Sampling & Orchestration
+
+## What is Sampling?
+
+**Sampling** (SEP-1577) is an advanced feature that allows the AI to autonomously orchestrate multiple tools, agents, and external MCP servers to complete complex tasks. Instead of requiring step-by-step user instructions, the AI "samples" the best path to achieve a high-level goal.
+
+## Key Agentic Features
+
+### 1. Autonomous Orchestration
+The AI can design and execute multi-step workflows without user intervention for each step.
+
+### 2. Cross-Server Collaboration
+Integration with other MCP servers (e.g., `windows-operations`, `database-operations`, `web-development`) to solve problems that span multiple domains.
+
+### 3. Verification & Self-Correction
+Agentic workflows include built-in verification steps and can automatically retry or adjust strategies if a step fails.
+
+## Core Agentic Tools
+
+### `adn_research(operation="research_orchestrate", ...)`
+The primary entry point for agentic research. It coordinates web search, academic papers, and local knowledge to build a comprehensive report.
+
+### `adn_system(operation="workflow", ...)`
+Executes pre-defined or dynamically generated agentic workflows for system management and content processing.
+
+### `adn_system(operation="sampling_status")`
+Check the health and capabilities of the sampling system, including available providers and performance metrics.
+
+## Usage Examples
+
+### Research Orchestration
+```
+adn_research(operation="research_orchestrate", query="Architecture of modern vector databases")
+# AI will:
+# 1. Search web for current trends
+# 2. Search arXiv for academic papers
+# 3. Retrieve relevant local notes
+# 4. Synthesize a detailed report
+```
+
+### Collaborative Workflow
+```
+adn_system(operation="workflow", topic="Organize my project files by type")
+# AI will:
+# 1. Scan the directory
+# 2. Identify file types
+# 3. Request file movement from filesystem-mcp
+# 4. Update memory records
+```
+
+## Safety & Ethics
+
+> [!IMPORTANT]
+> **Safety Guards**: Agentic operations are bound by strict safety protocols.
+> - **Confirmation Required**: Destructive or high-risk actions always require user approval.
+> - **Audit Logging**: Every step of an autonomous workflow is logged for transparency.
+> - **Resource Limits**: Sampling is throttled to prevent runaway processes.
+
+## Benefits for Enterprise
+- **Efficiency**: Automate repetitive, complex research and organization tasks.
+- **Scale**: Handle information at a scale that is difficult for manual navigation.
+- **Consistency**: Ensure standard procedures are followed across the knowledge base."""
+
+    else:  # advanced/expert
+        return """# Advanced Agentic Sampling Architecture (SEP-1577)
+
+## Orchestration Logic
+
+The sampling system in Advanced Memory utilizes a **multi-agent orchestration layer** built on top of the FastMCP sampling API.
+
+### 1. Planning Phase
+The orchestrator uses an LLM to decompose a high-level goal into a directed acyclic graph (DAG) of tool calls.
+```python
+# Internal representation (Conceptual)
+workflow = {
+    "goal": "Consolidate project documentation",
+    "steps": [
+        {"id": "scan", "tool": "list_directory", "args": {"path": "docs/"}},
+        {"id": "read", "tool": "read_multiple_files", "depends_on": ["scan"]},
+        {"id": "synthesize", "tool": "adn_research", "args": {"operation": "llm_generate"}, "depends_on": ["read"]},
+        {"id": "write", "tool": "write_note", "depends_on": ["synthesize"]}
+    ]
+}
+```
+
+### 2. Execution & State Management
+- **Context Handling**: The `SamplingContext` preserves state across tool boundaries.
+- **Tool Routing**: Requests are intelligently routed to local or external MCP servers based on capability manifests.
+- **Dynamic Adaptation**: The workflow is re-evaluated after each step results are received.
+
+### 3. Verification Loop
+Every critical action is followed by a verification tool call (e.g., `file_exists`, `status`) to ensure the environment matches the expected state before proceeding.
+
+## Sampling Tools Implementation
+
+### `adn_system("sampling_status")`
+Provides a detailed breakdown of the sampling engine's health:
+- **Provider Status**: Connectivity to underlying LLMs.
+- **Token Usage**: Consumption metrics for the current session.
+- **Active Workflows**: Real-time status of running orchestrations.
+- **Latency Metrics**: Performance tracking for tool interactions.
+
+### `adn_research("research_orchestrate")`
+The specialized researcher orchestrator:
+- **Depth Control**: Regulates how many layers of citations to follow.
+- **Source Filtering**: Prioritizes local memory over external search or vice versa.
+- **Conflict Resolution**: Merges potentially contradictory information from different sources.
+
+## Safety Guard Implementation
+
+Advanced Memory implements **Agentic Safety Guardrails**:
+- **Tool Permissions**: Granular control over which tools can be "sampled" by the AI.
+- **Domain Restrictions**: Lock sampling to specific directory subtrees or project IDs.
+- **Human-in-the-loop (HITL)**: Mandatory breakpoints for user verification of destructive payloads.
+
+## Future Directions
+- **Self-Healing Indexing**: Automated repair of broken semantic links using sampling.
+- **Cross-Fleet Knowledge Synthesis**: Orchestrating research across a fleet of 50+ MCP servers.
+- **Autonomous Compliance Auditing**: Real-time monitoring of knowledge base adherence to documentation standards."""
 
 
 def _get_basic_help() -> str:
@@ -200,6 +290,7 @@ Advanced Memory is an **enhanced knowledge management system** that combines:
 - **Rich editing** - Typora integration for advanced formatting
 - **Visual diagrams** - Mermaid diagram support
 - **AI integration** - Seamless Claude Desktop interaction
+- **Agentic Sampling** - Autonomous orchestration of complex tasks (SEP-1577)
 
 ## Quick Start
 
@@ -269,6 +360,7 @@ recent_activity()    # Check recent changes
 - Context-aware suggestions
 - Smart content generation
 - Knowledge graph exploration
+- **Sampling**: Autonomous orchestration of complex toolchains
 
 ## Need More Help?
 
@@ -276,6 +368,7 @@ recent_activity()    # Check recent changes
 - `help("tools")` - Complete command reference
 - `help("semantic-net")` - Understanding knowledge graphs
 - `help("claude")` - AI interaction details
+- `help("sampling")` - Agentic orchestration and workflows
 
 ## Getting Started Checklist
 
@@ -483,6 +576,11 @@ get_current_project()           # Current project info
 - Filter by content type and date
 - Combine multiple search strategies
 
+### Sampling & Agentic Workflows
+- `adn_research("web_search", query="...")` - AI-powered research
+- `adn_system("sampling_status")` - Check orchestration health
+- `adn_external("sampling", ...)` - Deep task orchestration
+
 For advanced features: `help("advanced")`
 For technical details: `help("expert")`"""
 
@@ -636,6 +734,20 @@ async def search_notes(query: str) -> SearchResponse:
 - **Integration tests**: End-to-end workflow verification
 - **Performance tests**: Scalability and efficiency checks
 - **Compatibility tests**: Cross-platform validation
+
+## Sampling & Orchestration Logic
+
+### Multi-Agent Coordination
+- **Task Decomposition**: High-level goals broken into atomic tool calls
+- **Context Routing**: Intelligent selection of relevant tools and servers
+- **Self-Correction**: Automatic retry and recovery on tool failures
+- **Result Synthesis**: Consolidating multiple tool outputs into a final response
+
+### Security & Safety Guards
+- **User Confirmation**: Explicit approval required for sensitive actions
+- **Resource Limits**: Memory, time, and API call quotas
+- **Boundary Verification**: Ensuring operations stay within project scope
+- **Audit Logging**: Traceable execution paths for all agentic actions
 
 For expert-level details: `help("expert")`"""
 

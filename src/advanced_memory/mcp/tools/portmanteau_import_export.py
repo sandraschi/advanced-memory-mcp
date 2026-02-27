@@ -38,9 +38,15 @@ async def adn_import_export(
         Field(description="Data format for operation"),
     ],
     path: Annotated[str | None, Field(description="File/directory path")] = None,
-    query: Annotated[str | None, Field(description="Search query (for search operations)")] = None,
-    destination: Annotated[str | None, Field(description="Export destination path")] = None,
-    options: Annotated[dict | None, Field(description="Format-specific options")] = None,
+    query: Annotated[
+        str | None, Field(description="Search query (for search operations)")
+    ] = None,
+    destination: Annotated[
+        str | None, Field(description="Export destination path")
+    ] = None,
+    options: Annotated[
+        dict | None, Field(description="Format-specific options")
+    ] = None,
 ) -> dict:
     """Unified portmanteau for all import and export operations.
 
@@ -61,43 +67,42 @@ async def adn_import_export(
                     "Path required for import operations",
                 )
 
-            # Route to appropriate import tool based on format
             if format == "obsidian":
                 from advanced_memory.mcp.tools.load_obsidian_vault import (
                     load_obsidian_vault,
                 )
 
-                result = await load_obsidian_vault.fn(path, **options)
+                result = await load_obsidian_vault(path, **options)
             elif format == "notion":
                 from advanced_memory.mcp.tools.load_notion_export import (
                     load_notion_export,
                 )
 
-                result = await load_notion_export.fn(path, **options)
+                result = await load_notion_export(path, **options)
             elif format == "joplin":
                 from advanced_memory.mcp.tools.load_joplin_vault import (
                     load_joplin_vault,
                 )
 
-                result = await load_joplin_vault.fn(path, **options)
+                result = await load_joplin_vault(path, **options)
             elif format == "evernote":
                 from advanced_memory.mcp.tools.load_evernote_export import (
                     load_evernote_export,
                 )
 
-                result = await load_evernote_export.fn(path, **options)
+                result = await load_evernote_export(path, **options)
             elif format == "onenote":
                 from advanced_memory.mcp.tools.load_onenote_html import (
                     load_onenote_html,
                 )
 
-                result = await load_onenote_html.fn(path, **options)
+                result = await load_onenote_html(path, **options)
             elif format == "archive":
                 from advanced_memory.mcp.tools.import_from_archive import (
                     import_from_archive,
                 )
 
-                result = await import_from_archive.fn(path, **options)
+                result = await import_from_archive(path, **options)
             else:
                 return build_error_response(
                     "VALIDATION_ERROR",
@@ -115,41 +120,39 @@ async def adn_import_export(
                     "Destination required for export operations",
                 )
 
-            # Route to appropriate export tool based on format
             if format == "html":
                 from advanced_memory.mcp.tools.export_html_notes import (
                     export_html_notes,
                 )
 
-                result = await export_html_notes.fn(destination, **options)
+                result = await export_html_notes(destination, **options)
             elif format == "pdf":
-                # Choose appropriate PDF export based on options
                 if options.get("combined", False):
                     from advanced_memory.mcp.tools.export_pdf_combined import (
                         export_pdf_combined,
                     )
 
-                    result = await export_pdf_combined.fn(destination, **options)
+                    result = await export_pdf_combined(destination, **options)
                 else:
                     from advanced_memory.mcp.tools.export_pdf_native import (
                         export_pdf_native,
                     )
 
-                    result = await export_pdf_native.fn(destination, **options)
+                    result = await export_pdf_native(destination, **options)
             elif format == "pandoc":
                 from advanced_memory.mcp.tools.export_pandoc import export_pandoc
 
-                result = await export_pandoc.fn(destination, **options)
+                result = await export_pandoc(destination, **options)
             elif format == "docsify":
                 from advanced_memory.mcp.tools.export_docsify import export_docsify
 
-                result = await export_docsify.fn(destination, **options)
+                result = await export_docsify(destination, **options)
             elif format == "archive":
                 from advanced_memory.mcp.tools.export_to_archive import (
                     export_to_archive,
                 )
 
-                result = await export_to_archive.fn(destination, **options)
+                result = await export_to_archive(destination, **options)
             else:
                 return build_error_response(
                     "VALIDATION_ERROR",
@@ -170,7 +173,7 @@ async def adn_import_export(
             if format == "canvas":
                 from advanced_memory.mcp.tools.load_canvas import load_obsidian_canvas
 
-                result = await load_obsidian_canvas.fn(path, **options)
+                result = await load_obsidian_canvas(path, **options)
             else:
                 return build_error_response(
                     "VALIDATION_ERROR",
@@ -188,31 +191,30 @@ async def adn_import_export(
                     "Query required for search operations",
                 )
 
-            # Route to appropriate search tool based on format
             if format == "obsidian":
                 from advanced_memory.mcp.tools.search_obsidian_vault import (
                     search_obsidian_vault,
                 )
 
-                result = await search_obsidian_vault.fn(query, **options)
+                result = await search_obsidian_vault(query, **options)
             elif format == "notion":
                 from advanced_memory.mcp.tools.search_notion_vault import (
                     search_notion_vault,
                 )
 
-                result = await search_notion_vault.fn(query, **options)
+                result = await search_notion_vault(query, **options)
             elif format == "joplin":
                 from advanced_memory.mcp.tools.search_joplin_vault import (
                     search_joplin_vault,
                 )
 
-                result = await search_joplin_vault.fn(query, **options)
+                result = await search_joplin_vault(query, **options)
             elif format == "evernote":
                 from advanced_memory.mcp.tools.search_evernote_vault import (
                     search_evernote_vault,
                 )
 
-                result = await search_evernote_vault.fn(query, **options)
+                result = await search_evernote_vault(query, **options)
             else:
                 return build_error_response(
                     "VALIDATION_ERROR",
@@ -230,7 +232,9 @@ async def adn_import_export(
             )
 
     except Exception as e:
-        logger.error(f"Import/export operation '{operation}' for format '{format}' failed: {e}")
+        logger.error(
+            f"Import/export operation '{operation}' for format '{format}' failed: {e}"
+        )
         return build_error_response(
             "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
         )

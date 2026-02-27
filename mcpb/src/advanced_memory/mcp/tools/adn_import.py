@@ -182,7 +182,7 @@ async def _archive_import(
     """Handle archive import operation."""
     from advanced_memory.mcp.tools.import_from_archive import import_from_archive
 
-    return await import_from_archive.fn(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
+    return await (import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive)(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
 
 
 async def _canvas_import(

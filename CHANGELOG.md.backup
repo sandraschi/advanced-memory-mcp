@@ -5,45 +5,6 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - Semantic Research (RAG) & Performance Surge (2026-02-27)
-
-### 🚀 **Semantic Intelligence (RAG)**
-
-#### Added - LanceDB Vector Search Integration
-- **LanceDB Implementation**: Integration of LanceDB for high-performance vector storage and hybrid search.
-- **Semantic Embeddings**: Adoption of `BAAI/bge-small-en-v1.5` via `fastembed` for generating state-of-the-art semantic embeddings.
-- **Hybrid Search Architecture**: Combined FTS5 keyword search with LanceDB semantic retrieval for maximum relevance.
-- **Semantic Chunking**: Implemented paragraph-based chunking logic to optimize document granularity for RAG.
-
-### ⚡ **Performance & Stability**
-
-#### Fixed - N+1 Query Resolution
-- **Batch Fetching**: Refactored API routers (specifically `utils.py`) to use batch fetching (`EntityRepository.find_all`) instead of individual queries, drastically reducing backend latency for large note lists.
-- **Pagination Hook**: Prepared backend infrastructure for paginated entity retrieval.
-
-#### Fixed - Build & UI Stability
-- **CSS Build Fix**: Resolved a malformed Tailwind CSS shadow rule in `main.css` that was causing Vite build failures.
-- **Dependency Consolidation**: Added `lancedb` and `fastembed` to `pyproject.toml` dependencies.
-
----
-
-## [1.4.1] - Sampling Bug Fix (2026-02-22)
-
-### Fixed
-
-#### FastMCP 2.14.1+ Sampling API — `inter_server_tools.py` rewrite
-- **Root cause**: `mcp/sampling.py` accessed `mcp.ctx` which does not exist on FastMCP instances. `mcp/inter_server.py` used a manual tool-call loop with dict-formatted tools — the pre-2.14.1 low-level pattern incompatible with `ctx.sample(tools=[...])`.
-- **Symptom**: All three agentic meta-tools (`agentic_content_workflow`, `intelligent_batch_processor`, `sampling_capabilities_status`) raised `AttributeError` at call time.
-- **Fix — `mcp/tools/inter_server_tools.py`**: Full rewrite using the correct FastMCP 2.14.1+ SEP-1577 pattern:
-  - 5 real async leaf-tool functions (no mocks, no lambdas), each calling the actual service layer
-  - `ctx: Context` parameter — correct name for FastMCP auto-injection (old code used `context`)
-  - `ctx.sample(messages=..., tools=[fn,...], result_type=PydanticModel)` for LLM orchestration
-  - `WorkflowResult` and `BatchResult` Pydantic models for validated structured output
-  - Tool group registry mapping `available_tools` strings to Python callables
-- **Fix — `mcp/inter_server.py`**: Gutted. Entire `AgenticWorkflow` / `sample_with_tools` / `create_tool_spec` machinery removed. Kept as import stub.
-- **Fix — `mcp/sampling.py`**: Gutted. Broken `SamplingClient` wrapper removed. Kept as import stub.
-
----
 
 ## [1.4.0] - Ecosystem Integration & Advanced Collaboration (2026-02-17)
 
@@ -508,18 +469,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 - **Logger management** - Nuclear option disable for JSON-RPC compliance
 - **Prompt/resource registration** - FastMCP 2.12+ best practices implementation
 
-## [1.5.1] - 2026-02-27
-### Added
-- **`adn_knowledge_rag`**: Specialized tool for high-density context retrieval (OpenFang bridge).
-- **Metadata Encryption**: Implemented transparent Fernet (AES-128) encryption for LanceDB metadata.
-
-### Changed
-- **RAG Performance**: Enabled Flash Attention 2 (FA2) for BGE-Reranker on RTX 4090.
-- **Typing & Linting**: 
-    - Full migration to SOTA Python typing (Python 3.12+ standards).
-    - Unified Ruff linting and formatting pass.
-
-## [1.5.0] - 2026-02-12
+## [1.1.0b3] - 2026-01-16
 
 ### 🚀 FastMCP 2.14.3 Advanced Features & Ecosystem Expansion
 

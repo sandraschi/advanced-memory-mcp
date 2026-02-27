@@ -30,7 +30,9 @@ async def adn_research(
         ],
         Field(description="Research operation to perform"),
     ],
-    query: Annotated[str | None, Field(description="Search query or research topic")] = None,
+    query: Annotated[
+        str | None, Field(description="Search query or research topic")
+    ] = None,
     provider: Annotated[
         str | None,
         Field(description="Provider/service (openai, anthropic, google, etc.)"),
@@ -38,13 +40,20 @@ async def adn_research(
     model: Annotated[str | None, Field(description="Model name/version")] = None,
     api_key: Annotated[str | None, Field(description="API key for service")] = None,
     limit: Annotated[int | None, Field(description="Result limit")] = None,
-    language: Annotated[str | None, Field(description="Programming language filter")] = None,
-    path: Annotated[str | None, Field(description="File path for document ingestion")] = None,
-    content: Annotated[str | None, Field(description="Content for LLM generation")] = None,
+    language: Annotated[
+        str | None, Field(description="Programming language filter")
+    ] = None,
+    path: Annotated[
+        str | None, Field(description="File path for document ingestion")
+    ] = None,
+    content: Annotated[
+        str | None, Field(description="Content for LLM generation")
+    ] = None,
 ) -> dict:
     """Unified portmanteau for AI research and knowledge discovery.
 
-    Operations: web_search, arxiv, github, document_ingest, rag_query, llm_config, llm_generate, research_orchestrate, tvtropes.
+    Operations: web_search, arxiv, github, document_ingest, rag_query,
+    llm_config, llm_generate, research_orchestrate, tvtropes.
 
     For full documentation on parameters and usage examples, call:
     `help(topic="adn_research")`
@@ -59,7 +68,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_web_search import adn_web_search
 
-            result = await adn_web_search.fn(query, max_results=limit or 10)
+            result = await adn_web_search(query, max_results=limit or 10)
             return build_success_response("web_search", result)
 
         elif operation == "arxiv":
@@ -71,7 +80,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
 
-            result = await adn_arxiv_research.fn(
+            result = await adn_arxiv_research(
                 operation="search_papers", query=query, max_results=limit or 10
             )
             return build_success_response("arxiv", result)
@@ -87,7 +96,7 @@ async def adn_research(
                 adn_github_research,
             )
 
-            result = await adn_github_research.fn(
+            result = await adn_github_research(
                 operation="search_repositories",
                 query=query,
                 language=language,
@@ -106,7 +115,7 @@ async def adn_research(
                 adn_tvtropes_research,
             )
 
-            result = await adn_tvtropes_research.fn(query)
+            result = await adn_tvtropes_research(query)
             return build_success_response("tvtropes", result)
 
         elif operation == "document_ingest":
@@ -120,7 +129,7 @@ async def adn_research(
                 adn_document_ingest,
             )
 
-            result = await adn_document_ingest.fn(path)
+            result = await adn_document_ingest(path)
             return build_success_response("document_ingest", result)
 
         elif operation == "rag_query":
@@ -132,7 +141,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_rag import adn_rag
 
-            result = await adn_rag.fn(query)
+            result = await adn_rag(query)
             return build_success_response("rag_query", result)
 
         elif operation == "llm_config":
@@ -144,7 +153,9 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_llm import adn_llm
 
-            result = await adn_llm.fn("configure", provider=provider, model=model, api_key=api_key)
+            result = await adn_llm(
+                "configure", provider=provider, model=model, api_key=api_key
+            )
             return build_success_response("llm_config", result)
 
         elif operation == "llm_generate":
@@ -156,7 +167,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_llm import adn_llm
 
-            result = await adn_llm.fn("generate", content=content)
+            result = await adn_llm("generate", content=content)
             return build_success_response("llm_generate", result)
 
         elif operation == "research_orchestrate":
@@ -170,7 +181,7 @@ async def adn_research(
                 research_orchestrator,
             )
 
-            result = await research_orchestrator.fn(query)
+            result = await research_orchestrator(query)
             return build_success_response("research_orchestrate", result)
 
         else:

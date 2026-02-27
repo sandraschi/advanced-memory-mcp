@@ -33,15 +33,20 @@ async def adn_skills(
         Field(description="Skill operation to perform"),
     ],
     name: Annotated[str | None, Field(description="Skill name")] = None,
-    content: Annotated[str | None, Field(description="Skill content/description")] = None,
+    content: Annotated[
+        str | None, Field(description="Skill content/description")
+    ] = None,
     tags: Annotated[list[str] | None, Field(description="Skill tags")] = None,
     query: Annotated[str | None, Field(description="Search query")] = None,
     skill_type: Annotated[str | None, Field(description="Skill type/category")] = None,
-    parameters: Annotated[dict | None, Field(description="Additional parameters")] = None,
+    parameters: Annotated[
+        dict | None, Field(description="Additional parameters")
+    ] = None,
 ) -> dict:
     """Unified portmanteau for skill system operations.
 
-    Operations: create, read, list, update, delete, search, advanced_create, creator, operations, research.
+    Operations: create, read, list, update, delete, search,
+    advanced_create, creator, operations, research.
 
     For full documentation on parameters and usage examples, call:
     `help(topic="adn_skills")`
@@ -57,9 +62,11 @@ async def adn_skills(
                     "Name and content required for skill creation",
                 )
 
-            from advanced_memory.mcp.tools.adn_skills import adn_skills
+            from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
-            result = await adn_skills.fn("create", name=name, content=content, tags=tags or [])
+            result = await _adn_skills(
+                "create", name=name, content=content, tags=tags or []
+            )
             return build_success_response("create", result)
 
         elif operation == "read":
@@ -72,13 +79,13 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills_reader import adn_skills_reader
 
-            result = await adn_skills_reader.fn(name)
+            result = await adn_skills_reader(name)
             return build_success_response("read", result)
 
         elif operation == "list":
-            from advanced_memory.mcp.tools.adn_skills import adn_skills
+            from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
-            result = await adn_skills.fn("list")
+            result = await _adn_skills("list")
             return build_success_response("list", result)
 
         elif operation == "search":
@@ -89,9 +96,9 @@ async def adn_skills(
                     "Query required for skill search",
                 )
 
-            from advanced_memory.mcp.tools.adn_skills import adn_skills
+            from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
-            result = await adn_skills.fn("search", query=query)
+            result = await _adn_skills("search", query=query)
             return build_success_response("search", result)
 
         elif operation == "update":
@@ -102,7 +109,7 @@ async def adn_skills(
                     "Skill name required for update",
                 )
 
-            from advanced_memory.mcp.tools.adn_skills import adn_skills
+            from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
             update_params = {"name": name}
             if content:
@@ -111,7 +118,7 @@ async def adn_skills(
                 update_params["tags"] = tags
             update_params.update(parameters)
 
-            result = await adn_skills.fn("update", **update_params)
+            result = await _adn_skills("update", **update_params)
             return build_success_response("update", result)
 
         elif operation == "delete":
@@ -122,9 +129,9 @@ async def adn_skills(
                     "Skill name required for deletion",
                 )
 
-            from advanced_memory.mcp.tools.adn_skills import adn_skills
+            from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
-            result = await adn_skills.fn("delete", name=name)
+            result = await _adn_skills("delete", name=name)
             return build_success_response("delete", result)
 
         elif operation == "advanced_create":
@@ -139,7 +146,7 @@ async def adn_skills(
                 make_skill_advanced,
             )
 
-            result = await make_skill_advanced.fn(name, content or "", **parameters)
+            result = await make_skill_advanced(name, content or "", **parameters)
             return build_success_response("advanced_create", result)
 
         elif operation == "creator":
@@ -152,7 +159,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills_creator import adn_skills_creator
 
-            result = await adn_skills_creator.fn(content, **parameters)
+            result = await adn_skills_creator(content, **parameters)
             return build_success_response("creator", result)
 
         elif operation == "operations":
@@ -160,11 +167,13 @@ async def adn_skills(
                 adn_skills_operations,
             )
 
-            result = await adn_skills_operations.fn("list")
+            result = await adn_skills_operations("list")
             return build_success_response("operations", result)
 
         elif operation == "research":
-            topic = query or parameters.get("topic") or (content[:200] if content else None)
+            topic = (
+                query or parameters.get("topic") or (content[:200] if content else None)
+            )
             if not topic:
                 return build_error_response(
                     "VALIDATION_ERROR",
@@ -175,7 +184,7 @@ async def adn_skills(
                 adn_skills_research,
             )
 
-            result = await adn_skills_research.fn(
+            result = await adn_skills_research(
                 topic=str(topic),
                 sources=parameters.get("sources"),
                 max_iterations=parameters.get("max_iterations", 3),

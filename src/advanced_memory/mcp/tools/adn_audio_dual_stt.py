@@ -364,7 +364,7 @@ async def _parse_and_execute_command_dual_stt(active_project, command_text: str)
             # Use adn_content quick operation
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                 operation="quick",
                 content=f"# {topic.title()}\n\nVoice command via dual STT: {command_text}",
                 project=active_project.name,
@@ -384,7 +384,7 @@ async def _parse_and_execute_command_dual_stt(active_project, command_text: str)
             logger.info("Dual STT: Detected read latest note command")
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(operation="read_latest", project=active_project.name)
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(operation="read_latest", project=active_project.name)
 
     # Search commands
     search_patterns = [
@@ -400,7 +400,7 @@ async def _parse_and_execute_command_dual_stt(active_project, command_text: str)
             logger.info(f"Dual STT: Detected search command: {query}")
             from advanced_memory.mcp.tools.adn_search import adn_search
 
-            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+            return await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(operation="notes", query=query, project=active_project.name)
 
     # If no pattern matches, try LLM fallback
     try:
@@ -481,7 +481,7 @@ If the command is unclear or doesn't match any operation, use "unknown"."""
             topic = params.get("topic", command_text)
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                 operation="quick",
                 content=f"# {topic}\n\nDual STT voice command: {command_text}",
                 project=active_project.name,
@@ -492,19 +492,19 @@ If the command is unclear or doesn't match any operation, use "unknown"."""
             if note_title:
                 from advanced_memory.mcp.tools.content_manager import adn_content
 
-                return await adn_content.fn(
+                return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                     operation="read", identifier=note_title, project=active_project.name
                 )
             else:
                 from advanced_memory.mcp.tools.content_manager import adn_content
 
-                return await adn_content.fn(operation="read_latest", project=active_project.name)
+                return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(operation="read_latest", project=active_project.name)
 
         elif operation == "search":
             query = params.get("query", command_text)
             from advanced_memory.mcp.tools.adn_search import adn_search
 
-            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+            return await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(operation="notes", query=query, project=active_project.name)
 
         elif operation == "weather":
             location = params.get("location")

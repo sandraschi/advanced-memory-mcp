@@ -193,7 +193,9 @@ async def adn_tvtropes_research(
             if not search_term:
                 return {"error": "trope_name or query required for find_examples"}
 
-            examples = await _find_trope_examples(base_url, search_term, media_type, max_results)
+            examples = await _find_trope_examples(
+                base_url, search_term, media_type, max_results
+            )
             return {
                 "operation": operation,
                 "search_term": search_term,
@@ -218,7 +220,9 @@ async def adn_tvtropes_research(
             if not query:
                 return {"error": "query required for character_archetypes"}
 
-            archetypes = await _character_archetype_research(base_url, query, max_results)
+            archetypes = await _character_archetype_research(
+                base_url, query, max_results
+            )
             return {
                 "operation": operation,
                 "query": query,
@@ -242,7 +246,9 @@ async def adn_tvtropes_research(
             if not query:
                 return {"error": "query required for media_analysis"}
 
-            analysis = await _media_specific_analysis(base_url, query, media_type, max_results)
+            analysis = await _media_specific_analysis(
+                base_url, query, media_type, max_results
+            )
             return {
                 "operation": operation,
                 "query": query,
@@ -283,7 +289,9 @@ async def _respect_rate_limits() -> None:
     await asyncio.sleep(delay)
 
 
-async def _search_tropes(base_url: str, query: str, max_results: int) -> list[dict[str, Any]]:
+async def _search_tropes(
+    base_url: str, query: str, max_results: int
+) -> list[dict[str, Any]]:
     """Search TV Tropes for relevant tropes using their official search."""
 
     try:
@@ -309,7 +317,9 @@ async def _search_tropes(base_url: str, query: str, max_results: int) -> list[di
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(search_url, params=params) as response:
                 if response.status != 200:
-                    logger.warning(f"TV Tropes search failed with status {response.status}")
+                    logger.warning(
+                        f"TV Tropes search failed with status {response.status}"
+                    )
                     return []
 
                 # Parse the HTML response (simplified - in practice, this would need proper HTML parsing)
@@ -317,7 +327,9 @@ async def _search_tropes(base_url: str, query: str, max_results: int) -> list[di
 
                 # Extract trope links and basic information
                 # This is a very simplified extraction - TV Tropes uses complex JavaScript
-                tropes = _extract_trope_search_results(html_content, max_results)
+                tropes = await _extract_trope_search_results(
+                    html_content, max_results, query
+                )
 
                 return tropes
 
@@ -326,39 +338,31 @@ async def _search_tropes(base_url: str, query: str, max_results: int) -> list[di
         return []
 
 
-def _extract_trope_search_results(html_content: str, max_results: int) -> list[dict[str, Any]]:
+async def _extract_trope_search_results(
+    html_content: str, max_results: int, query: str | None = None
+) -> list[dict[str, Any]]:
     """Extract trope information from TV Tropes search HTML (simplified)."""
 
-    # This is a placeholder implementation
-    # In reality, TV Tropes uses heavy JavaScript and would require Selenium/Playwright
-    # For compliance, we're providing mock/placeholder results
+    # Compliance Gateway: TV Tropes prohibits automated scraping.
+    # Instead of mock data, we attempt to find relevant tropes ALREADY in the knowledge base
+    # or provide a structured guidance for manual research.
 
-    # Mock results based on common tropes - in real implementation, this would parse actual HTML
-    mock_tropes = [
+    from advanced_memory.mcp.tools.adn_search import adn_search
+
+    _search = adn_search.fn if hasattr(adn_search, "fn") else adn_search
+    kb_results = await _search(operation="notes", query=f"trope {query or ''}")
+
+    if kb_results and kb_results.get("results"):
+        return kb_results["results"]
+
+    return [
         {
-            "name": "The Hero's Journey",
-            "url": "https://tvtropes.org/pmwiki/pmwiki.php/Main/TheHerosJourney",
-            "description": "A classic narrative structure following a hero's transformation",
-            "category": "Narrative",
-            "relevance_score": 0.95,
-        },
-        {
-            "name": "MacGuffin",
-            "url": "https://tvtropes.org/pmwiki/pmwiki.php/Main/MacGuffin",
-            "description": "An object that drives the plot but has no intrinsic value",
-            "category": "Plot Device",
-            "relevance_score": 0.88,
-        },
-        {
-            "name": "Character Arc",
-            "url": "https://tvtropes.org/pmwiki/pmwiki.php/Main/CharacterArc",
-            "description": "How characters change and develop throughout a story",
-            "category": "Character",
-            "relevance_score": 0.82,
-        },
+            "status": "Compliance Block",
+            "message": "TV Tropes prohibits automated access. No local notes found for this trope.",
+            "guidance": f"Please visit https://tvtropes.org/pmwiki/search_result.php?q={query or ''} manually.",
+            "relevance_score": 0.0,
+        }
     ]
-
-    return mock_tropes[:max_results]
 
 
 async def _analyze_specific_trope(base_url: str, trope_name: str) -> dict[str, Any]:

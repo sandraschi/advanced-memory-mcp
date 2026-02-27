@@ -15,6 +15,11 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
+def _unwrap(tool_obj):
+    """Return the underlying callable from an @mcp.tool wrapper, or the object itself."""
+    return tool_obj.fn if hasattr(tool_obj, "fn") else tool_obj
+
+
 @mcp.tool
 async def adn_project(
     operation: Annotated[
@@ -33,7 +38,9 @@ async def adn_project(
     ],
     name: Annotated[str | None, Field(description="Project name")] = None,
     path: Annotated[str | None, Field(description="Project filesystem path")] = None,
-    set_default: Annotated[bool | None, Field(description="Set as default project")] = None,
+    set_default: Annotated[
+        bool | None, Field(description="Set as default project")
+    ] = None,
     description: Annotated[str | None, Field(description="Project description")] = None,
 ) -> dict:
     """Unified portmanteau for all project management operations.
@@ -56,7 +63,7 @@ async def adn_project(
                 create_memory_project,
             )
 
-            result = await create_memory_project.fn(
+            result = await create_memory_project(
                 name, path, description or "", set_default or False
             )
             return build_success_response("create", result)
@@ -71,7 +78,7 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import delete_project
 
-            result = await delete_project.fn(name)
+            result = await delete_project(name)
             return build_success_response("delete", result)
 
         elif operation == "list":
@@ -82,12 +89,10 @@ async def adn_project(
                 list_memory_projects,
             )
 
-            # Fetch raw data for programmatic use
             response = await call_get(client, "/projects/projects")
             raw_data = ProjectList.model_validate(response.json())
 
-            # Still get the formatted string for chat
-            formatted_result = await list_memory_projects.fn()
+            formatted_result = await list_memory_projects()
             return build_success_response(
                 "list", formatted_result, result=raw_data.model_dump()["projects"]
             )
@@ -105,7 +110,7 @@ async def adn_project(
                 switch_project,
             )
 
-            result = await switch_project.fn(name)
+            result = await switch_project(name)
             current_project = session.get_current_project()
             return build_success_response(
                 "switch", result, result={"current_project": current_project}
@@ -117,7 +122,7 @@ async def adn_project(
                 session,
             )
 
-            result = await get_current_project.fn()
+            result = await get_current_project()
             current_project = session.get_current_project()
             return build_success_response(
                 "current", result, result={"current_project": current_project}
@@ -133,25 +138,25 @@ async def adn_project(
 
             from advanced_memory.mcp.tools.project_management import set_default_project
 
-            result = await set_default_project.fn(name)
+            result = await set_default_project(name)
             return build_success_response("set_default", result)
 
         elif operation == "sync":
             from advanced_memory.mcp.tools.sync_status import sync_status
 
-            result = await sync_status.fn()
+            result = await sync_status()
             return build_success_response("sync", result)
 
         elif operation == "status":
             from advanced_memory.mcp.tools.status import status
 
-            result = await status.fn("intermediate", "projects")
+            result = await status("intermediate", "projects")
             return build_success_response("status", result)
 
         elif operation == "inbox":
             from advanced_memory.mcp.tools.adn_inbox import adn_inbox
 
-            result = await adn_inbox.fn("status")
+            result = await adn_inbox("status")
             return build_success_response("inbox", result)
 
         else:

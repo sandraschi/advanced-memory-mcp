@@ -41,16 +41,16 @@ async def export_html_notes(
 
     Examples:
         # Export entire knowledge base to HTML
-        result = await export_html_notes.fn(export_path="/path/to/html-export")
+        result = await (export_html_notes.fn if hasattr(export_html_notes, "fn") else export_html_notes)(export_path="/path/to/html-export")
 
         # Export specific folder
-        result = await export_html_notes.fn(
+        result = await (export_html_notes.fn if hasattr(export_html_notes, "fn") else export_html_notes)(
             export_path="/path/to/export",
             source_folder="/research"
         )
 
         # Export without index page
-        result = await export_html_notes.fn(
+        result = await (export_html_notes.fn if hasattr(export_html_notes, "fn") else export_html_notes)(
             export_path="/path/to/export",
             include_index=False
         )
@@ -142,7 +142,7 @@ async def _get_notes_from_folder(
             if folder_matches and note_path.endswith(".md"):
                 # Read the actual note content
                 try:
-                    note_content = await read_note.fn(identifier=note_title, project=project)
+                    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=note_title, project=project)
 
                     # Extract just the markdown content (remove any artifact formatting)
                     content = note_content

@@ -33,11 +33,15 @@ async def adn_external(
     ],
     content: Annotated[str | None, Field(description="Content for operations")] = None,
     path: Annotated[str | None, Field(description="File path")] = None,
-    parameters: Annotated[dict | None, Field(description="Operation parameters")] = None,
+    parameters: Annotated[
+        dict | None, Field(description="Operation parameters")
+    ] = None,
+    ctx: object = None,  # FastMCP injects Context for sampling operations
 ) -> dict:
     """Unified portmanteau for external integrations and specialized operations.
 
-    Operations: audio, workflow, batch, canvas, typora, zettel, content_workflow, sampling, restart_watch.
+    Operations: audio, workflow, batch, canvas, typora, zettel,
+    content_workflow, sampling, restart_watch.
 
     For full documentation on parameters and usage examples, call:
     `help(topic="adn_external")`
@@ -56,7 +60,7 @@ async def adn_external(
                         "MISSING_PARAMETER",
                         "Path or content required for dictation",
                     )
-                result = await adn_audio.fn("dictate", path=path, content=content)
+                result = await adn_audio("dictate", path=path, content=content)
             elif sub_op == "speak":
                 if not content:
                     return build_error_response(
@@ -64,9 +68,9 @@ async def adn_external(
                         "MISSING_CONTENT",
                         "Content required for speech synthesis",
                     )
-                result = await adn_audio.fn("speak", content=content)
+                result = await adn_audio("speak", content=content)
             else:
-                result = await adn_audio.fn("status")
+                result = await adn_audio("status")
 
             return build_success_response("audio", result)
 
@@ -82,7 +86,9 @@ async def adn_external(
                 agentic_content_workflow,
             )
 
-            result = await agentic_content_workflow.fn(content)
+            result = await agentic_content_workflow(
+                content, available_tools=["full"], ctx=ctx
+            )
             return build_success_response("workflow", result)
 
         elif operation == "batch":
@@ -97,13 +103,18 @@ async def adn_external(
                 intelligent_batch_processor,
             )
 
-            result = await intelligent_batch_processor.fn(content)
+            result = await intelligent_batch_processor(
+                items=[{"content": content}],
+                processing_goal=content,
+                available_operations=["full"],
+                ctx=ctx,
+            )
             return build_success_response("batch", result)
 
         elif operation == "canvas":
             from advanced_memory.mcp.tools.canvas import canvas
 
-            result = await canvas.fn(content or "", **parameters)
+            result = await canvas(content or "", **parameters)
             return build_success_response("canvas", result)
 
         elif operation == "typora":
@@ -111,11 +122,11 @@ async def adn_external(
             from advanced_memory.mcp.tools.typora_control import typora_control
 
             if sub_op == "open" and path:
-                result = await typora_control.fn("open", path)
+                result = await typora_control("open", path)
             elif sub_op == "close":
-                result = await typora_control.fn("close")
+                result = await typora_control("close")
             else:
-                result = await typora_control.fn("status")
+                result = await typora_control("status")
 
             return build_success_response("typora", result)
 
@@ -129,7 +140,7 @@ async def adn_external(
 
             from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
-            result = await adn_zettelmaker.fn(content, **parameters)
+            result = await adn_zettelmaker(content, **parameters)
             return build_success_response("zettel", result)
 
         elif operation == "content_workflow":
@@ -144,7 +155,9 @@ async def adn_external(
                 agentic_content_workflow,
             )
 
-            result = await agentic_content_workflow.fn(content)
+            result = await agentic_content_workflow(
+                content, available_tools=["full"], ctx=ctx
+            )
             return build_success_response("content_workflow", result)
 
         elif operation == "sampling":
@@ -152,13 +165,11 @@ async def adn_external(
                 sampling_capabilities_status,
             )
 
-            result = await sampling_capabilities_status.fn()
+            result = await sampling_capabilities_status(ctx=ctx)
             return build_success_response("sampling", result)
 
         elif operation == "restart_watch":
-            # Create a simple restart function
             try:
-                # This would trigger the restart_watch_service functionality
                 result = {
                     "message": "Watch service restart initiated",
                     "status": "success",

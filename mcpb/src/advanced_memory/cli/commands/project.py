@@ -150,7 +150,7 @@ def display_project_info(
     """Display detailed information and statistics about the current project."""
     try:
         # Get project info
-        info = asyncio.run(project_info.fn())  # type: ignore  # pyright: ignore [reportAttributeAccessIssue]
+        info = asyncio.run((project_info.fn if hasattr(project_info, "fn") else project_info)())  # type: ignore  # pyright: ignore [reportAttributeAccessIssue]
 
         if json_output:
             # Convert to JSON and print

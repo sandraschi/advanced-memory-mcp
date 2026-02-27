@@ -25,7 +25,7 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 async def create_note_from_template(template: dict[str, Any]) -> None:
     """Create a single note from a template."""
-    await mcp_write_note.fn(
+    await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
         title=template["title"], content=template["content"], folder=template["folder"]
     )
 

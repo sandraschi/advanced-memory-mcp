@@ -10,10 +10,12 @@ from typing import Annotated, Literal
 
 from pydantic import Field
 
+from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
-async def adn_knowledge_portmanteau(
+@mcp.tool
+async def adn_knowledge(
     operation: Annotated[
         Literal[
             "create",
@@ -32,31 +34,45 @@ async def adn_knowledge_portmanteau(
     ],
     identifier: Annotated[
         str | None,
-        Field(description="Note/entity identifier (required for read/update/delete/move)"),
+        Field(
+            description="Note/entity identifier (required for read/update/delete/move)"
+        ),
     ] = None,
-    title: Annotated[str | None, Field(description="Note title (required for create)")] = None,
-    content: Annotated[str | None, Field(description="Note content (for create/update)")] = None,
-    folder: Annotated[str | None, Field(description="Target folder (for create/move)")] = None,
+    title: Annotated[
+        str | None, Field(description="Note title (required for create)")
+    ] = None,
+    content: Annotated[
+        str | None, Field(description="Note content (for create/update)")
+    ] = None,
+    folder: Annotated[
+        str | None, Field(description="Target folder (for create/move)")
+    ] = None,
     tags: Annotated[
-        list[str] | None, Field(description="Tags to assign (for create/update)")
+        str | None, Field(description="Tags to assign (for create/update)")
     ] = None,
-    query: Annotated[str | None, Field(description="Search query (for search operation)")] = None,
-    path: Annotated[
-        str | None, Field(description="File/directory path (for list/navigation)")
-    ] = None,
-    depth: Annotated[
-        int | None, Field(description="Navigation depth (for context/navigation)")
-    ] = None,
-    timeframe: Annotated[str | None, Field(description="Time filter (for activity)")] = None,
     entity_type: Annotated[str | None, Field(description="Entity type filter")] = None,
+    query: Annotated[
+        str | None, Field(description="Search query (for search operation)")
+    ] = None,
     search_type: Annotated[
         str | None,
         Field(description='Search type: "text", "title", "permalink" (for search)'),
     ] = None,
-    page: Annotated[int | None, Field(description="Page number for results")] = None,
-    results_per_page: Annotated[int | None, Field(description="Number of results per page")] = None,
     projects: Annotated[
         str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")
+    ] = None,
+    timeframe: Annotated[
+        str | None, Field(description="Time filter (for activity)")
+    ] = None,
+    depth: Annotated[
+        int | None, Field(description="Navigation depth (for context/navigation)")
+    ] = None,
+    path: Annotated[
+        str | None, Field(description="File/directory path (for list/navigation)")
+    ] = None,
+    page: Annotated[int | None, Field(description="Page number for results")] = None,
+    results_per_page: Annotated[
+        int | None, Field(description="Number of results per page")
     ] = None,
 ) -> dict:
     """Unified portmanteau for all core knowledge management operations.
@@ -82,7 +98,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.write_note import write_note
 
-        result = await write_note.fn(
+        result = await write_note(
             title=title,
             content=content,
             folder=folder or "",
@@ -101,8 +117,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.read_note import read_note
 
-        result = await read_note.fn(identifier)
-        # result is already likely a dict or model from read_note
+        result = await read_note(identifier)
         return build_success_response("read", "Note read successfully", result=result)
 
     elif operation == "update":
@@ -115,7 +130,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.edit_note import edit_note
 
-        result = await edit_note.fn(identifier, "replace", content or "")
+        result = await edit_note(identifier, "replace", content or "")
         return build_success_response("update", result)
 
     elif operation == "delete":
@@ -128,7 +143,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.delete_note import delete_note
 
-        result = await delete_note.fn(identifier)
+        result = await delete_note(identifier)
         return build_success_response("delete", result)
 
     elif operation == "move":
@@ -141,7 +156,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.move_note import move_note
 
-        result = await move_note.fn(identifier, folder)
+        result = await move_note(identifier, folder)
         return build_success_response("move", result)
 
     elif operation == "search":
@@ -154,7 +169,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.search import search_notes
 
-        result = await search_notes.fn(
+        result = await search_notes(
             query,
             page=page or 1,
             results_per_page=results_per_page or 20,
@@ -162,7 +177,6 @@ async def adn_knowledge_portmanteau(
             projects=projects,
             entity_types=[entity_type] if entity_type else None,
         )
-        # search_notes returns SearchResponse object
         return build_success_response(
             "search",
             "Search completed",
@@ -178,7 +192,6 @@ async def adn_knowledge_portmanteau(
                 list_directory,
             )
 
-            # Fetch raw nodes for programmatic use
             active_project = get_active_project(None)
             params = {"dir_name": path or "", "depth": str(depth or 1)}
             response = await call_get(
@@ -186,7 +199,7 @@ async def adn_knowledge_portmanteau(
             )
             raw_nodes = response.json()
 
-            formatted_result = await list_directory.fn(path or "", depth=depth or 1)
+            formatted_result = await list_directory(path or "", depth=depth or 1)
             return build_success_response("list", formatted_result, result=raw_nodes)
         except Exception as e:
             return build_error_response(
@@ -205,7 +218,7 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.build_context import build_context
 
-        result = await build_context.fn(identifier, depth=depth or 2)
+        result = await build_context(identifier, depth=depth or 2)
         return build_success_response("navigate", result)
 
     elif operation == "context":
@@ -218,22 +231,23 @@ async def adn_knowledge_portmanteau(
 
         from advanced_memory.mcp.tools.build_context import build_context
 
-        result = await build_context.fn(identifier, depth=depth or 2)
+        result = await build_context(identifier, depth=depth or 2)
         return build_success_response("context", result)
 
     elif operation == "activity":
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        result = await recent_activity.fn(
+        result = await recent_activity(
             entity_type or "entity", depth=depth or 1, timeframe=timeframe or "1d"
         )
-        # recent_activity might return a string or object depending on implementation
-        return build_success_response("activity", "Recent activity fetched", result=result)
+        return build_success_response(
+            "activity", "Recent activity fetched", result=result
+        )
 
     elif operation == "status":
         from advanced_memory.mcp.tools.status import status
 
-        result = await status.fn("basic")
+        result = await status("basic")
         return build_success_response("status", result)
 
     else:

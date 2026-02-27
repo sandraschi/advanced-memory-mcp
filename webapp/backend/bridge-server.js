@@ -1108,7 +1108,7 @@ app.get('/api/v1/notes', async (req, res) => {
         search_type: 'permalink',
         entity_type: 'entity',
         page,
-        results_per_page: 10000
+        results_per_page: pageSize
       });
       const payload = unwrapMCPToolResult(searchResponse);
       const results = payload?.result?.results || payload?.technical_summary?.results || [];
@@ -1126,7 +1126,7 @@ app.get('/api/v1/notes', async (req, res) => {
         query,
         entity_type: 'entity',
         page,
-        results_per_page: 10000
+        results_per_page: pageSize
       });
       const payload = unwrapMCPToolResult(mcpResponse);
       rawResults = payload?.result?.results || payload?.results || [];

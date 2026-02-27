@@ -5,23 +5,16 @@
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
 ![Research Powered](https://img.shields.io/badge/research--powered-🔍-blue)](https://github.com/sandraschi/advanced-memory-mcp)
 
-# Advanced Memory MCP & Webapp
+# Advanced Memory MCP
 
-**Research-Driven Knowledge Platform** - A dual-purpose system serving as both a powerful Model Context Protocol (MCP) server and a standalone React-based web application. Transform AI assistants into comprehensive research tools with multi-source intelligence gathering, semantic search (RAG), and intelligent skill synthesis.
+**Research-Driven Knowledge Platform** - Transform AI assistants into comprehensive research tools with multi-source intelligence gathering, academic literature access, and intelligent skill creation.
 
-Advanced Memory evolves from a simple memory tool into an enterprise-grade research platform, integrating a robust vector database for semantic understanding alongside its flexible note-taking core.
+Advanced Memory MCP builds upon the foundational work of [Basic Memory MCP](https://github.com/sandraschi/basic-memory-mcp), evolving it into an enterprise-grade research platform with expanded capabilities and improved reliability.
 
 ## Core Capabilities
 
 - **Multi-Source Research**: Web search, academic papers (arXiv), code repositories (GitHub), narrative patterns (TV Tropes)
-- **Semantic Intelligence**:
-    - **RAG Engine**: LanceDB + FastEmbed vector search with hybrid Whoosh/FTS5 integration.
-    - **Optimized Reranking**: BGE-Reranker-v2-m3 with Flash Attention 2 support (RTX 4090).
-    - **Encryption**: Transparent Fernet/AESnd (AES-128) metadata encryption for sensitive knowledge.
-- **Portmanteau Tools**:
-    - **adn_knowledge_rag**: High-density context retrieval bridge for OpenFang.
-- **Document Intelligence**: PDF/EPUB processing with intelligent chunking and automated vector ingestion.
-- **Agentic Workflows**: FastMCP 2.14.1+ SEP-1577 sampling with real tool functions — LLM autonomously orchestrates multi-step knowledge workflows via `ctx.sample(tools=[...], result_type=Model)`
+- **Document Intelligence**: PDF/EPUB processing with RAG vector search for large document analysis
 - **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
 - **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
 - **Ecosystem Observability**: Real-time fleet discovery (Apps Hub) and agent session monitoring (Control Room)
@@ -225,8 +218,8 @@ POST /api/v1/fetch              # HTTP fetch operations
 
 ## Development Status
 
-**Version**: 1.5.0
-**Status**: Production Ready (RAG Enabled)
+**Version**: 1.4.0
+**Status**: Production Ready
 **MCP Compatibility**: FastMCP 2.14.3+
 **Test Coverage**: 98% pass rate (1,136/1,161 tests) + 90% MCP Integration (18/20 tests)
 **Glama Rating**: Silver Tier (80/100)

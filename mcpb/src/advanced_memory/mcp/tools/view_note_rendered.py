@@ -68,7 +68,7 @@ async def view_note_rendered(
     logger.info(f"Rendering note with Mermaid: {identifier}")
 
     # Get the note content
-    content = await read_note.fn(identifier, page, page_size, project)
+    content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier, page, page_size, project)
 
     # Check for errors
     if "# Note Not Found:" in content:

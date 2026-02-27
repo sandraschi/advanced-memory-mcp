@@ -247,7 +247,7 @@ async def _process_joplin_import(
             # Check if note already exists
             if skip_existing:
                 try:
-                    existing = await search_notes.fn(
+                    existing = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
                         query=dest_path, search_type="permalink", project=project
                     )
                     if existing.results:
@@ -267,7 +267,7 @@ async def _process_joplin_import(
             stats["converted_links"] += link_conversions
 
             # Create the note
-            await write_note.fn(
+            await (write_note.fn if hasattr(write_note, "fn") else write_note)(
                 title=title, content=processed_content, folder=dest_path, project=project
             )
 

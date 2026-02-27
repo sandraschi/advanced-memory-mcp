@@ -41,6 +41,7 @@ interface NoteResult {
   backlinks: number
   readingTime: number
   fileSize: string
+  permalink?: string
 }
 
 interface SkillResult {
@@ -231,13 +232,13 @@ class ApiService {
     }
   }
 
-  async searchNotes(query: string, tags?: string[]): Promise<ApiResponse<NoteResult[]>> {
+  async searchNotes(query: string, page: number = 1, limit: number = 50, tags?: string[]): Promise<ApiResponse<{ notes: NoteResult[], total: number, page: number, pages: number }>> {
     try {
-      const params = new URLSearchParams({ q: query })
+      const params = new URLSearchParams({ query: query, page: page.toString(), limit: limit.toString() })
       if (tags && tags.length > 0) {
         params.append('tags', tags.join(','))
       }
-      const response = await this.client.get(`/notes/search?${params}`)
+      const response = await this.client.get(`/notes?${params}`)
       return response.data
     } catch (error) {
       return { success: false, error: 'Failed to search notes' }

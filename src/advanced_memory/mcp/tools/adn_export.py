@@ -325,7 +325,7 @@ async def _pdf_export(
     """Handle native PDF export using fpdf2 (no LaTeX, no weasyprint!)."""
     from advanced_memory.mcp.tools.export_pdf_native import export_pdf_native
 
-    return await export_pdf_native.fn(
+    return await (export_pdf_native.fn if hasattr(export_pdf_native, "fn") else export_pdf_native)(
         export_path,
         source_folder,
         include_subfolders,
@@ -365,7 +365,7 @@ async def _pandoc_export(
 
     from advanced_memory.mcp.tools.export_pandoc import export_pandoc
 
-    return await export_pandoc.fn(
+    return await (export_pandoc.fn if hasattr(export_pandoc, "fn") else export_pandoc)(
         export_path,
         format_type,
         source_folder,
@@ -396,7 +396,7 @@ async def _docsify_export(
     """Handle Docsify export operation."""
     from advanced_memory.mcp.tools.export_docsify import export_docsify
 
-    return await export_docsify.fn(
+    return await (export_docsify.fn if hasattr(export_docsify, "fn") else export_docsify)(
         export_path,
         source_folder,
         include_subfolders,
@@ -423,7 +423,7 @@ async def _html_export(
     """Handle HTML export operation."""
     from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 
-    return await export_html_notes.fn(
+    return await (export_html_notes.fn if hasattr(export_html_notes, "fn") else export_html_notes)(
         export_path=export_path,
         source_folder=source_folder,
         include_subfolders=include_subfolders,
@@ -443,7 +443,7 @@ async def _joplin_export(
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
 
-    return await export_joplin_notes.fn(
+    return await (export_joplin_notes.fn if hasattr(export_joplin_notes, "fn") else export_joplin_notes)(
         export_path, source_folder, include_subfolders, True, project
     )  # type: ignore[operator,no-any-return]
 
@@ -473,7 +473,7 @@ async def _pdf_book_export(
 
     from advanced_memory.mcp.tools.make_pdf_book import make_pdf_book
 
-    return await make_pdf_book.fn(
+    return await (make_pdf_book.fn if hasattr(make_pdf_book, "fn") else make_pdf_book)(
         book_title,
         source_folder,
         tag_filter,
@@ -490,7 +490,7 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
-    return await export_to_archive.fn(
+    return await (export_to_archive.fn if hasattr(export_to_archive, "fn") else export_to_archive)(
         export_path, None, None, None, None, True, project, show_after_export
     )  # type: ignore[operator,no-any-return]
 

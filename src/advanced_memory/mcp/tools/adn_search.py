@@ -250,7 +250,7 @@ async def _notes_search(
     # Use provided search_type or default to "text"
     actual_search_type = search_type if search_type else "text"
 
-    result = await search_notes.fn(
+    result = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
         query,
         page,
         page_size,
@@ -374,7 +374,7 @@ async def _obsidian_search(
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
 
-    return await search_obsidian_vault.fn(
+    return await (search_obsidian_vault.fn if hasattr(search_obsidian_vault, "fn") else search_obsidian_vault)(
         source_path, query, search_type, max_results, include_content
     )  # type: ignore[operator,no-any-return]
 
@@ -407,7 +407,7 @@ async def _joplin_search(
 
     from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
 
-    return await search_joplin_vault.fn(
+    return await (search_joplin_vault.fn if hasattr(search_joplin_vault, "fn") else search_joplin_vault)(
         source_path, query, search_type, max_results, include_content
     )  # type: ignore[operator,no-any-return]
 
@@ -440,7 +440,7 @@ async def _notion_search(
 
     from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
 
-    return await search_notion_vault.fn(source_path, query, case_sensitive, file_type, max_results)  # type: ignore[operator,no-any-return]
+    return await (search_notion_vault.fn if hasattr(search_notion_vault, "fn") else search_notion_vault)(source_path, query, case_sensitive, file_type, max_results)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_search(
@@ -473,7 +473,7 @@ async def _evernote_search(
 
     from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
 
-    return await search_evernote_vault.fn(
+    return await (search_evernote_vault.fn if hasattr(search_evernote_vault, "fn") else search_evernote_vault)(
         source_path,
         query,
         case_sensitive,

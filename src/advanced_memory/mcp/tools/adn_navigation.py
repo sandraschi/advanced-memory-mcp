@@ -147,7 +147,7 @@ async def _build_context_operation(
 
     from advanced_memory.mcp.tools.build_context import build_context
 
-    result = await build_context.fn(url, depth, timeframe, page, page_size, max_related, project)
+    result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(url, depth, timeframe, page, page_size, max_related, project)
 
     # Convert GraphContext to markdown string
     output = [f"# Context: {url}\n"]
@@ -195,7 +195,7 @@ async def _recent_activity_operation(
     """Handle recent activity operation."""
     from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-    raw_result = await recent_activity.fn(
+    raw_result = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
         type_param, depth, timeframe, page, page_size, max_related, project
     )
 
@@ -297,14 +297,14 @@ async def _list_directory_operation(
     """Handle list directory operation."""
     from advanced_memory.mcp.tools.list_directory import list_directory
 
-    return await list_directory.fn(dir_name, depth, file_name_glob, project)
+    return await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(dir_name, depth, file_name_glob, project)
 
 
 async def _status_operation(level: str, focus: str | None) -> str:
     """Handle status operation."""
     from advanced_memory.mcp.tools.status import status
 
-    return await status.fn(level, focus)
+    return await (status.fn if hasattr(status, "fn") else status)(level, focus)
 
 
 async def _backlinks_operation(identifier: str, max_related: int, project: str | None) -> str:
@@ -403,4 +403,4 @@ async def _sync_status_operation(project: str | None) -> str:
     """Handle sync status operation."""
     from advanced_memory.mcp.tools.sync_status import sync_status
 
-    return await sync_status.fn(project)
+    return await (sync_status.fn if hasattr(sync_status, "fn") else sync_status)(project)

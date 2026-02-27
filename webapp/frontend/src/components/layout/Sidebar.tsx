@@ -19,9 +19,11 @@ import {
   Search,
   Globe,
   Wand2,
-  Archive
+  Archive,
+  Database
 } from 'lucide-react'
 import IntelligencePanel from './IntelligencePanel'
+import { cn } from '@/utils/cn'; // Assuming utility exists, or use string template
 
 interface SidebarProps {
   isCollapsed: boolean
@@ -37,102 +39,74 @@ export default function Sidebar({
   onOpenHelp
 }: SidebarProps) {
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Recent Notes', href: '/recents', icon: Clock },
-    { name: 'Notes', href: '/notes', icon: FileText },
-    { name: 'Zettelkasten', href: '/dashboard/zettelkasten', icon: BookOpen },
-    { name: 'Graph Canvas', href: '/dashboard/canvas', icon: Network },
-    { name: 'Audio Hub', href: '/audio', icon: Volume2 },
-    { name: 'Checkpoints', href: '/checkpoints', icon: Activity },
-    { name: 'Projects', href: '/projects', icon: Briefcase },
-    { name: 'Skills', href: '/skills', icon: Code },
-    { name: 'Skill Studio', href: '/skills/studio', icon: Wand2 },
-    { name: 'Skill Research', href: '/skills/research', icon: BookOpen },
-    { name: 'Marketplace', href: '/marketplace', icon: Store },
-    { name: 'Research Lab', href: '/research', icon: FlaskConical },
-    { name: 'Zettelkasten', href: '/zettelflow', icon: Archive }, // Added ZettelFlow nav item
-    { name: 'Deep Search', href: '/research/deep', icon: Search },
-    { name: 'Chat', href: '/chat', icon: Wand2 },
+    { name: 'Overview', href: '/', icon: Home },
+    { name: 'Knowledge Graph', href: '/dashboard/canvas', icon: Network },
+    { name: 'Semantic Search', href: '/research/deep', icon: Search },
+    { name: 'Note Vault', href: '/notes', icon: FileText },
+    { name: 'Recent Activity', href: '/recents', icon: Clock },
+    { name: 'Project Workspace', href: '/projects', icon: Briefcase },
+    { name: 'Skill Lab', href: '/skills', icon: Code },
+    { name: 'Audio Memory', href: '/audio', icon: Volume2 },
+    { name: 'ZettelFlow', href: '/zettelflow', icon: Archive },
     { name: 'Apps Hub', href: '/apps-hub', icon: Globe },
-    { name: 'Control Room', href: '/control-room', icon: Terminal },
-    { name: 'Tools', href: '/tools', icon: Code },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
-  const handleLoggerClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    onOpenLogger()
-  }
-
-  const handleHelpClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    onOpenHelp()
-  }
-
   return (
-    <div className={`flex flex-col h-full bg-card border-r border-border transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <aside className={`glass-sidebar relative flex flex-col transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        {!isCollapsed && <span className="text-lg font-bold truncate">Advanced Memory</span>}
-        <button
-          onClick={onToggleCollapse}
-          className="p-1 rounded-md hover:bg-muted transition-colors"
-          title={isCollapsed ? 'Expand' : 'Collapse'}
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
+      <div className="flex h-20 items-center px-6">
+        <div className="flex items-center gap-3 font-bold text-slate-100">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center indigo-glow">
+            <Database className="h-5 w-5 text-white" />
+          </div>
+          {!isCollapsed && <span className="text-lg font-bold gradient-text text-indigo-100/90 whitespace-nowrap">Advanced Memory</span>}
+        </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-1 scrollbar-thin">
+      <nav className="flex-1 overflow-y-auto p-3 space-y-1 scrollbar-thin">
         {navigation.map((item) => (
           <NavLink
             key={item.href}
             to={item.href}
             className={({ isActive }) =>
-              `flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-3'} py-2 text-sm font-medium rounded-md transition-colors ${isActive
-                ? 'bg-primary text-primary-foreground'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-              }`
+              `nav-item ${isActive ? 'active' : ''} ${isCollapsed ? 'justify-center' : 'justify-start'}`
             }
-            title={isCollapsed ? item.name : undefined}
           >
-            <item.icon className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            <item.icon className="h-5 w-5" />
             {!isCollapsed && <span className="truncate">{item.name}</span>}
           </NavLink>
         ))}
 
-        <div className="pt-4 mt-4 border-t border-border space-y-1">
+        <div className="pt-4 mt-4 border-t border-white/[0.06] space-y-1">
           <button
-            onClick={handleLoggerClick}
-            className={`w-full group flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-2'} py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors`}
-            title={isCollapsed ? 'Logger' : undefined}
+            onClick={(e) => { e.preventDefault(); onOpenLogger(); }}
+            className={`nav-item w-full ${isCollapsed ? 'justify-center' : 'justify-start'}`}
           >
-            <Terminal className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            <Terminal className="h-5 w-5" />
             {!isCollapsed && <span>Logger</span>}
           </button>
 
           <button
-            onClick={handleHelpClick}
-            className={`w-full group flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-2'} py-2 text-sm font-medium rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors`}
-            title={isCollapsed ? 'Help' : undefined}
+            onClick={(e) => { e.preventDefault(); onOpenHelp(); }}
+            className={`nav-item w-full ${isCollapsed ? 'justify-center' : 'justify-start'}`}
           >
-            <HelpCircle className={`${isCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0`} />
+            <HelpCircle className="h-5 w-5" />
             {!isCollapsed && <span>Help</span>}
           </button>
         </div>
       </nav>
 
-      {/* Footer / Intelligence Panel */}
-      <div className="border-t border-border">
-        {isCollapsed ? (
-          <div className="p-4 text-center">
-            <div className="text-xs text-muted-foreground font-medium">AM</div>
-          </div>
-        ) : (
-          <IntelligencePanel />
-        )}
+      {/* Footer / Toggle */}
+      <div className="p-4 border-t border-white/[0.06]">
+        <button
+          onClick={onToggleCollapse}
+          className="flex w-full items-center justify-center rounded-xl p-2.5 text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all"
+        >
+          {isCollapsed ? <ChevronRight size={20} /> : <div className="flex items-center w-full"><ChevronLeft size={20} className="mr-3" /><span>Collapse</span></div>}
+        </button>
       </div>
-    </div>
+    </aside>
   )
 }

@@ -574,19 +574,19 @@ def _get_available_operations() -> str:
 **Examples:**
 ```python
 # Create research plan
-await research_orchestrator.fn("research_plan", topic="quantum computing")
+await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)("research_plan", topic="quantum computing")
 
 # Get methodology
-await research_orchestrator.fn("research_methodology", topic_type="technical")
+await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)("research_methodology", topic_type="technical")
 
 # Generate questions
-await research_orchestrator.fn("research_questions", topic="machine learning")
+await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)("research_questions", topic="machine learning")
 
 # Design note structure
-await research_orchestrator.fn("note_blueprint", research_type="analysis", topic="AI ethics")
+await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)("note_blueprint", research_type="analysis", topic="AI ethics")
 
 # Execute workflow
-await research_orchestrator.fn("research_workflow", topic="blockchain", step=1)
+await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)("research_workflow", topic="blockchain", step=1)
 ```
 
 **Each operation returns structured guidance for Claude to execute comprehensive research and create well-linked knowledge notes.** [BOOKS][LINK]"""

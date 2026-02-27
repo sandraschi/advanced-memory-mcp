@@ -377,7 +377,7 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     """Handle archive export operation."""
     from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
-    return await export_to_archive.fn(
+    return await (export_to_archive.fn if hasattr(export_to_archive, "fn") else export_to_archive)(
         export_path, None, None, None, None, True, project, show_after_export
     )  # type: ignore[operator,no-any-return]
 

@@ -255,7 +255,7 @@ async def _generate_operation(
             if ctx:  # pragma: no cover
                 await ctx.info(f"Creating note: {template['title']}")
 
-            result = await mcp_write_note.fn(
+            result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
                 title=template["title"],
                 content=template["content"],
                 folder=template["folder"],
@@ -323,7 +323,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             notes_created = []
             for template in cached_templates:
                 try:
-                    result = await mcp_write_note.fn(
+                    result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
                         title=template["title"],
                         content=template["content"],
                         folder=template["folder"],
@@ -383,7 +383,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
                 if ctx:  # pragma: no cover
                     await ctx.info(f"Creating AI-generated note: {template['title']}")
 
-                result = await mcp_write_note.fn(
+                result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
                     title=template["title"],
                     content=template["content"],
                     folder=template["folder"],

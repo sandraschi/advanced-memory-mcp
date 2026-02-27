@@ -314,7 +314,7 @@ async def _dictate_operation(
         # Create the note
         from advanced_memory.mcp.tools.write_note import write_note
 
-        return await write_note.fn(
+        return await (write_note.fn if hasattr(write_note, "fn") else write_note)(
             title=title,
             content=formatted_content,
             folder=folder,
@@ -360,7 +360,7 @@ async def _speak_operation(
     # Read the note content
     from advanced_memory.mcp.tools.read_note import read_note
 
-    note_content = await read_note.fn(
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=identifier, page=1, page_size=1000, project=active_project.name
     )
 
@@ -631,7 +631,7 @@ async def _parse_and_execute_command(active_project, command_text: str) -> dict:
             # Use adn_content quick operation
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                 operation="quick",
                 content=f"# {topic.title()}\n\nVoice command: {command_text}",
                 project=active_project.name,
@@ -651,7 +651,7 @@ async def _parse_and_execute_command(active_project, command_text: str) -> dict:
             logger.info("Detected read latest note command")
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(operation="read_latest", project=active_project.name)
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(operation="read_latest", project=active_project.name)
 
     # Read specific note
     read_specific_patterns = [
@@ -666,7 +666,7 @@ async def _parse_and_execute_command(active_project, command_text: str) -> dict:
             logger.info(f"Detected read note command: {note_title}")
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                 operation="read", identifier=note_title, project=active_project.name
             )
 
@@ -684,7 +684,7 @@ async def _parse_and_execute_command(active_project, command_text: str) -> dict:
             logger.info(f"Detected search command: {query}")
             from advanced_memory.mcp.tools.adn_search import adn_search
 
-            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+            return await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(operation="notes", query=query, project=active_project.name)
 
     # Weather commands
     weather_patterns = [
@@ -854,7 +854,7 @@ If the command is unclear or doesn't match any operation, use "unknown"."""
             topic = params.get("topic", command_text)
             from advanced_memory.mcp.tools.content_manager import adn_content
 
-            return await adn_content.fn(
+            return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                 operation="quick",
                 content=f"# {topic}\n\nVoice command: {command_text}",
                 project=active_project.name,
@@ -865,19 +865,19 @@ If the command is unclear or doesn't match any operation, use "unknown"."""
             if note_title:
                 from advanced_memory.mcp.tools.content_manager import adn_content
 
-                return await adn_content.fn(
+                return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(
                     operation="read", identifier=note_title, project=active_project.name
                 )
             else:
                 from advanced_memory.mcp.tools.content_manager import adn_content
 
-                return await adn_content.fn(operation="read_latest", project=active_project.name)
+                return await (adn_content.fn if hasattr(adn_content, "fn") else adn_content)(operation="read_latest", project=active_project.name)
 
         elif operation == "search":
             query = params.get("query", command_text)
             from advanced_memory.mcp.tools.adn_search import adn_search
 
-            return await adn_search.fn(operation="notes", query=query, project=active_project.name)
+            return await (adn_search.fn if hasattr(adn_search, "fn") else adn_search)(operation="notes", query=query, project=active_project.name)
 
         elif operation == "weather":
             location = params.get("location")

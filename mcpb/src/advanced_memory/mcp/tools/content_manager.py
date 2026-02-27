@@ -586,7 +586,7 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=identifier, page=page, page_size=page_size, project=active_project.name
     )
 
@@ -597,7 +597,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
     try:
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        raw_context = await recent_activity.fn(
+        raw_context = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
             type_filter=["entity", "observation"],
             depth=1,
             timeframe="365d",
@@ -652,21 +652,21 @@ async def _read_latest_operation(active_project) -> str:
 
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(identifier=identifier, project=active_project.name)
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=active_project.name)
 
 
 async def _view_operation(active_project, identifier: str) -> str:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
 
-    return await view_note.fn(identifier=identifier, project=active_project.name)
+    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(identifier=identifier, project=active_project.name)
 
 
 async def _view_rendered_operation(active_project, identifier: str) -> str:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await view_note_rendered.fn(identifier=identifier, project=active_project.name)
+    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(identifier=identifier, project=active_project.name)
 
 
 async def _edit_operation(
@@ -682,7 +682,7 @@ async def _edit_operation(
     """Handle edit operation."""
     from advanced_memory.mcp.tools.edit_note import edit_note
 
-    return await edit_note.fn(
+    return await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
         identifier=identifier,
         operation=edit_operation or "replace",
         content=content or "",
@@ -854,7 +854,7 @@ async def _move_operation(active_project, identifier: str, destination_path: str
     """Handle move operation."""
     from advanced_memory.mcp.tools.move_note import move_note
 
-    return await move_note.fn(
+    return await (move_note.fn if hasattr(move_note, "fn") else move_note)(
         identifier=identifier, destination_path=destination_path, project=active_project.name
     )
 
@@ -915,7 +915,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
     # Try to read existing daily note
     from advanced_memory.mcp.tools.read_note import read_note
 
-    existing_note = await read_note.fn(
+    existing_note = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=f"{folder}/{title}", page=1, page_size=1000, project=active_project.name
     )
 
@@ -946,7 +946,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
 
 ---
 """
-        return await edit_note.fn(
+        return await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
             identifier=f"{folder}/{title}",
             operation="append",
             content=append_content,
@@ -958,7 +958,7 @@ async def _delete_operation(active_project, identifier: str) -> str:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await delete_note.fn(identifier=identifier, project=active_project.name)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=active_project.name)
 
     # delete_note returns bool | str, convert to string for consistency
     if isinstance(result, bool):

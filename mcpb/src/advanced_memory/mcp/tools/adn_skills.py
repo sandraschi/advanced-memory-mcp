@@ -504,7 +504,7 @@ Files used in output (templates, boilerplate, etc.).
     # Create the skill using write_note
     from advanced_memory.mcp.tools.write_note import write_note
 
-    result = await write_note.fn(
+    result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
         title=skill_name,
         content=skill_content,
         folder=skill_folder,
@@ -604,7 +604,7 @@ adn_skills(
     # Read note content
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(identifier=identifier, project=project)
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
 
 
 async def _update_operation(
@@ -640,7 +640,7 @@ adn_skills(
     from advanced_memory.mcp.tools.edit_note import edit_note
 
     if content:
-        return await edit_note.fn(
+        return await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
             identifier=identifier, operation="replace", content=content, project=project
         )
     else:
@@ -687,7 +687,7 @@ adn_skills(
 
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await delete_note.fn(identifier=identifier, project=project)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=project)
     return f"# Skill Deleted\n\n{result}\n\n✅ Skill removed from knowledge base"
 
 
@@ -866,7 +866,7 @@ adn_skills(
     # Read the skill
     from advanced_memory.mcp.tools.read_note import read_note
 
-    content = await read_note.fn(identifier=identifier, project=project)
+    content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
 
     if "# Note Not Found:" in content:
         return content
@@ -1149,7 +1149,7 @@ description: When to use this skill
 
     from advanced_memory.mcp.tools.write_note import write_note
 
-    result = await write_note.fn(
+    result = await (write_note.fn if hasattr(write_note, "fn") else write_note)(
         title=skill_name,
         content=content,  # Full content including frontmatter
         folder=folder,
@@ -1243,7 +1243,7 @@ adn_skills(
     # Read the note
     from advanced_memory.mcp.tools.read_note import read_note
 
-    note_content = await read_note.fn(identifier=identifier, project=project)
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
 
     if "# Note Not Found:" in note_content:
         return note_content
@@ -1285,7 +1285,7 @@ adn_skills(
     # Update the note
     from advanced_memory.mcp.tools.edit_note import edit_note
 
-    result = await edit_note.fn(
+    result = await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
         identifier=identifier, operation="replace", content=new_content, project=project
     )
 
@@ -1333,7 +1333,7 @@ adn_skills(
     # Read the skill
     from advanced_memory.mcp.tools.read_note import read_note
 
-    skill_content = await read_note.fn(identifier=identifier, project=project)
+    skill_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
 
     if "# Note Not Found:" in skill_content:
         return skill_content
@@ -1392,7 +1392,7 @@ description: When to use
     # Update the note
     from advanced_memory.mcp.tools.edit_note import edit_note
 
-    result = await edit_note.fn(
+    result = await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
         identifier=identifier, operation="replace", content=new_content, project=project
     )
 
@@ -1422,7 +1422,7 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
     # Read and validate (reuse validation logic from _validate_operation above)
     from advanced_memory.mcp.tools.read_note import read_note
 
-    content = await read_note.fn(identifier=identifier, project=project)
+    content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
 
     if "# Note Not Found:" in content:
         return content

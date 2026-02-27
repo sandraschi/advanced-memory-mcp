@@ -205,7 +205,7 @@ async def _get_note_content(note) -> str | None:
         if not identifier:
             return None
 
-        content = await mcp_read_note.fn(identifier)
+        content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(identifier)
         return content if content else None
 
     except Exception as e:

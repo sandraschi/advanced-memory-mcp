@@ -1,107 +1,10 @@
 """Content Manager portmanteau tool for Advanced Memory MCP server.
 
-PORTMANTEAU PATTERN RATIONALE:
-Consolidates 7 content operations into one tool to prevent tool explosion while maintaining full functionality.
+This tool consolidates all content operations: write, read, edit, quick, daily, move, delete, etc.
+It reduces the number of MCP tools while maintaining full functionality.
 
-Supported Operations:
-- write: Create new notes with semantic processing and relations
-- read: Retrieve complete note content with knowledge graph awareness
-- read_latest: Get the most recently updated note in the project
-- view: Display notes as formatted artifacts for better readability
-- view_rendered: Display notes as HTML artifacts with rendered Mermaid diagrams
-- edit: Perform targeted edits (append, prepend, find_replace, replace_section, insert_*)
-- edit_tags: Edit tags (add, remove, replace, clear) without full note edits
-- quick: Ultra-fast note creation with smart defaults (auto-folder, auto-title, auto-tags)
-- daily: Create or append to today's daily journal note
-- move: Relocate notes while preserving relationships and updating references
-- delete: Remove notes from knowledge base with relationship cleanup
-- suggest_tags: LLM-powered semantic tag suggestions for notes
-- summarize: LLM-powered note summarization
-- enhance: LLM-powered note enhancement (update_content, update_style, add_examples, add_context, expand_sections, add_bibliography)
-- generate: LLM-powered content generation for new notes
-
-Prerequisites:
-- Active project session established via adn_project tool
-- Write access to local filesystem for project storage
-
-Args:
-    operation (Literal, required): The content operation to perform. Must be one of:
-        "write", "read", "read_latest", "view", "view_rendered", "edit", "edit_tags", "quick",
-        "daily", "move", "delete", "suggest_tags", "summarize", "enhance", "generate".
-
-    identifier (str | None): Note title, permalink, or memory:// URL. Required for:
-        read, view, view_rendered, edit, edit_tags, move, delete, suggest_tags, summarize, enhance.
-
-    content (str | None): Markdown content or edit payload. Required for:
-        write, edit (some operations), quick, daily, generate.
-
-    folder (str | None): Target folder path relative to project root. Default: "inbox".
-        Used by: write, quick operations.
-
-    tags (TagType | None): Tags for categorization. Used by: write, edit_tags operations.
-
-    entity_type (str): Type of document. Default: "note". Used by: write operation.
-
-    destination_path (str | None): New path for move operations. Required for: move.
-
-    edit_operation (str | None): Edit type for edit operations. Required for: edit.
-
-    tag_operation (str | None): Tag operation type. Required for: edit_tags.
-
-    find_text (str | None): Text to search for in find_replace. Required when edit_operation="find_replace".
-
-    new_string (str | None): Replacement text for find_replace. Required when edit_operation="find_replace".
-
-    section (str | None): Section header for replace_section. Required when edit_operation="replace_section".
-
-    expected_replacements (int): Expected matches for find_replace validation. Default: 1.
-
-    use_regex (bool): Whether find_text is regex. Default: False.
-
-    page (int): Pagination page. Default: 1.
-
-    page_size (int): Items per page. Default: 10.
-
-Returns:
-    FastMCP 2.14.3 Conversational Response Structure:
-
-    Success Response:
-    - success (bool): True if operation succeeded
-    - operation (str): Operation that was performed
-    - summary (str): Conversational description of what happened
-    - result (dict): Operation-specific return data
-    - next_steps (list[str]): Suggested actions user can take next
-    - context (dict): Additional contextual information
-    - suggestions (list[str]): AI-friendly follow-up suggestions
-    - follow_up_questions (list[str]): Questions to engage user in dialogue
-
-    Error Recovery Response:
-    - success (bool): Always false for errors
-    - error (str): Detailed, conversational error description
-    - error_code (str): Machine-readable error code
-    - message (str): Human-friendly explanation with context
-    - recovery_options (list[str]): Step-by-step recovery instructions
-    - diagnostic_info (dict): Technical details for debugging
-    - alternative_solutions (list[str]): Alternative approaches
-    - estimated_resolution_time (str): Time estimate for resolution
-    - urgency (str): Priority level (low/medium/high)
-
-Examples:
-    # Basic usage
-    result = await adn_content("read", identifier="Meeting Notes")
-    # Returns: {"success": true, "summary": "Retrieved note content", ...}
-
-    # Error handling
-    result = await adn_content("read", identifier="nonexistent")
-    # Returns: {"success": false, "error": "Note not found", ...}
-
-Errors:
-    NO_ACTIVE_PROJECT: No active project session found
-    MISSING_IDENTIFIER: Required identifier parameter not provided
-    MISSING_CONTENT: Required content parameter not provided
-    NOTE_NOT_FOUND: Specified note does not exist in project
-    PERMISSION_DENIED: No write access to project directory
-    INVALID_OPERATION: Specified operation is not supported
+For full documentation and examples, call:
+`help(topic="adn_content", level="intermediate")`
 """
 
 import json
@@ -199,10 +102,13 @@ async def adn_content(
     update_stale_tech: bool = False,  # Update outdated lib/tool versions; flag uncertainty
     # find_runts / find_junk (adn_knowledge_bulk delegates)
     max_content_length: int = 500,  # find_runts: notes under this char count
-    assessment_format: Literal["narrative", "structured"] = "narrative",  # find_junk output
+    assessment_format: Literal[
+        "narrative", "structured"
+    ] = "narrative",  # find_junk output
     # Parameter aliases for common mistakes (deprecated, will map to content)
     new_string: str | None = None,  # DEPRECATED: Use 'content' instead
-    replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
+    replacement: str
+    | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
 ) -> dict:
     """Knowledge content management with conversational responses.
@@ -242,11 +148,15 @@ async def adn_content(
                 edit_operation=edit_operation,
             )
 
-    logger.info(f"MCP tool call tool=adn_content operation={operation} identifier={identifier}")
+    logger.info(
+        f"MCP tool call tool=adn_content operation={operation} identifier={identifier}"
+    )
 
     original_operation = operation
     normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
-    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    normalized_operation = (
+        normalized_operation.replace("-", "_").replace(" ", "_").lower()
+    )
     alias_map: dict[
         str,
         Literal[
@@ -365,9 +275,14 @@ async def adn_content(
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
-            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            latest_identifier, error_message = await _get_latest_identifier(
+                active_project
+            )
             if not latest_identifier:
-                return error_message or "# No Recent Activity\n\nNo notes found to display."
+                return (
+                    error_message
+                    or "# No Recent Activity\n\nNo notes found to display."
+                )
             identifier = latest_identifier
 
         return await _view_operation(active_project, identifier)
@@ -384,9 +299,14 @@ async def adn_content(
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
-            latest_identifier, error_message = await _get_latest_identifier(active_project)
+            latest_identifier, error_message = await _get_latest_identifier(
+                active_project
+            )
             if not latest_identifier:
-                return error_message or "# No Recent Activity\n\nNo notes found to display."
+                return (
+                    error_message
+                    or "# No Recent Activity\n\nNo notes found to display."
+                )
             identifier = latest_identifier
 
         return await _view_rendered_operation(active_project, identifier)
@@ -423,7 +343,9 @@ async def adn_content(
                     error="Missing content",
                     error_code="MISSING_CONTENT",
                     message="find_replace requires content (replacement text)",
-                    recovery_options=["Provide the replacement text in the 'content' parameter"],
+                    recovery_options=[
+                        "Provide the replacement text in the 'content' parameter"
+                    ],
                 )
 
         if not content and edit_operation in ["append", "prepend", "replace_section"]:
@@ -461,7 +383,9 @@ async def adn_content(
                 message="Edit_tags requires tag_operation parameter",
                 recovery_options=["Valid operations: add, remove, replace, clear"],
             )
-        return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
+        return await _edit_tags_operation(
+            active_project, identifier, tag_operation, tags
+        )
 
     elif operation == "quick":
         if not content:
@@ -573,9 +497,13 @@ async def adn_content(
                 error="Missing content",
                 error_code="MISSING_CONTENT",
                 message="Generate requires content (topic/prompt)",
-                recovery_options=["Provide the topic or prompt in the 'content' parameter"],
+                recovery_options=[
+                    "Provide the topic or prompt in the 'content' parameter"
+                ],
             )
-        return await _generate_operation(active_project, content, folder, tags, entity_type)
+        return await _generate_operation(
+            active_project, content, folder, tags, entity_type
+        )
 
     elif operation == "find_runts":
         from advanced_memory.mcp.tools.knowledge_operations import _handle_find_runts
@@ -596,7 +524,9 @@ async def adn_content(
             filters["folder"] = folder
         action = {"format": assessment_format}
         result = await _handle_find_junk(filters, action, 20, project)
-        return build_success_response("find_junk", result, content=result, format=assessment_format)
+        return build_success_response(
+            "find_junk", result, content=result, format=assessment_format
+        )
 
     else:
         return build_error_response(
@@ -692,7 +622,9 @@ async def _write_operation(
 
         if fm is None:
             # No frontmatter found - auto-generate it
-            logger.info("No frontmatter detected. Auto-generating Claude Skills frontmatter.")
+            logger.info(
+                "No frontmatter detected. Auto-generating Claude Skills frontmatter."
+            )
 
             # Extract metadata from tags if present
             tag_list = parse_tags(tags) if tags else []
@@ -864,7 +796,9 @@ The API request failed with status code {response.status_code}.
         )
 
 
-async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> dict:
+async def _read_operation(
+    active_project, identifier: str, page: int, page_size: int
+) -> dict:
     """Handle read operation."""
     if not identifier:
         return build_error_response(
@@ -882,7 +816,7 @@ async def _read_operation(active_project, identifier: str, page: int, page_size:
     # Delegate to read_note tool
     from advanced_memory.mcp.tools.read_note import read_note
 
-    result = await read_note.fn(
+    result = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=identifier,
         page=page,
         page_size=page_size,
@@ -907,7 +841,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
     try:
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        raw_context = await recent_activity.fn(
+        raw_context = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
             type_filter=["entity", "observation"],
             depth=1,
             timeframe="365d",
@@ -958,25 +892,29 @@ async def _read_latest_operation(active_project) -> dict:
     """Handle read_latest operation - read the single most recent note."""
     identifier, error_message = await _get_latest_identifier(active_project)
     if not identifier:
-        return error_message or "# No Recent Activity\n\nNo notes found in the past year."
+        return (
+            error_message or "# No Recent Activity\n\nNo notes found in the past year."
+        )
 
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await read_note.fn(identifier=identifier, project=active_project.name)
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=active_project.name)
 
 
 async def _view_operation(active_project, identifier: str) -> dict:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
 
-    return await view_note.fn(identifier=identifier, project=active_project.name)
+    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(identifier=identifier, project=active_project.name)
 
 
 async def _view_rendered_operation(active_project, identifier: str) -> dict:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await view_note_rendered.fn(identifier=identifier, project=active_project.name)
+    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _edit_operation(
@@ -992,7 +930,7 @@ async def _edit_operation(
     """Handle edit operation."""
     from advanced_memory.mcp.tools.edit_note import edit_note
 
-    return await edit_note.fn(
+    return await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
         identifier=identifier,
         operation=edit_operation or "replace",
         content=content or "",
@@ -1053,7 +991,9 @@ async def _edit_tags_operation(
 
     # Normalize current tags to a list[str]
     existing_tags_raw = (
-        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
+        current_entity.entity_metadata.get("tags", [])
+        if current_entity.entity_metadata
+        else []
     )
     if isinstance(existing_tags_raw, str):
         # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
@@ -1090,7 +1030,9 @@ async def _edit_tags_operation(
                 error="No valid tags",
                 error_code="NO_VALID_TAGS",
                 message="No valid tags were provided after parsing",
-                recovery_options=["Provide a comma-separated string or a list of tag names"],
+                recovery_options=[
+                    "Provide a comma-separated string or a list of tag names"
+                ],
                 diagnostic_info={"provided_tags": tags},
             )
     else:
@@ -1214,11 +1156,13 @@ async def _edit_tags_operation(
     )
 
 
-async def _move_operation(active_project, identifier: str, destination_path: str) -> dict:
+async def _move_operation(
+    active_project, identifier: str, destination_path: str
+) -> dict:
     """Handle move operation."""
     from advanced_memory.mcp.tools.move_note import move_note
 
-    return await move_note.fn(
+    return await (move_note.fn if hasattr(move_note, "fn") else move_note)(
         identifier=identifier,
         destination_path=destination_path,
         project=active_project.name,
@@ -1400,7 +1344,9 @@ def _extract_content_tags(content: str, title: str) -> list[str]:
     if "scandal" in text:
         if "politics" not in extracted_tags:
             extracted_tags.append("politics")
-        if "news" not in extracted_tags and ("current" in text or "developments" in text):
+        if "news" not in extracted_tags and (
+            "current" in text or "developments" in text
+        ):
             extracted_tags.append("news")
 
     # Look for other common patterns
@@ -1476,7 +1422,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
     # Try to read existing daily note
     from advanced_memory.mcp.tools.read_note import read_note
 
-    existing_note = await read_note.fn(
+    existing_note = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
         identifier=f"{folder}/{title}",
         page=1,
         page_size=1000,
@@ -1488,7 +1434,9 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
         # Create new daily note
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
-        formatted_content = f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
+        formatted_content = (
+            f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
+        )
         return await _write_operation(
             active_project, title, formatted_content, folder, tag_list, "note"
         )
@@ -1497,7 +1445,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
         append_content = f"\n\n## {timestamp}\n\n" + content + "\n\n---\n"
-        return await edit_note.fn(
+        return await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
             identifier=f"{folder}/{title}",
             operation="append",
             content=append_content,
@@ -1509,7 +1457,7 @@ async def _delete_operation(active_project, identifier: str) -> dict:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await delete_note.fn(identifier=identifier, project=active_project.name)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=active_project.name)
 
     # delete_note returns bool | str, convert to string for consistency
     if isinstance(result, bool):
@@ -1528,7 +1476,9 @@ async def _suggest_tags_operation(active_project, identifier: str) -> dict:
         # Read the note first
         from advanced_memory.mcp.tools.read_note import read_note
 
-        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+        note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+            identifier=identifier, project=active_project.name
+        )
 
         if not note_content or note_content.startswith("# Error"):
             return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
@@ -1569,7 +1519,9 @@ Suggest semantic tags for this note."""
         )
 
         if isinstance(suggested_tags, list):
-            tags_list = [str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag]
+            tags_list = [
+                str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag
+            ]
         else:
             tags_list = []
 
@@ -1623,7 +1575,9 @@ async def _summarize_operation(active_project, identifier: str) -> dict:
         # Read the note first
         from advanced_memory.mcp.tools.read_note import read_note
 
-        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+        note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+            identifier=identifier, project=active_project.name
+        )
 
         if not note_content or note_content.startswith("# Error"):
             return f"# Error\n\nCould not read note: {identifier}\n\n{note_content}"
@@ -1647,7 +1601,9 @@ Return the summary as plain text (not JSON)."""
         note_preview = note_content[:4000]
         prompt = f"Summarize this note:\n\n{note_preview}"
 
-        summary = await llm.generate(prompt, system_prompt, max_tokens=1000, temperature=0.3)
+        summary = await llm.generate(
+            prompt, system_prompt, max_tokens=1000, temperature=0.3
+        )
 
         return f"""# Note Summary
 
@@ -1698,7 +1654,9 @@ async def _enhance_operation(
         # Read the note first
         from advanced_memory.mcp.tools.read_note import read_note
 
-        note_content = await read_note.fn(identifier=identifier, project=active_project.name)
+        note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+            identifier=identifier, project=active_project.name
+        )
 
         if not note_content or note_content.startswith("# Error"):
             return build_error_response(
@@ -1731,7 +1689,9 @@ async def _enhance_operation(
                 "the note was written, add their death date and any notable later-life events"
             )
         if update_style:
-            enhancement_tasks.append("Improve structure, clarity, readability, and organization")
+            enhancement_tasks.append(
+                "Improve structure, clarity, readability, and organization"
+            )
         if add_examples:
             enhancement_tasks.append(
                 "Add concrete examples, illustrations, or case studies where relevant"
@@ -1770,7 +1730,9 @@ Always preserve the original meaning and key information. For biographical updat
 
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         note_preview = note_content[:4000]
-        custom_instruction = f"\n\nCustom instruction: {instruction}" if instruction else ""
+        custom_instruction = (
+            f"\n\nCustom instruction: {instruction}" if instruction else ""
+        )
         prompt = f"Enhance this note:\n\n{note_preview}{custom_instruction}\n\nReturn the complete enhanced note body (markdown, no YAML frontmatter)."
 
         enhanced_content = await llm.generate(
@@ -1789,7 +1751,7 @@ Always preserve the original meaning and key information. For biographical updat
         # Update the note with enhanced content (replace_body preserves frontmatter)
         from advanced_memory.mcp.tools.edit_note import edit_note
 
-        edit_result = await edit_note.fn(
+        edit_result = await (edit_note.fn if hasattr(edit_note, "fn") else edit_note)(
             identifier=identifier,
             operation="replace_body",
             content=enhanced_content,

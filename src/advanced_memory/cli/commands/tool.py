@@ -87,10 +87,13 @@ def write_note(
 
         # Also check for empty content
         if content is not None and not content.strip():
-            typer.echo("Empty content provided. Please provide non-empty content.", err=True)
+            typer.echo(
+                "Empty content provided. Please provide non-empty content.", err=True
+            )
             raise typer.Exit(1)
 
-        note = asyncio.run(mcp_write_note.fn(title, content, folder, tags))
+        _fn = mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
+        note = asyncio.run(_fn(title, content, folder, tags))
         rprint(note)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
@@ -103,7 +106,8 @@ def write_note(
 def read_note(identifier: str, page: int = 1, page_size: int = 10):
     """Read a markdown note from the knowledge base."""
     try:
-        note = asyncio.run(mcp_read_note.fn(identifier, page, page_size))
+        _fn = mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
+        note = asyncio.run(_fn(identifier, page, page_size))
         rprint(note)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
@@ -123,8 +127,13 @@ def build_context(
 ):
     """Get context needed to continue a discussion."""
     try:
+        _fn = (
+            mcp_build_context.fn
+            if hasattr(mcp_build_context, "fn")
+            else mcp_build_context
+        )
         context = asyncio.run(
-            mcp_build_context.fn(
+            _fn(
                 url=url,
                 depth=depth,
                 timeframe=timeframe,
@@ -156,8 +165,13 @@ def recent_activity(
 ):
     """Get recent activity across the knowledge base."""
     try:
+        _fn = (
+            mcp_recent_activity.fn
+            if hasattr(mcp_recent_activity, "fn")
+            else mcp_recent_activity
+        )
         context = asyncio.run(
-            mcp_recent_activity.fn(
+            _fn(
                 type=type,  # pyright: ignore [reportArgumentType]
                 depth=depth,
                 timeframe=timeframe,
@@ -181,11 +195,15 @@ def recent_activity(
 @tool_app.command("search-notes")
 def search_notes(
     query: str,
-    permalink: Annotated[bool, typer.Option("--permalink", help="Search permalink values")] = False,
+    permalink: Annotated[
+        bool, typer.Option("--permalink", help="Search permalink values")
+    ] = False,
     title: Annotated[bool, typer.Option("--title", help="Search title values")] = False,
     after_date: Annotated[
         str | None,
-        typer.Option("--after_date", help="Search results after date, eg. '2d', '1 week'"),
+        typer.Option(
+            "--after_date", help="Search results after date, eg. '2d', '1 week'"
+        ),
     ] = None,
     page: int = 1,
     page_size: int = 10,
@@ -209,8 +227,9 @@ def search_notes(
         search_type = ("title" if title else None,)
         search_type = "text" if search_type is None else search_type
 
+        _fn = mcp_search.fn if hasattr(mcp_search, "fn") else mcp_search
         results = asyncio.run(
-            mcp_search.fn(
+            _fn(
                 query,
                 search_type=search_type,
                 page=page,
@@ -233,13 +252,22 @@ def search_notes(
 
 @tool_app.command(name="continue-conversation")
 def continue_conversation(
-    topic: Annotated[str | None, typer.Option(help="Topic or keyword to search for")] = None,
-    timeframe: Annotated[str | None, typer.Option(help="How far back to look for activity")] = None,
+    topic: Annotated[
+        str | None, typer.Option(help="Topic or keyword to search for")
+    ] = None,
+    timeframe: Annotated[
+        str | None, typer.Option(help="How far back to look for activity")
+    ] = None,
 ):
     """Prompt to continue a previous conversation or work session."""
     try:
         # Prompt functions return formatted strings directly
-        session = asyncio.run(mcp_continue_conversation.fn(topic=topic, timeframe=timeframe))  # type: ignore
+        _fn = (
+            mcp_continue_conversation.fn
+            if hasattr(mcp_continue_conversation, "fn")
+            else mcp_continue_conversation
+        )
+        session = asyncio.run(_fn(topic=topic, timeframe=timeframe))  # type: ignore
         # Use plain print to avoid Rich wrapping of Markdown content
         print(session)
     except Exception as e:  # pragma: no cover

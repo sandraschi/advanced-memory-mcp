@@ -28,7 +28,7 @@ export default function Layout({
   const [helpOpen, setHelpOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
+    <div className="min-h-screen bg-[#020205] text-slate-50 font-inter selection:bg-indigo-500/30 flex">
       {/* Left Sidebar */}
       <Sidebar
         isCollapsed={sidebarCollapsed}

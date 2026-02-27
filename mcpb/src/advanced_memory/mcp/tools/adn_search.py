@@ -304,7 +304,7 @@ async def _notes_search(
     # Use provided search_type or default to "text"
     actual_search_type = search_type if search_type else "text"
 
-    result = await search_notes.fn(
+    result = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
         query,
         page,
         page_size,

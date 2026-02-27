@@ -1,8 +1,8 @@
 # Advanced Memory MCP - Product Requirements Document
 
-**Status:** ✅ **1.4.0 Production** - Ecosystem Integration & Advanced Collaboration
-**Release Date:** 2026-02-17
-**Version:** 1.4.0
+**Status:** ✅ **1.5.0 Production** - Semantic Research (RAG) Enabled
+**Release Date:** 2026-02-27
+**Version:** 1.5.0
 
 ---
 
@@ -41,11 +41,13 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 - **Quality Assurance:** Source credibility assessment and relevance scoring
 - **Real-time Processing:** Streaming results with progress tracking
 
-#### 📄 **Document Intelligence**
-- **Format Support:** PDF, EPUB, text files, Markdown with intelligent extraction
-- **RAG System:** Vector-based retrieval with ChromaDB and Sentence Transformers
-- **Chunking Strategies:** Semantic and structural document segmentation
-- **Large Document Analysis:** Beyond LLM context limits with persistent storage
+#### 📄 **Semantic Document Intelligence (RAG)**
+- **LanceDB Integration:** High-performance vector storage for hybrid search.
+- **FastEmbed Search:** Local semantic embeddings using `BAAI/bge-small-en-v1.5`.
+- **Hybrid Retrieval:** Combined FTS5 keyword and LanceDB semantic search.
+- **Paragraph Chunking:** Semantic document segmentation for granular indexing.
+- **Format Support:** PDF, EPUB, text files, Markdown with intelligent extraction.
+- **Large Document Analysis:** Persistent storage for processing beyond context limits.
 
 #### 🧠 **Skill Synthesis Engine**
 - **Research-Driven Creation:** Multi-source intelligence synthesis for expert skills
@@ -137,8 +139,10 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 
 ### Technology Stack
 - **Backend:** Python 3.12+, FastAPI, SQLAlchemy
+- **Vector Engine:** LanceDB (Hybrid Semantic Search)
+- **Embeddings:** FastEmbed (`BAAI/bge-small-en-v1.5`)
 - **Database:** SQLite with Alembic migrations
-- **Frontend:** None (MCP-based integration)
+- **Frontend:** React, Tailwind CSS, Vite
 - **Build Tools:** uv, ruff, mypy, pytest
 - **CI/CD:** GitHub Actions with comprehensive testing matrix
 - **Container:** Multi-stage Docker builds
@@ -153,12 +157,12 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 
 ### Functional Requirements
 
-#### FR-1.0: Knowledge Graph Operations
+#### FR-1.0: Knowledge Graph & Semantic Operations
 - **FR-1.1:** Create, read, update, delete entities
 - **FR-1.2:** Add/remove observations with categories and context
 - **FR-1.3:** Establish bidirectional relationships between entities
-- **FR-1.4:** Perform full-text search across all content
-- **FR-1.5:** Build context from entity relationships
+- **FR-1.4:** Hybrid Search: FTS5 keyword + semantic vector retrieval
+- **FR-1.5:** Build context from entity relationships and semantic similarity
 
 #### FR-2.0: Project Management
 - **FR-2.1:** Create and configure multiple projects
@@ -279,13 +283,7 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 - Multi-user project support
 - Conflict resolution for concurrent edits
 
-### 1.2.0 - Advanced AI Integration
-- Custom embedding models
-- Advanced semantic search
-- AI-powered content suggestions
-
 ### 2.0.0 - Platform Expansion
-- Web-based interface
 - Mobile applications
 - Cloud synchronization options
 - Enterprise deployment tools

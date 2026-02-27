@@ -41,20 +41,21 @@
 │  └──────────────┘  └──────────────┘  └───────────┘ │
 │                                                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-│  │  Sync        │  │  Hybrid      │  │  Export/  │ │
-│  │  Service     │  │  Search      │  │  Import   │ │
-│  │  └──────────────┘  │  (FTS5+RAG)  │  └───────────┘ │
-│                 │  └──────────────┘                │
-└────────────────────┬──────────┬─────────────────────┘
-                     │          │
-                     │          │ LanceDB (Vector)
-                     │          ▼
+│  │  Sync        │  │  Search      │  │  Export/  │ │
+│  │  Service     │  │  Engine      │  │  Import   │ │
+│  └──────────────┘  └──────────────┘  └───────────┘ │
+└────────────────────┬────────────────────────────────┘
+                     │
+                     │ SQLAlchemy ORM
+                     │
 ┌────────────────────▼────────────────────────────────┐
-│              Storage Substrate                       │
+│              SQLite Database                         │
+│        (~/.advanced-memory/memory.db)                │
 │                                                      │
-│  - memory.db: SQLite (Entities, Obs, Rel)            │
-│  - vectors/: LanceDB (Semantic Embeddings)           │
-│  - projects/: Markdown storage isolation              │
+│  - Entities (notes, documents)                       │
+│  - Observations (metadata, properties)               │
+│  - Relations (semantic links)                        │
+│  - Projects (isolation via project_id)               │
 └─────────────────────────────────────────────────────┘
                      │
                      │ File I/O
@@ -140,38 +141,18 @@
 **Why**: Version control for database schema
 **Docs**: https://alembic.sqlalchemy.org/
 
-### Search & RAG
- 
- #### Whoosh / SQLite FTS5
- **What**: Keyword-based full-text search
- **Why**:
--- No external dependencies (vs Elasticsearch)
--- Fast full-text indexing
--- Supports complex queries
--- Integrates with SQLAlchemy
--  - Native SQLite FTS5 for local speed
--  - Whoosh for complex boolean queries (Legacy/Fallback)
-- 
-- **Homepage**: https://whoosh.readthedocs.io/
-- **Our Implementation**: `src/advanced_memory/services/search_service.py`
-- 
-- #### LanceDB
-- **What**: Serverless vector database for AI
-- **Why**:
-- - **Hybrid Search**: Native support for combining FTS and Vector search.
-- - **Disk-based**: Scales to millions of vectors without heavy RAM usage.
-- - **Lance Format**: Extremely fast random access and scans.
-- 
-- **Docs**: [LanceDB Documentation](https://lancedb.github.io/lancedb/)
-- 
-- #### FastEmbed
-- **What**: Light, fast Python library for generating embeddings.
-- **Why**:
-- - **No Heavy Dependencies**: Doesn't require full PyTorch/TensorFlow for inference.
-- - **Quantized Models**: Uses ONNX Runtime for optimized CPU/GPU execution.
-- - **Default Model**: `BAAI/bge-small-en-v1.5` for high-quality semantic retrieval.
-- 
-- **Docs**: [FastEmbed GitHub](https://github.com/qdrant/fastembed)
+### Search
+
+#### Whoosh
+**What**: Pure-Python full-text search library
+**Why**:
+- No external dependencies (vs Elasticsearch)
+- Fast full-text indexing
+- Supports complex queries
+- Integrates with SQLAlchemy
+
+**Homepage**: https://whoosh.readthedocs.io/
+**Our Implementation**: Search engine in `src/advanced_memory/services/search_service.py`
 
 ### Configuration
 
@@ -203,71 +184,6 @@ created: 2024-12-21T14:00:00Z
 modified: 2024-12-21T14:00:00Z
 ---
 ```
-
----
-
-## Agentic Workflows — FastMCP 2.14.1+ Sampling (SEP-1577)
-
-Advanced Memory implements the SEP-1577 sampling-with-tools pattern for meta-tools that require LLM orchestration of multi-step operations.
-
-### Correct Pattern
-
-```python
-from fastmcp import Context
-from pydantic import BaseModel
-
-class WorkflowResult(BaseModel):
-    summary: str
-    steps_taken: list[str]
-    findings: list[dict]
-    success: bool
-
-# Leaf tool — plain Python function, type hints + docstring → FastMCP makes schema
-async def search_knowledge_base(query: str, max_results: int = 10) -> str:
-    """Search the knowledge base. Returns markdown list of matching notes."""
-    ...
-
-# Meta-tool — ctx: Context is auto-injected by FastMCP
-@mcp.tool
-async def agentic_content_workflow(
-    workflow_prompt: str,
-    available_tools: list[str],
-    ctx: Context = None,          # ← 'ctx' name + Context type = FastMCP injection
-) -> dict:
-    result = await ctx.sample(
-        messages=workflow_prompt,
-        tools=[search_knowledge_base, ...],   # ← plain Python callables
-        result_type=WorkflowResult,           # ← Pydantic → validated output + auto-retry
-        max_tokens=4096,
-    )
-    wf: WorkflowResult = result.result
-    ...
-```
-
-### What Does NOT Work
-
-| Anti-pattern | Why it fails |
-|---|---|
-| `app.state.get("sampling_context")` | FastMCP has no `.state` attribute |
-| `mcp.ctx.sample()` | `mcp.ctx` does not exist on FastMCP instances |
-| `tools=[{"name": "x", "function": lambda ...}]` | Dict format is pre-2.14.1; pass callables directly |
-| `context: Context = None` parameter | FastMCP injects by type annotation; convention is `ctx` |
-| Manual `sample_step()` loop | Replaced by `ctx.sample(tools=[...])` which loops internally |
-
-### Meta-tools vs Leaf Tools
-
-- **Leaf tools** (`search_knowledge_base`, `read_knowledge_note`, etc.): plain Python, do real work, passed AS tools to `ctx.sample()` — they never call the LLM themselves.
-- **Meta-tools** (`agentic_content_workflow`, `intelligent_batch_processor`): call `ctx.sample()` to let the LLM decide which leaf tools to call and in what order.
-
-### Available Agentic Meta-tools
-
-| Tool | Purpose |
-|---|---|
-| `agentic_content_workflow` | Multi-step knowledge workflows (search → read → synthesise) |
-| `intelligent_batch_processor` | Batch processing of knowledge items with LLM orchestration |
-| `sampling_capabilities_status` | Reports SEP-1577 implementation status and session availability |
-
-Tool group registry (passed as `available_tools`): `search`, `read`, `write`, `browse`, `full`.
 
 ---
 
@@ -729,10 +645,8 @@ docker run -v ~/.advanced-memory:/root/.advanced-memory advanced-memory-mcp
 
 **Scaling**:
 - SQLite handles 2000+ notes efficiently
-- LanceDB handles millions of vectors with disk-based storage
-- Hybrid search (LanceDB + FTS5) optimized for sub-100ms retrieval
-- Memory: FastEmbed uses ONNX for memory-efficient inference
-- For >100,000 notes, hybrid architecture maintains constant-time retrieval performance
+- For >10,000 notes, consider PostgreSQL migration
+- Full-text search via Whoosh scales to 100k+ documents
 
 ### File Sync
 
