@@ -1,0 +1,43 @@
+# advanced-memory-mcp
+> **Research-Driven Knowledge Platform** - A dual-purpose system serving as both a powerful Model Context Protocol (MCP) server and a standalone React-based web application. Transform AI assistants into...
+
+This project includes automated llms.txt generation for AI accessibility.
+
+## Docs
+- [Readme](README.md): [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/lic...
+- [Readme](docs\tools\README.md): **Purpose**: Comprehensive documentation for all tools used in Advanced Memory MCP
+- [Readme](docs\mcpb-packaging\README.md): **Complete guide to packaging and distributing MCP servers with MCPB**
+- [Readme](docs\user-guide\README.md): Welcome to Advanced Memory! This guide covers everything you need to know to build and maintain your...
+- [Readme](docs\zettelkasten\README.md): This directory contains documentation for Advanced Memory's revolutionary Zettelkasten features.
+- [Readme](docs\integrations\README.md): **Purpose**: Documentation for all import/export integrations and third-party tool support
+- [Readme](docs\glama\README.md): This directory contains documentation related to achieving GLAMA AI Gold standard status for the Adv...
+- [Readme](docs\github\README.md): > **Purpose**: Comprehensive GitHub configuration guide to avoid hours of trial-and-error setup.
+- [Glama Readme](GLAMA_README.md): **Transform any AI assistant into a research powerhouse** with multi-source intelligence gathering, ...
+- [Readme](docs\README.md): **Version**: 1.1.0b2
+
+## Api
+- [Management Router](src\advanced_memory\api\routers\management_router.py): Api definitions and implementations
+- [Template Loader](src\advanced_memory\api\template_loader.py): Api definitions and implementations
+- [  Init  ](src\advanced_memory\api\__init__.py): Api definitions and implementations
+- [Project](src\advanced_memory\models\project.py): Models definitions and implementations
+- [Search](src\advanced_memory\models\search.py): Models definitions and implementations
+- [Base](src\advanced_memory\models\base.py): Models definitions and implementations
+- [Importer](src\advanced_memory\schemas\importer.py): Schemas definitions and implementations
+- [Schemas](src\advanced_memory\markdown\schemas.py): Schemas definitions and implementations
+- [Request](src\advanced_memory\schemas\request.py): Schemas definitions and implementations
+
+## Examples
+- [Skill Creation Examples](docs\Skills\SKILL_CREATION_EXAMPLES.md): Example usage and code samples
+- [Multi Project Examples](docs\user-guide\MULTI_PROJECT_EXAMPLES.md): Example usage and code samples
+
+## Configuration
+- [Pyproject](pyproject.toml): Python project configuration and dependencies
+- [Package](.venv\Lib\site-packages\pyright\dist\package.json): Node.js project configuration and dependencies
+- [Cargo](Cargo.toml): Rust project configuration and dependencies
+- [Config](.git\config): Application configuration files
+
+## Optional
+- [Changelog](CHANGELOG.md): Project changelog information
+- [Contributing](CONTRIBUTING.md): Project contributing information
+- [License](LICENSE): Project license information
+- [Cli Tools Roadmap](docs\development\CLI_TOOLS_ROADMAP.md): Project roadmap information

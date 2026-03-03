@@ -19,11 +19,9 @@ def _resolve_project(project: str | None) -> str | None:
         return project
     try:
         from advanced_memory.mcp.project_session import session
-
         return session.get_current_project()
     except Exception:
         return None
-
 
 # Note: This tool is intended to be registered by the main server initialization
 # but can be imported and defined here for modularity.
@@ -51,7 +49,7 @@ def register_rag_bridge(mcp: FastMCP):
             Dictionary containing optimized context chunks and high-density summary.
         """
         try:
-            target_project = _resolve_project(project)
+            target_project = resolve_project(project)
             search_service = await get_search_service()
 
             # Use the optimized knowledge_rag implementation from SearchService

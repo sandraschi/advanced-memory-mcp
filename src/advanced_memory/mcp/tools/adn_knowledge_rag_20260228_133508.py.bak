@@ -11,19 +11,7 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 
 from advanced_memory.deps import get_search_service
-
-
-def _resolve_project(project: str | None) -> str | None:
-    """Return the project to use: explicit override, or current session project."""
-    if project:
-        return project
-    try:
-        from advanced_memory.mcp.project_session import session
-
-        return session.get_current_project()
-    except Exception:
-        return None
-
+from advanced_memory.mcp.tools.portmanteau_knowledge import resolve_project
 
 # Note: This tool is intended to be registered by the main server initialization
 # but can be imported and defined here for modularity.
@@ -51,7 +39,7 @@ def register_rag_bridge(mcp: FastMCP):
             Dictionary containing optimized context chunks and high-density summary.
         """
         try:
-            target_project = _resolve_project(project)
+            target_project = resolve_project(project)
             search_service = await get_search_service()
 
             # Use the optimized knowledge_rag implementation from SearchService
