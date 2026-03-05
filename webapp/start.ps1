@@ -11,19 +11,38 @@ foreach ($p in $pids) {
     try { Stop-Process -Id $p -Force -ErrorAction Stop } catch { Write-Host "Warning: Could not terminate PID $p." -ForegroundColor Gray }
 }
 
-# 2. Setup
+# 2. Setup (frontend has package.json)
 Set-Location $PSScriptRoot
-if (-not (Test-Path "node_modules")) { npm install }
+$frontendPath = Join-Path $PSScriptRoot "frontend"
+if (-not (Test-Path (Join-Path $frontendPath "node_modules"))) {
+    Set-Location $frontendPath
+    npm install
+    Set-Location $PSScriptRoot
+}
 
-# 3. Start the Python backend (Background)
+# 3. Start the Python backend (Background) from project root so advanced_memory is importable
 Write-Host "Starting Python backend on port $BackendPort ..." -ForegroundColor Cyan
-
-# Use TRIPLE backtick to ensure $env:PYTHONPATH reaches the REAL shell
-$backendCmd = "`$env:PYTHONPATH = '$PSScriptRoot;$PSScriptRoot\src'; Set-Location '$PSScriptRoot'; uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port $BackendPort --log-level info"
-
+$backendCmd = "Set-Location '$ProjectRoot'; uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port $BackendPort --log-level info"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd -WindowStyle Normal
 
-# 4. Run server (Vite dev)
+# 3b. Wait and verify backend is listening
+$maxAttempts = 6
+$attempt = 0
+$backendUp = $false
+while ($attempt -lt $maxAttempts) {
+    Start-Sleep -Seconds 2
+    $conn = Get-NetTCPConnection -LocalPort $BackendPort -State Listen -ErrorAction SilentlyContinue
+    if ($conn) { $backendUp = $true; break }
+    $attempt++
+}
+if ($backendUp) {
+    Write-Host "Backend (port $BackendPort) is up." -ForegroundColor Green
+} else {
+    Write-Host "Backend (port $BackendPort) not responding after $($maxAttempts * 2)s; check the backend window." -ForegroundColor Yellow
+}
+
+# 4. Run Vite dev from frontend
 Write-Host "Starting Vite frontend on port $WebPort ..." -ForegroundColor Green
+Set-Location $frontendPath
 npm run dev -- --port $WebPort --host
 

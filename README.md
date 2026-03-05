@@ -24,7 +24,7 @@ Advanced Memory evolves from a simple memory tool into an enterprise-grade resea
 - **Portmanteau Tools**:
     - **adn_knowledge_rag**: High-density context retrieval bridge for OpenFang.
 - **Document Intelligence**: PDF/EPUB processing with intelligent chunking and automated vector ingestion.
-- **Agentic Workflows**: FastMCP 2.14.1+ SEP-1577 sampling with real tool functions — LLM autonomously orchestrates multi-step knowledge workflows via `ctx.sample(tools=[...], result_type=Model)`
+- **Agentic Workflows**: FastMCP 3.1+ SEP-1577 sampling with real tool functions — LLM autonomously orchestrates multi-step knowledge workflows via `ctx.sample(tools=[...], result_type=Model)`
 - **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
 - **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
 - **Ecosystem Observability**: Real-time fleet discovery (Apps Hub) and agent session monitoring (Control Room)
@@ -32,7 +32,7 @@ Advanced Memory evolves from a simple memory tool into an enterprise-grade resea
 - **Conversational AI** *(Planned)*: Natural language interaction with ADN tools and knowledge graph *(FREE - uses local Ollama)* → [Extension Plan](./CONVERSATIONAL_AI_README.md)
 - **Production Observability**: State-of-the-art monitoring with Grafana dashboards, Prometheus metrics, Loki logs
 - **Cross-Platform Support**: Compatible with Claude Desktop, Cursor IDE, Windsurf, and other MCP clients
-- **Web Interface**: Standalone React application for direct usage without MCP client requirements
+- **Web Interface**: Standalone React application for direct usage without MCP client requirements. See [Webapp README](webapp/README.md) for startup, ports, and troubleshooting.
 
 ## Architecture
 
@@ -81,7 +81,11 @@ mcpb pack . dist/advanced-memory-mcp.mcpb
 ```
 ```
 
-### Standalone Web Application (Automatic Startup)
+### Standalone Web Application
+
+**Canonical webapp docs:** [webapp/README.md](webapp/README.md) — ports (10704/10705), `start.ps1`, backend health check, and troubleshooting.
+
+Alternative startup scripts (repo root):
 ```powershell
 # RECOMMENDED: Clean startup (kills zombies, prevents port conflicts)
 .\run-webapp-clean.bat  # Opens http://localhost:17770
@@ -230,7 +234,7 @@ POST /api/v1/fetch              # HTTP fetch operations
 
 **Version**: 1.5.0
 **Status**: Production Ready (RAG Enabled)
-**MCP Compatibility**: FastMCP 2.14.3+
+**MCP Compatibility**: FastMCP 3.1+
 **Test Coverage**: 98% pass rate (1,136/1,161 tests) + 90% MCP Integration (18/20 tests)
 **Glama Rating**: Silver Tier (80/100)
 **Web Interface**: React application included (Apps Hub, Control Room, Skill Studio)

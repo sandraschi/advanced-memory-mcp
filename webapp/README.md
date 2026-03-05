@@ -1,65 +1,75 @@
-# ADN Webapp
+# Advanced Memory Webapp
 
-The unified web interface for the Advanced Memory MCP (ADN). This directory contains both the frontend interface and the bridge services required to orchestrate the research grid.
+React-based web interface for the Advanced Memory MCP (ADN). Runs a Vite frontend and a Python FastAPI backend, with optional Node.js bridge/startup services.
 
-## Architecture Overview
+## Architecture
 
-The webapp is composed of three primary services orchestrated via a central startup script:
+| Service        | Port  | Description                                      |
+|----------------|-------|--------------------------------------------------|
+| **Frontend**   | 10704 | Vite + React + Tailwind (Neural Interface)      |
+| **Backend**    | 10705 | Python FastAPI (uvicorn, from repo root)        |
 
-| Service | Port | Description |
-| :--- | :--- | :--- |
-| **Frontend** | 10704 | Vite-based React interface (the "Neural Interface") |
-| **Bridge** | 10705 | Node.js Express server relaying requests to the Python MCP server |
-| **Startup Service** | 10733 | Management API for service orchestration and health monitoring |
+Ports are in the SOTA range 10700–10800. Edit `start.ps1` to change them.
 
-## Directory Structure
+## Directory structure
 
-```text
+```
 webapp/
-├── frontend/          # React + Vite + Tailwind source
-├── backend/           # Node.js Express + Startup services
-├── start.ps1          # Unified PowerShell launcher (Recommended)
-├── start.bat          # Simple CMD launcher
-├── shutdown.ps1       # Graceful shutdown script
-└── shutdown.bat       # CMD shutdown script
+├── frontend/       # React + Vite + Tailwind (package.json here)
+├── backend/        # Optional Node bridge/startup services
+├── start.ps1       # Recommended launcher (Python backend + Vite)
+├── start.bat       # Alternative (Node bridge + startup + Vite)
+├── shutdown.ps1
+└── shutdown.bat
 ```
 
-## Quick Start
+## Quick start (PowerShell)
 
-The webapp requires Node.js, and will automatically install dependencies on first run.
+From the **webapp** directory:
 
-### Windows (Recommended)
-Double-click `start.bat` or run:
 ```powershell
 .\start.ps1
 ```
 
 This will:
-1. Clear existing processes on ports 10704, 10705, and 10733.
-2. Install `node_modules` for both frontend and backend if missing.
-3. Start the Bridge, Startup Service, and Frontend in parallel.
-4. Open the interface at [http://localhost:10704](http://localhost:10704).
+
+1. Kill any process using ports 10704 and 10705.
+2. Run `npm install` in `frontend/` if `node_modules` is missing.
+3. Start the **Python backend** in a new window (from repo root): `uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port 10705`.
+4. Wait up to ~12s and check that the backend is listening on 10705; print "Backend is up" or a warning.
+5. Start the **Vite dev server** from `frontend/` on port 10704.
+
+Open **http://localhost:10704/** in your browser.
+
+### Requirements
+
+- **Node.js** (for frontend build and dev server).
+- **uv** and **Python 3.12+** (for backend). Backend must run from the **repository root** so `advanced_memory` is importable.
+
+## Alternative: Node bridge + startup (start.bat)
+
+`start.bat` uses the Node backend in `backend/`:
+
+- Bridge on 10705, Startup Service on 10733, Frontend on 10704.
+- Install and run from `backend/` and `frontend/` as in the script.
+
+Use when you need the Node bridge/startup stack instead of the direct Python backend.
 
 ## Configuration
 
-Port allocations are standardized for SOTA compliance (10700-10800 range). To adjust ports, modify `start.ps1`:
+Ports are set at the top of `start.ps1`:
 
 ```powershell
 $WebPort = 10704
-$BridgePort = 10705
-$StartupPort = 10733
+$BackendPort = 10705
 ```
 
-## Component Details
+## Troubleshooting
 
-### Frontend
-A high-performance "Neural Interface" built with React and Tailwind CSS. It features a dark-themed, glassmorphic design with real-time research tracking and skill generation capabilities.
+- **Backend "not responding"**: Check the backend PowerShell window for uvicorn errors. Ensure you run from repo root (start.ps1 does this for the backend).
+- **npm errors in webapp root**: `start.ps1` runs npm only inside `frontend/`; there is no `package.json` in `webapp/` itself.
+- **Tailwind/PostCSS**: Arbitrary values with commas (e.g. `rgba(a,b,c,d)`) in `@apply` must use underscores in Tailwind (e.g. `rgba(a_b_c_d)`). See `frontend/src/styles/main.css` for examples.
 
-### Backend Bridge
-The bridge server (`bridge-server.js`) acts as a secure intermediary between the web interface and the Python-based Advanced Memory MCP server, handling JSON-RPC communication over HTTP.
+## Shutdown
 
-### Startup Service
-The `startup-service.js` monitors the health of the underlying MCP platform and provides the webapp with real-time status updates on model availability and research providers.
-
----
-*Zero Runts Policy Enforced — High-Cap/Zero-Crash Architecture*
+- Close the backend window and the terminal where Vite is running, or run `shutdown.ps1` / `shutdown.bat` if configured.

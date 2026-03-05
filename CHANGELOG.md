@@ -72,9 +72,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased] - Skills Factory (2026-02-10)
+## [Unreleased]
 
-### Added - Skills Factory (Research Chaining + LLM-Guided Loop)
+### Fixed - Webapp startup and docs (2026-03-05)
+
+- **start.ps1**: Run npm install and Vite from `webapp/frontend/` (where `package.json` lives) instead of `webapp/` to avoid ENOENT. Start Python backend from repository root so `advanced_memory` is importable.
+- **Backend health check**: After starting the backend, wait up to ~12s and verify port 10705 is listening; print "Backend is up" or a warning before starting Vite.
+- **main.css**: Fix Tailwind `@apply` for `.indigo-glow` — use `rgba(99_102_241_0.3)` (underscores) so commas in arbitrary values are not parsed as class separators (PostCSS error resolved).
+- **Docs**: Dedicated [webapp/README.md](webapp/README.md) for webapp architecture, ports, start.ps1/start.bat, and troubleshooting. Main README links to it under Web Interface and Standalone Web Application.
+
+### Added - Skills Factory (Research Chaining + LLM-Guided Loop) (2026-02-10)
 
 #### skill_research_chain.py (2026-02-10)
 - **ResearchChainService**: Chains arxiv, github, rag, web research with LLM-guided gap analysis
