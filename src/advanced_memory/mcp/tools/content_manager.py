@@ -1,10 +1,9 @@
-"""Content Manager portmanteau tool for Advanced Memory MCP server.
+"""Primary portmanteau tool for Advanced Memory knowledge content.
 
-This tool consolidates all content operations: write, read, edit, quick, daily, move, delete, etc.
-It reduces the number of MCP tools while maintaining full functionality.
+PORTMANTEAU PATTERN RATIONALE: Consolidates note CRUD, capture flows, LLM-assisted
+rewrites, and corpus hygiene into one tool so MCP clients stay within tool-count limits.
 
-For full documentation and examples, call:
-`help(topic="adn_content", level="intermediate")`
+Interactive reference: ``help(topic="adn_content", level="intermediate")``.
 """
 
 import json
@@ -111,12 +110,105 @@ async def adn_content(
     | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
 ) -> dict:
-    """Knowledge content management with conversational responses.
+    """Unified tool for knowledge-base notes — the primary Advanced Memory surface.
 
-    Operations: write, read, view, edit, quick, daily, move, delete, etc.
+    Operations: write, read, read_latest, view, view_rendered, edit, edit_tags, quick,
+    daily, move, delete, suggest_tags, summarize, enhance, generate, find_runts, find_junk.
 
-    For full documentation and examples, call:
-    `help(topic="adn_content", level="intermediate")`
+    Audio (dictate, speak) lives on ``adn_audio``. For full documentation and examples, call:
+    ``help(topic="adn_content", level="intermediate")``
+
+    WHY PORTMANTEAU: MCP hosts limit tool count; this tool keeps full note workflows
+    (CRUD, capture, tags, LLM assists, quality sweeps) behind one name.
+
+    SKILL AUTO-DETECTION: Writing under ``skills/`` can auto-fill Claude Skill frontmatter
+    (name, description, category) when missing.
+
+    Args:
+        operation: REQUIRED. One of: write, read, read_latest, view, view_rendered, edit,
+                    edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance,
+                    generate, find_runts, find_junk.
+        identifier: * write, read (non-latest), view, view_rendered, edit, edit_tags, move,
+                    delete, suggest_tags, summarize, enhance operations: REQUIRED — note
+                    title, permalink, or ``memory://`` URL. * read/view with empty identifier
+                    or aliases (latest, last, …): Optional — resolves to the latest note.
+                    * read_latest: NOT USED. * quick, daily, generate, find_runts, find_junk:
+                    Optional — see each operation (folder scoping for find_*).
+        content: * write: REQUIRED — markdown body. * edit: REQUIRED for append, prepend,
+                    replace_section, find_replace (replacement), and insert_* variants per
+                    ``edit_operation``. * quick, daily, generate: REQUIRED — capture text;
+                    generate uses this as topic/prompt. * enhance: Optional — override body
+                    before enhancement when provided. * Other operations: NOT USED unless noted.
+        folder: * write, generate: Optional — destination folder (write defaults to inbox).
+                    * find_runts, find_junk: Optional — restrict search to folder. * Other
+                    operations: NOT USED.
+        tags: * write, generate: Optional — tag list or comma-separated string. * edit_tags:
+                    REQUIRED for add/remove/replace; NOT USED for clear. * quick, daily:
+                    Optional. * Other operations: NOT USED.
+        entity_type: * write, generate: Optional — default ``note``. * Other operations:
+                    NOT USED.
+        destination_path: * move: REQUIRED — new relative path. * Other operations:
+                    NOT USED.
+        edit_operation: * edit: REQUIRED — append, prepend, find_replace, replace_section,
+                    insert_mermaid, insert_ascii_art, insert_kilroy, insert_kanban,
+                    insert_changelog. * Other operations: NOT USED.
+        tag_operation: * edit_tags: REQUIRED — add, remove, replace, clear. * Other
+                    operations: NOT USED.
+        find_text: * edit with find_replace: REQUIRED — text or regex (see use_regex) to
+                    find. * Other operations: NOT USED.
+        expected_replacements: * edit with find_replace: Optional — default 1. * Other
+                    operations: NOT USED.
+        use_regex: * edit with find_replace: Optional — treat find_text as regex. * Other
+                    operations: NOT USED.
+        section: * edit replace_section: REQUIRED — heading to replace. * insert_* ops:
+                    Optional section title/context. * Other operations: NOT USED.
+        page: * read, view, view_rendered: Optional — pagination page (default 1). * Other
+                    operations: NOT USED.
+        page_size: * read, view, view_rendered: Optional — page size (default 10). * Other
+                    operations: NOT USED.
+        results_per_page: * read, view, view_rendered: Optional — alias for page_size.
+                    * Other operations: NOT USED.
+        project: * Optional — project name; default active project. Passed through on
+                    find_runts/find_junk and general routing. * Multi-project safety: same as
+                    global project rules for mutating ops.
+        update_content: * enhance: Optional — default True; refresh facts/typos. * Other
+                    operations: NOT USED.
+        update_style: * enhance: Optional — default True; clarity/structure. * Other
+                    operations: NOT USED.
+        add_bibliography: * enhance: Optional — add references section when apt. * Other
+                    operations: NOT USED.
+        add_examples: * enhance: Optional — add examples. * Other operations: NOT USED.
+        add_context: * enhance: Optional — background/context expansions. * Other
+                    operations: NOT USED.
+        expand_sections: * enhance: Optional — deepen bullets into prose. * Other
+                    operations: NOT USED.
+        update_stale_tech: * enhance: Optional — refresh dated tooling mentions. * Other
+                    operations: NOT USED.
+        max_content_length: * find_runts: Optional — notes shorter than this (chars) are
+                    flagged (default 500). * Other operations: NOT USED.
+        assessment_format: * find_junk: Optional — narrative or structured output (default
+                    narrative). * Other operations: NOT USED.
+        new_string: * Deprecated alias for ``content``. * Any operation: Optional — if set
+                    and ``content`` is None, mapped to ``content`` with a warning. * Otherwise
+                    NOT USED.
+        replacement: * Deprecated alias for ``content`` (esp. find_replace). * Same mapping
+                    as new_string.
+        new_content: * Deprecated alias for ``content``. * Same mapping as new_string.
+
+    Returns:
+        Structured dict with ``success``, ``operation``, and fields such as ``summary`` or
+        ``message``; errors include ``recovery_options``. Some view paths embed markdown in
+        string fields inside the dict.
+
+    Examples:
+        adn_content("write", identifier="Project Plan", content="# Overview", folder="projects")
+        adn_content("read", identifier="Project Plan")
+        adn_content("read_latest")
+        adn_content("edit", identifier="Plan", edit_operation="append", content="\\n## Updates")
+        adn_content("quick", content="Insight: …")
+        adn_content("enhance", identifier="Rough Note", expand_sections=True)
+        adn_content("generate", content="Outline for Q2 roadmap", folder="plans")
+        adn_content("find_runts", max_content_length=400, folder="inbox")
     """
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)

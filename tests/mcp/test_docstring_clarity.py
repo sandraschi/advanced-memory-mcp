@@ -43,7 +43,8 @@ def extract_docstring_parameters(docstring: str) -> dict[str, list[str]]:
 
     for line in lines:
         # Check if this is a parameter definition (starts with parameter name)
-        param_match = re.match(r"^\s{8}(\w+):\s*(.*)$", line)
+        # After inspect.cleandoc(), Args entries are typically indented with 4 spaces
+        param_match = re.match(r"^\s{4}(\w+):\s*(.*)$", line)
         if param_match:
             # Save previous parameter
             if current_param:
