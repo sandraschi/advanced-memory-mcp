@@ -49,7 +49,7 @@ class ProjectConfig:
 
     @property
     def project_url(self) -> str:  # pragma: no cover
-        return f"/{generate_permalink(self.name)}"
+        return f"/api/v1/{generate_permalink(self.name)}"
 
 
 class AdvancedMemoryConfig(BaseSettings):
@@ -58,9 +58,7 @@ class AdvancedMemoryConfig(BaseSettings):
     env: Environment = Field(default="dev", description="Environment name")
 
     projects: dict[str, str] = Field(
-        default_factory=lambda: {
-            "main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))
-        },
+        default_factory=lambda: {"main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))},
         description="Mapping of project names to their filesystem paths",
     )
     default_project: str = Field(
@@ -125,17 +123,13 @@ class AdvancedMemoryConfig(BaseSettings):
 
     # RAG specific settings
     rag_persist_dir: str = Field(default="./chroma_db", env="RAG_PERSIST_DIR")
-    rag_embedding_model: str = Field(
-        default="BAAI/bge-small-en-v1.5", env="RAG_EMBEDDING_MODEL"
-    )
+    rag_embedding_model: str = Field(default="BAAI/bge-small-en-v1.5", env="RAG_EMBEDDING_MODEL")
     rag_chunk_size: int = Field(default=1000, env="RAG_CHUNK_SIZE")
     rag_chunk_overlap: int = Field(default=200, env="RAG_CHUNK_OVERLAP")
 
     # NEW: Reranker settings for RTX 4090 optimization
     rag_use_reranker: bool = Field(default=True, env="RAG_USE_RERANKER")
-    rag_reranker_model: str = Field(
-        default="BAAI/bge-reranker-base", env="RAG_RERANKER_MODEL"
-    )
+    rag_reranker_model: str = Field(default="BAAI/bge-reranker-base", env="RAG_RERANKER_MODEL")
     rag_top_k_candidates: int = Field(default=100, env="RAG_TOP_K_CANDIDATES")
     rag_top_k_final: int = Field(default=20, env="RAG_TOP_K_FINAL")
 
@@ -143,12 +137,8 @@ class AdvancedMemoryConfig(BaseSettings):
     rag_hybrid_search: bool = Field(default=True, env="RAG_HYBRID_SEARCH")
     rag_vector_weight: float = Field(default=0.5, env="RAG_VECTOR_WEIGHT")
     rag_fts_weight: float = Field(default=0.5, env="RAG_FTS_WEIGHT")
-    rag_storage_passphrase: str | None = Field(
-        default=None, env="RAG_STORAGE_PASSPHRASE"
-    )
-    rag_attn_implementation: str = Field(
-        default="flash_attention_2", env="RAG_ATTN_IMPLEMENTATION"
-    )
+    rag_storage_passphrase: str | None = Field(default=None, env="RAG_STORAGE_PASSPHRASE")
+    rag_attn_implementation: str = Field(default="flash_attention_2", env="RAG_ATTN_IMPLEMENTATION")
 
     model_config = SettingsConfigDict(
         env_prefix="ADVANCED_MEMORY_",
@@ -158,9 +148,7 @@ class AdvancedMemoryConfig(BaseSettings):
         env_nested_delimiter="__",
     )
 
-    def get_project_path(
-        self, project_name: str | None = None
-    ) -> Path:  # pragma: no cover
+    def get_project_path(self, project_name: str | None = None) -> Path:  # pragma: no cover
         """Get the path for a specific project or the default project."""
         name = project_name or self.default_project
 
@@ -174,9 +162,7 @@ class AdvancedMemoryConfig(BaseSettings):
         # Note: Removed auto-creation of "main" project - users should explicitly create projects
 
         # Ensure default project is valid
-        if (
-            self.default_project not in self.projects and len(self.projects) > 0
-        ):  # pragma: no cover
+        if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
             # Set default to first available project instead of auto-creating "main"
             self.default_project = list(self.projects.keys())[0]
 
@@ -211,16 +197,11 @@ class AdvancedMemoryConfig(BaseSettings):
     @property
     def project_list(self) -> list[ProjectConfig]:  # pragma: no cover
         """Get all configured projects as ProjectConfig objects."""
-        return [
-            ProjectConfig(name=name, home=Path(path))
-            for name, path in self.projects.items()
-        ]
+        return [ProjectConfig(name=name, home=Path(path)) for name, path in self.projects.items()]
 
     @field_validator("projects")
     @classmethod
-    def ensure_project_paths_exists(
-        cls, v: dict[str, str]
-    ) -> dict[str, str]:  # pragma: no cover
+    def ensure_project_paths_exists(cls, v: dict[str, str]) -> dict[str, str]:  # pragma: no cover
         """Ensure project path exists."""
         for _name, path_value in v.items():
             path = Path(path_value)
@@ -433,9 +414,7 @@ def setup_advanced_memory_logging() -> None:  # pragma: no cover
         return
 
     # Check for console logging environment variable
-    console_logging = (
-        os.getenv("ADVANCED_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
-    )
+    console_logging = os.getenv("ADVANCED_MEMORY_CONSOLE_LOGGING", "false").lower() == "true"
 
     config_manager = ConfigManager()
     config = get_project_config()
@@ -450,9 +429,7 @@ def setup_advanced_memory_logging() -> None:  # pragma: no cover
     # Suppress startup message in MCP stdio mode to avoid protocol interference
     # Note: MCP clients may not support cwd field, so we avoid depending on it
     if sys.stdout.isatty():  # Only log if we're in interactive mode
-        logger.info(
-            f"Advanced Memory {advanced_memory.__version__} (Project: {config.project})"
-        )
+        logger.info(f"Advanced Memory {advanced_memory.__version__} (Project: {config.project})")
     _LOGGING_SETUP = True
 
 
