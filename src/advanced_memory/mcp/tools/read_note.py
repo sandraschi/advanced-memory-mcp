@@ -1,58 +1,30 @@
-"""Read note tool for Advanced Memory MCP server."""
+﻿"""Read note tool for Advanced Memory MCP server."""
 
 from textwrap import dedent
+from typing import Annotated, Any
 
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.schemas.memory import memory_url_path
+from advanced_memory.schemas.search import SearchResponse
 from advanced_memory.utils import sanitize_filename, validate_project_path
 
 
 @mcp.tool
 async def read_note(
-    identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
-) -> str:
-    """Read a markdown note from the knowledge base.
-
-    This tool finds and retrieves a note by its title, permalink, or content search,
-    returning the raw markdown content including observations, relations, and metadata.
-    It will try multiple lookup strategies to find the most relevant note.
-
-    Args:
-        identifier: The title or permalink of the note to read
-                   Can be a full memory:// URL, a permalink, a title, or search text
-        page: Page number for paginated results (default: 1)
-        page_size: Number of items per page (default: 10)
-        project: Optional project name to read from. If not provided, uses current active project.
-
-    Returns:
-        The full markdown content of the note if found, or helpful guidance if not found.
-
-    Examples:
-        # Read by permalink
-        read_note("specs/search-spec")
-
-        # Read by title
-        read_note("Search Specification")
-
-        # Read with memory URL
-        read_note("memory://specs/search-spec")
-
-        # Read with pagination
-        read_note("Project Updates", page=2, page_size=5)
-
-        # Read from specific project
-        read_note("Meeting Notes", project="work-project")
-    """
-    # Get the active project first to check project-specific sync status
+    identifier: Annotated[str, Field(description="Title, permalink, or memory:// URL")],
+    page: Annotated[int, Field(description="Page number for paginated results")] = 1,
+    page_size: Annotated[int, Field(description="Results per page")] = 10,
+    project: Annotated[str | None, Field(description="Optional project override")] = None,
+) -> Any:
+    """Read a markdown note by title, permalink, or content lookup."""
     active_project = get_active_project(project)
 
-    # Check migration status and wait briefly if needed
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
     migration_status = await wait_for_migration_or_return_status(
@@ -62,10 +34,8 @@ async def read_note(
         return f"# System Status\n\n{migration_status}\n\nPlease wait for migration to complete before reading notes."
     project_url = active_project.project_url
 
-    # Get the file via REST API - first try direct permalink lookup
     entity_path = memory_url_path(identifier)
 
-    # Validate path to prevent path traversal attacks
     project_path = active_project.home
     if not validate_project_path(entity_path, project_path):
         logger.warning(
@@ -79,7 +49,6 @@ async def read_note(
     # Try direct lookup first
     path = f"{project_url}/resource/{entity_path}"
     logger.info(f"Attempting to read note from URL: {path}")
-
     try:
         response = await call_get(client, path, params={"page": page, "page_size": page_size})
         if response.status_code == 200:
@@ -87,17 +56,15 @@ async def read_note(
             return response.text
     except Exception as e:  # pragma: no cover
         logger.info(f"Direct lookup failed for '{path}': {e}")
-        # Continue to try sanitized version
 
-    # If direct lookup failed and identifier looks like a title (not a permalink),
-    # try with sanitized filename for markdown files
+    # Try sanitized filename variant for bare titles
     if (
         not identifier.startswith("memory://")
         and "/" not in identifier
         and not identifier.endswith(".md")
     ):
         sanitized_path = sanitize_filename(identifier)
-        if sanitized_path != identifier:  # Only try if different
+        if sanitized_path != identifier:
             sanitized_full_path = f"{project_url}/resource/{sanitized_path}.md"
             logger.info(f"Trying sanitized path: {sanitized_full_path}")
             try:
@@ -109,43 +76,49 @@ async def read_note(
                     return response.text
             except Exception as e:  # pragma: no cover
                 logger.info(f"Sanitized path lookup also failed for '{sanitized_full_path}': {e}")
-                # Continue to fallback methods
 
-    # Fallback 1: Try title search via API
+    # Fallback 1: title search via search API directly (bypass search_notes tool)
     logger.info(f"Search title for: {identifier}")
-    title_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(query=identifier, search_type="title", project=project)
+    try:
+        from advanced_memory.schemas.search import SearchQuery
 
-    if title_results and title_results.results:
-        result = title_results.results[0]  # Get the first/best match
-        if result.permalink:
-            try:
-                # Try to fetch the content using the found permalink
-                path = f"{project_url}/resource/{result.permalink}"
-                response = await call_get(
-                    client, path, params={"page": page, "page_size": page_size}
-                )
+        search_query = SearchQuery(query=identifier, search_type="title")  # type: ignore[call-arg]
+        search_response = await call_get(
+            client,
+            f"{project_url}/search/",
+            params={"query": identifier, "search_type": "title", "page": 1, "page_size": 5},
+        )
+        if search_response.status_code == 200:
+            search_result = SearchResponse.model_validate(search_response.json())
+            if search_result.results:
+                result = search_result.results[0]
+                if result.permalink:
+                    fetch_path = f"{project_url}/resource/{result.permalink}"
+                    fetch_response = await call_get(
+                        client, fetch_path, params={"page": page, "page_size": page_size}
+                    )
+                    if fetch_response.status_code == 200:
+                        logger.info(f"Found note by title search: {result.permalink}")
+                        return fetch_response.text
+    except Exception as e:  # pragma: no cover
+        logger.info(f"Title search fallback failed: {e}")
 
-                if response.status_code == 200:
-                    logger.info(f"Found note by title search: {result.permalink}")
-                    return response.text
-            except Exception as e:  # pragma: no cover
-                logger.info(
-                    f"Failed to fetch content for found title match {result.permalink}: {e}"
-                )
-    else:
-        logger.info(f"No results in title search for: {identifier}")
-
-    # Fallback 2: Text search as a last resort
+    # Fallback 2: text search
     logger.info(f"Title search failed, trying text search for: {identifier}")
-    text_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(query=identifier, search_type="text", project=project)
+    try:
+        search_response = await call_get(
+            client,
+            f"{project_url}/search/",
+            params={"query": identifier, "search_type": "text", "page": 1, "page_size": 5},
+        )
+        if search_response.status_code == 200:
+            search_result = SearchResponse.model_validate(search_response.json())
+            if search_result.results:
+                return format_related_results(identifier, search_result.results[:5])
+    except Exception as e:  # pragma: no cover
+        logger.info(f"Text search fallback failed: {e}")
 
-    # We didn't find a direct match, construct a helpful error message
-    if not text_results or not text_results.results:
-        # No results at all
-        return format_not_found_message(identifier)
-    else:
-        # We found some related results
-        return format_related_results(identifier, text_results.results[:5])
+    return format_not_found_message(identifier)
 
 
 def format_not_found_message(identifier: str) -> str:
@@ -170,27 +143,6 @@ def format_not_found_message(identifier: str) -> str:
         ```
         recent_activity(timeframe="7d")
         ```
-
-        ## Create New Note
-        This might be a good opportunity to create a new note on this topic:
-        ```
-        write_note(
-            title="{identifier.capitalize()}",
-            content='''
-            # {identifier.capitalize()}
-
-            ## Overview
-            [Your content here]
-
-            ## Observations
-            - [category] [Observation about {identifier}]
-
-            ## Relations
-            - relates_to [[Related Topic]]
-            ''',
-            folder="notes"
-        )
-        ```
     """)
 
 
@@ -199,14 +151,15 @@ def format_related_results(identifier: str, results) -> str:
     message = dedent(f"""
         # Note Not Found: "{identifier}"
 
-        I searched for "{identifier}" using direct lookup and title search but couldn't find an exact match. However, I found some related notes through text search:
+        I couldn't find an exact match, but found some related notes:
 
         """)
 
     for i, result in enumerate(results):
+        type_val = result.type.value if hasattr(result.type, "value") else str(result.type)
         message += dedent(f"""
             ## {i + 1}. {result.title}
-            - **Type**: {result.type.value}
+            - **Type**: {type_val}
             - **Permalink**: {result.permalink}
 
             You can read this note with:
@@ -215,26 +168,5 @@ def format_related_results(identifier: str, results) -> str:
             ```
 
             """)
-
-    message += dedent("""
-        ## Try More Specific Lookup
-        For exact matches, try using the full permalink from one of the results above.
-
-        ## Search For More Results
-        To see more related content:
-        ```
-        search_notes(query="{identifier}")
-        ```
-
-        ## Create New Note
-        If none of these match what you're looking for, consider creating a new note:
-        ```
-        write_note(
-            title="[Your title]",
-            content="[Your content]",
-            folder="notes"
-        )
-        ```
-    """)
 
     return message

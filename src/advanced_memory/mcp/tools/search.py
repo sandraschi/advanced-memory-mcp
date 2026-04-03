@@ -2,8 +2,10 @@
 
 import re
 from textwrap import dedent
+from typing import Annotated
 
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
@@ -280,163 +282,55 @@ Error searching for '{query}': {error_message}
 
 @mcp.tool
 async def search_notes(
-    query: str,
-    page: int = 1,
-    results_per_page: int = 10,
-    search_type: str = "text",
-    types: list[str] | None = None,
-    entity_types: list[str] | None = None,
-    after_date: str | None = None,
-    before_date: str | None = None,
-    tags: list[str] | None = None,
-    projects: str | None = None,
-    project: str | None = None,
-    search_all_projects: bool = False,
-) -> SearchResponse | str:
-    """Search across all content in the knowledge base with comprehensive syntax support.
+    query: Annotated[
+        str, Field(description="Search query (supports boolean operators and tag:value)")
+    ],
+    page: Annotated[int, Field(description="Results page number")] = 1,
+    results_per_page: Annotated[
+        int, Field(description="Number of results per page (max: 50)")
+    ] = 10,
+    search_type: Annotated[
+        str | None, Field(description="Search mode: 'text', 'title', or 'permalink'")
+    ] = "text",
+    types: Annotated[
+        list[str] | None, Field(description="Filter by categories (e.g. ['note'])")
+    ] = None,
+    entity_types: Annotated[
+        list[str] | None,
+        Field(description="Structural types: 'entity', 'observation', 'relation'"),
+    ] = None,
+    after_date: Annotated[
+        str | None, Field(description="Results FROM this date (e.g. '1 week')")
+    ] = None,
+    before_date: Annotated[
+        str | None, Field(description="Results UNTIL this date (e.g. '2024-12-31')")
+    ] = None,
+    tags: Annotated[
+        list[str] | None, Field(description="List of tags to match (must have ALL)")
+    ] = None,
+    projects: Annotated[
+        str | None, Field(description="Project scope: 'name', 'p1,p2', or 'ALL'")
+    ] = None,
+    project: Annotated[str | None, Field(description="Alias for projects")] = None,
+    search_all_projects: Annotated[
+        bool, Field(description="Boolean shortcut for projects='ALL'")
+    ] = False,
+) -> str:
+    """Advanced search with boolean logic and metadata filtering.
 
-    This tool searches the knowledge base using full-text search, pattern matching,
-    or exact permalink lookup. It supports filtering by content type, entity type,
-    and date, with advanced boolean and phrase search capabilities.
+    ⚠️ IMPORTANT: Searches CONTENT (text), not metadata recency.
+    - For recent activity: Use `adn_navigation("recent_activity", timeframe="1d")`.
+    - For precise date filtering: Use `after_date` / `before_date`.
 
-    ⚠️ IMPORTANT: This tool searches CONTENT (text within notes), not by date/recency.
-
-    - To find "latest notes" or "recent notes": Use `adn_navigation("recent_activity", timeframe="1d")`
-    - To find notes by topic AND filter by date: Use `after_date` parameter
-    - Queries like "latest note today" will search for those WORDS in content, not actual latest notes
-
-    ## Search Syntax Examples
-
-    ### Basic Searches
-    - `search_notes("keyword")` - Find any content containing "keyword"
-    - `search_notes("exact phrase")` - Search for exact phrase match
-
-    ### Advanced Boolean Searches
-    - `search_notes("term1 term2")` - Find content with both terms (implicit AND)
-    - `search_notes("term1 AND term2")` - Explicit AND search (both terms required)
-    - `search_notes("term1 OR term2")` - Either term can be present
-    - `search_notes("term1 NOT term2")` - Include term1 but exclude term2
-    - `search_notes("(project OR planning) AND notes")` - Grouped boolean logic
-
-    ### Content-Specific Searches
-    - `search_notes("tag:example")` - Search within specific tags (if supported by content)
-    - `search_notes("category:observation")` - Filter by observation categories
-    - `search_notes("author:username")` - Find content by author (if metadata available)
-
-    ### Search Type Examples
-    - `search_notes("Meeting", search_type="title")` - Search only in titles
-    - `search_notes("docs/meeting-*", search_type="permalink")` - Pattern match permalinks
-    - `search_notes("keyword", search_type="text")` - Full-text search (default)
-
-    ### Filtering Options
-    - `search_notes("query", types=["entity"])` - Search only entities
-    - `search_notes("query", types=["note", "person"])` - Multiple content types
-    - `search_notes("query", entity_types=["observation"])` - Filter by entity type (valid: entity, observation, relation)
-    - `search_notes("query", after_date="2024-01-01")` - Content after date
-    - `search_notes("query", before_date="2024-12-31")` - Content before date
-    - `search_notes("query", after_date="spring 2024", before_date="summer 2024")` - Date range
-    - `search_notes("query", tags=["dog", "training"])` - Filter by tags (must have ALL tags)
-
-    Note: Invalid entity_types are ignored with a warning. If all types are invalid, falls back to all types.
-
-    ### Advanced Pattern Examples
-    - `search_notes("project AND (meeting OR discussion)")` - Complex boolean logic
-    - `search_notes("\"exact phrase\" AND keyword")` - Combine phrase and keyword search
-    - `search_notes("bug NOT fixed")` - Exclude resolved issues
-    - `search_notes("docs/2024-*", search_type="permalink")` - Year-based permalink search
-
-    Args:
-        query: The search query string (supports boolean operators, phrases, patterns)
-        page: The page number of results to return (default 1)
-        results_per_page: The number of results to return per page (default 10)
-        search_type: Type of search to perform, one of: "text", "title", "permalink" (default: "text")
-        types: Optional list of note types to search (e.g., ["note", "person"])
-        entity_types: Optional list of entity types to filter by (e.g., ["entity", "observation"])
-        after_date: Optional date filter - content FROM this date forward (e.g., "1 week", "2d", "2024-01-01", "spring 2024")
-        before_date: Optional date filter - content UNTIL this date (e.g., "2024-12-31", "summer 2024")
-        tags: Optional list of tags to filter by (notes must have ALL specified tags)
-        projects: Optional project specification. Supports multiple formats:
-            - None (default): searches current active project only
-            - "project-name": searches specific single project
-            - "proj1,proj2,proj3": searches multiple projects (comma-delimited list)
-            - "ALL": searches across ALL projects and merges results
-            - "ALL_EXCEPT:proj1,proj2": searches all projects except specified ones
-            Results from multiple projects include project name prefix for clarity.
-        project: Backwards-compatible alias for `projects` (single project name).
-            - Ignored if `projects` is provided.
-        search_all_projects: When True, searches across every available project.
-            - Mutually exclusive with the projects parameter
-            - Equivalent to projects="ALL"
-
-    Returns:
-        SearchResponse with results and pagination info, or helpful error guidance if search fails
+    ## Syntax & Capabilities
+    - **Boolean**: `term1 AND term2`, `term1 OR term2`, `term1 NOT term2`
+    - **Phrases & Grouping**: `"exact phrase"`, `(logic OR group) AND match`
+    - **Shortcuts**: `tag:foo`, `category:observation`, `author:user`
+    - **Wildcards**: `docs/2024-*` (with `search_type="permalink"`)
 
     Examples:
-        # Basic text search
-        results = await search_notes("project planning")
-
-        # Boolean AND search (both terms must be present)
-        results = await search_notes("project AND planning")
-
-        # Boolean OR search (either term can be present)
-        results = await search_notes("project OR meeting")
-
-        # Boolean NOT search (exclude terms)
-        results = await search_notes("project NOT meeting")
-
-        # Boolean search with grouping
-        results = await search_notes("(project OR planning) AND notes")
-
-        # Exact phrase search
-        results = await search_notes("\"weekly standup meeting\"")
-
-        # Search with type filter
-        results = await search_notes(
-            query="meeting notes",
-            types=["entity"],
-        )
-
-        # Search with entity type filter
-        results = await search_notes(
-            query="meeting notes",
-            entity_types=["observation"],
-        )
-
-        # Search for recent content
-        results = await search_notes(
-            query="bug report",
-            after_date="1 week"
-        )
-
-        # Search with tag and date range filter
-        results = await search_notes(
-            query="german shepherd",
-            tags=["dog", "training"],
-            after_date="spring 2024",
-            before_date="summer 2024"
-        )
-
-        # Pattern matching on permalinks
-        results = await search_notes(
-            query="docs/meeting-*",
-            search_type="permalink"
-        )
-
-        # Search in specific project
-        results = await search_notes("meeting notes", projects="work-project")
-
-        # Search across ALL projects
-        results = await search_notes("shinjuku", projects="ALL")
-
-        # Search in multiple specific projects
-        results = await search_notes("database", projects="work,personal,archive")
-
-        # Complex search with multiple filters
-        results = await search_notes(
-            query="(bug OR issue) AND NOT resolved",
-            types=["entity"],
-            after_date="2024-01-01"
-        )
+        - `search_notes("project AND planning", types=["entity"])`
+        - `search_notes("\"standup meeting\"", project="work")`
     """
     # Normalize query and extract inline tag filters when applicable
     raw_query = (query or "").strip()
@@ -630,7 +524,16 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             page_size=results_per_page,
             total_results=len(all_results),
         )
-        return search_response
+
+        # Build Point Cloud Graph data (Hub and Spoke)
+        nodes = [{"id": "query", "label": query, "type": "hub"}]
+        edges = []
+        for r in search_response.results:
+            node_id = r.permalink or r.title
+            nodes.append({"id": node_id, "label": r.title, "type": "particle"})
+            edges.append({"from": "query", "to": node_id})
+
+        return _format_search_results_as_markdown(search_response, query, searched_projects)
 
     # Single project search (default behavior)
     active_project = get_active_project(
@@ -655,7 +558,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             # Don't treat this as an error, but the user might want guidance
             # We return the empty result as normal - the user can decide if they need help
 
-        return result
+        return _format_search_results_as_markdown(result, query, [active_project.name])
 
     except Exception as e:
         logger.error(f"Search failed for query '{query}': {e}")

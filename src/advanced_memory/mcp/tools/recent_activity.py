@@ -1,15 +1,14 @@
 """Recent activity tool for Advanced Memory MCP server."""
 
-from datetime import datetime
-
 # UTC is available in Python 3.11+, for older versions use timezone.utc
 try:
     from datetime import UTC
 except ImportError:
     UTC = UTC
-from typing import Any
+from typing import Annotated, Any
 
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
@@ -22,34 +21,19 @@ from advanced_memory.schemas.search import SearchItemType
 
 @mcp.tool
 async def recent_activity(
-    type_filter: str | list[str] = "",
-    depth: int = 1,
-    timeframe: TimeFrame = "7d",
-    page: int = 1,
-    page_size: int = 10,
-    max_related: int = 10,
-    project: str | None = None,
-) -> dict[str, Any]:
-    """Get recent activity across the knowledge base.
-
-    Args:
-        type_filter: Content type(s) to filter by — "entity", "relation", "observation",
-            or a list combining them. Empty string returns all types. Invalid types are ignored.
-        depth: Relation hops to traverse (1-3 recommended).
-        timeframe: Time window — natural language ("yesterday", "last week", "2 days ago"),
-            ISO date ("2024-01-01"), or shorthand ("7d", "24h"). Max 1 year back.
-        page: Page number (default: 1).
-        page_size: Results per page (default: 10).
-        max_related: Max related results per item (default: 10).
-        project: Project name to query. Defaults to active project.
-
-    Returns:
-        Dict with results, metadata, and pagination info.
-
-    Errors:
-        - "Invalid timeframe": Unrecognized timeframe format.
-        - "Project not found": Specified project does not exist.
-    """
+    type_filter: Annotated[
+        str | list[str], Field(description="Filter by 'entity', 'relation', 'observation'")
+    ] = "",
+    depth: Annotated[int, Field(description="Relation hops (1-3 recommended)")] = 1,
+    timeframe: Annotated[
+        TimeFrame, Field(description="ISO date or shorthand (e.g. '7d', 'yesterday')")
+    ] = "7d",
+    page: Annotated[int, Field(description="Page number for results")] = 1,
+    page_size: Annotated[int, Field(description="Results per page")] = 10,
+    max_related: Annotated[int, Field(description="Max related results per primary item")] = 10,
+    project: Annotated[str | None, Field(description="Optional project override")] = None,
+) -> Any:
+    """Get recent activity across the knowledge base."""
     logger.info(
         f"Getting recent activity from type_filter={type_filter}, depth={depth}, timeframe={timeframe}, page={page}, page_size={page_size}, max_related={max_related}"
     )
@@ -105,61 +89,46 @@ async def recent_activity(
         f"{project_url}/memory/recent",
         params=params,
     )
-    raw_data = response.json()
+    context = GraphContext.model_validate(response.json())
 
-    def normalize_timestamp(value: Any) -> str | None:
-        if value is None:
-            return None
-        if isinstance(value, str):
-            try:
-                # Handle timestamps with or without timezone info
-                ts = value.replace("Z", "+00:00")
-                dt = datetime.fromisoformat(ts)
-            except ValueError:
-                return value
-        elif isinstance(value, datetime):
-            dt = value
-        else:
-            return str(value)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=UTC)
-        return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    return _format_activity_as_markdown(context, str(timeframe))
 
-    def normalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
-        summary_type = summary.get("type")
 
-        if summary_type == "relation":
-            summary["relation_type"] = summary.get("relation_type") or "related_to"
-            summary["from_entity"] = summary.get("from_entity")
-            summary["to_entity"] = summary.get("to_entity")
-        elif summary_type == "observation":
-            summary["category"] = summary.get("category") or "general"
-            summary["content"] = summary.get("content") or ""
+def _format_activity_as_markdown(context: GraphContext, timeframe: str) -> str:
+    """Helper to format activity as markdown for fallback."""
+    md = [f"## Recent Activity ({timeframe})\n"]
+    if not context.results:
+        md.append("No recent activity found.")
+        return "\n".join(md)
 
-        summary["created_at"] = normalize_timestamp(summary.get("created_at"))
-        return summary
+    for item in context.results:
+        res = item.primary_result
+        res_type = getattr(res, "type", None)
+        if hasattr(res_type, "value"):
+            res_type = res_type.value
+        res_type = res_type or "unknown"
+        created = getattr(res, "created_at", "N/A") or "N/A"
 
-    results = raw_data.get("results", [])
-    for item in results:
-        if "primary_result" in item and isinstance(item["primary_result"], dict):
-            item["primary_result"] = normalize_summary(item["primary_result"])
+        if res_type == "note":
+            title = getattr(res, "title", None) or "Untitled Note"
+            md.append(f"### [Note] {title}")
+            md.append(f"- Created: {created}")
+            content_preview = getattr(res, "content", None)
+            if content_preview:
+                md.append(f"- Content: {content_preview[:200]}...")
+        elif res_type == "observation":
+            cat = getattr(res, "category", None) or "general"
+            content = getattr(res, "content", None) or ""
+            md.append(f"### [Observation] {cat}")
+            md.append(f"- Created: {created}")
+            md.append(f"- {content}")
+        elif res_type == "relation":
+            rel = getattr(res, "relation_type", None) or "related_to"
+            from_e = getattr(res, "from_entity", None) or "Unknown"
+            to_e = getattr(res, "to_entity", None) or "Unknown"
+            md.append(f"### [Relation] {rel}")
+            md.append(f"- Created: {created}")
+            md.append(f"- {from_e} -> {to_e}")
+        md.append("")
 
-        observations = item.get("observations", [])
-        item["observations"] = [
-            normalize_summary(obs) for obs in observations if isinstance(obs, dict)
-        ]
-
-        related = item.get("related_results", [])
-        item["related_results"] = [
-            normalize_summary(rel) for rel in related if isinstance(rel, dict)
-        ]
-
-    metadata = raw_data.get("metadata", {})
-    metadata["generated_at"] = normalize_timestamp(metadata.get("generated_at"))
-    metadata["timeframe"] = metadata.get("timeframe")
-    raw_data["metadata"] = metadata
-
-    raw_data["results"] = results
-
-    context = GraphContext.model_validate(raw_data)
-    return context.model_dump(mode="json")
+    return "\n".join(md)
