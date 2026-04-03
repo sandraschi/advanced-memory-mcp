@@ -1,6 +1,9 @@
 """MCP server command with streamable HTTP transport."""
 
 import asyncio
+import contextlib
+import os
+from pathlib import Path
 
 import typer
 from loguru import logger
@@ -17,6 +20,46 @@ from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.server import mcp as mcp_server  # pragma: no cover
 
 
+@contextlib.contextmanager
+def _stdio_single_instance_lock():
+    """Guard stdio mode with a process lock on Windows (opt-out via env)."""
+    if os.getenv("ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE", "1") != "1":
+        yield
+        return
+
+    lock_path = (
+        Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home())))
+        / ".advanced-memory"
+        / "mcp-stdio.lock"
+    )
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if os.name == "nt":
+        import msvcrt
+
+        lock_file = open(lock_path, "a+b")
+        try:
+            msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+        except OSError as e:
+            logger.error(
+                "advanced-memory stdio already running "
+                f"(lock: {lock_path}). Close other MCP clients or set "
+                "ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE=0."
+            )
+            lock_file.close()
+            raise typer.Exit(1) from e
+        try:
+            yield
+        finally:
+            try:
+                lock_file.seek(0)
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+            finally:
+                lock_file.close()
+    else:
+        yield
+
+
 @app.command()
 def mcp(
     transport: str = typer.Option("stdio", help="Transport type: stdio, streamable-http, or sse"),
@@ -25,14 +68,26 @@ def mcp(
     ),
     port: int = typer.Option(8000, help="Port for HTTP transports"),
     path: str = typer.Option("/mcp", help="Path prefix for streamable-http transport"),
+    agentic: bool = typer.Option(
+        False,
+        "--agentic",
+        help=(
+            "Enable agentic mode: apply CodeMode transform so all tools collapse into "
+            "search+execute meta-tools. Intended for automated agent pipelines. "
+            "Default off (interactive mode shows all portmanteau tools)."
+        ),
+    ),
 ):  # pragma: no cover
     """Run the MCP server with configurable transport options.
 
     This command starts an MCP server using one of three transport options:
 
-    - stdio: Standard I/O (good for local usage)
-    - streamable-http: Recommended for web deployments (default)
+    - stdio: Standard I/O (good for local usage, default)
+    - streamable-http: Recommended for web deployments
     - sse: Server-Sent Events (for compatibility with existing clients)
+
+    Use --agentic for automated agent pipelines (CodeMode: 2 meta-tools).
+    Default (no --agentic) exposes all portmanteau tools for human use.
     """
 
     # Use unified thread-based sync approach for both transports
@@ -91,11 +146,24 @@ def mcp(
             # Set unbuffered mode to prevent any buffering issues
             os.environ.setdefault("PYTHONUNBUFFERED", "1")
 
-        mcp_server.run(
-            transport=transport,
-            show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution
-        )
+        # Apply CodeMode AFTER imports, BEFORE run — only in agentic mode.
+        # This collapses all tools into search+execute meta-tools for agents.
+        # NEVER apply this in server.py module scope (breaks interactive use).
+        if agentic:
+            from fastmcp.experimental.transforms.code_mode import CodeMode
+            mcp_server.add_transform(CodeMode())
+
+        with _stdio_single_instance_lock():
+            mcp_server.run(
+                transport=transport,
+                show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution
+            )
     elif transport == "streamable-http" or transport == "sse":
+        # Apply CodeMode for HTTP transports too if agentic mode requested
+        if agentic:
+            from fastmcp.experimental.transforms.code_mode import CodeMode
+            mcp_server.add_transform(CodeMode())
+
         mcp_server.run(
             transport=transport,
             host=host,
