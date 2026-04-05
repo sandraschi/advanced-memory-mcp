@@ -3,6 +3,9 @@
 import os
 import platform
 from pathlib import Path
+from typing import Annotated
+
+from pydantic import Field
 
 from advanced_memory.config import ConfigManager  # noqa: F401 - Used in inner functions
 from advanced_memory.mcp.mcp_instance import mcp
@@ -10,33 +13,15 @@ from advanced_memory.services.sync_status_service import sync_status_tracker
 
 
 @mcp.tool
-async def status(level: str = "basic", focus: str | None = None) -> str:
-    """Get comprehensive status information about Advanced Memory system.
-
-    This enhanced status tool provides different levels of diagnostic information:
-
-    **Level 1 - "basic"**: Core system status and sync information
-    **Level 2 - "intermediate"**: Tool availability and configuration
-    **Level 3 - "advanced"**: Performance metrics and system resources
-    **Level 4 - "diagnostic"**: Detailed troubleshooting information
-
-    Args:
-        level: Status detail level (basic, intermediate, advanced, diagnostic)
-        focus: Optional focus area (sync, tools, system, projects)
-
-    Returns:
-        Comprehensive status report at requested level
-
-    Examples:
-        status() - Basic system overview
-        status("intermediate") - Tool and configuration status
-        status("advanced", "system") - System performance metrics
-        status("diagnostic") - Full diagnostic information
-
-    Errors:
-        - "Invalid status level": Returned if the provided 'level' is not one of the supported levels (basic, intermediate, advanced, diagnostic).
-        - "Invalid focus area": Returned if the provided 'focus' area is not recognized.
-    """
+async def status(
+    level: Annotated[
+        str, Field(description="Detail level: basic, intermediate, advanced, diagnostic")
+    ] = "basic",
+    focus: Annotated[
+        str | None, Field(description="Focus area: sync, tools, system, projects")
+    ] = None,
+) -> str:
+    """Get system status and diagnostic information."""
 
     if focus:
         return await _get_focused_status(focus, level)

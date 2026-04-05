@@ -211,7 +211,7 @@ class SearchService:
         return results, total_count
 
     async def knowledge_rag(self, query: str, limit: int = 20) -> list[dict[str, Any]]:
-        """Optimized RAG tool for OpenFang/Agentic cognitive bridge.
+        """Optimized RAG tool for knowledge management.
 
         Retrieves high-density knowledge context with reranking and FA2.
         """
@@ -251,6 +251,46 @@ class SearchService:
             )
 
         return formatted
+
+    async def semantic_search_chunks(self, query: str, limit: int = 20) -> list[dict[str, Any]]:
+        """Return RAG chunks with entity_id and permalink for UI (e.g. deep search page)."""
+        project_filter = f"metadata.project_id = {self.repository.project_id}"
+        candidate_limit = self.app_config.rag_top_k_candidates
+        vector_results = await self.vector_repository.search(
+            query,
+            limit=candidate_limit,
+            query_type="hybrid" if self.app_config.rag_hybrid_search else "vector",
+            filter=project_filter,
+        )
+        if not vector_results:
+            return []
+        reranked_docs = await self.vector_repository.rerank(
+            query,
+            vector_results,
+            self.app_config.rag_reranker_model,
+            attn_implementation=self.app_config.rag_attn_implementation,
+        )
+        final = reranked_docs[:limit]
+        entity_ids = list({doc["metadata"]["entity_id"] for doc in final})
+        entities = await self.entity_repository.find_by_ids(entity_ids)
+        permalink_by_id = {e.id: e.permalink for e in entities if e.id is not None}
+        out = []
+        for doc in final:
+            entity_id = doc["metadata"]["entity_id"]
+            title = doc["metadata"].get("title", "Unknown")
+            text = doc["text"]
+            score = float(doc.get("rerank_score", doc.get("_score", 0.0)))
+            out.append(
+                {
+                    "entity_id": entity_id,
+                    "permalink": permalink_by_id.get(entity_id),
+                    "title": title,
+                    "snippet": text[:300] + ("..." if len(text) > 300 else ""),
+                    "chunk_text": text,
+                    "score": score,
+                }
+            )
+        return out
 
     @staticmethod
     def _generate_variants(text: str) -> set[str]:

@@ -10,10 +10,10 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 try:
-    from advanced_memory.cli.main import app
-
     # Run MCP server with HTTP transport
-    app(["mcp", "--transport", "streamable-http", "--port", "8000"])
+    # Note: 'am' is an alias for 'advanced_memory.cli.main:app'
+    from advanced_memory.cli.main import app
+    app(["mcp", "--transport", "streamable-http", "--port", "10850"])
 except ImportError as e:
     print(f"Import error: {e}")
     print("Make sure the package is installed with: pip install -e .")

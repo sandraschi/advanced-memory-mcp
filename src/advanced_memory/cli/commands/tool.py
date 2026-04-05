@@ -87,9 +87,7 @@ def write_note(
 
         # Also check for empty content
         if content is not None and not content.strip():
-            typer.echo(
-                "Empty content provided. Please provide non-empty content.", err=True
-            )
+            typer.echo("Empty content provided. Please provide non-empty content.", err=True)
             raise typer.Exit(1)
 
         _fn = mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
@@ -127,11 +125,7 @@ def build_context(
 ):
     """Get context needed to continue a discussion."""
     try:
-        _fn = (
-            mcp_build_context.fn
-            if hasattr(mcp_build_context, "fn")
-            else mcp_build_context
-        )
+        _fn = mcp_build_context.fn if hasattr(mcp_build_context, "fn") else mcp_build_context
         context = asyncio.run(
             _fn(
                 url=url,
@@ -165,11 +159,7 @@ def recent_activity(
 ):
     """Get recent activity across the knowledge base."""
     try:
-        _fn = (
-            mcp_recent_activity.fn
-            if hasattr(mcp_recent_activity, "fn")
-            else mcp_recent_activity
-        )
+        _fn = mcp_recent_activity.fn if hasattr(mcp_recent_activity, "fn") else mcp_recent_activity
         context = asyncio.run(
             _fn(
                 type=type,  # pyright: ignore [reportArgumentType]
@@ -195,15 +185,11 @@ def recent_activity(
 @tool_app.command("search-notes")
 def search_notes(
     query: str,
-    permalink: Annotated[
-        bool, typer.Option("--permalink", help="Search permalink values")
-    ] = False,
+    permalink: Annotated[bool, typer.Option("--permalink", help="Search permalink values")] = False,
     title: Annotated[bool, typer.Option("--title", help="Search title values")] = False,
     after_date: Annotated[
         str | None,
-        typer.Option(
-            "--after_date", help="Search results after date, eg. '2d', '1 week'"
-        ),
+        typer.Option("--after_date", help="Search results after date, eg. '2d', '1 week'"),
     ] = None,
     page: int = 1,
     page_size: int = 10,
@@ -252,12 +238,8 @@ def search_notes(
 
 @tool_app.command(name="continue-conversation")
 def continue_conversation(
-    topic: Annotated[
-        str | None, typer.Option(help="Topic or keyword to search for")
-    ] = None,
-    timeframe: Annotated[
-        str | None, typer.Option(help="How far back to look for activity")
-    ] = None,
+    topic: Annotated[str | None, typer.Option(help="Topic or keyword to search for")] = None,
+    timeframe: Annotated[str | None, typer.Option(help="How far back to look for activity")] = None,
 ):
     """Prompt to continue a previous conversation or work session."""
     try:

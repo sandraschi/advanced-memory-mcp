@@ -27,7 +27,7 @@ from advanced_memory.services import EntityService, FileService
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.search_service import SearchService
 from advanced_memory.sync import SyncService
-from advanced_memory.sync.sync_service import SyncReport
+from advanced_memory.sync.sync_service import SyncReport, get_sync_service
 
 console = Console()
 
@@ -36,53 +36,6 @@ console = Console()
 class ValidationIssue:
     file_path: str
     error: str
-
-
-async def get_sync_service(project: Project) -> SyncService:  # pragma: no cover
-    """Get sync service instance with all dependencies."""
-
-    app_config = ConfigManager().config
-    _, session_maker = await db.get_or_create_db(
-        db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM
-    )
-
-    project_path = Path(project.path)
-    entity_parser = EntityParser(project_path)
-    markdown_processor = MarkdownProcessor(entity_parser)
-    file_service = FileService(project_path, markdown_processor)
-
-    # Initialize repositories
-    entity_repository = EntityRepository(session_maker, project_id=project.id)
-    observation_repository = ObservationRepository(session_maker, project_id=project.id)
-    relation_repository = RelationRepository(session_maker, project_id=project.id)
-    search_repository = SearchRepository(session_maker, project_id=project.id)
-
-    # Initialize services
-    search_service = SearchService(search_repository, entity_repository, file_service)
-    link_resolver = LinkResolver(entity_repository, search_service)
-
-    # Initialize services
-    entity_service = EntityService(
-        entity_parser,
-        entity_repository,
-        observation_repository,
-        relation_repository,
-        file_service,
-        link_resolver,
-    )
-
-    # Create sync service
-    sync_service = SyncService(
-        app_config=app_config,
-        entity_service=entity_service,
-        entity_parser=entity_parser,
-        entity_repository=entity_repository,
-        relation_repository=relation_repository,
-        search_service=search_service,
-        file_service=file_service,
-    )
-
-    return sync_service
 
 
 def group_issues_by_directory(issues: list[ValidationIssue]) -> dict[str, list[ValidationIssue]]:

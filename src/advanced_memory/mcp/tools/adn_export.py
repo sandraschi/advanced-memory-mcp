@@ -443,9 +443,9 @@ async def _joplin_export(
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
 
-    return await (export_joplin_notes.fn if hasattr(export_joplin_notes, "fn") else export_joplin_notes)(
-        export_path, source_folder, include_subfolders, True, project
-    )  # type: ignore[operator,no-any-return]
+    return await (
+        export_joplin_notes.fn if hasattr(export_joplin_notes, "fn") else export_joplin_notes
+    )(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
 
 
 async def _pdf_book_export(

@@ -1,14 +1,7 @@
-"""RAG Cognitive Bridge for OpenFang - Optimized Knowledge Retrieval.
+from typing import Annotated, Any
 
-This tool provides a specialized interface for Agentic RAG (Retrieval Augmented Generation)
-optimized for OpenFang cognitive bridges. It leverages LanceDB with transparent
-metadata encryption and Flash Attention 2 (BGE-Reranker) for high-precision
-context retrieval within small VRAM budgets.
-"""
-
-from typing import Any
-
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
+from pydantic import Field
 
 from advanced_memory.deps import get_search_service
 
@@ -25,37 +18,32 @@ def _resolve_project(project: str | None) -> str | None:
         return None
 
 
-# Note: This tool is intended to be registered by the main server initialization
-# but can be imported and defined here for modularity.
-
-
 def register_rag_bridge(mcp: FastMCP):
     @mcp.tool()
     async def adn_knowledge_rag(
-        query: str,
-        limit: int = 10,
-        project: str | None = None,
-        min_score: float = 0.5,
-        include_metadata: bool = True,
-    ) -> dict[str, Any]:
-        """Specialized RAG retrieval optimized for OpenFang/Agentic cognitive bridges.
+        query: Annotated[str, Field(description="The semantic search query or context prompt")],
+        limit: Annotated[
+            int, Field(description="Maximum number of high-density chunks to return")
+        ] = 10,
+        project: Annotated[
+            str | None, Field(description="Optional project override (defaults to current active)")
+        ] = None,
+        min_score: Annotated[
+            float, Field(description="Minimum relevance threshold (0.0 to 1.0)")
+        ] = 0.5,
+        include_metadata: Annotated[
+            bool, Field(description="Whether to include source metadata (file paths, timestamps)")
+        ] = True,
+    ) -> Any:
+        """Specialized RAG retrieval for optimized knowledge management.
 
-        Args:
-            query: The semantic search query or context prompt
-            limit: Maximum number of high-density chunks to return (default 10)
-            project: Optional project override (defaults to current active)
-            min_score: Minimum relevance threshold (0.0 to 1.0)
-            include_metadata: Whether to include source metadata (file paths, timestamps)
-
-        Returns:
-            Dictionary containing optimized context chunks and high-density summary.
+        Leverages LanceDB and vector search for high-precision context retrieval.
         """
         try:
             target_project = _resolve_project(project)
             search_service = await get_search_service()
 
             # Use the optimized knowledge_rag implementation from SearchService
-            # This handles FA2 reranking and transparent decryption
             results = await search_service.knowledge_rag(
                 query=query, limit=limit, project=target_project, min_score=min_score
             )
@@ -63,6 +51,7 @@ def register_rag_bridge(mcp: FastMCP):
             # Format high-density context for Agentic models
             context_blocks = []
             sources = []
+            explorer_results = []
 
             for i, chunk in enumerate(results.get("results", [])):
                 score = chunk.get("score", 0.0)
@@ -74,17 +63,27 @@ def register_rag_bridge(mcp: FastMCP):
                 context_blocks.append(block)
                 sources.append(source)
 
+                explorer_results.append(
+                    {
+                        "title": f"Source {i + 1}: {source}",
+                        "permalink": source,
+                        "content": text,
+                        "score": score,
+                        "type": "chunk",
+                    }
+                )
+
             formatted_context = "\n\n---\n\n".join(context_blocks)
 
-            return {
-                "success": True,
-                "query": query,
-                "project": target_project,
-                "count": len(results.get("results", [])),
-                "context": formatted_context,
-                "sources": list(set(sources)),
-                "raw_results": results.get("results", []) if include_metadata else [],
-            }
+            from advanced_memory.mcp.prefabs import SearchExplorer
+
+            return mcp.ToolResult(
+                content=[f"## RAG Results for: {query}\n\n{formatted_context}"],
+                app=SearchExplorer(f"RAG: {query}", explorer_results),
+            )
 
         except Exception as e:
+            from loguru import logger
+
+            logger.error(f"RAG error: {e}")
             return {"success": False, "error": str(e)}

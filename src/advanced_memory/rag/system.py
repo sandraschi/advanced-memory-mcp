@@ -1,10 +1,9 @@
 """RAG (Retrieval Augmented Generation) System for Advanced Memory.
 
-This module provides comprehensive RAG capabilities including:
-- Intelligent document chunking
-- Vector embeddings with ChromaDB
-- Semantic retrieval
-- Context-aware knowledge synthesis
+Legacy/optional: ChromaDB + sentence-transformers. The main app uses
+LanceDB (VectorRepository) for semantic search. This module is only
+used if explicitly instantiated; chromadb and sentence_transformers
+are optional dependencies.
 """
 
 from __future__ import annotations
@@ -13,9 +12,17 @@ import os
 from pathlib import Path
 from typing import Any, Literal
 
-import chromadb
 from loguru import logger
-from sentence_transformers import SentenceTransformer
+
+try:
+    import chromadb
+    from sentence_transformers import SentenceTransformer
+
+    _CHROMA_AVAILABLE = True
+except ImportError:
+    _CHROMA_AVAILABLE = False
+    chromadb = None  # type: ignore[assignment]
+    SentenceTransformer = None  # type: ignore[assignment]
 
 
 class DocumentChunk:
@@ -481,36 +488,36 @@ class RAGSystem:
 _rag_system: RAGSystem | None = None
 
 
-def get_rag_system() -> RAGSystem:
-    """Get or create the global RAG system instance."""
+def get_rag_system() -> RAGSystem | None:
+    """Get or create the global RAG system instance. Returns None if chromadb/sentence_transformers not installed."""
 
     global _rag_system
-
+    if not _CHROMA_AVAILABLE:
+        return None
     if _rag_system is None:
-        # Configure from environment
         persist_dir = os.getenv("RAG_PERSIST_DIR", "./chroma_db")
         embedding_model = os.getenv("RAG_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
         chunk_size = int(os.getenv("RAG_CHUNK_SIZE", "1000"))
         chunk_overlap = int(os.getenv("RAG_CHUNK_OVERLAP", "200"))
-
         _rag_system = RAGSystem(
             persist_directory=persist_dir,
             embedding_model=embedding_model,
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
         )
-
     return _rag_system
 
 
 async def initialize_rag_system() -> bool:
-    """Initialize the global RAG system."""
+    """Initialize the global RAG system. Returns False if optional deps missing."""
 
+    if not _CHROMA_AVAILABLE:
+        logger.debug("ChromaDB RAG skipped (optional deps not installed)")
+        return False
     try:
-        # system = get_rag_system()  # Initialize RAG system
-        get_rag_system()  # Initialize RAG system
-        logger.info("RAG system initialized successfully")
+        get_rag_system()
+        logger.info("RAG system (ChromaDB) initialized successfully")
         return True
     except Exception as e:
-        logger.error(f"Failed to initialize RAG system: {e}")
+        logger.warning("Failed to initialize ChromaDB RAG: %s", e)
         return False

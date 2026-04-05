@@ -145,7 +145,9 @@ async def _scan_vault_files(
                 att_files = []
 
                 try:
-                    dir_contents = await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(current_path)
+                    dir_contents = await (
+                        list_directory.fn if hasattr(list_directory, "fn") else list_directory
+                    )(current_path)
 
                     lines = dir_contents.split("\n")
                     for line in lines:
@@ -239,9 +241,9 @@ async def _process_vault_import(
             # Check if file already exists
             if skip_existing:
                 try:
-                    existing = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
-                        query=dest_path, search_type="permalink", project=project
-                    )
+                    existing = await (
+                        search_notes.fn if hasattr(search_notes, "fn") else search_notes
+                    )(query=dest_path, search_type="permalink", project=project)
                     if existing.results:
                         logger.info(f"Skipping existing file: {dest_path}")
                         stats["skipped_files"] += 1

@@ -137,9 +137,7 @@ async def adn_skills(
     elif operation == "package":
         return await _package_operation(identifier, export_path, project)
     elif operation == "from_zettel":
-        return await _from_zettel_operation(
-            identifier, description, category, metadata, project
-        )
+        return await _from_zettel_operation(identifier, description, category, metadata, project)
     elif operation == "to_zettel":
         return await _to_zettel_operation(identifier, project)
     elif operation == "import_from_github":
@@ -155,9 +153,7 @@ async def adn_skills(
             query, max_papers, synthesis_level, category, project
         )
     elif operation == "distill_from_textbook":
-        return await _distill_from_textbook_operation(
-            pdf_path, chapters, level, category, project
-        )
+        return await _distill_from_textbook_operation(pdf_path, chapters, level, category, project)
     elif operation == "distill_from_text":
         return await _distill_from_text_operation(
             text_path, focus, context_level, category, project
@@ -170,17 +166,13 @@ async def adn_skills(
     elif operation == "activate":
         return await _activate_operation(identifier or skill_name, scope, project)
     elif operation == "deactivate":
-        return await _deactivate_operation(
-            identifier or skill_name, deactivate_all, project
-        )
+        return await _deactivate_operation(identifier or skill_name, deactivate_all, project)
     elif operation == "active":
         return await _active_operation(verbose, project)
     elif operation == "load_section":
         return await _load_section_operation(identifier or skill_name, section, project)
     elif operation == "load_resource":
-        return await _load_resource_operation(
-            identifier or skill_name, resource, project
-        )
+        return await _load_resource_operation(identifier or skill_name, resource, project)
     else:
         return f"""# Error: Invalid Skills Operation
 
@@ -593,17 +585,11 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
                 return False
 
         confidence_filter = filters.get("confidence")
-        if (
-            confidence_filter
-            and record["confidence"].lower() != str(confidence_filter).lower()
-        ):
+        if confidence_filter and record["confidence"].lower() != str(confidence_filter).lower():
             return False
 
         difficulty_filter = filters.get("difficulty")
-        if (
-            difficulty_filter
-            and record["difficulty"].lower() != str(difficulty_filter).lower()
-        ):
+        if difficulty_filter and record["difficulty"].lower() != str(difficulty_filter).lower():
             return False
 
         tag_filter = filters.get("tags")
@@ -649,9 +635,7 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
         category = meta_block.get("category", "general")
         confidence = meta_block.get("confidence", "low")
         difficulty = meta_block.get("difficulty", "unassigned")
-        status = meta_block.get(
-            "status", "Draft scaffold – complete research checklist before use"
-        )
+        status = meta_block.get("status", "Draft scaffold – complete research checklist before use")
         license_value = fm.get("license", "Proprietary")
         allowed_tools = fm.get("allowed-tools") or []
         if not isinstance(allowed_tools, list):
@@ -702,9 +686,7 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
     ]
 
     for idx, record in enumerate(page_entries, start=start + 1):
-        allowed = (
-            ", ".join(record["allowed_tools"]) if record["allowed_tools"] else "None"
-        )
+        allowed = ", ".join(record["allowed_tools"]) if record["allowed_tools"] else "None"
         tags = ", ".join(record["tags"]) if record["tags"] else "None"
         lines.append(f"## {idx}. {record['title']}")
         lines.append(f"**Directory:** `skills/{record['rel_path']}`")
@@ -1162,9 +1144,7 @@ adn_skills(
             existing_frontmatter["metadata"].update(metadata)
 
     # Build new content
-    yaml_str = yaml.dump(
-        existing_frontmatter, default_flow_style=False, allow_unicode=True
-    )
+    yaml_str = yaml.dump(existing_frontmatter, default_flow_style=False, allow_unicode=True)
     new_content = f"---\n{yaml_str}---\n{body}"
 
     # Update the note
@@ -1518,9 +1498,7 @@ adn_skills("create", skill_name="my-skill", description="When to use this skill"
     }.get(scope or "session", "session")
 
     sections_list = "\n".join(sections) if sections else "No sections found"
-    resources_list = (
-        "\n".join(resources) if resources else "No resource directories found"
-    )
+    resources_list = "\n".join(resources) if resources else "No resource directories found"
 
     return f"""# 🚪 Skill Activated: {skill_name}
 

@@ -63,7 +63,9 @@ async def load_obsidian_canvas(
         logger.info(f"Starting canvas import: {canvas_path}")
 
         # Read the canvas file
-        canvas_content = await (mcp_read_content.fn if hasattr(mcp_read_content, "fn") else mcp_read_content)(canvas_path, project)
+        canvas_content = await (
+            mcp_read_content.fn if hasattr(mcp_read_content, "fn") else mcp_read_content
+        )(canvas_path, project)
         if canvas_content.get("type") == "error":
             return f"# Canvas Import Failed\n\nError reading canvas file '{canvas_path}': {canvas_content['error']}"
 

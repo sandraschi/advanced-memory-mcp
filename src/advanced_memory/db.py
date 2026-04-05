@@ -1,4 +1,6 @@
 import asyncio
+import datetime
+import sqlite3
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from enum import Enum, auto
@@ -18,6 +20,20 @@ from sqlalchemy.ext.asyncio import (
 
 from advanced_memory.config import AdvancedMemoryConfig, ConfigManager
 from advanced_memory.repository.search_repository import SearchRepository
+
+
+# Register sqlite3 adapters for Python 3.12+ compatibility
+def _adapt_datetime_iso(val: datetime.datetime) -> str:
+    return val.isoformat()
+
+
+def _convert_datetime(val: bytes) -> datetime.datetime:
+    return datetime.datetime.fromisoformat(val.decode())
+
+
+sqlite3.register_adapter(datetime.datetime, _adapt_datetime_iso)
+sqlite3.register_converter("timestamp", _convert_datetime)
+sqlite3.register_converter("datetime", _convert_datetime)
 
 # Module level state
 _engine: AsyncEngine | None = None

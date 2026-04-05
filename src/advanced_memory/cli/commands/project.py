@@ -52,9 +52,7 @@ def list_projects() -> None:
         for project in result.projects:
             is_default = "YES" if project.is_default else ""
             is_active = "YES" if session.get_current_project() == project.name else ""
-            table.add_row(
-                project.name, format_path(project.path), is_default, is_active
-            )
+            table.add_row(project.name, format_path(project.path), is_default, is_active)
 
         console.print(table)
     except Exception as e:
@@ -106,9 +104,7 @@ def remove_project(
         raise typer.Exit(1) from e
 
     # Show this message regardless of method used
-    console.print(
-        "[yellow]Note: The project files have not been deleted from disk.[/yellow]"
-    )
+    console.print("[yellow]Note: The project files have not been deleted from disk.[/yellow]")
 
 
 @project_app.command("default")
@@ -184,9 +180,7 @@ def display_project_info(
             stats_table.add_row(
                 "Unresolved Relations", str(info.statistics.total_unresolved_relations)
             )
-            stats_table.add_row(
-                "Isolated Entities", str(info.statistics.isolated_entities)
-            )
+            stats_table.add_row("Isolated Entities", str(info.statistics.isolated_entities))
 
             console.print(stats_table)
 
@@ -258,9 +252,7 @@ def display_project_info(
 
                 if running:
                     start_time = (
-                        datetime.fromisoformat(
-                            info.system.watch_status.get("start_time", "")
-                        )
+                        datetime.fromisoformat(info.system.watch_status.get("start_time", ""))
                         if isinstance(info.system.watch_status.get("start_time"), str)
                         else info.system.watch_status.get("start_time")
                     )
@@ -297,9 +289,7 @@ def display_project_info(
                 if isinstance(info.system.timestamp, str)
                 else info.system.timestamp
             )
-            console.print(
-                f"\nTimestamp: [cyan]{current_time.strftime('%Y-%m-%d %H:%M:%S')}[/cyan]"
-            )
+            console.print(f"\nTimestamp: [cyan]{current_time.strftime('%Y-%m-%d %H:%M:%S')}[/cyan]")
 
     except Exception as e:  # pragma: no cover
         typer.echo(f"Error getting project info: {e}", err=True)

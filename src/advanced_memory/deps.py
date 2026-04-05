@@ -31,6 +31,7 @@ from advanced_memory.services import EntityService, ProjectService
 from advanced_memory.services.context_service import ContextService
 from advanced_memory.services.directory_service import DirectoryService
 from advanced_memory.services.file_service import FileService
+from advanced_memory.services.inbox_processor import InboxProcessor, get_inbox_processor
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.search_service import SearchService
 from advanced_memory.sync import SyncService
@@ -41,9 +42,7 @@ def get_app_config() -> AdvancedMemoryConfig:  # pragma: no cover
     return app_config
 
 
-AppConfigDep = Annotated[
-    AdvancedMemoryConfig, Depends(get_app_config)
-]  # pragma: no cover
+AppConfigDep = Annotated[AdvancedMemoryConfig, Depends(get_app_config)]  # pragma: no cover
 
 
 ## project
@@ -75,9 +74,7 @@ async def get_project_config(
     )
 
 
-ProjectConfigDep = Annotated[
-    ProjectConfig, Depends(get_project_config)
-]  # pragma: no cover
+ProjectConfigDep = Annotated[ProjectConfig, Depends(get_project_config)]  # pragma: no cover
 
 ## sqlalchemy
 
@@ -186,9 +183,7 @@ async def get_observation_repository(
     return ObservationRepository(session_maker, project_id=project_id)
 
 
-ObservationRepositoryDep = Annotated[
-    ObservationRepository, Depends(get_observation_repository)
-]
+ObservationRepositoryDep = Annotated[ObservationRepository, Depends(get_observation_repository)]
 
 
 async def get_relation_repository(
@@ -219,9 +214,7 @@ async def get_vector_repository(
     """Create a VectorRepository instance."""
     # Place vector DB in the same directory as the SQLite DB
     vector_db_path = str(app_config.app_database_path.parent / "vectors")
-    return VectorRepository(
-        vector_db_path, passphrase=app_config.rag_storage_passphrase
-    )
+    return VectorRepository(vector_db_path, passphrase=app_config.rag_storage_passphrase)
 
 
 VectorRepositoryDep = Annotated[VectorRepository, Depends(get_vector_repository)]
@@ -306,9 +299,7 @@ SearchServiceDep = Annotated[SearchService, Depends(get_search_service)]
 async def get_link_resolver(
     entity_repository: EntityRepositoryDep, search_service: SearchServiceDep
 ) -> LinkResolver:
-    return LinkResolver(
-        entity_repository=entity_repository, search_service=search_service
-    )
+    return LinkResolver(entity_repository=entity_repository, search_service=search_service)
 
 
 LinkResolverDep = Annotated[LinkResolver, Depends(get_link_resolver)]
@@ -410,9 +401,7 @@ async def get_claude_projects_importer(
     return ClaudeProjectsImporter(project_config.home, markdown_processor)
 
 
-ClaudeProjectsImporterDep = Annotated[
-    ClaudeProjectsImporter, Depends(get_claude_projects_importer)
-]
+ClaudeProjectsImporterDep = Annotated[ClaudeProjectsImporter, Depends(get_claude_projects_importer)]
 
 
 async def get_memory_json_importer(
@@ -423,3 +412,11 @@ async def get_memory_json_importer(
 
 
 MemoryJsonImporterDep = Annotated[MemoryJsonImporter, Depends(get_memory_json_importer)]
+
+
+async def get_inbox_processor_dep() -> InboxProcessor:
+    """Get InboxProcessor dependency."""
+    return get_inbox_processor()
+
+
+InboxProcessorDep = Annotated[InboxProcessor, Depends(get_inbox_processor_dep)]

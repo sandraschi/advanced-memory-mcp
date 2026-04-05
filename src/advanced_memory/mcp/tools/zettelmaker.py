@@ -25,7 +25,9 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 @mcp.tool
 async def adn_zettelmaker(
-    operation: Literal["generate", "customize", "expand", "suggest", "connect", "analyze"],
+    operation: Literal[
+        "generate", "customize", "expand", "suggest", "connect", "analyze", "collect"
+    ],
     category: str | None = None,
     topic: str | None = None,
     note_identifier: str | None = None,
@@ -34,12 +36,12 @@ async def adn_zettelmaker(
     ai_generate: bool = False,
     quality: Literal["quick", "standard", "comprehensive", "expert"] = "standard",
     ctx: Context | None = None,
-) -> str:
+) -> Any:
     """Intelligent Zettelkasten Portmanteau for Advanced Memory.
 
     This tool consolidates the entire zettelkasten scaffolding workflow into one interface.
     Instead of separate tools for generation, analysis, and expansion, this unifies
-    the cognitive pipeline: Analyze -> Suggest -> Generate -> Expand -> Connect.
+    the cognitive pipeline: Analyze -> Suggest -> Generate -> Expand -> Connect -> Collect.
 
     ---------------------------------------------------------------------------
     [PORTMANTEAU PATTERN RATIONALE]
@@ -56,19 +58,7 @@ async def adn_zettelmaker(
     - analyze: Evaluate knowledge base composition and identify missing deeper layers.
     - connect: Auto-discover and instantiate relationships between existing notes.
     - customize: Configure template parameters (depth, tone, structure).
-
-    ---------------------------------------------------------------------------
-    [CATEGORIES & TOPICS]
-    - developer: python-core, git, testing, architecture, rust, go.
-    - researcher: methods, critical-thinking, academic-writing, grants.
-    - writer: storytelling, editing, publishing, screenwriting.
-    - knowledge-worker: productivity, pkm, communication, negotiation.
-    - devops: docker, k8s, ci-cd, terraform, aws.
-    - data-scientist: ml, statistics, visualization, pandas.
-    - uiux-designer: principles, figma, research, accessibility.
-    - product-manager: strategy, roadmaps, metrics, okrs.
-    - entrepreneur: models, fundraising, growth, sales.
-    - creative: photography, video, design, music.
+    - collect: Low-friction capture for 'off-the-cuff' atomic thoughts.
 
     ---------------------------------------------------------------------------
     [OPERATIONS DETAIL]
@@ -82,6 +72,10 @@ async def adn_zettelmaker(
     - Parameters: category (optional), count (default: 5).
     - Returns: Prioritized list of next steps based on current graph state.
     - Use when: You don't know what to write next.
+
+    collect: Capture Engine
+    - Returns: ZettelCollector interactive UI for rapid note taking.
+    - Use when: You have a sudden 'off-the-cuff' insight.
 
     analyze: Insight Engine
     - Parameters: category (optional), depth (default: 3).
@@ -103,6 +97,9 @@ async def adn_zettelmaker(
     ---------------------------------------------------------------------------
     [EXAMPLES]
 
+    - Quick capture (interactive):
+      adn_zettelmaker(operation="collect")
+
     - Standard generation (pre-built):
       adn_zettelmaker(operation="generate", category="developer", topic="python-core")
 
@@ -119,21 +116,32 @@ async def adn_zettelmaker(
         f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}"
     )
 
+    from advanced_memory.mcp.prefabs import ZettelCollector
+
     # Route to appropriate operation
+    if operation == "collect":
+        return mcp.ToolResult(
+            content=["Opening Zettel Collector for quick, off-the-cuff capture..."],
+            app=ZettelCollector(),
+        )
+
+    result_text = ""
+    app_to_return = None
+
     if operation == "generate":
-        return await _generate_operation(category, topic, ai_generate, quality, ctx)
+        result_text = await _generate_operation(category, topic, ai_generate, quality, ctx)
     elif operation == "customize":
-        return await _customize_operation(category, topic, depth, ctx)
+        result_text = await _customize_operation(category, topic, depth, ctx)
     elif operation == "expand":
-        return await _expand_operation(note_identifier, depth, ctx)
+        result_text = await _expand_operation(note_identifier, depth, ctx)
     elif operation == "suggest":
-        return await _suggest_operation(category, count, ctx)
+        result_text = await _suggest_operation(category, count, ctx)
     elif operation == "connect":
-        return await _connect_operation(count, ctx)
+        result_text = await _connect_operation(count, ctx)
     elif operation == "analyze":
-        return await _analyze_operation(category, depth, ctx)
+        result_text = await _analyze_operation(category, depth, ctx)
     else:
-        return dedent(
+        result_text = dedent(
             f"""
             # Error
 
@@ -146,10 +154,13 @@ async def adn_zettelmaker(
             - suggest: Get topic suggestions
             - connect: Auto-create relationships
             - analyze: Analyze knowledge gaps
+            - collect: Quick off-the-cuff capture
 
             Use: adn_zettelmaker("generate", category="developer", topic="python-core")
             """
         ).strip()
+
+    return mcp.ToolResult(content=[result_text], app=app_to_return)
 
 
 async def _generate_operation(
@@ -323,7 +334,9 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             notes_created = []
             for template in cached_templates:
                 try:
-                    result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
+                    result = await (
+                        mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
+                    )(
                         title=template["title"],
                         content=template["content"],
                         folder=template["folder"],
@@ -383,7 +396,9 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
                 if ctx:  # pragma: no cover
                     await ctx.info(f"Creating AI-generated note: {template['title']}")
 
-                result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
+                result = await (
+                    mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
+                )(
                     title=template["title"],
                     content=template["content"],
                     folder=template["folder"],

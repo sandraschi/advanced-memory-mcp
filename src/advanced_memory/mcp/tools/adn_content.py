@@ -5,6 +5,6 @@ scripts still import advanced_memory.mcp.tools.adn_content. Re-export
 the main entrypoint so those imports continue to succeed.
 """
 
-from .content_manager import adn_content
+from .content_manager import adn_content, adn_corpus_qc, adn_note_ai, adn_notes
 
-__all__ = ["adn_content"]
+__all__ = ["adn_content", "adn_corpus_qc", "adn_note_ai", "adn_notes"]

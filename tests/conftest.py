@@ -313,6 +313,15 @@ async def search_repository(session_maker, test_project: Project):
     return SearchRepository(session_maker, project_id=test_project.id)
 
 
+@pytest.fixture
+def vector_repository(config_home, app_config):
+    """Create VectorRepository for tests (uses test config path for vectors)."""
+    from advanced_memory.repository.vector_repository import VectorRepository
+
+    vector_db_path = str(config_home / "vectors")
+    return VectorRepository(vector_db_path, passphrase=app_config.rag_storage_passphrase)
+
+
 @pytest_asyncio.fixture(autouse=True)
 async def init_search_index(search_service):
     await search_service.init_search_index()
@@ -322,10 +331,18 @@ async def init_search_index(search_service):
 async def search_service(
     search_repository: SearchRepository,
     entity_repository: EntityRepository,
+    vector_repository,
     file_service: FileService,
+    app_config: AdvancedMemoryConfig,
 ) -> SearchService:
     """Create and initialize search service"""
-    service = SearchService(search_repository, entity_repository, file_service)
+    service = SearchService(
+        search_repository,
+        entity_repository,
+        vector_repository,
+        file_service,
+        app_config,
+    )
     await service.init_search_index()
     return service
 

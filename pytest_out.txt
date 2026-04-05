@@ -1,0 +1,267 @@
+2026-03-24 20:17:08.055 | DEBUG    | advanced_memory.api.template_loader:__init__:236 - Initialized template loader with directory: D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\templates
+2026-03-24 20:17:09.593 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.593 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.626 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_content_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.645 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.648 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.650 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.651 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.662 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.662 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.686 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_notes_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.695 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.698 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.701 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.701 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.714 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.714 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.740 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_note_ai_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.748 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.751 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.755 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.755 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.763 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.763 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.787 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_corpus_qc_registratio0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.794 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.796 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.799 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.799 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.808 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.808 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.833 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_project_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.840 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.843 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.846 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.846 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.856 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.856 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.877 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_export_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.887 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.891 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.893 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.893 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.903 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.904 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.925 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_import_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.932 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.935 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.937 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.937 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.948 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.948 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:09.969 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_search_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:09.977 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.980 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:09.981 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:09.981 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:09.995 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:09.995 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.018 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_knowledge_registratio0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.024 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.027 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.029 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.029 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.038 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.038 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.059 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_navigation_registrati0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.066 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.069 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.072 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.072 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.082 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.082 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.103 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_llm_registration0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.110 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.112 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.114 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.114 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.125 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.125 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.149 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_content_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.156 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.158 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.160 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.160 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.170 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.171 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.193 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_project_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.199 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.202 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.204 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.204 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.216 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.217 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.240 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_export_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.247 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.250 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.252 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.252 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.263 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.263 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.283 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_import_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.290 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.294 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.297 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.297 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.310 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.310 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.332 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_search_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.340 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.344 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.345 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.345 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.357 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.357 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.377 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_knowledge_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.384 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.388 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.390 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.390 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.398 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.398 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.421 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_navigation_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.430 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.432 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.435 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.435 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.445 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.445 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.467 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_llm_signature0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.473 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.477 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.479 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.479 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.489 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.489 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.514 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_content_invalid_opera0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.520 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.523 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.525 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.525 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.548 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.548 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.572 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_content_missing_param0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.581 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.584 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.587 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.587 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.605 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.605 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.628 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_project_invalid_opera0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.635 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.638 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.640 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.641 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.653 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.653 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.674 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_project_missing_param0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.682 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.686 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.688 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.688 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.699 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.699 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.725 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_export_invalid_operat0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.733 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.736 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.738 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.738 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.752 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.752 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.777 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_import_invalid_operat0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.783 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.787 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.789 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.789 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.800 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.800 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.826 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_import_missing_parame0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.834 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.837 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.840 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.840 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.852 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.852 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.877 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_search_invalid_operat0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.885 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.887 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.890 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.890 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.903 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.903 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.929 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_search_missing_parame0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.937 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.939 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.942 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.942 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:10.953 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:10.953 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:10.981 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_knowledge_invalid_ope0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:10.989 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.992 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:10.995 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:10.995 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.012 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.012 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.044 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_navigation_invalid_op0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.055 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.059 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.062 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.062 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.073 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.074 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.105 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_content_structured_er0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.113 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.117 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.119 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.119 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.143 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.144 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.169 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_project_structured_er0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.176 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.180 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.182 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.182 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.192 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.193 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.219 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_export_structured_err0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.228 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.232 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.234 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.234 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.249 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.249 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.273 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_import_structured_err0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.282 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.286 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.289 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.289 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.303 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.304 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.332 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_search_structured_err0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.341 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.344 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.347 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.347 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.357 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.357 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.378 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_knowledge_structured_0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.385 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.388 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.390 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.390 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.402 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.402 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.423 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_adn_navigation_structured0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.431 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.434 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.436 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.436 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project
+2026-03-24 20:17:11.450 | INFO     | advanced_memory.db:get_db_url:38 - Using in-memory SQLite database
+2026-03-24 20:17:11.450 | DEBUG    | advanced_memory.db:engine_session_factory:167 - Creating engine for db_url: sqlite+aiosqlite://
+2026-03-24 20:17:11.472 | DEBUG    | advanced_memory.repository.repository:create:208 - Creating Project from entity_data: {'name': 'test-project', 'description': 'Project used as context for tests', 'path': 'C:\\Users\\sandr\\AppData\\Local\\Temp\\pytest-of-sandr\\pytest-89\\test_all_tools_return_dict_res0', 'is_active': True, 'is_default': True}
+2026-03-24 20:17:11.481 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.483 | INFO     | advanced_memory.repository.search_repository:init_search_index:116 - Initializing search index
+2026-03-24 20:17:11.485 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: test-project
+2026-03-24 20:17:11.485 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: test-project -> test-project

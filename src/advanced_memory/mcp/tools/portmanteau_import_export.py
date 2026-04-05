@@ -38,15 +38,9 @@ async def adn_import_export(
         Field(description="Data format for operation"),
     ],
     path: Annotated[str | None, Field(description="File/directory path")] = None,
-    query: Annotated[
-        str | None, Field(description="Search query (for search operations)")
-    ] = None,
-    destination: Annotated[
-        str | None, Field(description="Export destination path")
-    ] = None,
-    options: Annotated[
-        dict | None, Field(description="Format-specific options")
-    ] = None,
+    query: Annotated[str | None, Field(description="Search query (for search operations)")] = None,
+    destination: Annotated[str | None, Field(description="Export destination path")] = None,
+    options: Annotated[dict | None, Field(description="Format-specific options")] = None,
 ) -> dict:
     """Unified portmanteau for all import and export operations.
 
@@ -232,9 +226,7 @@ async def adn_import_export(
             )
 
     except Exception as e:
-        logger.error(
-            f"Import/export operation '{operation}' for format '{format}' failed: {e}"
-        )
+        logger.error(f"Import/export operation '{operation}' for format '{format}' failed: {e}")
         return build_error_response(
             "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
         )

@@ -69,10 +69,10 @@ export default function Dashboard() {
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/40 via-black to-black border border-white/10 p-8 mb-8 indigo-glow">
         <div className="relative z-10 max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-4">Semantic Intelligence Layer</h1>
-          <p className="text-lg text-indigo-200/70 mb-6">Autonomous knowledge synthesis, zettelkasten orchestration, and expert skill generation.</p>
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-4">Knowledge Management Layer</h1>
+          <p className="text-lg text-indigo-200/70 mb-6">Structured research, zettelkasten organization, and automated skill generation.</p>
           <div className="flex gap-4">
-            <button className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">Initiate Research</button>
+            <button className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">New Research</button>
             <button className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">Browse Skills</button>
           </div>
         </div>
@@ -86,15 +86,15 @@ export default function Dashboard() {
             <Search className="h-6 w-6 text-indigo-400" />
           </div>
           <h3 className="font-bold text-white mb-1">New Research</h3>
-          <p className="text-xs text-slate-500">Multisource knowledge acquisition</p>
+          <p className="text-xs text-slate-500">Multi-source knowledge search</p>
         </div>
 
         <div className="glass-card p-6 text-center cursor-pointer group">
           <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
             <Zap className="h-6 w-6 text-indigo-400" />
           </div>
-          <h3 className="font-bold text-white mb-1">Skill Forge</h3>
-          <p className="text-xs text-slate-500">Autonomous logic distillation</p>
+          <h3 className="font-bold text-white mb-1">Skill Library</h3>
+          <p className="text-xs text-slate-500">Expert skill generation</p>
         </div>
 
         <div className="glass-card p-6 text-center cursor-pointer group">

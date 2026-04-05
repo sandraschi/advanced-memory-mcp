@@ -193,7 +193,9 @@ async def _notepadpp_edit_operation(
 
     try:
         # Get the note content
-        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
+        original_content = await (
+            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
+        )(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 

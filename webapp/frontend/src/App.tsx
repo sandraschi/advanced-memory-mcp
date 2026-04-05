@@ -28,6 +28,7 @@ import ZettelMaster from './pages/zettelkasten/ZettelMaster'
 import AudioHub from './pages/audio/AudioHub'
 import Checkpoints from './pages/checkpoints/Checkpoints'
 import Tools from './pages/dashboard/Tools'
+import Tests from './pages/tests/Tests'
 
 function App() {
   const [selectedNoteId, setSelectedNoteId] = useState<string | undefined>()
@@ -256,6 +257,12 @@ function App() {
       <Route path="/tools" element={
         <Layout>
           <Tools />
+        </Layout>
+      } />
+
+      <Route path="/tests" element={
+        <Layout>
+          <Tests />
         </Layout>
       } />
     </Routes>

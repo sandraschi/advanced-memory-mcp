@@ -1,4 +1,4 @@
-# Webapp Start - Standardized SOTA (Auto-Repaired V2.5)
+﻿# Webapp Start - Standardized SOTA (Auto-Repaired V2.5)
 $WebPort = 10704
 $BackendPort = 10705
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -20,9 +20,9 @@ if (-not (Test-Path (Join-Path $frontendPath "node_modules"))) {
     Set-Location $PSScriptRoot
 }
 
-# 3. Start the Python backend (Background) from project root so advanced_memory is importable
+# 3. Start the Python backend (Background). uv --project finds package; CWD stays webapp.
 Write-Host "Starting Python backend on port $BackendPort ..." -ForegroundColor Cyan
-$backendCmd = "Set-Location '$ProjectRoot'; uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port $BackendPort --log-level info"
+$backendCmd = "Set-Location '$PSScriptRoot'; uv run --project '$ProjectRoot' uvicorn advanced_memory.server:app --host 127.0.0.1 --port $BackendPort --log-level info"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd -WindowStyle Normal
 
 # 3b. Wait and verify backend is listening
@@ -44,5 +44,14 @@ if ($backendUp) {
 # 4. Run Vite dev from frontend
 Write-Host "Starting Vite frontend on port $WebPort ..." -ForegroundColor Green
 Set-Location $frontendPath
+
+# 4b. Launch background task to open browser once frontend is ready (Auto-opened by Antigravity)
+$frontendUrl = "http://127.0.0.1:$WebPort/"
+$pollAndOpen = "for (`$i = 0; `$i -lt 60; `$i++) { try { `$null = Invoke-WebRequest -Uri '$frontendUrl' -TimeoutSec 2 -UseBasicParsing -ErrorAction Stop; Start-Process '$frontendUrl'; exit } catch { Start-Sleep -Seconds 1 } }"
+Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Hidden", "-Command", $pollAndOpen
+
+Write-Host "Browser will open automatically when Vite is ready." -ForegroundColor Gray
 npm run dev -- --port $WebPort --host
+
+
 

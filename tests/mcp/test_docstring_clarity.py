@@ -1,113 +1,117 @@
-"""Test docstring clarity and parameter documentation for portmanteau tools.
+"""MCP tool documentation checks.
 
-This test ensures that all portmanteau tools have clear, unambiguous docstrings
-that specify which operations use which parameters.
+**Official / conventional docstring standards (Python):**
+- **PEP 257** — docstring conventions (summary line, optional blank line, rest): https://peps.python.org/pep-0257/
+- **Google Python Style Guide** — one common narrative style; **not** a Python stdlib spec: https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
+- **NumPy / Sphinx** — common in scientific code; still not a single “one true” standard.
+
+**MCP / FastMCP (this repo):** Cursor and other clients show **per-parameter text from the JSON Schema**
+(`inputSchema.properties.<name>.description`), which comes from **Pydantic `Field(description=...)`** on
+`Annotated[...]` parameters—not from a long docstring bullet list. The function docstring is the
+**tool description**; keep it **short** (PEP 257 summary + one short paragraph at most).
+
+See also: https://gofastmcp.com/ (Tools).
 """
 
 import inspect
 import re
+from typing import Annotated, get_args, get_origin
 
 import pytest
 
 from advanced_memory.mcp.tools import (
     adn_audio,
     adn_content,
+    adn_corpus_qc,
     adn_export,
     adn_import,
     adn_inbox,
     adn_knowledge,
     adn_llm,
     adn_navigation,
+    adn_note_ai,
+    adn_notes,
     adn_project,
     adn_search,
     adn_skills,
 )
 
+_FORBIDDEN_SECTION = re.compile(r"(?im)^\s*(Args|Arguments)\s*:\s*$")
 
-def extract_docstring_parameters(docstring: str) -> dict[str, list[str]]:
-    """Extract parameter documentation from docstring."""
-    if not docstring:
-        return {}
-
-    params = {}
-    current_param = None
-    current_lines = []
-
-    # Find Args section
-    args_match = re.search(r"Args:\s*\n", docstring)
-    if not args_match:
-        return {}
-
-    args_section = docstring[args_match.end() :]
-    lines = args_section.split("\n")
-
-    for line in lines:
-        # Check if this is a parameter definition (starts with parameter name)
-        # After inspect.cleandoc(), Args entries are typically indented with 4 spaces
-        param_match = re.match(r"^\s{4}(\w+):\s*(.*)$", line)
-        if param_match:
-            # Save previous parameter
-            if current_param:
-                params[current_param] = "\n".join(current_lines)
-
-            # Start new parameter
-            current_param = param_match.group(1)
-            current_lines = [param_match.group(2).strip()]
-        elif current_param and line.strip():
-            # Continuation of current parameter
-            current_lines.append(line.strip())
-
-    # Save last parameter
-    if current_param:
-        params[current_param] = "\n".join(current_lines)
-
-    return params
+_CONTENT_TOOLS = (
+    ("adn_notes", adn_notes),
+    ("adn_note_ai", adn_note_ai),
+    ("adn_corpus_qc", adn_corpus_qc),
+    ("adn_content", adn_content),
+)
 
 
-def check_parameter_clarity(param_doc: str, param_name: str) -> list[str]:
-    """Check if parameter documentation is clear and unambiguous."""
-    issues = []
+def _tool_fn(tool: object):
+    return tool.fn if hasattr(tool, "fn") else tool
 
-    if not param_doc:
-        issues.append(f"Parameter '{param_name}' has no documentation")
-        return issues
 
-    # Check for ambiguous phrases
-    ambiguous_phrases = [
-        "depends on",
-        "varies",
-        "see above",
-        "see below",
-        "as needed",
-        "if applicable",
-    ]
+def _forbidden_args_section_lines(doc: str) -> list[str]:
+    hits = []
+    for line in doc.splitlines():
+        if _FORBIDDEN_SECTION.match(line.strip()):
+            hits.append(line.strip())
+    return hits
 
-    param_lower = param_doc.lower()
-    for phrase in ambiguous_phrases:
-        if phrase in param_lower and "NOT USED" not in param_doc:
-            issues.append(
-                f"Parameter '{param_name}' uses ambiguous phrase '{phrase}' without clear operation-specific details"
-            )
 
-    # Check that it specifies which operations use it
-    if "NOT USED" not in param_doc and "*" not in param_doc:
-        # Should have operation-specific documentation
-        if not re.search(r"\*\s+\w+\s+operation", param_doc):
-            issues.append(f"Parameter '{param_name}' doesn't specify which operations use it")
+def _pydantic_field_description(annotation: object) -> str | None:
+    """Return Field(description=...) text from Annotated[..., Field(...)], if any."""
+    if get_origin(annotation) is not Annotated:
+        return None
+    for meta in get_args(annotation)[1:]:
+        desc = getattr(meta, "description", None)
+        if isinstance(desc, str) and desc.strip():
+            return desc.strip()
+    return None
 
-    # Check for REQUIRED/Optional/NOT USED markers
-    if "REQUIRED" not in param_doc and "Optional" not in param_doc and "NOT USED" not in param_doc:
-        issues.append(
-            f"Parameter '{param_name}' doesn't specify if it's REQUIRED, Optional, or NOT USED"
-        )
 
-    return issues
+def _content_tool_params_have_field_descriptions(fn: object) -> list[str]:
+    """Return parameter names missing a non-empty Field(description=...)."""
+    sig = inspect.signature(fn)
+    missing: list[str] = []
+    for name, param in sig.parameters.items():
+        if name in ("self", "ctx"):
+            continue
+        ann = param.annotation
+        desc = _pydantic_field_description(ann)
+        if not desc:
+            missing.append(name)
+    return missing
+
+
+@pytest.mark.parametrize("tool_name,tool", _CONTENT_TOOLS)
+def test_content_tools_use_field_descriptions_for_mcp_schema(tool_name: str, tool: object) -> None:
+    """MCP clients read per-parameter descriptions from Field metadata, not docstring bullets."""
+    fn = _tool_fn(tool)
+    missing = _content_tool_params_have_field_descriptions(fn)
+    assert not missing, (
+        f"{tool_name}: add Field(description=...) on Annotated parameters: {missing}. "
+        "That text is what Cursor shows next to each parameter."
+    )
+
+
+@pytest.mark.parametrize("tool_name,tool", _CONTENT_TOOLS)
+def test_content_tool_docstrings_stay_short(tool_name: str, tool: object) -> None:
+    """Long markdown docstrings often render poorly in UIs; keep the tool description compact."""
+    fn = _tool_fn(tool)
+    doc = inspect.getdoc(fn) or ""
+    assert doc.strip(), f"{tool_name} needs a short docstring"
+    assert len(doc) <= 1200, (
+        f"{tool_name} docstring is {len(doc)} chars; keep under ~1200 (summary + one short paragraph)."
+    )
+    forbidden = _forbidden_args_section_lines(doc)
+    assert not forbidden, (
+        f"{tool_name}: do not use Google-style {forbidden} headers; use Field() for params"
+    )
 
 
 @pytest.mark.parametrize(
     "tool_name,tool",
     [
-        ("adn_content", adn_content),
         ("adn_export", adn_export),
         ("adn_import", adn_import),
         ("adn_search", adn_search),
@@ -120,76 +124,27 @@ def check_parameter_clarity(param_doc: str, param_name: str) -> list[str]:
         ("adn_project", adn_project),
     ],
 )
-def test_portmanteau_tool_docstring_clarity(tool_name, tool):
-    """Test that portmanteau tools have clear, unambiguous docstrings."""
-    fn = tool.fn if hasattr(tool, "fn") else tool
-    docstring = inspect.getdoc(fn)
-
-    assert docstring, f"{tool_name} has no docstring"
-
-    # Check for PORTMANTEAU PATTERN section (should be concise)
-    if "PORTMANTEAU PATTERN" in docstring:
-        pattern_section = re.search(
-            r"PORTMANTEAU PATTERN[^\n]*\n(.*?)(?=\n[A-Z]|\Z)", docstring, re.DOTALL
-        )
-        if pattern_section:
-            pattern_text = pattern_section.group(1)
-            # Should be concise (not more than 3 lines)
-            pattern_lines = [line.strip() for line in pattern_text.split("\n") if line.strip()]
-            assert len(pattern_lines) <= 3, (
-                f"{tool_name} PORTMANTEAU PATTERN section is too verbose ({len(pattern_lines)} lines)"
-            )
-
-    # Extract parameter documentation
-    param_docs = extract_docstring_parameters(docstring)
-
-    # Get actual function parameters
-    sig = inspect.signature(fn)
-    func_params = list(sig.parameters.keys())
-
-    # Check each parameter
-    all_issues = []
-    for param_name in func_params:
-        if param_name == "self":
-            continue
-
-        param_doc = param_docs.get(param_name, "")
-        issues = check_parameter_clarity(param_doc, param_name)
-        all_issues.extend(issues)
-
-    # Report all issues
-    if all_issues:
-        error_msg = f"{tool_name} docstring clarity issues:\n" + "\n".join(
-            f"  - {issue}" for issue in all_issues
-        )
-        pytest.fail(error_msg)
+def test_portmanteau_tools_forbid_google_args_section(tool_name: str, tool: object) -> None:
+    fn = _tool_fn(tool)
+    doc = inspect.getdoc(fn) or ""
+    assert doc.strip(), f"{tool_name} has no docstring"
+    forbidden = _forbidden_args_section_lines(doc)
+    assert not forbidden, (
+        f"{tool_name}: remove {forbidden!r}. Use Field(description=...) on parameters where the UI shows 'no description'."
+    )
 
 
-def test_portmanteau_pattern_sections_are_concise():
-    """Test that all PORTMANTEAU PATTERN sections are concise."""
-    tools = [
-        ("adn_content", adn_content),
-        ("adn_export", adn_export),
-        ("adn_import", adn_import),
-        ("adn_search", adn_search),
-        ("adn_navigation", adn_navigation),
-        ("adn_knowledge", adn_knowledge),
-        ("adn_skills", adn_skills),
-        ("adn_llm", adn_llm),
-        ("adn_audio", adn_audio),
-        ("adn_inbox", adn_inbox),
-        ("adn_project", adn_project),
-    ]
-
+def test_portmanteau_pattern_sections_are_concise() -> None:
     issues = []
-    for tool_name, tool in tools:
-        fn = tool.fn if hasattr(tool, "fn") else tool
-        docstring = inspect.getdoc(fn)
+    for tool_name, tool in _CONTENT_TOOLS:
+        fn = _tool_fn(tool)
+        doc = inspect.getdoc(fn) or ""
 
-        if "PORTMANTEAU PATTERN" in docstring:
-            # Check that it's concise (one line or very short)
+        if "PORTMANTEAU PATTERN" in doc:
             pattern_match = re.search(
-                r"PORTMANTEAU PATTERN[^\n]*\n(.*?)(?=\n[A-Z]|\Z)", docstring, re.DOTALL
+                r"PORTMANTEAU PATTERN[^\n]*\n(.*?)(?=\n\s*\*\*|\n\s*-\s|`|\Z)",
+                doc,
+                re.DOTALL,
             )
             if pattern_match:
                 pattern_text = pattern_match.group(1)

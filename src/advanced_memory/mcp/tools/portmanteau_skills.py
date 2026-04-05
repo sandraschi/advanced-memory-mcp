@@ -33,15 +33,11 @@ async def adn_skills(
         Field(description="Skill operation to perform"),
     ],
     name: Annotated[str | None, Field(description="Skill name")] = None,
-    content: Annotated[
-        str | None, Field(description="Skill content/description")
-    ] = None,
+    content: Annotated[str | None, Field(description="Skill content/description")] = None,
     tags: Annotated[list[str] | None, Field(description="Skill tags")] = None,
     query: Annotated[str | None, Field(description="Search query")] = None,
     skill_type: Annotated[str | None, Field(description="Skill type/category")] = None,
-    parameters: Annotated[
-        dict | None, Field(description="Additional parameters")
-    ] = None,
+    parameters: Annotated[dict | None, Field(description="Additional parameters")] = None,
 ) -> dict:
     """Unified portmanteau for skill system operations.
 
@@ -64,9 +60,7 @@ async def adn_skills(
 
             from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
 
-            result = await _adn_skills(
-                "create", name=name, content=content, tags=tags or []
-            )
+            result = await _adn_skills("create", name=name, content=content, tags=tags or [])
             return build_success_response("create", result)
 
         elif operation == "read":
@@ -171,9 +165,7 @@ async def adn_skills(
             return build_success_response("operations", result)
 
         elif operation == "research":
-            topic = (
-                query or parameters.get("topic") or (content[:200] if content else None)
-            )
+            topic = query or parameters.get("topic") or (content[:200] if content else None)
             if not topic:
                 return build_error_response(
                     "VALIDATION_ERROR",

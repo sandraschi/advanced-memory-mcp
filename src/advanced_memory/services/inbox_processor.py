@@ -11,8 +11,11 @@ from typing import Any
 
 from loguru import logger
 
+from advanced_memory import db
 from advanced_memory.config import ConfigManager
+from advanced_memory.repository import ProjectRepository
 from advanced_memory.services.document_converter import DocumentConverter
+# from advanced_memory.deps import get_sync_service (moved to method to break circularity)
 
 
 class InboxProcessor:
@@ -263,14 +266,55 @@ class InboxProcessor:
         """Trigger sync for newly added file
 
         Args:
-            file_path: Path to file that should be synced
+            file_path: Absolute path to the moved/converted file
         """
-        logger.info(f"File processed: {file_path.name}")
+        logger.info(f"Triggering sync for processed file: {file_path.name}")
 
-        # TODO: Integrate with existing sync service
-        # For now, files are moved to project directory
-        # User can run 'advanced-memory sync' manually to index them
-        logger.info(f"Run 'advanced-memory sync' to index {file_path.name} in database")
+        try:
+            # 1. Get database session
+            app_config = ConfigManager().config
+            _, session_maker = await db.get_or_create_db(
+                db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM
+            )
+
+            # 2. Get project from config
+            from advanced_memory.config import get_project_config
+
+            project_config = get_project_config()
+
+            async with session_maker() as session:
+                project_repo = ProjectRepository(session)
+                project = await project_repo.get_by_name(project_config.project)
+
+                if not project:
+                    logger.error(
+                        f"Project '{project_config.project}' not found during sync trigger"
+                    )
+                    return
+
+                # 3. Initialize SyncService and sync the file
+                from advanced_memory.sync.sync_service import get_sync_service
+                sync_service = await get_sync_service(project)
+
+                # Calculate relative path for sync_service
+                project_base = Path(project.path)
+                try:
+                    rel_path = file_path.relative_to(project_base)
+                    # Normalize for database consistency
+                    normalized_path = str(rel_path).replace("\\", "/")
+
+                    logger.info(f"Syncing file: {normalized_path}")
+                    await sync_service.sync_file(normalized_path, new=True)
+
+                    # Also resolve relations in case this file links to others or others link to it
+                    await sync_service.resolve_relations()
+
+                    logger.info(f"Successfully indexed {file_path.name}")
+                except ValueError:
+                    logger.error(f"File {file_path} is not within project path {project_base}")
+
+        except Exception as e:
+            logger.exception(f"Failed to trigger auto-sync for {file_path.name}: {e}")
 
     async def process_inbox(self) -> list[dict[str, Any]]:
         """Process all files currently in the inbox

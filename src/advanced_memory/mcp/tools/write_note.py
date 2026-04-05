@@ -1,6 +1,9 @@
 """Write note tool for Advanced Memory MCP server."""
 
+from typing import Annotated
+
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
@@ -10,61 +13,30 @@ from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
 from advanced_memory.utils import parse_tags, validate_project_path
 
-# Define TagType as a Union that can accept either a string or a list of strings or None
-TagType = list[str] | str | None
-
-# Define TagType as a Union that can accept either a string or a list of strings or None
+# Define TagType for better readability
 TagType = list[str] | str | None
 
 
 @mcp.tool
 async def write_note(
-    title: str,
-    content: str,
-    folder: str,
-    tags=None,  # Remove type hint completely to avoid schema issues
-    entity_type: str = "note",
-    project: str | None = None,
+    title: Annotated[str, Field(description="The title of the note")],
+    content: Annotated[str, Field(description="Markdown content with observations/relations")],
+    folder: Annotated[
+        str, Field(description="Folder path relative to project root (e.g. 'notes')")
+    ],
+    tags: Annotated[
+        str | list[str] | None,
+        Field(description="Tags as list or comma-separated string"),
+    ] = None,
+    entity_type: Annotated[
+        str, Field(description="Type of entity to create (default: 'note')")
+    ] = "note",
+    project: Annotated[str | None, Field(description="Optional project name")] = None,
 ) -> str:
-    """Write a markdown note to the knowledge base.
+    """Write a markdown note with semantic observations and relations.
 
-    The content can include semantic observations and relations using markdown syntax.
-    Relations can be specified either explicitly or through inline wiki-style links:
-
-    Observations format:
-        `- [category] Observation text #tag1 #tag2 (optional context)`
-
-        Examples:
-        `- [design] Files are the source of truth #architecture (All state comes from files)`
-        `- [tech] Using SQLite for storage #implementation`
-        `- [note] Need to add error handling #todo`
-
-    Relations format:
-        - Explicit: `- relation_type [[Entity]] (optional context)`
-        - Inline: Any `[[Entity]]` reference creates a relation
-
-        Examples:
-        `- depends_on [[Content Parser]] (Need for semantic extraction)`
-        `- implements [[Search Spec]] (Initial implementation)`
-        `- This feature extends [[Base Design]] andst uses [[Core Utils]]`
-
-    Args:
-        title: The title of the note
-        content: Markdown content for the note, can include observations and relations
-        folder: Folder path relative to project root where the file should be saved.
-                Use forward slashes (/) as separators. Examples: "notes", "projects/2025", "research/ml"
-        tags: Tags to categorize the note. Can be a list of strings, a comma-separated string, or None.
-              Note: If passing from external MCP clients, use a string format (e.g. "tag1,tag2,tag3")
-        entity_type: Type of entity to create. Defaults to "note". Can be "guide", "report", "config", etc.
-        project: Optional project name to write to. If not provided, uses current active project.
-
-    Returns:
-        A markdown formatted summary of the semantic content, including:
-        - Creation/update status
-        - File path and checksum
-        - Observation counts by category
-        - Relation counts (resolved/unresolved)
-        - Tags if present
+    Observations: `- [category] Observation text #tag1 #tag2 (optional context)`
+    Relations: `- relation_type [[Entity]] (optional context)`
     """
     logger.info(f"MCP tool call tool=write_note folder={folder}, title={title}, tags={tags}")
 

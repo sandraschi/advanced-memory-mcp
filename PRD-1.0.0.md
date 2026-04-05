@@ -1,20 +1,20 @@
 # Advanced Memory MCP - Product Requirements Document
 
-**Status:** ✅ **1.5.0 Production** - Semantic Research (RAG) Enabled
-**Release Date:** 2026-02-27
-**Version:** 1.5.0
+**Status:** ✅ **1.6.0 Stable** - Modernization & Prefab UI 0.2
+**Release Date:** 2026-03-30
+**Version:** 1.6.0
 
 ---
 
 ## 📋 Executive Summary
 
-Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an enterprise-grade research platform with monorepo architecture and standalone web interface. This release transforms the system from an MCP-only tool into a comprehensive research ecosystem with multi-source intelligence gathering, academic literature access, and intelligent skill creation.
+Advanced Memory (Memops) represents the evolution from Basic Memory MCP into a reliable, local-first memory substrate for AI assistants. This release focuses on robust Zettelkasten-based note management, high-performance semantic search (RAG), and universal data portability (Import/Export).
 
 ## 🎯 Mission & Vision
 
-**Mission:** Provide a research-driven knowledge platform that transforms AI assistants into comprehensive research tools through multi-source intelligence gathering and automated skill synthesis.
+**Mission:** Provide a reliable, portable knowledge substrate that enables AI assistants to maintain long-term, contextually rich memory through semantic retrieval and universal I/O.
 
-**Vision:** Become the standard for AI-assisted research and knowledge management, enabling users to conduct professional-grade research through natural AI interactions while maintaining rich, contextual knowledge graphs.
+**Vision:** Become the standard for AI-assisted memory management, providing a stable and efficient foundation for personal knowledge bases that remain fully portable and local-first.
 
 ## 🏆 Success Metrics
 
@@ -32,30 +32,37 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 - **Performance:** Support for concurrent research operations and large knowledge bases
 
 ## 🚀 Core Features (1.3.0)
+## Core Features
 
-### ✅ Completed Features
+### Completed/Stable Features
 
-#### 🔍 **Research Intelligence Engine**
-- **Multi-Source Research:** Web search, academic papers (arXiv), code repositories (GitHub), narrative patterns (TV Tropes)
-- **Research Pipeline:** Automated query distribution, result aggregation, and synthesis
-- **Quality Assurance:** Source credibility assessment and relevance scoring
-- **Real-time Processing:** Streaming results with progress tracking
-
-#### 📄 **Semantic Document Intelligence (RAG)**
-- **LanceDB Integration:** High-performance vector storage for hybrid search.
-- **FastEmbed Search:** Local semantic embeddings using `BAAI/bge-small-en-v1.5`.
+#### Semantic Memory (RAG)
+- **LanceDB Integration:** High-performance local vector storage for hybrid search.
+- **FastEmbed Search:** Local semantic embeddings using BAAI/bge-small-en-v1.5.
 - **Hybrid Retrieval:** Combined FTS5 keyword and LanceDB semantic search.
-- **Paragraph Chunking:** Semantic document segmentation for granular indexing.
-- **Format Support:** PDF, EPUB, text files, Markdown with intelligent extraction.
-- **Large Document Analysis:** Persistent storage for processing beyond context limits.
+- **Document Processing:** PDF, EPUB, and Markdown ingestion with intelligent segmenting.
 
-#### 🧠 **Skill Synthesis Engine**
-- **Research-Driven Creation:** Multi-source intelligence synthesis for expert skills
-- **FastMCP Integration:** Direct LLM interrogation with structured output
-- **Citation Management:** Primary source attribution and reference tracking
-- **Claude Skills Compatibility:** Bidirectional format conversion
+#### Universal Data Portability
+- **Obsidian Integration:** Vault import/export for local interop.
+- **Joplin & Evernote Support:** Note synchronization and ENEX processing.
+- **Pandoc Export Engine:** Conversion to PDF, DOCX, EPUB, and LaTeX.
+- **Claude Skills Sync:** Bidirectional format conversion with IDE skills folders.
 
-#### 🌐 **Web Interface**
+#### Memory Management
+- **Zettelkasten Note System:** Atomic note-based management with bidirectional links.
+- **Project Sessions:** Multi-project isolation and lifecycle management.
+- **FastMCP 3.1 UI:** High-fidelity Prefab UI for note viewing and navigation.
+
+### Beta Features
+
+#### Research Intelligence (BETA)
+- **Multi-Source Gathering:** Experimental retrieval from Web, arXiv, and GitHub.
+- **Research Hub:** Automated result aggregation and faceted exploration.
+- **Skill Synthesis:** Research-driven export of expert knowledge to Claude Skills.
+
+#### Visualization (BETA)
+- **Point Cloud Engine:** Particle-based graph view for knowledge mapping.
+- **Mermaid Graphs:** Dynamic relationship mapping using flowchart primitives.
 - **React Application:** Standalone interface with dark professional theme
 - **Research Dashboard:** Unified multi-source research interface
 - **Skill Studio:** Interactive creation with live preview
@@ -120,6 +127,12 @@ Advanced Memory MCP 1.3.0 represents the evolution from Basic Memory MCP into an
 - **Agent Control Room:** Mission-control interface for agent session observability
 - **Intelligence Panel:** Substrate telemetry (GPU/CPU/RAM) integrated in sidebar
 - **Hardware Optimization:** Native RTX 4094/local LLM substrate detection
+
+#### 🖼️ **Prefab UI 0.2 Modernization (v1.6.0)**
+- **FastMCP 3.1 Migration:** Complete migration to the high-fidelity Prefab UI 0.2 engine.
+- **Glassmorphism Design:** Implementation of SOTA 2026 professional aesthetics.
+- **Mermaid Knowledge Graphs:** Interactive relationship mapping using Mermaid flowchart primitives.
+- **Reactive Components:** Transition to a full children-based component tree for dynamic tool responses.
 
 ## 🏗️ Architecture & Technical Specifications
 

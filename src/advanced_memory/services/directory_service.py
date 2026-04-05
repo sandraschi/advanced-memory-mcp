@@ -7,7 +7,11 @@ from collections.abc import Sequence
 
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
-from advanced_memory.schemas.directory import DirectoryNode
+from advanced_memory.schemas.directory import DirectoryListPage, DirectoryNode
+
+# Upper bound for a single API/MCP page (context-window safety).
+_MAX_LIST_LIMIT = 5000
+_DEFAULT_LIST_LIMIT = 200
 
 logger = logging.getLogger(__name__)
 
@@ -95,17 +99,28 @@ class DirectoryService:
         dir_name: str = "/",
         depth: int = 1,
         file_name_glob: str | None = None,
-    ) -> list[DirectoryNode]:
-        """List directory contents with filtering and depth control.
+        *,
+        limit: int = _DEFAULT_LIST_LIMIT,
+        offset: int = 0,
+    ) -> DirectoryListPage:
+        """List directory contents with filtering, depth control, and pagination.
 
         Args:
             dir_name: Directory path to list (default: root "/")
             depth: Recursion depth (1 = immediate children only)
             file_name_glob: Glob pattern for filtering file names
+            limit: Max nodes in this page (clamped 1..5000; default 200).
+            offset: Skip this many nodes after stable sort (for continuation pages).
 
         Returns:
-            List of DirectoryNode objects matching the criteria
+            DirectoryListPage with nodes slice and pagination metadata.
         """
+        if offset < 0:
+            offset = 0
+        if limit < 1:
+            limit = 1
+        limit = min(limit, _MAX_LIST_LIMIT)
+
         # Normalize directory path
         if not dir_name.startswith("/"):
             dir_name = f"/{dir_name}"
@@ -118,13 +133,24 @@ class DirectoryService:
         # Find the target directory node
         target_node = self._find_directory_node(root_tree, dir_name)
         if not target_node:
-            return []
+            return DirectoryListPage(nodes=[], total=0, limit=limit, offset=offset, has_more=False)
 
         # Collect nodes with depth and glob filtering
-        result: list[DirectoryNode] = []
-        self._collect_nodes_recursive(target_node, result, depth, file_name_glob, 0)
+        collected: list[DirectoryNode] = []
+        self._collect_nodes_recursive(target_node, collected, depth, file_name_glob, 0)
 
-        return result
+        collected.sort(key=lambda n: (n.directory_path or "", n.name))
+        total = len(collected)
+        page_nodes = collected[offset : offset + limit]
+        has_more = offset + len(page_nodes) < total
+
+        return DirectoryListPage(
+            nodes=page_nodes,
+            total=total,
+            limit=limit,
+            offset=offset,
+            has_more=has_more,
+        )
 
     def _find_directory_node(self, root: DirectoryNode, target_path: str) -> DirectoryNode | None:
         """Find a directory node by path in the tree."""

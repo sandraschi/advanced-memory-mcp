@@ -1,14 +1,118 @@
 """Vector repository for semantic search using LanceDB."""
 
-import os
 import base64
+import os
+import shutil
+from pathlib import Path
 from typing import Any
+
 import lancedb
-from fastembed import TextEmbedding
-from loguru import logger
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from loguru import logger
+
+
+def _get_fastembed_cache_dir() -> Path:
+    """Return the fastembed cache directory (local to repo root by default)."""
+    # fastembed uses FASTEMBED_CACHE_PATH env var
+    env_path = os.environ.get("FASTEMBED_CACHE_PATH")
+    if env_path:
+        return Path(env_path)
+
+    # Use a persistent local cache in the repository's 'data' folder
+    # This file is at src/advanced_memory/repository/vector_repository.py
+    # Repo root is 4 levels up from this file's position in a typical install,
+    # but we can try common paths or just use 'data/fastembed_cache' relative to cwd
+    # or the repo root if we can identify it.
+    try:
+        # Search for .git or pyproject.toml up from current file
+        curr = Path(__file__).resolve().parent
+        for _ in range(5):
+            if (curr / ".git").exists() or (curr / "pyproject.toml").exists():
+                cache_dir = curr / "data" / "fastembed_cache"
+                cache_dir.mkdir(parents=True, exist_ok=True)
+                return cache_dir
+            curr = curr.parent
+    except Exception:
+        pass
+
+    # Fallback to current directory or system temp
+    local_data = Path.cwd() / "data" / "fastembed_cache"
+    if local_data.parent.exists():
+        local_data.mkdir(parents=True, exist_ok=True)
+        return local_data
+
+    return Path(os.environ.get("TEMP", os.environ.get("TMP", "/tmp"))) / "fastembed_cache"
+
+
+def _purge_fastembed_model_cache(model_slug: str) -> None:
+    """Delete the cached files for a specific model slug so fastembed re-downloads it.
+
+    model_slug example: 'models--qdrant--bge-small-en-v1.5-onnx-q'
+    """
+    cache_dir = _get_fastembed_cache_dir() / model_slug
+    if cache_dir.exists():
+        logger.warning("Purging corrupt fastembed cache at: %s", cache_dir)
+        shutil.rmtree(cache_dir, ignore_errors=True)
+        logger.info("Cache purged, model will be re-downloaded on next use.")
+    else:
+        logger.info("No cache dir found at %s, nothing to purge.", cache_dir)
+
+
+def _load_text_embedding(model_name: str, max_retries: int = 2) -> Any:
+    """Load fastembed TextEmbedding with automatic cache-repair on ONNX errors.
+
+    If the ONNX model file is missing or corrupt, the cache is wiped and loading
+    is retried once so the model re-downloads cleanly.
+    """
+    from fastembed import TextEmbedding  # imported here so it stays optional
+
+    # Map model name to the HuggingFace-style slug fastembed uses for caching.
+    # This only needs to cover the models we actually use.
+    MODEL_SLUG_MAP = {
+        "BAAI/bge-small-en-v1.5": "models--qdrant--bge-small-en-v1.5-onnx-q",
+    }
+
+    for attempt in range(max_retries):
+        try:
+            model = TextEmbedding(model_name=model_name, cache_dir=str(_get_fastembed_cache_dir()))
+            # Smoke-test: actually run the model to surface any ONNX errors now
+            # rather than later during a write operation.
+            list(model.embed(["warmup"]))
+            logger.info("TextEmbedding model loaded and verified: %s", model_name)
+            return model
+        except Exception as e:
+            err_str = str(e)
+            is_onnx_error = (
+                "ONNXRuntimeError" in err_str
+                or "Load model" in err_str
+                or "File doesn't exist" in err_str
+                or "model_optimized.onnx" in err_str
+                or "NoSuchKey" in err_str
+                or "Size does not match" in err_str
+                or "corrupt" in err_str.lower()
+            )
+            if is_onnx_error and attempt < max_retries - 1:
+                logger.warning(
+                    "ONNX model load failed (attempt %d/%d): %s — purging cache and retrying.",
+                    attempt + 1,
+                    max_retries,
+                    e,
+                )
+                slug = MODEL_SLUG_MAP.get(model_name)
+                if slug:
+                    _purge_fastembed_model_cache(slug)
+                else:
+                    # Unknown model: wipe the whole cache as fallback
+                    logger.warning(
+                        "Unknown model slug for '%s', wiping entire fastembed cache.", model_name
+                    )
+                    cache_dir = _get_fastembed_cache_dir()
+                    if cache_dir.exists():
+                        shutil.rmtree(cache_dir, ignore_errors=True)
+            else:
+                raise
 
 
 class MetadataEncryptor:
@@ -64,7 +168,7 @@ class VectorRepository:
         if self._embedding_model is None:
             # Using a lightweight but effective model
             # For 4090 we could use larger ones, but bge-small is good for speed
-            self._embedding_model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
+            self._embedding_model = _load_text_embedding("BAAI/bge-small-en-v1.5")
         return self._embedding_model
 
     def get_reranker(
@@ -72,29 +176,34 @@ class VectorRepository:
         model_name: str = "BAAI/bge-reranker-base",
         attn_implementation: str = "flash_attention_2",
     ):
-        """Get or initialize the reranker model."""
+        """Get or initialize the reranker model. Returns None if deps missing."""
         if self._reranker_model is None:
-            from sentence_transformers import CrossEncoder
-            import torch
+            try:
+                import torch
+                from sentence_transformers import CrossEncoder
 
-            logger.info(
-                f"Loading reranker model: {model_name} with {attn_implementation}"
-            )
-
-            # FA2 requires specific setup often passed via model_kwargs in newer versions
-            # Here we follow the standard approach for sentence-transformers/transformers
-            model_kwargs = {}
-            if attn_implementation == "flash_attention_2" and torch.cuda.is_available():
-                model_kwargs["attn_implementation"] = "flash_attention_2"
-                model_kwargs["torch_dtype"] = torch.float16
-
-            self._reranker_model = CrossEncoder(model_name, automodel_args=model_kwargs)
+                logger.info(
+                    "Loading reranker model: %s with %s",
+                    model_name,
+                    attn_implementation,
+                )
+                model_kwargs = {}
+                if attn_implementation == "flash_attention_2" and torch.cuda.is_available():
+                    model_kwargs["attn_implementation"] = "flash_attention_2"
+                    model_kwargs["torch_dtype"] = torch.float16
+                self._reranker_model = CrossEncoder(model_name, automodel_args=model_kwargs)
+            except Exception as e:
+                logger.warning(
+                    "Reranker unavailable (install sentence-transformers, torch): %s",
+                    e,
+                )
+                return None
         return self._reranker_model
 
     async def connect(self):
         """Connect to the LanceDB database."""
         if self.db is None:
-            os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+            os.makedirs(self.db_path, exist_ok=True)
             self.db = lancedb.connect(self.db_path)
 
         if self.table_name not in self.db.table_names():
@@ -123,7 +232,7 @@ class VectorRepository:
         embeddings = list(self.embedding_model.embed(texts))
 
         data = []
-        for doc, emb in zip(documents, embeddings):
+        for doc, emb in zip(documents, embeddings, strict=False):
             # Encrypt sensitive chunks
             encrypted_text = self.encryptor.encrypt(doc["text"])
 
@@ -137,9 +246,7 @@ class VectorRepository:
             )
 
         if self.table is None:
-            self.table = self.db.create_table(
-                self.table_name, data=data, mode="overwrite"
-            )
+            self.table = self.db.create_table(self.table_name, data=data, mode="overwrite")
             # Create FTS index for hybrid search
             self.table.create_fts_index("text", replace=True)
         else:
@@ -185,26 +292,19 @@ class VectorRepository:
         model_name: str,
         attn_implementation: str = "flash_attention_2",
     ) -> list[dict[str, Any]]:
-        """Rerank search results using a Cross-Encoder."""
+        """Rerank search results using a Cross-Encoder. Returns docs unchanged if reranker unavailable."""
         if not documents:
             return []
-
         reranker = self.get_reranker(model_name, attn_implementation)
-
-        # Prepare pairs for reranking
+        if reranker is None:
+            for doc in documents:
+                doc["rerank_score"] = doc.get("_score", 0.0)
+            return documents
         pairs = [[query, doc["text"]] for doc in documents]
-
-        # Get scores
         scores = reranker.predict(pairs)
-
-        # Attach scores and sort
-        for doc, score in zip(documents, scores):
+        for doc, score in zip(documents, scores, strict=False):
             doc["rerank_score"] = float(score)
-
-        # Sort by rerank score descending
-        sorted_docs = sorted(documents, key=lambda x: x["rerank_score"], reverse=True)
-
-        return sorted_docs
+        return sorted(documents, key=lambda x: x["rerank_score"], reverse=True)
 
     async def delete_by_id(self, doc_id: str):
         """Delete a document by its ID."""

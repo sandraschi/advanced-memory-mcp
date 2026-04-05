@@ -8,7 +8,11 @@ from sqlalchemy import text
 
 from advanced_memory import db
 from advanced_memory.schemas import Entity as EntitySchema
-from advanced_memory.schemas.search import SearchItemType, SearchResponse
+from advanced_memory.schemas.search import (
+    SearchItemType,
+    SearchResponse,
+    SemanticSearchResponse,
+)
 
 
 @pytest_asyncio.fixture
@@ -169,3 +173,23 @@ async def test_multiple_filters(client, indexed_entity, project_url):
     assert result.permalink == indexed_entity.permalink
     assert result.type == SearchItemType.ENTITY.value
     assert result.metadata["entity_type"] == "test"
+
+
+@pytest.mark.asyncio
+async def test_semantic_search_returns_schema(client, project_url):
+    """POST /search/semantic returns 200 and valid SemanticSearchResponse (chunks list)."""
+    response = await client.post(
+        f"{project_url}/search/semantic",
+        json={"query": "test query", "limit": 10},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    result = SemanticSearchResponse.model_validate(data)
+    assert hasattr(result, "chunks")
+    assert isinstance(result.chunks, list)
+    for chunk in result.chunks:
+        assert "entity_id" in chunk
+        assert "title" in chunk
+        assert "snippet" in chunk
+        assert "chunk_text" in chunk
+        assert "score" in chunk

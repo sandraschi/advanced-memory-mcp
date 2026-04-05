@@ -33,9 +33,7 @@ async def adn_external(
     ],
     content: Annotated[str | None, Field(description="Content for operations")] = None,
     path: Annotated[str | None, Field(description="File path")] = None,
-    parameters: Annotated[
-        dict | None, Field(description="Operation parameters")
-    ] = None,
+    parameters: Annotated[dict | None, Field(description="Operation parameters")] = None,
     ctx: object = None,  # FastMCP injects Context for sampling operations
 ) -> dict:
     """Unified portmanteau for external integrations and specialized operations.
@@ -86,9 +84,7 @@ async def adn_external(
                 agentic_content_workflow,
             )
 
-            result = await agentic_content_workflow(
-                content, available_tools=["full"], ctx=ctx
-            )
+            result = await agentic_content_workflow(content, available_tools=["full"], ctx=ctx)
             return build_success_response("workflow", result)
 
         elif operation == "batch":
@@ -155,9 +151,7 @@ async def adn_external(
                 agentic_content_workflow,
             )
 
-            result = await agentic_content_workflow(
-                content, available_tools=["full"], ctx=ctx
-            )
+            result = await agentic_content_workflow(content, available_tools=["full"], ctx=ctx)
             return build_success_response("content_workflow", result)
 
         elif operation == "sampling":

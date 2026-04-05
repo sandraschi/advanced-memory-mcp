@@ -52,7 +52,9 @@ async def edit_in_notepadpp(
     """
     try:
         # Get the note content
-        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
+        original_content = await (
+            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
+        )(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 
@@ -155,7 +157,9 @@ async def import_from_notepadpp(
         edited_content = md_file.read_text(encoding="utf-8")
 
         # Get original content for comparison
-        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
+        original_content = await (
+            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
+        )(note_identifier)
         if not original_content:
             return f"[UNICODE] Original note '{note_identifier}' not found."
 

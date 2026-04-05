@@ -1,6 +1,9 @@
 """Build context tool for Advanced Memory MCP server."""
 
+from typing import Annotated
+
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
@@ -16,56 +19,17 @@ from advanced_memory.schemas.memory import (
 
 @mcp.tool
 async def build_context(
-    url: MemoryUrl,
-    depth: int | None = 1,
-    timeframe: TimeFrame | None = "7d",
-    page: int = 1,
-    page_size: int = 10,
-    max_related: int = 10,
-    project: str | None = None,
+    url: Annotated[MemoryUrl, Field(description="memory:// URI to follow")],
+    depth: Annotated[int | None, Field(description="Relation hops (1-3 recommended)")] = 1,
+    timeframe: Annotated[
+        TimeFrame | None, Field(description="Lookback window (e.g. 'today', '2 days ago')")
+    ] = "7d",
+    page: Annotated[int, Field(description="Results page number")] = 1,
+    page_size: Annotated[int, Field(description="Results per page")] = 10,
+    max_related: Annotated[int, Field(description="Max related results")] = 10,
+    project: Annotated[str | None, Field(description="Optional project override")] = None,
 ) -> GraphContext:
-    """Get context needed to continue a discussion.
-
-    This tool enables natural continuation of discussions by loading relevant context
-    from memory:// URIs. It uses pattern matching to find relevant content and builds
-    a rich context graph of related information.
-
-    Args:
-        url: memory:// URI pointing to discussion content (e.g. memory://specs/search)
-        depth: How many relation hops to traverse (1-3 recommended for performance)
-        timeframe: How far back to look. Supports natural language like "2 days ago", "last week"
-        page: Page number of results to return (default: 1)
-        page_size: Number of results to return per page (default: 10)
-        max_related: Maximum number of related results to return (default: 10)
-        project: Optional project name to build context from. If not provided, uses current active project.
-
-    Returns:
-        GraphContext containing:
-            - primary_results: Content matching the memory:// URI
-            - related_results: Connected content via relations
-            - metadata: Context building details
-
-    Examples:
-        # Continue a specific discussion
-        build_context("memory://specs/search")
-
-        # Get deeper context about a component
-        build_context("memory://components/memory-service", depth=2)
-
-        # Look at recent changes to a specification
-        build_context("memory://specs/document-format", timeframe="today")
-
-        # Research the history of a feature
-        build_context("memory://features/knowledge-graph", timeframe="3 months ago")
-
-        # Build context from specific project
-        build_context("memory://specs/search", project="work-project")
-
-    Errors:
-        - "Invalid URL format": Returned if the provided 'url' does not follow the memory:// URI pattern.
-        - "Project not found": Returned if the specified 'project' name does not exist.
-        - "Migration in progress": Returned if a background data migration is occurring, preventing immediate context building.
-    """
+    """Get context needed to continue a discussion via memory:// URIs."""
     logger.info(f"Building context from {url}")
     # URL is already validated and normalized by MemoryUrl type annotation
 

@@ -2,14 +2,17 @@
 
 import json
 import logging
-from typing import TypeVar
+from pathlib import Path
+from typing import Any, TypeVar
 
 from fastapi import APIRouter, Form, HTTPException, UploadFile, status
+from pydantic import BaseModel
 
 from advanced_memory.deps import (
     ChatGPTImporterDep,
     ClaudeConversationsImporterDep,
     ClaudeProjectsImporterDep,
+    InboxProcessorDep,
     MemoryJsonImporterDep,
 )
 from advanced_memory.importers import Importer
@@ -20,11 +23,44 @@ from advanced_memory.schemas.importer import (
     ProjectImportResult,
 )
 
+logger = logging.getLogger(__name__)
 T = TypeVar("T", bound=ImportResult)
 
-logger = logging.getLogger(__name__)
+
+class BatchImportRequest(BaseModel):
+    files: list[str]
+    destination_folder: str
+    project: str | None = None
+
 
 router = APIRouter(prefix="/import", tags=["import"])
+
+
+@router.post("/batch")
+async def import_batch(
+    request: BatchImportRequest,
+    inbox_processor: InboxProcessorDep,
+) -> list[dict[str, Any]]:
+    """
+    Import multiple files in batch using InboxProcessor.
+    """
+    results = []
+    for file_path_str in request.files:
+        file_path = Path(file_path_str)
+        try:
+            result = await inbox_processor.process_file(file_path)
+            results.append(
+                {
+                    "file": file_path_str,
+                    "success": result.get("status") == "success",
+                    "message": result.get("message", "Processed"),
+                    "details": result,
+                }
+            )
+        except Exception as e:
+            logger.error(f"Failed to process {file_path_str}: {e}")
+            results.append({"file": file_path_str, "success": False, "message": str(e)})
+    return results
 
 
 @router.post("/chatgpt", response_model=ChatImportResult)
@@ -33,19 +69,7 @@ async def import_chatgpt(
     file: UploadFile,
     folder: str = Form("conversations"),
 ) -> ChatImportResult:
-    """Import conversations from ChatGPT JSON export.
-
-    Args:
-        file: The ChatGPT conversations.json file.
-        folder: The folder to place the files in.
-        markdown_processor: MarkdownProcessor instance.
-
-    Returns:
-        ChatImportResult with import statistics.
-
-    Raises:
-        HTTPException: If import fails.
-    """
+    """Import conversations from ChatGPT JSON export."""
     return await import_file(importer, file, folder)
 
 
@@ -55,19 +79,7 @@ async def import_claude_conversations(
     file: UploadFile,
     folder: str = Form("conversations"),
 ) -> ChatImportResult:
-    """Import conversations from Claude conversations.json export.
-
-    Args:
-        file: The Claude conversations.json file.
-        folder: The folder to place the files in.
-        markdown_processor: MarkdownProcessor instance.
-
-    Returns:
-        ChatImportResult with import statistics.
-
-    Raises:
-        HTTPException: If import fails.
-    """
+    """Import conversations from Claude conversations.json export."""
     return await import_file(importer, file, folder)
 
 
@@ -77,19 +89,7 @@ async def import_claude_projects(
     file: UploadFile,
     folder: str = Form("projects"),
 ) -> ProjectImportResult:
-    """Import projects from Claude projects.json export.
-
-    Args:
-        file: The Claude projects.json file.
-        base_folder: The base folder to place the files in.
-        markdown_processor: MarkdownProcessor instance.
-
-    Returns:
-        ProjectImportResult with import statistics.
-
-    Raises:
-        HTTPException: If import fails.
-    """
+    """Import projects from Claude projects.json export."""
     return await import_file(importer, file, folder)
 
 
@@ -99,19 +99,7 @@ async def import_memory_json(
     file: UploadFile,
     folder: str = Form("conversations"),
 ) -> EntityImportResult:
-    """Import entities and relations from a memory.json file.
-
-    Args:
-        file: The memory.json file.
-        destination_folder: Optional destination folder within the project.
-        markdown_processor: MarkdownProcessor instance.
-
-    Returns:
-        EntityImportResult with import statistics.
-
-    Raises:
-        HTTPException: If import fails.
-    """
+    """Import entities and relations from a memory.json file."""
     try:
         file_data = []
         file_bytes = await file.read()
@@ -121,7 +109,7 @@ async def import_memory_json(
             file_data.append(json_data)
 
         result = await importer.import_data(file_data, folder)
-        if not result.success:  # pragma: no cover
+        if not result.success:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=result.error_message or "Import failed",
@@ -137,10 +125,9 @@ async def import_memory_json(
 
 async def import_file(importer: Importer, file: UploadFile, destination_folder: str) -> T:
     try:
-        # Process file
         json_data = json.load(file.file)
         result = await importer.import_data(json_data, destination_folder)
-        if not result.success:  # pragma: no cover
+        if not result.success:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=result.error_message or "Import failed",

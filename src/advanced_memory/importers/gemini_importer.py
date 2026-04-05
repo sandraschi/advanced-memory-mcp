@@ -182,7 +182,7 @@ class GeminiImporter(Importer):
         for key in keys:
             if key in data:
                 value = data[key]
-                if isinstance(value, (int, float)):
+                if isinstance(value, int | float):
                     return float(value)
                 if isinstance(value, str):
                     try:

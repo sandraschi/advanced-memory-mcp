@@ -134,7 +134,9 @@ async def _get_notes_from_folder(
             if folder_matches and note_path.endswith(".md"):
                 # Read the actual note content
                 try:
-                    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=note_title, project=project)
+                    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+                        identifier=note_title, project=project
+                    )
 
                     # Extract just the markdown content (remove any artifact formatting)
                     content = note_content

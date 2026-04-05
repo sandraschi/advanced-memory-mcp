@@ -3,73 +3,69 @@
 [![Tests](https://img.shields.io/badge/tests-1244%20passing-brightgreen)](https://github.com/sandraschi/advanced-memory-mcp/actions)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
-![Research Powered](https://img.shields.io/badge/research--powered-🔍-blue)](https://github.com/sandraschi/advanced-memory-mcp)
+![Research Powered](https://img.shields.io/badge/research--powered--blue)](https://github.com/sandraschi/advanced-memory-mcp)
 
-# Advanced Memory MCP & Webapp
+# Advanced Memory (Memops)
 
-**Research-Driven Knowledge Platform** - A dual-purpose system serving as both a powerful Model Context Protocol (MCP) server and a standalone React-based web application. Transform AI assistants into comprehensive research tools with multi-source intelligence gathering, semantic search (RAG), and intelligent skill synthesis.
+**Reliable Memory Tool** - A dual-purpose system serving as both a Model Context Protocol (MCP) server and a standalone React-based web application. Optimized for personal knowledge management, semantic search (RAG), and data portability.
 
 > [!IMPORTANT]
-> **Dual Architecture**: MemOps is a hybrid system consisting of a high-concurrency **FastMCP Server** (for tool integration) and a premium **React Webapp** (for visual knowledge management).
+> **Dual Architecture**: Memops is a hybrid system consisting of a **FastMCP Server** (for tool integration) and a **React Webapp** (for visual knowledge management).
 
-Advanced Memory evolves from a simple memory tool into an enterprise-grade research platform, integrating a robust vector database for semantic understanding.
+Advanced Memory provides a stable substrate for AI assistants to store, retrieve, and synchronize knowledge across multiple platforms.
 
 ## Core Capabilities
 
-- **Multi-Source Research**: Web search, academic papers (arXiv), code repositories (GitHub), narrative patterns (TV Tropes)
-- **Semantic Intelligence**:
-    - **RAG Engine**: LanceDB + FastEmbed vector search with hybrid Whoosh/FTS5 integration.
-    - **Optimized Reranking**: BGE-Reranker-v2-m3 with Flash Attention 2 support (RTX 4090).
-    - **Encryption**: Transparent Fernet/AESnd (AES-128) metadata encryption for sensitive knowledge.
-- **Portmanteau Tools**:
-    - **adn_knowledge_rag**: High-density context retrieval bridge for OpenFang.
-- **Document Intelligence**: PDF/EPUB processing with intelligent chunking and automated vector ingestion.
-- **Agentic Workflows**: FastMCP 3.1+ SEP-1577 sampling with real tool functions — LLM autonomously orchestrates multi-step knowledge workflows via `ctx.sample(tools=[...], result_type=Model)`
-- **Skill Synthesis**: Research-driven expert skill generation using FastMCP sampling
-- **Knowledge Management**: Zettelkasten-based note system with Claude Skills export/import
-- **Ecosystem Observability**: Real-time fleet discovery (Apps Hub) and agent session monitoring (Control Room)
-- **Hardware Telemetry**: Native substrate tracking (GPU/CPU/RAM) with RTX 4094 optimization
-- **Conversational AI** *(Planned)*: Natural language interaction with ADN tools and knowledge graph *(FREE - uses local Ollama)* → [Extension Plan](./CONVERSATIONAL_AI_README.md)
-- **Production Observability**: State-of-the-art monitoring with Grafana dashboards, Prometheus metrics, Loki logs
-- **Cross-Platform Support**: Compatible with Claude Desktop, Cursor IDE, Windsurf, and other MCP clients
-- **Web Interface**: Standalone React application for direct usage without MCP client requirements. See [Webapp README](webapp/README.md) for startup, ports, and troubleshooting.
+- **Memory Management**: Zettelkasten-based note system with tagging and relationship mapping.
+- **Semantic Search (RAG)**:
+    - **Engine**: LanceDB + FastEmbed vector search for fast, local retrieval.
+    - **Reranking**: BGE-Reranker-v2-m3 support for high-precision results.
+- **Data Portability (I/O)**:
+    - **Imports**: Obsidian, Joplin, Notion, Evernote (ENEX).
+    - **Exports**: PDF, DOCX, EPUB via Pandoc; Claude Skills bidirectional sync.
+- **Document Processing**: PDF/EPUB ingestion with automated vector indexing.
+- **[BETA] Research Tools**: Experimental multi-source gathering from Web, arXiv, and GitHub.
+- **[BETA] Visualization**: Point cloud and Mermaid graph mappings for knowledge structure.
+- **Agentic Workflows**: FastMCP 3.1+ sampling for multi-step memory operations.
+- **Web Interface**: Standalone React application for managing notes without an MCP client.
 
 ## Architecture
 
 ```
 advanced-memory-mcp/
-├── src/                    # MCP server source code
-├── webapp/                 # React web application
-├── docs/                   # Documentation
-├── tests/                  # Test suite
-└── scripts/                # Build and utility scripts
+ src/                    # MCP server source code
+ webapp/                 # React web application
+ docs/                   # Documentation
+ tests/                  # Test suite
+ scripts/                # Build and utility scripts
 ```
 
 ## Quick Start
 
-## 🚀 Installation
+##  Installation
 
 ### Prerequisites
 - [uv](https://docs.astral.sh/uv/) installed (RECOMMENDED)
 - Python 3.12+
 
-### 📦 Quick Start
+###  Quick Start
 Run immediately via `uvx`:
 ```bash
 uvx advanced-memory
 ```
 
-### 🎯 Claude Desktop Integration
-Add to your `claude_desktop_config.json`:
+###  Claude Desktop / Cursor Integration
+Start the MCP server in stdio mode (required for Claude Desktop, Cursor, and other MCP clients). Add to your MCP config (e.g. Claude `claude_desktop_config.json`, or Cursor MCP settings):
 ```json
 "mcpServers": {
   "advanced-memory": {
     "command": "uv",
-    "args": ["--directory", "D:/Dev/repos/advanced-memory-mcp", "run", "advanced-memory"]
+    "args": ["--directory", "D:/Dev/repos/advanced-memory-mcp", "run", "advanced-memory", "mcp", "--transport", "stdio"]
   }
 }
 ```
-## 📦 Packaging & Distribution
+**Important:** The `mcp` subcommand and `--transport stdio` are required. Without them the process runs the CLI and exits; the server only starts with `advanced-memory mcp --transport stdio`. See `docs/CURSOR_MCP_SETUP.md` for Cursor-specific steps.
+##  Packaging & Distribution
 
 This repository is SOTA 2026 compliant and uses the officially validated `@anthropic-ai/mcpb` workflow for distribution.
 
@@ -83,7 +79,7 @@ mcpb pack . dist/advanced-memory-mcp.mcpb
 
 ### Standalone Web Application
 
-**Canonical webapp docs:** [webapp/README.md](webapp/README.md) — ports (10704/10705), `start.ps1`, backend health check, and troubleshooting.
+**Canonical webapp docs:** [webapp/README.md](webapp/README.md)  ports (10704/10705), `start.ps1`, backend health check, and troubleshooting.
 
 Alternative startup scripts (repo root):
 ```powershell
@@ -157,7 +153,7 @@ The Advanced Memory MCP server provides comprehensive tools for knowledge manage
 
 ### Supported MCP Clients
 
-- **Cursor**: Full integration with stdio transport
+- **Cursor**: Full integration with stdio transport. If the server does not start, see [docs/CURSOR_MCP_SETUP.md](docs/CURSOR_MCP_SETUP.md) (requires `mcp --transport stdio` in config).
 - **Claude Desktop**: Full integration with stdio transport
 - **Web Bridge Server**: HTTP-to-MCP bridge for web applications
 - **External MCP Servers**: BrightData and Fetch integration
@@ -232,12 +228,12 @@ POST /api/v1/fetch              # HTTP fetch operations
 
 ## Development Status
 
-**Version**: 1.5.0
-**Status**: Production Ready (RAG Enabled)
-**MCP Compatibility**: FastMCP 3.1+
+**Version**: 1.6.0
+**Status**: Production Ready (RAG + Prefab UI 0.2)
+**MCP Compatibility**: FastMCP 3.1+ (Prefab UI 0.2)
 **Test Coverage**: 98% pass rate (1,136/1,161 tests) + 90% MCP Integration (18/20 tests)
 **Glama Rating**: Silver Tier (80/100)
-**Web Interface**: React application included (Apps Hub, Control Room, Skill Studio)
+**Web Interface**: React application included (Apps Hub, Control Room,### Audio Implementation Stack (2026)
 **MCP Ecosystem**: Full integration with BrightData, Fetch, and ADN servers
 
 ## Requirements
@@ -258,9 +254,12 @@ Transform the webapp into a Claude-like conversational assistant with natural la
 - Context-aware responses using knowledge graph
 - Conversation persistence as searchable knowledge
 - Real-time tool execution visualization
-- **💰 100% FREE** - Uses local Ollama, no API costs
+- ** 100% FREE** - Uses local Ollama, no API costs
 
-**[📋 Detailed Plan](./CONVERSATIONAL_AI_README.md)** | **[🧠 ADN Note](./zettelkasten/2026-01-23-conversational-ai-extension-plan.md)**
+**[ Detailed Plan](./CONVERSATIONAL_AI_README.md)** | **[ ADN Note](./zettelkasten/2026-01-23-conversational-ai-extension-plan.md)**
+
+- **Hardware Telemetry**: Native resource tracking (GPU/CPU/RAM) with RTX 4090 optimization
+- **System Monitoring**: Real-time fleet discovery (Apps Hub) and agent session monitoring (Control Room)
 
 ## License
 
@@ -268,4 +267,4 @@ AGPL-3.0-or-later
 
 ---
 
-**Advanced Memory MCP** - Enterprise-grade research platform for AI assistants with state-of-the-art observability, evolved from Basic Memory MCP with expanded research capabilities and production reliability.
+**Advanced Memory MCP** - Professional knowledge platform for AI assistants with state-of-the-art monitoring, evolved from Basic Memory MCP with expanded research capabilities and production reliability.

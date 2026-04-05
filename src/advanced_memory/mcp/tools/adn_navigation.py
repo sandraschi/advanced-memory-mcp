@@ -33,6 +33,8 @@ async def adn_navigation(
     page_size: int = 10,
     max_related: int = 10,
     file_name_glob: str | None = None,
+    directory_limit: int = 200,
+    directory_offset: int = 0,
     type_filter: Literal["entity", "observation", "relation", ""] | None = "",
     level: Literal["basic", "intermediate", "advanced"] | None = "basic",
     focus: str | None = None,
@@ -89,7 +91,9 @@ async def adn_navigation(
             type_filter, depth, timeframe, page, page_size, max_related, project
         )
     elif operation == "list_directory":
-        return await _list_directory_operation(dir_name, depth, file_name_glob, project)
+        return await _list_directory_operation(
+            dir_name, depth, file_name_glob, project, directory_limit, directory_offset
+        )
     elif operation == "backlinks":
         if not identifier:
             return build_error_response(
@@ -147,7 +151,9 @@ async def _build_context_operation(
 
     from advanced_memory.mcp.tools.build_context import build_context
 
-    result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(url, depth, timeframe, page, page_size, max_related, project)
+    result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(
+        url, depth, timeframe, page, page_size, max_related, project
+    )
 
     # Convert GraphContext to markdown string
     output = [f"# Context: {url}\n"]
@@ -292,12 +298,25 @@ async def _recent_activity_operation(
 
 
 async def _list_directory_operation(
-    dir_name: str, depth: int, file_name_glob: str | None, project: str | None
+    dir_name: str,
+    depth: int,
+    file_name_glob: str | None,
+    project: str | None,
+    directory_limit: int = 200,
+    directory_offset: int = 0,
 ) -> str:
     """Handle list directory operation."""
     from advanced_memory.mcp.tools.list_directory import list_directory
 
-    return await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(dir_name, depth, file_name_glob, project)
+    fn = list_directory.fn if hasattr(list_directory, "fn") else list_directory
+    return await fn(
+        dir_name,
+        depth,
+        file_name_glob,
+        directory_limit,
+        directory_offset,
+        project,
+    )
 
 
 async def _status_operation(level: str, focus: str | None) -> str:

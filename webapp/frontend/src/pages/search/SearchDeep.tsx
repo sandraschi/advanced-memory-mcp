@@ -1,65 +1,77 @@
-import { useState } from 'react'
-import { Search, Filter, Folder, Target, ChevronRight, Bookmark, Clock, Share2, MoreVertical, Loader2, Sparkles, Brain, Database } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Search, Folder, ChevronRight, Loader2, Sparkles, Brain, Database, X } from 'lucide-react'
+import { apiService } from '../../services/api'
 
-interface SearchResult {
-    id: string
+interface SemanticChunk {
+    entity_id: number
+    permalink: string | null
     title: string
     snippet: string
-    source: string
-    project: string
-    tags: string[]
+    chunk_text: string
     score: number
-    date: string
+}
+
+interface NoteContent {
+    title: string
+    permalink: string | null
+    content: string
 }
 
 export default function SearchDeep() {
     const [query, setQuery] = useState('')
     const [isSearching, setIsSearching] = useState(false)
-    const [results, setResults] = useState<SearchResult[]>([])
+    const [results, setResults] = useState<SemanticChunk[]>([])
     const [activeFilters, setActiveFilters] = useState<string[]>(['All Projects', 'Knowledge Base'])
+    const [project, setProject] = useState<string>('default')
+    const [noteModal, setNoteModal] = useState<NoteContent | null>(null)
+    const [noteLoading, setNoteLoading] = useState(false)
+    const [searchError, setSearchError] = useState<string | null>(null)
 
-    const handleSearch = (e: React.FormEvent) => {
+    useEffect(() => {
+        apiService.getProjects().then((r) => {
+            if (r.success && r.data?.length) {
+                const defaultProj = r.data.find((p: { is_default?: boolean }) => p.is_default) ?? r.data[0]
+                setProject(defaultProj.name ?? defaultProj.permalink ?? 'default')
+            }
+        })
+    }, [])
+
+    const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!query.trim()) return
-
         setIsSearching(true)
-        // Simulate deep semantic search across multiple projects
-        setTimeout(() => {
-            setResults([
-                {
-                    id: '1',
-                    title: 'Materialist Epistemology in AI Development',
-                    snippet: 'The core architecture follows a reductionist approach where data constituents are the primary arbiters of truth. This aligns with the Sandra-SOTA protocols defined in v13.0...',
-                    source: 'Zettelkasten',
-                    project: 'Advanced Memory',
-                    tags: ['philosophy', 'architecture', 'SOTA'],
-                    score: 0.98,
-                    date: '2026-02-17'
-                },
-                {
-                    id: '2',
-                    title: 'Robotics Control State Machine',
-                    snippet: 'Wandering/Conversing/Performing states are managed via a nested state machine that prioritizes safe proximity behaviors and low-latency response cycles...',
-                    source: 'Research Lab',
-                    project: 'Robotics MCP',
-                    tags: ['robotics', 'state-machine', 'kinematics'],
-                    score: 0.85,
-                    date: '2026-02-15'
-                },
-                {
-                    id: '3',
-                    title: 'ClawHub Security Audit Protocol',
-                    snippet: 'Analysis of binary purges and static code analysis for Thermodynamic Villains. Recent malware trends (AMOS) require strict 5-point scrubbing before ingestion...',
-                    source: 'Skills Depot',
-                    project: 'Advanced Memory',
-                    tags: ['security', 'malware', 'clawhub'],
-                    score: 0.92,
-                    date: '2026-02-16'
-                }
-            ])
+        setSearchError(null)
+        try {
+            const response = await apiService.searchSemanticChunks(project, query.trim(), 20)
+            if (response.success && response.data?.chunks) {
+                setResults(response.data.chunks)
+            } else {
+                setResults([])
+                setSearchError(response.error ?? 'No results')
+            }
+        } catch {
+            setResults([])
+            setSearchError('Semantic search failed')
+        } finally {
             setIsSearching(false)
-        }, 1500)
+        }
     }
+
+    const openNote = async (permalink: string | null) => {
+        if (!permalink) return
+        setNoteLoading(true)
+        setNoteModal(null)
+        try {
+            const response = await apiService.getNoteContent(project, permalink)
+            if (response.success && response.data) {
+                setNoteModal(response.data)
+            }
+        } finally {
+            setNoteLoading(false)
+        }
+    }
+
+    const closeNote = () => setNoteModal(null)
 
     return (
         <div className="flex flex-col h-full bg-background">
@@ -135,67 +147,62 @@ export default function SearchDeep() {
                                 <p className="text-[10px] text-muted-foreground uppercase font-mono italic">Scanning 14,287 intelligence nodes...</p>
                             </div>
                         </div>
+                    ) : searchError ? (
+                        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                            <p className="text-sm text-muted-foreground">{searchError}</p>
+                        </div>
                     ) : results.length > 0 ? (
                         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                             <div className="flex items-center justify-between opacity-50">
                                 <span className="text-[10px] uppercase font-bold tracking-widest leading-none flex items-center space-x-2">
                                     <Database className="h-3 w-3" />
-                                    <span>{results.length} intelligence clusters identified</span>
+                                    <span>{results.length} chunks</span>
                                 </span>
-                                <div className="flex items-center space-x-4">
-                                    <button className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest hover:text-white transition-colors">
-                                        <Filter className="h-3 w-3" />
-                                        <span>Sort by Score</span>
-                                    </button>
-                                </div>
                             </div>
 
                             <div className="space-y-4">
-                                {results.map(result => (
-                                    <div key={result.id} className="group relative bg-white/2 border border-white/5 hover:border-white/10 p-8 rounded-3xl transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-1">
+                                {results.map((result, idx) => (
+                                    <div
+                                        key={`${result.entity_id}-${idx}`}
+                                        className="group relative bg-white/2 border border-white/5 hover:border-white/10 p-8 rounded-3xl transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-1 cursor-pointer"
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={() => result.permalink && openNote(result.permalink)}
+                                        onKeyDown={(e) => e.key === 'Enter' && result.permalink && openNote(result.permalink)}
+                                    >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="space-y-2">
                                                 <div className="flex items-center space-x-3">
                                                     <h3 className="text-lg font-bold group-hover:text-amber-500 transition-colors">{result.title}</h3>
                                                     <div className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded-md">
-                                                        <span className="text-[9px] font-mono font-bold text-amber-500">{(result.score * 100).toFixed(0)}% Match</span>
+                                                        <span className="text-[9px] font-mono font-bold text-amber-500">{(result.score * 100).toFixed(0)}%</span>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center space-x-3 text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
-                                                    <div className="flex items-center space-x-1">
+                                                {result.permalink && (
+                                                    <div className="flex items-center space-x-1 text-[10px] text-muted-foreground font-mono">
                                                         <Folder className="h-3 w-3" />
-                                                        <span>{result.project}</span>
+                                                        <span>{result.permalink}</span>
                                                     </div>
-                                                    <div className="w-1 h-1 rounded-full bg-white/20" />
-                                                    <div className="flex items-center space-x-1">
-                                                        <Clock className="h-3 w-3" />
-                                                        <span>{result.date}</span>
-                                                    </div>
-                                                    <div className="w-1 h-1 rounded-full bg-white/20" />
-                                                    <div className="flex items-center space-x-1">
-                                                        <Target className="h-3 w-3" />
-                                                        <span>{result.source}</span>
-                                                    </div>
+                                                )}
+                                            </div>
+                                            {result.permalink && (
+                                                <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500">Open note</span>
+                                                    <ChevronRight className="h-3 w-3" />
                                                 </div>
-                                            </div>
-                                            <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 hover:bg-white/10 rounded-xl transition-colors"><Bookmark className="h-4 w-4" /></button>
-                                                <button className="p-2 hover:bg-white/10 rounded-xl transition-colors"><Share2 className="h-4 w-4" /></button>
-                                                <button className="p-2 hover:bg-white/10 rounded-xl transition-colors"><MoreVertical className="h-4 w-4" /></button>
-                                            </div>
+                                            )}
                                         </div>
                                         <p className="text-sm text-muted-foreground leading-relaxed mb-6 line-clamp-2">{result.snippet}</p>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                {result.tags.map(tag => (
-                                                    <span key={tag} className="px-2 py-1 bg-white/5 border border-white/5 rounded-md text-[9px] font-mono text-muted-foreground">#{tag}</span>
-                                                ))}
-                                            </div>
-                                            <button className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 hover:text-amber-400 group/btn transition-colors">
-                                                <span>Explore Cluster</span>
+                                        {result.permalink && (
+                                            <button
+                                                type="button"
+                                                className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 hover:text-amber-400 group/btn transition-colors"
+                                                onClick={(e) => { e.stopPropagation(); openNote(result.permalink!) }}
+                                            >
+                                                <span>Show full note</span>
                                                 <ChevronRight className="h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
                                             </button>
-                                        </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -235,6 +242,29 @@ export default function SearchDeep() {
                     </div>
                 </div>
             </div>
+
+            {/* Full note modal */}
+            {(noteModal !== null || noteLoading) && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={closeNote} role="dialog" aria-modal="true">
+                    <div className="bg-background border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col m-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-4 border-b border-white/5">
+                            <h2 className="text-lg font-bold truncate">{noteModal?.title ?? 'Loading...'}</h2>
+                            <button type="button" onClick={closeNote} className="p-2 hover:bg-white/10 rounded-xl transition-colors" aria-label="Close">
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-6">
+                            {noteLoading ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+                                </div>
+                            ) : noteModal ? (
+                                <pre className="whitespace-pre-wrap font-sans text-sm text-muted-foreground leading-relaxed">{noteModal.content}</pre>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

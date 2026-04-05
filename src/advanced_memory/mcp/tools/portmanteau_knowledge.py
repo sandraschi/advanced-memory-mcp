@@ -34,26 +34,14 @@ async def adn_knowledge(
     ],
     identifier: Annotated[
         str | None,
-        Field(
-            description="Note/entity identifier (required for read/update/delete/move)"
-        ),
+        Field(description="Note/entity identifier (required for read/update/delete/move)"),
     ] = None,
-    title: Annotated[
-        str | None, Field(description="Note title (required for create)")
-    ] = None,
-    content: Annotated[
-        str | None, Field(description="Note content (for create/update)")
-    ] = None,
-    folder: Annotated[
-        str | None, Field(description="Target folder (for create/move)")
-    ] = None,
-    tags: Annotated[
-        str | None, Field(description="Tags to assign (for create/update)")
-    ] = None,
+    title: Annotated[str | None, Field(description="Note title (required for create)")] = None,
+    content: Annotated[str | None, Field(description="Note content (for create/update)")] = None,
+    folder: Annotated[str | None, Field(description="Target folder (for create/move)")] = None,
+    tags: Annotated[str | None, Field(description="Tags to assign (for create/update)")] = None,
     entity_type: Annotated[str | None, Field(description="Entity type filter")] = None,
-    query: Annotated[
-        str | None, Field(description="Search query (for search operation)")
-    ] = None,
+    query: Annotated[str | None, Field(description="Search query (for search operation)")] = None,
     search_type: Annotated[
         str | None,
         Field(description='Search type: "text", "title", "permalink" (for search)'),
@@ -61,9 +49,7 @@ async def adn_knowledge(
     projects: Annotated[
         str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")
     ] = None,
-    timeframe: Annotated[
-        str | None, Field(description="Time filter (for activity)")
-    ] = None,
+    timeframe: Annotated[str | None, Field(description="Time filter (for activity)")] = None,
     depth: Annotated[
         int | None, Field(description="Navigation depth (for context/navigation)")
     ] = None,
@@ -71,16 +57,11 @@ async def adn_knowledge(
         str | None, Field(description="File/directory path (for list/navigation)")
     ] = None,
     page: Annotated[int | None, Field(description="Page number for results")] = None,
-    results_per_page: Annotated[
-        int | None, Field(description="Number of results per page")
-    ] = None,
+    results_per_page: Annotated[int | None, Field(description="Number of results per page")] = None,
 ) -> dict:
-    """Unified portmanteau for all core knowledge management operations.
+    """Unified portmanteau for core knowledge management.
 
-    Operations: create, read, update, delete, move, list, search, navigate, context, activity, status.
-
-    For full documentation on parameters and usage examples, call:
-    `help(topic="adn_knowledge")`
+    For full documentation and examples, call: `help(topic="adn_knowledge")`
     """
     if operation == "create":
         if not title:
@@ -117,8 +98,7 @@ async def adn_knowledge(
 
         from advanced_memory.mcp.tools.read_note import read_note
 
-        result = await read_note(identifier)
-        return build_success_response("read", "Note read successfully", result=result)
+        return await read_note(identifier)
 
     elif operation == "update":
         if not identifier:
@@ -169,18 +149,13 @@ async def adn_knowledge(
 
         from advanced_memory.mcp.tools.search import search_notes
 
-        result = await search_notes(
+        return await search_notes(
             query,
             page=page or 1,
             results_per_page=results_per_page or 20,
             search_type=search_type or "text",
             projects=projects,
             entity_types=[entity_type] if entity_type else None,
-        )
-        return build_success_response(
-            "search",
-            "Search completed",
-            result=result.model_dump() if hasattr(result, "model_dump") else result,
         )
 
     elif operation == "list":
@@ -193,14 +168,28 @@ async def adn_knowledge(
             )
 
             active_project = get_active_project(None)
-            params = {"dir_name": path or "", "depth": str(depth or 1)}
+            page_num = max(page or 1, 1)
+            per = results_per_page if results_per_page is not None else 200
+            per = min(max(per, 1), 5000)
+            list_offset = (page_num - 1) * per
+            params = {
+                "dir_name": path or "",
+                "depth": str(depth or 1),
+                "limit": str(per),
+                "offset": str(list_offset),
+            }
             response = await call_get(
                 client, f"{active_project.project_url}/directory/list", params=params
             )
-            raw_nodes = response.json()
+            raw_page = response.json()
 
-            formatted_result = await list_directory(path or "", depth=depth or 1)
-            return build_success_response("list", formatted_result, result=raw_nodes)
+            formatted_result = await list_directory(
+                path or "",
+                depth=depth or 1,
+                limit=per,
+                offset=list_offset,
+            )
+            return build_success_response("list", formatted_result, result=raw_page)
         except Exception as e:
             return build_error_response(
                 "LIST_FAILED",
@@ -237,11 +226,8 @@ async def adn_knowledge(
     elif operation == "activity":
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        result = await recent_activity(
+        return await recent_activity(
             entity_type or "entity", depth=depth or 1, timeframe=timeframe or "1d"
-        )
-        return build_success_response(
-            "activity", "Recent activity fetched", result=result
         )
 
     elif operation == "status":

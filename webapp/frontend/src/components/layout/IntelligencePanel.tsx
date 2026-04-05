@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Cpu, Activity, Zap, Database, AlertCircle, Thermometer, Box } from 'lucide-react'
+import { Zap, Activity } from 'lucide-react'
 import apiService from '../../services/api'
 
-interface SubstrateStats {
+interface HardwareStats {
     gpu: {
         model: string
         utilization: string
@@ -21,12 +21,12 @@ interface SubstrateStats {
 }
 
 export default function IntelligencePanel() {
-    const [stats, setStats] = useState<SubstrateStats | null>(null)
+    const [stats, setStats] = useState<HardwareStats | null>(null)
 
     const fetchStats = useCallback(async () => {
         const response = await apiService.detectHardware()
         if (response.success && response.data) {
-            setStats(response.data as SubstrateStats)
+            setStats(response.data as HardwareStats)
         }
     }, [])
 
@@ -36,90 +36,111 @@ export default function IntelligencePanel() {
         return () => clearInterval(interval)
     }, [fetchStats])
 
-    if (!stats) return null
+    if (!stats) {
+        return (
+            <div className="hardware-panel h-64 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2 opacity-40">
+                    <Activity className="animate-spin text-indigo-500" size={20} />
+                    <span className="text-[10px] uppercase font-bold tracking-widest">Initialising Hardware...</span>
+                </div>
+            </div>
+        )
+    }
+
+    // Parse numeric values for progress bars
+    const gpuUtil = parseInt(stats.gpu.utilization) || 0
+    const cpuUtil = parseInt(stats.cpu.utilization) || 0
+    
+    // Memory percent calculation
+    const memUsed = parseFloat(stats.memory.used) || 0
+    const memTotal = parseFloat(stats.memory.total) || 1
+    const memPercent = Math.round((memUsed / memTotal) * 100)
 
     return (
-        <div className="p-4 bg-black/40 border-t border-white/5 space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                    <div className="relative">
-                        <Activity className="h-3.5 w-3.5 text-amber-500" />
-                        <div className="absolute inset-0 bg-amber-500/20 blur-sm animate-pulse rounded-full" />
+        <div className="hardware-panel">
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <div className="p-1 rounded-md bg-indigo-500/10">
+                        <Activity size={12} className="text-indigo-400" />
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-[0.22em] text-muted-foreground">Substrate</span>
+                    <h3 className="hardware-label">Hardware Status</h3>
                 </div>
-                <div className="flex items-center space-x-1.5 px-2 py-0.5 bg-green-500/10 border border-green-500/20 rounded-full">
-                    <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[8px] uppercase font-bold tracking-widest text-green-500">Live</span>
+                <div className="hardware-live-badge">
+                    <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
+                    <span className="hardware-live-text">Live Telemetry</span>
                 </div>
             </div>
 
-            <div className="space-y-4">
-                {/* GPU Section */}
+            <div className="space-y-6">
+                {/* GPU Capability */}
                 <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[9px] uppercase font-bold tracking-widest opacity-60">
-                        <div className="flex items-center space-x-1.5">
-                            <Cpu className="h-3 w-3 text-blue-500" />
-                            <span>GPU: RTX 4090</span>
-                        </div>
-                        <span className="text-blue-500">{stats.gpu.utilization}</span>
+                    <div className="hardware-stat-title">
+                        <span>Graphics Processing (GPU)</span>
+                        <span className="text-blue-400 font-mono">{stats.gpu.utilization}</span>
                     </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-blue-500 transition-all duration-1000"
-                            style={{ width: stats.gpu.utilization }}
+                    <div className="hardware-progress-container text-blue-500">
+                        <div 
+                            className="hardware-progress-bar hardware-progress-bar-gpu" 
+                            style={{ '--progress': `${gpuUtil}%` } as React.CSSProperties}
                         />
                     </div>
-                    <div className="flex items-center justify-between text-[8px] font-mono opacity-40">
-                        <div className="flex items-center space-x-1">
-                            <Thermometer className="h-2.5 w-2.5" />
-                            <span>{stats.gpu.temperature}</span>
-                        </div>
-                        <span>VRAM: {stats.gpu.vram_used} / {stats.gpu.vram_total}</span>
+                    <div className="hardware-stat-footer">
+                        <span className="truncate max-w-[150px]">{stats.gpu.model}</span>
+                        <span>{stats.gpu.vram_used} / {stats.gpu.vram_total} VRAM</span>
                     </div>
                 </div>
 
-                {/* CPU Section */}
+                {/* CPU Load */}
                 <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[9px] uppercase font-bold tracking-widest opacity-60">
-                        <div className="flex items-center space-x-1.5">
-                            <Box className="h-3 w-3 text-purple-500" />
-                            <span>CPU: {stats.cpu.cores} Cores</span>
-                        </div>
-                        <span className="text-purple-500">{stats.cpu.utilization}</span>
+                    <div className="hardware-stat-title">
+                        <span>Central Processing (CPU)</span>
+                        <span className="text-purple-400 font-mono">{stats.cpu.utilization}</span>
                     </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-purple-500 transition-all duration-1000"
-                            style={{ width: stats.cpu.utilization }}
+                    <div className="hardware-progress-container text-purple-500">
+                        <div 
+                            className="hardware-progress-bar hardware-progress-bar-cpu" 
+                            style={{ '--progress': `${cpuUtil}%` } as React.CSSProperties}
                         />
+                    </div>
+                    <div className="hardware-stat-footer">
+                        <span>{stats.cpu.cores} Logical Cores</span>
+                        <span>Health: Optimal</span>
                     </div>
                 </div>
 
-                {/* Memory Section */}
+                {/* Memory Usage */}
                 <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[9px] uppercase font-bold tracking-widest opacity-60">
-                        <div className="flex items-center space-x-1.5" title="System RAM">
-                            <Database className="h-3 w-3 text-amber-500" />
-                            <span>System RAM</span>
-                        </div>
-                        <span className="text-amber-500">{(parseInt(stats.memory.used) / parseInt(stats.memory.total) * 100).toFixed(0)}%</span>
+                    <div className="hardware-stat-title">
+                        <span>System Memory (RAM)</span>
+                        <span className="text-amber-400 font-mono">{memPercent}%</span>
                     </div>
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-amber-500 transition-all duration-1000"
-                            style={{ width: `${(parseInt(stats.memory.used) / parseInt(stats.memory.total) * 100)}%` }}
+                    <div className="hardware-progress-container text-amber-500">
+                        <div 
+                            className="hardware-progress-bar hardware-progress-bar-mem" 
+                            style={{ '--progress': `${memPercent}%` } as React.CSSProperties}
                         />
+                    </div>
+                    <div className="hardware-stat-footer">
+                        <span>Physical Memory</span>
+                        <span>{stats.memory.used} / {stats.memory.total}</span>
                     </div>
                 </div>
             </div>
 
-            <div className="pt-2 flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
-                <div className="flex items-center space-x-1.5">
-                    <AlertCircle className="h-3 w-3 text-blue-400" />
-                    <span className="text-[8px] uppercase font-bold tracking-[0.1em]">Ollama optimization active</span>
+            <div className="pt-6 mt-2 border-t border-white/[0.03]">
+                <div className="p-3 rounded-xl bg-indigo-500/5 border border-indigo-500/10 transition-all hover:bg-indigo-500/10 group cursor-default">
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
+                            <Zap size={14} />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider mb-0.5">System Optimization</p>
+                            <p className="text-[10px] text-indigo-200/60 leading-relaxed">
+                                Hardware detected. Local inference parameters adjusted for system capacity.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <Zap className="h-3 w-3 text-amber-500" />
             </div>
         </div>
     )

@@ -21,6 +21,7 @@ from advanced_memory.schemas import (
     DeleteEntitiesResponse,
     EntityListResponse,
     EntityResponse,
+    NoteContentResponse,
 )
 from advanced_memory.schemas.base import Entity, Permalink
 from advanced_memory.schemas.request import EditEntityRequest, MoveEntityRequest
@@ -204,6 +205,28 @@ async def move_entity(
 
 
 ## Read endpoints
+
+
+@router.get("/entities/{identifier:path}/content", response_model=NoteContentResponse)
+async def get_entity_content(
+    link_resolver: LinkResolverDep,
+    file_service: FileServiceDep,
+    identifier: str,
+) -> NoteContentResponse:
+    """Get full note content by permalink or path (for semantic search chunk click)."""
+    entity = await link_resolver.resolve_link(identifier)
+    if not entity:
+        raise HTTPException(status_code=404, detail=f"Entity {identifier} not found")
+    try:
+        content = await file_service.read_entity_content(entity)
+    except Exception as e:
+        logger.warning(f"Failed to read entity content: {e}")
+        raise HTTPException(status_code=500, detail="Failed to read note content") from e
+    return NoteContentResponse(
+        title=entity.title,
+        permalink=getattr(entity, "permalink", None),
+        content=content,
+    )
 
 
 @router.get("/entities/{identifier:path}", response_model=EntityResponse)

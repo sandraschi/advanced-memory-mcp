@@ -28,7 +28,7 @@ export default function Layout({
   const [helpOpen, setHelpOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#020205] text-slate-50 font-inter selection:bg-indigo-500/30 flex">
+    <div className="h-screen min-h-0 bg-[#020205] text-slate-50 font-inter selection:bg-indigo-500/30 flex overflow-hidden">
       {/* Left Sidebar */}
       <Sidebar
         isCollapsed={sidebarCollapsed}
@@ -37,8 +37,8 @@ export default function Layout({
         onOpenHelp={() => setHelpOpen(true)}
       />
 
-      {/* Main Content Area - no ml; sidebar already reserves space in flex flow */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* Main Content Area - min-h-0 so flex child can shrink and fill viewport */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         {/* Topbar */}
         <Topbar
           onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -47,9 +47,9 @@ export default function Layout({
           sidebarCollapsed={sidebarCollapsed}
         />
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-hidden">
-          <div className="h-full">
+        {/* Page Content - fills remaining height so NoteViewer etc. can use full space */}
+        <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div className="flex-1 min-h-0 flex flex-col">
             {children}
           </div>
         </main>

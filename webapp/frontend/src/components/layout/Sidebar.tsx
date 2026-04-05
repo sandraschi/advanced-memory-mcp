@@ -49,6 +49,7 @@ export default function Sidebar({
     { name: 'Audio Memory', href: '/audio', icon: Volume2 },
     { name: 'ZettelFlow', href: '/zettelflow', icon: Archive },
     { name: 'Apps Hub', href: '/apps-hub', icon: Globe },
+    { name: 'Tests', href: '/tests', icon: FlaskConical },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 

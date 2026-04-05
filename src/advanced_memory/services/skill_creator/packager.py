@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import zipfile
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -64,7 +64,7 @@ def package_skill(skill_path: str | Path, output_dir: str | Path | None = None) 
 
     manifest = {
         "name": skill_root.name,
-        "packaged_at": datetime.utcnow().isoformat() + "Z",
+        "packaged_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "source_path": str(skill_root),
         "archive": str(zip_path),
         "sha256": sha256,

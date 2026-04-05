@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from advanced_memory.schemas.directory import DirectoryNode
+from advanced_memory.schemas.directory import DirectoryListPage, DirectoryNode
 
 
 @pytest.mark.asyncio
@@ -137,13 +137,16 @@ async def test_list_directory_endpoint_default(test_graph, client, project_url):
     assert response.status_code == 200
     data = response.json()
 
-    # Should return a list
-    assert isinstance(data, list)
+    assert "nodes" in data
+    nodes = data["nodes"]
+    assert isinstance(nodes, list)
 
     # With test_graph, should return the "test" directory
-    assert len(data) == 1
-    assert data[0]["name"] == "test"
-    assert data[0]["type"] == "directory"
+    assert len(nodes) == 1
+    assert nodes[0]["name"] == "test"
+    assert nodes[0]["type"] == "directory"
+    assert data.get("total") == 1
+    assert data.get("has_more") is False
 
 
 @pytest.mark.asyncio
@@ -156,12 +159,12 @@ async def test_list_directory_endpoint_specific_path(test_graph, client, project
     assert response.status_code == 200
     data = response.json()
 
-    # Should return list of files in test directory
-    assert isinstance(data, list)
-    assert len(data) == 5
+    nodes = data["nodes"]
+    assert isinstance(nodes, list)
+    assert len(nodes) == 5
 
     # All should be files (no subdirectories in test_graph)
-    for item in data:
+    for item in nodes:
         assert item["type"] == "file"
         assert item["name"].endswith(".md")
 
@@ -178,11 +181,11 @@ async def test_list_directory_endpoint_with_glob(test_graph, client, project_url
     assert response.status_code == 200
     data = response.json()
 
-    # Should return only Connected Entity files
-    assert isinstance(data, list)
-    assert len(data) == 2
+    nodes = data["nodes"]
+    assert isinstance(nodes, list)
+    assert len(nodes) == 2
 
-    file_names = {item["name"] for item in data}
+    file_names = {item["name"] for item in nodes}
     assert file_names == {"Connected_Entity_1.md", "Connected_Entity_2.md"}
 
 
@@ -212,9 +215,8 @@ async def test_list_directory_endpoint_nonexistent_path(test_graph, client, proj
     assert response.status_code == 200
     data = response.json()
 
-    # Should return empty list
-    assert isinstance(data, list)
-    assert len(data) == 0
+    assert data["nodes"] == []
+    assert data.get("total") == 0
 
 
 @pytest.mark.asyncio
@@ -250,9 +252,16 @@ async def test_list_directory_endpoint_mocked(client, project_url):
     ]
 
     # Patch the directory service
+    mock_page = DirectoryListPage(
+        nodes=mock_nodes,
+        total=2,
+        limit=200,
+        offset=0,
+        has_more=False,
+    )
     with patch(
         "advanced_memory.services.directory_service.DirectoryService.list_directory",
-        return_value=mock_nodes,
+        return_value=mock_page,
     ):
         # Call the endpoint
         response = await client.get(f"{project_url}/directory/list?dir_name=/test")
@@ -261,17 +270,17 @@ async def test_list_directory_endpoint_mocked(client, project_url):
         assert response.status_code == 200
         data = response.json()
 
-        # Check structure matches our mock
-        assert isinstance(data, list)
-        assert len(data) == 2
+        nodes = data["nodes"]
+        assert isinstance(nodes, list)
+        assert len(nodes) == 2
 
         # Check directory
-        folder = next(item for item in data if item["type"] == "directory")
+        folder = next(item for item in nodes if item["type"] == "directory")
         assert folder["name"] == "folder1"
         assert folder["directory_path"] == "/folder1"
 
         # Check file
-        file_item = next(item for item in data if item["type"] == "file")
+        file_item = next(item for item in nodes if item["type"] == "file")
         assert file_item["name"] == "file1.md"
         assert file_item["directory_path"] == "/file1.md"
         assert file_item["file_path"] == "file1.md"

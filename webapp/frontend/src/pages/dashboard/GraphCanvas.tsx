@@ -78,7 +78,7 @@ export default function GraphCanvas() {
                             <Globe className="h-5 w-5 text-amber-500" />
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold tracking-tight">Intelligence Canvas</h1>
+                            <h1 className="text-lg font-bold tracking-tight">Knowledge Graph</h1>
                             <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Zettelkasten Graph v1.3.0</p>
                         </div>
                     </div>

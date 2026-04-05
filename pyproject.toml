@@ -1,6 +1,6 @@
 [project]
 name = "advanced-memory"
-version = "1.3.0"
+version = "1.6.1"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -28,9 +28,10 @@ dependencies = [
     "watchfiles>=1.0.4",
     "fastapi[standard]>=0.115.8",
     "alembic>=1.14.1",
+    "mako>=1.3.0",
     "pillow>=11.1.0",
     "pybars3>=0.9.7",
-    "fastmcp>=3.1.0",
+    "fastmcp[code-mode]>=3.2.0",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
@@ -59,6 +60,9 @@ dependencies = [
     "PyMuPDF>=1.23.0", # PDF text extraction for research
     "ruff>=0.12.2",
     "cryptography>=45.0.5",
+    "psutil>=6.1.1",
+    "nvidia-ml-py>=12.560.30",
+    "prefab-ui>=0.1.3",
 ]
 
 [project.optional-dependencies]
@@ -101,41 +105,6 @@ filterwarnings = [
     "ignore::RuntimeWarning:.*coroutine.*was never awaited",
 ]
 
-[tool.ruff]
-line-length = 100
-target-version = "py311"
-extend-exclude = ["migrations", "mcpb", "dist", "htmlcov"]
-
-[tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
-]
-ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
-    "B904",  # raise without from in except clause (intentional in some error handlers)
-]
-
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401", "E402"]  # Allow imports after code in __init__.py files
-"src/advanced_memory/mcp/mcp_instance.py" = ["E402"]  # Logger setup before imports
-"src/advanced_memory/mcp/server.py" = ["E402", "F811"]  # Logger setup before imports
-"src/advanced_memory/services/initialization.py" = ["E402"]  # Conditional logger/db imports
-"tests/**" = ["F841"]  # Unused result in tests (assertions on side effects)
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
-
 [dependency-groups]
 dev = [
     "gevent>=24.11.1",
@@ -165,7 +134,7 @@ source = "uv-dynamic-versioning"
 vcs = "git"
 style = "pep440"
 bump = true
-fallback-version = "0.0.0"
+fallback-version = "1.6.1"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/advanced_memory"]
@@ -258,3 +227,32 @@ omit = [
 
 [tool.logfire]
 ignore_no_config = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+# Hardened v13.1 Rule Set
+select = [
+    "E", "F", "I", "UP", "B", "S", "A", "ANN", "COM", "C4", "DTZ", "PIE", "T20", "PYI", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PTH", "ERA", "PD", "PGH", "PL", "TRY", "FLY", "PERF", "FURB", "LOG", "RUF"
+]
+ignore = [
+    "ANN101", # Missing type annotation for self
+    "ANN102", # Missing type annotation for cls
+    "COM812", # Trailing comma missing (handled by formatter)
+    "ISC001", # Single line implicit string concatenation (handled by formatter)
+    "PLR0913", # Too many arguments
+    "S101",   # Use of assert (standard for pytest)
+    "TRY003", # Avoid specifying long messages in exceptions
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN", "PLR", "TRY", "S105", "S106", "SLF001", "ARG002", "PLC0415"]
+"server.py" = ["T20", "ARG001", "ARG002"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

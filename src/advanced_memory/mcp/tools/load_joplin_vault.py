@@ -247,9 +247,9 @@ async def _process_joplin_import(
             # Check if note already exists
             if skip_existing:
                 try:
-                    existing = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
-                        query=dest_path, search_type="permalink", project=project
-                    )
+                    existing = await (
+                        search_notes.fn if hasattr(search_notes, "fn") else search_notes
+                    )(query=dest_path, search_type="permalink", project=project)
                     if existing.results:
                         logger.info(f"Skipping existing note: {dest_path}")
                         stats["skipped_files"] += 1

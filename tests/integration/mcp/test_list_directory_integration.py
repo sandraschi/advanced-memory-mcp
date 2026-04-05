@@ -58,12 +58,12 @@ async def test_list_directory_basic_operation(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show the structure
-        assert "Contents of '/' (depth 1):" in list_text
+        assert "Contents of '/' (depth 1)" in list_text
         assert "[FOLDER] meetings" in list_text
         assert "[FOLDER] projects" in list_text
         assert "[DOC] Root_Note.md" in list_text or "📄 Root_Note.md" in list_text
         assert "Root Note" in list_text  # Title should be shown
-        assert "Total:" in list_text
+        assert "Pagination:" in list_text
         assert "directories" in list_text or "folder" in list_text.lower()
         assert "file" in list_text
 
@@ -117,7 +117,7 @@ async def test_list_directory_specific_folder(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show work folder contents
-        assert "Contents of '/work' (depth 1):" in list_text
+        assert "Contents of '/work' (depth 1)" in list_text
         assert "[FOLDER] meetings" in list_text or "📁 meetings" in list_text
         assert "[FOLDER] projects" in list_text or "📁 projects" in list_text
         assert "[DOC] Task_List.md" in list_text or "📄 Task_List.md" in list_text
@@ -173,7 +173,7 @@ async def test_list_directory_with_depth(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show nested structure within depth=3
-        assert "Contents of '/research' (depth 3):" in list_text
+        assert "Contents of '/research' (depth 3)" in list_text
         assert "[FOLDER] ml" in list_text or "📁 ml" in list_text
         assert "[DOC] Research_Index.md" in list_text or "📄 Research_Index.md" in list_text
         assert "ML" in list_text  # ML Overview title should appear
@@ -232,7 +232,7 @@ async def test_list_directory_with_glob_pattern(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show only matching files
-        assert "Files in '/meetings' matching 'Meeting*' (depth 1):" in list_text
+        assert "Files in '/meetings' matching 'Meeting*' (depth 1)" in list_text
         assert "Meeting_2025-01-15.md" in list_text
         assert "Meeting_2025-01-22.md" in list_text
         assert "Project Status" not in list_text  # Should be filtered out
@@ -335,7 +335,7 @@ async def test_list_directory_various_file_types(mcp_server, app):
         assert "mixed/Simple_Note.md" in list_text
         assert "Complex_Document_with_Long_Title.md" in list_text
         assert "mixed/Complex_Document_with_Long_Title.md" in list_text
-        assert "Total: 2 items (2 files)" in list_text
+        assert "This page: 2 items (2 files)" in list_text
 
 
 @pytest.mark.asyncio
@@ -364,9 +364,9 @@ async def test_list_directory_default_parameters(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show root directory with depth 1
-        assert "Contents of '/' (depth 1):" in list_text
+        assert "Contents of '/' (depth 1)" in list_text
         assert "[FOLDER] default-test" in list_text or "📁 default-test" in list_text
-        assert "Total:" in list_text
+        assert "Pagination:" in list_text
 
 
 @pytest.mark.asyncio
@@ -408,7 +408,7 @@ async def test_list_directory_deep_recursion(mcp_server, app):
         list_text = list_result.content[0].text
 
         # Should show deep structure
-        assert "Contents of '/level1' (depth 10):" in list_text
+        assert "Contents of '/level1' (depth 10)" in list_text
         assert "[FOLDER] level2" in list_text or "📁 level2" in list_text
         assert "Level_3_Note.md" in list_text
         assert "Level_5_Note.md" in list_text

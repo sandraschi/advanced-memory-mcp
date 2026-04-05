@@ -1,5 +1,5 @@
 # Core MCP dependencies - VERSION REQUIREMENT
-fastmcp>=2.12.0,<3.0.0
+fastmcp>=3.1.0,<4
 fastapi[standard]>=0.115.8
 uvicorn[standard]>=0.22.0
 pydantic[email,timezone]>=2.10.3

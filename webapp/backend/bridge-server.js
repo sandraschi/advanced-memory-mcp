@@ -1266,6 +1266,19 @@ app.get('/api/v1/notes/:path(.*)', async (req, res) => {
       });
     }
 
+    // Detect MCP conversational "not found" response so we don't return it as note content
+    const contentStr = typeof payload === 'string' ? payload : (payload?.result?.content ?? payload?.result?.text ?? payload?.technical_summary?.content ?? payload?.content ?? payload?.text ?? '');
+    const isNotFoundResponse = typeof contentStr === 'string' && (
+      /#\s*Note Not Found:/i.test(contentStr) ||
+      /couldn't find an exact match/i.test(contentStr) ||
+      /I searched for .* but couldn't find/i.test(contentStr) ||
+      /read_note\s*\(\s*["']/i.test(contentStr) && /consider creating a new note/i.test(contentStr)
+    );
+    if (isNotFoundResponse) {
+      console.warn('adn_content returned conversational not-found response for identifier:', noteId);
+      return res.status(404).json({ success: false, error: 'Note not found' });
+    }
+
     // adn_content read returns either: (a) raw markdown string, or (b) build_success_response dict with result
     let noteData = null;
     if (typeof payload === 'string' && payload.length > 0) {

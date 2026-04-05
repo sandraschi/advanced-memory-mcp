@@ -11,6 +11,7 @@ from advanced_memory import __version__ as version
 from advanced_memory import db
 from advanced_memory.api.routers import (
     directory_router,
+    hardware_router,
     importer_router,
     knowledge,
     management,
@@ -19,6 +20,7 @@ from advanced_memory.api.routers import (
     prompt_router,
     resource,
     search,
+    tests_router,
 )
 from advanced_memory.config import ConfigManager
 from advanced_memory.services.initialization import initialize_app, initialize_file_sync
@@ -67,18 +69,23 @@ app = FastAPI(
 
 
 # Include routers
-app.include_router(knowledge.router, prefix="/{project}")
-app.include_router(memory.router, prefix="/{project}")
-app.include_router(resource.router, prefix="/{project}")
-app.include_router(search.router, prefix="/{project}")
-app.include_router(project.project_router, prefix="/{project}")
-app.include_router(directory_router.router, prefix="/{project}")
-app.include_router(prompt_router.router, prefix="/{project}")
-app.include_router(importer_router.router, prefix="/{project}")
+app.include_router(hardware_router.router, prefix="/api/v1")
+app.include_router(hardware_router.model_router, prefix="/api/v1")
+app.include_router(importer_router.router, prefix="/api/v1")
 
-# Project resource router works accross projects
-app.include_router(project.project_resource_router)
-app.include_router(management.router)
+# Project-scoped routers under /api/v1/{project}
+app.include_router(knowledge.router, prefix="/api/v1/{project}")
+app.include_router(memory.router, prefix="/api/v1/{project}")
+app.include_router(resource.router, prefix="/api/v1/{project}")
+app.include_router(search.router, prefix="/api/v1/{project}")
+app.include_router(project.project_router, prefix="/api/v1/{project}")
+app.include_router(directory_router.router, prefix="/api/v1/{project}")
+app.include_router(prompt_router.router, prefix="/api/v1/{project}")
+
+# Non-project specific routers
+app.include_router(project.project_resource_router, prefix="/api/v1")
+app.include_router(management.router, prefix="/api/v1")
+app.include_router(tests_router.router, prefix="/api/v1")
 
 # Auth routes are handled by FastMCP automatically when auth is enabled
 

@@ -21,12 +21,8 @@ class ResearchGapAnalysis(BaseModel):
     """LLM output: synthesis and next-step decisions."""
 
     synthesis: str = Field(description="Summary of findings so far")
-    gaps: list[str] = Field(
-        default_factory=list, description="Missing concepts or unclear areas"
-    )
-    next_sources: list[str] = Field(
-        default_factory=list, description="Sources to query next"
-    )
+    gaps: list[str] = Field(default_factory=list, description="Missing concepts or unclear areas")
+    next_sources: list[str] = Field(default_factory=list, description="Sources to query next")
     coverage_score: float = Field(ge=0.0, le=1.0, description="0-1 coverage estimate")
     should_continue: bool = Field(description="Whether to run more research")
 
@@ -79,9 +75,7 @@ def _extract_snippets(result: dict[str, Any], source: str) -> list[dict[str, Any
 
     # github
     elif source == "github":
-        items = result.get(
-            "items", result.get("repositories", result.get("results", []))
-        )
+        items = result.get("items", result.get("repositories", result.get("results", [])))
         for i in items[:10] if isinstance(items, list) else []:
             if isinstance(i, dict):
                 name = i.get("full_name", i.get("name", ""))
@@ -102,13 +96,9 @@ def _extract_snippets(result: dict[str, Any], source: str) -> list[dict[str, Any
         for c in chunks[:10] if isinstance(chunks, list) else []:
             if isinstance(c, dict):
                 content = (c.get("content") or c.get("text") or str(c))[:1500]
-                snippets.append(
-                    {"source": "rag", "content": content, "url": "", "relevance": 0.8}
-                )
+                snippets.append({"source": "rag", "content": content, "url": "", "relevance": 0.8})
             elif isinstance(c, str):
-                snippets.append(
-                    {"source": "rag", "content": c[:1500], "url": "", "relevance": 0.7}
-                )
+                snippets.append({"source": "rag", "content": c[:1500], "url": "", "relevance": 0.7})
 
     # web: returns {"results": [...]} or similar
     elif source == "web":
@@ -132,9 +122,7 @@ def _extract_snippets(result: dict[str, Any], source: str) -> list[dict[str, Any
     return snippets
 
 
-async def _run_source(
-    source: str, topic: str, limit: int
-) -> tuple[list[dict], list[str]]:
+async def _run_source(source: str, topic: str, limit: int) -> tuple[list[dict], list[str]]:
     """Run one research source and return (snippets, citations)."""
     snippets: list[dict] = []
     citations: list[str] = []
@@ -143,11 +131,7 @@ async def _run_source(
         if source == "arxiv":
             from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
 
-            _fn = (
-                adn_arxiv_research.fn
-                if hasattr(adn_arxiv_research, "fn")
-                else adn_arxiv_research
-            )
+            _fn = adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research
             out = await _fn(
                 operation="search_papers",
                 query=topic,
@@ -277,9 +261,7 @@ async def run_chain(
             f"[{s.get('source', '?')}] {s.get('content', '')}" for s in batch_snippets
         )
         if not snippets_text.strip():
-            logger.warning(
-                "skill_research_chain: no snippets in iteration %d", iteration + 1
-            )
+            logger.warning("skill_research_chain: no snippets in iteration %d", iteration + 1)
             break
 
         # LLM gap analysis
@@ -292,11 +274,7 @@ async def run_chain(
                 max_tokens=800,
                 temperature=0.2,
             )
-            raw_dict = (
-                raw[0]
-                if isinstance(raw, list) and raw and isinstance(raw[0], dict)
-                else raw
-            )
+            raw_dict = raw[0] if isinstance(raw, list) and raw and isinstance(raw[0], dict) else raw
             if isinstance(raw_dict, dict):
                 analysis = ResearchGapAnalysis(
                     synthesis=str(raw_dict.get("synthesis", "")),
@@ -336,9 +314,7 @@ async def run_chain(
         if not analysis.should_continue:
             break
 
-        remaining = [
-            s for s in analysis.next_sources if s in ("arxiv", "github", "rag", "web")
-        ]
+        remaining = [s for s in analysis.next_sources if s in ("arxiv", "github", "rag", "web")]
         if not remaining:
             break
 

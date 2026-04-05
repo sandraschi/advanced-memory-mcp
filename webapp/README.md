@@ -70,6 +70,27 @@ $BackendPort = 10705
 - **npm errors in webapp root**: `start.ps1` runs npm only inside `frontend/`; there is no `package.json` in `webapp/` itself.
 - **Tailwind/PostCSS**: Arbitrary values with commas (e.g. `rgba(a,b,c,d)`) in `@apply` must use underscores in Tailwind (e.g. `rgba(a_b_c_d)`). See `frontend/src/styles/main.css` for examples.
 
+## Tests page
+
+The webapp can run the project test suite (pytest) from the **Tests** page. To enable it, start the backend with:
+
+```powershell
+$env:ENABLE_WEBAPP_TESTS = "1"
+uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port 10705
+```
+
+Or in `start.ps1`, set the env var before starting the backend. The endpoint is disabled by default (returns 403) so it is not run in production.
+
+## API endpoints used by the frontend
+
+- **Semantic search (Deep Search page)**  
+  `POST /api/v1/{project}/search/semantic` — body: `{ "query": "...", "limit": 20 }`. Returns `{ "chunks": [ { "entity_id", "permalink", "title", "snippet", "chunk_text", "score" }, ... ] }` from the RAG (LanceDB) pipeline.
+
+- **Note content (full note for chunk click)**  
+  `GET /api/v1/{project}/knowledge/entities/{permalink}/content` — returns `{ "title", "permalink", "content" }` for the full note body. Used when the user clicks a semantic search chunk to open the full note in a modal.
+
+Project in the path is the project name/permalink (e.g. default or the current project from the projects API).
+
 ## Shutdown
 
 - Close the backend window and the terminal where Vite is running, or run `shutdown.ps1` / `shutdown.bat` if configured.

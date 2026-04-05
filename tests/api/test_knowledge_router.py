@@ -8,6 +8,7 @@ from httpx import AsyncClient
 from advanced_memory.schemas import (
     Entity,
     EntityResponse,
+    NoteContentResponse,
 )
 from advanced_memory.schemas.search import SearchItemType, SearchResponse
 
@@ -212,6 +213,28 @@ async def test_get_entity_by_file_path(client: AsyncClient, project_url):
     assert entity["file_path"] == "test/TestEntity.md"
     assert entity["entity_type"] == "test"
     assert entity["permalink"] == "test/test-entity"
+
+
+@pytest.mark.asyncio
+async def test_get_entity_content(client: AsyncClient, project_url):
+    """GET /entities/{identifier}/content returns full note content as JSON."""
+    data = {
+        "title": "ContentNote",
+        "folder": "test",
+        "entity_type": "note",
+        "content": "Full note body for content endpoint.",
+    }
+    create_resp = await client.post(f"{project_url}/knowledge/entities", json=data)
+    assert create_resp.status_code == 200
+    created = create_resp.json()
+    permalink = created["permalink"]
+
+    response = await client.get(f"{project_url}/knowledge/entities/{permalink}/content")
+    assert response.status_code == 200
+    body = NoteContentResponse.model_validate(response.json())
+    assert body.title == "ContentNote"
+    assert body.permalink == "test/content-note"
+    assert "Full note body for content endpoint" in body.content
 
 
 @pytest.mark.asyncio

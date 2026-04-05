@@ -39,9 +39,7 @@ logger = logging.getLogger(__name__)
 
 _MAX_TOKENS_PER_CALL: int = int(os.environ.get("MEMOPS_MAX_TOKENS", "16000"))
 _RATE_LIMIT_CALLS: int = int(os.environ.get("MEMOPS_RATE_LIMIT_CALLS", "3"))
-_RATE_LIMIT_WINDOW: int = int(
-    os.environ.get("MEMOPS_RATE_LIMIT_WINDOW", "60")
-)  # seconds
+_RATE_LIMIT_WINDOW: int = int(os.environ.get("MEMOPS_RATE_LIMIT_WINDOW", "60"))  # seconds
 
 # Sliding window call log — timestamps of recent sampling invocations
 _call_timestamps: deque = deque(maxlen=100)
@@ -176,9 +174,7 @@ async def write_knowledge_note(
         from advanced_memory.mcp.tools.write_note import write_note
 
         tag_list = [t.strip() for t in tags.split(",") if t.strip()] if tags else []
-        return await write_note(
-            title=title, content=content, folder=folder, tags=tag_list
-        )
+        return await write_note(title=title, content=content, folder=folder, tags=tag_list)
     except Exception as e:
         return f"ERROR: {e}"
 
@@ -214,7 +210,7 @@ async def list_knowledge_folder(folder_path: str) -> str:
     try:
         from advanced_memory.mcp.tools.list_directory import list_directory
 
-        result = await list_directory(path=folder_path)
+        result = await list_directory(dir_name=folder_path)
         if isinstance(result, str):
             return result
         return str(result)

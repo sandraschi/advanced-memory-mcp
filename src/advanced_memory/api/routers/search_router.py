@@ -4,9 +4,36 @@ from fastapi import APIRouter, BackgroundTasks
 
 from advanced_memory.api.routers.utils import to_search_results
 from advanced_memory.deps import EntityServiceDep, SearchServiceDep
-from advanced_memory.schemas.search import SearchQuery, SearchResponse
+from advanced_memory.schemas.search import (
+    SearchQuery,
+    SearchResponse,
+    SemanticSearchRequest,
+    SemanticSearchResponse,
+)
 
 router = APIRouter(prefix="/search", tags=["search"])
+
+
+@router.post("/semantic", response_model=SemanticSearchResponse)
+async def semantic_search(
+    body: SemanticSearchRequest,
+    search_service: SearchServiceDep,
+) -> SemanticSearchResponse:
+    """Semantic (vector) search returning chunks with entity_id and permalink for UI."""
+    chunks = await search_service.semantic_search_chunks(body.query, limit=body.limit)
+    return SemanticSearchResponse(
+        chunks=[
+            {
+                "entity_id": c["entity_id"],
+                "permalink": c.get("permalink"),
+                "title": c["title"],
+                "snippet": c["snippet"],
+                "chunk_text": c["chunk_text"],
+                "score": c["score"],
+            }
+            for c in chunks
+        ]
+    )
 
 
 @router.post("/", response_model=SearchResponse)

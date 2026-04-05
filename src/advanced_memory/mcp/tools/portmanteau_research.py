@@ -30,9 +30,7 @@ async def adn_research(
         ],
         Field(description="Research operation to perform"),
     ],
-    query: Annotated[
-        str | None, Field(description="Search query or research topic")
-    ] = None,
+    query: Annotated[str | None, Field(description="Search query or research topic")] = None,
     provider: Annotated[
         str | None,
         Field(description="Provider/service (openai, anthropic, google, etc.)"),
@@ -40,15 +38,9 @@ async def adn_research(
     model: Annotated[str | None, Field(description="Model name/version")] = None,
     api_key: Annotated[str | None, Field(description="API key for service")] = None,
     limit: Annotated[int | None, Field(description="Result limit")] = None,
-    language: Annotated[
-        str | None, Field(description="Programming language filter")
-    ] = None,
-    path: Annotated[
-        str | None, Field(description="File path for document ingestion")
-    ] = None,
-    content: Annotated[
-        str | None, Field(description="Content for LLM generation")
-    ] = None,
+    language: Annotated[str | None, Field(description="Programming language filter")] = None,
+    path: Annotated[str | None, Field(description="File path for document ingestion")] = None,
+    content: Annotated[str | None, Field(description="Content for LLM generation")] = None,
 ) -> dict:
     """Unified portmanteau for AI research and knowledge discovery.
 
@@ -66,7 +58,7 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Query required for web search",
                 )
-            from advanced_memory.mcp.tools.adn_web_search import adn_web_search
+            from advanced_memory.mcp.beta.adn_web_search import adn_web_search
 
             result = await adn_web_search(query, max_results=limit or 10)
             return build_success_response("web_search", result)
@@ -78,7 +70,7 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Query required for arXiv search",
                 )
-            from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
+            from advanced_memory.mcp.beta.adn_arxiv_research import adn_arxiv_research
 
             result = await adn_arxiv_research(
                 operation="search_papers", query=query, max_results=limit or 10
@@ -92,7 +84,7 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Query required for GitHub search",
                 )
-            from advanced_memory.mcp.tools.adn_github_research import (
+            from advanced_memory.mcp.beta.adn_github_research import (
                 adn_github_research,
             )
 
@@ -111,7 +103,7 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Query required for TV Tropes research",
                 )
-            from advanced_memory.mcp.tools.adn_tvtropes_research import (
+            from advanced_memory.mcp.beta.adn_tvtropes_research import (
                 adn_tvtropes_research,
             )
 
@@ -153,9 +145,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_llm import adn_llm
 
-            result = await adn_llm(
-                "configure", provider=provider, model=model, api_key=api_key
-            )
+            result = await adn_llm("configure", provider=provider, model=model, api_key=api_key)
             return build_success_response("llm_config", result)
 
         elif operation == "llm_generate":

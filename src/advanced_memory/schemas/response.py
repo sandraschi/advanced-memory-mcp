@@ -143,6 +143,14 @@ class EntityResponse(SQLAlchemyModel):
     updated_at: datetime
 
 
+class NoteContentResponse(BaseModel):
+    """Full note content for display (e.g. when opening a chunk from semantic search)."""
+
+    title: str
+    permalink: str | None
+    content: str
+
+
 class EntityListResponse(SQLAlchemyModel):
     """Response for create_entities operation.
 

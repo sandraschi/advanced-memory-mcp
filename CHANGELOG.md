@@ -5,6 +5,54 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - Tool Modernization & Zero Noise Docs (2026-03-30)
+
+### 🚀 **FastMCP 3.1 Modernization**
+
+#### Refactored - Zero Noise Tool Documentation
+- **Annotated Signatures**: Migrated core tools (`search_notes`, `write_note`, `read_note`, `recent_activity`, `status`, `build_context`) to use `Annotated[Type, Field(description="...")]` for parameter documentation.
+- **Single Source of Truth**: Documentation now resides exclusively in the function signature, ensuring the MCP JSON schema is automatically generated without redundant docstring "Args" blocks.
+- **LLM Optimization**: Removed verbose and repetitive "Args" and "Returns" sections from docstrings to reduce token noise and improve agentic tool selection.
+
+### 🔧 **Code Quality & Maintenance**
+
+#### Fixed - Repository-Wide Linting (Ruff)
+- **Comprehensive Cleanup**: Executed `ruff check --fix --unsafe-fixes` and `ruff format` across the entire repository.
+- **SOTA Standards**: Resolved 90+ linting issues, including:
+  - Migration to native `datetime.UTC` (removing deprecated `utcnow`).
+  - Adoption of modern `isinstance(x, A | B)` syntax and `X | Y` type unions.
+  - Fixes for B905 (zip strictness) and UP035/UP006 (modern typing imports).
+- **Import Optimization**: Removed unused imports and resolved import sorting (I001) in critical modules.
+- **Zero Noise Modernization**: Eliminated redundant docstring "Args" and "Returns" across the entire codebase.
+
+### 🏢 **Industrial Rebranding**
+
+#### Refactored - Professional Technical Persona
+- **Branding Purge**: Removed all scifi-lore and dramatic AI terminology (e.g., "OpenFang", "Substrate", "Audio Soul", "Cognitive Bridge") from documentation and source code.
+- **Documentation Sanitization**: Overhauled `README.md` and `TECHNICAL.md` with industrial-grade technical descriptions focusing on Knowledge Management and Research.
+- **UI Labeling Optimization**: Updated Webapp labels in `Dashboard.tsx` and `GraphCanvas.tsx` to reflect the new professional identity (e.g., "Knowledge Management Layer", "Skill Library", "Knowledge Graph").
+
+---
+
+## [1.6.0] - Modernization & Prefab UI 0.2 (2026-03-30)
+
+### 🚀 **UI/UX Modernization**
+
+#### Migrated to Prefab UI 0.2 (FastMCP 3.1)
+- **App Engine**: Replaced deprecated `App` with `PrefabApp` and migrated all prefabs to the new reactive component structure.
+- **Glassmorphism Design**: Implemented `pf-glass` and `pf-outline` SOTA 2026 design patterns across the toolset.
+- **Knowledge Visualization**: Replaced legacy `Graph` component with a dynamic **Mermaid** flowchart for interactive relationship mapping.
+- **Improved Layouts**: Refactored grid systems to use the new `GridColumn` and standard `Column`/`Row` components for high-fidelity responses.
+
+### 🔧 **Technical Stability**
+
+#### Fixed - Tool Runtime Stability
+- **Missing Imports**: Resolved critical `NameError` in `read_note.py` and other tool files where `Any` was used without an import.
+- **Dependency Cleanliness**: Automated cleanup of unused imports in `prefabs.py` to ensure O-lint codebase.
+- **Protocol Compliance**: Verified FastMCP 3.1 `ToolResult` serialization for rich UI payloads.
+
+---
+
 ## [1.5.0] - Semantic Research (RAG) & Performance Surge (2026-02-27)
 
 ### 🚀 **Semantic Intelligence (RAG)**
@@ -73,6 +121,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [Unreleased]
+
+### Fixed - Cursor / MemOps MCP startup (2026-03-07)
+
+- **MCP config must use `mcp` subcommand and `--transport stdio`**: Without them the process runs the CLI and exits; the server only starts with `advanced-memory mcp --transport stdio`. README and docs updated.
+- **docs/CURSOR_MCP_SETUP.md**: New doc with correct Cursor/Claude MCP config (command, args including `mcp` and `--transport stdio`), where to put it, and why the previous config failed. README "Supported MCP Clients" links to it.
+- **Cursor config**: Use full path to `uv` (e.g. `D:/Dev/repos/uv-install/uv.exe`) if `uv` is not on PATH when Cursor starts the subprocess.
+
+### Added - Semantic search API and Deep Search UI (2026-03-05)
+
+- **POST `/{project}/search/semantic`**: Request body `{ query, limit }`. Returns RAG chunks (entity_id, permalink, title, snippet, chunk_text, score) from LanceDB vector search + rerank. Used by the Deep Search page.
+- **GET `/{project}/knowledge/entities/{identifier:path}/content`**: Returns full note content as JSON `{ title, permalink, content }` for a given permalink/path. Enables "click chunk to show full note" in the UI. Route declared before the generic entity route so `/content` is matched correctly.
+- **SearchDeep.tsx**: Replaced mock data with real API calls. Fetches current project from `getProjects()`, calls semantic search API, displays real chunks; on chunk click calls note-content API and shows full note in a modal.
+- **api.ts**: `searchSemanticChunks(project, query, limit)` and `getNoteContent(project, permalink)`.
+- **Schemas**: `SemanticSearchRequest`, `SemanticChunkResult`, `SemanticSearchResponse` in `schemas/search.py`; `NoteContentResponse` in `schemas/response.py`.
+- **Tests**: `test_semantic_search_returns_schema` (POST semantic, response shape); `test_get_entity_content` (GET entity content JSON). Conftest: `search_service` fixture updated for `SearchService` constructor (`vector_repository`, `app_config`); added `vector_repository` fixture for tests.
 
 ### Fixed - Webapp startup and docs (2026-03-05)
 

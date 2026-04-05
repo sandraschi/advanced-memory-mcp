@@ -67,11 +67,11 @@
                         │ HTTP APIs
                         │
 ┌───────────────────────▼─────────────────────────────┐
-│          Ecosystem Observability Layer               │
+│             System Monitoring Layer                  │
 │                                                      │
 │  - Apps Hub (Discovery)                              │
 │  - Control Room (Audit)                              │
-│  - Intelligence Panel (Telemetry)                    │
+│  - Resource Monitor (Telemetry)                      │
 └───────────────────────┬─────────────────────────────┘
                         │
                         │ Hardware Interface
@@ -90,7 +90,7 @@
 - **Global database**: Shared across projects with `project_id` isolation
 - **Markdown-first**: User files remain as standard markdown
 - **Sync service**: Bidirectional sync between files and database
-- **Portmanteau tools**: Consolidate 40+ tools → 10 for IDE compatibility
+- **Portmanteau tools**: Consolidate redundant tools for improved LLM context efficiency
 
 **Detailed Architecture**: [docs/ARCHITECTURE_DEEP_DIVE.md](docs/ARCHITECTURE_DEEP_DIVE.md)
 
@@ -110,6 +110,7 @@
 
 **Homepage**: https://github.com/jlowin/fastmcp
 **Documentation**: [FastMCP Docs](https://github.com/jlowin/fastmcp#readme)
+**Current Version**: 3.1.0+ (with Prefab UI 0.2)
 **Our Usage**: [docs/integrations/fastmcp.md](docs/integrations/fastmcp.md)
 
 **Alternatives Considered**:
@@ -206,7 +207,7 @@ modified: 2024-12-21T14:00:00Z
 
 ---
 
-## Agentic Workflows — FastMCP 2.14.1+ Sampling (SEP-1577)
+## Agentic Workflows — FastMCP 3.1+ Sampling (SEP-1577)
 
 Advanced Memory implements the SEP-1577 sampling-with-tools pattern for meta-tools that require LLM orchestration of multi-step operations.
 
@@ -223,24 +224,29 @@ class WorkflowResult(BaseModel):
     success: bool
 
 # Leaf tool — plain Python function, type hints + docstring → FastMCP makes schema
-async def search_knowledge_base(query: str, max_results: int = 10) -> str:
-    """Search the knowledge base. Returns markdown list of matching notes."""
+# Modern SEP-1577 Annotated pattern — parameter docs in signature ONLY (Zero Noise)
+@mcp.tool
+async def search_knowledge_base(
+    query: Annotated[str, Field(description="Search query or keywords")],
+    max_results: Annotated[int, Field(description="Maximum results to return")] = 10,
+) -> str:
+    """Search the knowledge management layer. Returns markdown list of matching notes."""
     ...
 
 # Meta-tool — ctx: Context is auto-injected by FastMCP
 @mcp.tool
 async def agentic_content_workflow(
-    workflow_prompt: str,
-    available_tools: list[str],
+    workflow_prompt: Annotated[str, Field(description="Goal for the autonomous workflow")],
+    available_tools: Annotated[list[str], Field(description="List of tool names allowed")] = None,
     ctx: Context = None,          # ← 'ctx' name + Context type = FastMCP injection
 ) -> dict:
+    """Execute autonomous documentation research and report generation workflows."""
     result = await ctx.sample(
         messages=workflow_prompt,
         tools=[search_knowledge_base, ...],   # ← plain Python callables
         result_type=WorkflowResult,           # ← Pydantic → validated output + auto-retry
         max_tokens=4096,
     )
-    wf: WorkflowResult = result.result
     ...
 ```
 

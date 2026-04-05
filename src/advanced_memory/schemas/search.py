@@ -117,3 +117,27 @@ class SearchResponse(BaseModel):
     current_page: int
     page_size: int
     total_results: int
+
+
+class SemanticSearchRequest(BaseModel):
+    """Request body for semantic (vector) search."""
+
+    query: str
+    limit: int = 20
+
+
+class SemanticChunkResult(BaseModel):
+    """Single chunk from semantic search for UI."""
+
+    entity_id: int
+    permalink: str | None
+    title: str
+    snippet: str
+    chunk_text: str
+    score: float
+
+
+class SemanticSearchResponse(BaseModel):
+    """Response for semantic search chunks."""
+
+    chunks: list[SemanticChunkResult]

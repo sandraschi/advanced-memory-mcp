@@ -1,16 +1,17 @@
-"""Primary portmanteau tool for Advanced Memory knowledge content.
+"""Content portmanteaus for Advanced Memory (notes, LLM, corpus QC).
 
-PORTMANTEAU PATTERN RATIONALE: Consolidates note CRUD, capture flows, LLM-assisted
-rewrites, and corpus hygiene into one tool so MCP clients stay within tool-count limits.
+Primary surfaces: ``adn_notes`` (CRUD/capture/view), ``adn_note_ai`` (LLM on notes),
+``adn_corpus_qc`` (find_runts/find_junk), plus legacy ``adn_content`` (full union).
 
 Interactive reference: ``help(topic="adn_content", level="intermediate")``.
 """
 
 import json
 import re
-from typing import Literal
+from typing import Annotated, Any, Literal
 
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
@@ -23,6 +24,24 @@ from advanced_memory.utils import parse_tags, validate_project_path
 
 # Define TagType as a Union that can accept either a string or a list of strings or None
 TagType = list[str] | str | None
+
+_NOTES_OPERATIONS = frozenset(
+    {
+        "write",
+        "read",
+        "read_latest",
+        "view",
+        "view_rendered",
+        "edit",
+        "edit_tags",
+        "quick",
+        "daily",
+        "move",
+        "delete",
+    }
+)
+_AI_OPERATIONS = frozenset({"suggest_tags", "summarize", "enhance", "generate"})
+_QC_OPERATIONS = frozenset({"find_runts", "find_junk"})
 
 
 # FastMCP 2.14.3 Conversational Response Builders
@@ -42,8 +61,7 @@ def build_error_response(error: str, error_code: str, message: str, **kwargs) ->
     }
 
 
-@mcp.tool
-async def adn_content(
+async def _dispatch_content_operations(
     operation: Literal[
         "write",
         "read",
@@ -101,115 +119,15 @@ async def adn_content(
     update_stale_tech: bool = False,  # Update outdated lib/tool versions; flag uncertainty
     # find_runts / find_junk (adn_knowledge_bulk delegates)
     max_content_length: int = 500,  # find_runts: notes under this char count
-    assessment_format: Literal[
-        "narrative", "structured"
-    ] = "narrative",  # find_junk output
+    assessment_format: Literal["narrative", "structured"] = "narrative",  # find_junk output
     # Parameter aliases for common mistakes (deprecated, will map to content)
     new_string: str | None = None,  # DEPRECATED: Use 'content' instead
-    replacement: str
-    | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
+    replacement: str | None = None,  # DEPRECATED: Use 'content' instead (for find_replace)
     new_content: str | None = None,  # DEPRECATED: Use 'content' instead
+    *,
+    mcp_tool: str = "adn_content",
 ) -> dict:
-    """Unified tool for knowledge-base notes — the primary Advanced Memory surface.
-
-    Operations: write, read, read_latest, view, view_rendered, edit, edit_tags, quick,
-    daily, move, delete, suggest_tags, summarize, enhance, generate, find_runts, find_junk.
-
-    Audio (dictate, speak) lives on ``adn_audio``. For full documentation and examples, call:
-    ``help(topic="adn_content", level="intermediate")``
-
-    WHY PORTMANTEAU: MCP hosts limit tool count; this tool keeps full note workflows
-    (CRUD, capture, tags, LLM assists, quality sweeps) behind one name.
-
-    SKILL AUTO-DETECTION: Writing under ``skills/`` can auto-fill Claude Skill frontmatter
-    (name, description, category) when missing.
-
-    Args:
-        operation: REQUIRED. One of: write, read, read_latest, view, view_rendered, edit,
-                    edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance,
-                    generate, find_runts, find_junk.
-        identifier: * write, read (non-latest), view, view_rendered, edit, edit_tags, move,
-                    delete, suggest_tags, summarize, enhance operations: REQUIRED — note
-                    title, permalink, or ``memory://`` URL. * read/view with empty identifier
-                    or aliases (latest, last, …): Optional — resolves to the latest note.
-                    * read_latest: NOT USED. * quick, daily, generate, find_runts, find_junk:
-                    Optional — see each operation (folder scoping for find_*).
-        content: * write: REQUIRED — markdown body. * edit: REQUIRED for append, prepend,
-                    replace_section, find_replace (replacement), and insert_* variants per
-                    ``edit_operation``. * quick, daily, generate: REQUIRED — capture text;
-                    generate uses this as topic/prompt. * enhance: Optional — override body
-                    before enhancement when provided. * Other operations: NOT USED unless noted.
-        folder: * write, generate: Optional — destination folder (write defaults to inbox).
-                    * find_runts, find_junk: Optional — restrict search to folder. * Other
-                    operations: NOT USED.
-        tags: * write, generate: Optional — tag list or comma-separated string. * edit_tags:
-                    REQUIRED for add/remove/replace; NOT USED for clear. * quick, daily:
-                    Optional. * Other operations: NOT USED.
-        entity_type: * write, generate: Optional — default ``note``. * Other operations:
-                    NOT USED.
-        destination_path: * move: REQUIRED — new relative path. * Other operations:
-                    NOT USED.
-        edit_operation: * edit: REQUIRED — append, prepend, find_replace, replace_section,
-                    insert_mermaid, insert_ascii_art, insert_kilroy, insert_kanban,
-                    insert_changelog. * Other operations: NOT USED.
-        tag_operation: * edit_tags: REQUIRED — add, remove, replace, clear. * Other
-                    operations: NOT USED.
-        find_text: * edit with find_replace: REQUIRED — text or regex (see use_regex) to
-                    find. * Other operations: NOT USED.
-        expected_replacements: * edit with find_replace: Optional — default 1. * Other
-                    operations: NOT USED.
-        use_regex: * edit with find_replace: Optional — treat find_text as regex. * Other
-                    operations: NOT USED.
-        section: * edit replace_section: REQUIRED — heading to replace. * insert_* ops:
-                    Optional section title/context. * Other operations: NOT USED.
-        page: * read, view, view_rendered: Optional — pagination page (default 1). * Other
-                    operations: NOT USED.
-        page_size: * read, view, view_rendered: Optional — page size (default 10). * Other
-                    operations: NOT USED.
-        results_per_page: * read, view, view_rendered: Optional — alias for page_size.
-                    * Other operations: NOT USED.
-        project: * Optional — project name; default active project. Passed through on
-                    find_runts/find_junk and general routing. * Multi-project safety: same as
-                    global project rules for mutating ops.
-        update_content: * enhance: Optional — default True; refresh facts/typos. * Other
-                    operations: NOT USED.
-        update_style: * enhance: Optional — default True; clarity/structure. * Other
-                    operations: NOT USED.
-        add_bibliography: * enhance: Optional — add references section when apt. * Other
-                    operations: NOT USED.
-        add_examples: * enhance: Optional — add examples. * Other operations: NOT USED.
-        add_context: * enhance: Optional — background/context expansions. * Other
-                    operations: NOT USED.
-        expand_sections: * enhance: Optional — deepen bullets into prose. * Other
-                    operations: NOT USED.
-        update_stale_tech: * enhance: Optional — refresh dated tooling mentions. * Other
-                    operations: NOT USED.
-        max_content_length: * find_runts: Optional — notes shorter than this (chars) are
-                    flagged (default 500). * Other operations: NOT USED.
-        assessment_format: * find_junk: Optional — narrative or structured output (default
-                    narrative). * Other operations: NOT USED.
-        new_string: * Deprecated alias for ``content``. * Any operation: Optional — if set
-                    and ``content`` is None, mapped to ``content`` with a warning. * Otherwise
-                    NOT USED.
-        replacement: * Deprecated alias for ``content`` (esp. find_replace). * Same mapping
-                    as new_string.
-        new_content: * Deprecated alias for ``content``. * Same mapping as new_string.
-
-    Returns:
-        Structured dict with ``success``, ``operation``, and fields such as ``summary`` or
-        ``message``; errors include ``recovery_options``. Some view paths embed markdown in
-        string fields inside the dict.
-
-    Examples:
-        adn_content("write", identifier="Project Plan", content="# Overview", folder="projects")
-        adn_content("read", identifier="Project Plan")
-        adn_content("read_latest")
-        adn_content("edit", identifier="Plan", edit_operation="append", content="\\n## Updates")
-        adn_content("quick", content="Insight: …")
-        adn_content("enhance", identifier="Rough Note", expand_sections=True)
-        adn_content("generate", content="Outline for Q2 roadmap", folder="plans")
-        adn_content("find_runts", max_content_length=400, folder="inbox")
-    """
+    """Shared router for note/content operations (used by adn_content and split portmanteaus)."""
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)
     if results_per_page is not None and page_size == 10:  # Only if default value
@@ -238,17 +156,14 @@ async def adn_content(
                 alias=alias_name,
                 operation=operation,
                 edit_operation=edit_operation,
+                mcp_tool=mcp_tool,
             )
 
-    logger.info(
-        f"MCP tool call tool=adn_content operation={operation} identifier={identifier}"
-    )
+    logger.info(f"MCP tool call tool={mcp_tool} operation={operation} identifier={identifier}")
 
     original_operation = operation
     normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
-    normalized_operation = (
-        normalized_operation.replace("-", "_").replace(" ", "_").lower()
-    )
+    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
     alias_map: dict[
         str,
         Literal[
@@ -367,14 +282,9 @@ async def adn_content(
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
-            latest_identifier, error_message = await _get_latest_identifier(
-                active_project
-            )
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
             if not latest_identifier:
-                return (
-                    error_message
-                    or "# No Recent Activity\n\nNo notes found to display."
-                )
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
             identifier = latest_identifier
 
         return await _view_operation(active_project, identifier)
@@ -391,14 +301,9 @@ async def adn_content(
         identifier_key = (identifier or "").strip().lower().replace(" ", "_")
 
         if not identifier or identifier_key in latest_aliases:
-            latest_identifier, error_message = await _get_latest_identifier(
-                active_project
-            )
+            latest_identifier, error_message = await _get_latest_identifier(active_project)
             if not latest_identifier:
-                return (
-                    error_message
-                    or "# No Recent Activity\n\nNo notes found to display."
-                )
+                return error_message or "# No Recent Activity\n\nNo notes found to display."
             identifier = latest_identifier
 
         return await _view_rendered_operation(active_project, identifier)
@@ -435,9 +340,7 @@ async def adn_content(
                     error="Missing content",
                     error_code="MISSING_CONTENT",
                     message="find_replace requires content (replacement text)",
-                    recovery_options=[
-                        "Provide the replacement text in the 'content' parameter"
-                    ],
+                    recovery_options=["Provide the replacement text in the 'content' parameter"],
                 )
 
         if not content and edit_operation in ["append", "prepend", "replace_section"]:
@@ -475,9 +378,7 @@ async def adn_content(
                 message="Edit_tags requires tag_operation parameter",
                 recovery_options=["Valid operations: add, remove, replace, clear"],
             )
-        return await _edit_tags_operation(
-            active_project, identifier, tag_operation, tags
-        )
+        return await _edit_tags_operation(active_project, identifier, tag_operation, tags)
 
     elif operation == "quick":
         if not content:
@@ -589,13 +490,9 @@ async def adn_content(
                 error="Missing content",
                 error_code="MISSING_CONTENT",
                 message="Generate requires content (topic/prompt)",
-                recovery_options=[
-                    "Provide the topic or prompt in the 'content' parameter"
-                ],
+                recovery_options=["Provide the topic or prompt in the 'content' parameter"],
             )
-        return await _generate_operation(
-            active_project, content, folder, tags, entity_type
-        )
+        return await _generate_operation(active_project, content, folder, tags, entity_type)
 
     elif operation == "find_runts":
         from advanced_memory.mcp.tools.knowledge_operations import _handle_find_runts
@@ -616,9 +513,7 @@ async def adn_content(
             filters["folder"] = folder
         action = {"format": assessment_format}
         result = await _handle_find_junk(filters, action, 20, project)
-        return build_success_response(
-            "find_junk", result, content=result, format=assessment_format
-        )
+        return build_success_response("find_junk", result, content=result, format=assessment_format)
 
     else:
         return build_error_response(
@@ -627,6 +522,7 @@ async def adn_content(
             message=f"Operation '{operation}' is not supported",
             recovery_options=[
                 "Use supported operations: write, read, view, view_rendered, edit, edit_tags, quick, daily, move, delete, suggest_tags, summarize, enhance, generate, find_runts, find_junk",
+                "Prefer split tools: adn_notes (CRUD/capture/view), adn_note_ai (LLM), adn_corpus_qc (find_runts/find_junk)",
                 "For audio operations (dictate, speak), use the adn_audio tool instead",
                 "Check operation spelling and try again",
             ],
@@ -635,6 +531,7 @@ async def adn_content(
                 "supported_operations": [
                     "write",
                     "read",
+                    "read_latest",
                     "view",
                     "view_rendered",
                     "edit",
@@ -647,10 +544,560 @@ async def adn_content(
                     "summarize",
                     "enhance",
                     "generate",
+                    "find_runts",
+                    "find_junk",
                 ],
             },
             urgency="low",
         )
+
+
+@mcp.tool
+async def adn_notes(
+    operation: Annotated[
+        Literal[
+            "write",
+            "read",
+            "read_latest",
+            "view",
+            "view_rendered",
+            "edit",
+            "edit_tags",
+            "quick",
+            "daily",
+            "move",
+            "delete",
+        ],
+        Field(
+            description="Note sub-command (write, read, edit, ...). Only pass other fields this op needs."
+        ),
+    ],
+    identifier: Annotated[
+        str | None,
+        Field(description="Note title or permalink; required for most ops except read_latest."),
+    ] = None,
+    content: Annotated[
+        str | None,
+        Field(
+            description="Markdown body; required for write/quick; replacement text for edit find_replace."
+        ),
+    ] = None,
+    folder: Annotated[
+        str | None,
+        Field(description="Vault folder (default inbox for write)."),
+    ] = None,
+    tags: Annotated[
+        TagType | None,
+        Field(description="Tags string or list; used on write and edit_tags."),
+    ] = None,
+    entity_type: Annotated[
+        str,
+        Field(description="Usually 'note'."),
+    ] = "note",
+    destination_path: Annotated[
+        str | None,
+        Field(description="Destination path for move."),
+    ] = None,
+    edit_operation: Annotated[
+        Literal[
+            "append",
+            "prepend",
+            "find_replace",
+            "replace_section",
+            "insert_mermaid",
+            "insert_ascii_art",
+            "insert_kilroy",
+            "insert_kanban",
+            "insert_changelog",
+        ]
+        | None,
+        Field(description="When operation=edit: how to modify the note."),
+    ] = None,
+    tag_operation: Annotated[
+        Literal["add", "remove", "replace", "clear"] | None,
+        Field(description="When operation=edit_tags: tag mutation mode."),
+    ] = None,
+    find_text: Annotated[
+        str | None,
+        Field(description="Needle for edit find_replace."),
+    ] = None,
+    expected_replacements: Annotated[
+        int,
+        Field(description="Max replacements for edit find_replace (default 1)."),
+    ] = 1,
+    use_regex: Annotated[
+        bool,
+        Field(description="If true, treat find_text as a regex in edit."),
+    ] = False,
+    section: Annotated[
+        str | None,
+        Field(description="Section anchor for edit replace_section."),
+    ] = None,
+    page: Annotated[
+        int,
+        Field(description="Page number for paginated read."),
+    ] = 1,
+    page_size: Annotated[
+        int,
+        Field(description="Page size for read."),
+    ] = 10,
+    results_per_page: Annotated[
+        int | None,
+        Field(description="Alias for page_size on read when set (overrides default page_size)."),
+    ] = None,
+    project: Annotated[
+        str | None,
+        Field(description="Project id/name; defaults to active project."),
+    ] = None,
+    new_string: Annotated[
+        str | None,
+        Field(description="Deprecated: use content for edit replacements."),
+    ] = None,
+    replacement: Annotated[
+        str | None,
+        Field(description="Deprecated alias for content in edit."),
+    ] = None,
+    new_content: Annotated[
+        str | None,
+        Field(description="Deprecated alias for content in edit."),
+    ] = None,
+) -> Any:
+    """Create, read, edit, move, and delete notes (smaller schema than legacy ``adn_content``).
+
+    Parameter help in the MCP/Cursor tool form is defined on each argument (Field descriptions).
+    """
+    if operation not in _NOTES_OPERATIONS:
+        return build_error_response(
+            error="Invalid operation for adn_notes",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported on adn_notes",
+            recovery_options=[
+                f"Use one of: {', '.join(sorted(_NOTES_OPERATIONS))}",
+                "Use adn_note_ai for suggest_tags, summarize, enhance, generate",
+                "Use adn_corpus_qc for find_runts, find_junk",
+            ],
+            urgency="low",
+        )
+    return await _dispatch_content_operations(
+        operation,
+        identifier,
+        content,
+        folder,
+        tags,
+        entity_type,
+        destination_path,
+        edit_operation,
+        tag_operation,
+        find_text,
+        expected_replacements,
+        use_regex,
+        section,
+        page,
+        page_size,
+        results_per_page,
+        project,
+        update_content=True,
+        update_style=True,
+        add_bibliography=False,
+        add_examples=False,
+        add_context=False,
+        expand_sections=False,
+        update_stale_tech=False,
+        max_content_length=500,
+        assessment_format="narrative",
+        new_string=new_string,
+        replacement=replacement,
+        new_content=new_content,
+        mcp_tool="adn_notes",
+    )
+
+
+@mcp.tool
+async def adn_note_ai(
+    operation: Annotated[
+        Literal["suggest_tags", "summarize", "enhance", "generate"],
+        Field(description="LLM op: suggest_tags, summarize, enhance, or generate."),
+    ],
+    identifier: Annotated[
+        str | None,
+        Field(description="Target note for suggest_tags/summarize/enhance; optional for generate."),
+    ] = None,
+    content: Annotated[
+        str | None,
+        Field(description="Prompt or body; required for generate."),
+    ] = None,
+    folder: Annotated[
+        str | None,
+        Field(description="Folder hint when generate creates material."),
+    ] = None,
+    tags: Annotated[
+        TagType | None,
+        Field(description="Tag hints for suggest_tags."),
+    ] = None,
+    entity_type: Annotated[
+        str,
+        Field(description="Usually 'note'."),
+    ] = "note",
+    project: Annotated[
+        str | None,
+        Field(description="Project id/name; defaults to active project."),
+    ] = None,
+    update_content: Annotated[
+        bool,
+        Field(description="If true, enhance may persist model edits."),
+    ] = True,
+    update_style: Annotated[
+        bool,
+        Field(description="If true, enhance may adjust tone or structure."),
+    ] = True,
+    add_bibliography: Annotated[
+        bool,
+        Field(description="If true, enhance may add references."),
+    ] = False,
+    add_examples: Annotated[
+        bool,
+        Field(description="If true, enhance may insert examples."),
+    ] = False,
+    add_context: Annotated[
+        bool,
+        Field(description="If true, enhance may pull in linked context."),
+    ] = False,
+    expand_sections: Annotated[
+        bool,
+        Field(description="If true, enhance may expand thin sections."),
+    ] = False,
+    update_stale_tech: Annotated[
+        bool,
+        Field(description="If true, enhance may refresh stale technical claims."),
+    ] = False,
+    new_string: Annotated[
+        str | None,
+        Field(description="Deprecated: use content."),
+    ] = None,
+    replacement: Annotated[
+        str | None,
+        Field(description="Deprecated: use content."),
+    ] = None,
+    new_content: Annotated[
+        str | None,
+        Field(description="Deprecated: use content."),
+    ] = None,
+) -> Any:
+    """LLM-assisted note ops (tags, summary, rewrite, generation). Parameter text in the tool form uses Field descriptions."""
+    if operation not in _AI_OPERATIONS:
+        return build_error_response(
+            error="Invalid operation for adn_note_ai",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported on adn_note_ai",
+            recovery_options=[
+                f"Use one of: {', '.join(sorted(_AI_OPERATIONS))}",
+                "Use adn_notes for write/read/edit/quick/daily/...",
+            ],
+            urgency="low",
+        )
+    return await _dispatch_content_operations(
+        operation,
+        identifier,
+        content,
+        folder,
+        tags,
+        entity_type,
+        destination_path=None,
+        edit_operation=None,
+        tag_operation=None,
+        find_text=None,
+        expected_replacements=1,
+        use_regex=False,
+        section=None,
+        page=1,
+        page_size=10,
+        results_per_page=None,
+        project=project,
+        update_content=update_content,
+        update_style=update_style,
+        add_bibliography=add_bibliography,
+        add_examples=add_examples,
+        add_context=add_context,
+        expand_sections=expand_sections,
+        update_stale_tech=update_stale_tech,
+        max_content_length=500,
+        assessment_format="narrative",
+        new_string=new_string,
+        replacement=replacement,
+        new_content=new_content,
+        mcp_tool="adn_note_ai",
+    )
+
+
+@mcp.tool
+async def adn_corpus_qc(
+    operation: Annotated[
+        Literal["find_runts", "find_junk"],
+        Field(
+            description=(
+                "find_runts: list notes shorter than max_content_length; "
+                "find_junk: score likely junk or low-value notes."
+            ),
+        ),
+    ],
+    folder: Annotated[
+        str | None,
+        Field(
+            description="If set, only scan this vault folder; if omitted, scan the whole project."
+        ),
+    ] = None,
+    max_content_length: Annotated[
+        int,
+        Field(description="Runt threshold in characters (find_runts only; default 500)."),
+    ] = 500,
+    assessment_format: Annotated[
+        Literal["narrative", "structured"],
+        Field(description="find_junk output style: narrative prose or structured fields."),
+    ] = "narrative",
+    project: Annotated[
+        str | None,
+        Field(description="Project id/name; defaults to the active project."),
+    ] = None,
+) -> Any:
+    """Sweep the corpus for very short notes (find_runts) or junk-like notes (find_junk).
+
+    Per-parameter help in the MCP tool form comes from Field descriptions on each argument.
+    """
+    if operation not in _QC_OPERATIONS:
+        return build_error_response(
+            error="Invalid operation for adn_corpus_qc",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported on adn_corpus_qc",
+            recovery_options=[
+                f"Use one of: {', '.join(sorted(_QC_OPERATIONS))}",
+            ],
+            urgency="low",
+        )
+    return await _dispatch_content_operations(
+        operation,
+        identifier=None,
+        content=None,
+        folder=folder,
+        tags=None,
+        entity_type="note",
+        destination_path=None,
+        edit_operation=None,
+        tag_operation=None,
+        find_text=None,
+        expected_replacements=1,
+        use_regex=False,
+        section=None,
+        page=1,
+        page_size=10,
+        results_per_page=None,
+        project=project,
+        update_content=True,
+        update_style=True,
+        add_bibliography=False,
+        add_examples=False,
+        add_context=False,
+        expand_sections=False,
+        update_stale_tech=False,
+        max_content_length=max_content_length,
+        assessment_format=assessment_format,
+        new_string=None,
+        replacement=None,
+        new_content=None,
+        mcp_tool="adn_corpus_qc",
+    )
+
+
+@mcp.tool
+async def adn_content(
+    operation: Annotated[
+        Literal[
+            "write",
+            "read",
+            "read_latest",
+            "view",
+            "view_rendered",
+            "edit",
+            "edit_tags",
+            "quick",
+            "daily",
+            "move",
+            "delete",
+            "suggest_tags",
+            "summarize",
+            "enhance",
+            "generate",
+            "find_runts",
+            "find_junk",
+        ],
+        Field(
+            description=(
+                "Sub-command: note CRUD/view, LLM (suggest_tags…generate), or corpus (find_runts, find_junk). "
+                "Prefer adn_notes / adn_note_ai / adn_corpus_qc for smaller schemas."
+            ),
+        ),
+    ],
+    identifier: Annotated[
+        str | None,
+        Field(
+            description="Note title or permalink; required for most reads/edits and targeted LLM ops."
+        ),
+    ] = None,
+    content: Annotated[
+        str | None,
+        Field(description="Body or prompt; required for write, quick, generate, many edits."),
+    ] = None,
+    folder: Annotated[
+        str | None,
+        Field(description="Vault folder; default inbox for write."),
+    ] = None,
+    tags: Annotated[
+        TagType | None,
+        Field(description="Tags for write/edit_tags; hints for suggest_tags."),
+    ] = None,
+    entity_type: Annotated[
+        str,
+        Field(description="Usually 'note'."),
+    ] = "note",
+    destination_path: Annotated[
+        str | None,
+        Field(description="Target path for move."),
+    ] = None,
+    edit_operation: Annotated[
+        Literal[
+            "append",
+            "prepend",
+            "find_replace",
+            "replace_section",
+            "insert_mermaid",
+            "insert_ascii_art",
+            "insert_kilroy",
+            "insert_kanban",
+            "insert_changelog",
+        ]
+        | None,
+        Field(description="When operation=edit: edit mode."),
+    ] = None,
+    tag_operation: Annotated[
+        Literal["add", "remove", "replace", "clear"] | None,
+        Field(description="When operation=edit_tags: tag mode."),
+    ] = None,
+    find_text: Annotated[
+        str | None,
+        Field(description="Needle for edit find_replace."),
+    ] = None,
+    expected_replacements: Annotated[
+        int,
+        Field(description="Cap for edit find_replace."),
+    ] = 1,
+    use_regex: Annotated[
+        bool,
+        Field(description="Regex mode for edit find_replace."),
+    ] = False,
+    section: Annotated[
+        str | None,
+        Field(description="Section anchor for edit replace_section."),
+    ] = None,
+    page: Annotated[
+        int,
+        Field(description="Read pagination page."),
+    ] = 1,
+    page_size: Annotated[
+        int,
+        Field(description="Read page size."),
+    ] = 10,
+    results_per_page: Annotated[
+        int | None,
+        Field(description="Alias for page_size on read."),
+    ] = None,
+    project: Annotated[
+        str | None,
+        Field(description="Project id/name; defaults to active project."),
+    ] = None,
+    update_content: Annotated[
+        bool,
+        Field(description="Persist enhance edits when true."),
+    ] = True,
+    update_style: Annotated[
+        bool,
+        Field(description="Allow enhance to change tone/structure."),
+    ] = True,
+    add_bibliography: Annotated[
+        bool,
+        Field(description="Enhance: add references."),
+    ] = False,
+    add_examples: Annotated[
+        bool,
+        Field(description="Enhance: add examples."),
+    ] = False,
+    add_context: Annotated[
+        bool,
+        Field(description="Enhance: enrich from links."),
+    ] = False,
+    expand_sections: Annotated[
+        bool,
+        Field(description="Enhance: expand thin sections."),
+    ] = False,
+    update_stale_tech: Annotated[
+        bool,
+        Field(description="Enhance: refresh stale technical claims."),
+    ] = False,
+    max_content_length: Annotated[
+        int,
+        Field(description="find_runts threshold (characters)."),
+    ] = 500,
+    assessment_format: Annotated[
+        Literal["narrative", "structured"],
+        Field(description="find_junk output style."),
+    ] = "narrative",
+    new_string: Annotated[
+        str | None,
+        Field(description="Deprecated: use content for edit."),
+    ] = None,
+    replacement: Annotated[
+        str | None,
+        Field(description="Deprecated alias for content."),
+    ] = None,
+    new_content: Annotated[
+        str | None,
+        Field(description="Deprecated alias for content."),
+    ] = None,
+) -> Any:
+    """Legacy all-in-one content tool. Prefer ``adn_notes``, ``adn_note_ai``, ``adn_corpus_qc``.
+
+    Per-argument help in Cursor/MCP comes from Field descriptions on each parameter.
+    """
+    return await _dispatch_content_operations(
+        operation,
+        identifier,
+        content,
+        folder,
+        tags,
+        entity_type,
+        destination_path,
+        edit_operation,
+        tag_operation,
+        find_text,
+        expected_replacements,
+        use_regex,
+        section,
+        page,
+        page_size,
+        results_per_page,
+        project,
+        update_content,
+        update_style,
+        add_bibliography,
+        add_examples,
+        add_context,
+        expand_sections,
+        update_stale_tech,
+        max_content_length,
+        assessment_format,
+        new_string,
+        replacement,
+        new_content,
+        mcp_tool="adn_content",
+    )
 
 
 async def _write_operation(
@@ -714,9 +1161,7 @@ async def _write_operation(
 
         if fm is None:
             # No frontmatter found - auto-generate it
-            logger.info(
-                "No frontmatter detected. Auto-generating Claude Skills frontmatter."
-            )
+            logger.info("No frontmatter detected. Auto-generating Claude Skills frontmatter.")
 
             # Extract metadata from tags if present
             tag_list = parse_tags(tags) if tags else []
@@ -888,9 +1333,7 @@ The API request failed with status code {response.status_code}.
         )
 
 
-async def _read_operation(
-    active_project, identifier: str, page: int, page_size: int
-) -> dict:
+async def _read_operation(active_project, identifier: str, page: int, page_size: int) -> dict:
     """Handle read operation."""
     if not identifier:
         return build_error_response(
@@ -933,7 +1376,9 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
     try:
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        raw_context = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
+        raw_context = await (
+            recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity
+        )(
             type_filter=["entity", "observation"],
             depth=1,
             timeframe="365d",
@@ -984,29 +1429,31 @@ async def _read_latest_operation(active_project) -> dict:
     """Handle read_latest operation - read the single most recent note."""
     identifier, error_message = await _get_latest_identifier(active_project)
     if not identifier:
-        return (
-            error_message or "# No Recent Activity\n\nNo notes found in the past year."
-        )
+        return error_message or "# No Recent Activity\n\nNo notes found in the past year."
 
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=active_project.name)
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _view_operation(active_project, identifier: str) -> dict:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
 
-    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(identifier=identifier, project=active_project.name)
+    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _view_rendered_operation(active_project, identifier: str) -> dict:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(
-        identifier=identifier, project=active_project.name
-    )
+    return await (
+        view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered
+    )(identifier=identifier, project=active_project.name)
 
 
 async def _edit_operation(
@@ -1083,9 +1530,7 @@ async def _edit_tags_operation(
 
     # Normalize current tags to a list[str]
     existing_tags_raw = (
-        current_entity.entity_metadata.get("tags", [])
-        if current_entity.entity_metadata
-        else []
+        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     )
     if isinstance(existing_tags_raw, str):
         # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
@@ -1122,9 +1567,7 @@ async def _edit_tags_operation(
                 error="No valid tags",
                 error_code="NO_VALID_TAGS",
                 message="No valid tags were provided after parsing",
-                recovery_options=[
-                    "Provide a comma-separated string or a list of tag names"
-                ],
+                recovery_options=["Provide a comma-separated string or a list of tag names"],
                 diagnostic_info={"provided_tags": tags},
             )
     else:
@@ -1248,9 +1691,7 @@ async def _edit_tags_operation(
     )
 
 
-async def _move_operation(
-    active_project, identifier: str, destination_path: str
-) -> dict:
+async def _move_operation(active_project, identifier: str, destination_path: str) -> dict:
     """Handle move operation."""
     from advanced_memory.mcp.tools.move_note import move_note
 
@@ -1436,9 +1877,7 @@ def _extract_content_tags(content: str, title: str) -> list[str]:
     if "scandal" in text:
         if "politics" not in extracted_tags:
             extracted_tags.append("politics")
-        if "news" not in extracted_tags and (
-            "current" in text or "developments" in text
-        ):
+        if "news" not in extracted_tags and ("current" in text or "developments" in text):
             extracted_tags.append("news")
 
     # Look for other common patterns
@@ -1526,9 +1965,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
         # Create new daily note
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
-        formatted_content = (
-            f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
-        )
+        formatted_content = f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
         return await _write_operation(
             active_project, title, formatted_content, folder, tag_list, "note"
         )
@@ -1549,7 +1986,9 @@ async def _delete_operation(active_project, identifier: str) -> dict:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=active_project.name)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(
+        identifier=identifier, project=active_project.name
+    )
 
     # delete_note returns bool | str, convert to string for consistency
     if isinstance(result, bool):
@@ -1611,9 +2050,7 @@ Suggest semantic tags for this note."""
         )
 
         if isinstance(suggested_tags, list):
-            tags_list = [
-                str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag
-            ]
+            tags_list = [str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag]
         else:
             tags_list = []
 
@@ -1693,9 +2130,7 @@ Return the summary as plain text (not JSON)."""
         note_preview = note_content[:4000]
         prompt = f"Summarize this note:\n\n{note_preview}"
 
-        summary = await llm.generate(
-            prompt, system_prompt, max_tokens=1000, temperature=0.3
-        )
+        summary = await llm.generate(prompt, system_prompt, max_tokens=1000, temperature=0.3)
 
         return f"""# Note Summary
 
@@ -1781,9 +2216,7 @@ async def _enhance_operation(
                 "the note was written, add their death date and any notable later-life events"
             )
         if update_style:
-            enhancement_tasks.append(
-                "Improve structure, clarity, readability, and organization"
-            )
+            enhancement_tasks.append("Improve structure, clarity, readability, and organization")
         if add_examples:
             enhancement_tasks.append(
                 "Add concrete examples, illustrations, or case studies where relevant"
@@ -1822,9 +2255,7 @@ Always preserve the original meaning and key information. For biographical updat
 
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         note_preview = note_content[:4000]
-        custom_instruction = (
-            f"\n\nCustom instruction: {instruction}" if instruction else ""
-        )
+        custom_instruction = f"\n\nCustom instruction: {instruction}" if instruction else ""
         prompt = f"Enhance this note:\n\n{note_preview}{custom_instruction}\n\nReturn the complete enhanced note body (markdown, no YAML frontmatter)."
 
         enhanced_content = await llm.generate(

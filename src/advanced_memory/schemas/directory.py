@@ -28,3 +28,13 @@ class DirectoryNode(BaseModel):
 
 # Support for recursive model
 DirectoryNode.model_rebuild()
+
+
+class DirectoryListPage(BaseModel):
+    """Paginated flat listing from ``list_directory`` (bounded responses for large vaults)."""
+
+    nodes: list[DirectoryNode]
+    total: int
+    limit: int
+    offset: int
+    has_more: bool

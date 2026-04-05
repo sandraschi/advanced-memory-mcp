@@ -24,6 +24,12 @@ Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
 Write-Host ""
 
 try {
+    # Ensure src is in PYTHONPATH and customize fastembed cache
+    $env:PYTHONPATH = "src;$env:PYTHONPATH"
+    
+    # Optional: explicitly set fastembed cache path if you want to override the default local search
+    # $env:FASTEMBED_CACHE_PATH = "$PSScriptRoot\data\fastembed_cache"
+    
     python -m advanced_memory.mcp.server
 } catch {
     Write-Host "Error starting server: $($_.Exception.Message)" -ForegroundColor Red

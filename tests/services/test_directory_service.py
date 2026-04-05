@@ -64,7 +64,9 @@ async def test_directory_tree(directory_service: DirectoryService, test_graph):
 async def test_list_directory_empty(directory_service: DirectoryService):
     """Test listing directory with no entities."""
     result = await directory_service.list_directory()
-    assert result == []
+    assert result.nodes == []
+    assert result.total == 0
+    assert result.has_more is False
 
 
 @pytest.mark.asyncio
@@ -85,8 +87,8 @@ async def test_list_directory_specific_path(directory_service: DirectoryService,
     result = await directory_service.list_directory(dir_name="/test")
 
     # Should return the 5 files in the test directory
-    assert len(result) == 5
-    file_names = {node.name for node in result}
+    assert len(result.nodes) == 5
+    file_names = {node.name for node in result.nodes}
     expected_files = {
         "Connected_Entity_1.md",
         "Connected_Entity_2.md",
@@ -97,7 +99,7 @@ async def test_list_directory_specific_path(directory_service: DirectoryService,
     assert file_names == expected_files
 
     # All should be files
-    for node in result:
+    for node in result.nodes:
         assert node.type == "file"
 
 
@@ -105,7 +107,8 @@ async def test_list_directory_specific_path(directory_service: DirectoryService,
 async def test_list_directory_nonexistent_path(directory_service: DirectoryService, test_graph):
     """Test listing nonexistent directory."""
     result = await directory_service.list_directory(dir_name="/nonexistent")
-    assert result == []
+    assert result.nodes == []
+    assert result.total == 0
 
 
 @pytest.mark.asyncio
@@ -125,7 +128,7 @@ async def test_list_directory_with_markdown_filter(directory_service: DirectoryS
     result = await directory_service.list_directory(dir_name="/test", file_name_glob="*.md")
 
     # All files in test_graph are markdown files
-    assert len(result) == 5
+    assert len(result.nodes) == 5
 
 
 @pytest.mark.asyncio
@@ -135,8 +138,8 @@ async def test_list_directory_with_specific_file_filter(
     """Test listing directory with specific file pattern."""
     result = await directory_service.list_directory(dir_name="/test", file_name_glob="Root.*")
 
-    assert len(result) == 1
-    assert result[0].name == "Root.md"
+    assert len(result.nodes) == 1
+    assert result.nodes[0].name == "Root.md"
 
 
 @pytest.mark.asyncio
@@ -144,11 +147,11 @@ async def test_list_directory_depth_control(directory_service: DirectoryService,
     """Test listing directory with depth control."""
     # Depth 1 should only return immediate children
     result_depth_1 = await directory_service.list_directory(dir_name="/", depth=1)
-    assert len(result_depth_1) == 1  # Just the "test" directory
+    assert len(result_depth_1.nodes) == 1  # Just the "test" directory
 
     # Depth 2 should return directory + its contents
     result_depth_2 = await directory_service.list_directory(dir_name="/", depth=2)
-    assert len(result_depth_2) == 6  # "test" directory + 5 files in it
+    assert len(result_depth_2.nodes) == 6  # "test" directory + 5 files in it
 
 
 @pytest.mark.asyncio
@@ -174,7 +177,8 @@ async def test_list_directory_glob_no_matches(directory_service: DirectoryServic
     result = await directory_service.list_directory(
         dir_name="/test", file_name_glob="*.nonexistent"
     )
-    assert result == []
+    assert result.nodes == []
+    assert result.total == 0
 
 
 @pytest.mark.asyncio
@@ -183,6 +187,25 @@ async def test_list_directory_default_parameters(directory_service: DirectorySer
     # Should default to root directory, depth 1, no glob filter
     result = await directory_service.list_directory()
 
-    assert len(result) == 1
-    assert result[0].name == "test"
-    assert result[0].type == "directory"
+    assert len(result.nodes) == 1
+    assert result.nodes[0].name == "test"
+    assert result.nodes[0].type == "directory"
+
+
+@pytest.mark.asyncio
+async def test_list_directory_pagination(directory_service: DirectoryService, test_graph):
+    """Second page via offset returns remaining files."""
+    page1 = await directory_service.list_directory(dir_name="/test", limit=2, offset=0)
+    assert page1.total == 5
+    assert len(page1.nodes) == 2
+    assert page1.has_more is True
+
+    page2 = await directory_service.list_directory(dir_name="/test", limit=2, offset=2)
+    assert page2.total == 5
+    assert len(page2.nodes) == 2
+    assert page2.has_more is True
+
+    page3 = await directory_service.list_directory(dir_name="/test", limit=2, offset=4)
+    assert page3.total == 5
+    assert len(page3.nodes) == 1
+    assert page3.has_more is False

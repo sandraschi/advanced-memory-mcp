@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Test script for all portmanteau tools to verify import, registration, and signatures."""
 
+import inspect
 import sys
 
 # Add src to path
@@ -10,6 +11,16 @@ sys.path.insert(0, "src")
 def test_tool_imports():
     """Test that all portmanteau tools can be imported."""
     try:
+        import importlib
+
+        from advanced_memory.mcp.tools import __all__ as exported_tools
+
+        tools_module = importlib.import_module("advanced_memory.mcp.tools")
+
+        for tool_name in exported_tools:
+            tool = getattr(tools_module, tool_name)
+            assert tool is not None, f"Tool {tool_name} is exported but not defined"
+
         print("[PASS] All portmanteau tools imported successfully")
         return True
     except Exception as e:
@@ -20,46 +31,21 @@ def test_tool_imports():
 def test_tool_registration():
     """Test that tools are properly registered with MCP."""
     try:
-        from advanced_memory.mcp.tools import (
-            adn_content,
-            adn_editor,
-            adn_export,
-            adn_import,
-            adn_knowledge,
-            adn_navigation,
-            adn_project,
-            adn_search,
-        )
+        import importlib
 
-        tools = [
-            adn_content,
-            adn_project,
-            adn_export,
-            adn_import,
-            adn_search,
-            adn_knowledge,
-            adn_navigation,
-            adn_editor,
-        ]
+        from advanced_memory.mcp.tools import __all__ as exported_tools
 
-        for tool in tools:
-            assert hasattr(tool, "name"), f"{tool} missing name attribute"
+        tools_module = importlib.import_module("advanced_memory.mcp.tools")
 
-        expected_names = [
-            "adn_content",
-            "adn_project",
-            "adn_export",
-            "adn_import",
-            "adn_search",
-            "adn_knowledge",
-            "adn_navigation",
-            "adn_editor",
-        ]
+        # In FastMCP, tools are standard python functions decorated with @mcp.tool
+        # We verify they are callable
+        tools_to_check = [name for name in exported_tools if name.startswith("adn_")]
 
-        for tool, expected_name in zip(tools, expected_names, strict=False):
-            assert tool.name == expected_name, f"{tool} has wrong name: {tool.name}"
+        for name in tools_to_check:
+            tool = getattr(tools_module, name)
+            assert callable(tool), f"{name} is not callable"
 
-        print("[PASS] All portmanteau tools properly registered with MCP")
+        print("[PASS] All portmanteau tools properly registered and callable")
         return True
     except Exception as e:
         print(f"[FAIL] Tool registration test failed: {e}")
@@ -69,92 +55,40 @@ def test_tool_registration():
 def test_tool_signatures():
     """Test that tools have expected signatures."""
     try:
-        import inspect
-
         from advanced_memory.mcp.tools import (
             adn_content,
-            adn_editor,
-            adn_export,
-            adn_import,
+            adn_import_export,
             adn_knowledge,
-            adn_navigation,
             adn_project,
-            adn_search,
+            adn_research,
+            adn_system,
         )
 
-        # Test adn_content signature
-        content_manager_fn = adn_content.fn
-        sig = inspect.signature(content_manager_fn)
-        params = list(sig.parameters.keys())
+        def check_params(tool_fn, expected_params):
+            sig = inspect.signature(tool_fn)
+            params = list(sig.parameters.keys())
+            for param in expected_params:
+                assert param in params, f"{tool_fn.__name__} missing parameter: {param}"
 
-        expected_params = ["operation", "identifier", "content", "folder", "tags"]
-        for param in expected_params:
-            assert param in params, f"adn_content missing parameter: {param}"
+        # Test adn_content signature
+        check_params(adn_content, ["operation", "identifier", "content", "folder", "tags"])
 
         # Test adn_project signature
-        project_manager_fn = adn_project.fn
-        sig = inspect.signature(project_manager_fn)
-        params = list(sig.parameters.keys())
+        check_params(adn_project, ["operation", "name", "path", "set_default"])
 
-        expected_params = ["operation", "project_name", "project_path", "set_default"]
-        for param in expected_params:
-            assert param in params, f"adn_project missing parameter: {param}"
+        # Test adn_import_export signature
+        check_params(adn_import_export, ["operation"])
 
-        # Test adn_export signature
-        export_fn = adn_export.fn
-        sig = inspect.signature(export_fn)
-        params = list(sig.parameters.keys())
-
-        expected_params = ["operation", "export_path", "format_type"]
-        for param in expected_params:
-            assert param in params, f"adn_export missing parameter: {param}"
-
-        # Test adn_import signature
-        import_fn = adn_import.fn
-        sig = inspect.signature(import_fn)
-        params = list(sig.parameters.keys())
-
-        expected_params = ["operation", "source_path", "destination_folder"]
-        for param in expected_params:
-            assert param in params, f"adn_import missing parameter: {param}"
-
-        # Test adn_search signature
-        search_fn = adn_search.fn
-        sig = inspect.signature(search_fn)
-        params = list(sig.parameters.keys())
-
-        expected_params = ["operation", "query", "source_path"]
-        for param in expected_params:
-            assert param in params, f"adn_search missing parameter: {param}"
+        # Test adn_research signature
+        check_params(adn_research, ["operation"])
 
         # Test adn_knowledge signature
-        knowledge_fn = adn_knowledge.fn
-        sig = inspect.signature(knowledge_fn)
-        params = list(sig.parameters.keys())
+        check_params(adn_knowledge, ["operation"])
 
-        expected_params = ["operation", "filters", "action", "topic"]
-        for param in expected_params:
-            assert param in params, f"adn_knowledge missing parameter: {param}"
+        # Test adn_system signature
+        check_params(adn_system, ["operation"])
 
-        # Test adn_navigation signature
-        navigation_fn = adn_navigation.fn
-        sig = inspect.signature(navigation_fn)
-        params = list(sig.parameters.keys())
-
-        expected_params = ["operation", "url", "dir_name", "depth"]
-        for param in expected_params:
-            assert param in params, f"adn_navigation missing parameter: {param}"
-
-        # Test adn_editor signature
-        editor_fn = adn_editor.fn
-        sig = inspect.signature(editor_fn)
-        params = list(sig.parameters.keys())
-
-        expected_params = ["operation", "note_identifier", "workspace_path"]
-        for param in expected_params:
-            assert param in params, f"adn_editor missing parameter: {param}"
-
-        print("[PASS] All portmanteau tools have correct signatures")
+        print("[PASS] All portmanteau tools have correct operation signatures")
         return True
     except Exception as e:
         print(f"[FAIL] Tool signature test failed: {e}")
@@ -162,29 +96,30 @@ def test_tool_signatures():
 
 
 def test_tool_count():
-    """Test that we have exactly 11 portmanteau tools (v1.1.0)."""
+    """Test that we have exactly 12 portmanteau tools (SOTA)."""
     try:
         from advanced_memory.mcp.tools import __all__
 
         # Count portmanteau tools (adn_* prefix)
         portmanteau_tools = [tool for tool in __all__ if tool.startswith("adn_")]
 
-        assert len(portmanteau_tools) == 11, (
-            f"Expected 11 portmanteau tools, found {len(portmanteau_tools)}"
+        assert len(portmanteau_tools) == 12, (
+            f"Expected 12 portmanteau tools, found {len(portmanteau_tools)}: {portmanteau_tools}"
         )
 
         expected_tools = [
-            "adn_content",  # Core CRUD
-            "adn_audio",  # Voice operations (NEW in v1.1.0)
-            "adn_project",  # Project management
-            "adn_export",  # Export operations
-            "adn_import",  # Import operations
-            "adn_search",  # Search operations
-            "adn_knowledge",  # Knowledge operations
-            "adn_zettelmaker",  # Template generation
-            "adn_skills",  # Claude Skills
-            "adn_navigation",  # Navigation
-            "adn_inbox",  # Inbox processing
+            "adn_notes",
+            "adn_note_ai",
+            "adn_corpus_qc",
+            "adn_content",
+            "adn_knowledge",
+            "adn_research",
+            "adn_import_export",
+            "adn_project",
+            "adn_system",
+            "adn_skills",
+            "adn_external",
+            "adn_observability",
         ]
 
         for tool in expected_tools:
@@ -217,7 +152,6 @@ def main():
 
     if passed == total:
         print("[SUCCESS] All portmanteau tools working correctly!")
-        print("Ready for Cursor IDE with 11 portmanteau tools + 3 utilities = 14 total!")
         return True
     else:
         print("[FAILURE] Some tests failed")

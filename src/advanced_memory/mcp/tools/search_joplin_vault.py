@@ -119,7 +119,9 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
             async def scan_recursive(current_path: str) -> list[dict[str, str]]:
                 files = []
                 try:
-                    dir_contents = await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(current_path)
+                    dir_contents = await (
+                        list_directory.fn if hasattr(list_directory, "fn") else list_directory
+                    )(current_path)
 
                     # Group files by base name (without extension)
                     file_groups: dict[str, dict[str, str]] = {}

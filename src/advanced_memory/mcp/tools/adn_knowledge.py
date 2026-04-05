@@ -75,7 +75,9 @@ async def _knowledge_operations(
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import adn_knowledge_bulk
 
-    return await (adn_knowledge_bulk.fn if hasattr(adn_knowledge_bulk, "fn") else adn_knowledge_bulk)(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
+    return await (
+        adn_knowledge_bulk.fn if hasattr(adn_knowledge_bulk, "fn") else adn_knowledge_bulk
+    )(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(
@@ -89,9 +91,9 @@ async def _research_orchestrator(
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
 
-    return await (research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator)(
-        operation, topic, topic_type, research_type, step, parameters
-    )  # type: ignore[operator,no-any-return]
+    return await (
+        research_orchestrator.fn if hasattr(research_orchestrator, "fn") else research_orchestrator
+    )(operation, topic, topic_type, research_type, step, parameters)  # type: ignore[operator,no-any-return]
 
 
 async def _llm_content_analysis(
@@ -226,7 +228,9 @@ async def _suggest_relationships(
         return "# Error\n\nsuggest_relationships requires note_id in filters\n\nExample: adn_knowledge('suggest_relationships', filters={'note_id': 'My Note'})"
 
     # Read the note
-    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=note_id, project=active_project.name)
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+        identifier=note_id, project=active_project.name
+    )
     if not note_content or note_content.startswith("# Error"):
         return f"# Error\n\nCould not read note: {note_id}"
 

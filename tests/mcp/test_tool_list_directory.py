@@ -29,9 +29,11 @@ async def test_list_directory_with_test_graph(client, test_graph):
     result = await list_directory.fn()
 
     assert isinstance(result, str)
-    assert "Contents of '/' (depth 1):" in result
+    assert "Contents of '/' (depth 1)" in result
+    assert "[page offset=0, limit=200]" in result
     assert "[FOLDER] test" in result
-    assert "Total: 1 items (1 directory)" in result
+    assert "This page: 1 items (1 directory)" in result
+    assert "Pagination:" in result
 
 
 @pytest.mark.asyncio
@@ -41,13 +43,13 @@ async def test_list_directory_specific_path(client, test_graph):
     result = await list_directory.fn(dir_name="/test")
 
     assert isinstance(result, str)
-    assert "Contents of '/test' (depth 1):" in result
+    assert "Contents of '/test' (depth 1)" in result
     assert "[DOC] Connected_Entity_1.md" in result
     assert "[DOC] Connected_Entity_2.md" in result
     assert "[DOC] Deep_Entity.md" in result
     assert "[DOC] Deeper_Entity.md" in result
     assert "[DOC] Root.md" in result
-    assert "Total: 5 items (5 files)" in result
+    assert "This page: 5 items (5 files)" in result
 
 
 @pytest.mark.asyncio
@@ -57,14 +59,14 @@ async def test_list_directory_with_glob_filter(client, test_graph):
     result = await list_directory.fn(dir_name="/test", file_name_glob="*Connected*")
 
     assert isinstance(result, str)
-    assert "Files in '/test' matching '*Connected*' (depth 1):" in result
+    assert "Files in '/test' matching '*Connected*' (depth 1)" in result
     assert "[DOC] Connected_Entity_1.md" in result
     assert "[DOC] Connected_Entity_2.md" in result
     # Should not contain other files
     assert "Deep Entity.md" not in result
     assert "Deeper Entity.md" not in result
     assert "Root.md" not in result
-    assert "Total: 2 items (2 files)" in result
+    assert "This page: 2 items (2 files)" in result
 
 
 @pytest.mark.asyncio
@@ -80,7 +82,7 @@ async def test_list_directory_with_markdown_filter(client, test_graph):
     assert "[DOC] Deep_Entity.md" in result
     assert "[DOC] Deeper_Entity.md" in result
     assert "[DOC] Root.md" in result
-    assert "Total: 5 items (5 files)" in result
+    assert "This page: 5 items (5 files)" in result
 
 
 @pytest.mark.asyncio
@@ -90,22 +92,22 @@ async def test_list_directory_with_depth_control(client, test_graph):
     result_depth_1 = await list_directory.fn(dir_name="/", depth=1)
 
     assert isinstance(result_depth_1, str)
-    assert "Contents of '/' (depth 1):" in result_depth_1
+    assert "Contents of '/' (depth 1)" in result_depth_1
     assert "[FOLDER] test" in result_depth_1
-    assert "Total: 1 items (1 directory)" in result_depth_1
+    assert "This page: 1 items (1 directory)" in result_depth_1
 
     # Depth 2: should return directory + its files
     result_depth_2 = await list_directory.fn(dir_name="/", depth=2)
 
     assert isinstance(result_depth_2, str)
-    assert "Contents of '/' (depth 2):" in result_depth_2
+    assert "Contents of '/' (depth 2)" in result_depth_2
     assert "[FOLDER] test" in result_depth_2
     assert "[DOC] Connected_Entity_1.md" in result_depth_2
     assert "[DOC] Connected_Entity_2.md" in result_depth_2
     assert "[DOC] Deep_Entity.md" in result_depth_2
     assert "[DOC] Deeper_Entity.md" in result_depth_2
     assert "[DOC] Root.md" in result_depth_2
-    assert "Total: 6 items (1 directory, 5 files)" in result_depth_2
+    assert "This page: 6 items (1 directory, 5 files)" in result_depth_2
 
 
 @pytest.mark.asyncio
@@ -155,28 +157,28 @@ async def test_list_directory_with_created_notes(client):
     result_root = await list_directory.fn()
 
     assert isinstance(result_root, str)
-    assert "Contents of '/' (depth 1):" in result_root
+    assert "Contents of '/' (depth 1)" in result_root
     assert "[FOLDER] projects" in result_root
     assert "[FOLDER] research" in result_root
-    assert "Total: 2 items (2 directories)" in result_root
+    assert "This page: 2 items (2 directories)" in result_root
 
     # List projects directory
     result_projects = await list_directory.fn(dir_name="/projects")
 
     assert isinstance(result_projects, str)
-    assert "Contents of '/projects' (depth 1):" in result_projects
+    assert "Contents of '/projects' (depth 1)" in result_projects
     assert "[DOC] Project_Planning.md" in result_projects
     assert "[DOC] Meeting_Notes.md" in result_projects
-    assert "Total: 2 items (2 files)" in result_projects
+    assert "This page: 2 items (2 files)" in result_projects
 
     # Test glob filter for "Meeting"
     result_meeting = await list_directory.fn(dir_name="/projects", file_name_glob="*Meeting*")
 
     assert isinstance(result_meeting, str)
-    assert "Files in '/projects' matching '*Meeting*' (depth 1):" in result_meeting
+    assert "Files in '/projects' matching '*Meeting*' (depth 1)" in result_meeting
     assert "[DOC] Meeting_Notes.md" in result_meeting
     assert "Project_Planning.md" not in result_meeting
-    assert "Total: 1 items (1 file)" in result_meeting
+    assert "This page: 1 items (1 file)" in result_meeting
 
 
 @pytest.mark.asyncio
@@ -188,7 +190,7 @@ async def test_list_directory_path_normalization(client, test_graph):
     for path in paths_to_test:
         result = await list_directory.fn(dir_name=path)
         # All should return the same number of items
-        assert "Total: 5 items (5 files)" in result
+        assert "This page: 5 items (5 files)" in result
         assert "[DOC] Connected_Entity_1.md" in result
 
 

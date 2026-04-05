@@ -181,7 +181,9 @@ async def _obsidian_import(
     """Handle Obsidian import operation."""
     from advanced_memory.mcp.tools.load_obsidian_vault import load_obsidian_vault
 
-    return await (load_obsidian_vault.fn if hasattr(load_obsidian_vault, "fn") else load_obsidian_vault)(
+    return await (
+        load_obsidian_vault.fn if hasattr(load_obsidian_vault, "fn") else load_obsidian_vault
+    )(
         source_path,
         destination_folder,
         preserve_structure,
@@ -222,7 +224,9 @@ async def _notion_import(
     """Handle Notion import operation."""
     from advanced_memory.mcp.tools.load_notion_export import load_notion_export
 
-    return await (load_notion_export.fn if hasattr(load_notion_export, "fn") else load_notion_export)(source_path, destination_folder, preserve_structure, project)  # type: ignore[operator,no-any-return]
+    return await (
+        load_notion_export.fn if hasattr(load_notion_export, "fn") else load_notion_export
+    )(source_path, destination_folder, preserve_structure, project)  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_import(
@@ -235,7 +239,9 @@ async def _evernote_import(
     """Handle Evernote import operation."""
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
 
-    return await (load_evernote_export.fn if hasattr(load_evernote_export, "fn") else load_evernote_export)(
+    return await (
+        load_evernote_export.fn if hasattr(load_evernote_export, "fn") else load_evernote_export
+    )(
         source_path,
         destination_folder,
         preserve_structure,
@@ -265,7 +271,9 @@ async def _archive_import(
     """Handle archive import operation."""
     from advanced_memory.mcp.tools.import_from_archive import import_from_archive
 
-    return await (import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive)(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
+    return await (
+        import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive
+    )(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
 
 
 async def _canvas_import(

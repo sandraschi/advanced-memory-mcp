@@ -32,9 +32,7 @@ async def adn_system(
     ],
     level: Annotated[str | None, Field(description="Status detail level")] = None,
     focus: Annotated[str | None, Field(description="Status focus area")] = None,
-    server_name: Annotated[
-        str | None, Field(description="External server name")
-    ] = None,
+    server_name: Annotated[str | None, Field(description="External server name")] = None,
     tool_name: Annotated[str | None, Field(description="External tool name")] = None,
     parameters: Annotated[dict | None, Field(description="Tool parameters")] = None,
     topic: Annotated[str | None, Field(description="Topic for operations")] = None,

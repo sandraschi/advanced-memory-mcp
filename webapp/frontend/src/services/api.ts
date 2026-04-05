@@ -411,6 +411,36 @@ class ApiService {
     }
   }
 
+  // Semantic search (vector/RAG chunks) and note content for deep search UI
+  async searchSemanticChunks(
+    project: string,
+    query: string,
+    limit: number = 20
+  ): Promise<ApiResponse<{ chunks: Array<{ entity_id: number; permalink: string | null; title: string; snippet: string; chunk_text: string; score: number }> }>> {
+    try {
+      const response = await this.client.post(`/${encodeURIComponent(project)}/search/semantic`, {
+        query,
+        limit
+      })
+      return response.data
+    } catch (error) {
+      return { success: false, error: 'Semantic search failed' }
+    }
+  }
+
+  async getNoteContent(
+    project: string,
+    permalink: string
+  ): Promise<ApiResponse<{ title: string; permalink: string | null; content: string }>> {
+    try {
+      const path = `${encodeURIComponent(project)}/knowledge/entities/${encodeURIComponent(permalink)}/content`
+      const response = await this.client.get(path)
+      return response.data
+    } catch (error) {
+      return { success: false, error: 'Failed to load note content' }
+    }
+  }
+
   // Project Management
   async getProjects(): Promise<ApiResponse<any[]>> {
     try {
@@ -497,6 +527,25 @@ class ApiService {
       return response.data
     } catch (error) {
       return { success: false, error: 'Failed to optimize model parameters' }
+    }
+  }
+
+  // Test runner (requires ENABLE_WEBAPP_TESTS=1 on backend)
+  async runTests(options?: { target?: string; timeout_seconds?: number; extra_args?: string[] }): Promise<
+    ApiResponse<{ success: boolean; exit_code: number; stdout: string; stderr: string; duration_seconds: number }>
+  > {
+    try {
+      const body = {
+        target: options?.target ?? 'tests',
+        timeout_seconds: options?.timeout_seconds ?? 300,
+        extra_args: options?.extra_args ?? [],
+      }
+      const response = await this.client.post('/tests/run', body, { timeout: (body.timeout_seconds + 10) * 1000 })
+      return response.data
+    } catch (error: any) {
+      const status = error?.response?.status
+      const detail = error?.response?.data?.detail ?? error?.message ?? 'Test run failed'
+      return { success: false, error: detail, data: status === 403 ? undefined : { success: false, exit_code: -1, stdout: '', stderr: String(detail), duration_seconds: 0 } }
     }
   }
 

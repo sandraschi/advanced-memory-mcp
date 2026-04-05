@@ -529,7 +529,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full min-h-0 flex flex-col">
       {/* Search Header */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center space-x-4">
@@ -664,11 +664,11 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         )}
       </div>
 
-      {/* Notes List and Content */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Notes List and Content - min-h-0 so this row gets bounded height and content can scroll */}
+      <div className="flex-1 flex min-h-0 overflow-hidden relative">
         {/* Notes List */}
         {!isFullscreen && (
-          <div className="w-80 border-r border-border flex flex-col animate-in slide-in-from-left duration-300">
+          <div className="w-80 min-h-0 border-r border-border flex flex-col animate-in slide-in-from-left duration-300">
             <div className="p-4 border-b border-border flex justify-between items-center">
               <h2 className="font-semibold flex items-center gap-2">Notes <span className="text-xs font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">{totalNotes}</span></h2>
               <div className="flex bg-muted/50 p-1 rounded-md">
@@ -849,12 +849,12 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
           </div>
         )}
 
-        {/* Note Content */}
-        <div className="flex-1 flex flex-col">
+        {/* Note Content - min-h-0 so flex child can shrink and scroll */}
+        <div className="flex-1 flex flex-col min-h-0">
           {selectedNote ? (
             <>
               {/* Note Header */}
-              <div className="p-6 border-b border-border">
+              <div className="p-6 border-b border-border shrink-0">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h1 className="text-2xl font-bold mb-2">{selectedNote.title}</h1>
@@ -897,8 +897,8 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 </div>
               </div>
 
-              {/* Note Content */}
-              <div className="flex-1 overflow-auto p-6">
+              {/* Note Content - fills remaining height and scrolls */}
+              <div className="flex-1 min-h-0 overflow-auto p-6">
                 <div className="prose prose-sm max-w-none dark:prose-invert">
                   <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">{selectedNote.content}</pre>
                 </div>

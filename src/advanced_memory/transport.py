@@ -7,7 +7,7 @@ Provides unified transport configuration for STDIO, HTTP Streamable, and legacy 
 Environment Variables:
     MCP_TRANSPORT: Transport mode (stdio, http, sse). Default: stdio
     MCP_HOST: Bind address for HTTP/SSE. Default: 127.0.0.1
-    MCP_PORT: Port for HTTP/SSE. Default: 8000
+    MCP_PORT: Port for HTTP/SSE. Default: 10704 (fleet 10700+; set MCP_PORT to override)
     MCP_PATH: HTTP endpoint path. Default: /mcp
 
 CLI Arguments:
@@ -41,7 +41,7 @@ TransportType = Literal["stdio", "http", "sse"]
 # Environment variable standards
 ENV_TRANSPORT = "MCP_TRANSPORT"  # stdio | http | sse
 ENV_HOST = "MCP_HOST"  # default: 127.0.0.1
-ENV_PORT = "MCP_PORT"  # default: 8000
+ENV_PORT = "MCP_PORT"  # default: 10704
 ENV_PATH = "MCP_PATH"  # default: /mcp (HTTP only)
 
 
@@ -55,7 +55,7 @@ def get_transport_config() -> dict:
     return {
         "transport": os.getenv(ENV_TRANSPORT, "stdio").lower(),
         "host": os.getenv(ENV_HOST, "127.0.0.1"),
-        "port": int(os.getenv(ENV_PORT, "8000")),
+        "port": int(os.getenv(ENV_PORT, "10704")),
         "path": os.getenv(ENV_PATH, "/mcp"),
     }
 
@@ -77,7 +77,7 @@ def create_argument_parser(server_name: str) -> argparse.ArgumentParser:
 Environment Variables:
   {ENV_TRANSPORT}    Transport mode: stdio, http, sse (default: stdio)
   {ENV_HOST}         Bind address (default: 127.0.0.1)
-  {ENV_PORT}         Port number (default: 8000)
+  {ENV_PORT}         Port number (default: 10704)
   {ENV_PATH}         HTTP endpoint path (default: /mcp)
 
 Examples:
@@ -85,10 +85,10 @@ Examples:
   python -m {server_name.replace("-", "_")} --stdio
 
   # HTTP mode (web apps)
-  python -m {server_name.replace("-", "_")} --http --port 8080
+  python -m {server_name.replace("-", "_")} --http --port 10704
 
   # Via environment
-  MCP_TRANSPORT=http MCP_PORT=8080 python -m {server_name.replace("-", "_")}
+  MCP_TRANSPORT=http MCP_PORT=10704 python -m {server_name.replace("-", "_")}
 """,
     )
 
@@ -107,7 +107,7 @@ Examples:
         "--host", default=None, help=f"Host to bind to (default: ${ENV_HOST} or 127.0.0.1)"
     )
     parser.add_argument(
-        "--port", type=int, default=None, help=f"Port to listen on (default: ${ENV_PORT} or 8000)"
+        "--port", type=int, default=None, help=f"Port to listen on (default: ${ENV_PORT} or 10704)"
     )
     parser.add_argument(
         "--path", default=None, help=f"HTTP endpoint path (default: ${ENV_PATH} or /mcp)"

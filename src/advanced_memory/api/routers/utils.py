@@ -121,8 +121,7 @@ async def to_graph_context(
         generated_at=context_result.metadata.generated_at,
         primary_count=context_result.metadata.primary_count,
         related_count=context_result.metadata.related_count,
-        total_results=context_result.metadata.primary_count
-        + context_result.metadata.related_count,
+        total_results=context_result.metadata.primary_count + context_result.metadata.related_count,
         total_relations=context_result.metadata.total_relations,
         total_observations=context_result.metadata.total_observations,
     )

@@ -215,7 +215,7 @@ async def initialize_file_sync_full(
     # Sync all projects sequentially (expensive operation)
     for project in active_projects:
         # avoid circular imports
-        from advanced_memory.cli.commands.sync import get_sync_service
+        from advanced_memory.sync.sync_service import get_sync_service
 
         logger.info(f"Starting sync for project: {project.name}")
         sync_service = await get_sync_service(project)
