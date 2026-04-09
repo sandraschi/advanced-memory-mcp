@@ -118,21 +118,21 @@ check: lint format type-check test
 migration message:
     cd src/basic_memory/alembic && alembic revision --autogenerate -m "{{message}}"
 
-# Create a stable release (e.g., just release v0.13.2)
+# Create a stable release (e.g., just release v1.6.2)
 release version:
     #!/usr/bin/env bash
     set -euo pipefail
 
     # Validate version format
     if [[ ! "{{version}}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "❌ Invalid version format. Use: v0.13.2"
+        echo "❌ Invalid version format. Use: v1.6.2"
         exit 1
     fi
 
     # Extract version number without 'v' prefix
     VERSION_NUM=$(echo "{{version}}" | sed 's/^v//')
 
-    echo "🚀 Creating stable release {{version}}"
+    echo "🚀 Creating SOTA stable release {{version}}"
 
     # Pre-flight checks
     echo "📋 Running pre-flight checks..."
@@ -156,14 +156,14 @@ release version:
     echo "🔍 Running quality checks..."
     just check
 
-    # Update version in __init__.py
-    echo "📝 Updating version in __init__.py..."
-    sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/basic_memory/__init__.py
-    rm -f src/basic_memory/__init__.py.bak
-
-    # Commit version update
-    git add src/basic_memory/__init__.py
-    git commit -m "chore: update version to $VERSION_NUM for {{version}} release"
+    # Update version in __init__.py (if it exists)
+    if [ -f src/advanced_memory/__init__.py ]; then
+        echo "📝 Updating version in src/advanced_memory/__init__.py..."
+        sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/advanced_memory/__init__.py
+        rm -f src/advanced_memory/__init__.py.bak
+        git add src/advanced_memory/__init__.py
+        git commit -m "chore: update version to $VERSION_NUM for {{version}} release"
+    fi
 
     # Create and push tag
     echo "🏷️  Creating tag {{version}}..."
@@ -174,8 +174,8 @@ release version:
     git push origin "{{version}}"
 
     echo "✅ Release {{version}} created successfully!"
-    echo "📦 GitHub Actions will build and publish to PyPI"
-    echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
+    echo "📦 Industrial Launch initiated (OIDC Handshake)."
+    echo "🔗 Monitor at: https://github.com/sandraschi/advanced-memory-mcp/actions"
 
 # Create a beta release (e.g., just beta v0.13.2b1)
 beta version:

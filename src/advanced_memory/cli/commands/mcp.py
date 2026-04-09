@@ -37,14 +37,32 @@ def _stdio_single_instance_lock():
     if os.name == "nt":
         import msvcrt
 
-        lock_file = open(lock_path, "a+b")
+        # Use 'r+' to read/write if exists, or 'w+' to create
+        mode = "r+b" if lock_path.exists() else "w+b"
+        lock_file = open(lock_path, mode)
         try:
+            # Try to acquire a non-blocking lock on the first byte
             msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+
+            # Successfully locked! Write our PID for diagnostics
+            lock_file.seek(0)
+            lock_file.truncate()
+            lock_file.write(str(os.getpid()).encode())
+            lock_file.flush()
         except OSError as e:
+            # Lock failed. Try to read the PID of the holder
+            holder_pid = "Unknown"
+            try:
+                lock_file.seek(0)
+                content = lock_file.read().decode().strip()
+                if content.isdigit():
+                    holder_pid = content
+            except Exception:
+                pass
+
             logger.error(
-                "advanced-memory stdio already running "
-                f"(lock: {lock_path}). Close other MCP clients or set "
-                "ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE=0."
+                f"advanced-memory stdio already running (PID: {holder_pid}, lock: {lock_path}). "
+                "Close the other instance or set ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE=0."
             )
             lock_file.close()
             raise typer.Exit(1) from e
@@ -52,10 +70,15 @@ def _stdio_single_instance_lock():
             yield
         finally:
             try:
+                # Clean up: clear PID and unlock
                 lock_file.seek(0)
+                lock_file.truncate()
                 msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
             finally:
                 lock_file.close()
+                # Try to remove the file if we are the last ones out
+                with contextlib.suppress(OSError):
+                    lock_path.unlink()
     else:
         yield
 

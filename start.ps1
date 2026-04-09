@@ -10,7 +10,21 @@ Write-Host "--- Advanced Memory MCP Launcher ---" -ForegroundColor Cyan
 $portProcess = Get-NetTCPConnection -LocalPort $PORT -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -First 1
 if ($portProcess) {
     Write-Host "Killing process $portProcess squatting on port $PORT..." -ForegroundColor Yellow
-    Stop-Process -Id $portProcess -Force
+    Stop-Process -Id $portProcess -Force -ErrorAction SilentlyContinue
+}
+
+# Clear stale lock if it exists (Antigravity/stdio mode)
+$lockPath = Join-Path $HOME ".advanced-memory\mcp-stdio.lock"
+if (Test-Path $lockPath) {
+    Write-Host "Clearing stale lock file at $lockPath..." -ForegroundColor Yellow
+    Remove-Item $lockPath -Force -ErrorAction SilentlyContinue
+}
+
+# Kill orphaned am mcp or advanced-memory processes
+$orphans = Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like "*advanced-memory*" -or $_.CommandLine -like "*am mcp*" } | Where-Object { $_.ProcessId -ne $PID }
+foreach ($p in $orphans) {
+    Write-Host "Killing orphaned process $($p.ProcessId): $($p.CommandLine)" -ForegroundColor Yellow
+    Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
 }
 
 # Verify uv installation

@@ -122,6 +122,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed - Hardened MCP Startup & Lock Recovery (2026-04-09)
+
+- **PID-Aware Locking**: Enhanced the `_stdio_single_instance_lock` context manager to store the active process ID (PID) in the lock file. If a conflict occurs, the error message now explicitly identifies the PID of the process holding the lock.
+- **Automated Startup Cleanup**: Hardened `start.ps1` with a "Clean Slate" routine that proactively removes stale `mcp-stdio.lock` files and terminates orphaned `advanced-memory` or `am mcp` processes before server launch.
+- **Graceful Cleanup**: Ensured the lock file is explicitly removed upon graceful server shutdown.
+
 ### Fixed - Cursor / MemOps MCP startup (2026-03-07)
 
 - **MCP config must use `mcp` subcommand and `--transport stdio`**: Without them the process runs the CLI and exits; the server only starts with `advanced-memory mcp --transport stdio`. README and docs updated.
