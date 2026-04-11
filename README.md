@@ -1,66 +1,44 @@
 ![Advanced Memory Hub](docs/assets/header.png)
 
-# 🧠 Advanced Memory (Memops)
+# Advanced Memory (Memops)
 
-[![Standard: SOTA v14.1.0](https://img.shields.io/badge/Standard-SOTA_v14.1.0-gold.svg)](docs/COMPLIANCE_AND_STANDARDS.md)
+[![Docs: compliance](https://img.shields.io/badge/Docs-compliance-gold.svg)](docs/COMPLIANCE_AND_STANDARDS.md)
 [![Package: v1.7.0](https://img.shields.io/badge/Package-v1.7.0-blue.svg)](pyproject.toml)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
-[![Tests: Industrial](https://img.shields.io/badge/Tests-Industrial_Scaffold-brightgreen)](tests/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+MCP server for **research and personal knowledge**: web search, GitHub and arXiv helpers, optional TV Tropes narrative lookups, document ingestion, vector search (RAG), research-oriented skill creation, exports (HTML, PDF, Pandoc, and more), and integrations with notes apps (e.g. Obsidian, Joplin, Notion workflows where supported). Built with **FastMCP** on Python 3.12+.
 
 ---
 
-## 🦮 Benny: The Grounding Anchor
+## Documentation
 
-![Benny the GSD](docs/assets/benny.png)
-
-> *"In a reductionist reality, data is the only objective truth. Benny ensures that our data stays grounded in the physical world."* — **Sandra Schipal**
-
-**Benny**, our resident German Shepherd, serves as the emotional and social anchor for the Advanced Memory ecosystem. In our hunt for high-density knowledge, he represents the **Manual Override Adjudicator**. 
-
-If the AI grid hallucinates or a security anomaly is detected, the **Benny Protocol** enforces an immediate manual interrupt. We trust the data, but we verify with the GSD.
+- [Installation](docs/INSTALLATION.md) — Python `uv`, optional OCR/Pandoc
+- [Architecture](docs/ARCHITECTURE.md)
+- [Usage](docs/USAGE.md)
+- [Fleet / multi-node notes](docs/FLEET.md) — if you run more than one instance
+- [Compliance & standards](docs/COMPLIANCE_AND_STANDARDS.md)
 
 ---
 
-## 🏗️ Industrial Documentation
+## Repo commands (`just`)
 
-Select a portal to explore the advanced architecture:
-
-- 🚀 **[Installation Guide](docs/INSTALLATION.md)**: Zero-friction setup using `uv`.
-- 🏛️ **[System Architecture](docs/ARCHITECTURE.md)**: High-level overview of the unified memory substrate.
-- 🛠️ **[Practical Usage](docs/USAGE.md)**: Scenario-based workflows for agentic consumption.
-- 🚢 **[Fleet Integration](docs/FLEET.md)**: Deploying as a node in the Alsergrund Bridge federation.
-- 📜 **[Compliance & Standards](docs/COMPLIANCE_AND_STANDARDS.md)**: Audit trail for SOTA v14.1.0 adherence.
-
----
-
-## 🔧 Operational Dashboard
-
-This repository is managed via an **Industrial Justfile**.
+This project uses a [Just](https://github.com/casey/just) file for common tasks. From the repo root:
 
 ```bash
-# Display the premium operations dashboard
 just
 ```
 
-### Core Recipes
-| Command | Action | Standard |
-| :--- | :--- | :--- |
-| `just lint` | Execute Ruff Security Scan | SOTA v14.1 |
-| `just fix` | Automated Logic Hardening | SOTA v14.1 |
-| `just test` | High-Fidelity Verification | Industrial Scaffold |
-| `just pack` | Create `.mcpb` Distribution | mcpb v1.0 |
+Typical recipes:
+
+| Command   | Purpose        |
+| :-------- | :------------- |
+| `just lint` | Ruff lint      |
+| `just fix`  | Ruff fix + format |
+| `just test` | Tests          |
+| `just pack` | Build `.mcpb` package |
+
+See the `Justfile` for the full list.
 
 ---
 
-## 🔋 System Status: **PROD/INDUSTRIALIZED**
-
-Advanced Memory is now a **Gold Standard** flagship component. It provides the persistent reasoning substrate required for long-horizon agentic missions.
-
-> [!IMPORTANT]
-> **Arcade Compliance**: This server uses **Shadow Unrolling** to remain compatible with legacy scanners while providing a full FastMCP 3.2+ feature set.
-
----
-
-**Locale**: 9th District (Alsergrund), Vienna, Austria.  
-**Philosophy**: Materialism | Reductionist | High-Fidelity.  
-**Anchor**: Benny (GSD).
+**Author:** Sandra Schipal · Vienna, Austria
