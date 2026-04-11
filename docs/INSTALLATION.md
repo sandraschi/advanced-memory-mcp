@@ -68,6 +68,8 @@ Set-Location webapp
 .\start.ps1
 ```
 
+Or from `webapp`: `.\start.bat` (runs the same `start.ps1`).
+
 Opens the frontend at **http://localhost:10704/** with the API on **10705**. See [webapp/README.md](../webapp/README.md).
 
 ---

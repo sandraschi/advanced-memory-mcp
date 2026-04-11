@@ -18,16 +18,23 @@ webapp/
 ├── frontend/       # React + Vite + Tailwind (package.json here)
 ├── backend/        # Optional Node MCP bridge (see backend/README.md) — not used by start.ps1
 ├── start.ps1       # Launcher: Python backend + Vite
+├── start.bat       # Thin wrapper: runs start.ps1 (double-click / cmd)
 ├── shutdown.ps1
 └── shutdown.bat
 ```
 
 ## Start
 
-From this **`webapp`** directory:
+From this **`webapp`** directory, either:
 
 ```powershell
 .\start.ps1
+```
+
+Or (same behavior — calls `start.ps1`):
+
+```bat
+start.bat
 ```
 
 This will:
