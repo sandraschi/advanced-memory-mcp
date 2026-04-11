@@ -1,6 +1,6 @@
 # AI features (RAG, agentic mode, sampling)
 
-Short reference for how this repo uses retrieval, automation-oriented tool shapes, and MCP sampling. For setup, see [Installation](INSTALLATION.md) and [Usage](USAGE.md).
+Short reference for how this repo uses retrieval, automation-oriented tool shapes, and MCP sampling. For **FastMCP 3.2+** specifics (portmanteaus, prefabs, `--agentic`, transports), see [FASTMCP.md](FASTMCP.md). For setup, see [Installation](INSTALLATION.md) and [Usage](USAGE.md).
 
 ---
 

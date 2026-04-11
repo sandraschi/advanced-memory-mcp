@@ -17,6 +17,7 @@
 - [Installation](docs/INSTALLATION.md) — Python `uv`, optional OCR/Pandoc
 - [Usage](docs/USAGE.md) — MCP clients, webapp, advanced topics
 - [AI features](docs/AI-FEATURES.md) — RAG, agentic mode, sampling
+- [FastMCP 3.2+](docs/FASTMCP.md) — portmanteaus, prefabs, CodeMode, transports
 - [Architecture](docs/ARCHITECTURE.md)
 - [Fleet / multi-node](docs/FLEET.md)
 - [Compliance & standards](docs/COMPLIANCE_AND_STANDARDS.md)

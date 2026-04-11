@@ -76,6 +76,7 @@ Then open **http://localhost:10704/** . Frontend is port **10704**, API **10705*
 | Topic | Where |
 | :---- | :---- |
 | RAG, agentic flag, MCP sampling | [AI-FEATURES.md](AI-FEATURES.md) |
+| FastMCP 3.2+ (prefabs, portmanteaus, transports) | [FASTMCP.md](FASTMCP.md) |
 | How pieces fit together | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | More than one server / sync | [FLEET.md](FLEET.md) |
 | Standards / audit notes | [COMPLIANCE_AND_STANDARDS.md](COMPLIANCE_AND_STANDARDS.md) |
