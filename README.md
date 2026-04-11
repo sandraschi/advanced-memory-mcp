@@ -6,38 +6,20 @@
 [![Package: v1.7.0](https://img.shields.io/badge/Package-v1.7.0-blue.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-MCP server for **research and personal knowledge**: web search, GitHub and arXiv helpers, optional TV Tropes narrative lookups, document ingestion, vector search (RAG), research-oriented skill creation, exports (HTML, PDF, Pandoc, and more), and integrations with notes apps (e.g. Obsidian, Joplin, Notion workflows where supported). Built with **FastMCP** on Python 3.12+.
+- **Why** — Give an MCP-capable assistant a **durable place** for notes, research, and retrieval: search and RAG over *your* content instead of losing context every session.
+- **What** — A **FastMCP** server (Python 3.12+) with tools for web/GitHub/arXiv research, document ingestion, vector search (LanceDB), exports (HTML, PDF, Pandoc, and more), skills workflows, and hooks into common note stacks (e.g. Obsidian, Joplin, Notion-oriented flows where implemented).
+- **How** — **Connect** the MCP server from your client ([installation](docs/INSTALLATION.md), then [usage](docs/USAGE.md)). Optionally run the **[webapp](webapp/README.md)** for a browser UI on top of the same backend.
 
 ---
 
 ## Documentation
 
 - [Installation](docs/INSTALLATION.md) — Python `uv`, optional OCR/Pandoc
+- [Usage](docs/USAGE.md) — MCP clients, webapp, advanced topics
 - [Architecture](docs/ARCHITECTURE.md)
-- [Usage](docs/USAGE.md)
-- [Fleet / multi-node notes](docs/FLEET.md) — if you run more than one instance
+- [Fleet / multi-node](docs/FLEET.md)
 - [Compliance & standards](docs/COMPLIANCE_AND_STANDARDS.md)
-
----
-
-## Repo commands (`just`)
-
-This project uses a [Just](https://github.com/casey/just) file for common tasks. From the repo root:
-
-```bash
-just
-```
-
-Typical recipes:
-
-| Command   | Purpose        |
-| :-------- | :------------- |
-| `just lint` | Ruff lint      |
-| `just fix`  | Ruff fix + format |
-| `just test` | Tests          |
-| `just pack` | Build `.mcpb` package |
-
-See the `Justfile` for the full list.
+- [Development](docs/DEVELOPMENT.md) — `just` recipes (lint, test, pack)
 
 ---
 
