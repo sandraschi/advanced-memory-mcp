@@ -1,11 +1,11 @@
 {
   "manifest_version": "0.2",
   "name": "advanced-memory-mcp",
-  "version": "1.1.0b3",
-  "description": "Advanced Memory MCP - A powerful knowledge management system with portmanteau tools for Cursor IDE compatibility. Consolidates 40+ tools into 8 comprehensive tools with full functionality.",
+  "version": "1.7.0",
+  "description": "Advanced Memory MCP — research and knowledge platform with FastMCP, portmanteau tools, RAG, and webapp.",
   "author": {
-    "name": "Sandra Schi",
-    "email": "sandra@sandraschi.dev",
+    "name": "Sandra Schipal",
+    "email": "sandra@schipal.at",
     "url": "https://github.com/sandraschi"
   },
   "repository": {
@@ -21,12 +21,8 @@
     "knowledge-management",
     "memory",
     "notes",
-    "obsidian",
-    "notion",
-    "evernote",
-    "joplin",
-    "portmanteau-tools",
-    "cursor-ide"
+    "fastmcp",
+    "portmanteau-tools"
   ],
   "server": {
     "type": "python",
@@ -45,7 +41,7 @@
     "index_all_files": {
       "type": "boolean",
       "title": "Index All File Types",
-      "description": "Index all files (code, configs, markdown) or only .md files. Recommended: true for code repos, false for pure notes. Maps to ADVANCED_MEMORY_INDEX_ALL_FILES.",
+      "description": "Index all files (code, configs, markdown) or only .md files. Maps to ADVANCED_MEMORY_INDEX_ALL_FILES.",
       "required": false,
       "sensitive": false,
       "default": true
@@ -53,7 +49,7 @@
     "log_level": {
       "type": "string",
       "title": "Log Level",
-      "description": "Logging verbosity: DEBUG, INFO, WARNING, ERROR. Maps to ADVANCED_MEMORY_LOG_LEVEL.",
+      "description": "DEBUG, INFO, WARNING, ERROR. Maps to ADVANCED_MEMORY_LOG_LEVEL.",
       "required": false,
       "sensitive": false,
       "default": "INFO"
@@ -61,7 +57,7 @@
     "sync_changes": {
       "type": "boolean",
       "title": "Auto-Sync Files",
-      "description": "Automatically sync file changes in real-time. Disable for manual sync only. Maps to ADVANCED_MEMORY_SYNC_CHANGES.",
+      "description": "Automatically sync file changes in real-time. Maps to ADVANCED_MEMORY_SYNC_CHANGES.",
       "required": false,
       "sensitive": false,
       "default": true

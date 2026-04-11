@@ -101,6 +101,13 @@ format:
 run-inspector:
     npx @modelcontextprotocol/inspector
 
+# Build MCPB bundle (requires Node.js + npx). Output: dist/advanced-memory-mcp.mcpb
+pack:
+    Set-Location '{{justfile_directory()}}'
+    if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" | Out-Null }
+    npx --yes @anthropic-ai/mcpb@latest validate manifest.json
+    npx --yes @anthropic-ai/mcpb@latest pack . "dist/advanced-memory-mcp.mcpb"
+
 # Build macOS installer
 installer-mac:
     cd installer && chmod +x make_icons.sh && ./make_icons.sh

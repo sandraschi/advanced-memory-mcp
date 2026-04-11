@@ -31,7 +31,7 @@ class TestCIBasic:
             "pyproject.toml",
             "LICENSE",
             ".github/workflows/ci.yml",
-            "mcpb/manifest.json",
+            "manifest.json",
         ]
 
         for file_path in essential_files:
@@ -62,9 +62,9 @@ class TestCIBasic:
     def test_manifest_json_exists(self):
         """Test that MCPB manifest exists."""
         project_root = Path(__file__).parent.parent
-        manifest_path = project_root / "mcpb" / "manifest.json"
+        manifest_path = project_root / "manifest.json"
 
-        assert manifest_path.exists(), "mcpb/manifest.json should exist for MCPB package"
+        assert manifest_path.exists(), "manifest.json should exist for MCPB package"
 
     @pytest.mark.skip(reason="Missing security-scan.yml workflow - will add in CI/CD modernization phase")
     def test_github_workflows_exist(self):

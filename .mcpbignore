@@ -1,4 +1,4 @@
-# MCPB Pack Exclusion List
+# MCPB Pack Exclusion List (keep the bundle small; runtime is Python MCP server under src/)
 tests/
 .git/
 __pycache__/
@@ -14,3 +14,31 @@ scripts/
 .pytest_cache/
 .coverage
 Cargo.lock
+
+# Not needed for MCP server runtime
+webapp/
+**/node_modules/
+temp-anthropic-skills/
+temp-anthropic-courses/
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.playwright-mcp/
+.snapshots/
+content/
+coolstuff/
+imported-skills/
+knowledge/
+notes/
+projects/
+relative/
+scratch/
+scratch_db_async/
+skill-zips/
+zettelkasten/
+templates/
+tools/
+mcpb/
+data/
+.agents/
+.claude/
