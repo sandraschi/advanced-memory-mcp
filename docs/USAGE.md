@@ -1,48 +1,88 @@
-# Advanced Memory MCP - Practical Usage Guide
+# Usage
 
-## Getting Started: The Thinking Persona
-
-Advanced Memory is not just a database; it is a **Thinking Substrate**. To get the most out of it, treat it as a collaborator that stores your logic and architectural decisions.
-
-### Scenario 1: Developing a New Feature (Industrialized)
-
-When starting a project, use the **Entity Engine** to prime your workspace.
-
-1. **Initialize Project**:
-   ```bash
-   # Create a dedicated context for your new project
-   adn_content("write", "Project Zero-G", "Initializing the quantum-gravity research branch.", "#milestone #science")
-   ```
-2. **Retrieve Context**:
-   When you return to work, ask your AI:
-   *"Retrieve the latest milestones for Project Zero-G and summarize our architectural consensus."*
-   The AI will use semantic search to fetch relevant notes.
-
-### Scenario 2: Documentation Synthesis (Deep Research)
-
-If you have a collection of PDFs or Markdown files, use the ingestion pipeline.
-
-1. **Ingest Content**:
-   Use the `ingest_file` or `ingest_folder` tools.
-2. **Execute RAG**:
-   Ask: *"Based on the Gormenghast trilogy, map the relationship between Steerpike and Fuchsia using a Mermaid diagram."*
-   Advanced Memory will retrieve the passages, rerank them for relevance, and feed them into the model.
-
-### Scenario 3: Fleet-Wide Milestones
-
-If you are working across many repositories, use the **Global Tagging** system.
-
-- Use `#tech-debt` to track issues across your fleet.
-- Use `adn_status("fleet")` to see the health and versioning of all registered nodes.
-
-## Tips for High-Fidelity Results
-
-> [!TIP]
-> **Semantic Precision**: Use rich descriptive text for milestone summaries. Instead of "Fix bug", write "Remediated race condition in the async port listener by introducing a PID-aware lock file."
-
-> [!IMPORTANT]
-> **Benny Protocol**: If you encounter an unrecoverable failure or a security anomaly, tag it with `#benny-interrupt`. This signals to the fleet that a manual investigation is required.
+Set up the app first: [Installation](INSTALLATION.md). Then use either **(1) an MCP client** or **(2) the webapp**. Section **(3)** is optional depth.
 
 ---
 
-[Back to README](../README.md) | [Architecture Overview](ARCHITECTURE.md) | [Fleet Setup](FLEET.md)
+## 1. MCP clients (Cursor, Claude Desktop, etc.)
+
+The server process is started by your client; you chat normally and the assistant calls tools for you.
+
+### Stdio (typical for local IDEs)
+
+Configure the client to run:
+
+`uv --directory <repo> run advanced-memory mcp --transport stdio`
+
+Replace `<repo>` with the path where you cloned this repository.
+
+**Claude Desktop** — edit `%APPDATA%\Claude\claude_desktop_config.json` and add under `mcpServers`:
+
+```json
+"advanced-memory": {
+  "command": "uv",
+  "args": [
+    "--directory",
+    "D:/Dev/repos/advanced-memory-mcp",
+    "run",
+    "advanced-memory",
+    "mcp",
+    "--transport",
+    "stdio"
+  ]
+}
+```
+
+Change the `--directory` value to your checkout. Restart Claude Desktop after saving.
+
+**Cursor** — Settings → MCP: add a server with the same `command` and `args` (or equivalent if you use `uv tool install` and the tool is on your PATH).
+
+**In chat:** ask in plain language, for example: search the vault for a topic, add or update a note, import a file, or run a research query. You do not type raw JSON; the assistant uses the tool list the server exposes.
+
+**Windows:** only one stdio instance should run at a time by default. If startup complains that another instance is running, close the other app or see `ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE` in the MCP command implementation.
+
+### HTTP (`streamable-http` or `sse`)
+
+For a network listener instead of stdio:
+
+```
+uv run advanced-memory mcp --transport streamable-http --host 0.0.0.0 --port 8000 --path /mcp
+```
+
+Use `advanced-memory mcp --help` for `host`, `port`, and `path`. Point your client at that URL if it supports remote MCP.
+
+### `--agentic`
+
+Adding `--agentic` turns on a compact “code mode” tool surface for automation. For day‑to‑day chat, leave it **off** so you get the full tool set.
+
+---
+
+## 2. Webapp
+
+Browser UI: Vite frontend + FastAPI backend. **Details:** [webapp/README.md](../webapp/README.md).
+
+**Quick start** — from the `webapp` folder in this repo:
+
+```powershell
+.\start.ps1
+```
+
+Then open **http://localhost:10704/** . Frontend is port **10704**, API **10705** (defaults in `start.ps1`).
+
+---
+
+## 3. Advanced / related docs
+
+| Topic | Where |
+| :---- | :---- |
+| RAG, agentic flag, MCP sampling | [AI-FEATURES.md](AI-FEATURES.md) |
+| How pieces fit together | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| More than one server / sync | [FLEET.md](FLEET.md) |
+| Standards / audit notes | [COMPLIANCE_AND_STANDARDS.md](COMPLIANCE_AND_STANDARDS.md) |
+| Lint, tests, `just` | [DEVELOPMENT.md](DEVELOPMENT.md) |
+
+**Practical habits:** use clear titles and tags in notes; ingest documents before expecting RAG to find them; name projects consistently if your tools are project‑scoped.
+
+---
+
+[README](../README.md) · [Installation](INSTALLATION.md)
