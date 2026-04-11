@@ -59,15 +59,16 @@ Add to `%APPDATA%\Claude\claude_desktop_config.json`:
 2. Add a new server named `advanced-memory`.
 3. Use the same `command` and `args` as shown for Claude above.
 
-## 4. Webapp Startup (Premium UI)
+## 4. Webapp
 
-The webapp provides a visual interface for managing your memories.
+Browser UI (Vite + Python FastAPI). From the repository clone:
 
 ```powershell
-# SOTA Clean Startup (Recommended)
-.\run-webapp-clean.bat
+Set-Location webapp
+.\start.ps1
 ```
-This utility kills zombie processes and binds to ports **10704/10705**.
+
+Opens the frontend at **http://localhost:10704/** with the API on **10705**. See [webapp/README.md](../webapp/README.md).
 
 ---
 

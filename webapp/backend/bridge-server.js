@@ -1829,15 +1829,13 @@ async function discoverWebapps() {
           try {
             const webStats = await fs.stat(webPath);
             if (webStats.isDirectory()) {
-              // Check for start.bat
-              const startBatPath = path.join(webPath, 'start.bat');
+              // Check for start.ps1 (canonical webapp launcher)
+              const startPs1Path = path.join(webPath, 'start.ps1');
               try {
-                await fs.access(startBatPath);
+                await fs.access(startPs1Path);
 
-                // Found a SOTA webapp!
-                // Try to extract port from start.ps1 in the same folder
+                // Extract port from start.ps1
                 let port = 0;
-                const startPs1Path = path.join(webPath, 'start.ps1');
                 try {
                   const content = await fs.readFile(startPs1Path, 'utf8');
                   const portMatch = content.match(/\$WebPort\s*=\s*(\d+)/i) ||
@@ -1868,7 +1866,7 @@ async function discoverWebapps() {
                     description: `Automated discovery: ${repo} (${folderName})`
                   });
                 }
-              } catch (e) { /* no start.bat */ }
+              } catch (e) { /* no start.ps1 */ }
             }
           } catch (e) { /* folder doesn't exist */ }
         }

@@ -1,4 +1,4 @@
-﻿# Webapp Start - Standardized SOTA (Auto-Repaired V2.5)
+﻿# Webapp: Python FastAPI backend + Vite frontend (single supported launcher)
 $WebPort = 10704
 $BackendPort = 10705
 $ProjectRoot = Split-Path -Parent $PSScriptRoot

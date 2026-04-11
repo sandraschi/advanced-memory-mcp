@@ -1,33 +1,7 @@
-# ADN Webapp Backend
+# Node MCP bridge (optional, developer-only)
 
-Node.js-based service layer for the ADN Webapp. This component manages the bridge between the frontend neural interface and the Python-based MCP research engine.
+This folder contains **Express** scripts used for **stdio MCP ↔ HTTP** experiments (`bridge-server.js`, `startup-service.js`, etc.). They are **not** started by the main webapp flow.
 
-## Services
+**End users:** start the UI with **`../start.ps1`** only (Python FastAPI + Vite).
 
-### 1. Bridge Server (`bridge-server.js`)
-- **Port**: 10705
-- **Function**: Acts as an HTTP-to-JSON-RPC adapter.
-- **Protocol**: Accepts standard REST requests and translates them into MCP-compatible JSON-RPC payloads.
-
-### 2. Startup Service (`startup-service.js`)
-- **Port**: 10733
-- **Function**: Monitors MCP server status and handles resource discovery.
-- **Reporting**: Provides health telemetry and model availability data.
-
-### 3. Auto-Start Service (`auto-start-service.js`)
-- **Function**: Background watcher for automatic MCP server recovery.
-
-## Development
-
-Install dependencies:
-```bash
-npm install
-```
-
-Start the bridge:
-```bash
-npm run start:bridge
-```
-
-## Logs
-Logs are maintained in `bridge_logs.json` for persistent debugging and audit trails.
+**Bridge development:** from `backend/`, run `npm install` and e.g. `npm run start:bridge` or `node bridge-server.js` as needed. Default bridge port is **10705** — do not run at the same time as the Python API on the same port.
