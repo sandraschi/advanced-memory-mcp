@@ -2,12 +2,6 @@
 
 # 🧠 Advanced Memory (Memops)
 
-> [!CAUTION]
-> **SYSTEM STATUS: NON-FUNCTIONAL / CRITICAL REGRESSION**
-> This repository is currently in a broken state due to a major architectural regression (Ghost Dispatcher). 
-> **DO NOT ATTEMPT TO USE THIS VERSION.** 
-> Emergency repairs are currently underway to restore the `adn_skills_operations` bridge and system integrity. Expected resolution for v1.7.0.
-
 [![Standard: SOTA v14.1.0](https://img.shields.io/badge/Standard-SOTA_v14.1.0-gold.svg)](docs/COMPLIANCE_AND_STANDARDS.md)
 [![Package: v1.7.0](https://img.shields.io/badge/Package-v1.7.0-blue.svg)](pyproject.toml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
