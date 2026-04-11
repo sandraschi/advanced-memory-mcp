@@ -106,7 +106,7 @@ async def load_notion_export(
             else:
                 errors.append(f"HTML {html_file.name}: {result['error']}")
         except Exception as e:
-            errors.append(f"HTML {html_file.name}: {str(e)}")
+            errors.append(f"HTML {html_file.name}: {e!s}")
 
     # Process Markdown files
     for md_file in markdown_files:
@@ -120,7 +120,7 @@ async def load_notion_export(
             else:
                 errors.append(f"MD {md_file.name}: {result['error']}")
         except Exception as e:
-            errors.append(f"MD {md_file.name}: {str(e)}")
+            errors.append(f"MD {md_file.name}: {e!s}")
 
     # Clean up temp directory
     if temp_dir and temp_dir.exists():

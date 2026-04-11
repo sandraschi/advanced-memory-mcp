@@ -340,7 +340,7 @@ async def make_skill_advanced(
     except Exception as e:
         logger.error(f"Advanced skill creation failed: {e}")
         return build_error_response(
-            "OPERATION_FAILED", f"Advanced skill creation operation failed: {str(e)}"
+            "OPERATION_FAILED", f"Advanced skill creation operation failed: {e!s}"
         )
 
 

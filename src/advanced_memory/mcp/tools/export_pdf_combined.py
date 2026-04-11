@@ -256,7 +256,7 @@ After installing, restart the MCP server.
 
     except Exception as e:
         logger.error(f"Combined PDF export failed: {e}")
-        return f"PDF export failed: {str(e)}"
+        return f"PDF export failed: {e!s}"
 
 
 async def _search_notes(query: str, project: str | None = None) -> list[dict[str, Any]]:

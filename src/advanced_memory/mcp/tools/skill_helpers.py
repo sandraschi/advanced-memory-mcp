@@ -151,7 +151,7 @@ def parse_skill_frontmatter(content: str) -> tuple[dict | None, str, list[str]]:
         frontmatter = yaml.safe_load(match.group(1))
         body = match.group(2)
     except Exception as e:
-        errors.append(f"Invalid YAML frontmatter: {str(e)}")
+        errors.append(f"Invalid YAML frontmatter: {e!s}")
         return (None, content, errors)
 
     return (frontmatter, body, errors)

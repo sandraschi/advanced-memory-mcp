@@ -150,7 +150,7 @@ adn_export("pdf", export_path="...", source_folder="...")
                 else:
                     errors.append(f"Failed to export: {note_info['title']}")
             except Exception as e:
-                errors.append(f"Error exporting {note_info['title']}: {str(e)}")
+                errors.append(f"Error exporting {note_info['title']}: {e!s}")
 
         # Generate summary
         summary = _generate_export_summary(exported_files, errors, format_type, export_path)
@@ -172,7 +172,7 @@ adn_export("pdf", export_path="...", source_folder="...")
         return summary
 
     except Exception as e:
-        return f"Pandoc export failed: {str(e)}"
+        return f"Pandoc export failed: {e!s}"
 
 
 async def _get_notes_from_folder(

@@ -61,7 +61,7 @@ async def adn_knowledge_bulk(
 
     except Exception as e:
         logger.error(f"Error in knowledge_operations: {e}")
-        return f"[UNICODE] Operation failed: {str(e)}"
+        return f"[UNICODE] Operation failed: {e!s}"
 
 
 async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> str:
@@ -137,7 +137,7 @@ async def _handle_tag_analytics(action: dict[str, Any], project: str | None) -> 
 
     except Exception as e:
         logger.error(f"Error in tag analytics: {e}")
-        return f"[UNICODE] Tag analytics failed: {str(e)}"
+        return f"[UNICODE] Tag analytics failed: {e!s}"
 
 
 def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, int]) -> list[str]:

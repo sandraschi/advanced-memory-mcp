@@ -170,7 +170,7 @@ async def load_onenote_html(
             logger.info(f"Imported OneNote page: {page_title}")
 
         except Exception as e:
-            error_msg = f"{page_data.get('title', 'Unknown')}: {str(e)}"
+            error_msg = f"{page_data.get('title', 'Unknown')}: {e!s}"
             errors.append(error_msg)
             logger.error(f"Failed to import page: {error_msg}")
 

@@ -328,7 +328,7 @@ async def skeleton_key(
             sanitized_path = _sanitize_path(server_path)
         except ValueError as e:
             return build_error_response(
-                "PATH_SANITIZATION_FAILED", f"Path sanitization failed: {str(e)}"
+                "PATH_SANITIZATION_FAILED", f"Path sanitization failed: {e!s}"
             )
 
         # Create client for the target server
@@ -354,10 +354,10 @@ async def skeleton_key(
         }
 
     except Exception as e:
-        logger.error(f"Skeleton key operation failed: {str(e)}")
+        logger.error(f"Skeleton key operation failed: {e!s}")
         return build_error_response(
             "SKELETON_KEY_FAILED",
-            f"Failed to execute tool '{tool_name}' on server '{server_path}': {str(e)}",
+            f"Failed to execute tool '{tool_name}' on server '{server_path}': {e!s}",
             suggestions=[
                 "Verify the server_path points to a valid MCP server",
                 "Check that the tool_name exists on the target server",
@@ -399,9 +399,9 @@ async def discover_mcp_server_tools(server_path: str) -> dict[str, Any]:
         }
 
     except Exception as e:
-        logger.error(f"Tool discovery failed: {str(e)}")
+        logger.error(f"Tool discovery failed: {e!s}")
         return build_error_response(
-            "DISCOVERY_FAILED", f"Failed to discover tools on server '{server_path}': {str(e)}"
+            "DISCOVERY_FAILED", f"Failed to discover tools on server '{server_path}': {e!s}"
         )
 
 
@@ -495,7 +495,7 @@ class ExternalMCPClient:
             )
         except Exception as e:
             logger.error(f"{self.server_name}: Error calling {tool_name}: {e}")
-            return build_error_response("TOOL_ERROR", f"Error calling {tool_name}: {str(e)}")
+            return build_error_response("TOOL_ERROR", f"Error calling {tool_name}: {e!s}")
 
     async def list_tools(self) -> list[dict[str, Any]]:
         """List available tools from the external MCP server."""
@@ -623,7 +623,7 @@ async def get_weather_report(location: str, source: str = "brightdata") -> dict[
     except Exception as e:
         logger.error(f"Weather report failed for {location}: {e}")
         return build_error_response(
-            "WEATHER_ERROR", f"Failed to get weather for {location}: {str(e)}"
+            "WEATHER_ERROR", f"Failed to get weather for {location}: {e!s}"
         )
 
 
@@ -651,7 +651,7 @@ async def _parse_weather_from_search(search_result: dict[str, Any]) -> dict[str,
         }
 
     except Exception as e:
-        return build_error_response("PARSE_ERROR", f"Failed to parse weather from search: {str(e)}")
+        return build_error_response("PARSE_ERROR", f"Failed to parse weather from search: {e!s}")
 
 
 async def _get_weather_direct(location: str) -> dict[str, Any]:
@@ -682,7 +682,7 @@ async def _get_weather_direct(location: str) -> dict[str, Any]:
             }
 
     except Exception as e:
-        return build_error_response("DIRECT_API_ERROR", f"Direct weather API failed: {str(e)}")
+        return build_error_response("DIRECT_API_ERROR", f"Direct weather API failed: {e!s}")
 
 
 # ============================================================================
@@ -732,7 +732,7 @@ async def get_vrchat_server_status() -> dict[str, Any]:
 
     except Exception as e:
         logger.error(f"VRChat status check failed: {e}")
-        return build_error_response("VRCHAT_ERROR", f"Failed to get VRChat status: {str(e)}")
+        return build_error_response("VRCHAT_ERROR", f"Failed to get VRChat status: {e!s}")
 
 
 @mcp.tool
@@ -787,7 +787,7 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
                 }
 
     except Exception as e:
-        return build_error_response("DIRECT_API_ERROR", f"Direct VRChat API check failed: {str(e)}")
+        return build_error_response("DIRECT_API_ERROR", f"Direct VRChat API check failed: {e!s}")
 
 
 # ============================================================================
@@ -838,7 +838,7 @@ async def call_external_mcp_tool(
     except Exception as e:
         logger.error(f"External MCP tool call failed: {server_name}.{tool_name}: {e}")
         return build_error_response(
-            "EXTERNAL_CALL_ERROR", f"Failed to call {tool_name} on {server_name}: {str(e)}"
+            "EXTERNAL_CALL_ERROR", f"Failed to call {tool_name} on {server_name}: {e!s}"
         )
 
 
@@ -872,5 +872,5 @@ async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
 
     except Exception as e:
         return build_error_response(
-            "LIST_TOOLS_ERROR", f"Failed to list tools from {server_name}: {str(e)}"
+            "LIST_TOOLS_ERROR", f"Failed to list tools from {server_name}: {e!s}"
         )

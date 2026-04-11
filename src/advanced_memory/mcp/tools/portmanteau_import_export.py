@@ -228,5 +228,5 @@ async def adn_import_export(
     except Exception as e:
         logger.error(f"Import/export operation '{operation}' for format '{format}' failed: {e}")
         return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
+            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
         )

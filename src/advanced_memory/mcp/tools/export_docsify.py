@@ -163,7 +163,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
                 logger.info(f"Exported enhanced note: {note_info['title']} -> {md_path}")
 
             except Exception as e:
-                logger.error(f"Failed to export note {note_info['title']}: {str(e)}")
+                logger.error(f"Failed to export note {note_info['title']}: {e!s}")
 
         # NOW create enhanced sidebar with icons and metadata (uses exported_files)
         enhanced_sidebar = _create_enhanced_sidebar(exported_files, export_path_obj)

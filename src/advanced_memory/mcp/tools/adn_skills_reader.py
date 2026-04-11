@@ -136,7 +136,7 @@ async def adn_skills_reader(
                 },
             }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_skills_reader_error: %s", exc, exc_info=True)
         return {
             "error": str(exc),

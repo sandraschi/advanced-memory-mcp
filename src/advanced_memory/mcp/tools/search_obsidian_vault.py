@@ -463,7 +463,7 @@ def _format_search_results(
         output_lines.append(f"**Path:** {file_path}")
 
         # Add specific match information
-        if "matches" in result and result["matches"]:
+        if result.get("matches"):
             output_lines.append(f"**Matches:** {result['total_matches']} total")
             if include_content:
                 for line_num, line_content in result["matches"][:3]:  # Show first 3 matches

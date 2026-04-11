@@ -162,5 +162,5 @@ async def adn_system(
     except Exception as e:
         logger.error(f"System operation '{operation}' failed: {e}")
         return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
+            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
         )

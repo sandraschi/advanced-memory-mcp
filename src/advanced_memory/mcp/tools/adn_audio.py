@@ -258,7 +258,7 @@ async def _dictate_operation(
             logger.info(f"Recording saved to: {audio_path}")
 
         except Exception as e:
-            return f"# Recording Failed\n\nError: {str(e)}\n\nEnsure sounddevice and soundfile are installed."
+            return f"# Recording Failed\n\nError: {e!s}\n\nEnsure sounddevice and soundfile are installed."
 
     # Check if audio file exists
     if not audio_path or not Path(audio_path).exists():
@@ -325,7 +325,7 @@ async def _dictate_operation(
 
     except Exception as e:
         logger.error(f"Transcription error: {e}")
-        return f"# Transcription Failed\n\nError: {str(e)}\n\nTry a different audio file or check Whisper installation."
+        return f"# Transcription Failed\n\nError: {e!s}\n\nTry a different audio file or check Whisper installation."
 
 
 async def _speak_operation(
@@ -579,7 +579,7 @@ async def _listen_command_operation(
             logger.info(f"Recording saved to: {audio_path}")
 
         except Exception as e:
-            return f"# Recording Failed\n\nError: {str(e)}\n\nEnsure sounddevice and soundfile are installed."
+            return f"# Recording Failed\n\nError: {e!s}\n\nEnsure sounddevice and soundfile are installed."
 
     # Check if audio file exists
     if not audio_path or not Path(audio_path).exists():
@@ -602,7 +602,7 @@ async def _listen_command_operation(
 
     except Exception as e:
         logger.error(f"Voice command error: {e}", exc_info=True)
-        return f"# Voice Command Failed\n\nError: {str(e)}\n\nTry again or check your audio setup."
+        return f"# Voice Command Failed\n\nError: {e!s}\n\nTry again or check your audio setup."
 
 
 async def _parse_and_execute_command(active_project, command_text: str) -> dict:
@@ -1023,11 +1023,11 @@ async def _get_weather(location: str | None = None) -> dict:
 
     except httpx.RequestError as e:
         logger.error(f"Weather API error: {e}", exc_info=True)
-        return f"# Weather Error\n\nFailed to connect to weather service: {str(e)}\n\nPlease check your internet connection and try again."
+        return f"# Weather Error\n\nFailed to connect to weather service: {e!s}\n\nPlease check your internet connection and try again."
     except Exception as e:
         logger.error(f"Weather error: {e}", exc_info=True)
         return (
-            f"# Weather Error\n\nUnexpected error fetching weather: {str(e)}\n\nPlease try again."
+            f"# Weather Error\n\nUnexpected error fetching weather: {e!s}\n\nPlease try again."
         )
 
 
@@ -1150,12 +1150,10 @@ Could not parse time: "{time_str}"
                     logger.warning(f"Could not speak alarm: {e}")
 
                 # Remove from active alarms
-                if alarm_id in _alarms:
-                    del _alarms[alarm_id]
+                _alarms.pop(alarm_id, None)
             except Exception as e:
                 logger.error(f"Alarm thread error: {e}", exc_info=True)
-                if alarm_id in _alarms:
-                    del _alarms[alarm_id]
+                _alarms.pop(alarm_id, None)
 
         thread = threading.Thread(target=alarm_thread, daemon=True)
         thread.start()
@@ -1190,7 +1188,7 @@ Could not parse time: "{time_str}"
         return build_error_response(
             error="alarm_setup_failed",
             error_code="ALARM_ERROR",
-            message=f"Failed to set alarm: {str(e)}",
+            message=f"Failed to set alarm: {e!s}",
             recovery_options=[
                 "Check time format (use HH:MM or descriptive like '7 AM')",
                 "Ensure time is in the future",
@@ -1317,12 +1315,10 @@ Could not parse duration: "{duration_str}"
                     logger.warning(f"Could not speak timer: {e}")
 
                 # Remove from active timers
-                if timer_id in _timers:
-                    del _timers[timer_id]
+                _timers.pop(timer_id, None)
             except Exception as e:
                 logger.error(f"Timer thread error: {e}", exc_info=True)
-                if timer_id in _timers:
-                    del _timers[timer_id]
+                _timers.pop(timer_id, None)
 
         thread = threading.Thread(target=timer_thread, daemon=True)
         thread.start()
@@ -1355,7 +1351,7 @@ Could not parse duration: "{duration_str}"
         return build_error_response(
             error="timer_setup_failed",
             error_code="TIMER_ERROR",
-            message=f"Failed to set timer: {str(e)}",
+            message=f"Failed to set timer: {e!s}",
             recovery_options=[
                 "Check duration format (use '5 minutes', '30 seconds', etc.)",
                 "Ensure duration is greater than 0",
@@ -1433,7 +1429,7 @@ async def _control_music(command: str, query: str | None = None) -> dict:
 
     except Exception as e:
         logger.error(f"Music control error: {e}", exc_info=True)
-        return f"# Music Control Error\n\nFailed to control music: {str(e)}\n\nPlease check your music player configuration."
+        return f"# Music Control Error\n\nFailed to control music: {e!s}\n\nPlease check your music player configuration."
 
 
 async def _control_music_plex(command: str, query: str | None) -> dict:
@@ -1603,7 +1599,7 @@ Went to previous track.
         raise  # Re-raise to be caught by caller
     except Exception as e:
         logger.error(f"Plex control error: {e}", exc_info=True)
-        return f"# Music Error\n\nFailed to control Plex: {str(e)}\n\nMake sure Plex Media Server is running and accessible."
+        return f"# Music Error\n\nFailed to control Plex: {e!s}\n\nMake sure Plex Media Server is running and accessible."
 
 
 async def _control_music_windows(command: str, query: str | None) -> dict:
@@ -1706,7 +1702,7 @@ pip install pywin32
 """
     except Exception as e:
         logger.error(f"Windows Media Player control error: {e}", exc_info=True)
-        return f"# Music Error\n\nFailed to control Windows Media Player: {str(e)}\n\nTry using Plexamp CLI instead."
+        return f"# Music Error\n\nFailed to control Windows Media Player: {e!s}\n\nTry using Plexamp CLI instead."
 
 
 async def _wake_word_operation(active_project, wake_word: str, record_duration: int) -> dict:
@@ -1801,7 +1797,7 @@ Then restart and try again!"""
         return "# Wake Word Listener Stopped\n\nWake word listening was interrupted."
     except Exception as e:
         logger.error(f"Wake word error: {e}", exc_info=True)
-        return f"# Wake Word Error\n\nError: {str(e)}\n\nCheck your audio setup and try again."
+        return f"# Wake Word Error\n\nError: {e!s}\n\nCheck your audio setup and try again."
 
 
 async def _wake_start_operation(active_project, wake_word: str, record_duration: int) -> dict:

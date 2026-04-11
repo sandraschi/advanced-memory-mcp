@@ -41,7 +41,7 @@ async def adn_skills_operations(operation: str, **parameters) -> str:
                 "distill_from_text",
                 "distill_from_expert",
             ]
-            return f"# Advanced Skill Operations\n\nAvailable operations:\n\n" + "\n".join(
+            return "# Advanced Skill Operations\n\nAvailable operations:\n\n" + "\n".join(
                 f"- {op}" for op in ops
             )
 
@@ -105,7 +105,7 @@ async def adn_skills_operations(operation: str, **parameters) -> str:
 
     except Exception as e:
         logger.error(f"Advanced skill operation '{operation}' failed: {e}")
-        return f"# Error: Operation Failed\n\n{str(e)}"
+        return f"# Error: Operation Failed\n\n{e!s}"
 
 
 async def _import_from_github_operation(
@@ -187,7 +187,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 
 **Problem:** Could not parse YAML frontmatter
 
-**Error:** {str(e)}
+**Error:** {e!s}
 
 **Fix the YAML syntax in the repository's SKILL.md file.**"""
 
@@ -244,7 +244,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 **Operation:** import_from_github
 **Repository:** {repository}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - Repository not found or private (need GITHUB_TOKEN environment variable)
@@ -377,7 +377,7 @@ adn_skills(
 **Operation:** distill_from_wikipedia
 **Topic:** {topic}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - Article not found (check title spelling)
@@ -502,7 +502,7 @@ adn_skills(
 **Operation:** distill_from_arxiv
 **Query:** {query}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - No papers found for query
@@ -629,7 +629,7 @@ adn_skills(
 **Operation:** distill_from_textbook
 **PDF Path:** {pdf_path}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - PDF file not found
@@ -758,7 +758,7 @@ adn_skills(
 **Operation:** distill_from_text
 **Text Path:** {text_path}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - File not found
@@ -886,7 +886,7 @@ adn_skills(
 **Operation:** distill_from_expert
 **Expert:** {expert_name}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - No content found for expert

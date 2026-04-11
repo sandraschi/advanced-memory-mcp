@@ -89,7 +89,7 @@ async def edit_in_notepadpp(
             subprocess.Popen([str(notepadpp_path), str(md_file)])
             logger.info(f"Opened {md_file} in Notepad++")
         except Exception as e:
-            return f"[UNICODE] Failed to open Notepad++: {str(e)}"
+            return f"[UNICODE] Failed to open Notepad++: {e!s}"
 
         return f"""[UNICODE] **Note exported to Notepad++ workspace!**
 
@@ -111,7 +111,7 @@ async def edit_in_notepadpp(
 
     except Exception as e:
         logger.error(f"Error in edit_in_notepadpp: {e}")
-        return f"[UNICODE] Error exporting note to Notepad++: {str(e)}"
+        return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
 
 
 @mcp.tool
@@ -204,7 +204,7 @@ The content in Notepad++ workspace is identical to the original note.
 
     except Exception as e:
         logger.error(f"Error in import_from_notepadpp: {e}")
-        return f"[UNICODE] Error importing note from Notepad++: {str(e)}"
+        return f"[UNICODE] Error importing note from Notepad++: {e!s}"
 
 
 def _find_notepadpp_executable() -> Path | None:

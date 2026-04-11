@@ -164,7 +164,7 @@ async def adn_rag(
             except Exception as e:
                 return {
                     "success": False,
-                    "error": f"Failed to read document: {str(e)}",
+                    "error": f"Failed to read document: {e!s}",
                     "document_path": document_path,
                 }
 
@@ -290,7 +290,7 @@ async def adn_rag(
                 ],
             }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_rag_error: %s", exc, exc_info=True)
         return {
             "success": False,

@@ -526,7 +526,7 @@ import_from_archive("{archive_path}")
 
     except Exception as e:
         logger.error(f"Error creating archive: {e}")
-        return f"[UNICODE] **Archive Creation Failed**\n\nError: {str(e)}"
+        return f"[UNICODE] **Archive Creation Failed**\n\nError: {e!s}"
 
 
 def _format_size(bytes_size: float) -> str:

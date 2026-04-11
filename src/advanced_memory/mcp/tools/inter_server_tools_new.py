@@ -152,7 +152,7 @@ async def agentic_content_workflow(
         return build_error_response(
             error="Agentic workflow failed",
             error_code="WORKFLOW_EXECUTION_ERROR",
-            message=f"Failed to complete agentic workflow: {str(e)}",
+            message=f"Failed to complete agentic workflow: {e!s}",
             recovery_options=[
                 "Check LLM provider connectivity",
                 "Verify sampling handlers are configured",
@@ -323,7 +323,7 @@ async def intelligent_batch_processor(
         return build_error_response(
             error="Intelligent batch processing failed",
             error_code="INTELLIGENT_BATCH_ERROR",
-            message=f"Failed to complete intelligent batch processing: {str(e)}",
+            message=f"Failed to complete intelligent batch processing: {e!s}",
             recovery_options=[
                 "Check LLM provider connectivity",
                 "Simplify processing goal",
@@ -399,7 +399,7 @@ async def sampling_capabilities_status(context: Context | None = None) -> dict:
         return build_error_response(
             error="Capabilities check failed",
             error_code="CAPABILITIES_CHECK_ERROR",
-            message=f"Could not retrieve sampling capabilities: {str(e)}",
+            message=f"Could not retrieve sampling capabilities: {e!s}",
             recovery_options=[
                 "Ensure FastMCP 2.14.3 is installed",
                 "Check sampling handler configuration",

@@ -403,7 +403,7 @@ SUGGESTIONS:
 
 **Identifier:** {identifier}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Possible causes:**
 1. The note identifier doesn't exist

@@ -267,7 +267,7 @@ async def _listen_dual_stt_operation(
             logger.info(f"Dual STT recording saved to: {audio_path}")
 
         except Exception as e:
-            return f"# Recording Failed\n\nError: {str(e)}\n\nEnsure sounddevice and soundfile are installed."
+            return f"# Recording Failed\n\nError: {e!s}\n\nEnsure sounddevice and soundfile are installed."
 
     # Check if audio file exists
     if not audio_path or not Path(audio_path).exists():
@@ -326,7 +326,7 @@ async def _listen_dual_stt_operation(
 
     except Exception as e:
         logger.error(f"Dual STT transcription error: {e}")
-        return f"# Dual STT Failed\n\nError: {str(e)}\n\nTry using the regular 'listen' operation instead."
+        return f"# Dual STT Failed\n\nError: {e!s}\n\nTry using the regular 'listen' operation instead."
 
 
 async def _parse_and_execute_command_dual_stt(active_project, command_text: str) -> dict:

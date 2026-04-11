@@ -112,7 +112,7 @@ async def adn_skills_research(
                     scaffold_references_from_research(skill_dir, bundle, include_sources_md=True)
                     result["skill_draft"]["references_path"] = str(skill_dir / "references")
                     result["skill_draft"]["status"] = "references_scaffolded"
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     logger.warning("adn_skills_research: scaffold references failed: %s", exc)
                     result["skill_draft"]["status"] = "bundle_only"
                     result["skill_draft"]["scaffold_error"] = str(exc)
@@ -121,7 +121,7 @@ async def adn_skills_research(
 
         return result
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_skills_research_error: %s", exc, exc_info=True)
         return {
             "success": False,

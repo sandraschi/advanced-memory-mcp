@@ -113,7 +113,7 @@ If issues occur, restore from backup: `{backup_path if backup_existing else "No 
 
     except Exception as e:
         logger.error(f"Error importing archive: {e}")
-        return f"[UNICODE] **Archive Import Failed**\n\nError: {str(e)}"
+        return f"[UNICODE] **Archive Import Failed**\n\nError: {e!s}"
 
 
 async def _preview_import(archive_root: Path, metadata: dict, config) -> str:

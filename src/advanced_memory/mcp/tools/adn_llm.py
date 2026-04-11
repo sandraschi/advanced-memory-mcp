@@ -174,7 +174,7 @@ Model selection updated and saved to configuration. Use 'load_model' to load int
 
     except Exception as e:
         logger.error(f"LLM operation error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to execute operation: {str(e)}"
+        return f"# Error\n\nFailed to execute operation: {e!s}"
 
 
 async def _list_providers() -> dict:
@@ -294,7 +294,7 @@ async def _list_ollama_models(base_url: str | None = None) -> dict:
                 return f"# Error\n\nFailed to connect to Ollama: HTTP {response.status_code}\n\nMake sure Ollama is running: `ollama serve`"
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to Ollama: {str(e)}\n\nMake sure Ollama is running and accessible at {url}"
+        return f"# Error\n\nFailed to connect to Ollama: {e!s}\n\nMake sure Ollama is running and accessible at {url}"
 
 
 async def _list_lmstudio_models(base_url: str | None = None) -> dict:
@@ -323,7 +323,7 @@ async def _list_lmstudio_models(base_url: str | None = None) -> dict:
                 return f"# Error\n\nFailed to connect to LM Studio: HTTP {response.status_code}\n\nMake sure LM Studio server is running."
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to LM Studio: {str(e)}\n\nMake sure LM Studio server is running at {url}"
+        return f"# Error\n\nFailed to connect to LM Studio: {e!s}\n\nMake sure LM Studio server is running at {url}"
 
 
 async def _list_openai_models() -> dict:
@@ -361,7 +361,7 @@ async def _list_openai_models() -> dict:
     except ImportError:
         return "# Error\n\nOpenAI library not installed. Install with: `pip install openai`"
     except Exception as e:
-        return f"# Error\n\nFailed to list OpenAI models: {str(e)}"
+        return f"# Error\n\nFailed to list OpenAI models: {e!s}"
 
 
 async def _load_model(
@@ -405,7 +405,7 @@ Model is now loaded and ready to use.
                 )
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to Ollama: {str(e)}\n\nMake sure Ollama is running."
+        return f"# Error\n\nFailed to connect to Ollama: {e!s}\n\nMake sure Ollama is running."
 
 
 async def _load_lmstudio_model(model: str, base_url: str | None = None) -> dict:
@@ -448,7 +448,7 @@ Model is loaded and ready to use in LM Studio.
                 return f"# Error\n\nFailed to connect to LM Studio: HTTP {response.status_code}"
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to LM Studio: {str(e)}\n\nMake sure LM Studio server is running."
+        return f"# Error\n\nFailed to connect to LM Studio: {e!s}\n\nMake sure LM Studio server is running."
 
 
 async def _unload_model(
@@ -533,7 +533,7 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
                     else:
                         result += f"❌ **Ollama**: Unhealthy (HTTP {response.status_code})\n"
             except Exception as e:
-                result += f"❌ **Ollama**: Unavailable ({str(e)})\n"
+                result += f"❌ **Ollama**: Unavailable ({e!s})\n"
 
         elif prov == "lmstudio":
             url = (base_url or "http://localhost:1234") + "/v1/models"
@@ -545,7 +545,7 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
                     else:
                         result += f"❌ **LM Studio**: Unhealthy (HTTP {response.status_code})\n"
             except Exception as e:
-                result += f"❌ **LM Studio**: Unavailable ({str(e)})\n"
+                result += f"❌ **LM Studio**: Unavailable ({e!s})\n"
 
         elif prov == "openai":
             api_key = os.getenv("OPENAI_API_KEY")

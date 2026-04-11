@@ -369,7 +369,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> di
         return dedent(f"""
             # Project Switch Failed
 
-            Could not switch to project '{project_name}': {str(e)}
+            Could not switch to project '{project_name}': {e!s}
 
             ## Current project: {current_project}
             Your session remains on the previous project.
@@ -641,7 +641,7 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> dict
         return build_error_response(
             error="Sync failed",
             error_code="SYNC_ERROR",
-            message=f"Failed to sync project '{project_name}': {str(e)}",
+            message=f"Failed to sync project '{project_name}': {e!s}",
             recovery_options=[
                 "Verify the project exists",
                 "Use adn_project('list') to see available projects",
@@ -709,7 +709,7 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> di
         return build_error_response(
             error="Status retrieval failed",
             error_code="STATUS_ERROR",
-            message=f"Failed to get status for project '{project_name}': {str(e)}",
+            message=f"Failed to get status for project '{project_name}': {e!s}",
             recovery_options=[
                 "Verify the project exists",
                 "Use adn_project('list') to see available projects",

@@ -219,7 +219,7 @@ async def adn_skills_creator(
 
         raise ValueError(f"Unsupported operation '{operation}'.")
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_skills_creator_error: %s", exc, exc_info=True)
         return {
             "success": False,

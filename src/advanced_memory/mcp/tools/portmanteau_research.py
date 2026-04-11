@@ -184,5 +184,5 @@ async def adn_research(
     except Exception as e:
         logger.error(f"Research operation '{operation}' failed: {e}")
         return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
+            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
         )

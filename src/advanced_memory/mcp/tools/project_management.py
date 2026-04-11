@@ -144,7 +144,7 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
         return dedent(f"""
             # Project Switch Failed
 
-            Could not switch to project '{project_name}': {str(e)}
+            Could not switch to project '{project_name}': {e!s}
 
             ## Current project: {current_project}
             Your session remains on the previous project.

@@ -448,7 +448,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             f"""
             # 🤖 AI Generation Setup Required
 
-            {str(e)}
+            {e!s}
 
             ## Setup Instructions
 
@@ -496,7 +496,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             f"""
             # ❌ AI Generation Error
 
-            **Error:** {str(e)}
+            **Error:** {e!s}
 
             ## Troubleshooting
 
@@ -746,7 +746,7 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
             f"""
             # 💡 Topic Suggestions
 
-            **Error getting current knowledge stats:** {str(e)}
+            **Error getting current knowledge stats:** {e!s}
 
             **Popular Topics:**
             1. **python-core** (developer) - Python fundamentals
@@ -879,7 +879,7 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
             f"""
             # 📊 Knowledge Base Analysis
 
-            **Error:** {str(e)}
+            **Error:** {e!s}
 
             **Manual Analysis:**
             - Check your current note count

@@ -111,7 +111,7 @@ async def load_evernote_export(
                 errors.append(f"{enex_file.name}: {result['error']}")
 
         except Exception as e:
-            errors.append(f"{enex_file.name}: {str(e)}")
+            errors.append(f"{enex_file.name}: {e!s}")
 
     # Generate summary
     summary = "## Evernote Import Complete\n\n"

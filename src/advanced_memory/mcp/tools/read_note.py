@@ -1,4 +1,4 @@
-﻿"""Read note tool for Advanced Memory MCP server."""
+"""Read note tool for Advanced Memory MCP server."""
 
 from textwrap import dedent
 from typing import Annotated, Any
@@ -80,9 +80,6 @@ async def read_note(
     # Fallback 1: title search via search API directly (bypass search_notes tool)
     logger.info(f"Search title for: {identifier}")
     try:
-        from advanced_memory.schemas.search import SearchQuery
-
-        search_query = SearchQuery(query=identifier, search_type="title")  # type: ignore[call-arg]
         search_response = await call_get(
             client,
             f"{project_url}/search/",

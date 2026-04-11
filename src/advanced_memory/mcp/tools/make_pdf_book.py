@@ -102,7 +102,7 @@ async def make_pdf_book(
             return "[UNICODE] PDF book creation failed. Check that Pandoc and LaTeX are installed."
 
     except Exception as e:
-        return f"[UNICODE] Error creating PDF book: {str(e)}"
+        return f"[UNICODE] Error creating PDF book: {e!s}"
 
 
 async def _get_book_notes(

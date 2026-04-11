@@ -170,7 +170,7 @@ async def adn_document_ingest(
             "processing_timestamp": "2025-12-02",
         }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_document_ingest_error: %s", exc, exc_info=True)
         return {
             "success": False,

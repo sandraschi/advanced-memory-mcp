@@ -194,7 +194,7 @@ async def adn_knowledge(
             return build_error_response(
                 "LIST_FAILED",
                 "LIST_FAILED",
-                f"List operation failed internal: {type(e).__name__}: {str(e)}",
+                f"List operation failed internal: {type(e).__name__}: {e!s}",
             )
 
     elif operation == "navigate":

@@ -202,5 +202,5 @@ async def adn_skills(
     except Exception as e:
         logger.error(f"Skill operation '{operation}' failed: {e}")
         return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {str(e)}"
+            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
         )

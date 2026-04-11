@@ -135,7 +135,7 @@ async def _llm_content_analysis(
 
     except Exception as e:
         logger.error(f"LLM content analysis error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to perform analysis: {str(e)}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
+        return f"# Error\n\nFailed to perform analysis: {e!s}\n\nMake sure an LLM provider is configured (use adn_llm to select one)."
 
 
 async def _analyze_content_quality(
@@ -209,7 +209,7 @@ Provide quality assessments for each note."""
         return result
 
     except Exception as e:
-        return f"# Error\n\nFailed to analyze quality: {str(e)}"
+        return f"# Error\n\nFailed to analyze quality: {e!s}"
 
 
 async def _suggest_relationships(
@@ -285,7 +285,7 @@ Suggest relationships between the main note and related notes."""
         return result
 
     except Exception as e:
-        return f"# Error\n\nFailed to suggest relationships: {str(e)}"
+        return f"# Error\n\nFailed to suggest relationships: {e!s}"
 
 
 async def _find_knowledge_gaps(
@@ -356,7 +356,7 @@ Identify knowledge gaps - what's missing or incomplete?"""
         return result
 
     except Exception as e:
-        return f"# Error\n\nFailed to find gaps: {str(e)}"
+        return f"# Error\n\nFailed to find gaps: {e!s}"
 
 
 async def _cluster_content(
@@ -426,7 +426,7 @@ Group related notes together."""
         return result
 
     except Exception as e:
-        return f"# Error\n\nFailed to cluster content: {str(e)}"
+        return f"# Error\n\nFailed to cluster content: {e!s}"
 
 
 async def _extract_insights(
@@ -496,4 +496,4 @@ Identify the most important insights, patterns, and connections."""
         return result
 
     except Exception as e:
-        return f"# Error\n\nFailed to extract insights: {str(e)}"
+        return f"# Error\n\nFailed to extract insights: {e!s}"

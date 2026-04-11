@@ -214,7 +214,7 @@ After installing, restart the MCP server.
                     errors.append(f"Failed to export: {note_info['title']}")
             except Exception as e:
                 logger.error(f"Error exporting {note_info['title']}: {e}")
-                errors.append(f"Error exporting {note_info['title']}: {str(e)}")
+                errors.append(f"Error exporting {note_info['title']}: {e!s}")
 
         # Generate summary
         summary = "# PDF Export Summary\n\n"
@@ -243,7 +243,7 @@ After installing, restart the MCP server.
 
     except Exception as e:
         logger.error(f"PDF export failed: {e}")
-        return f"PDF export failed: {str(e)}"
+        return f"PDF export failed: {e!s}"
 
 
 async def _export_single_note_pdf(note_info: dict[str, Any], export_dir: Path) -> str | None:
@@ -459,7 +459,7 @@ async def _export_combined_pdf(
         import traceback
 
         logger.error(traceback.format_exc())
-        return f"Combined PDF export failed: {str(e)}"
+        return f"Combined PDF export failed: {e!s}"
 
 
 async def _get_notes_from_folder(

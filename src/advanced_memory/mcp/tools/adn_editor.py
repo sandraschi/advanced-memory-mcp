@@ -226,7 +226,7 @@ async def _notepadpp_edit_operation(
         try:
             subprocess.Popen([str(notepadpp_path), str(md_file)])
         except Exception as e:
-            return f"[UNICODE] Failed to open Notepad++: {str(e)}"
+            return f"[UNICODE] Failed to open Notepad++: {e!s}"
 
         return f"""[UNICODE] **Note exported to Notepad++ workspace!**
 
@@ -247,7 +247,7 @@ async def _notepadpp_edit_operation(
 **Note:** Notepad++ is completely FREE and open source! [SUCCESS]"""
 
     except Exception as e:
-        return f"[UNICODE] Error exporting note to Notepad++: {str(e)}"
+        return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
 
 
 async def _notepadpp_import_operation(
@@ -297,7 +297,7 @@ async def _notepadpp_import_operation(
                 shutil.rmtree(workspace_dir)
             except Exception as e:
                 return (
-                    f"[UNICODE] Note updated successfully, but failed to clean workspace: {str(e)}"
+                    f"[UNICODE] Note updated successfully, but failed to clean workspace: {e!s}"
                 )
 
         return f"""[UNICODE] **Note imported back to Advanced Memory!**
@@ -309,7 +309,7 @@ async def _notepadpp_import_operation(
 **Note:** All metadata and relationships have been preserved. [SUCCESS]"""
 
     except Exception as e:
-        return f"[UNICODE] Error importing note from Notepad++: {str(e)}"
+        return f"[UNICODE] Error importing note from Notepad++: {e!s}"
 
 
 async def _typora_control_operation(
@@ -343,7 +343,7 @@ async def _typora_control_operation(
         else:
             return f"[UNICODE] **Typora Control**\n\nOperation '{typora_operation}' not yet implemented in portmanteau tool.\n\n**Available operations**:\n- export: Export document to various formats\n- get_content: Get current document content\n- set_content: Replace document content\n\n**Note**: Full Typora integration requires the json_rpc plugin."
     except Exception as e:
-        return f"[UNICODE] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {str(e)}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
+        return f"[UNICODE] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {e!s}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
 
 
 async def _handle_typora_export(
@@ -422,7 +422,7 @@ async def _canvas_create_operation(
 **Note:** Requires Obsidian for full visualization. Canvas files are JSON-based."""
 
     except Exception as e:
-        return f"# Error\n\nCanvas creation failed: {str(e)}"
+        return f"# Error\n\nCanvas creation failed: {e!s}"
 
 
 async def _read_content_operation(path: str | None, project: str | None) -> str:
@@ -504,7 +504,7 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
 
 ![{file_path.name}](data:{content_type};base64,{image_data})"""
             except Exception as e:
-                return f"# Error\n\nCannot read image file: {str(e)}"
+                return f"# Error\n\nCannot read image file: {e!s}"
 
         else:
             # Other files
@@ -531,7 +531,7 @@ async def _read_content_operation(path: str | None, project: str | None) -> str:
 {binary_data}
 ```"""
             except Exception as e:
-                return f"# Error\n\nCannot read binary file: {str(e)}"
+                return f"# Error\n\nCannot read binary file: {e!s}"
 
     except Exception as e:
-        return f"# Error\n\nRead content failed: {str(e)}"
+        return f"# Error\n\nRead content failed: {e!s}"

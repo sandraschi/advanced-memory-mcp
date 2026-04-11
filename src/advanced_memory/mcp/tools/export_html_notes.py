@@ -490,7 +490,7 @@ async def _export_combined_html(
         import traceback
 
         logger.error(traceback.format_exc())
-        return f"Combined HTML export failed: {str(e)}"
+        return f"Combined HTML export failed: {e!s}"
 
 
 def _slugify(text: str) -> str:

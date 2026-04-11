@@ -7,7 +7,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from advanced_memory.config import ConfigManager  # noqa: F401 - Used in inner functions
+from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 

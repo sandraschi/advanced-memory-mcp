@@ -80,7 +80,7 @@ class TyporaRPCClient:
         except websockets.exceptions.ConnectionClosedError:
             return {"success": False, "error": "Connection closed by Typora"}
         except Exception as e:
-            return {"success": False, "error": f"Connection failed: {str(e)}"}
+            return {"success": False, "error": f"Connection failed: {e!s}"}
 
     def _generate_id(self) -> int:
         """Generate unique request ID."""
@@ -210,11 +210,11 @@ async def typora_control(
         return _wrap_handler_result(handler_result, operation)
 
     except Exception as e:
-        logger.error(f"Typora control operation failed: {str(e)}")
+        logger.error(f"Typora control operation failed: {e!s}")
         return build_error_response(
             error="typora_operation_failed",
             error_code="TYPORA_OPERATION_ERROR",
-            message=f"Operation '{operation}' failed: {str(e)}",
+            message=f"Operation '{operation}' failed: {e!s}",
             recovery_options=[
                 "Ensure Typora is running",
                 "Check json_rpc plugin is enabled on port 8888",
@@ -688,7 +688,7 @@ async def _handle_batch_export(
                 )
 
         except Exception as e:
-            results.append(f"[UNICODE] {Path(file_path).name}: Error - {str(e)}")
+            results.append(f"[UNICODE] {Path(file_path).name}: Error - {e!s}")
 
     return f"""[UNICODE][UNICODE] **Batch Export Completed**
 

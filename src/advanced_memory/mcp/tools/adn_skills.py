@@ -609,7 +609,7 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
     for skill_file in sorted(skills_root.glob("**/SKILL.md")):
         try:
             post = frontmatter.loads(skill_file.read_text(encoding="utf-8"))
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.warning(f"Failed to parse {skill_file}: {exc}")
             skill_records.append(
                 {
@@ -964,7 +964,7 @@ description: When to use this skill
 
 **Problem:** Could not parse YAML frontmatter
 
-**Error details:** {str(e)}
+**Error details:** {e!s}
 
 **Common issues:**
 - Indentation errors (use spaces, not tabs)
@@ -1308,7 +1308,7 @@ async def _validate_operation(identifier: str | None, project: str | None) -> di
     try:
         frontmatter = yaml.safe_load(match.group(1))
     except Exception as e:
-        return f"# Validation Failed\n\n❌ Invalid YAML frontmatter\n\nError: {str(e)}"
+        return f"# Validation Failed\n\n❌ Invalid YAML frontmatter\n\nError: {e!s}"
 
     errors = []
     warnings = []
@@ -2024,6 +2024,6 @@ Use this code/reference as needed for your task.*"""
 
 **Skill:** {skill_name}
 **Resource:** {resource}
-**Error:** {str(e)}
+**Error:** {e!s}
 
 Could not read the resource file. It may be corrupted or have encoding issues."""

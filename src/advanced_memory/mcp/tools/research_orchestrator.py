@@ -79,7 +79,7 @@ async def research_orchestrator(
             return _get_available_operations()
 
     except Exception as e:
-        return f"[UNICODE] Research orchestration failed: {str(e)}"
+        return f"[UNICODE] Research orchestration failed: {e!s}"
 
 
 async def _create_research_plan(topic: str, params: dict[str, Any]) -> str:

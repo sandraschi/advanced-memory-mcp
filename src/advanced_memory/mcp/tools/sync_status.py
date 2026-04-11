@@ -239,7 +239,7 @@ async def sync_status(project: str | None = None) -> str:
         logger.error(f"Error getting sync status: {e}")
         return f"""# Sync Status - Error
 
-[ERROR] **Unable to check sync status**: {str(e)}
+[ERROR] **Unable to check sync status**: {e!s}
 
 **Troubleshooting:**
 - The system may still be starting up
@@ -248,5 +248,5 @@ async def sync_status(project: str | None = None) -> str:
 - Consider restarting if the issue persists
 
 **Error Details:**
-{str(e)}
+{e!s}
 """
