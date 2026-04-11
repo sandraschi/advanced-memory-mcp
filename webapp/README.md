@@ -6,10 +6,10 @@ React-based web interface for the Advanced Memory MCP (ADN). Runs a Vite fronten
 
 | Service        | Port  | Description                                      |
 |----------------|-------|--------------------------------------------------|
-| **Frontend**   | 10704 | Vite + React + Tailwind (Neural Interface)      |
-| **Backend**    | 10705 | Python FastAPI (uvicorn, from repo root)        |
+| **Frontend**   | 10704 | Vite + React + Tailwind                         |
+| **Backend**    | 10705 | Python FastAPI (`advanced_memory.server:app` via `start.ps1`) |
 
-Ports are in the SOTA range 10700–10800. Edit `start.ps1` to change them.
+Ports use the 10700–10800 band by convention. Edit `start.ps1` to change them.
 
 ## Directory structure
 
@@ -46,14 +46,21 @@ Open **http://localhost:10704/** in your browser.
 - **Node.js** (for frontend build and dev server).
 - **uv** and **Python 3.12+** (for backend). Backend must run from the **repository root** so `advanced_memory` is importable.
 
-## Alternative: Node bridge + startup (start.bat)
+## Alternative: `start.bat` (Node MCP bridge — not the Python API)
 
-`start.bat` uses the Node backend in `backend/`:
+**Use `start.ps1` for normal development.** It runs the **real app API**: Python **FastAPI** on **10705** plus Vite on **10704**.
 
-- Bridge on 10705, Startup Service on 10733, Frontend on 10704.
-- Install and run from `backend/` and `frontend/` as in the script.
+`start.bat` does **not** start Python or uvicorn. It starts three separate things:
 
-Use when you need the Node bridge/startup stack instead of the direct Python backend.
+| What | Port | Role |
+| :--- | :--- | :--- |
+| **Vite** | 10704 | Same dev frontend as `start.ps1`. |
+| **`bridge-server.js`** | 10705 | **Node (Express)** “MCP bridge”: exposes HTTP endpoints that talk to **stdio MCP** processes (spawn/manage MCP servers from the browser side). This is **not** `advanced_memory.server:app`. |
+| **`startup-service.js`** | 10733 | Small **control service** with `POST /start-bridge` and `POST /stop-bridge` to launch or stop the bridge process. |
+
+So **10705 means two different servers** depending on which script you used: FastAPI (`.ps1`) vs Node bridge (`.bat`). The React UI’s REST features (semantic search, note content, etc.) expect the **Python** backend — use **`start.ps1`** for that.
+
+Use **`start.bat`** only when you are developing or testing the **Node MCP bridge** / startup control path, not as a drop-in replacement for the Python web API.
 
 ## Configuration
 
