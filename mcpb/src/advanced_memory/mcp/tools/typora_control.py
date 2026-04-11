@@ -69,7 +69,7 @@ class TyporaRPCClient:
         except websockets.exceptions.ConnectionClosedError:
             return {"success": False, "error": "Connection closed by Typora"}
         except Exception as e:
-            return {"success": False, "error": f"Connection failed: {str(e)}"}
+            return {"success": False, "error": f"Connection failed: {e!s}"}
 
     def _generate_id(self) -> int:
         """Generate unique request ID."""
@@ -157,13 +157,11 @@ async def typora_control(
             return await _handle_unknown_operation(operation)
 
     except Exception as e:
-        logger.error(f"Typora control operation failed: {str(e)}")
-        return f"[UNICODE] **Typora Control Error**\n\nOperation '{operation}' failed: {str(e)}\n\n**Troubleshooting**:\n[UNICODE] Ensure Typora is running\n[UNICODE] Check json_rpc plugin is enabled\n[UNICODE] Verify port 8888 is available\n[UNICODE] Restart Typora if issues persist"
+        logger.error(f"Typora control operation failed: {e!s}")
+        return f"[UNICODE] **Typora Control Error**\n\nOperation '{operation}' failed: {e!s}\n\n**Troubleshooting**:\n[UNICODE] Ensure Typora is running\n[UNICODE] Check json_rpc plugin is enabled\n[UNICODE] Verify port 8888 is available\n[UNICODE] Restart Typora if issues persist"
 
 
-async def _handle_export(
-    format: str | None, output_path: str | None, options: dict[str, Any]
-) -> str:
+async def _handle_export(format: str | None, output_path: str | None, options: dict[str, Any]) -> str:
     """Handle document export operation."""
     if not format:
         return "[UNICODE] Export requires 'format' parameter (pdf, html, docx, odt, etc.)"
@@ -407,9 +405,7 @@ async def _handle_set_metadata(options: dict[str, Any]) -> str:
 **Use `get_metadata` to verify changes**"""
 
 
-async def _handle_search_replace(
-    find_text: str | None, replace_text: str | None, options: dict[str, Any]
-) -> str:
+async def _handle_search_replace(find_text: str | None, replace_text: str | None, options: dict[str, Any]) -> str:
     """Search and replace text."""
     if find_text is None:
         return "[UNICODE] search_replace requires 'find_text' parameter"
@@ -531,9 +527,7 @@ async def _handle_batch_export(
             # Open file
             open_result = await typora_client.call("openFile", {"path": file_path})
             if not open_result["success"]:
-                results.append(
-                    f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}"
-                )
+                results.append(f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}")
                 continue
 
             # Brief pause for loading - configurable via environment
@@ -558,12 +552,10 @@ async def _handle_batch_export(
                 results.append(f"[UNICODE] {export_filename}: Exported successfully")
                 successful_exports += 1
             else:
-                results.append(
-                    f"[UNICODE] {export_filename}: Export failed - {export_result['error']}"
-                )
+                results.append(f"[UNICODE] {export_filename}: Export failed - {export_result['error']}")
 
         except Exception as e:
-            results.append(f"[UNICODE] {Path(file_path).name}: Error - {str(e)}")
+            results.append(f"[UNICODE] {Path(file_path).name}: Error - {e!s}")
 
     return f"""[UNICODE][UNICODE] **Batch Export Completed**
 
@@ -648,9 +640,7 @@ async def _handle_link_validation() -> str:
                 if end > 0:
                     link_text = line[line.find("[") + 1 : start]
                     link_url = line[start + 2 : end]
-                    links_found.append(
-                        {"line": i, "text": link_text, "url": link_url, "full_match": line}
-                    )
+                    links_found.append({"line": i, "text": link_text, "url": link_url, "full_match": line})
 
     if not links_found:
         return "[LINK] **Link Validation**: No links found in document"
@@ -682,9 +672,7 @@ async def _handle_link_validation() -> str:
 
         if is_valid:
             valid_links += 1
-            validation_results.append(
-                f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}"
-            )
+            validation_results.append(f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}")
         else:
             broken_links += 1
             validation_results.append(

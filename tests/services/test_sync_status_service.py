@@ -244,9 +244,7 @@ def test_project_isolation_scenario(sync_tracker):
     """Test the specific bug scenario: project isolation with mixed sync states."""
     # Set up the bug scenario: one failed project, one healthy project
     sync_tracker.start_project_sync("main")
-    sync_tracker.fail_project_sync(
-        "main", "UNIQUE constraint failed: entity.file_path, entity.project_id"
-    )
+    sync_tracker.fail_project_sync("main", "UNIQUE constraint failed: entity.file_path, entity.project_id")
 
     sync_tracker.start_project_sync("basic-memory-testing-20250626-1009")
     sync_tracker.complete_project_sync("basic-memory-testing-20250626-1009")

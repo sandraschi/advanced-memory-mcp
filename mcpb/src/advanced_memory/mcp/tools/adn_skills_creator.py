@@ -151,10 +151,7 @@ async def adn_skills_creator(
                 return {
                     "success": ok,
                     "data": {
-                        "issues": [
-                            {"path": issue.path, "issue": issue.issue, "fix": issue.fix}
-                            for issue in issues
-                        ]
+                        "issues": [{"path": issue.path, "issue": issue.issue, "fix": issue.fix} for issue in issues]
                     },
                     "metadata": {"operation": operation, "skill_path": str(path)},
                 }
@@ -185,7 +182,7 @@ async def adn_skills_creator(
 
         raise ValueError(f"Unsupported operation '{operation}'.")
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_skills_creator_error: %s", exc, exc_info=True)
         return {
             "success": False,

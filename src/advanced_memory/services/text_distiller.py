@@ -45,10 +45,10 @@ class TextDistiller:
                 return content
             except Exception as e:
                 logger.error(f"Error reading text file: {e}")
-                raise ValueError(f"Failed to read file '{file_path}': {str(e)}") from e
+                raise ValueError(f"Failed to read file '{file_path}': {e!s}") from e
         except Exception as e:
             logger.error(f"Error reading text file: {e}")
-            raise ValueError(f"Failed to read file '{file_path}': {str(e)}") from e
+            raise ValueError(f"Failed to read file '{file_path}': {e!s}") from e
 
     def read_pdf_text(self, pdf_path: str | Path) -> str:
         """Read PDF file content as text.
@@ -95,12 +95,10 @@ class TextDistiller:
                         text_parts.append(text)
                 return "\n\n".join(text_parts)
             except ImportError:
-                raise ImportError(
-                    "PDF parsing libraries required. Install with: pip install pdfplumber pypdf"
-                )
+                raise ImportError("PDF parsing libraries required. Install with: pip install pdfplumber pypdf")
         except Exception as e:
             logger.error(f"Error reading PDF: {e}")
-            raise ValueError(f"Failed to read PDF '{pdf_path}': {str(e)}") from e
+            raise ValueError(f"Failed to read PDF '{pdf_path}': {e!s}") from e
 
     def distill_to_skill(
         self,
@@ -165,7 +163,7 @@ class TextDistiller:
             }
         except Exception as e:
             logger.error(f"Error distilling text: {e}")
-            raise ValueError(f"Failed to distill text '{text_path}': {str(e)}") from e
+            raise ValueError(f"Failed to distill text '{text_path}': {e!s}") from e
 
     def _slugify(self, text: str) -> str:
         """Convert text to hyphen-case slug.
@@ -200,8 +198,7 @@ class TextDistiller:
             line.strip()
             for line in lines
             if any(
-                keyword in line.lower()
-                for keyword in ["principle", "rule", "law", "fundamental", "core", "essential"]
+                keyword in line.lower() for keyword in ["principle", "rule", "law", "fundamental", "core", "essential"]
             )
         ][:20]
 
@@ -337,10 +334,7 @@ Based on complete analysis of the source text.
         principles = [
             line.strip()
             for line in lines
-            if any(
-                keyword in line.lower()
-                for keyword in ["principle", "rule", "law", "fundamental", "core"]
-            )
+            if any(keyword in line.lower() for keyword in ["principle", "rule", "law", "fundamental", "core"])
         ][:10]
         return principles
 

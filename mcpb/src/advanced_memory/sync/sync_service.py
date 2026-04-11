@@ -184,15 +184,11 @@ class SyncService:
                 # it will show up in the move and modified lists, so handle it in modified
                 if new_path in report.modified:
                     report.modified.remove(new_path)
-                    logger.debug(
-                        f"File marked as moved and modified: old_path={old_path}, new_path={new_path}"
-                    )
+                    logger.debug(f"File marked as moved and modified: old_path={old_path}, new_path={new_path}")
                 else:
                     await self.handle_move(old_path, new_path)
             except Exception as e:  # pragma: no cover
-                logger.error(
-                    f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}"
-                )
+                logger.error(f"Unexpected error moving file {old_path} -> {new_path}: {type(e).__name__}: {e}")
                 # Continue with other files
 
             files_processed += 1
@@ -244,9 +240,7 @@ class SyncService:
                 if entity is None:
                     logger.warning(f"Skipped modified file due to errors: {path}")
             except Exception as e:  # pragma: no cover
-                logger.error(
-                    f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}"
-                )
+                logger.error(f"Unexpected error syncing modified file {path}: {type(e).__name__}: {e}")
                 # Continue with other files
             files_processed += 1
             if project_name:
@@ -340,9 +334,7 @@ class SyncService:
             Tuple of (entity, checksum) or (None, None) if sync fails
         """
         try:
-            logger.debug(
-                f"Syncing file path={path} is_new={new} is_markdown={self.file_service.is_markdown(path)}"
-            )
+            logger.debug(f"Syncing file path={path} is_new={new} is_markdown={self.file_service.is_markdown(path)}")
 
             if self.file_service.is_markdown(path):
                 entity, checksum = await self.sync_markdown_file(path, new)
@@ -352,9 +344,7 @@ class SyncService:
             if entity is not None:
                 await self.search_service.index_entity(entity)
 
-                logger.debug(
-                    f"File sync completed, path={path}, entity_id={entity.id}, checksum={checksum[:8]}"
-                )
+                logger.debug(f"File sync completed, path={path}, entity_id={entity.id}, checksum={checksum[:8]}")
             return entity, checksum
 
         except Exception as e:  # pragma: no cover
@@ -369,18 +359,14 @@ class SyncService:
                 )
             elif "scanning an alias" in error_msg or "alias" in error_msg.lower():
                 logger.warning(f"Invalid YAML alias in {path}: {error_msg}")
-                logger.info(
-                    f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax."
-                )
+                logger.info(f"File {path} will be skipped due to malformed YAML aliases. Check for invalid &/* syntax.")
             elif "yaml" in error_msg.lower() or "yamlload" in error_type.lower():
                 logger.warning(f"YAML parsing error in {path}: {error_msg}")
                 logger.info(
                     f"File {path} will be skipped due to YAML syntax error. The file may still be processed with empty frontmatter."
                 )
             else:
-                logger.error(
-                    f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}"
-                )
+                logger.error(f"Failed to sync file: path={path}, error_type={error_type}, error={error_msg}")
 
             # Return None to indicate sync failure, but don't crash the entire process
             return None, None
@@ -424,7 +410,7 @@ class SyncService:
             return True, None
 
         except Exception as e:
-            error_msg = f"Failed to validate frontmatter in {path}: {str(e)}"
+            error_msg = f"Failed to validate frontmatter in {path}: {e!s}"
             logger.warning(error_msg)
             return False, error_msg
 
@@ -594,20 +580,14 @@ class SyncService:
             except IntegrityError as e:
                 # Handle race condition where entity was created by another process
                 if "UNIQUE constraint failed: entity.file_path" in str(e):
-                    logger.info(
-                        f"Entity already exists for file_path={path}, updating instead of creating"
-                    )
+                    logger.info(f"Entity already exists for file_path={path}, updating instead of creating")
                     # Treat as update instead of create
                     entity = await self.entity_repository.get_by_file_path(path)
                     if entity is None:  # pragma: no cover
                         logger.error(f"Entity not found after constraint violation, path={path}")
-                        raise ValueError(
-                            f"Entity not found after constraint violation: {path}"
-                        ) from e
+                        raise ValueError(f"Entity not found after constraint violation: {path}") from e
 
-                    updated = await self.entity_repository.update(
-                        entity.id, {"file_path": path, "checksum": checksum}
-                    )
+                    updated = await self.entity_repository.update(entity.id, {"file_path": path, "checksum": checksum})
 
                     if updated is None:  # pragma: no cover
                         logger.error(f"Failed to update entity, entity_id={entity.id}, path={path}")
@@ -695,16 +675,12 @@ class SyncService:
             updates = {"file_path": normalized_new_path}
 
             # If configured, also update permalink to match new path
-            if self.app_config.update_permalinks_on_move and self.file_service.is_markdown(
-                normalized_new_path
-            ):
+            if self.app_config.update_permalinks_on_move and self.file_service.is_markdown(normalized_new_path):
                 # generate new permalink value
                 new_permalink = await self.entity_service.resolve_permalink(normalized_new_path)
 
                 # write to file and get new checksum
-                new_checksum = await self.file_service.update_frontmatter(
-                    new_path, {"permalink": new_permalink}
-                )
+                new_checksum = await self.file_service.update_frontmatter(new_path, {"permalink": new_permalink})
 
                 updates["permalink"] = new_permalink
                 updates["checksum"] = new_checksum
@@ -720,10 +696,7 @@ class SyncService:
 
                 if updated is None:  # pragma: no cover
                     logger.error(
-                        "Failed to update entity path"
-                        f"entity_id={entity.id}"
-                        f"old_path={old_path}"
-                        f"new_path={new_path}"
+                        f"Failed to update entity pathentity_id={entity.id}old_path={old_path}new_path={new_path}"
                     )
                     raise ValueError(f"Failed to update entity path for ID {entity.id}")
             except IntegrityError as e:
@@ -861,7 +834,7 @@ class SyncService:
 
         logger.debug(
             f"{directory} scan completed "
-            f"directory={str(directory)} "
+            f"directory={directory!s} "
             f"files_found={len(result.files)} "
             f"duration_ms={duration_ms}"
         )

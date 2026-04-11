@@ -98,17 +98,13 @@ async def adn_import(
     elif operation == "notion":
         return await _notion_import(source_path, destination_folder, preserve_structure, project)
     elif operation == "evernote":
-        return await _evernote_import(
-            source_path, destination_folder, preserve_structure, include_attachments, project
-        )
+        return await _evernote_import(source_path, destination_folder, preserve_structure, include_attachments, project)
     elif operation == "archive":
         return await _archive_import(source_path, restore_mode, backup_existing, project)
     elif operation == "canvas":
         return await _canvas_import(source_path, destination_folder, create_missing_files, project)
     elif operation == "claude_skills":
-        return await _claude_skills_import(
-            source_path, destination_folder, preserve_structure, project
-        )
+        return await _claude_skills_import(source_path, destination_folder, preserve_structure, project)
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: obsidian, joplin, notion, evernote, archive, canvas, claude_skills"
 
@@ -171,18 +167,16 @@ async def _evernote_import(
     """Handle Evernote import operation."""
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
 
-    return await load_evernote_export(
-        source_path, destination_folder, preserve_structure, include_attachments, project
-    )  # type: ignore[operator,no-any-return]
+    return await load_evernote_export(source_path, destination_folder, preserve_structure, include_attachments, project)  # type: ignore[operator,no-any-return]
 
 
-async def _archive_import(
-    source_path: str, restore_mode: str, backup_existing: bool, project: str | None
-) -> str:
+async def _archive_import(source_path: str, restore_mode: str, backup_existing: bool, project: str | None) -> str:
     """Handle archive import operation."""
     from advanced_memory.mcp.tools.import_from_archive import import_from_archive
 
-    return await (import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive)(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
+    return await (import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive)(
+        source_path, restore_mode, backup_existing, False, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _canvas_import(
@@ -241,11 +235,7 @@ async def _claude_skills_import(
             if preserve_structure:
                 # Preserve relative path from source
                 rel_path = skill_file.parent.relative_to(source_dir)
-                folder = (
-                    f"{destination_folder}/{rel_path}"
-                    if rel_path != Path(".")
-                    else destination_folder
-                )
+                folder = f"{destination_folder}/{rel_path}" if rel_path != Path(".") else destination_folder
             else:
                 folder = destination_folder
 

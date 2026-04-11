@@ -38,9 +38,7 @@ async def test_export_pandoc_docx(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 # Mock successful subprocess
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"")
@@ -70,9 +68,7 @@ async def test_export_pandoc_epub(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"")
                 mock_process.returncode = 0
@@ -98,9 +94,7 @@ async def test_export_pandoc_html(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"")
                 mock_process.returncode = 0
@@ -126,9 +120,7 @@ async def test_export_pandoc_show_after_export(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"")
                 mock_process.returncode = 0
@@ -160,9 +152,7 @@ async def test_export_pandoc_no_show(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]  # Returns list, not string
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"")
                 mock_process.returncode = 0
@@ -209,9 +199,7 @@ async def test_export_pandoc_error_handling(tmp_path, mock_notes_data):
         with patch("advanced_memory.mcp.tools.export_pandoc.get_pandoc_command") as mock_pandoc:
             mock_pandoc.return_value = ["pandoc"]
 
-            with patch(
-                "advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec"
-            ) as mock_exec:
+            with patch("advanced_memory.mcp.tools.export_pandoc.asyncio.create_subprocess_exec") as mock_exec:
                 # Mock failed subprocess
                 mock_process = AsyncMock()
                 mock_process.communicate.return_value = (b"", b"Error: conversion failed")
@@ -238,8 +226,7 @@ class TestPdfEngineDefaults:
 
         assert pdf_engine_param is not None, "pdf_engine parameter not found"
         assert pdf_engine_param.default == "weasyprint", (
-            f"Expected default pdf_engine to be 'weasyprint' (pure Python), "
-            f"but got '{pdf_engine_param.default}'"
+            f"Expected default pdf_engine to be 'weasyprint' (pure Python), but got '{pdf_engine_param.default}'"
         )
 
     def test_default_self_contained_is_true(self):

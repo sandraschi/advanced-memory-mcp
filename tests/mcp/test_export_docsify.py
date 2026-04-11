@@ -68,9 +68,7 @@ Nested content.
 async def test_export_docsify_enhanced_plugins(tmp_path, config_home, app):
     """Test that enhanced features/plugins are properly configured."""
     # Create note through API
-    await write_note.fn(
-        title="Simple Note", folder="plugin_test", content="# Simple Note\n\nContent."
-    )
+    await write_note.fn(title="Simple Note", folder="plugin_test", content="# Simple Note\n\nContent.")
 
     export_path = tmp_path / "docsify_plugins"
 
@@ -171,9 +169,7 @@ async def test_export_docsify_enhanced_no_subfolders(tmp_path, config_home, app)
     """Test export without including subfolders."""
     # Create notes through API
     await write_note.fn(title="Root", folder="no_sub_test", content="# Root\n\nRoot level.")
-    await write_note.fn(
-        title="Sub", folder="no_sub_test/subfolder", content="# Sub\n\nShould not be exported."
-    )
+    await write_note.fn(title="Sub", folder="no_sub_test/subfolder", content="# Sub\n\nShould not be exported.")
 
     export_path = tmp_path / "docsify_no_sub"
 

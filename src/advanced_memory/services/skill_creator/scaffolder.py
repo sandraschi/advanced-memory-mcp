@@ -17,9 +17,7 @@ def slugify_skill_name(name: str) -> str:
     if not slug:
         raise ValueError("Skill name cannot be empty after slugification.")
     if not re.fullmatch(r"[a-z0-9-]+", slug):
-        raise ValueError(
-            f"Invalid skill name '{slug}'. Use lowercase letters, digits, and hyphens only."
-        )
+        raise ValueError(f"Invalid skill name '{slug}'. Use lowercase letters, digits, and hyphens only.")
     return slug
 
 
@@ -54,9 +52,7 @@ def scaffold_skill(
 
     if skill_dir.exists():
         if not overwrite:
-            raise FileExistsError(
-                f"Skill directory already exists at {skill_dir}. Set overwrite=True to replace."
-            )
+            raise FileExistsError(f"Skill directory already exists at {skill_dir}. Set overwrite=True to replace.")
     else:
         skill_dir.mkdir(parents=True, exist_ok=True)
 

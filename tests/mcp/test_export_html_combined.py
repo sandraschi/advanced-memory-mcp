@@ -239,9 +239,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "combined.html"
 
-        result = await _export_combined_html(
-            multiple_notes, export_path, "Multiple Notes", make_toc=True
-        )
+        result = await _export_combined_html(multiple_notes, export_path, "Multiple Notes", make_toc=True)
 
         assert "Combined HTML Export Complete" in result
         assert "Notes Combined: 3" in result
@@ -309,9 +307,7 @@ class TestCombinedHTMLExport:
 
         export_path = export_dir / "edge-cases.html"
 
-        result = await _export_combined_html(
-            edge_case_notes, export_path, "Edge Cases", make_toc=True
-        )
+        result = await _export_combined_html(edge_case_notes, export_path, "Edge Cases", make_toc=True)
 
         assert "Combined HTML Export Complete" in result
         html_file = export_path.with_suffix(".html")
@@ -488,9 +484,7 @@ class TestExportHTMLNotesIntegration:
             }
         ]
 
-        with patch(
-            "advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get:
             mock_get.return_value = mock_notes
 
             result = await export_html_notes.fn(
@@ -510,9 +504,7 @@ class TestExportHTMLNotesIntegration:
         """Test that TOC includes note titles as top-level items."""
         export_path = tmp_path / "toc-test.html"
 
-        with patch(
-            "advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get:
             mock_get.return_value = multiple_notes
 
             await export_html_notes.fn(
@@ -544,9 +536,7 @@ class TestExportHTMLNotesIntegration:
 
         export_path = tmp_path / "hierarchy.html"
 
-        with patch(
-            "advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get:
             mock_get.return_value = notes_with_headings
 
             from advanced_memory.mcp.tools.export_html_notes import _export_combined_html

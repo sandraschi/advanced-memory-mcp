@@ -301,9 +301,7 @@ class SearchRepository:
             if " " in term and not any(c in term for c in problematic_chars):
                 # Check if any individual word contains special characters that need quoting
                 words = term.strip().split()
-                has_special_in_words = any(
-                    any(c in word for c in needs_quoting_chars if c != " ") for word in words
-                )
+                has_special_in_words = any(any(c in word for c in needs_quoting_chars if c != " ") for word in words)
 
                 if not has_special_in_words:
                     # For multi-word queries with simple words (like "emoji unicode"),
@@ -403,9 +401,7 @@ class SearchRepository:
             if not is_boolean_query:
                 sanitized_title = sanitize_filename(title.strip())
                 if sanitized_title != title.strip():  # Only add if different
-                    sanitized_title_text = self._prepare_search_term(
-                        sanitized_title, is_prefix=False
-                    )
+                    sanitized_title_text = self._prepare_search_term(sanitized_title, is_prefix=False)
                     params["sanitized_title_text"] = sanitized_title_text
                     conditions.append("title MATCH :sanitized_title_text")
 
@@ -611,9 +607,7 @@ class SearchRepository:
         """Delete an item from the search index by entity_id."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(
-                text(
-                    "DELETE FROM search_index WHERE entity_id = :entity_id AND project_id = :project_id"
-                ),
+                text("DELETE FROM search_index WHERE entity_id = :entity_id AND project_id = :project_id"),
                 {"entity_id": entity_id, "project_id": self.project_id},
             )
             await session.commit()
@@ -622,9 +616,7 @@ class SearchRepository:
         """Delete an item from the search index."""
         async with db.scoped_session(self.session_maker) as session:
             await session.execute(
-                text(
-                    "DELETE FROM search_index WHERE permalink = :permalink AND project_id = :project_id"
-                ),
+                text("DELETE FROM search_index WHERE permalink = :permalink AND project_id = :project_id"),
                 {"permalink": permalink, "project_id": self.project_id},
             )
             await session.commit()

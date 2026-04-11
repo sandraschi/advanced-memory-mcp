@@ -13,20 +13,9 @@ from rich.tree import Tree
 from advanced_memory import db
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager, get_project_config
-from advanced_memory.markdown import EntityParser
-from advanced_memory.markdown.markdown_processor import MarkdownProcessor
-from advanced_memory.models import Project
 from advanced_memory.repository import (
-    EntityRepository,
-    ObservationRepository,
     ProjectRepository,
-    RelationRepository,
 )
-from advanced_memory.repository.search_repository import SearchRepository
-from advanced_memory.services import EntityService, FileService
-from advanced_memory.services.link_resolver import LinkResolver
-from advanced_memory.services.search_service import SearchService
-from advanced_memory.sync import SyncService
 from advanced_memory.sync.sync_service import SyncReport, get_sync_service
 
 console = Console()
@@ -116,9 +105,7 @@ async def run_sync(verbose: bool = False) -> None:
     app_config = ConfigManager().config
     config = get_project_config()
 
-    _, session_maker = await db.get_or_create_db(
-        db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM
-    )
+    _, session_maker = await db.get_or_create_db(db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM)
     project_repository = ProjectRepository(session_maker)
     project = await project_repository.get_by_name(config.project)
     if not project:  # pragma: no cover
@@ -221,12 +208,9 @@ def validate(
         if not isinstance(e, typer.Exit):
             logger.exception(
                 "Validate command failed",
-                f"project={config.project},"
-                f"error={str(e)},"
-                f"error_type={type(e).__name__},"
-                f"directory={str(config.home)}",
+                f"project={config.project},error={e!s},error_type={type(e).__name__},directory={config.home!s}",
             )
-            typer.secho(f"Error: {str(e)}", fg=typer.colors.RED)
+            typer.secho(f"Error: {e!s}", fg=typer.colors.RED)
 
 
 @app.command()
@@ -253,10 +237,7 @@ def sync(
         if not isinstance(e, typer.Exit):
             logger.exception(
                 "Sync command failed",
-                f"project={config.project},"
-                f"error={str(e)},"
-                f"error_type={type(e).__name__},"
-                f"directory={str(config.home)}",
+                f"project={config.project},error={e!s},error_type={type(e).__name__},directory={config.home!s}",
             )
             typer.echo(f"Error during sync: {e}", err=True)
             raise typer.Exit(1) from e

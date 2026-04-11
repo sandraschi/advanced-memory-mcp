@@ -11,6 +11,6 @@ PathLike = str | Path
 FilePath = TypeVar("FilePath", str, Path)
 
 __all__ = [
-    "PathLike",
     "FilePath",
+    "PathLike",
 ]

@@ -6,7 +6,7 @@ import pytest
 from typer.testing import CliRunner
 
 from advanced_memory.cli.app import import_app
-from advanced_memory.cli.commands import import_memory_json  # noqa
+from advanced_memory.cli.commands import import_memory_json
 from advanced_memory.markdown import MarkdownProcessor
 
 # Set up CLI runner

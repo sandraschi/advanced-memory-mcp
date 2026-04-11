@@ -35,7 +35,7 @@ class ConcreteImporter(Importer):
 
         error_message = f"{message}"
         if error:
-            error_message += f": {str(error)}"
+            error_message += f": {error!s}"
 
         logger.error(error_message)
         return ImportResult(

@@ -113,9 +113,7 @@ async def test_large_tag_operations(mcp_server):
     print("=" * 80)
     try:
         async with Client(mcp_server) as client:
-            result3 = await client.call_tool(
-                "adn_content", {"operation": "read", "identifier": test_note_id}
-            )
+            result3 = await client.call_tool("adn_content", {"operation": "read", "identifier": test_note_id})
             print("✅ SUCCESS: Read note")
             print(f"Result preview: {str(result3)[:500]}...")
             print()

@@ -56,7 +56,7 @@ def list_projects() -> None:
 
         console.print(table)
     except Exception as e:
-        console.print(f"[red]Error listing projects: {str(e)}[/red]")
+        console.print(f"[red]Error listing projects: {e!s}[/red]")
         raise typer.Exit(1) from e
 
 
@@ -78,7 +78,7 @@ def add_project(
 
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
-        console.print(f"[red]Error adding project: {str(e)}[/red]")
+        console.print(f"[red]Error adding project: {e!s}[/red]")
         raise typer.Exit(1) from e
 
     # Display usage hint
@@ -100,7 +100,7 @@ def remove_project(
 
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
-        console.print(f"[red]Error removing project: {str(e)}[/red]")
+        console.print(f"[red]Error removing project: {e!s}[/red]")
         raise typer.Exit(1) from e
 
     # Show this message regardless of method used
@@ -120,7 +120,7 @@ def set_default_project(
 
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:
-        console.print(f"[red]Error setting default project: {str(e)}[/red]")
+        console.print(f"[red]Error setting default project: {e!s}[/red]")
         raise typer.Exit(1) from e
 
     # The API call above should have updated both config and MCP session
@@ -139,7 +139,7 @@ def synchronize_projects() -> None:
 
         console.print(f"[green]{result.message}[/green]")
     except Exception as e:  # pragma: no cover
-        console.print(f"[red]Error synchronizing projects: {str(e)}[/red]")
+        console.print(f"[red]Error synchronizing projects: {e!s}[/red]")
         raise typer.Exit(1) from e
 
 
@@ -177,9 +177,7 @@ def display_project_info(
             stats_table.add_row("Entities", str(info.statistics.total_entities))
             stats_table.add_row("Observations", str(info.statistics.total_observations))
             stats_table.add_row("Relations", str(info.statistics.total_relations))
-            stats_table.add_row(
-                "Unresolved Relations", str(info.statistics.total_unresolved_relations)
-            )
+            stats_table.add_row("Unresolved Relations", str(info.statistics.total_unresolved_relations))
             stats_table.add_row("Isolated Entities", str(info.statistics.isolated_entities))
 
             console.print(stats_table)
@@ -234,9 +232,7 @@ def display_project_info(
 
             # System status
             system_tree = Tree("System Status")
-            system_tree.add(
-                f"Advanced Memory version: [bold green]{info.system.version}[/bold green]"
-            )
+            system_tree.add(f"Advanced Memory version: [bold green]{info.system.version}[/bold green]")
             system_tree.add(
                 f"Database: [cyan]{info.system.database_path}[/cyan] ([green]{info.system.database_size}[/green])"
             )
@@ -256,12 +252,8 @@ def display_project_info(
                         if isinstance(info.system.watch_status.get("start_time"), str)
                         else info.system.watch_status.get("start_time")
                     )
-                    watch_branch.add(
-                        f"Running since: [cyan]{start_time.strftime('%Y-%m-%d %H:%M')}[/cyan]"
-                    )
-                    watch_branch.add(
-                        f"Files synced: [green]{info.system.watch_status.get('synced_files', 0)}[/green]"
-                    )
+                    watch_branch.add(f"Running since: [cyan]{start_time.strftime('%Y-%m-%d %H:%M')}[/cyan]")
+                    watch_branch.add(f"Files synced: [green]{info.system.watch_status.get('synced_files', 0)}[/green]")
                     watch_branch.add(
                         f"Errors: [{'red' if info.system.watch_status.get('error_count', 0) > 0 else 'green'}]{info.system.watch_status.get('error_count', 0)}[/{'red' if info.system.watch_status.get('error_count', 0) > 0 else 'green'}]"
                     )

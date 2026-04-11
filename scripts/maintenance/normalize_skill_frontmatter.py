@@ -71,9 +71,7 @@ def _sanitize_body(body: str) -> str:
 def normalize_skill(skill_path: Path, dry_run: bool = False) -> bool:
     """Normalize a single SKILL.md file. Returns True when modifications were made."""
     original_text = skill_path.read_text(encoding="utf-8")
-    multiline_description = bool(
-        re.search(r"^description:\s+[^\r\n]+\r?\n\s+\S", original_text, flags=re.MULTILINE)
-    )
+    multiline_description = bool(re.search(r"^description:\s+[^\r\n]+\r?\n\s+\S", original_text, flags=re.MULTILINE))
 
     post = frontmatter.loads(original_text)
     original_metadata = dict(post.metadata)
@@ -140,9 +138,7 @@ def normalize_skill(skill_path: Path, dry_run: bool = False) -> bool:
         confidence_note = status_note or "Legacy content pending validation"
 
     confidence_label = CONFIDENCE_LABELS.get(confidence_value, CONFIDENCE_LABELS["medium"])
-    confidence_line = (
-        f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
-    )
+    confidence_line = f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
     last_validated_line = last_validated or date.today().isoformat()
 
     body = post.content or ""
@@ -172,17 +168,13 @@ def normalize_skill(skill_path: Path, dry_run: bool = False) -> bool:
     post.metadata = new_frontmatter
 
     if changed and not dry_run:
-        skill_path.write_text(
-            frontmatter.dumps(post, sort_keys=False, width=4096), encoding="utf-8"
-        )
+        skill_path.write_text(frontmatter.dumps(post, sort_keys=False, width=4096), encoding="utf-8")
 
     return changed
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Normalize SKILL.md frontmatter across all skills."
-    )
+    parser = argparse.ArgumentParser(description="Normalize SKILL.md frontmatter across all skills.")
     parser.add_argument(
         "--root",
         type=Path,

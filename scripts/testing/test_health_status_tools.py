@@ -42,7 +42,7 @@ async def run_test(test: ToolTest) -> tuple[str, str, bool]:
         logger.debug(f"Executing {test.label} kwargs={test.kwargs}")
         outcome = await test.tool(**test.kwargs)
         return (test.label, serialize_result(outcome), True)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.exception(f"Tool invocation failed label={test.label}")
         return (test.label, f"Exception: {exc}", False)
 

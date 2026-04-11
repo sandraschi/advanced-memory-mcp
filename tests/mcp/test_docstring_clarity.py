@@ -21,27 +21,21 @@ import pytest
 
 from advanced_memory.mcp.tools import (
     adn_audio,
-    adn_content,
-    adn_corpus_qc,
     adn_export,
     adn_import,
     adn_inbox,
     adn_knowledge,
-    adn_llm,
     adn_navigation,
-    adn_note_ai,
-    adn_notes,
-    adn_project,
-    adn_search,
     adn_skills,
 )
+from advanced_memory.mcp.tools.content_manager import adn_content
+from advanced_memory.mcp.tools.adn_llm import adn_llm
+from advanced_memory.mcp.tools.adn_search import adn_search
+from advanced_memory.mcp.tools.project_manager import adn_project
 
 _FORBIDDEN_SECTION = re.compile(r"(?im)^\s*(Args|Arguments)\s*:\s*$")
 
 _CONTENT_TOOLS = (
-    ("adn_notes", adn_notes),
-    ("adn_note_ai", adn_note_ai),
-    ("adn_corpus_qc", adn_corpus_qc),
     ("adn_content", adn_content),
 )
 
@@ -104,9 +98,7 @@ def test_content_tool_docstrings_stay_short(tool_name: str, tool: object) -> Non
         f"{tool_name} docstring is {len(doc)} chars; keep under ~1200 (summary + one short paragraph)."
     )
     forbidden = _forbidden_args_section_lines(doc)
-    assert not forbidden, (
-        f"{tool_name}: do not use Google-style {forbidden} headers; use Field() for params"
-    )
+    assert not forbidden, f"{tool_name}: do not use Google-style {forbidden} headers; use Field() for params"
 
 
 @pytest.mark.parametrize(

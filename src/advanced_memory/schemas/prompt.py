@@ -23,9 +23,7 @@ class ContinueConversationRequest(BaseModel):
     """
 
     topic: str | None = Field(None, description="Topic or keyword to search for")
-    timeframe: TimeFrame | None = Field(
-        None, description="How far back to look for activity (e.g. '1d', '1 week')"
-    )
+    timeframe: TimeFrame | None = Field(None, description="How far back to look for activity (e.g. '1d', '1 week')")
     # Limit depth to max 2 for performance reasons - higher values cause significant slowdown
     search_items_limit: int = Field(
         5,
@@ -52,9 +50,7 @@ class SearchPromptRequest(BaseModel):
     """
 
     query: str = Field(..., description="The search query text")
-    timeframe: TimeFrame | None = Field(
-        None, description="Optional timeframe to limit results (e.g. '1d', '1 week')"
-    )
+    timeframe: TimeFrame | None = Field(None, description="Optional timeframe to limit results (e.g. '1d', '1 week')")
 
 
 class PromptMetadata(BaseModel):
@@ -86,6 +82,4 @@ class PromptResponse(BaseModel):
 
     prompt: str = Field(..., description="The rendered prompt text")
     context: dict[str, Any] = Field(..., description="The context used to render the prompt")
-    metadata: PromptMetadata = Field(
-        ..., description="Metadata about the prompt generation process"
-    )
+    metadata: PromptMetadata = Field(..., description="Metadata about the prompt generation process")

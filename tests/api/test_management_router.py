@@ -84,9 +84,7 @@ def mock_project_repository():
 
 
 @pytest.mark.asyncio
-async def test_start_watch_service_when_not_running(
-    mock_app, mock_sync_service, mock_project_repository
-):
+async def test_start_watch_service_when_not_running(mock_app, mock_sync_service, mock_project_repository):
     """Test starting watch service when it's not running."""
     # Set up app state
     mock_app.state.watch_task = None
@@ -97,9 +95,7 @@ async def test_start_watch_service_when_not_running(
     # Mock the create_background_sync_task function
     with (
         patch("advanced_memory.sync.WatchService") as mock_watch_service_class,
-        patch(
-            "advanced_memory.sync.background_sync.create_background_sync_task"
-        ) as mock_create_task,
+        patch("advanced_memory.sync.background_sync.create_background_sync_task") as mock_create_task,
     ):
         # Create a mock task
         mock_task = MagicMock()
@@ -111,9 +107,7 @@ async def test_start_watch_service_when_not_running(
         mock_watch_service_class.return_value = mock_watch_service
 
         # Call endpoint directly
-        response = await start_watch_service(
-            mock_request, mock_project_repository, mock_sync_service
-        )  # pyright: ignore [reportCallIssue]
+        response = await start_watch_service(mock_request, mock_project_repository, mock_sync_service)  # pyright: ignore [reportCallIssue]
 
         # Verify response
         assert isinstance(response, WatchStatusResponse)
@@ -124,9 +118,7 @@ async def test_start_watch_service_when_not_running(
 
 
 @pytest.mark.asyncio
-async def test_start_watch_service_already_running(
-    mock_app, mock_sync_service, mock_project_repository
-):
+async def test_start_watch_service_already_running(mock_app, mock_sync_service, mock_project_repository):
     """Test starting watch service when it's already running."""
     # Create a mock task that reports as running
     mock_task = MagicMock()
@@ -138,13 +130,9 @@ async def test_start_watch_service_already_running(
     # Create mock request
     mock_request = MockRequest(mock_app)
 
-    with patch(
-        "advanced_memory.sync.background_sync.create_background_sync_task"
-    ) as mock_create_task:
+    with patch("advanced_memory.sync.background_sync.create_background_sync_task") as mock_create_task:
         # Call endpoint directly
-        response = await start_watch_service(
-            mock_request, mock_project_repository, mock_sync_service
-        )
+        response = await start_watch_service(mock_request, mock_project_repository, mock_sync_service)
 
         # Verify response
         assert isinstance(response, WatchStatusResponse)

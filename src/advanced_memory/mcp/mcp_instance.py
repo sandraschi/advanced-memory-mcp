@@ -18,11 +18,7 @@ setup_stdio_binary_mode()
 
 # Detect if we're running in stdio mode (MCP server)
 # Check environment variable or if stdout is not a TTY
-_is_stdio_mode = (
-    not sys.stdout.isatty()
-    or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
-    or "stdio" in sys.argv
-)
+_is_stdio_mode = not sys.stdout.isatty() or os.getenv("MCP_STDIO_MODE", "").lower() == "true" or "stdio" in sys.argv
 
 if _is_stdio_mode:
     # CRITICAL: Patch stdout FIRST to prevent ANY writes during initialization
@@ -217,8 +213,8 @@ def _initialize_prompts_and_resources() -> None:
     import advanced_memory.mcp.resources.project_info as project_info
     import advanced_memory.mcp.resources.prompt_templates as prompt_templates
     from advanced_memory.mcp import (
-        prompts,  # noqa: F401
-        resources,  # noqa: F401
+        prompts,
+        resources,
     )
 
     # Store references to prevent garbage collection
@@ -239,19 +235,15 @@ def _initialize_prompts_and_resources() -> None:
 
 
 # For MCP server mode, we need prompts available immediately but can delay resources
-_is_stdio_mode = (
-    not sys.stdout.isatty()
-    or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
-    or "stdio" in sys.argv
-)
+_is_stdio_mode = not sys.stdout.isatty() or os.getenv("MCP_STDIO_MODE", "").lower() == "true" or "stdio" in sys.argv
 
 if _is_stdio_mode:
     # For MCP stdio mode, load prompts immediately but delay resource loading
     # Import individual prompt modules to register them via decorators
     try:
-        import advanced_memory.mcp.prompts.continue_conversation  # noqa: F401
-        import advanced_memory.mcp.prompts.recent_activity  # noqa: F401
-        import advanced_memory.mcp.prompts.search  # noqa: F401
+        import advanced_memory.mcp.prompts.continue_conversation
+        import advanced_memory.mcp.prompts.recent_activity
+        import advanced_memory.mcp.prompts.search
     except ImportError:
         # If there are import issues, continue anyway
         pass
@@ -262,8 +254,8 @@ if _is_stdio_mode:
         try:
             # Import resources module to register all resources via __init__.py
             # Also import the ai_assistant_guide which is a resource in prompts
-            import advanced_memory.mcp.prompts.ai_assistant_guide  # noqa: F401
-            import advanced_memory.mcp.resources  # noqa: F401
+            import advanced_memory.mcp.prompts.ai_assistant_guide
+            import advanced_memory.mcp.resources
         except ImportError:
             pass
 

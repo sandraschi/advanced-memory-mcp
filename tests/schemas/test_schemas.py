@@ -254,9 +254,7 @@ def test_timeframe_validation(timeframe: str, expected_valid: bool):
 def test_edit_entity_request_validation():
     """Test EditEntityRequest validation for operation-specific parameters."""
     # Valid request - append operation
-    edit_request = EditEntityRequest.model_validate(
-        {"operation": "append", "content": "New content to append"}
-    )
+    edit_request = EditEntityRequest.model_validate({"operation": "append", "content": "New content to append"})
     assert edit_request.operation == "append"
     assert edit_request.content == "New content to append"
 
@@ -290,9 +288,7 @@ def test_edit_entity_request_validation():
 
 def test_edit_entity_request_find_replace_empty_find_text():
     """Test that find_replace operation requires non-empty find_text parameter."""
-    with pytest.raises(
-        ValueError, match="find_text parameter is required for find_replace operation"
-    ):
+    with pytest.raises(ValueError, match="find_text parameter is required for find_replace operation"):
         EditEntityRequest.model_validate(
             {
                 "operation": "find_replace",
@@ -304,9 +300,7 @@ def test_edit_entity_request_find_replace_empty_find_text():
 
 def test_edit_entity_request_replace_section_empty_section():
     """Test that replace_section operation requires non-empty section parameter."""
-    with pytest.raises(
-        ValueError, match="section parameter is required for replace_section operation"
-    ):
+    with pytest.raises(ValueError, match="section parameter is required for replace_section operation"):
         EditEntityRequest.model_validate(
             {
                 "operation": "replace_section",

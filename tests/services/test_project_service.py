@@ -432,9 +432,7 @@ async def test_ensure_single_default_project_enforcement_logic(project_service: 
 
 
 @pytest.mark.asyncio
-async def test_synchronize_projects_calls_ensure_single_default(
-    project_service: ProjectService, tmp_path
-):
+async def test_synchronize_projects_calls_ensure_single_default(project_service: ProjectService, tmp_path):
     """Test that synchronize_projects calls _ensure_single_default_project."""
     test_project_name = f"test-sync-default-{os.urandom(4).hex()}"
     test_project_path = str(tmp_path / "test-sync-default")
@@ -471,9 +469,7 @@ async def test_synchronize_projects_calls_ensure_single_default(
 
 
 @pytest.mark.asyncio
-async def test_synchronize_projects_normalizes_project_names(
-    project_service: ProjectService, tmp_path
-):
+async def test_synchronize_projects_normalizes_project_names(project_service: ProjectService, tmp_path):
     """Test that synchronize_projects normalizes project names in config to match database format."""
     # Use a project name that needs normalization (uppercase, spaces)
     unnormalized_name = "Test Project With Spaces"
@@ -536,9 +532,7 @@ async def test_synchronize_projects_normalizes_project_names(
 
 
 @pytest.mark.asyncio
-async def test_synchronize_projects_handles_case_sensitivity_bug(
-    project_service: ProjectService, tmp_path
-):
+async def test_synchronize_projects_handles_case_sensitivity_bug(project_service: ProjectService, tmp_path):
     """Test that synchronize_projects fixes the case sensitivity bug (Personal vs personal)."""
     # Simulate the exact bug scenario: config has "Personal" but database expects "personal"
     config_name = "Personal"

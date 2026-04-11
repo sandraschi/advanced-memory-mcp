@@ -99,9 +99,7 @@ async def search_notion_vault(
     return _format_search_results(query, results, len(files_to_search))
 
 
-async def _search_file(
-    file_path: Path, query_pattern: re.Pattern, vault_dir: Path
-) -> list[dict[str, Any]]:
+async def _search_file(file_path: Path, query_pattern: re.Pattern, vault_dir: Path) -> list[dict[str, Any]]:
     """Search a single file for the query pattern."""
 
     try:
@@ -208,8 +206,6 @@ def _format_search_results(query: str, results: list[dict[str, Any]], total_file
         summary += f"- **Context**: ...{result['context']}...\n\n"
 
     if len(results) >= 20:
-        summary += (
-            "*Showing first 20 results. Use more specific search terms for better results.*\n"
-        )
+        summary += "*Showing first 20 results. Use more specific search terms for better results.*\n"
 
     return summary

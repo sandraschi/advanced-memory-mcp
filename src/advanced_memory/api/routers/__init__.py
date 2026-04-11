@@ -14,8 +14,8 @@ __all__ = [
     "management",
     "memory",
     "project",
+    "prompt",
     "resource",
     "search",
-    "prompt",
     "tests_router",
 ]

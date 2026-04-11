@@ -1,0 +1,45 @@
+{
+  "name": "standard",
+  "description": "A well-populated knowledge graph for search and RAG testing",
+  "entities": [
+    {
+      "title": "Project Glenn",
+      "folder": "projects",
+      "entity_type": "project",
+      "content": "# Project Glenn\nHigh-fidelity agentic framework based on Chrono-Glenn architecture.",
+      "observations": [
+        {"content": "Uses SOTA 2026 patterns", "category": "tech", "tags": ["sota", "2026"]},
+        {"content": "Managed by Sandra Schipal", "category": "bio"}
+      ],
+      "relations": [
+        {"to_id": "tech/fastmcp", "relation_type": "depends_on"}
+      ]
+    },
+    {
+      "title": "FastMCP",
+      "folder": "tech",
+      "entity_type": "framework",
+      "content": "# FastMCP\nHigh-performance MCP server framework.",
+      "observations": [
+        {"content": "Supports 3.2 binary mode", "category": "tech"},
+        {"content": "Industrialized for high availability", "category": "status"}
+      ],
+      "relations": [
+        {"to_id": "projects/project-glenn", "relation_type": "powers"}
+      ]
+    },
+    {
+      "title": "Sandra Schipal",
+      "folder": "people",
+      "entity_type": "person",
+      "content": "# Sandra Schipal\nLead architect of the Alsergrund fleet.",
+      "observations": [
+        {"content": "Lives in Vienna, Austria", "category": "bio"},
+        {"content": "Reductionist philosopher", "category": "philosophy"}
+      ],
+      "relations": [
+        {"to_id": "projects/project-glenn", "relation_type": "leads"}
+      ]
+    }
+  ]
+}

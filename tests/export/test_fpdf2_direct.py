@@ -42,18 +42,12 @@ class MarkdownPDF(FPDF):
             elif line.strip().startswith("- "):
                 self.set_font("Arial", "", 12)
                 self.cell(10)
-                self.cell(0, 6, "• " + line.strip()[2:], ln=1)
-            elif line.strip():
-                self.set_font("Arial", "", 12)
-                text = line.strip().replace("**", "")
-                self.multi_cell(0, 6, text, align="L")
-                self.ln(1)
-            else:
-                self.ln(2)
+                self.cell(0, 6, "- " + line.strip()[2:], ln=1)
 
 
-# Test markdown
-test_md = """# Test PDF Export
+def run_test():
+    # Test markdown
+    test_md = """# Test PDF Export
 
 This tests fpdf2 - pure Python, no LaTeX!
 
@@ -68,18 +62,24 @@ This tests fpdf2 - pure Python, no LaTeX!
 fpdf2 is ready!
 """
 
-# Create PDF
-print("Creating PDF with fpdf2...")
-pdf = MarkdownPDF(title="Test Export")
-pdf.add_page()
-pdf.add_markdown(test_md)
+    # Create PDF
+    print("Creating PDF with fpdf2...")
+    pdf = MarkdownPDF(title="Test Export")
+    pdf.add_page()
+    pdf.add_markdown(test_md)
 
-output_path = Path("d:/Dev/repos/test-pdf-export/test_fpdf2_direct.pdf")
-pdf.output(str(output_path))
+    output_path = Path("d:/Dev/repos/test-pdf-export/test_fpdf2_direct.pdf")
+    # Ensure directory exists
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    pdf.output(str(output_path))
 
-if output_path.exists():
-    size = output_path.stat().st_size
-    print(f"✅ PDF created: {output_path}")
-    print(f"   Size: {size:,} bytes")
-else:
-    print("❌ PDF not created!")
+    if output_path.exists():
+        size = output_path.stat().st_size
+        print(f"✅ PDF created: {output_path}")
+        print(f"   Size: {size:,} bytes")
+    else:
+        print("❌ PDF not created!")
+
+
+if __name__ == "__main__":
+    run_test()

@@ -67,9 +67,7 @@ class AdvancedMemoryConfig(BaseSettings):
     log_level: str = "INFO"
 
     # Watch service configuration
-    sync_delay: int = Field(
-        default=1000, description="Milliseconds to wait after changes before syncing", gt=0
-    )
+    sync_delay: int = Field(default=1000, description="Milliseconds to wait after changes before syncing", gt=0)
 
     # update permalinks on move
     update_permalinks_on_move: bool = Field(
@@ -119,7 +117,7 @@ class AdvancedMemoryConfig(BaseSettings):
         # Ensure default project is valid
         if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
             # Set default to first available project instead of auto-creating "main"
-            self.default_project = list(self.projects.keys())[0]
+            self.default_project = next(iter(self.projects.keys()))
 
     @property
     def app_database_path(self) -> Path:

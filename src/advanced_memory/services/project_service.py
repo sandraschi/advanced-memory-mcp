@@ -87,9 +87,7 @@ class ProjectService:
 
     async def get_project(self, name: str) -> Project | None:
         """Get the file path for a project by name or permalink."""
-        return await self.repository.get_by_name(name) or await self.repository.get_by_permalink(
-            name
-        )
+        return await self.repository.get_by_name(name) or await self.repository.get_by_permalink(name)
 
     async def add_project(self, name: str, path: str, set_default: bool = False) -> None:
         """Add a new project to the configuration and database.
@@ -192,9 +190,7 @@ class ProjectService:
         multiple projects might have is_default=True or no project is marked as default.
         """
         if not self.repository:
-            raise ValueError(
-                "Repository is required for _ensure_single_default_project"
-            )  # pragma: no cover
+            raise ValueError("Repository is required for _ensure_single_default_project")  # pragma: no cover
 
         # Get all projects with is_default=True
         db_projects: Sequence[Project] = await self.repository.find_all()
@@ -211,9 +207,7 @@ class ProjectService:
             # Clear all defaults first, then set only the first one as default
             await self.repository.set_as_default(keep_default.id)  # pragma: no cover
 
-            logger.info(
-                f"Fixed default project conflicts, kept '{keep_default.name}' as default"
-            )  # pragma: no cover
+            logger.info(f"Fixed default project conflicts, kept '{keep_default.name}' as default")  # pragma: no cover
 
         elif len(default_projects) == 0:  # pragma: no cover
             # No default project - set the config default as default
@@ -222,9 +216,7 @@ class ProjectService:
             config_project = await self.repository.get_by_name(config_default)  # pragma: no cover
             if config_project:  # pragma: no cover
                 await self.repository.set_as_default(config_project.id)  # pragma: no cover
-                logger.info(
-                    f"Set '{config_default}' as default project (was missing)"
-                )  # pragma: no cover
+                logger.info(f"Set '{config_default}' as default project (was missing)")  # pragma: no cover
 
     async def synchronize_projects(self) -> None:  # pragma: no cover
         """Synchronize projects between database and configuration.
@@ -313,9 +305,7 @@ class ProjectService:
 
                 normalized_path = normalize_file_path(path)
                 if existing_project.path != normalized_path:
-                    logger.info(
-                        f"Updating path for project '{name}': {existing_project.path} -> {normalized_path}"
-                    )
+                    logger.info(f"Updating path for project '{name}': {existing_project.path} -> {normalized_path}")
                     await self.repository.update(existing_project.id, {"path": normalized_path})
 
         # Don't automatically add database projects back to config
@@ -333,9 +323,7 @@ class ProjectService:
                         f"This prevents accidental lockout. Please manually remove if needed."
                     )
                     continue
-                logger.info(
-                    f"Project '{name}' exists in database but not in config - marking inactive"
-                )
+                logger.info(f"Project '{name}' exists in database but not in config - marking inactive")
                 await self.repository.update(project.id, {"is_active": False})
 
         # Ensure database default project state is consistent
@@ -439,9 +427,7 @@ class ProjectService:
                 new_default = active_projects[0]
                 await self.repository.set_as_default(new_default.id)
                 self.config_manager.set_default_project(new_default.name)
-                logger.info(
-                    f"Changed default project to '{new_default.name}' as '{name}' was deactivated"
-                )
+                logger.info(f"Changed default project to '{new_default.name}' as '{name}' was deactivated")
 
     async def get_project_info(self, project_name: str | None = None) -> ProjectInfoResponse:
         """Get comprehensive information about the specified Advanced Memory project.
@@ -535,9 +521,7 @@ class ProjectService:
         total_observations = observation_count_result.scalar() or 0
 
         relation_count_result = await self.repository.execute_query(
-            text(
-                "SELECT COUNT(*) FROM relation r JOIN entity e ON r.from_id = e.id WHERE e.project_id = :project_id"
-            ),
+            text("SELECT COUNT(*) FROM relation r JOIN entity e ON r.from_id = e.id WHERE e.project_id = :project_id"),
             {"project_id": project_id},
         )
         total_relations = relation_count_result.scalar() or 0
@@ -552,9 +536,7 @@ class ProjectService:
 
         # Get entity counts by type
         entity_types_result = await self.repository.execute_query(
-            text(
-                "SELECT entity_type, COUNT(*) FROM entity WHERE project_id = :project_id GROUP BY entity_type"
-            ),
+            text("SELECT entity_type, COUNT(*) FROM entity WHERE project_id = :project_id GROUP BY entity_type"),
             {"project_id": project_id},
         )
         entity_types = {row[0]: row[1] for row in entity_types_result.fetchall()}
@@ -684,9 +666,7 @@ class ProjectService:
         # Get monthly growth over the last 6 months
         # Calculate the start of 6 months ago
         now = datetime.now()
-        six_months_ago = datetime(
-            now.year - (1 if now.month <= 6 else 0), ((now.month - 6) % 12) or 12, 1
-        )
+        six_months_ago = datetime(now.year - (1 if now.month <= 6 else 0), ((now.month - 6) % 12) or 12, 1)
 
         # Query for monthly entity creation (project filtered)
         entity_growth_result = await self.repository.execute_query(
@@ -737,19 +717,13 @@ class ProjectService:
 
         # Combine all monthly growth data
         monthly_growth = {}
-        for month in set(
-            list(entity_growth.keys())
-            + list(observation_growth.keys())
-            + list(relation_growth.keys())
-        ):
+        for month in set(list(entity_growth.keys()) + list(observation_growth.keys()) + list(relation_growth.keys())):
             monthly_growth[month] = {
                 "entities": entity_growth.get(month, 0),
                 "observations": observation_growth.get(month, 0),
                 "relations": relation_growth.get(month, 0),
                 "total": (
-                    entity_growth.get(month, 0)
-                    + observation_growth.get(month, 0)
-                    + relation_growth.get(month, 0)
+                    entity_growth.get(month, 0) + observation_growth.get(month, 0) + relation_growth.get(month, 0)
                 ),
             }
 

@@ -13,9 +13,7 @@ except ImportError:
 try:
     from advanced_memory.api.app import app
 except ImportError:
-    print(
-        "Error: Could not import 'advanced_memory.api.app'. Ensure you are running from the repo root."
-    )
+    print("Error: Could not import 'advanced_memory.api.app'. Ensure you are running from the repo root.")
     sys.exit(1)
 
 # Project Configuration

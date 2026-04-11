@@ -148,9 +148,7 @@ class TestReadContentSecurityValidation:
 
                 # Should succeed (not a security error)
                 assert isinstance(result, dict)
-                assert result[
-                    "type"
-                ] != "error" or "paths must stay within project boundaries" not in result.get(
+                assert result["type"] != "error" or "paths must stay within project boundaries" not in result.get(
                     "error", ""
                 )
 
@@ -199,9 +197,7 @@ class TestReadContentSecurityValidation:
 
             assert isinstance(result, dict)
             # Empty path should not trigger security error (it's handled as project root)
-            assert result[
-                "type"
-            ] != "error" or "paths must stay within project boundaries" not in result.get(
+            assert result["type"] != "error" or "paths must stay within project boundaries" not in result.get(
                 "error", ""
             )
 
@@ -227,9 +223,7 @@ class TestReadContentSecurityValidation:
 
                 assert isinstance(result, dict)
                 # Should NOT contain security error message
-                assert result[
-                    "type"
-                ] != "error" or "paths must stay within project boundaries" not in result.get(
+                assert result["type"] != "error" or "paths must stay within project boundaries" not in result.get(
                     "error", ""
                 )
 
@@ -287,9 +281,7 @@ class TestReadContentFunctionality:
                 mock_img.getbands.return_value = ["R", "G", "B"]
                 mock_pil.open.return_value = mock_img
 
-                with patch(
-                    "advanced_memory.mcp.tools.read_content.optimize_image"
-                ) as mock_optimize:
+                with patch("advanced_memory.mcp.tools.read_content.optimize_image") as mock_optimize:
                     mock_optimize.return_value = b"optimized_image_data"
 
                     result = await read_content.fn(path="assets/safe-image.png")
@@ -305,9 +297,7 @@ class TestReadContentFunctionality:
         """Test reading content with explicit project parameter."""
         # Mock the API call and project configuration
         with patch("advanced_memory.mcp.tools.read_content.call_get") as mock_call_get:
-            with patch(
-                "advanced_memory.mcp.tools.read_content.get_active_project"
-            ) as mock_get_project:
+            with patch("advanced_memory.mcp.tools.read_content.get_active_project") as mock_get_project:
                 # Mock project configuration
                 mock_project = MagicMock()
                 mock_project.project_url = "http://test"
@@ -319,9 +309,7 @@ class TestReadContentFunctionality:
                 mock_response.text = "Project-specific content"
                 mock_call_get.return_value = mock_response
 
-                result = await read_content.fn(
-                    path="notes/project-file.txt", project="specific-project"
-                )
+                result = await read_content.fn(path="notes/project-file.txt", project="specific-project")
 
                 assert isinstance(result, dict)
                 assert result["type"] == "text"

@@ -145,13 +145,9 @@ def format_prompt_context(context: PromptContext) -> str:
                     - title: {related.title}
                     """)
                 if related.permalink:  # pragma: no cover
-                    section_content += (
-                        f'You can view this document with: `read_note("{related.permalink}")`'
-                    )
+                    section_content += f'You can view this document with: `read_note("{related.permalink}")`'
                 else:  # pragma: no cover
-                    section_content += (
-                        f'You can view this file with: `read_file("{related.file_path}")`'
-                    )
+                    section_content += f'You can view this file with: `read_file("{related.file_path}")`'
 
                 section += section_content
                 sections.append(section)

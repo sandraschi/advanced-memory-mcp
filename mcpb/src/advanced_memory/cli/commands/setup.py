@@ -78,15 +78,11 @@ def setup():
             try:
                 webbrowser.open(link)
                 rprint("[green]✓[/green] Opening link in browser...")
-                rprint(
-                    "\n[yellow]→[/yellow] Cursor should prompt you to install Advanced Memory MCP"
-                )
+                rprint("\n[yellow]→[/yellow] Cursor should prompt you to install Advanced Memory MCP")
                 rprint("[yellow]→[/yellow] Click 'Install' to complete setup\n")
             except Exception as e:
                 rprint(f"[red]✗[/red] Could not open browser: {e}")
-                rprint(
-                    "[yellow]→[/yellow] Please copy the link above and paste it into your browser\n"
-                )
+                rprint("[yellow]→[/yellow] Please copy the link above and paste it into your browser\n")
         else:
             rprint("\n[yellow]>> Copy the link above and paste it into your browser[/yellow]")
             rprint("[yellow]>> Cursor will prompt you to install[/yellow]\n")
@@ -111,15 +107,11 @@ def setup():
             try:
                 webbrowser.open(link)
                 rprint("[green]Opening link in browser...[/green]")
-                rprint(
-                    "\n[yellow]VS Code should prompt you to install Advanced Memory MCP[/yellow]"
-                )
+                rprint("\n[yellow]VS Code should prompt you to install Advanced Memory MCP[/yellow]")
                 rprint("[yellow]Click 'Install' to complete setup[/yellow]\n")
             except Exception as e:
                 rprint(f"[red]Could not open browser: {e}[/red]")
-                rprint(
-                    "[yellow]Please copy the link above and paste it into your browser[/yellow]\n"
-                )
+                rprint("[yellow]Please copy the link above and paste it into your browser[/yellow]\n")
         else:
             rprint("\n[yellow]Copy the link above and paste it into your browser[/yellow]")
             rprint("[yellow]VS Code will prompt you to install[/yellow]\n")
@@ -142,9 +134,7 @@ def setup():
         rprint("\n[yellow]NOTE: Claude Desktop requires manual configuration[/yellow]\n")
         rprint("[bold]Steps:[/bold]")
         rprint("  1. Open your claude_desktop_config.json file:")
-        rprint(
-            "     [dim]• macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]"
-        )
+        rprint("     [dim]• macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]")
         rprint("     [dim]• Windows: %APPDATA%\\Claude\\claude_desktop_config.json[/dim]")
         rprint("     [dim]• Linux: ~/.config/Claude/claude_desktop_config.json[/dim]")
         rprint("  2. Add the configuration shown above to the 'mcpServers' section")
@@ -170,9 +160,7 @@ def setup():
     else:
         rprint("[bold]Next Steps:[/bold]")
         rprint("  1. Start the Advanced Memory MCP server:")
-        rprint(
-            f"     [cyan]advanced-memory mcp --transport {transport} --host {host} --port {port}[/cyan]"
-        )
+        rprint(f"     [cyan]advanced-memory mcp --transport {transport} --host {host} --port {port}[/cyan]")
         rprint("  2. Click the installation link")
         rprint("  3. Start using Advanced Memory MCP in your AI client!\n")
 

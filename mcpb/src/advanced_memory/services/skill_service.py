@@ -145,9 +145,7 @@ class SkillService:
         logger.info(f"Deleted skill: {name}")
         return True
 
-    async def list_skills(
-        self, category: str | None = None, limit: int = 100, offset: int = 0
-    ) -> list[Skill]:
+    async def list_skills(self, category: str | None = None, limit: int = 100, offset: int = 0) -> list[Skill]:
         """List all skills with optional filtering.
 
         Args:

@@ -24,9 +24,7 @@ class RelationRepository(Repository):
         """
         super().__init__(session_maker, Relation, project_id=project_id)
 
-    async def find_relation(
-        self, from_permalink: str, to_permalink: str, relation_type: str
-    ) -> Relation | None:
+    async def find_relation(self, from_permalink: str, to_permalink: str, relation_type: str) -> Relation | None:
         """Find a relation by its from and to path IDs."""
         from_entity = aliased(Entity)
         to_entity = aliased(Entity)

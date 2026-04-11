@@ -105,9 +105,7 @@ def _load_text_embedding(model_name: str, max_retries: int = 2) -> Any:
                     _purge_fastembed_model_cache(slug)
                 else:
                     # Unknown model: wipe the whole cache as fallback
-                    logger.warning(
-                        "Unknown model slug for '%s', wiping entire fastembed cache.", model_name
-                    )
+                    logger.warning("Unknown model slug for '%s', wiping entire fastembed cache.", model_name)
                     cache_dir = _get_fastembed_cache_dir()
                     if cache_dir.exists():
                         shutil.rmtree(cache_dir, ignore_errors=True)
@@ -206,7 +204,11 @@ class VectorRepository:
             os.makedirs(self.db_path, exist_ok=True)
             self.db = lancedb.connect(self.db_path)
 
-        if self.table_name not in self.db.table_names():
+        tables = self.db.table_names() if hasattr(self.db, "table_names") else self.db.list_tables()
+        # Handle cases where list_tables returns a list-like object or a results object
+        table_list = tables if isinstance(tables, list) else getattr(tables, "tables", [])
+
+        if self.table_name not in table_list:
             # Initial schema definition will happen on first add if not explicitly created
             logger.info(f"Creating vector table: {self.table_name}")
         else:
@@ -270,7 +272,7 @@ class VectorRepository:
         elif query_type == "hybrid":
             search_obj = self.table.search(query, query_type="hybrid")
         else:
-            query_vector = list(self.embedding_model.embed([query]))[0]
+            query_vector = next(iter(self.embedding_model.embed([query])))
             search_obj = self.table.search(query_vector)
 
         if filter:

@@ -9,7 +9,7 @@ from loguru import logger
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-from advanced_memory.services.skill_creator import package_skill  # noqa: E402
+from advanced_memory.services.skill_creator import package_skill
 
 
 def collect_skill_dirs(skills_root: Path) -> list[Path]:
@@ -44,7 +44,7 @@ def rebuild_archives(skills_root: Path, output_dir: Path) -> None:
         try:
             archive = package_skill(skill_dir, output_dir)
             logger.info("Packaged {} → {}", skill_dir.name, archive.name)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.error("Failed to package {}: {}", skill_dir.name, exc)
             failures.append((skill_dir, str(exc)))
 

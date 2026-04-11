@@ -119,7 +119,7 @@ class ExpertDistiller:
             }
         except Exception as e:
             logger.error(f"Error distilling expert content: {e}")
-            raise ValueError(f"Failed to distill expert '{expert_name}': {str(e)}") from e
+            raise ValueError(f"Failed to distill expert '{expert_name}': {e!s}") from e
 
     def _search_arxiv(self, expert_name: str, max_results: int) -> list[dict[str, Any]]:
         """Search arXiv for expert's papers.
@@ -187,9 +187,7 @@ class ExpertDistiller:
 
         content_parts.append("## Overview")
         content_parts.append("")
-        content_parts.append(
-            f"This skill is based on the work of {expert_name}, a leading expert in this field."
-        )
+        content_parts.append(f"This skill is based on the work of {expert_name}, a leading expert in this field.")
         content_parts.append("")
 
         # Add publications

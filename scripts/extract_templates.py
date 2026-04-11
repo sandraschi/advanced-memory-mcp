@@ -89,9 +89,7 @@ def extract_templates():
             topic_dir.mkdir(exist_ok=True)
 
             # Extract each template (templates are list of dicts)
-            template_list = (
-                topic_templates if isinstance(topic_templates, list) else [topic_templates]
-            )
+            template_list = topic_templates if isinstance(topic_templates, list) else [topic_templates]
 
             for template in template_list:
                 if isinstance(template, dict):
@@ -100,9 +98,7 @@ def extract_templates():
                 else:
                     # Old format (dict[str, str])
                     note_title = template
-                    note_content = (
-                        topic_templates[template] if isinstance(topic_templates, dict) else template
-                    )
+                    note_content = topic_templates[template] if isinstance(topic_templates, dict) else template
 
                 # Create filename
                 note_slug = slugify(note_title)
@@ -126,9 +122,7 @@ def extract_templates():
         readme_path = category_dir / "README.md"
 
         # Count templates in this category
-        template_count = sum(
-            len(topic_templates) for topic_templates in categories[category_name].values()
-        )
+        template_count = sum(len(topic_templates) for topic_templates in categories[category_name].values())
 
         readme_content = f"""# {category_name.replace("-", " ").title()} Templates
 

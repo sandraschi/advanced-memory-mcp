@@ -167,7 +167,9 @@ async def test_write_note_unicode_content(mcp_server, app):
     """Test handling unicode content including emojis."""
 
     async with Client(mcp_server) as client:
-        unicode_content = "# Unicode Test 🚀\n\nThis note has emoji 🎉 and unicode ♠♣♥♦\n\n- [note] Testing unicode handling 测试"
+        unicode_content = (
+            "# Unicode Test 🚀\n\nThis note has emoji 🎉 and unicode ♠♣♥♦\n\n- [note] Testing unicode handling 测试"
+        )
 
         result = await client.call_tool(
             "write_note",

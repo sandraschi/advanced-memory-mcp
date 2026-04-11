@@ -430,9 +430,7 @@ async def test_write_note_permalink_collision_fix_issue_139(app):
     After the fix, it should either update the existing note or create with unique permalink.
     """
     # Step 1: Create first note
-    result1 = await write_note.fn(
-        title="Note 1", folder="test", content="Original content for note 1"
-    )
+    result1 = await write_note.fn(title="Note 1", folder="test", content="Original content for note 1")
     assert "# Created note" in result1
     assert "permalink: test/note-1" in result1
 

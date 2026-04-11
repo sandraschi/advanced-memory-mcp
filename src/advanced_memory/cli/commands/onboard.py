@@ -153,22 +153,16 @@ def onboard_wizard():
         console.print(
             f"\n[bold green]Selected {total_categories} categories with {total_sub_interests} focus areas[/bold green]"
         )
-        console.print(
-            "This will create approximately 50-60 excellent, interconnected starter notes."
-        )
+        console.print("This will create approximately 50-60 excellent, interconnected starter notes.")
 
         # Confirm
         proceed = Prompt.ask("Ready to create your starter Zettelkasten?", default="y")
         if proceed.lower() not in ["y", "yes"]:
-            console.print(
-                "[yellow]Cancelled. Run 'advanced-memory onboard wizard' anytime to start over.[/yellow]"
-            )
+            console.print("[yellow]Cancelled. Run 'advanced-memory onboard wizard' anytime to start over.[/yellow]")
             return
 
         # Generate content
-        console.print(
-            "\n[bold blue]Generating your personalized starter Zettelkasten...[/bold blue]"
-        )
+        console.print("\n[bold blue]Generating your personalized starter Zettelkasten...[/bold blue]")
 
         async def run_generation():
             return await generate_starter_content(interests)
@@ -177,9 +171,7 @@ def onboard_wizard():
 
         # Success message
         console.print("\n[bold green]🎉 Success![/bold green]")
-        console.print(
-            f"Created [bold]{total_notes}[/bold] high-quality starter notes in your knowledge base!"
-        )
+        console.print(f"Created [bold]{total_notes}[/bold] high-quality starter notes in your knowledge base!")
         console.print("\n[bold]What's next?[/bold]")
         console.print('• Explore your new notes with: [cyan]advanced-memory search "Python"[/cyan]')
         console.print("• Start connecting ideas by adding wikilinks [[Note Name]]")
@@ -221,21 +213,15 @@ def onboard_quick(
             console.print(f"Available: {', '.join(CONTENT_TEMPLATES.keys())}")
             return
 
-        console.print(
-            f"[bold blue]Creating starter Zettelkasten for: {', '.join(interests_dict.keys())}[/bold blue]"
-        )
+        console.print(f"[bold blue]Creating starter Zettelkasten for: {', '.join(interests_dict.keys())}[/bold blue]")
 
         async def run_generation():
             return await generate_starter_content(interests_dict)
 
         total_notes = asyncio.run(run_generation())
 
-        console.print(
-            f"\n[bold green]✅ Created {total_notes} excellent starter notes![/bold green]"
-        )
-        console.print(
-            "Run [cyan]advanced-memory onboard wizard[/cyan] for interactive setup anytime."
-        )
+        console.print(f"\n[bold green]✅ Created {total_notes} excellent starter notes![/bold green]")
+        console.print("Run [cyan]advanced-memory onboard wizard[/cyan] for interactive setup anytime.")
 
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")

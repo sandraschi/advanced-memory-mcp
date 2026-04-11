@@ -80,9 +80,7 @@ class ProjectDetector:
             # Exact name match (high confidence)
             if project_name_lower in query_lower or project_permalink in query_lower:
                 scores[project["name"]] = scores.get(project["name"], 0.0) + 0.8
-                reasons[project["name"]].append(
-                    f"Project name '{project['name']}' mentioned in query"
-                )
+                reasons[project["name"]].append(f"Project name '{project['name']}' mentioned in query")
 
             # Partial name match (medium confidence)
             words = query_lower.split()
@@ -120,9 +118,7 @@ class ProjectDetector:
                 project_name_lower = project["name"].lower()
                 if project_name_lower in ["private", "personal", "daily", "life"]:
                     scores[project["name"]] = scores.get(project["name"], 0.0) + 0.5
-                    reasons[project["name"]].append(
-                        "Personal context detected (meeting, family, etc.)"
-                    )
+                    reasons[project["name"]].append("Personal context detected (meeting, family, etc.)")
 
         # Work context indicators
         work_indicators = [
@@ -197,9 +193,7 @@ class ProjectDetector:
                 # This is a simplified check - could be enhanced with actual folder scanning
                 if folder_match.lower() in project["name"].lower():
                     scores[project["name"]] = scores.get(project["name"], 0.0) + 0.4
-                    reasons[project["name"]].append(
-                        f"Folder mention matches project: {folder_match}"
-                    )
+                    reasons[project["name"]].append(f"Folder mention matches project: {folder_match}")
 
         # 6. If current project has any score, give it a small boost (inertia)
         if current_project and current_project in scores:
@@ -240,9 +234,7 @@ class ProjectDetector:
             "should_switch": should_switch,
         }
 
-    async def search_across_projects(
-        self, query: str, max_results_per_project: int = 3
-    ) -> dict[str, Any]:
+    async def search_across_projects(self, query: str, max_results_per_project: int = 3) -> dict[str, Any]:
         """Search across all projects to find which project contains relevant content.
 
         Args:
@@ -264,9 +256,7 @@ class ProjectDetector:
         return {
             "query": query,
             "project_scores": project_scores,
-            "suggested_project": max(project_scores.items(), key=lambda x: x[1])[0]
-            if project_scores
-            else None,
+            "suggested_project": max(project_scores.items(), key=lambda x: x[1])[0] if project_scores else None,
         }
 
     async def _get_all_projects(self) -> list[dict[str, Any]]:

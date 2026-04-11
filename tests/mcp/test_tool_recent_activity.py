@@ -35,7 +35,7 @@ async def test_recent_activity_timeframe_formats(client, test_graph):
             )
             assert result is not None
         except Exception as e:
-            pytest.fail(f"Failed with valid timeframe '{timeframe}': {str(e)}")
+            pytest.fail(f"Failed with valid timeframe '{timeframe}': {e!s}")
 
     # Test invalid timeframes should raise ValidationError
     for timeframe in invalid_timeframes:
@@ -70,8 +70,7 @@ async def test_recent_activity_type_filters(client, test_graph):
     assert result is not None
     assert len(result.results) > 0
     assert all(
-        isinstance(item.primary_result, EntitySummary)
-        or isinstance(item.primary_result, ObservationSummary)
+        isinstance(item.primary_result, EntitySummary) or isinstance(item.primary_result, ObservationSummary)
         for item in result.results
     )
 
@@ -80,8 +79,7 @@ async def test_recent_activity_type_filters(client, test_graph):
     assert result is not None
     assert len(result.results) > 0
     assert all(
-        isinstance(item.primary_result, EntitySummary)
-        or isinstance(item.primary_result, ObservationSummary)
+        isinstance(item.primary_result, EntitySummary) or isinstance(item.primary_result, ObservationSummary)
         for item in result.results
     )
 
@@ -105,13 +103,9 @@ async def test_recent_activity_type_invalid(client, test_graph):
     # Test single invalid string type
     with pytest.raises(ValueError) as e:
         await recent_activity.fn(type="note")
-    assert (
-        str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"
-    )
+    assert str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"
 
     # Test invalid string array type
     with pytest.raises(ValueError) as e:
         await recent_activity.fn(type=["note"])
-    assert (
-        str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"
-    )
+    assert str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"

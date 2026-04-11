@@ -218,7 +218,7 @@ async def adn_web_search(
             },
         }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_web_search_error: %s", exc, exc_info=True)
         return {
             "success": False,
@@ -296,9 +296,7 @@ def _enhance_query_with_time(query: str, time_filter: str) -> str:
     return query
 
 
-async def _execute_search(
-    provider: SearchProvider, query: str, max_results: int
-) -> list[dict[str, Any]]:
+async def _execute_search(provider: SearchProvider, query: str, max_results: int) -> list[dict[str, Any]]:
     """Execute the actual web search."""
 
     import urllib.parse

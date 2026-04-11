@@ -32,9 +32,7 @@ class TestTyporaRPCClient:
         with patch("websockets.connect") as mock_connect:
             mock_ws = AsyncMock()
             mock_ws.send = AsyncMock()
-            mock_ws.recv = AsyncMock(
-                return_value='{"jsonrpc": "2.0", "id": 1, "result": {"content": "test content"}}'
-            )
+            mock_ws.recv = AsyncMock(return_value='{"jsonrpc": "2.0", "id": 1, "result": {"content": "test content"}}')
             mock_connect.return_value.__aenter__.return_value = mock_ws
 
             result = await client.call("getContent")
@@ -104,9 +102,7 @@ class TestTyporaControlOperations:
     @pytest.mark.asyncio
     async def test_get_content_operation(self, mock_client):
         """Test get_content operation."""
-        mock_client.call = AsyncMock(
-            return_value={"success": True, "result": "# Test Content\n\nSome content"}
-        )
+        mock_client.call = AsyncMock(return_value={"success": True, "result": "# Test Content\n\nSome content"})
 
         result = await typora_control.fn("get_content")
 
@@ -161,9 +157,7 @@ class TestTyporaControlOperations:
         )
 
         files = ["/test/file1.md", "/test/file2.md"]
-        result = await typora_control.fn(
-            "batch_export", files=files, format="html", output_path="/exports"
-        )
+        result = await typora_control.fn("batch_export", files=files, format="html", output_path="/exports")
 
         assert "[UNICODE][UNICODE] **Batch Export Completed**" in result
         assert "**Files Processed**: 2" in result
@@ -264,9 +258,7 @@ class TestUtilityFunctions:
     @pytest.mark.asyncio
     async def test_get_typora_status_disconnected(self):
         """Test getting Typora status when disconnected."""
-        with patch(
-            "advanced_memory.mcp.tools.typora_control.check_typora_connection", return_value=False
-        ):
+        with patch("advanced_memory.mcp.tools.typora_control.check_typora_connection", return_value=False):
             status = await get_typora_status()
 
             assert status["connection"] is False

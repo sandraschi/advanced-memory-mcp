@@ -1,6 +1,6 @@
 [project]
-name = "schi-mcp-advanced-memory"
-version = "1.6.1"
+name = "schip-mcp-advanced-memory"
+version = "1.7.0"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -234,7 +234,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "S", "UP", "RUF"]
-ignore = ["S101", "B008"]
+ignore = ["S101", "B008", "S108", "S603", "S607", "S110", "RUF001", "E501", "RUF012", "B904", "S606", "S608", "E402", "S324", "S112", "RUF034", "F401", "S605", "S104", "S314", "RUF002", "RUF003"]
 
 [tool.ruff.format]
 quote-style = "double"

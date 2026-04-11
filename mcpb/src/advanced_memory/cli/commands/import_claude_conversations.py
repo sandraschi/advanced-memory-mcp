@@ -27,12 +27,10 @@ async def get_markdown_processor() -> MarkdownProcessor:
 
 @claude_app.command(name="conversations", help="Import chat conversations from Claude.ai.")
 def import_claude(
-    conversations_json: Annotated[
-        Path, typer.Argument(..., help="Path to conversations.json file")
-    ] = Path("conversations.json"),
-    folder: Annotated[
-        str, typer.Option(help="The folder to place the files in.")
-    ] = "conversations",
+    conversations_json: Annotated[Path, typer.Argument(..., help="Path to conversations.json file")] = Path(
+        "conversations.json"
+    ),
+    folder: Annotated[str, typer.Option(help="The folder to place the files in.")] = "conversations",
 ):
     """Import chat conversations from conversations2.json format.
 

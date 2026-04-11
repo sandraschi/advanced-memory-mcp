@@ -105,9 +105,7 @@ class WatchServiceState(BaseModel):
             # Reset error count periodically to prevent false positives
             # but keep track of the pattern
             if self.last_error and (datetime.now() - self.last_error).seconds > 3600:  # 1 hour
-                self.error_count = max(
-                    1, self.error_count // 2
-                )  # Reduce but don't reset completely
+                self.error_count = max(1, self.error_count // 2)  # Reduce but don't reset completely
 
 
 class WatchService:
@@ -242,9 +240,7 @@ class WatchService:
 
         start_time = time.time()
         directory = Path(project.path).resolve()
-        logger.info(
-            f"Processing project: {project.name} changes, change_count={len(changes)}, directory={directory}"
-        )
+        logger.info(f"Processing project: {project.name} changes, change_count={len(changes)}, directory={directory}")
 
         # Group changes by type
         adds: list[str] = []
@@ -266,9 +262,7 @@ class WatchService:
             elif change == Change.modified:
                 modifies.append(relative_path)
 
-        logger.debug(
-            f"Grouped file changes, added={len(adds)}, deleted={len(deletes)}, modified={len(modifies)}"
-        )
+        logger.debug(f"Grouped file changes, added={len(adds)}, deleted={len(deletes)}, modified={len(modifies)}")
 
         # because of our atomic writes on updates, an add may be an existing file
         for added_path in adds:  # pragma: no cover
@@ -328,7 +322,7 @@ class WatchService:
                             "Error checking for move",
                             f"old_path={deleted_path}",
                             f"new_path={added_path}",
-                            f"error={str(e)}",
+                            f"error={e!s}",
                         )
 
         # Handle remaining changes - group them by type for concise output
@@ -354,18 +348,14 @@ class WatchService:
                 # Skip directories - only process files
                 full_path = directory / path
                 if not full_path.exists() or full_path.is_dir():
-                    logger.debug(
-                        f"Skipping non-existent or directory path, path={path}"
-                    )  # pragma: no cover
+                    logger.debug(f"Skipping non-existent or directory path, path={path}")  # pragma: no cover
                     processed.add(path)  # pragma: no cover
                     continue  # pragma: no cover
 
                 logger.debug(f"Processing new file, path={path}")
                 entity, checksum = await sync_service.sync_file(path, new=True)
                 if checksum:
-                    self.state.add_event(
-                        path=path, action="new", status="success", checksum=checksum
-                    )
+                    self.state.add_event(path=path, action="new", status="success", checksum=checksum)
                     self.console.print(f"[green]OK[/green] {path}")
                     logger.info(
                         "new file processed",
@@ -376,9 +366,7 @@ class WatchService:
                     add_count += 1
                 else:  # pragma: no cover
                     logger.warning(f"Error syncing new file, path={path}")  # pragma: no cover
-                    self.console.print(
-                        f"[orange]?[/orange] Error syncing: {path}"
-                    )  # pragma: no cover
+                    self.console.print(f"[orange]?[/orange] Error syncing: {path}")  # pragma: no cover
 
         # Process modifies - detect repeats
         last_modified_path = None
@@ -395,18 +383,14 @@ class WatchService:
 
                 logger.debug(f"Processing modified file: path={path}")
                 entity, checksum = await sync_service.sync_file(path, new=False)
-                self.state.add_event(
-                    path=path, action="modified", status="success", checksum=checksum
-                )
+                self.state.add_event(path=path, action="modified", status="success", checksum=checksum)
 
                 # Check if this is a repeat of the last modified file
                 if path == last_modified_path:  # pragma: no cover
                     repeat_count += 1  # pragma: no cover
                     # Only show a message for the first repeat
                     if repeat_count == 1:  # pragma: no cover
-                        self.console.print(
-                            f"[yellow]...[/yellow] Repeated changes to {path}"
-                        )  # pragma: no cover
+                        self.console.print(f"[yellow]...[/yellow] Repeated changes to {path}")  # pragma: no cover
                 else:
                     # haven't processed this file
                     self.console.print(f"[yellow]EDIT[/yellow] {path}")

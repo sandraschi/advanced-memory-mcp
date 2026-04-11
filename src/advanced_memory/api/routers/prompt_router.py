@@ -57,9 +57,7 @@ async def continue_conversation(
     Returns:
         Formatted continuation prompt with context
     """
-    logger.info(
-        f"Generating continue conversation prompt, topic: {request.topic}, timeframe: {request.timeframe}"
-    )
+    logger.info(f"Generating continue conversation prompt, topic: {request.topic}, timeframe: {request.timeframe}")
 
     since = parse_timeframe(request.timeframe) if request.timeframe else None
 
@@ -86,9 +84,7 @@ async def continue_conversation(
                 )
 
                 # Process results into the schema format
-                graph_context = await to_graph_context(
-                    context_result, entity_repository=entity_repository
-                )
+                graph_context = await to_graph_context(context_result, entity_repository=entity_repository)
 
                 # Add results to our collection (limit to top results for each permalink)
                 if graph_context.results:
@@ -125,9 +121,7 @@ async def continue_conversation(
 
     try:
         # Render template
-        rendered_prompt = await template_loader.render(
-            "prompts/continue_conversation.hbs", template_context
-        )
+        rendered_prompt = await template_loader.render("prompts/continue_conversation.hbs", template_context)
 
         # Calculate metadata
         # Count items of different types
@@ -169,18 +163,11 @@ async def continue_conversation(
         metadata = {
             "query": request.topic,
             "timeframe": request.timeframe,
-            "search_count": len(search_results)
-            if request.topic
-            else 0,  # Original search results count
+            "search_count": len(search_results) if request.topic else 0,  # Original search results count
             "context_count": len(hierarchical_results_for_count),
             "observation_count": observation_count,
             "relation_count": relation_count,
-            "total_items": (
-                len(hierarchical_results_for_count)
-                + observation_count
-                + relation_count
-                + entity_count
-            ),
+            "total_items": (len(hierarchical_results_for_count) + observation_count + relation_count + entity_count),
             "search_limit": request.search_items_limit,
             "context_depth": request.depth,
             "related_limit": request.related_items_limit,
@@ -189,14 +176,12 @@ async def continue_conversation(
 
         prompt_metadata = PromptMetadata(**metadata)
 
-        return PromptResponse(
-            prompt=rendered_prompt, context=template_context, metadata=prompt_metadata
-        )
+        return PromptResponse(prompt=rendered_prompt, context=template_context, metadata=prompt_metadata)
     except Exception as e:
         logger.error(f"Error rendering continue conversation template: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error rendering prompt template: {str(e)}",
+            detail=f"Error rendering prompt template: {e!s}",
         ) from e
 
 
@@ -259,12 +244,10 @@ async def search_prompt(
 
         prompt_metadata = PromptMetadata(**metadata)
 
-        return PromptResponse(
-            prompt=rendered_prompt, context=template_context, metadata=prompt_metadata
-        )
+        return PromptResponse(prompt=rendered_prompt, context=template_context, metadata=prompt_metadata)
     except Exception as e:
         logger.error(f"Error rendering search template: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error rendering prompt template: {str(e)}",
+            detail=f"Error rendering prompt template: {e!s}",
         ) from e

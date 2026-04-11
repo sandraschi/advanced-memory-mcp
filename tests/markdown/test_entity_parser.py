@@ -72,26 +72,22 @@ async def test_parse_complete_file(project_config, entity_parser, valid_entity_c
 
     # Check relations
     assert len(entity.relations) == 5
-    assert (
-        Relation(type="implements", target="OAuth Implementation", context="Core auth flows")
-        in entity.relations
-    ), "missing [[OAuth Implementation]]"
-    assert (
-        Relation(type="uses", target="Redis Cache", context="Token caching") in entity.relations
-    ), "missing [[Redis Cache]]"
-    assert (
-        Relation(type="specified_by", target="Auth API Spec", context="OpenAPI spec")
-        in entity.relations
-    ), "missing [[Auth API Spec]]"
+    assert Relation(type="implements", target="OAuth Implementation", context="Core auth flows") in entity.relations, (
+        "missing [[OAuth Implementation]]"
+    )
+    assert Relation(type="uses", target="Redis Cache", context="Token caching") in entity.relations, (
+        "missing [[Redis Cache]]"
+    )
+    assert Relation(type="specified_by", target="Auth API Spec", context="OpenAPI spec") in entity.relations, (
+        "missing [[Auth API Spec]]"
+    )
 
     # inline links in content
-    assert Relation(type="links to", target="Random Link", context=None) in entity.relations, (
-        "missing [[Random Link]]"
-    )
+    assert Relation(type="links to", target="Random Link", context=None) in entity.relations, "missing [[Random Link]]"
     # Wikilink [[target|display]] should extract just the target
-    assert (
-        Relation(type="links to", target="Random Link with Title", context=None) in entity.relations
-    ), "missing [[Random Link with Title|Titled Link]]"
+    assert Relation(type="links to", target="Random Link with Title", context=None) in entity.relations, (
+        "missing [[Random Link with Title|Titled Link]]"
+    )
 
 
 @pytest.mark.asyncio

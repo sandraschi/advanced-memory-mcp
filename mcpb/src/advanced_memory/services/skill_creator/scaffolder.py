@@ -29,9 +29,7 @@ def slugify_skill_name(name: str) -> str:
     if not slug:
         raise ValueError("Skill name cannot be empty after slugification.")
     if not re.fullmatch(r"[a-z0-9-]+", slug):
-        raise ValueError(
-            f"Invalid skill name '{slug}'. Use lowercase letters, digits, and hyphens only."
-        )
+        raise ValueError(f"Invalid skill name '{slug}'. Use lowercase letters, digits, and hyphens only.")
     return slug
 
 
@@ -65,9 +63,7 @@ def scaffold_skill(
 
     if skill_dir.exists():
         if not overwrite:
-            raise FileExistsError(
-                f"Skill directory already exists at {skill_dir}. Set overwrite=True to replace."
-            )
+            raise FileExistsError(f"Skill directory already exists at {skill_dir}. Set overwrite=True to replace.")
     else:
         skill_dir.mkdir(parents=True, exist_ok=True)
 
@@ -93,15 +89,11 @@ def scaffold_skill(
     (skill_dir / "_toc.md").write_text(render_toc(), encoding="utf-8")
     (modules_dir / "core-guidance.md").write_text(render_core_guidance(), encoding="utf-8")
     (modules_dir / "known-gaps.md").write_text(render_known_gaps(), encoding="utf-8")
-    (modules_dir / "research-checklist.md").write_text(
-        render_research_checklist(), encoding="utf-8"
-    )
+    (modules_dir / "research-checklist.md").write_text(render_research_checklist(), encoding="utf-8")
 
     # Placeholders for resources
     (skill_dir / "scripts" / "example.py").write_text(render_example_script(slug), encoding="utf-8")
-    (skill_dir / "references" / "example.md").write_text(
-        render_example_reference(title), encoding="utf-8"
-    )
+    (skill_dir / "references" / "example.md").write_text(render_example_reference(title), encoding="utf-8")
     (skill_dir / "assets" / "example.txt").write_text(render_example_asset(), encoding="utf-8")
 
     logger.info("Skill scaffolded at %s", skill_dir)

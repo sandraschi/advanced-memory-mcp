@@ -22,10 +22,7 @@ def test_template_loader_finds_templates_dir():
 
     assert loader.templates_dir.exists()
     assert loader.templates_dir.name == "templates"
-    assert (
-        loader.templates_dir.parent.name == "zettelkasten"
-        or loader.templates_dir.parent.name == "advanced_memory"
-    )
+    assert loader.templates_dir.parent.name == "zettelkasten" or loader.templates_dir.parent.name == "advanced_memory"
 
 
 def test_load_all_categories():

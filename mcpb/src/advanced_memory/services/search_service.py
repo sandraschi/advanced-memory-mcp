@@ -55,9 +55,7 @@ class SearchService:
 
         logger.info("Reindex complete")
 
-    async def search(
-        self, query: SearchQuery, limit: int = 10, offset: int = 0
-    ) -> list[SearchIndexRow]:
+    async def search(self, query: SearchQuery, limit: int = 10, offset: int = 0) -> list[SearchIndexRow]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -72,21 +70,13 @@ class SearchService:
         logger.trace(f"Searching with query: {query}")
 
         after_date = (
-            (
-                query.after_date
-                if isinstance(query.after_date, datetime)
-                else parse(query.after_date)
-            )
+            (query.after_date if isinstance(query.after_date, datetime) else parse(query.after_date))
             if query.after_date
             else None
         )
 
         before_date = (
-            (
-                query.before_date
-                if isinstance(query.before_date, datetime)
-                else parse(query.before_date)
-            )
+            (query.before_date if isinstance(query.before_date, datetime) else parse(query.before_date))
             if query.before_date
             else None
         )
@@ -182,9 +172,7 @@ class SearchService:
         await self.repository.delete_by_entity_id(entity_id=entity.id)
 
         # reindex
-        await self.index_entity_markdown(
-            entity
-        ) if entity.is_markdown else await self.index_entity_file(entity)
+        await self.index_entity_markdown(entity) if entity.is_markdown else await self.index_entity_file(entity)
 
     async def index_entity_file(
         self,
@@ -284,9 +272,7 @@ class SearchService:
         # Index each observation with permalink
         for obs in entity.observations:
             # Index with parent entity's file path since that's where it's defined
-            obs_content_stems = "\n".join(
-                p for p in self._generate_variants(obs.content) if p and p.strip()
-            )
+            obs_content_stems = "\n".join(p for p in self._generate_variants(obs.content) if p and p.strip())
             await self.repository.index_item(
                 SearchIndexRow(
                     id=obs.id,
@@ -311,14 +297,10 @@ class SearchService:
         for rel in entity.outgoing_relations:
             # Create descriptive title showing the relationship
             relation_title = (
-                f"{rel.from_entity.title} -> {rel.to_entity.title}"
-                if rel.to_entity
-                else f"{rel.from_entity.title}"
+                f"{rel.from_entity.title} -> {rel.to_entity.title}" if rel.to_entity else f"{rel.from_entity.title}"
             )
 
-            rel_content_stems = "\n".join(
-                p for p in self._generate_variants(relation_title) if p and p.strip()
-            )
+            rel_content_stems = "\n".join(p for p in self._generate_variants(relation_title) if p and p.strip())
             await self.repository.index_item(
                 SearchIndexRow(
                     id=rel.id,
@@ -363,10 +345,7 @@ class SearchService:
             + [r.permalink for r in entity.outgoing_relations]
         )
 
-        logger.debug(
-            f"Deleting search index entries for entity_id={entity.id}, "
-            f"index_entries={len(permalinks)}"
-        )
+        logger.debug(f"Deleting search index entries for entity_id={entity.id}, index_entries={len(permalinks)}")
 
         for permalink in permalinks:
             if permalink:

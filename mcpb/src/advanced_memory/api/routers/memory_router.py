@@ -29,11 +29,7 @@ async def recent(
     max_related: int = 10,
 ) -> GraphContext:
     # return all types by default
-    types = (
-        [SearchItemType.ENTITY, SearchItemType.RELATION, SearchItemType.OBSERVATION]
-        if not type
-        else type
-    )
+    types = [SearchItemType.ENTITY, SearchItemType.RELATION, SearchItemType.OBSERVATION] if not type else type
 
     logger.debug(
         f"Getting recent context: `{types}` depth: `{depth}` timeframe: `{timeframe}` page: `{page}` page_size: `{page_size}` max_related: `{max_related}`"
@@ -85,6 +81,4 @@ async def get_memory_context(
     context = await context_service.build_context(
         memory_url, depth=depth, since=since, limit=limit, offset=offset, max_related=max_related
     )
-    return await to_graph_context(
-        context, entity_repository=entity_repository, page=page, page_size=page_size
-    )
+    return await to_graph_context(context, entity_repository=entity_repository, page=page, page_size=page_size)

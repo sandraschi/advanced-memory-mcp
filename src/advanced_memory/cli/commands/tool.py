@@ -40,9 +40,7 @@ def write_note(
             help="The content of the note. If not provided, content will be read from stdin. This allows piping content from other commands, e.g.: cat file.md | advanced-memory tools write-note"
         ),
     ] = None,
-    tags: Annotated[
-        list[str] | None, typer.Option(help="A list of tags to apply to the note")
-    ] = None,
+    tags: Annotated[list[str] | None, typer.Option(help="A list of tags to apply to the note")] = None,
 ):
     """Create or update a markdown note. Content can be provided as an argument or read from stdin.
 
@@ -244,11 +242,7 @@ def continue_conversation(
     """Prompt to continue a previous conversation or work session."""
     try:
         # Prompt functions return formatted strings directly
-        _fn = (
-            mcp_continue_conversation.fn
-            if hasattr(mcp_continue_conversation, "fn")
-            else mcp_continue_conversation
-        )
+        _fn = mcp_continue_conversation.fn if hasattr(mcp_continue_conversation, "fn") else mcp_continue_conversation
         session = asyncio.run(_fn(topic=topic, timeframe=timeframe))  # type: ignore
         # Use plain print to avoid Rich wrapping of Markdown content
         print(session)

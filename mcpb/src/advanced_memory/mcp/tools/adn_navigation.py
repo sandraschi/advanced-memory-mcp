@@ -15,9 +15,7 @@ from advanced_memory.schemas.memory import GraphContext
 
 @mcp.tool
 async def adn_navigation(
-    operation: Literal[
-        "build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"
-    ],
+    operation: Literal["build_context", "recent_activity", "list_directory", "backlinks", "status", "sync_status"],
     identifier: str | None = None,
     url: str | None = None,
     dir_name: str = "/",
@@ -145,14 +143,10 @@ adn_navigation(
     depth=2
 )
 ```"""
-        return await _build_context_operation(
-            url, depth, timeframe, page, page_size, max_related, project
-        )
+        return await _build_context_operation(url, depth, timeframe, page, page_size, max_related, project)
     elif operation == "recent_activity":
         # Pass type_filter to recent_activity operation
-        return await _recent_activity_operation(
-            type_filter, depth, timeframe, page, page_size, max_related, project
-        )
+        return await _recent_activity_operation(type_filter, depth, timeframe, page, page_size, max_related, project)
     elif operation == "list_directory":
         return await _list_directory_operation(dir_name, depth, file_name_glob, project)
     elif operation == "backlinks":
@@ -216,7 +210,9 @@ async def _build_context_operation(
 
     from advanced_memory.mcp.tools.build_context import build_context
 
-    result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(url, depth, timeframe, page, page_size, max_related, project)
+    result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(
+        url, depth, timeframe, page, page_size, max_related, project
+    )
 
     # Convert GraphContext to markdown string
     output = [f"# Context: {url}\n"]
@@ -225,9 +221,7 @@ async def _build_context_operation(
         output.append(f"**Found {len(result.results)} matching items**\n")
         for ctx_result in result.results:
             # Each result has a primary_result nested inside
-            item = (
-                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
-            )
+            item = ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             title = getattr(item, "title", getattr(item, "name", "Unknown"))
             item_type = getattr(item, "type", "item")
             permalink = getattr(item, "permalink", "")
@@ -236,9 +230,7 @@ async def _build_context_operation(
             # Show related results if any
             if hasattr(ctx_result, "related_results") and ctx_result.related_results:
                 for related in ctx_result.related_results[:3]:
-                    rel_item = (
-                        related.primary_result if hasattr(related, "primary_result") else related
-                    )
+                    rel_item = related.primary_result if hasattr(related, "primary_result") else related
                     rel_title = getattr(rel_item, "title", "Unknown")
                     output.append(f"  - Related: {rel_title}")
     else:
@@ -282,9 +274,7 @@ async def _recent_activity_operation(
                 payload_type=type(raw_result),
             )
             return (
-                "# Error\n\n"
-                "recent_activity returned data in an unexpected format. "
-                "Please retry or check server logs."
+                "# Error\n\nrecent_activity returned data in an unexpected format. Please retry or check server logs."
             )
 
     # Convert GraphContext to markdown string
@@ -294,9 +284,7 @@ async def _recent_activity_operation(
         output.append(f"**Found {len(result.results)} recent items**\n")
         for ctx_result in result.results:
             # Each result has a primary_result nested inside
-            item = (
-                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
-            )
+            item = ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             title = getattr(item, "title", getattr(item, "name", "Unknown"))
             item_type = getattr(item, "type", "item")
             permalink = getattr(item, "permalink", "")
@@ -313,13 +301,13 @@ async def _recent_activity_operation(
     return "\n".join(output)
 
 
-async def _list_directory_operation(
-    dir_name: str, depth: int, file_name_glob: str | None, project: str | None
-) -> str:
+async def _list_directory_operation(dir_name: str, depth: int, file_name_glob: str | None, project: str | None) -> str:
     """Handle list directory operation."""
     from advanced_memory.mcp.tools.list_directory import list_directory
 
-    return await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(dir_name, depth, file_name_glob, project)
+    return await (list_directory.fn if hasattr(list_directory, "fn") else list_directory)(
+        dir_name, depth, file_name_glob, project
+    )
 
 
 async def _status_operation(level: str, focus: str | None) -> str:
@@ -406,7 +394,7 @@ SUGGESTIONS:
 
 **Identifier:** {identifier}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Possible causes:**
 1. The note identifier doesn't exist

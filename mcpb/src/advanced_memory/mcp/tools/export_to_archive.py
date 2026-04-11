@@ -98,9 +98,7 @@ def _filter_database(
                 # Find entities with excluded tags
                 tag_conditions = " OR ".join(["entity_metadata LIKE ?" for _ in exclude_tags])
                 tag_params = [f'%"tags":%"{tag}"%' for tag in exclude_tags]
-                where_conditions.append(
-                    f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))"
-                )
+                where_conditions.append(f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))")
                 params.extend(tag_params)
 
             if since_date and since_date > datetime.min:
@@ -257,9 +255,7 @@ async def export_to_archive(
                     entities_kept, entities_filtered = _filter_database(
                         db_source, db_dest, exclude_tags, cutoff_date, project_ids
                     )
-                    logger.info(
-                        f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered"
-                    )
+                    logger.info(f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered")
                 else:
                     # Simple copy
                     shutil.copy2(db_source, db_dest)
@@ -292,16 +288,10 @@ async def export_to_archive(
             # Apply project filtering
             if exclude_projects:
                 # Exclude specified projects
-                projects_to_export = {
-                    name: path
-                    for name, path in all_projects.items()
-                    if name not in exclude_projects
-                }
+                projects_to_export = {name: path for name, path in all_projects.items() if name not in exclude_projects}
             elif include_projects:
                 # Include only specified projects
-                projects_to_export = {
-                    name: path for name, path in all_projects.items() if name in include_projects
-                }
+                projects_to_export = {name: path for name, path in all_projects.items() if name in include_projects}
             else:
                 # Include all projects
                 projects_to_export = all_projects
@@ -435,9 +425,7 @@ async def export_to_archive(
             final_size = archive_path.stat().st_size
 
             # Format results
-            projects_list = "\n".join(
-                f"  - {name}: {path}" for name, path in projects_to_export.items()
-            )
+            projects_list = "\n".join(f"  - {name}: {path}" for name, path in projects_to_export.items())
 
             filter_info = ""
             if filters_applied:
@@ -495,7 +483,7 @@ import_from_archive("{archive_path}")
 
     except Exception as e:
         logger.error(f"Error creating archive: {e}")
-        return f"[UNICODE] **Archive Creation Failed**\n\nError: {str(e)}"
+        return f"[UNICODE] **Archive Creation Failed**\n\nError: {e!s}"
 
 
 def _format_size(bytes_size: float) -> str:

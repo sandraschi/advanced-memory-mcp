@@ -71,9 +71,7 @@ async def test_project_info_tool():
                     "updated_at": "2025-03-05T12:00:00",
                 }
             ],
-            "monthly_growth": {
-                "2025-03": {"entities": 10, "observations": 5, "relations": 8, "total": 23}
-            },
+            "monthly_growth": {"2025-03": {"entities": 10, "observations": 5, "relations": 8, "total": 23}},
         },
         "system": {
             "version": "0.1.0",
@@ -93,9 +91,7 @@ async def test_project_info_tool():
     mock_response.json.return_value = sample_data
 
     # Mock the call_get function
-    with patch(
-        "advanced_memory.mcp.resources.project_info.call_get", return_value=mock_response
-    ) as mock_call_get:
+    with patch("advanced_memory.mcp.resources.project_info.call_get", return_value=mock_response) as mock_call_get:
         # Call the function
         result = await project_info.fn()
 
@@ -133,9 +129,7 @@ async def test_project_info_tool():
 async def test_project_info_error_handling():
     """Test that the project_info tool handles errors gracefully."""
     # Mock call_get to raise an exception
-    with patch(
-        "advanced_memory.mcp.resources.project_info.call_get", side_effect=Exception("Test error")
-    ):
+    with patch("advanced_memory.mcp.resources.project_info.call_get", side_effect=Exception("Test error")):
         # Verify that the exception propagates
         with pytest.raises(Exception) as excinfo:
             await project_info.fn()

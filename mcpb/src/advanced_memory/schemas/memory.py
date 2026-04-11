@@ -170,9 +170,7 @@ class MemoryMetadata(BaseModel):
 class ContextResult(BaseModel):
     """Context result containing a primary item with its observations and related items."""
 
-    primary_result: EntitySummary | RelationSummary | ObservationSummary = Field(
-        description="Primary item"
-    )
+    primary_result: EntitySummary | RelationSummary | ObservationSummary = Field(description="Primary item")
 
     observations: Sequence[ObservationSummary] = Field(
         description="Observations belonging to this entity", default_factory=list

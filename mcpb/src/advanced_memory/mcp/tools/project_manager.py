@@ -25,9 +25,7 @@ from advanced_memory.utils import generate_permalink
 
 @mcp.tool
 async def adn_project(
-    operation: Literal[
-        "create", "switch", "delete", "set_default", "get_current", "list", "sync", "status"
-    ],
+    operation: Literal["create", "switch", "delete", "set_default", "get_current", "list", "sync", "status"],
     project_name: str | None = None,
     project_path: str | None = None,
     set_default: bool = False,
@@ -135,9 +133,7 @@ async def _create_operation(
         await ctx.info(f"Creating project: {project_name} at {project_path}")
 
     # Create the project request
-    project_request = ProjectInfoRequest(
-        name=project_name, path=project_path, set_default=set_default
-    )
+    project_request = ProjectInfoRequest(name=project_name, path=project_path, set_default=set_default)
 
     # Call API to create project
     response = await call_post(client, "/projects/projects", json=project_request.model_dump())
@@ -232,7 +228,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> st
         return dedent(f"""
             # Project Switch Failed
 
-            Could not switch to project '{project_name}': {str(e)}
+            Could not switch to project '{project_name}': {e!s}
 
             ## Current project: {current_project}
             Your session remains on the previous project.
@@ -391,7 +387,7 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> str:
         return add_project_metadata(result, session.get_current_project())
 
     except Exception as e:
-        result = f"❌ Error syncing project '{project_name}': {str(e)}\n\n"
+        result = f"❌ Error syncing project '{project_name}': {e!s}\n\n"
         result += "Make sure the project exists. Use adn_project('list') to see all projects.\n"
         return add_project_metadata(result, session.get_current_project())
 
@@ -430,6 +426,6 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> st
 
     except Exception as e:
         return add_project_metadata(
-            f"❌ Error getting status for project '{project_name}': {str(e)}",
+            f"❌ Error getting status for project '{project_name}': {e!s}",
             session.get_current_project(),
         )

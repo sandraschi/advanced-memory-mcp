@@ -26,9 +26,7 @@ class LinkResolver:
         self.entity_repository = entity_repository
         self.search_service = search_service
 
-    async def resolve_link(
-        self, link_text: str, use_search: bool = True, strict: bool = False
-    ) -> Entity | None:
+    async def resolve_link(self, link_text: str, use_search: bool = True, strict: bool = False) -> Entity | None:
         """Resolve a markdown link to a permalink.
 
         Args:
@@ -94,13 +92,8 @@ class LinkResolver:
                     # This handles cases where the input case doesn't match the stored case
                     all_entities: Sequence[Entity] = await self.entity_repository.find_all()
                     for entity in all_entities:
-                        if (
-                            entity.file_path
-                            and entity.file_path.lower() == file_path_normalized.lower()
-                        ):
-                            logger.debug(
-                                f"Found entity with case-insensitive path match: {entity.file_path}"
-                            )
+                        if entity.file_path and entity.file_path.lower() == file_path_normalized.lower():
+                            logger.debug(f"Found entity with case-insensitive path match: {entity.file_path}")
                             return entity
 
         # In strict mode, don't try fuzzy search - return None if no exact match found
@@ -116,9 +109,7 @@ class LinkResolver:
             if results:
                 # Look for best match
                 best_match = min(results, key=lambda x: x.score)  # pyright: ignore
-                logger.trace(
-                    f"Selected best match from {len(results)} results: {best_match.permalink}"
-                )
+                logger.trace(f"Selected best match from {len(results)} results: {best_match.permalink}")
                 if best_match.permalink:
                     return await self.entity_repository.get_by_permalink(best_match.permalink)
 

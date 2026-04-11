@@ -15,9 +15,7 @@ logger = logging.getLogger(__name__)
 class ChatGPTImporter(Importer):
     """Service for importing ChatGPT conversations."""
 
-    async def import_data(
-        self, source_data: Any, destination_folder: str, **kwargs: Any
-    ) -> ChatImportResult:
+    async def import_data(self, source_data: Any, destination_folder: str, **kwargs: Any) -> ChatImportResult:
         """Import conversations from ChatGPT JSON export.
 
         Args:
@@ -50,9 +48,7 @@ class ChatGPTImporter(Importer):
                     1
                     for node in chat["mapping"].values()
                     if node.get("message")
-                    and not node.get("message", {})
-                    .get("metadata", {})
-                    .get("is_visually_hidden_from_conversation")
+                    and not node.get("message", {}).get("metadata", {}).get("is_visually_hidden_from_conversation")
                 )
 
                 chats_imported += 1
@@ -69,9 +65,7 @@ class ChatGPTImporter(Importer):
             logger.exception("Failed to import ChatGPT conversations")
             return self.handle_error("Failed to import ChatGPT conversations", e)  # pyright: ignore [reportReturnType]
 
-    def _format_chat_content(
-        self, folder: str, conversation: dict[str, Any]
-    ) -> EntityMarkdown:  # pragma: no cover
+    def _format_chat_content(self, folder: str, conversation: dict[str, Any]) -> EntityMarkdown:  # pragma: no cover
         """Convert chat conversation to Advanced Memory entity.
 
         Args:

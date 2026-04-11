@@ -27,12 +27,10 @@ async def get_markdown_processor() -> MarkdownProcessor:
 
 @import_app.command(name="gemini", help="Import conversations from Google Gemini JSON export.")
 def import_gemini(
-    conversations_json: Annotated[
-        Path, typer.Argument(help="Path to Gemini conversations.json file")
-    ] = Path("gemini_conversations.json"),
-    folder: Annotated[
-        str, typer.Option(help="The folder to place the files in.")
-    ] = "conversations",
+    conversations_json: Annotated[Path, typer.Argument(help="Path to Gemini conversations.json file")] = Path(
+        "gemini_conversations.json"
+    ),
+    folder: Annotated[str, typer.Option(help="The folder to place the files in.")] = "conversations",
 ):
     """Import chat conversations from Google Gemini JSON format.
 
@@ -60,9 +58,7 @@ def import_gemini(
         config = get_project_config()
         # Process the file
         base_path = config.home / folder
-        console.print(
-            f"\nImporting Gemini chats from {conversations_json}...writing to {base_path}"
-        )
+        console.print(f"\nImporting Gemini chats from {conversations_json}...writing to {base_path}")
 
         # Create importer and run import
         importer = GeminiImporter(config.home, markdown_processor)

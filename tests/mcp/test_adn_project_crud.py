@@ -53,10 +53,7 @@ class TestAdnProjectCRUD:
         assert result["success"] is True, f"Operation failed: {result.get('message')}"
         assert result["operation"] == "create"
         # The build_success_response uses 'technical_summary' instead of 'summary'
-        assert (
-            "Created" in result["technical_summary"]
-            or "added successfully" in result["technical_summary"]
-        )
+        assert "Created" in result["technical_summary"] or "added successfully" in result["technical_summary"]
         assert project_name in result["technical_summary"]
 
         # Verify context call
@@ -82,16 +79,12 @@ class TestAdnProjectCRUD:
         assert test_project.name in result["technical_summary"]
 
     @pytest.mark.asyncio
-    async def test_adn_project_switch_success(
-        self, mock_ctx, test_project, config_home, project_repository
-    ):
+    async def test_adn_project_switch_success(self, mock_ctx, test_project, config_home, project_repository):
         """Test successful project switching."""
         # Create another project to switch to
         other_name = "other-project"
         other_path = str(config_home / "other")
-        await project_repository.create(
-            {"name": other_name, "path": other_path, "is_active": False}
-        )
+        await project_repository.create({"name": other_name, "path": other_path, "is_active": False})
 
         result = await adn_project_fn(operation="switch", name=other_name, ctx=mock_ctx)
 

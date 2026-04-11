@@ -4,7 +4,7 @@ import os
 import platform
 from pathlib import Path
 
-from advanced_memory.config import ConfigManager  # noqa: F401 - Used in inner functions
+from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
@@ -109,9 +109,7 @@ async def _get_intermediate_status() -> str:
         export_tools = [t for t in tools if t.startswith(("export_", "save_"))]
         search_tools = [t for t in tools if "search" in t or "find" in t]
         editing_tools = [t for t in tools if "edit" in t or "typora" in t]
-        core_tools = [
-            t for t in tools if t not in import_tools + export_tools + search_tools + editing_tools
-        ]
+        core_tools = [t for t in tools if t not in import_tools + export_tools + search_tools + editing_tools]
 
         status_lines.extend(
             [
@@ -213,12 +211,8 @@ async def _get_advanced_status() -> str:
             path_obj = Path(project_path)
             if path_obj.exists():
                 total_files = sum(1 for _ in path_obj.rglob("*") if _.is_file())
-                total_size_mb = (
-                    sum(_.stat().st_size for _ in path_obj.rglob("*") if _.is_file()) / 1024 / 1024
-                )
-                status_lines.append(
-                    f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB"
-                )
+                total_size_mb = sum(_.stat().st_size for _ in path_obj.rglob("*") if _.is_file()) / 1024 / 1024
+                status_lines.append(f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB")
             else:
                 status_lines.append(f"- **{project_name}**: Path not found")
     except Exception as e:
@@ -375,9 +369,7 @@ async def _get_focused_status(focus: str, level: str) -> str:
             for project_name, project_path in config.projects.items():
                 path_obj = Path(project_path)
                 exists = path_obj.exists()
-                status_lines.append(
-                    f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})"
-                )
+                status_lines.append(f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})")
 
             return "\n".join(status_lines)
         except Exception as e:

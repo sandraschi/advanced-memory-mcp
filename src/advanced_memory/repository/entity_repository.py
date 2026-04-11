@@ -97,9 +97,7 @@ class EntityRepository(Repository):
             return []
 
         # Use existing select pattern
-        query = (
-            self.select().options(*self.get_load_options()).where(Entity.permalink.in_(permalinks))
-        )
+        query = self.select().options(*self.get_load_options()).where(Entity.permalink.in_(permalinks))
 
         result = await self.execute_query(query)
         return list(result.scalars().all())
@@ -124,9 +122,7 @@ class EntityRepository(Repository):
 
             # Check for existing entity with same file_path first
             existing_by_path = await session.execute(
-                select(Entity).where(
-                    Entity.file_path == entity.file_path, Entity.project_id == entity.project_id
-                )
+                select(Entity).where(Entity.file_path == entity.file_path, Entity.project_id == entity.project_id)
             )
             existing_path_entity = existing_by_path.scalar_one_or_none()
 
@@ -145,17 +141,11 @@ class EntityRepository(Repository):
 
                 await session.flush()
                 # Return with relationships loaded
-                query = (
-                    self.select()
-                    .where(Entity.file_path == entity.file_path)
-                    .options(*self.get_load_options())
-                )
+                query = self.select().where(Entity.file_path == entity.file_path).options(*self.get_load_options())
                 result = await session.execute(query)
                 found = result.scalar_one_or_none()
                 if not found:  # pragma: no cover
-                    raise RuntimeError(
-                        f"Failed to retrieve entity after update: {entity.file_path}"
-                    )
+                    raise RuntimeError(f"Failed to retrieve entity after update: {entity.file_path}")
                 return found
 
             # No existing entity with same file_path, try insert
@@ -165,17 +155,11 @@ class EntityRepository(Repository):
                 await session.flush()
 
                 # Return with relationships loaded
-                query = (
-                    self.select()
-                    .where(Entity.file_path == entity.file_path)
-                    .options(*self.get_load_options())
-                )
+                query = self.select().where(Entity.file_path == entity.file_path).options(*self.get_load_options())
                 result = await session.execute(query)
                 found = result.scalar_one_or_none()
                 if not found:  # pragma: no cover
-                    raise RuntimeError(
-                        f"Failed to retrieve entity after insert: {entity.file_path}"
-                    )
+                    raise RuntimeError(f"Failed to retrieve entity after insert: {entity.file_path}")
                 return found
 
             except IntegrityError:
@@ -184,9 +168,7 @@ class EntityRepository(Repository):
 
                 # Check if it's a file_path conflict (race condition)
                 existing_by_path_check = await session.execute(
-                    select(Entity).where(
-                        Entity.file_path == entity.file_path, Entity.project_id == entity.project_id
-                    )
+                    select(Entity).where(Entity.file_path == entity.file_path, Entity.project_id == entity.project_id)
                 )
                 race_condition_entity = existing_by_path_check.scalar_one_or_none()
 
@@ -206,11 +188,7 @@ class EntityRepository(Repository):
 
                     await session.flush()
                     # Return the updated entity with relationships loaded
-                    query = (
-                        self.select()
-                        .where(Entity.file_path == entity.file_path)
-                        .options(*self.get_load_options())
-                    )
+                    query = self.select().where(Entity.file_path == entity.file_path).options(*self.get_load_options())
                     result = await session.execute(query)
                     found = result.scalar_one_or_none()
                     if not found:  # pragma: no cover
@@ -231,9 +209,7 @@ class EntityRepository(Repository):
         while True:
             test_permalink = f"{base_permalink}-{suffix}"
             existing = await session.execute(
-                select(Entity).where(
-                    Entity.permalink == test_permalink, Entity.project_id == entity.project_id
-                )
+                select(Entity).where(Entity.permalink == test_permalink, Entity.project_id == entity.project_id)
             )
             if existing.scalar_one_or_none() is None:
                 # Found unique permalink
@@ -246,11 +222,7 @@ class EntityRepository(Repository):
         await session.flush()
 
         # Return the inserted entity with relationships loaded
-        query = (
-            self.select()
-            .where(Entity.file_path == entity.file_path)
-            .options(*self.get_load_options())
-        )
+        query = self.select().where(Entity.file_path == entity.file_path).options(*self.get_load_options())
         result = await session.execute(query)
         found = result.scalar_one_or_none()
         if not found:  # pragma: no cover

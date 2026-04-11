@@ -74,17 +74,13 @@ async def write_note(
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home
     if folder and not validate_project_path(folder, project_path):
-        logger.warning(
-            "Attempted path traversal attack blocked", folder=folder, project=active_project.name
-        )
+        logger.warning("Attempted path traversal attack blocked", folder=folder, project=active_project.name)
         return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
 
     # Check migration status and wait briefly if needed
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
-    migration_status = await wait_for_migration_or_return_status(
-        timeout=5.0, project_name=active_project.name
-    )
+    migration_status = await wait_for_migration_or_return_status(timeout=5.0, project_name=active_project.name)
     if migration_status:  # pragma: no cover
         return f"# System Status\n\n{migration_status}\n\nPlease wait for migration to complete before creating notes."
 

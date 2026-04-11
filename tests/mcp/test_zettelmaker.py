@@ -113,9 +113,7 @@ async def test_zettelmaker_operations_with_context():
 @pytest.mark.asyncio
 async def test_zettelmaker_ai_generate_no_api_key():
     """Test AI generation without API key shows setup instructions."""
-    result = await adn_zettelmaker.fn(
-        "generate", category="developer", topic="Rust Programming", ai_generate=True
-    )
+    result = await adn_zettelmaker.fn("generate", category="developer", topic="Rust Programming", ai_generate=True)
 
     assert "AI Generation Setup Required" in result or "API_KEY" in result
     assert "ANTHROPIC" in result or "OPENAI" in result

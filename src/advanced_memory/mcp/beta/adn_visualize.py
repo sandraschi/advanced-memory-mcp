@@ -46,9 +46,7 @@ async def adn_visualize(
 
     search_query = SearchQuery(query=query or "*", limit=100 if mode == "point_cloud" else 50)
 
-    search_results = await search_service.search_notes(
-        query=search_query, project=active_project.name
-    )
+    search_results = await search_service.search_notes(query=search_query, project=active_project.name)
 
     # Build a simple Hub and Spoke graph for visualization
     nodes = []
@@ -56,9 +54,7 @@ async def adn_visualize(
 
     # Primary "Hub" node if query exists
     if query:
-        nodes.append(
-            {"id": "query_hub", "label": f"Search: {query}", "type": "hub", "color": "#00d2ff"}
-        )
+        nodes.append({"id": "query_hub", "label": f"Search: {query}", "type": "hub", "color": "#00d2ff"})
 
     for r in search_results.results:
         node_id = r.permalink or r.id
@@ -76,8 +72,6 @@ async def adn_visualize(
     from advanced_memory.mcp.prefabs import KnowledgeGraph
 
     return mcp.ToolResult(
-        content=[
-            f"# Knowledge Graph: {mode.replace('_', ' ').capitalize()}\nProject: {active_project.name}"
-        ],
+        content=[f"# Knowledge Graph: {mode.replace('_', ' ').capitalize()}\nProject: {active_project.name}"],
         app=KnowledgeGraph(nodes=nodes, edges=edges, title=f"KG ({mode}): {active_project.name}"),
     )

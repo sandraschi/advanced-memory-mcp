@@ -53,9 +53,7 @@ class EntityService(BaseService[EntityModel]):
         self.file_service = file_service
         self.link_resolver = link_resolver
 
-    async def resolve_permalink(
-        self, file_path: Permalink | Path, markdown: EntityMarkdown | None = None
-    ) -> str:
+    async def resolve_permalink(self, file_path: Permalink | Path, markdown: EntityMarkdown | None = None) -> str:
         """Get or generate unique permalink for an entity.
 
         Priority:
@@ -104,14 +102,12 @@ class EntityService(BaseService[EntityModel]):
         """Create new entity or update existing one.
         Returns: (entity, is_new) where is_new is True if a new entity was created
         """
-        logger.debug(
-            f"Creating or updating entity: {schema.file_path}, permalink: {schema.permalink}"
-        )
+        logger.debug(f"Creating or updating entity: {schema.file_path}, permalink: {schema.permalink}")
 
         # Try to find existing entity using smart resolution
-        existing = await self.link_resolver.resolve_link(
-            schema.file_path
-        ) or await self.link_resolver.resolve_link(schema.permalink)
+        existing = await self.link_resolver.resolve_link(schema.file_path) or await self.link_resolver.resolve_link(
+            schema.permalink
+        )
 
         if existing:
             logger.debug(f"Found existing entity: {existing.file_path}")
@@ -128,9 +124,7 @@ class EntityService(BaseService[EntityModel]):
         file_path = Path(schema.file_path)
 
         if await self.file_service.exists(file_path):
-            raise EntityCreationError(
-                f"file for entity {schema.folder}/{schema.title} already exists: {file_path}"
-            )
+            raise EntityCreationError(f"file for entity {schema.folder}/{schema.title} already exists: {file_path}")
 
         # Parse content frontmatter to check for user-specified permalink and entity_type
         content_markdown = None
@@ -182,9 +176,7 @@ class EntityService(BaseService[EntityModel]):
 
     async def update_entity(self, entity: EntityModel, schema: EntitySchema) -> EntityModel:
         """Update an entity's content and metadata."""
-        logger.debug(
-            f"Updating entity with permalink: {entity.permalink} content-type: {schema.content_type}"
-        )
+        logger.debug(f"Updating entity with permalink: {entity.permalink} content-type: {schema.content_type}")
 
         # Convert file path string to Path
         file_path = Path(entity.file_path)
@@ -270,12 +262,8 @@ class EntityService(BaseService[EntityModel]):
             else:
                 entities = await self.get_entities_by_id([permalink_or_id])
                 if len(entities) != 1:  # pragma: no cover
-                    logger.error(
-                        "Entity lookup error", entity_id=permalink_or_id, found_count=len(entities)
-                    )
-                    raise ValueError(
-                        f"Expected 1 entity with ID {permalink_or_id}, got {len(entities)}"
-                    )
+                    logger.error("Entity lookup error", entity_id=permalink_or_id, found_count=len(entities))
+                    raise ValueError(f"Expected 1 entity with ID {permalink_or_id}, got {len(entities)}")
                 entity = entities[0]
 
             # Delete file first
@@ -312,9 +300,7 @@ class EntityService(BaseService[EntityModel]):
 
         await self.repository.delete_by_file_path(normalize_file_path(str(file_path)))
 
-    async def create_entity_from_markdown(
-        self, file_path: Path, markdown: EntityMarkdown
-    ) -> EntityModel:
+    async def create_entity_from_markdown(self, file_path: Path, markdown: EntityMarkdown) -> EntityModel:
         """Create entity and observations only.
 
         Creates the entity with null checksum to indicate sync not complete.
@@ -333,11 +319,9 @@ class EntityService(BaseService[EntityModel]):
             return await self.repository.upsert_entity(model)
         except Exception as e:
             logger.error(f"Failed to upsert entity for {file_path}: {e}")
-            raise EntityCreationError(f"Failed to create entity: {str(e)}") from e
+            raise EntityCreationError(f"Failed to create entity: {e!s}") from e
 
-    async def update_entity_and_observations(
-        self, file_path: Path, markdown: EntityMarkdown
-    ) -> EntityModel:
+    async def update_entity_and_observations(self, file_path: Path, markdown: EntityMarkdown) -> EntityModel:
         """Update entity fields and observations.
 
         Updates everything except relations and sets null checksum
@@ -414,9 +398,7 @@ class EntityService(BaseService[EntityModel]):
                 await self.relation_repository.add(relation)
             except IntegrityError:
                 # Unique constraint violation - relation already exists
-                logger.debug(
-                    f"Skipping duplicate relation {rel.type} from {db_entity.permalink} target: {rel.target}"
-                )
+                logger.debug(f"Skipping duplicate relation {rel.type} from {db_entity.permalink} target: {rel.target}")
                 continue
 
         return await self.repository.get_by_file_path(path)
@@ -515,9 +497,7 @@ class EntityService(BaseService[EntityModel]):
 
             if use_regex:
                 # Use regex-based replacement with security safeguards
-                return self._find_replace_regex(
-                    current_content, find_text, content, expected_replacements
-                )
+                return self._find_replace_regex(current_content, find_text, content, expected_replacements)
             else:
                 # Simple string replacement (default, backward compatible)
                 actual_count = current_content.count(find_text)
@@ -528,8 +508,7 @@ class EntityService(BaseService[EntityModel]):
                         raise ValueError(f"Text to replace not found: '{find_text}'")
                     else:
                         raise ValueError(
-                            f"Expected {expected_replacements} occurrences of '{find_text}', "
-                            f"but found {actual_count}"
+                            f"Expected {expected_replacements} occurrences of '{find_text}', but found {actual_count}"
                         )
 
                 return current_content.replace(find_text, content)
@@ -612,9 +591,7 @@ class EntityService(BaseService[EntityModel]):
         else:
             raise ValueError(f"Unsupported operation: {operation}")
 
-    def replace_section_content(
-        self, current_content: str, section_header: str, new_content: str
-    ) -> str:
+    def replace_section_content(self, current_content: str, section_header: str, new_content: str) -> str:
         """Replace content under a specific markdown section header.
 
         This method uses a simple, safe approach: when replacing a section, it only
@@ -651,8 +628,7 @@ class EntityService(BaseService[EntityModel]):
         # Handle multiple sections error
         if len(matching_sections) > 1:
             raise ValueError(
-                f"Multiple sections found with header '{section_header}'. "
-                f"Section replacement requires unique headers."
+                f"Multiple sections found with header '{section_header}'. Section replacement requires unique headers."
             )
 
         # If no section found, append it
@@ -753,8 +729,7 @@ class EntityService(BaseService[EntityModel]):
                     raise ValueError(f"Regex pattern not found: '{pattern}'")
                 else:
                     raise ValueError(
-                        f"Expected {expected_replacements} matches for pattern '{pattern}', "
-                        f"but found {actual_count}"
+                        f"Expected {expected_replacements} matches for pattern '{pattern}', but found {actual_count}"
                     )
 
             # Perform replacement
@@ -794,9 +769,7 @@ class EntityService(BaseService[EntityModel]):
                 return f"---\n{yaml_fm}---\n\n{new_body.strip()}"
 
             except Exception as e:  # pragma: no cover
-                logger.warning(
-                    f"Failed to parse frontmatter during prepend: {e}"
-                )  # pragma: no cover
+                logger.warning(f"Failed to parse frontmatter during prepend: {e}")  # pragma: no cover
                 # Fall back to simple prepend if frontmatter parsing fails  # pragma: no cover
 
         # No frontmatter or parsing failed - do simple prepend  # pragma: no cover
@@ -869,15 +842,11 @@ class EntityService(BaseService[EntityModel]):
                 new_permalink = await self.resolve_permalink(destination_path)
 
                 # Update frontmatter with new permalink
-                await self.file_service.update_frontmatter(
-                    destination_path, {"permalink": new_permalink}
-                )
+                await self.file_service.update_frontmatter(destination_path, {"permalink": new_permalink})
 
                 updates["permalink"] = new_permalink
                 if old_permalink is None:
-                    logger.info(
-                        f"Generated permalink for entity with null permalink: {new_permalink}"
-                    )
+                    logger.info(f"Generated permalink for entity with null permalink: {new_permalink}")
                 else:
                     logger.info(f"Updated permalink: {old_permalink} -> {new_permalink}")
 
@@ -902,4 +871,4 @@ class EntityService(BaseService[EntityModel]):
                     logger.error(f"Failed to rollback file move: {rollback_error}")
 
             # Re-raise the original error with context
-            raise ValueError(f"Move failed: {str(e)}") from e
+            raise ValueError(f"Move failed: {e!s}") from e

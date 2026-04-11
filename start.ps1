@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 
 # Authoritative Port Registry: 10850
-$PORT = 10850
+$PORT = 10732
 
 Write-Host "--- Advanced Memory MCP Launcher ---" -ForegroundColor Cyan
 

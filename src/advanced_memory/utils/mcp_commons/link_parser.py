@@ -162,15 +162,11 @@ class LinkParser:
 
             # Check if too many links
             if len(result.links) >= self.max_links:
-                result.add_warning(
-                    f"Maximum links reached ({self.max_links}), some links may be missing"
-                )
+                result.add_warning(f"Maximum links reached ({self.max_links}), some links may be missing")
 
             # Warn if many links
             if len(result.links) > self.WARN_LINK_COUNT:
-                result.add_warning(
-                    f"Large number of links ({len(result.links)}) may impact performance"
-                )
+                result.add_warning(f"Large number of links ({len(result.links)}) may impact performance")
 
             # Calculate parse time
             result.parse_time_ms = (time.time() - start_time) * 1000
@@ -183,9 +179,7 @@ class LinkParser:
 
         except Exception as e:
             result.add_error(f"Link parsing failed: {type(e).__name__}: {e}")
-            logger.error(
-                "link_parsing_exception: error=%s, error_type=%s", str(e), type(e).__name__
-            )
+            logger.error("link_parsing_exception: error=%s, error_type=%s", str(e), type(e).__name__)
 
         return result
 
@@ -265,9 +259,7 @@ class LinkParser:
         except Exception as e:
             result.add_warning(f"Image parsing error: {e}")
 
-    def _parse_markdown_links(
-        self, content: str, result: LinkParseResult, start_time: float
-    ) -> None:
+    def _parse_markdown_links(self, content: str, result: LinkParseResult, start_time: float) -> None:
         """Parse markdown links: [text](url)."""
         try:
             # Skip positions already covered by images
@@ -381,9 +373,7 @@ def parse_links_safe(content: str) -> LinkParseResult:
     except Exception as e:
         result = LinkParseResult(is_valid=False, content=content)
         result.add_error(f"Catastrophic link parsing failure: {e}")
-        logger.error(
-            "link_parsing_catastrophic_failure: error=%s, error_type=%s", str(e), type(e).__name__
-        )
+        logger.error("link_parsing_catastrophic_failure: error=%s, error_type=%s", str(e), type(e).__name__)
         return result
 
 

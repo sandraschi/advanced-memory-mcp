@@ -8,4 +8,4 @@ from . import prompt_router as prompt
 from . import resource_router as resource
 from . import search_router as search
 
-__all__ = ["knowledge", "management", "memory", "project", "resource", "search", "prompt"]
+__all__ = ["knowledge", "management", "memory", "project", "prompt", "resource", "search"]

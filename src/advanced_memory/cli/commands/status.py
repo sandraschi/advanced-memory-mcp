@@ -19,9 +19,7 @@ from advanced_memory.sync.sync_service import SyncReport
 console = Console()
 
 
-def add_files_to_tree(
-    tree: Tree, paths: set[str], style: str, checksums: dict[str, str] | None = None
-) -> None:
+def add_files_to_tree(tree: Tree, paths: set[str], style: str, checksums: dict[str, str] | None = None) -> None:
     """Add files to tree, grouped by directory."""
     # Group by directory
     by_dir: dict[str, list[tuple[str, str]]] = {}
@@ -86,9 +84,7 @@ def build_directory_summary(counts: dict[str, int]) -> str:
     return " ".join(parts)
 
 
-def display_changes(
-    project_name: str, title: str, changes: SyncReport, verbose: bool = False
-) -> None:
+def display_changes(project_name: str, title: str, changes: SyncReport, verbose: bool = False) -> None:
     """Display changes using Rich for better visualization."""
     tree = Tree(f"{project_name}: {title}")
 
@@ -130,9 +126,7 @@ async def run_status(verbose: bool = False) -> None:  # pragma: no cover
     app_config = ConfigManager().config
     config = get_project_config()
 
-    _, session_maker = await db.get_or_create_db(
-        db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM
-    )
+    _, session_maker = await db.get_or_create_db(db_path=app_config.database_path, db_type=db.DatabaseType.FILESYSTEM)
     project_repository = ProjectRepository(session_maker)
     project = await project_repository.get_by_name(config.project)
     if not project:  # pragma: no cover

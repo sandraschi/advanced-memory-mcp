@@ -93,11 +93,7 @@ class EntityParser:
         """Parse markdown file into EntityMarkdown."""
 
         # Check if the path is already absolute
-        if (
-            isinstance(path, Path)
-            and path.is_absolute()
-            or (isinstance(path, str) and Path(path).is_absolute())
-        ):
+        if (isinstance(path, Path) and path.is_absolute()) or (isinstance(path, str) and Path(path).is_absolute()):
             absolute_path = Path(path)
         else:
             absolute_path = self.get_file_path(path)

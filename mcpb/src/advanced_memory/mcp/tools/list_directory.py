@@ -139,9 +139,7 @@ async def list_directory(
     total_count = len(directories) + len(files)
     summary_parts = []
     if directories:
-        summary_parts.append(
-            f"{len(directories)} director{'y' if len(directories) == 1 else 'ies'}"
-        )
+        summary_parts.append(f"{len(directories)} director{'y' if len(directories) == 1 else 'ies'}")
     if files:
         summary_parts.append(f"{len(files)} file{'s' if len(files) != 1 else ''}")
 

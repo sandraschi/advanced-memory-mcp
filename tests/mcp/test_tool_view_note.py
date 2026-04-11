@@ -118,9 +118,7 @@ async def test_view_note_unicode_content(app):
 @pytest.mark.asyncio
 async def test_view_note_by_permalink(app):
     """Test viewing a note by its permalink."""
-    await write_note.fn(
-        title="Permalink Test", folder="test", content="Content for permalink test."
-    )
+    await write_note.fn(title="Permalink Test", folder="test", content="Content for permalink test.")
 
     # View by permalink
     result = await view_note.fn("test/permalink-test")
@@ -166,9 +164,7 @@ async def test_view_note_not_found(app):
 @pytest.mark.asyncio
 async def test_view_note_pagination(app):
     """Test viewing a note with pagination parameters."""
-    await write_note.fn(
-        title="Pagination Test", folder="test", content="Content for pagination test."
-    )
+    await write_note.fn(title="Pagination Test", folder="test", content="Content for pagination test.")
 
     # View with pagination
     result = await view_note.fn("Pagination Test", page=1, page_size=5)

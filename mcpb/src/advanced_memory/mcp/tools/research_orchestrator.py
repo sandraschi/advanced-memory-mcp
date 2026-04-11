@@ -79,7 +79,7 @@ async def research_orchestrator(
             return _get_available_operations()
 
     except Exception as e:
-        return f"[UNICODE] Research orchestration failed: {str(e)}"
+        return f"[UNICODE] Research orchestration failed: {e!s}"
 
 
 async def _create_research_plan(topic: str, params: dict[str, Any]) -> str:
@@ -526,11 +526,7 @@ Use: `research_orchestrator("research_plan", topic="new_topic")`
 **Focus Area:** {current_step_data.parameters.get("focus", "General research")}
 
 **Specific Actions:**
-{
-        chr(10).join(
-            f"[UNICODE] {action}" for action in _get_step_actions(current_step_data.action, topic)
-        )
-    }
+{chr(10).join(f"[UNICODE] {action}" for action in _get_step_actions(current_step_data.action, topic))}
 
 **Quality Guidelines:**
 [UNICODE] Ensure information is from credible sources
@@ -550,9 +546,9 @@ Use: `research_orchestrator("research_workflow", topic="{topic}", step={next_ste
         else "**[SUCCESS] Final Step!**"
     }
 
-**[CHART] Progress:** {
-        "[UNICODE]" * current_step + "[UNICODE]" * (len(workflow_steps) - current_step)
-    } ({current_step}/{len(workflow_steps)})
+**[CHART] Progress:** {"[UNICODE]" * current_step + "[UNICODE]" * (len(workflow_steps) - current_step)} ({
+        current_step
+    }/{len(workflow_steps)})
 
 **Ready to execute this step?** [LAUNCH]
 """
@@ -671,9 +667,7 @@ def _design_note_structure(topic: str, depth: str) -> dict[str, Any]:
     }
 
     if depth == "comprehensive":
-        structure["sections"].extend(
-            ["Historical Development", "Technical Details", "Case Studies", "Expert Opinions"]
-        )
+        structure["sections"].extend(["Historical Development", "Technical Details", "Case Studies", "Expert Opinions"])
 
     return structure
 
@@ -687,9 +681,7 @@ def _select_methodology(topic: str, depth: str) -> str:
     elif depth == "comprehensive":
         return "Comprehensive Research: Overview [UNICODE] Analysis [UNICODE] Synthesis [UNICODE] Validation"
     else:
-        return (
-            "Exploratory Research: Broad investigation [UNICODE] Key insights [UNICODE] Deep dives"
-        )
+        return "Exploratory Research: Broad investigation [UNICODE] Key insights [UNICODE] Deep dives"
 
 
 def _get_step_actions(step_action: str, topic: str) -> list[str]:

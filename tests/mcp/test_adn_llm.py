@@ -44,9 +44,7 @@ class TestAdnLLM:
             mock_response.json.return_value = {
                 "models": [{"name": "llama3", "size": 1000000000, "modified_at": "2024-01-01"}]
             }
-            mock_client.return_value.__aenter__.return_value.get = AsyncMock(
-                return_value=mock_response
-            )
+            mock_client.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_response)
 
             result = await adn_llm.fn(operation="list_models", provider="ollama")
             assert "Ollama Models" in result
@@ -84,9 +82,7 @@ class TestAdnLLM:
         with patch("httpx.AsyncClient") as mock_client:
             mock_response = MagicMock()
             mock_response.status_code = 200
-            mock_client.return_value.__aenter__.return_value.get = AsyncMock(
-                return_value=mock_response
-            )
+            mock_client.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_response)
 
             result = await adn_llm.fn(operation="health")
             assert "Health Check" in result

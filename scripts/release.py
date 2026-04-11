@@ -98,9 +98,7 @@ See [full changelog](https://github.com/{get_repo_info()}/compare/v{get_previous
 def get_repo_info() -> str:
     """Get repository info from git remote"""
     try:
-        result = subprocess.run(
-            ["git", "remote", "get-url", "origin"], capture_output=True, text=True, check=True
-        )
+        result = subprocess.run(["git", "remote", "get-url", "origin"], capture_output=True, text=True, check=True)
         url = result.stdout.strip()
 
         # Extract owner/repo from URL
@@ -142,12 +140,8 @@ def create_git_tag(new_version: str) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Release automation script")
-    parser.add_argument(
-        "bump_type", choices=["patch", "minor", "major"], help="Type of version bump"
-    )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be done without making changes"
-    )
+    parser.add_argument("bump_type", choices=["patch", "minor", "major"], help="Type of version bump")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making changes")
 
     args = parser.parse_args()
 

@@ -70,9 +70,7 @@ async def build_context(
     # Check migration status and wait briefly if needed
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
-    migration_status = await wait_for_migration_or_return_status(
-        timeout=5.0, project_name=active_project.name
-    )
+    migration_status = await wait_for_migration_or_return_status(timeout=5.0, project_name=active_project.name)
     if migration_status:  # pragma: no cover
         # Return a proper GraphContext with status message
         from datetime import datetime

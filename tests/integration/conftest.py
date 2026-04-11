@@ -63,7 +63,7 @@ from advanced_memory.db import DatabaseType, engine_session_factory
 from advanced_memory.deps import get_app_config, get_engine_factory, get_project_config
 
 # Import MCP tools so they're available for testing
-from advanced_memory.mcp import tools  # noqa: F401
+from advanced_memory.mcp import tools
 from advanced_memory.models import Project
 from advanced_memory.repository.project_repository import ProjectRepository
 
@@ -160,9 +160,7 @@ def project_config(test_project):
 
 
 @pytest.fixture(scope="function")
-def app(
-    app_config, project_config, engine_factory, test_project, project_session, config_manager
-) -> FastAPI:
+def app(app_config, project_config, engine_factory, test_project, project_session, config_manager) -> FastAPI:
     """Create test FastAPI application with single project."""
 
     # Import the FastAPI app AFTER the config_manager has written the test config to disk
@@ -207,10 +205,10 @@ async def search_service(engine_factory, test_project):
 def mcp_server(config_manager, search_service, project_session):
     # Import mcp instance
     # Import prompts to register them
-    import advanced_memory.mcp.prompts  # noqa: F401
+    import advanced_memory.mcp.prompts
 
     # Import mcp tools to register them
-    import advanced_memory.mcp.tools  # noqa: F401
+    import advanced_memory.mcp.tools
     from advanced_memory.mcp.server import mcp as server
 
     return server

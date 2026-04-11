@@ -9,9 +9,7 @@ from advanced_memory.mcp.tools.read_note import read_note
 
 
 @mcp.tool
-async def view_note(
-    identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
-) -> str:
+async def view_note(identifier: str, page: int = 1, page_size: int = 10, project: str | None = None) -> str:
     """View a markdown note as a formatted artifact.
 
     This tool reads a note using the same logic as read_note but displays the content

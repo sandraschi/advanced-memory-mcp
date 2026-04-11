@@ -245,9 +245,7 @@ async def run_migrations(
         )
         config.set_main_option("timezone", "UTC")
         config.set_main_option("revision_environment", "false")
-        config.set_main_option(
-            "sqlalchemy.url", DatabaseType.get_db_url(app_config.database_path, database_type)
-        )
+        config.set_main_option("sqlalchemy.url", DatabaseType.get_db_url(app_config.database_path, database_type))
 
         command.upgrade(config, "head")
         logger.info("Migrations completed successfully")

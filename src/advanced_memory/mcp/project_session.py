@@ -46,7 +46,7 @@ class ProjectSession:
             config_manager = ConfigManager()
             projects = config_manager.projects
             if projects:
-                result = list(projects.keys())[0]
+                result = next(iter(projects.keys()))
                 logger.warning(f"No current/default project set, using first available: {result}")
             else:
                 logger.error("No projects configured!")
@@ -76,7 +76,7 @@ class ProjectSession:
         config_manager = ConfigManager()
         projects = config_manager.projects
         if projects:
-            return list(projects.keys())[0]
+            return next(iter(projects.keys()))
 
         return "main"  # Last resort fallback
 

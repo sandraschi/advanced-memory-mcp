@@ -40,10 +40,7 @@ def package_skill(skill_path: str | Path, output_dir: str | Path | None = None) 
 
     is_valid, issues = validate_skill(skill_root)
     if not is_valid:
-        raise ValueError(
-            "Skill validation failed: "
-            + "; ".join(f"{issue.path}: {issue.issue}" for issue in issues)
-        )
+        raise ValueError("Skill validation failed: " + "; ".join(f"{issue.path}: {issue.issue}" for issue in issues))
 
     metadata = _read_frontmatter(skill_root)
 

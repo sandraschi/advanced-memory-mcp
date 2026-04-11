@@ -69,9 +69,7 @@ async def test_date_helper(custom_template_loader, temp_template_dir):
     # Test date helper
     date_path = temp_template_dir / "date.hbs"
     date_path.write_text("{{date timestamp}}", encoding="utf-8")
-    date_result = await custom_template_loader.render(
-        "date.hbs", {"timestamp": datetime.datetime(2023, 1, 1, 12, 30)}
-    )
+    date_result = await custom_template_loader.render("date.hbs", {"timestamp": datetime.datetime(2023, 1, 1, 12, 30)})
     assert "2023-01-01" in date_result
 
 
@@ -171,7 +169,7 @@ After"""
     result = await custom_template_loader.render("dedent.hbs", {})
 
     # Print the actual output for debugging
-    print(f"Dedent helper result: {repr(result)}")
+    print(f"Dedent helper result: {result!r}")
 
     # Check that the indentation is properly removed
     assert "This is indented text" in result
@@ -208,7 +206,7 @@ async def test_nested_dedent_helper(custom_template_loader, temp_template_dir):
     result = await custom_template_loader.render("nested_dedent.hbs", {"items": [1, 2]})
 
     # Print the actual output for debugging
-    print(f"Actual result: {repr(result)}")
+    print(f"Actual result: {result!r}")
 
     # Use a more flexible assertion that checks individual components
     # instead of exact string matching

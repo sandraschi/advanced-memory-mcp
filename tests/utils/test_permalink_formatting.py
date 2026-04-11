@@ -64,9 +64,7 @@ Testing permalink generation.
     # Verify permalinks
     for filename, expected_permalink in test_cases:
         entity = await entity_service.repository.get_by_file_path(filename)
-        assert entity.permalink == expected_permalink, (
-            f"File {filename} should have permalink {expected_permalink}"
-        )
+        assert entity.permalink == expected_permalink, f"File {filename} should have permalink {expected_permalink}"
 
 
 @pytest.mark.parametrize(

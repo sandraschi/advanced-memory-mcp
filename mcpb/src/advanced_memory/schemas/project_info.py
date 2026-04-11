@@ -16,14 +16,10 @@ class ProjectStatistics(BaseModel):
     total_entities: int = Field(description="Total number of entities in the knowledge base")
     total_observations: int = Field(description="Total number of observations across all entities")
     total_relations: int = Field(description="Total number of relations between entities")
-    total_unresolved_relations: int = Field(
-        description="Number of relations with unresolved targets"
-    )
+    total_unresolved_relations: int = Field(description="Number of relations with unresolved targets")
 
     # Entity counts by type
-    entity_types: dict[str, int] = Field(
-        description="Count of entities by type (e.g., note, conversation)"
-    )
+    entity_types: dict[str, int] = Field(description="Count of entities by type (e.g., note, conversation)")
 
     # Observation counts by category
     observation_categories: dict[str, int] = Field(
@@ -31,9 +27,7 @@ class ProjectStatistics(BaseModel):
     )
 
     # Relation counts by type
-    relation_types: dict[str, int] = Field(
-        description="Count of relations by type (e.g., implements, relates_to)"
-    )
+    relation_types: dict[str, int] = Field(description="Count of relations by type (e.g., implements, relates_to)")
 
     # Graph metrics
     most_connected_entities: list[dict[str, Any]] = Field(
@@ -46,12 +40,8 @@ class ActivityMetrics(BaseModel):
     """Activity metrics for the current project."""
 
     # Recent activity
-    recently_created: list[dict[str, Any]] = Field(
-        description="Recently created entities with timestamps"
-    )
-    recently_updated: list[dict[str, Any]] = Field(
-        description="Recently updated entities with timestamps"
-    )
+    recently_created: list[dict[str, Any]] = Field(description="Recently created entities with timestamps")
+    recently_updated: list[dict[str, Any]] = Field(description="Recently updated entities with timestamps")
 
     # Growth over time (last 6 months)
     monthly_growth: dict[str, dict[str, int]] = Field(
@@ -174,9 +164,7 @@ class ProjectWatchStatus(BaseModel):
 
     name: str = Field(..., description="Name of the project")
     path: str = Field(..., description="Path to the project")
-    watch_status: WatchServiceState | None = Field(
-        None, description="Watch status information for the project"
-    )
+    watch_status: WatchServiceState | None = Field(None, description="Watch status information for the project")
 
 
 class ProjectItem(BaseModel):
@@ -204,9 +192,5 @@ class ProjectStatusResponse(BaseModel):
     message: str = Field(..., description="Status message about the project switch")
     status: str = Field(..., description="Status of the switch (success or error)")
     default: bool = Field(..., description="True if the project was set as the default")
-    old_project: ProjectItem | None = Field(
-        None, description="Information about the project being switched from"
-    )
-    new_project: ProjectItem | None = Field(
-        None, description="Information about the project being switched to"
-    )
+    old_project: ProjectItem | None = Field(None, description="Information about the project being switched from")
+    new_project: ProjectItem | None = Field(None, description="Information about the project being switched to")

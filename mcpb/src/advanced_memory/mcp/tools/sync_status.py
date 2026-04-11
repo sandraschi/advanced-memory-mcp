@@ -35,10 +35,7 @@ def _get_all_projects_status() -> list[str]:
                     elif project_sync_status.status.value in ["scanning", "syncing"]:
                         status_icon = "[SYNCING]"
                         if project_sync_status.files_total > 0:
-                            progress_pct = (
-                                project_sync_status.files_processed
-                                / project_sync_status.files_total
-                            ) * 100
+                            progress_pct = (project_sync_status.files_processed / project_sync_status.files_total) * 100
                             status_text = f"Syncing: {project_sync_status.files_processed}/{project_sync_status.files_total} files ({progress_pct:.0f}% complete)"
                         else:
                             status_text = f"Syncing: {project_sync_status.message}"
@@ -115,9 +112,7 @@ async def sync_status(project: str | None = None) -> str:
             # System is still processing - show both active and all projects
             all_sync_projects = sync_status_tracker.get_all_projects()
 
-            active_projects = [
-                p for p in all_sync_projects.values() if p.status.value in ["scanning", "syncing"]
-            ]
+            active_projects = [p for p in all_sync_projects.values() if p.status.value in ["scanning", "syncing"]]
             failed_projects = [p for p in all_sync_projects.values() if p.status.value == "failed"]
 
             if active_projects:
@@ -135,14 +130,12 @@ async def sync_status(project: str | None = None) -> str:
                 for project_status in active_projects:
                     progress = ""
                     if project_status.files_total > 0:
-                        progress_pct = (
-                            project_status.files_processed / project_status.files_total
-                        ) * 100
-                        progress = f" ({project_status.files_processed}/{project_status.files_total}, {progress_pct:.0f}%)"
+                        progress_pct = (project_status.files_processed / project_status.files_total) * 100
+                        progress = (
+                            f" ({project_status.files_processed}/{project_status.files_total}, {progress_pct:.0f}%)"
+                        )
 
-                    status_lines.append(
-                        f"- **{project_status.project_name}**: {project_status.message}{progress}"
-                    )
+                    status_lines.append(f"- **{project_status.project_name}**: {project_status.message}{progress}")
 
                 status_lines.extend(
                     [
@@ -236,7 +229,7 @@ async def sync_status(project: str | None = None) -> str:
         logger.error(f"Error getting sync status: {e}")
         return f"""# Sync Status - Error
 
-[ERROR] **Unable to check sync status**: {str(e)}
+[ERROR] **Unable to check sync status**: {e!s}
 
 **Troubleshooting:**
 - The system may still be starting up
@@ -245,5 +238,5 @@ async def sync_status(project: str | None = None) -> str:
 - Consider restarting if the issue persists
 
 **Error Details:**
-{str(e)}
+{e!s}
 """

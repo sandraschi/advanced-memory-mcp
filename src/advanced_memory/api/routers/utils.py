@@ -134,9 +134,7 @@ async def to_graph_context(
     )
 
 
-async def to_search_results(
-    entity_service: EntityService, results: list[SearchIndexRow]
-) -> list[SearchResult]:
+async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[SearchResult]:
     # 1. Collect all entity IDs needed for batch fetch
     all_entity_ids: set[int] = set()
     for r in results:

@@ -62,8 +62,7 @@ async def adn_content(
     section: str | None = None,
     page: int = 1,
     page_size: int = 10,
-    results_per_page: int
-    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
+    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
 ) -> str:
     """Comprehensive content management tool for Advanced Memory knowledge base.
@@ -326,9 +325,7 @@ async def adn_content(
         assert identifier is not None
         assert content is not None
         assert folder is not None
-        return await _write_operation(
-            active_project, identifier, content, folder, tags, entity_type
-        )
+        return await _write_operation(active_project, identifier, content, folder, tags, entity_type)
 
     elif operation == "read":
         latest_aliases = {"", "latest", "last", "__latest__", "latest_note", "last_note"}
@@ -446,9 +443,7 @@ async def _write_operation(
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home
     if folder and not validate_project_path(folder, project_path):
-        logger.warning(
-            "Attempted path traversal attack blocked", folder=folder, project=active_project.name
-        )
+        logger.warning("Attempted path traversal attack blocked", folder=folder, project=active_project.name)
         return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
 
     # AUTO-DETECT SKILLS: If writing to skills/ folder, ensure proper frontmatter
@@ -460,9 +455,7 @@ async def _write_operation(
     )
 
     if detect_skill_path(folder):
-        logger.info(
-            f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed."
-        )
+        logger.info(f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed.")
 
         # Check if content already has frontmatter
         fm, body, errors = parse_skill_frontmatter(content)
@@ -486,7 +479,9 @@ async def _write_operation(
             skill_name = title_to_skill_name(identifier)
 
             # Create description (use first paragraph from body if available)
-            description = f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            description = (
+                f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            )
 
             # Generate frontmatter
             try:
@@ -614,11 +609,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
 
     except Exception as exc:  # pragma: no cover
         logger.error("adn_content_latest_identifier_error", exc_info=True)
-        return None, (
-            "# Error\n\n"
-            "Unable to load recent activity to determine the latest note.\n"
-            f"Details: {exc}"
-        )
+        return None, (f"# Error\n\nUnable to load recent activity to determine the latest note.\nDetails: {exc}")
 
     context_results = getattr(result, "results", [])
     if not context_results:
@@ -634,11 +625,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
 
     identifier = getattr(item, "permalink", None) or getattr(item, "file_path", None)
     if not identifier:
-        return None, (
-            "# Error\n\n"
-            "Could not determine identifier for most recent note.\n"
-            f"Item attributes: {dir(item)}"
-        )
+        return None, (f"# Error\n\nCould not determine identifier for most recent note.\nItem attributes: {dir(item)}")
 
     logger.debug(f"Extracted latest identifier: {identifier}")
     return identifier, None
@@ -652,21 +639,27 @@ async def _read_latest_operation(active_project) -> str:
 
     from advanced_memory.mcp.tools.read_note import read_note
 
-    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=active_project.name)
+    return await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _view_operation(active_project, identifier: str) -> str:
     """Handle view operation."""
     from advanced_memory.mcp.tools.view_note import view_note
 
-    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(identifier=identifier, project=active_project.name)
+    return await (view_note.fn if hasattr(view_note, "fn") else view_note)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _view_rendered_operation(active_project, identifier: str) -> str:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(identifier=identifier, project=active_project.name)
+    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _edit_operation(
@@ -715,9 +708,7 @@ async def _edit_tags_operation(
     current_entity = EntityResponse.model_validate(response.json())
 
     # Normalize current tags to a list[str]
-    existing_tags_raw = (
-        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
-    )
+    existing_tags_raw = current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     if isinstance(existing_tags_raw, str):
         # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
         import ast
@@ -892,9 +883,7 @@ async def _quick_capture_operation(active_project, content: str, tags: TagType) 
     formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n{content}"
 
     # Create the note
-    return await _write_operation(
-        active_project, title, formatted_content, folder, tag_list, "note"
-    )
+    return await _write_operation(active_project, title, formatted_content, folder, tag_list, "note")
 
 
 async def _daily_note_operation(active_project, content: str, tags: TagType) -> str:
@@ -932,9 +921,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
 ---
 
 """
-        return await _write_operation(
-            active_project, title, formatted_content, folder, tag_list, "note"
-        )
+        return await _write_operation(active_project, title, formatted_content, folder, tag_list, "note")
     else:
         # Append to existing daily note
         timestamp = today.strftime("%H:%M")
@@ -958,7 +945,9 @@ async def _delete_operation(active_project, identifier: str) -> str:
     """Handle delete operation."""
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=active_project.name)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(
+        identifier=identifier, project=active_project.name
+    )
 
     # delete_note returns bool | str, convert to string for consistency
     if isinstance(result, bool):

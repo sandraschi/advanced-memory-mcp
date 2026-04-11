@@ -452,9 +452,7 @@ class TestReadNoteSecurityValidation:
 
             assert isinstance(result, str)
             # Should not contain security error message
-            assert (
-                "# Error" not in result or "paths must stay within project boundaries" not in result
-            )
+            assert "# Error" not in result or "paths must stay within project boundaries" not in result
             # Should either succeed or fail for legitimate reasons (not found, etc.)
             # but not due to security validation
 

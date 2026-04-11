@@ -136,9 +136,7 @@ def _validate_frontmatter(path: Path, issues: list[SkillValidationIssue]) -> dic
             )
         )
 
-    status_line_present = any(
-        marker in body for marker in ("⚠️", "✅", "Research complete", "Requires web research")
-    )
+    status_line_present = any(marker in body for marker in ("⚠️", "✅", "Research complete", "Requires web research"))
     if not status_line_present:
         issues.append(
             SkillValidationIssue(
@@ -317,9 +315,7 @@ def validate_skill_agentskills(skill_path: str | Path) -> tuple[bool, list[str],
         checks["description_present"] = True
         checks["description_length_1_1024"] = 1 <= len(description) <= 1024
         if not checks["description_length_1_1024"]:
-            warnings.append(
-                f"Description length {len(description)} outside 1-1024 chars (agentskills.io)"
-            )
+            warnings.append(f"Description length {len(description)} outside 1-1024 chars (agentskills.io)")
     else:
         warnings.append("Missing or empty 'description' in frontmatter")
 

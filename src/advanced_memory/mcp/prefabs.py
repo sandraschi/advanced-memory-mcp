@@ -68,9 +68,7 @@ def NoteViewer(content: str, metadata: NoteMetadata) -> PrefabApp:
                                                             f"**Permalink:** `{metadata.permalink}`",
                                                             size="xs",
                                                         ),
-                                                        Text(
-                                                            f"**Type:** {metadata.type}", size="xs"
-                                                        ),
+                                                        Text(f"**Type:** {metadata.type}", size="xs"),
                                                         Text(
                                                             f"**Created:** {metadata.created_at}",
                                                             size="xs",
@@ -86,9 +84,7 @@ def NoteViewer(content: str, metadata: NoteMetadata) -> PrefabApp:
                                                 CardContent(
                                                     children=[
                                                         Text(
-                                                            ", ".join(
-                                                                [f"#{t}" for t in metadata.tags]
-                                                            ),
+                                                            ", ".join([f"#{t}" for t in metadata.tags]),
                                                             color="cyan",
                                                         )
                                                     ]
@@ -111,9 +107,7 @@ def NoteViewer(content: str, metadata: NoteMetadata) -> PrefabApp:
     )
 
 
-def KnowledgeGraph(
-    nodes: list[dict], edges: list[dict], title: str = "Research Graph"
-) -> PrefabApp:
+def KnowledgeGraph(nodes: list[dict], edges: list[dict], title: str = "Research Graph") -> PrefabApp:
     """Interactive Knowledge Graph using Mermaid Flowchart."""
     # Convert nodes and edges to Mermaid flowchart syntax
     mermaid_lines = ["graph TD"]

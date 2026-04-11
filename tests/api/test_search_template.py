@@ -138,9 +138,7 @@ async def test_timeframe_display(template_loader):
         "results": [],
     }
 
-    result_with_timeframe = await template_loader.render(
-        "prompts/search.hbs", context_with_timeframe
-    )
+    result_with_timeframe = await template_loader.render("prompts/search.hbs", context_with_timeframe)
     assert 'Search Results for: "with timeframe" (after 7d)' in result_with_timeframe
 
     # Context without timeframe
@@ -152,8 +150,6 @@ async def test_timeframe_display(template_loader):
         "results": [],
     }
 
-    result_without_timeframe = await template_loader.render(
-        "prompts/search.hbs", context_without_timeframe
-    )
+    result_without_timeframe = await template_loader.render("prompts/search.hbs", context_without_timeframe)
     assert 'Search Results for: "without timeframe"' in result_without_timeframe
     assert 'Search Results for: "without timeframe" (after' not in result_without_timeframe

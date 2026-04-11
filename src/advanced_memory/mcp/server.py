@@ -137,6 +137,7 @@ async def app_lifespan(
 
 # Register specialized RAG bridge
 from advanced_memory.mcp import tools
+
 tools.register_adn_knowledge_rag(mcp)
 
 # Set the lifespan on the server instance (not during module import to avoid slow startup)

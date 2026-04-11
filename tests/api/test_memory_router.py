@@ -89,12 +89,8 @@ async def test_get_memory_context_timeframe(client, test_graph, project_url):
     older = GraphContext(**response.json())
 
     # Calculate total related items
-    total_recent_related = (
-        sum(len(item.related_results) for item in recent.results) if recent.results else 0
-    )
-    total_older_related = (
-        sum(len(item.related_results) for item in older.results) if older.results else 0
-    )
+    total_recent_related = sum(len(item.related_results) for item in recent.results) if recent.results else 0
+    total_older_related = sum(len(item.related_results) for item in older.results) if older.results else 0
 
     assert total_older_related >= total_recent_related
 

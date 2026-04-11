@@ -107,10 +107,7 @@ async def export_repo(repo_path: str, export_path: str):
                 if gitignore_dir == Path("."):
                     continue
                 try:
-                    if (
-                        rel_path_obj.is_relative_to(gitignore_dir)
-                        or gitignore_dir in rel_path_obj.parents
-                    ):
+                    if rel_path_obj.is_relative_to(gitignore_dir) or gitignore_dir in rel_path_obj.parents:
                         rel_to_gitignore = rel_path_obj.relative_to(gitignore_dir)
                         rel_to_gitignore_str = str(rel_to_gitignore).replace("\\", "/")
                         if spec.match_file(rel_to_gitignore_str):

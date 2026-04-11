@@ -104,9 +104,7 @@ async def optimize_model_params(params: dict[str, Any]) -> dict[str, Any]:
     Provides recommendations for Ollama/Local LLM.
     """
     # Handle both flat and nested structures for compatibility
-    actual_params = (
-        params.get("params", params) if "params" in params and len(params) == 1 else params
-    )
+    actual_params = params.get("params", params) if "params" in params and len(params) == 1 else params
 
     # 1. System RAM check
     mem = psutil.virtual_memory()
@@ -141,14 +139,10 @@ async def optimize_model_params(params: dict[str, Any]) -> dict[str, Any]:
             # Suggest high num_gpu for small models, or partial for large ones
             optimized_params["num_gpu"] = 35  # Default high to push layers to GPU
         else:
-            recommendations.append(
-                "GPU memory is nearly full. Suggesting CPU fallback for some layers."
-            )
+            recommendations.append("GPU memory is nearly full. Suggesting CPU fallback for some layers.")
             optimized_params["num_gpu"] = 0
     else:
-        recommendations.append(
-            "No specialized GPU detected. Optimizing for multi-threaded CPU inference."
-        )
+        recommendations.append("No specialized GPU detected. Optimizing for multi-threaded CPU inference.")
         optimized_params["num_gpu"] = 0
         optimized_params["num_thread"] = psutil.cpu_count(logical=False) or 4
 
@@ -158,14 +152,10 @@ async def optimize_model_params(params: dict[str, Any]) -> dict[str, Any]:
         )
         optimized_params["num_ctx"] = 2048  # Reduce context window
     elif available_gb < 12.0:
-        recommendations.append(
-            "System RAM is moderate. Balanced context window (4096) recommended."
-        )
+        recommendations.append("System RAM is moderate. Balanced context window (4096) recommended.")
         optimized_params["num_ctx"] = 4096
     else:
-        recommendations.append(
-            "Plenty of system RAM available. High context window (8192+) supported."
-        )
+        recommendations.append("Plenty of system RAM available. High context window (8192+) supported.")
         optimized_params["num_ctx"] = 8192
 
     return {

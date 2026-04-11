@@ -40,9 +40,7 @@ def _cmd_validate(args: argparse.Namespace) -> None:
         json.dumps(
             {
                 "success": ok,
-                "issues": [
-                    {"path": issue.path, "issue": issue.issue, "fix": issue.fix} for issue in issues
-                ],
+                "issues": [{"path": issue.path, "issue": issue.issue, "fix": issue.fix} for issue in issues],
             },
             indent=2,
         )
@@ -62,9 +60,7 @@ def _cmd_upgrade(args: argparse.Namespace) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(
-        prog="am-skill-creator", description="Advanced Memory skill creator utilities."
-    )
+    parser = argparse.ArgumentParser(prog="am-skill-creator", description="Advanced Memory skill creator utilities.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 

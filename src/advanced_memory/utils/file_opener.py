@@ -99,9 +99,7 @@ def format_open_result(success: bool, message: str, path: str | Path | None = No
             if path_obj.is_file():
                 manual_msg = f"\n\n**Open manually**: Double-click `{path_obj}`"
             else:
-                manual_msg = (
-                    f"\n\n**Open manually**: Navigate to `{path_obj}` in your file explorer"
-                )
+                manual_msg = f"\n\n**Open manually**: Navigate to `{path_obj}` in your file explorer"
 
         return f"""## ⚠️ Auto-Open Failed
 

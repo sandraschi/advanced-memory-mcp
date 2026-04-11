@@ -15,9 +15,7 @@ logger = logging.getLogger(__name__)
 class GeminiImporter(Importer):
     """Service for importing Google Gemini conversations."""
 
-    async def import_data(
-        self, source_data: Any, destination_folder: str, **kwargs: Any
-    ) -> ChatImportResult:
+    async def import_data(self, source_data: Any, destination_folder: str, **kwargs: Any) -> ChatImportResult:
         """Import conversations from Gemini JSON export.
 
         Args:
@@ -106,9 +104,7 @@ class GeminiImporter(Importer):
 
         return 0
 
-    def _format_chat_content(
-        self, folder: str, conversation: dict[str, Any]
-    ) -> EntityMarkdown:  # pragma: no cover
+    def _format_chat_content(self, folder: str, conversation: dict[str, Any]) -> EntityMarkdown:  # pragma: no cover
         """Convert chat conversation to Advanced Memory entity.
 
         Args:
@@ -120,24 +116,16 @@ class GeminiImporter(Importer):
         """
         # Extract title/name
         title = (
-            conversation.get("title")
-            or conversation.get("name")
-            or conversation.get("id")
-            or "Untitled Conversation"
+            conversation.get("title") or conversation.get("name") or conversation.get("id") or "Untitled Conversation"
         )
 
         # Extract timestamps
         created_at = self._extract_timestamp(conversation, "created_at", "created", "create_time")
-        modified_at = (
-            self._extract_timestamp(conversation, "updated_at", "updated", "update_time")
-            or created_at
-        )
+        modified_at = self._extract_timestamp(conversation, "updated_at", "updated", "update_time") or created_at
 
         # Generate permalink
         date_prefix = (
-            datetime.fromtimestamp(created_at).strftime("%Y%m%d")
-            if created_at
-            else datetime.now().strftime("%Y%m%d")
+            datetime.fromtimestamp(created_at).strftime("%Y%m%d") if created_at else datetime.now().strftime("%Y%m%d")
         )
         clean_title = clean_filename(title)
 
@@ -274,13 +262,7 @@ class GeminiImporter(Importer):
             Author name (User, Gemini, Model, etc.).
         """
         # Try different role/author keys
-        role = (
-            message.get("role")
-            or message.get("author")
-            or message.get("sender")
-            or message.get("type")
-            or "Unknown"
-        )
+        role = message.get("role") or message.get("author") or message.get("sender") or message.get("type") or "Unknown"
 
         # Normalize role names
         role_lower = str(role).lower()
@@ -301,13 +283,7 @@ class GeminiImporter(Importer):
             Cleaned message content.
         """
         # Try different content keys
-        content = (
-            message.get("content")
-            or message.get("text")
-            or message.get("message")
-            or message.get("parts")
-            or ""
-        )
+        content = message.get("content") or message.get("text") or message.get("message") or message.get("parts") or ""
 
         # Handle different content types
         if isinstance(content, str):

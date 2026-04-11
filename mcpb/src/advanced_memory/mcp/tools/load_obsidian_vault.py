@@ -87,9 +87,7 @@ async def load_obsidian_vault(
         logger.info(f"Starting Obsidian vault import: {vault_path} -> {destination_folder}")
 
         # Find all relevant files
-        markdown_files, attachment_files = await _scan_vault_files(
-            vault_path_obj, include_attachments
-        )
+        markdown_files, attachment_files = await _scan_vault_files(vault_path_obj, include_attachments)
 
         if not markdown_files:
             return f"# Vault Import Complete\n\nNo markdown files found in vault: {vault_path}"
@@ -114,9 +112,7 @@ async def load_obsidian_vault(
         return f"# Vault Import Failed\n\nUnexpected error: {e}"
 
 
-async def _scan_vault_files(
-    vault_path: Path, include_attachments: bool
-) -> tuple[list[Path], list[Path]]:
+async def _scan_vault_files(vault_path: Path, include_attachments: bool) -> tuple[list[Path], list[Path]]:
     """Scan vault for markdown and attachment files."""
     markdown_files = []
     attachment_files = []
@@ -222,9 +218,7 @@ async def _process_vault_import(
     }
 
     # Build file mapping for link conversion
-    file_mapping = await _build_file_mapping(
-        vault_path, markdown_files, destination_folder, preserve_structure
-    )
+    file_mapping = await _build_file_mapping(vault_path, markdown_files, destination_folder, preserve_structure)
 
     # Process markdown files
     processed_files = []
@@ -232,9 +226,7 @@ async def _process_vault_import(
     for file_path in markdown_files:
         try:
             # Calculate destination path
-            dest_path = _calculate_destination_path(
-                file_path, vault_path, destination_folder, preserve_structure
-            )
+            dest_path = _calculate_destination_path(file_path, vault_path, destination_folder, preserve_structure)
 
             # Check if file already exists
             if skip_existing:
@@ -258,9 +250,7 @@ async def _process_vault_import(
             # Convert wikilinks if requested
             link_conversions = 0
             if convert_links:
-                body, link_conversions = _convert_wikilinks(
-                    body, file_mapping, vault_path, file_path
-                )
+                body, link_conversions = _convert_wikilinks(body, file_mapping, vault_path, file_path)
                 stats["converted_links"] += link_conversions
 
             # Create the note
@@ -294,9 +284,7 @@ async def _process_vault_import(
         except Exception as e:
             logger.error(f"Failed to import {file_path}: {e}")
             stats["failed_files"] += 1
-            processed_files.append(
-                {"original_path": str(file_path.relative_to(vault_path)), "error": str(e)}
-            )
+            processed_files.append({"original_path": str(file_path.relative_to(vault_path)), "error": str(e)})
 
     # Process attachments if requested
     if include_attachments and attachment_files:
@@ -365,9 +353,7 @@ async def _build_file_mapping(
         rel_path = file_path.relative_to(vault_path)
         original_name = str(rel_path.with_suffix(""))  # Remove .md extension
 
-        dest_path = _calculate_destination_path(
-            file_path, vault_path, destination_folder, preserve_structure
-        )
+        dest_path = _calculate_destination_path(file_path, vault_path, destination_folder, preserve_structure)
 
         # Add various forms of the original name
         mapping[original_name] = dest_path
@@ -473,9 +459,7 @@ def _generate_import_report(
         lines.append("## Processed Files")
         for file_info in processed_files[:20]:  # Limit to first 20
             if "error" in file_info:
-                lines.append(
-                    f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}"
-                )
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
             else:
                 links_text = (
                     f" ({file_info['links_converted']} links converted)"

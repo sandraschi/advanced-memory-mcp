@@ -110,12 +110,8 @@ class AgenticWorkflow:
                 {
                     "iteration": self.iteration_count,
                     "prompt": current_prompt,
-                    "step_result": step_result.model_dump()
-                    if hasattr(step_result, "model_dump")
-                    else step_result,
-                    "tool_calls": step_result.tool_calls
-                    if hasattr(step_result, "tool_calls")
-                    else [],
+                    "step_result": step_result.model_dump() if hasattr(step_result, "model_dump") else step_result,
+                    "tool_calls": step_result.tool_calls if hasattr(step_result, "tool_calls") else [],
                 }
             )
 
@@ -150,9 +146,7 @@ class AgenticWorkflow:
         """Format tools for sampling API."""
         formatted_tools = []
         for tool in self.config.tools:
-            formatted_tools.append(
-                {"name": tool.name, "description": tool.description, "parameters": tool.parameters}
-            )
+            formatted_tools.append({"name": tool.name, "description": tool.description, "parameters": tool.parameters})
         return formatted_tools
 
     async def _execute_tool_calls(self, tool_calls: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -207,11 +201,7 @@ class AgenticWorkflow:
             else:
                 result_summary += f"❌ {result['tool_name']}: {result['error']}\n"
 
-        return (
-            current_prompt
-            + result_summary
-            + "\n\nContinue with the next step, or provide final answer if complete."
-        )
+        return current_prompt + result_summary + "\n\nContinue with the next step, or provide final answer if complete."
 
     def _should_finish_workflow(self, tool_results: list[dict[str, Any]]) -> bool:
         """Determine if the workflow should finish based on tool results."""
@@ -272,9 +262,7 @@ async def sample_with_tools(
     return await workflow.execute_workflow(prompt)
 
 
-def create_tool_spec(
-    name: str, description: str, function: Callable, parameters: dict[str, Any]
-) -> ToolSpec:
+def create_tool_spec(name: str, description: str, function: Callable, parameters: dict[str, Any]) -> ToolSpec:
     """
     Create a tool specification for use in sampling operations.
 

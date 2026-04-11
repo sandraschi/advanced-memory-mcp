@@ -40,9 +40,7 @@ def write_note(
             help="The content of the note. If not provided, content will be read from stdin. This allows piping content from other commands, e.g.: cat file.md | advanced-memory tools write-note"
         ),
     ] = None,
-    tags: Annotated[
-        list[str] | None, typer.Option(help="A list of tags to apply to the note")
-    ] = None,
+    tags: Annotated[list[str] | None, typer.Option(help="A list of tags to apply to the note")] = None,
 ):
     """Create or update a markdown note. Content can be provided as an argument or read from stdin.
 
@@ -90,7 +88,9 @@ def write_note(
             typer.echo("Empty content provided. Please provide non-empty content.", err=True)
             raise typer.Exit(1)
 
-        note = asyncio.run((mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(title, content, folder, tags))
+        note = asyncio.run(
+            (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(title, content, folder, tags)
+        )
         rprint(note)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
@@ -103,7 +103,9 @@ def write_note(
 def read_note(identifier: str, page: int = 1, page_size: int = 10):
     """Read a markdown note from the knowledge base."""
     try:
-        note = asyncio.run((mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(identifier, page, page_size))
+        note = asyncio.run(
+            (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(identifier, page, page_size)
+        )
         rprint(note)
     except Exception as e:  # pragma: no cover
         if not isinstance(e, typer.Exit):
@@ -239,7 +241,11 @@ def continue_conversation(
     """Prompt to continue a previous conversation or work session."""
     try:
         # Prompt functions return formatted strings directly
-        session = asyncio.run((mcp_continue_conversation.fn if hasattr(mcp_continue_conversation, "fn") else mcp_continue_conversation)(topic=topic, timeframe=timeframe))  # type: ignore
+        session = asyncio.run(
+            (mcp_continue_conversation.fn if hasattr(mcp_continue_conversation, "fn") else mcp_continue_conversation)(
+                topic=topic, timeframe=timeframe
+            )
+        )  # type: ignore
         # Use plain print to avoid Rich wrapping of Markdown content
         print(session)
     except Exception as e:  # pragma: no cover

@@ -210,9 +210,7 @@ async def test_import_claude_conversations(
         data = {"folder": "test_claude_conversations"}
 
         # Send request
-        response = await client.post(
-            f"{project_url}/import/claude/conversations", files=files, data=data
-        )
+        response = await client.post(f"{project_url}/import/claude/conversations", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -245,9 +243,7 @@ async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp
         data = {"folder": "test_claude_conversations"}
 
         # Send request - this should return an error
-        response = await client.post(
-            f"{project_url}/import/claude/conversations", files=files, data=data
-        )
+        response = await client.post(f"{project_url}/import/claude/conversations", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -268,9 +264,7 @@ async def test_import_claude_projects(
         data = {"folder": "test_claude_projects"}
 
         # Send request
-        response = await client.post(
-            f"{project_url}/import/claude/projects", files=files, data=data
-        )
+        response = await client.post(f"{project_url}/import/claude/projects", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -308,9 +302,7 @@ async def test_import_claude_projects_invalid_file(client: AsyncClient, tmp_path
         data = {"folder": "test_claude_projects"}
 
         # Send request - this should return an error
-        response = await client.post(
-            f"{project_url}/import/claude/projects", files=files, data=data
-        )
+        response = await client.post(f"{project_url}/import/claude/projects", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -318,9 +310,7 @@ async def test_import_claude_projects_invalid_file(client: AsyncClient, tmp_path
 
 
 @pytest.mark.asyncio
-async def test_import_memory_json(
-    client: AsyncClient, tmp_path, memory_json_content, file_service, project_url
-):
+async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_content, file_service, project_url):
     """Test importing memory.json file."""
     # Create a test file
     json_file = tmp_path / "memory.json"

@@ -104,16 +104,12 @@ class ContextService:
             # Pattern matching - use search
             if "*" in path:
                 logger.debug(f"Pattern search for '{path}'")
-                primary = await self.search_repository.search(
-                    permalink_match=path, limit=limit, offset=offset
-                )
+                primary = await self.search_repository.search(permalink_match=path, limit=limit, offset=offset)
 
             # Direct lookup for exact path
             else:
                 logger.debug(f"Direct lookup for '{path}'")
-                primary = await self.search_repository.search(
-                    permalink=path, limit=limit, offset=offset
-                )
+                primary = await self.search_repository.search(permalink=path, limit=limit, offset=offset)
         else:
             logger.debug(f"Build context for '{types}'")
             primary = await self.search_repository.search(
@@ -126,9 +122,7 @@ class ContextService:
         logger.debug(f"found primary type_id_pairs: {len(type_id_pairs)}")
 
         # Find related content
-        related = await self.find_related(
-            type_id_pairs, max_depth=depth, since=since, max_results=max_related
-        )
+        related = await self.find_related(type_id_pairs, max_depth=depth, since=since, max_results=max_related)
         logger.debug(f"Found {len(related)} related results")
 
         # Collect entity IDs from primary and related results
@@ -234,9 +228,7 @@ class ContextService:
             logger.debug("No entity IDs found in type_id_pairs")
             return []
 
-        logger.debug(
-            f"Finding connected items for {len(entity_ids)} entities with depth {max_depth}"
-        )
+        logger.debug(f"Finding connected items for {len(entity_ids)} entities with depth {max_depth}")
 
         # Build the VALUES clause for entity IDs
         entity_id_values = ", ".join([str(i) for i in entity_ids])

@@ -193,9 +193,7 @@ async def adn_github_research(
                         }
 
                         if include_content and repo.get("description"):
-                            repo_info["readme_preview"] = await _get_readme_preview(
-                                session, repo["full_name"]
-                            )
+                            repo_info["readme_preview"] = await _get_readme_preview(session, repo["full_name"])
 
                         repos.append(repo_info)
 
@@ -284,9 +282,7 @@ async def adn_github_research(
                             "updated_at": repo["updated_at"],
                             "pushed_at": repo["pushed_at"],
                             "size": repo["size"],
-                            "license": repo.get("license", {}).get("name")
-                            if repo.get("license")
-                            else None,
+                            "license": repo.get("license", {}).get("name") if repo.get("license") else None,
                         },
                     }
 
@@ -436,7 +432,7 @@ async def adn_github_research(
                     ],
                 }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_github_research_error: %s", exc, exc_info=True)
         return {
             "success": False,

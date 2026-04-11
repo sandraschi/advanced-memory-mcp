@@ -6,7 +6,7 @@ import pytest
 from typer.testing import CliRunner
 
 from advanced_memory.cli.app import app, import_app
-from advanced_memory.cli.commands import import_chatgpt  # noqa
+from advanced_memory.cli.commands import import_chatgpt
 from advanced_memory.config import get_project_config
 
 # Set up CLI runner

@@ -164,7 +164,7 @@ class AdvancedMemoryConfig(BaseSettings):
         # Ensure default project is valid
         if self.default_project not in self.projects and len(self.projects) > 0:  # pragma: no cover
             # Set default to first available project instead of auto-creating "main"
-            self.default_project = list(self.projects.keys())[0]
+            self.default_project = next(iter(self.projects.keys()))
 
     @property
     def app_database_path(self) -> Path:

@@ -185,13 +185,9 @@ async def adn_export(
                         proj_name,
                     )
                 elif operation == "html":
-                    result = await _html_export(
-                        proj_export_path, source_folder, include_subfolders, proj_name
-                    )
+                    result = await _html_export(proj_export_path, source_folder, include_subfolders, proj_name)
                 elif operation == "claude_skills":
-                    result = await _claude_skills_export(
-                        proj_export_path, source_folder, include_subfolders, proj_name
-                    )
+                    result = await _claude_skills_export(proj_export_path, source_folder, include_subfolders, proj_name)
                 elif operation == "archive":
                     result = await _archive_export(proj_export_path, show_after_export, proj_name)
                 else:
@@ -243,13 +239,9 @@ async def adn_export(
             project,
         )
     elif operation == "html":
-        return await _html_export(
-            resolved_export_path, source_folder, include_subfolders, show_after_export, project
-        )
+        return await _html_export(resolved_export_path, source_folder, include_subfolders, show_after_export, project)
     elif operation == "joplin":
-        return await _joplin_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _joplin_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "pdf_book":
         return await _pdf_book_export(
             resolved_export_path, source_folder, include_subfolders, book_title, tag_filter, project
@@ -257,17 +249,11 @@ async def adn_export(
     elif operation == "archive":
         return await _archive_export(resolved_export_path, show_after_export, project)
     elif operation == "evernote":
-        return await _evernote_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _evernote_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "notion":
-        return await _notion_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _notion_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "claude_skills":
-        return await _claude_skills_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _claude_skills_export(resolved_export_path, source_folder, include_subfolders, project)
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, claude_skills"
 
@@ -328,18 +314,14 @@ async def _docsify_export(
     )  # type: ignore[operator,no-any-return]
 
 
-async def _html_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _html_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle HTML export operation."""
     from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 
     return await export_html_notes(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
 
 
-async def _joplin_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _joplin_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
 
@@ -382,16 +364,12 @@ async def _archive_export(export_path: str, show_after_export: bool, project: st
     )  # type: ignore[operator,no-any-return]
 
 
-async def _evernote_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Evernote export operation."""
     return f"[UNICODE] **Evernote Export**\n\nEvernote export functionality requires the full export_evernote_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_evernote_compatible tool for complete functionality."
 
 
-async def _notion_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _notion_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Notion export operation."""
     return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
 

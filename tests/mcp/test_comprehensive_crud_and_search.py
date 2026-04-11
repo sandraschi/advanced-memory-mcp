@@ -20,7 +20,7 @@ import pytest
 from advanced_memory.mcp.tools import adn_content, adn_search
 
 
-class TestReport:  # noqa: B903
+class TestReport:
     """Test report generator with detailed logging."""
 
     def __init__(self):
@@ -83,9 +83,7 @@ class TestReport:  # noqa: B903
         # Group results by category
         categories: dict[str, list[dict[str, Any]]] = {}
         for result in self.results:
-            category = (
-                result["test_name"].split(" - ")[0] if " - " in result["test_name"] else "Other"
-            )
+            category = result["test_name"].split(" - ")[0] if " - " in result["test_name"] else "Other"
             if category not in categories:
                 categories[category] = []
             categories[category].append(result)
@@ -111,9 +109,7 @@ class TestReport:  # noqa: B903
                 report += f"**Timestamp:** {failure['timestamp']}\n"
                 report += f"**Error:** {failure['error']}\n"
                 if failure["details"]:
-                    report += (
-                        f"**Details:**\n```json\n{json.dumps(failure['details'], indent=2)}\n```\n"
-                    )
+                    report += f"**Details:**\n```json\n{json.dumps(failure['details'], indent=2)}\n```\n"
                 report += "\n"
 
         return report
@@ -752,9 +748,7 @@ async def test_note_update_tags_remove(app):
         report.log_test("CRUD - Update Tags Remove", True)
         return result
     except Exception as e:
-        report.log_test(
-            "CRUD - Update Tags Remove", False, str(e), {"error_type": type(e).__name__}
-        )
+        report.log_test("CRUD - Update Tags Remove", False, str(e), {"error_type": type(e).__name__})
         raise
 
 
@@ -790,9 +784,7 @@ async def test_note_update_tags_replace(app):
         report.log_test("CRUD - Update Tags Replace", True)
         return result
     except Exception as e:
-        report.log_test(
-            "CRUD - Update Tags Replace", False, str(e), {"error_type": type(e).__name__}
-        )
+        report.log_test("CRUD - Update Tags Replace", False, str(e), {"error_type": type(e).__name__})
         raise
 
 
@@ -915,14 +907,10 @@ async def test_search_with_tags_list(app):
         )
 
         # Search with tags as list (this was failing before)
-        result = await adn_search.fn(
-            operation="notes", query="programming", tags=["python", "programming"]
-        )
+        result = await adn_search.fn(operation="notes", query="programming", tags=["python", "programming"])
         assert result
         # Should find the Python note but not JavaScript (both have programming, but Python has python tag)
-        report.log_test(
-            "Search - Tags Parameter (List Format)", True, details={"result_preview": result[:200]}
-        )
+        report.log_test("Search - Tags Parameter (List Format)", True, details={"result_preview": result[:200]})
         return result
     except Exception as e:
         report.log_test(
@@ -938,9 +926,7 @@ async def test_search_with_tags_list(app):
 async def test_search_with_tags_string(app):
     """Test search with tags parameter as comma-separated string."""
     try:
-        result = await adn_search.fn(
-            operation="notes", query="programming", tags="python,programming"
-        )
+        result = await adn_search.fn(operation="notes", query="programming", tags="python,programming")
         assert result
         report.log_test("Search - Tags Parameter (String Format)", True)
         return result
@@ -958,9 +944,7 @@ async def test_search_with_tags_string(app):
 async def test_search_with_entity_types_list(app):
     """Test search with entity_types parameter as list."""
     try:
-        result = await adn_search.fn(
-            operation="notes", query="test", entity_types=["entity", "observation"]
-        )
+        result = await adn_search.fn(operation="notes", query="test", entity_types=["entity", "observation"])
         assert result
         report.log_test("Search - Entity Types Parameter (List Format)", True)
         return result
@@ -1055,9 +1039,7 @@ async def test_search_type_permalink(app):
             search_type="permalink",
         )
         assert result
-        report.log_test(
-            "Search - Search Type Permalink", True, details={"result_preview": result[:200]}
-        )
+        report.log_test("Search - Search Type Permalink", True, details={"result_preview": result[:200]})
         return result
     except Exception as e:
         report.log_test("Search - Search Type Permalink", False, str(e))
@@ -1145,9 +1127,7 @@ async def test_note_read_nonexistent(app):
         return result
     except Exception as e:
         # If it raises an exception, that's also acceptable error handling
-        report.log_test(
-            "Edge Case - Read Nonexistent Note", True, details={"exception_handled": str(e)}
-        )
+        report.log_test("Edge Case - Read Nonexistent Note", True, details={"exception_handled": str(e)})
         return None
 
 
@@ -1177,9 +1157,7 @@ async def test_search_invalid_operation(app):
         return result
     except Exception as e:
         # Exception is also acceptable
-        report.log_test(
-            "Edge Case - Invalid Search Operation", True, details={"exception_handled": str(e)}
-        )
+        report.log_test("Edge Case - Invalid Search Operation", True, details={"exception_handled": str(e)})
         return None
 
 

@@ -57,9 +57,7 @@ class TestValidateMemoryUrlPath:
         ]
 
         for path in invalid_paths:
-            assert not validate_memory_url_path(path), (
-                f"Path '{path}' should be invalid (double slashes)"
-            )
+            assert not validate_memory_url_path(path), f"Path '{path}' should be invalid (double slashes)"
 
     def test_invalid_protocol_schemes(self):
         """Test that paths with protocol schemes fail validation."""
@@ -73,9 +71,7 @@ class TestValidateMemoryUrlPath:
         ]
 
         for path in invalid_paths:
-            assert not validate_memory_url_path(path), (
-                f"Path '{path}' should be invalid (protocol scheme)"
-            )
+            assert not validate_memory_url_path(path), f"Path '{path}' should be invalid (protocol scheme)"
 
     def test_invalid_characters(self):
         """Test that paths with invalid characters fail validation."""
@@ -87,9 +83,7 @@ class TestValidateMemoryUrlPath:
         ]
 
         for path in invalid_paths:
-            assert not validate_memory_url_path(path), (
-                f"Path '{path}' should be invalid (invalid chars)"
-            )
+            assert not validate_memory_url_path(path), f"Path '{path}' should be invalid (invalid chars)"
 
 
 class TestNormalizeMemoryUrl:
@@ -108,9 +102,7 @@ class TestNormalizeMemoryUrl:
 
         for input_url, expected in test_cases:
             result = normalize_memory_url(input_url)
-            assert result == expected, (
-                f"normalize_memory_url('{input_url}') should return '{expected}', got '{result}'"
-            )
+            assert result == expected, f"normalize_memory_url('{input_url}') should return '{expected}', got '{result}'"
 
     def test_empty_url(self):
         """Test that empty URLs return empty string."""
@@ -186,9 +178,7 @@ class TestMemoryUrlPydanticValidation:
         for url in valid_urls:
             # Should not raise an exception
             result = memory_url.validate_python(url)
-            assert result.startswith("memory://"), (
-                f"Validated URL should start with memory://, got {result}"
-            )
+            assert result.startswith("memory://"), f"Validated URL should start with memory://, got {result}"
 
     def test_invalid_urls_fail_validation(self):
         """Test that invalid URLs fail Pydantic validation with clear errors."""

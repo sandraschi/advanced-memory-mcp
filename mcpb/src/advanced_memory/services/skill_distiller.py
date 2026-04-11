@@ -58,7 +58,7 @@ class SkillDistiller:
             return result
         except Exception as e:
             logger.error(f"Error distilling from Wikipedia: {e}")
-            raise ValueError(f"Failed to distill from Wikipedia '{topic}': {str(e)}") from e
+            raise ValueError(f"Failed to distill from Wikipedia '{topic}': {e!s}") from e
 
     def distill_from_arxiv(
         self,
@@ -81,14 +81,12 @@ class SkillDistiller:
         """
         try:
             logger.info(f"Distilling skill from arXiv: {query}")
-            result = self.arxiv.distill_to_skill(
-                query=query, max_papers=max_papers, synthesis_level=synthesis_level
-            )
+            result = self.arxiv.distill_to_skill(query=query, max_papers=max_papers, synthesis_level=synthesis_level)
             logger.info(f"Successfully distilled arXiv skill: {result['name']}")
             return result
         except Exception as e:
             logger.error(f"Error distilling from arXiv: {e}")
-            raise ValueError(f"Failed to distill from arXiv '{query}': {str(e)}") from e
+            raise ValueError(f"Failed to distill from arXiv '{query}': {e!s}") from e
 
     def distill_from_textbook(
         self,
@@ -111,14 +109,12 @@ class SkillDistiller:
         """
         try:
             logger.info(f"Distilling skill from textbook: {pdf_path}")
-            result = self.textbook.distill_to_skill(
-                pdf_path=pdf_path, chapters=chapters, level=level
-            )
+            result = self.textbook.distill_to_skill(pdf_path=pdf_path, chapters=chapters, level=level)
             logger.info(f"Successfully distilled textbook skill: {result['name']}")
             return result
         except Exception as e:
             logger.error(f"Error distilling from textbook: {e}")
-            raise ValueError(f"Failed to distill from textbook '{pdf_path}': {str(e)}") from e
+            raise ValueError(f"Failed to distill from textbook '{pdf_path}': {e!s}") from e
 
     def distill_from_text(
         self,
@@ -141,14 +137,12 @@ class SkillDistiller:
         """
         try:
             logger.info(f"Distilling skill from text: {text_path}")
-            result = self.text.distill_to_skill(
-                text_path=text_path, focus=focus, context_level=context_level
-            )
+            result = self.text.distill_to_skill(text_path=text_path, focus=focus, context_level=context_level)
             logger.info(f"Successfully distilled text skill: {result['name']}")
             return result
         except Exception as e:
             logger.error(f"Error distilling from text: {e}")
-            raise ValueError(f"Failed to distill from text '{text_path}': {str(e)}") from e
+            raise ValueError(f"Failed to distill from text '{text_path}': {e!s}") from e
 
     def distill_from_expert(
         self,
@@ -178,4 +172,4 @@ class SkillDistiller:
             return result
         except Exception as e:
             logger.error(f"Error distilling from expert: {e}")
-            raise ValueError(f"Failed to distill from expert '{expert_name}': {str(e)}") from e
+            raise ValueError(f"Failed to distill from expert '{expert_name}': {e!s}") from e

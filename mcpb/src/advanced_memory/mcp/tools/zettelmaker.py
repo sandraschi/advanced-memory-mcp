@@ -112,9 +112,7 @@ async def adn_zettelmaker(
         # Expand existing note
         adn_zettelmaker("expand", note_identifier="Python Fundamentals", depth=2)
     """
-    logger.info(
-        f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}"
-    )
+    logger.info(f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}")
 
     # Route to appropriate operation
     if operation == "generate":
@@ -428,7 +426,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             f"""
             # 🤖 AI Generation Setup Required
 
-            {str(e)}
+            {e!s}
 
             ## Setup Instructions
 
@@ -476,7 +474,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             f"""
             # ❌ AI Generation Error
 
-            **Error:** {str(e)}
+            **Error:** {e!s}
 
             ## Troubleshooting
 
@@ -495,9 +493,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
         ).strip()
 
 
-async def _customize_operation(
-    category: str | None, topic: str | None, depth: int, ctx: Context | None
-) -> str:
+async def _customize_operation(category: str | None, topic: str | None, depth: int, ctx: Context | None) -> str:
     """Handle customize operation - customize template generation parameters."""
     if not category or not topic:
         return dedent(
@@ -610,9 +606,7 @@ async def _expand_operation(note_identifier: str | None, depth: int, ctx: Contex
 async def _suggest_operation(category: str | None, count: int, ctx: Context | None) -> str:
     """Handle suggest operation - get AI-suggested topics based on existing knowledge."""
     if ctx:  # pragma: no cover
-        await ctx.info(
-            f"Analyzing knowledge base for smart suggestions in {category or 'all categories'}"
-        )
+        await ctx.info(f"Analyzing knowledge base for smart suggestions in {category or 'all categories'}")
 
     # Use knowledge analyzer for smart suggestions
     try:
@@ -671,15 +665,11 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
         )
 
         # Format detected topics
-        topics_summary = (
-            ", ".join(t["topic"] for t in detected_topics[:5]) if detected_topics else "None yet"
-        )
+        topics_summary = ", ".join(t["topic"] for t in detected_topics[:5]) if detected_topics else "None yet"
 
         # Format knowledge gaps
         gaps_summary = (
-            "\n".join(f"- {gap['gap']}: {gap['reason']}" for gap in gaps[:3])
-            if gaps
-            else "- No gaps detected"
+            "\n".join(f"- {gap['gap']}: {gap['reason']}" for gap in gaps[:3]) if gaps else "- No gaps detected"
         )
 
         result = dedent(
@@ -726,7 +716,7 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
             f"""
             # 💡 Topic Suggestions
 
-            **Error getting current knowledge stats:** {str(e)}
+            **Error getting current knowledge stats:** {e!s}
 
             **Popular Topics:**
             1. **python-core** (developer) - Python fundamentals
@@ -859,7 +849,7 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
             f"""
             # 📊 Knowledge Base Analysis
 
-            **Error:** {str(e)}
+            **Error:** {e!s}
 
             **Manual Analysis:**
             - Check your current note count

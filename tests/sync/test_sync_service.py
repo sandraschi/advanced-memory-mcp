@@ -75,9 +75,7 @@ Target content
 
 
 @pytest.mark.asyncio
-async def test_sync(
-    sync_service: SyncService, project_config: ProjectConfig, entity_service: EntityService
-):
+async def test_sync(sync_service: SyncService, project_config: ProjectConfig, entity_service: EntityService):
     """Test basic knowledge sync functionality."""
     # Create test files
     project_dir = project_config.home
@@ -155,9 +153,7 @@ async def test_sync_hidden_file(
 
 
 @pytest.mark.asyncio
-async def test_sync_entity_with_nonexistent_relations(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_entity_with_nonexistent_relations(sync_service: SyncService, project_config: ProjectConfig):
     """Test syncing an entity that references nonexistent entities."""
     project_dir = project_config.home
 
@@ -184,9 +180,7 @@ modified: 2024-01-01
     await sync_service.sync(project_config.home)
 
     # Verify entity created but no relations
-    entity = await sync_service.entity_service.repository.get_by_permalink(
-        "concept/depends-on-future"
-    )
+    entity = await sync_service.entity_service.repository.get_by_permalink("concept/depends-on-future")
     assert entity is not None
     assert len(entity.relations) == 2
     assert entity.relations[0].to_name == "concept/not_created_yet"
@@ -194,9 +188,7 @@ modified: 2024-01-01
 
 
 @pytest.mark.asyncio
-async def test_sync_entity_circular_relations(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_entity_circular_relations(sync_service: SyncService, project_config: ProjectConfig):
     """Test syncing entities with circular dependencies."""
     project_dir = project_config.home
 
@@ -264,9 +256,7 @@ modified: 2024-01-01
 
 
 @pytest.mark.asyncio
-async def test_sync_entity_duplicate_relations(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_entity_duplicate_relations(sync_service: SyncService, project_config: ProjectConfig):
     """Test handling of duplicate relations in an entity."""
     project_dir = project_config.home
 
@@ -311,9 +301,7 @@ modified: 2024-01-01
     await sync_service.sync(project_config.home)
 
     # Verify duplicates are handled
-    entity = await sync_service.entity_service.repository.get_by_permalink(
-        "concept/duplicate-relations"
-    )
+    entity = await sync_service.entity_service.repository.get_by_permalink("concept/duplicate-relations")
 
     # Count relations by type
     relation_counts = {}
@@ -326,9 +314,7 @@ modified: 2024-01-01
 
 
 @pytest.mark.asyncio
-async def test_sync_entity_with_random_categories(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_entity_with_random_categories(sync_service: SyncService, project_config: ProjectConfig):
     """Test handling of random observation categories."""
     project_dir = project_config.home
 
@@ -353,9 +339,7 @@ modified: 2024-01-01
     await sync_service.sync(project_config.home)
 
     # Verify observations
-    entity = await sync_service.entity_service.repository.get_by_permalink(
-        "concept/invalid-category"
-    )
+    entity = await sync_service.entity_service.repository.get_by_permalink("concept/invalid-category")
 
     assert len(entity.observations) == 3
     categories = [obs.category for obs in entity.observations]
@@ -369,9 +353,7 @@ modified: 2024-01-01
 
 @pytest.mark.skip("sometimes fails")
 @pytest.mark.asyncio
-async def test_sync_entity_with_order_dependent_relations(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_entity_with_order_dependent_relations(sync_service: SyncService, project_config: ProjectConfig):
     """Test that order of entity syncing doesn't affect relation creation."""
     project_dir = project_config.home
 
@@ -478,9 +460,7 @@ async def test_sync_empty_directories(sync_service: SyncService, project_config:
 
 
 @pytest.mark.asyncio
-async def test_sync_file_modified_during_sync(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_file_modified_during_sync(sync_service: SyncService, project_config: ProjectConfig):
     """Test handling of files that change during sync process."""
     # Create initial files
     doc_path = project_config.home / "changing.md"
@@ -557,9 +537,7 @@ Testing permalink generation.
     for filename, expected_permalink in test_files.items():
         # Find entity for this file
         entity = next(e for e in entities if e.file_path == filename)
-        assert entity.permalink == expected_permalink, (
-            f"File {filename} should have permalink {expected_permalink}"
-        )
+        assert entity.permalink == expected_permalink, f"File {filename} should have permalink {expected_permalink}"
 
 
 @pytest.mark.asyncio
@@ -946,16 +924,12 @@ async def test_sync_non_markdown_files(sync_service, project_config, test_files)
     assert pdf_entity is not None, "PDF entity should have been created"
     assert pdf_entity.content_type == "application/pdf"
 
-    image_entity = await sync_service.entity_repository.get_by_file_path(
-        str(test_files["image"].name)
-    )
+    image_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["image"].name))
     assert image_entity.content_type == "image/png"
 
 
 @pytest.mark.asyncio
-async def test_sync_non_markdown_files_modified(
-    sync_service, project_config, test_files, file_service
-):
+async def test_sync_non_markdown_files_modified(sync_service, project_config, test_files, file_service):
     """Test syncing non-markdown files."""
     report = await sync_service.sync(project_config.home)
     assert report.total == 2
@@ -974,9 +948,7 @@ async def test_sync_non_markdown_files_modified(
     image_file_content, img_checksum = await file_service.read_file(test_files["image"].name)
 
     pdf_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["pdf"].name))
-    image_entity = await sync_service.entity_repository.get_by_file_path(
-        str(test_files["image"].name)
-    )
+    image_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["image"].name))
 
     assert pdf_entity.checksum == pdf_checksum
     assert image_entity.checksum == img_checksum
@@ -1022,9 +994,7 @@ async def test_sync_non_markdown_files_deleted(sync_service, project_config, tes
 
 
 @pytest.mark.asyncio
-async def test_sync_non_markdown_files_move_with_delete(
-    sync_service, project_config, test_files, file_service
-):
+async def test_sync_non_markdown_files_move_with_delete(sync_service, project_config, test_files, file_service):
     """Test syncing non-markdown files handles file deletes and renames during sync"""
 
     # Create initial files
@@ -1090,9 +1060,7 @@ permalink: note
 
 
 @pytest.mark.asyncio
-async def test_sync_regular_file_race_condition_handling(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_regular_file_race_condition_handling(sync_service: SyncService, project_config: ProjectConfig):
     """Test that sync_regular_file handles race condition with IntegrityError (lines 380-401)."""
     from datetime import datetime
     from unittest.mock import patch
@@ -1158,12 +1126,8 @@ This is a test file for race condition handling.
 
     with (
         patch.object(sync_service.entity_repository, "add", side_effect=mock_add),
-        patch.object(
-            sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path
-        ) as mock_get,
-        patch.object(
-            sync_service.entity_repository, "update", side_effect=mock_update
-        ) as mock_update_call,
+        patch.object(sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path) as mock_get,
+        patch.object(sync_service.entity_repository, "update", side_effect=mock_update) as mock_update_call,
     ):
         # Call sync_regular_file
         entity, checksum = await sync_service.sync_regular_file(
@@ -1181,9 +1145,7 @@ This is a test file for race condition handling.
 
 
 @pytest.mark.asyncio
-async def test_sync_regular_file_integrity_error_reraise(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_regular_file_integrity_error_reraise(sync_service: SyncService, project_config: ProjectConfig):
     """Test that sync_regular_file re-raises IntegrityError for non-race-condition cases."""
     from unittest.mock import patch
 
@@ -1207,12 +1169,8 @@ This is a test file for integrity error handling.
 
     with patch.object(sync_service.entity_repository, "add", side_effect=mock_add):
         # Should re-raise the IntegrityError since it's not a file_path constraint
-        with pytest.raises(
-            IntegrityError, match="UNIQUE constraint failed: entity.some_other_field"
-        ):
-            await sync_service.sync_regular_file(
-                str(test_file.relative_to(project_config.home)), new=True
-            )
+        with pytest.raises(IntegrityError, match="UNIQUE constraint failed: entity.some_other_field"):
+            await sync_service.sync_regular_file(str(test_file.relative_to(project_config.home)), new=True)
 
 
 @pytest.mark.asyncio
@@ -1245,21 +1203,15 @@ This is a test file for entity not found after constraint violation.
 
     with (
         patch.object(sync_service.entity_repository, "add", side_effect=mock_add),
-        patch.object(
-            sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path
-        ),
+        patch.object(sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path),
     ):
         # Should raise ValueError when entity is not found after constraint violation
         with pytest.raises(ValueError, match="Entity not found after constraint violation"):
-            await sync_service.sync_regular_file(
-                str(test_file.relative_to(project_config.home)), new=True
-            )
+            await sync_service.sync_regular_file(str(test_file.relative_to(project_config.home)), new=True)
 
 
 @pytest.mark.asyncio
-async def test_sync_regular_file_race_condition_update_failed(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_sync_regular_file_race_condition_update_failed(sync_service: SyncService, project_config: ProjectConfig):
     """Test handling when update fails after IntegrityError (pragma: no cover case)."""
     from datetime import datetime
     from unittest.mock import patch
@@ -1303,22 +1255,16 @@ This is a test file for update failure after constraint violation.
 
     with (
         patch.object(sync_service.entity_repository, "add", side_effect=mock_add),
-        patch.object(
-            sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path
-        ),
+        patch.object(sync_service.entity_repository, "get_by_file_path", side_effect=mock_get_by_file_path),
         patch.object(sync_service.entity_repository, "update", side_effect=mock_update),
     ):
         # Should raise ValueError when update fails
         with pytest.raises(ValueError, match="Failed to update entity with ID"):
-            await sync_service.sync_regular_file(
-                str(test_file.relative_to(project_config.home)), new=True
-            )
+            await sync_service.sync_regular_file(str(test_file.relative_to(project_config.home)), new=True)
 
 
 @pytest.mark.asyncio
-async def test_scan_directory_finds_all_file_types(
-    sync_service: SyncService, project_config: ProjectConfig
-):
+async def test_scan_directory_finds_all_file_types(sync_service: SyncService, project_config: ProjectConfig):
     """Test that scan_directory picks up all file types, not just .md files.
 
     This supports using advanced-memory for code repositories and mixed content.

@@ -25,9 +25,7 @@ def create_client() -> AsyncClient:
     else:
         # Use ASGI transport for local API
         logger.debug("Creating ASGI client for local Advanced Memory API")
-        return AsyncClient(
-            transport=ASGITransport(app=fastapi_app), base_url="http://test", timeout=timeout
-        )
+        return AsyncClient(transport=ASGITransport(app=fastapi_app), base_url="http://test", timeout=timeout)
 
 
 # Create shared async client

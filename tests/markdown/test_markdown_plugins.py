@@ -26,7 +26,7 @@ def test_observation_plugin():
         """)
 
     tokens = md.parse(content)
-    token = [t for t in tokens if t.type == "inline"][0]
+    token = next(t for t in tokens if t.type == "inline")
     assert "observation" in token.meta
     obs = token.meta["observation"]
     assert obs["category"] == "design"
@@ -36,7 +36,7 @@ def test_observation_plugin():
 
     # Test without category
     content = "- Basic observation #tag1 (context)"
-    token = [t for t in md.parse(content) if t.type == "inline"][0]
+    token = next(t for t in md.parse(content) if t.type == "inline")
     obs = token.meta["observation"]
     assert obs["category"] is None
     assert obs["content"] == "Basic observation #tag1"
@@ -45,7 +45,7 @@ def test_observation_plugin():
 
     # Test without tags
     content = "- [note] Basic observation (context)"
-    token = [t for t in md.parse(content) if t.type == "inline"][0]
+    token = next(t for t in md.parse(content) if t.type == "inline")
     obs = token.meta["observation"]
     assert obs["category"] == "note"
     assert obs["content"] == "Basic observation"
@@ -86,7 +86,7 @@ def test_relation_plugin():
         """)
 
     tokens = md.parse(content)
-    token = [t for t in tokens if t.type == "inline"][0]
+    token = next(t for t in tokens if t.type == "inline")
     assert "relations" in token.meta
     rel = token.meta["relations"][0]
     assert rel["type"] == "implements"
@@ -95,7 +95,7 @@ def test_relation_plugin():
 
     # Test implicit relations in text
     content = "Some text with a [[Link]] and [[Another Link]]"
-    token = [t for t in md.parse(content) if t.type == "inline"][0]
+    token = next(t for t in md.parse(content) if t.type == "inline")
     rels = token.meta["relations"]
     assert len(rels) == 2
     assert rels[0]["type"] == "links to"

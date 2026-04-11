@@ -81,9 +81,7 @@ async def test_get_directory_tree_mocked(client, project_url):
                     )
                 ],
             ),
-            DirectoryNode(
-                name="folder2", directory_path="/test/folder2", type="directory", children=[]
-            ),
+            DirectoryNode(name="folder2", directory_path="/test/folder2", type="directory", children=[]),
         ],
     )
 
@@ -173,9 +171,7 @@ async def test_list_directory_endpoint_specific_path(test_graph, client, project
 async def test_list_directory_endpoint_with_glob(test_graph, client, project_url):
     """Test the list_directory endpoint with glob filtering."""
     # Call the endpoint with glob filter
-    response = await client.get(
-        f"{project_url}/directory/list?dir_name=/test&file_name_glob=*Connected*"
-    )
+    response = await client.get(f"{project_url}/directory/list?dir_name=/test&file_name_glob=*Connected*")
 
     # Verify response
     assert response.status_code == 200

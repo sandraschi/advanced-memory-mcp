@@ -20,9 +20,7 @@ runner = CliRunner()
 def test_status_command():
     """Test CLI status command."""
     # Mock the async run_status function to avoid event loop issues
-    with patch(
-        "advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock
-    ) as mock_run_status:
+    with patch("advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock) as mock_run_status:
         # Mock successful execution (no return value needed since it just prints)
         mock_run_status.return_value = None
 
@@ -37,9 +35,7 @@ def test_status_command():
 def test_status_command_error():
     """Test CLI status command error handling."""
     # Mock the async run_status function to raise an exception
-    with patch(
-        "advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock
-    ) as mock_run_status:
+    with patch("advanced_memory.cli.commands.status.run_status", new_callable=AsyncMock) as mock_run_status:
         # Mock an error
         mock_run_status.side_effect = Exception("Database connection failed")
 

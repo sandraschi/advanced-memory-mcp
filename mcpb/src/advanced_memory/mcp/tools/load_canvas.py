@@ -63,7 +63,9 @@ async def load_obsidian_canvas(
         logger.info(f"Starting canvas import: {canvas_path}")
 
         # Read the canvas file
-        canvas_content = await (mcp_read_content.fn if hasattr(mcp_read_content, "fn") else mcp_read_content)(canvas_path, project)
+        canvas_content = await (mcp_read_content.fn if hasattr(mcp_read_content, "fn") else mcp_read_content)(
+            canvas_path, project
+        )
         if canvas_content.get("type") == "error":
             return f"# Canvas Import Failed\n\nError reading canvas file '{canvas_path}': {canvas_content['error']}"
 
@@ -82,9 +84,7 @@ async def load_obsidian_canvas(
             return f"# Canvas Import Failed\n\n{validation_result['error']}"
 
         # Process the canvas
-        result = await _process_canvas(
-            canvas_data, canvas_path, destination_folder, create_missing_files, project
-        )
+        result = await _process_canvas(canvas_data, canvas_path, destination_folder, create_missing_files, project)
 
         return result
 
@@ -151,17 +151,13 @@ async def _process_canvas(
 
     for node in nodes:
         try:
-            entity_path = await _process_canvas_node(
-                node, destination_folder, create_missing_files, project
-            )
+            entity_path = await _process_canvas_node(node, destination_folder, create_missing_files, project)
             if entity_path:
                 node_map[node["id"]] = entity_path
                 if entity_path not in created_entities:
                     created_entities.append(entity_path)
             else:
-                skipped_items.append(
-                    f"Node {node['id']}: {node.get('text', node.get('file', 'unknown'))}"
-                )
+                skipped_items.append(f"Node {node['id']}: {node.get('text', node.get('file', 'unknown'))}")
         except Exception as e:
             logger.error(f"Failed to process node {node.get('id', 'unknown')}: {e}")
             skipped_items.append(f"Node {node.get('id', 'unknown')}: {e}")

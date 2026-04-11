@@ -134,9 +134,7 @@ class FileSafety:
 
         # Check file size
         if path_obj.is_file() and path_obj.stat().st_size > self.MAX_TRASH_SIZE:
-            logger.warning(
-                f"Moving large file to trash: {path_obj} ({path_obj.stat().st_size} bytes)"
-            )
+            logger.warning(f"Moving large file to trash: {path_obj} ({path_obj.stat().st_size} bytes)")
 
         # Generate unique trash path
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

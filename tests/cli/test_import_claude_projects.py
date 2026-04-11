@@ -6,7 +6,7 @@ import pytest
 from typer.testing import CliRunner
 
 from advanced_memory.cli.app import app
-from advanced_memory.cli.commands.import_claude_projects import import_projects  # noqa
+from advanced_memory.cli.commands.import_claude_projects import import_projects
 from advanced_memory.config import get_project_config
 
 # Set up CLI runner

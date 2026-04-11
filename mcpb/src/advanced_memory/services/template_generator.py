@@ -94,12 +94,8 @@ class TemplateGenerator:
             3. **Connections**: Use [[WikiLinks]] between related concepts
             4. **Observations**: Include categorized facts: `- [category] content`
             5. **Relations**: Add directional links: `- relation_type [[Target]]`
-            6. **Examples**: {
-                "Include practical code/examples" if quality_config["examples"] else "Skip examples"
-            }
-            7. **Exercises**: {
-                "Include practice exercises" if quality_config["exercises"] else "Skip exercises"
-            }
+            6. **Examples**: {"Include practical code/examples" if quality_config["examples"] else "Skip examples"}
+            7. **Exercises**: {"Include practice exercises" if quality_config["exercises"] else "Skip exercises"}
 
             ## Note Structure Template
 
@@ -159,9 +155,7 @@ class TemplateGenerator:
             ]
             ```
 
-            Generate {
-                quality_config["note_count"]
-            } high-quality, interconnected zettelkasten notes now.
+            Generate {quality_config["note_count"]} high-quality, interconnected zettelkasten notes now.
             """
         ).strip()
 
@@ -176,9 +170,7 @@ class TemplateGenerator:
         """Get file path for cached template."""
         return self.cache_dir / f"{cache_key}.json"
 
-    def get_cached_template(
-        self, topic: str, category: str, quality: str = "standard"
-    ) -> list[dict[str, Any]] | None:
+    def get_cached_template(self, topic: str, category: str, quality: str = "standard") -> list[dict[str, Any]] | None:
         """Get cached template if available.
 
         Args:
@@ -205,9 +197,7 @@ class TemplateGenerator:
         logger.info(f"Template cache miss: {topic}/{category}/{quality}")
         return None
 
-    def cache_template(
-        self, topic: str, category: str, quality: str, templates: list[dict[str, Any]]
-    ) -> None:
+    def cache_template(self, topic: str, category: str, quality: str, templates: list[dict[str, Any]]) -> None:
         """Cache generated template for future use.
 
         Args:
@@ -309,9 +299,7 @@ class TemplateGenerator:
 
         # In Phase 2, this would call the actual Claude API
         # For now, return a placeholder message
-        logger.info(
-            f"AI template generation requested: {topic}/{category}/{quality} (not yet implemented)"
-        )
+        logger.info(f"AI template generation requested: {topic}/{category}/{quality} (not yet implemented)")
 
         raise NotImplementedError(
             "AI template generation coming in Phase 2! "

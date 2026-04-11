@@ -108,9 +108,7 @@ async def recent_activity(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_types.append(t)
-                logger.warning(
-                    f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types."
-                )
+                logger.warning(f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types.")
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_types:
@@ -171,14 +169,10 @@ async def recent_activity(
             item["primary_result"] = normalize_summary(item["primary_result"])
 
         observations = item.get("observations", [])
-        item["observations"] = [
-            normalize_summary(obs) for obs in observations if isinstance(obs, dict)
-        ]
+        item["observations"] = [normalize_summary(obs) for obs in observations if isinstance(obs, dict)]
 
         related = item.get("related_results", [])
-        item["related_results"] = [
-            normalize_summary(rel) for rel in related if isinstance(rel, dict)
-        ]
+        item["related_results"] = [normalize_summary(rel) for rel in related if isinstance(rel, dict)]
 
     metadata = raw_data.get("metadata", {})
     metadata["generated_at"] = normalize_timestamp(metadata.get("generated_at"))

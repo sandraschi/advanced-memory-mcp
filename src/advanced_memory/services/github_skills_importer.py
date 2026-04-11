@@ -84,7 +84,7 @@ class GitHubSkillsImporter:
             return response.json()
         except requests.RequestException as e:
             logger.error(f"Error fetching repo info: {e}")
-            raise ValueError(f"Failed to access repository {repository}: {str(e)}") from e
+            raise ValueError(f"Failed to access repository {repository}: {e!s}") from e
 
     def find_skills_in_repo(
         self, repository: str, branch: str = "main", pattern: str = "**/SKILL.md"
@@ -118,9 +118,7 @@ class GitHubSkillsImporter:
                     # Extract skill folder and name
                     skill_path = Path(item["path"])
                     skill_folder = str(skill_path.parent)
-                    skill_name = (
-                        skill_folder.split("/")[-1] if "/" in skill_folder else skill_folder
-                    )
+                    skill_name = skill_folder.split("/")[-1] if "/" in skill_folder else skill_folder
 
                     skills.append(
                         {
@@ -172,7 +170,7 @@ class GitHubSkillsImporter:
             return content
         except requests.RequestException as e:
             logger.error(f"Error fetching file: {e}")
-            raise ValueError(f"Failed to fetch file {file_path}: {str(e)}") from e
+            raise ValueError(f"Failed to fetch file {file_path}: {e!s}") from e
 
     def clone_repo(self, repository: str, branch: str = "main") -> Path:
         """Clone repository to temporary directory.
@@ -207,7 +205,7 @@ class GitHubSkillsImporter:
             return temp_dir
         except Exception as e:
             logger.error(f"Error cloning repository: {e}")
-            raise ValueError(f"Failed to clone repository {repository}: {str(e)}") from e
+            raise ValueError(f"Failed to clone repository {repository}: {e!s}") from e
 
     def import_skill_from_repo(
         self, repository: str, skill_path: str | None = None, branch: str = "main"
@@ -228,9 +226,7 @@ class GitHubSkillsImporter:
         """
         if skill_path:
             # Import specific skill
-            skill_md_path = (
-                f"{skill_path}/SKILL.md" if not skill_path.endswith("SKILL.md") else skill_path
-            )
+            skill_md_path = f"{skill_path}/SKILL.md" if not skill_path.endswith("SKILL.md") else skill_path
 
             try:
                 content = self.get_file_content(repository, skill_md_path, branch)

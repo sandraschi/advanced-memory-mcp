@@ -188,9 +188,7 @@ async def test_delete_entity(entity_repository: EntityRepository, sample_entity)
 
 
 @pytest.mark.asyncio
-async def test_delete_entity_with_observations(
-    entity_repository: EntityRepository, entity_with_observations
-):
+async def test_delete_entity_with_observations(entity_repository: EntityRepository, entity_with_observations):
     """Test deleting an entity cascades to its observations."""
     entity = entity_with_observations
 

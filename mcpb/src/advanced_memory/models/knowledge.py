@@ -77,9 +77,7 @@ class Entity(Base):
 
     # Relationships
     project = relationship("Project", back_populates="entities")
-    observations = relationship(
-        "Observation", back_populates="entity", cascade="all, delete-orphan"
-    )
+    observations = relationship("Observation", back_populates="entity", cascade="all, delete-orphan")
     outgoing_relations = relationship(
         "Relation",
         back_populates="from_entity",
@@ -124,9 +122,7 @@ class Observation(Base):
     content: Mapped[str] = mapped_column(Text)
     category: Mapped[str] = mapped_column(String, nullable=False, default="note")
     context: Mapped[str | None] = mapped_column(Text, nullable=True)
-    tags: Mapped[list[str] | None] = mapped_column(
-        JSON, nullable=True, default=list, server_default="[]"
-    )
+    tags: Mapped[list[str] | None] = mapped_column(JSON, nullable=True, default=list, server_default="[]")
 
     # Relationships
     entity = relationship("Entity", back_populates="observations")
@@ -138,9 +134,7 @@ class Observation(Base):
         We can construct these because observations are always defined in
         and owned by a single entity.
         """
-        return generate_permalink(
-            f"{self.entity.permalink}/observations/{self.category}/{self.content}"
-        )
+        return generate_permalink(f"{self.entity.permalink}/observations/{self.category}/{self.content}")
 
     def __repr__(self) -> str:  # pragma: no cover
         return f"Observation(id={self.id}, entity_id={self.entity_id}, content='{self.content}')"
@@ -152,9 +146,7 @@ class Relation(Base):
     __tablename__ = "relation"
     __table_args__ = (
         UniqueConstraint("from_id", "to_id", "relation_type", name="uix_relation_from_id_to_id"),
-        UniqueConstraint(
-            "from_id", "to_name", "relation_type", name="uix_relation_from_id_to_name"
-        ),
+        UniqueConstraint("from_id", "to_name", "relation_type", name="uix_relation_from_id_to_name"),
         Index("ix_relation_type", "relation_type"),
         Index("ix_relation_from_id", "from_id"),  # Add FK indexes
         Index("ix_relation_to_id", "to_id"),
@@ -162,17 +154,13 @@ class Relation(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     from_id: Mapped[int] = mapped_column(Integer, ForeignKey("entity.id", ondelete="CASCADE"))
-    to_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("entity.id", ondelete="CASCADE"), nullable=True
-    )
+    to_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("entity.id", ondelete="CASCADE"), nullable=True)
     to_name: Mapped[str] = mapped_column(String)
     relation_type: Mapped[str] = mapped_column(String)
     context: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    from_entity = relationship(
-        "Entity", foreign_keys=[from_id], back_populates="outgoing_relations"
-    )
+    from_entity = relationship("Entity", foreign_keys=[from_id], back_populates="outgoing_relations")
     to_entity = relationship("Entity", foreign_keys=[to_id], back_populates="incoming_relations")
 
     @property

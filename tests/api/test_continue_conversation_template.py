@@ -88,9 +88,7 @@ async def test_continue_conversation_with_results(template_loader, context_with_
 @pytest.mark.asyncio
 async def test_continue_conversation_without_results(template_loader, context_without_results):
     """Test rendering the continue_conversation template without results."""
-    result = await template_loader.render(
-        "prompts/continue_conversation.hbs", context_without_results
-    )
+    result = await template_loader.render("prompts/continue_conversation.hbs", context_without_results)
 
     # Check that key elements are present
     assert "Continuing conversation on: Empty Topic" in result
@@ -108,10 +106,7 @@ async def test_next_steps_section(template_loader, context_with_results):
 
     assert "Next Steps" in result
     assert 'Explore more with: `search_notes("Test Topic")`' in result
-    assert (
-        f'See what\'s changed: `recent_activity(timeframe="{context_with_results["timeframe"]}")`'
-        in result
-    )
+    assert f'See what\'s changed: `recent_activity(timeframe="{context_with_results["timeframe"]}")`' in result
     assert "Record new learnings or decisions from this conversation" in result
 
 
@@ -135,9 +130,7 @@ async def test_timeframe_default_value(template_loader, context_with_results):
     context_without_timeframe = context_with_results.copy()
     context_without_timeframe["timeframe"] = None
 
-    result = await template_loader.render(
-        "prompts/continue_conversation.hbs", context_without_timeframe
-    )
+    result = await template_loader.render("prompts/continue_conversation.hbs", context_without_timeframe)
 
     # Check that the default value is used
     assert 'recent_activity(timeframe="7d")' in result

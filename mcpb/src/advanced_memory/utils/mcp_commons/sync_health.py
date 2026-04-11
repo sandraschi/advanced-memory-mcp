@@ -287,9 +287,7 @@ class SyncHealthMonitor:
     async def _attempt_recovery(self):
         """Attempt to recover from errors."""
         if self.recovery_attempts >= self.max_recovery_attempts:
-            self._log(
-                "max_recovery_attempts_reached", level="error", attempts=self.recovery_attempts
-            )
+            self._log("max_recovery_attempts_reached", level="error", attempts=self.recovery_attempts)
             return
 
         self.recovery_attempts += 1
@@ -311,9 +309,7 @@ class SyncHealthMonitor:
             self._log("recovery_successful", attempt=self.recovery_attempts)
 
         except Exception as e:
-            self._log(
-                "recovery_failed", level="error", attempt=self.recovery_attempts, error=str(e)
-            )
+            self._log("recovery_failed", level="error", attempt=self.recovery_attempts, error=str(e))
 
     def get_health_report(self) -> dict[str, Any]:
         """
@@ -343,9 +339,7 @@ class SyncHealthMonitor:
             },
             "watcher": {
                 "exists": self.watcher is not None,
-                "alive": self.watcher.is_alive()
-                if self.watcher and hasattr(self.watcher, "is_alive")
-                else None,
+                "alive": self.watcher.is_alive() if self.watcher and hasattr(self.watcher, "is_alive") else None,
             },
             "errors": self.errors[-10:],  # Last 10 errors
             "recovery_attempts": self.recovery_attempts,

@@ -42,9 +42,7 @@ async def test_find_connected_depth_limit(context_service, test_graph):
 
 
 @pytest.mark.asyncio
-async def test_find_connected_timeframe(
-    context_service, test_graph, search_repository, entity_repository
-):
+async def test_find_connected_timeframe(context_service, test_graph, search_repository, entity_repository):
     """Test timeframe filtering.
     This tests how traversal is affected by the item dates.
     When we filter by date, items are only included if:
@@ -62,9 +60,7 @@ async def test_find_connected_timeframe(
 
     # Connected entity uses recent date
     connected_entity = test_graph["connected1"]
-    await entity_repository.update(
-        connected_entity.id, {"created_at": recent_date, "updated_at": recent_date}
-    )
+    await entity_repository.update(connected_entity.id, {"created_at": recent_date, "updated_at": recent_date})
 
     # Also update search_index for test consistency
     await search_repository.index_item(

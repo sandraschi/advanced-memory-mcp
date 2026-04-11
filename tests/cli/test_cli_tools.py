@@ -101,7 +101,7 @@ def test_write_note_with_tags(cli_env, project_config):
 
     # Check for expected success message
     assert "Tagged_CLI_Test_Note" in result.stdout  # Sanitized filename
-    assert "tag1, tag2" in result.stdout or "tag1" in result.stdout and "tag2" in result.stdout
+    assert "tag1, tag2" in result.stdout or ("tag1" in result.stdout and "tag2" in result.stdout)
 
 
 def test_write_note_from_stdin(cli_env, project_config, monkeypatch):
@@ -326,14 +326,14 @@ def test_build_context_with_options(cli_env, setup_test_note):
         context_result = {"content": "", "metadata": {}}
 
     # Check that metadata reflects our options (if available)
-    if "metadata" in context_result and context_result["metadata"]:
+    if context_result.get("metadata"):
         assert context_result["metadata"].get("depth", 2) == 2
         if "timeframe" in context_result["metadata"]:
             timeframe = datetime.fromisoformat(context_result["metadata"]["timeframe"])
             assert datetime.now() - timeframe <= timedelta(days=2)  # don't bother about timezones
 
     # Results should include our test note (if available)
-    if "results" in context_result and context_result["results"]:
+    if context_result.get("results"):
         found = False
         for item in context_result["results"]:
             if item.get("primary_result", {}).get("permalink") == permalink:

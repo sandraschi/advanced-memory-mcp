@@ -75,9 +75,7 @@ async def test_create_entity_file_exists(entity_service: EntityService, file_ser
     assert await file_service.exists(file_path)
 
     file_content, _ = await file_service.read_file(file_path)
-    assert (
-        "---\ntitle: Test Entity\ntype: test\npermalink: test-entity\n---\n\nfirst" == file_content
-    )
+    assert "---\ntitle: Test Entity\ntype: test\npermalink: test-entity\n---\n\nfirst" == file_content
 
     entity_data = EntitySchema(
         title="Test Entity",
@@ -686,9 +684,7 @@ async def test_edit_entity_find_replace(entity_service: EntityService, file_serv
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_replace_section(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_replace_section(entity_service: EntityService, file_service: FileService):
     """Test replacing a specific section in an entity."""
     # Create test entity with sections
     content = dedent("""
@@ -727,9 +723,7 @@ async def test_edit_entity_replace_section(
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_replace_section_create_new(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_replace_section_create_new(entity_service: EntityService, file_service: FileService):
     """Test replacing a section that doesn't exist creates it."""
     # Create test entity without the section
     entity = await entity_service.create_entity(
@@ -760,9 +754,7 @@ async def test_edit_entity_replace_section_create_new(
 async def test_edit_entity_not_found(entity_service: EntityService):
     """Test editing a non-existent entity raises error."""
     with pytest.raises(EntityNotFoundError):
-        await entity_service.edit_entity(
-            identifier="non-existent", operation="append", content="content"
-        )
+        await entity_service.edit_entity(identifier="non-existent", operation="append", content="content")
 
 
 @pytest.mark.asyncio
@@ -779,9 +771,7 @@ async def test_edit_entity_invalid_operation(entity_service: EntityService):
     )
 
     with pytest.raises(ValueError, match="Unsupported operation"):
-        await entity_service.edit_entity(
-            identifier=entity.permalink, operation="invalid_operation", content="content"
-        )
+        await entity_service.edit_entity(identifier=entity.permalink, operation="invalid_operation", content="content")
 
 
 @pytest.mark.asyncio
@@ -798,9 +788,7 @@ async def test_edit_entity_find_replace_missing_find_text(entity_service: Entity
     )
 
     with pytest.raises(ValueError, match="find_text is required"):
-        await entity_service.edit_entity(
-            identifier=entity.permalink, operation="find_replace", content="new content"
-        )
+        await entity_service.edit_entity(identifier=entity.permalink, operation="find_replace", content="new content")
 
 
 @pytest.mark.asyncio
@@ -823,9 +811,7 @@ async def test_edit_entity_replace_section_missing_section(entity_service: Entit
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_with_observations_and_relations(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_with_observations_and_relations(entity_service: EntityService, file_service: FileService):
     """Test editing entity updates observations and relations correctly."""
     # Create test entity with observations and relations
     content = dedent("""
@@ -862,18 +848,16 @@ async def test_edit_entity_with_observations_and_relations(
     assert len(updated.relations) == 2
 
     # Check new observation
-    new_obs = [obs for obs in updated.observations if obs.category == "category"][0]
+    new_obs = next(obs for obs in updated.observations if obs.category == "category")
     assert new_obs.content == "New observation"
 
     # Check new relation
-    new_rel = [rel for rel in updated.relations if rel.to_name == "New Entity"][0]
+    new_rel = next(rel for rel in updated.relations if rel.to_name == "New Entity")
     assert new_rel.relation_type == "relates to"
 
 
 @pytest.mark.asyncio
-async def test_create_entity_from_markdown_with_upsert(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_create_entity_from_markdown_with_upsert(entity_service: EntityService, file_service: FileService):
     """Test that create_entity_from_markdown uses UPSERT approach for conflict resolution."""
     file_path = Path("test/upsert-test.md")
 
@@ -908,9 +892,7 @@ async def test_create_entity_from_markdown_with_upsert(
 
 
 @pytest.mark.asyncio
-async def test_create_entity_from_markdown_error_handling(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_create_entity_from_markdown_error_handling(entity_service: EntityService, file_service: FileService):
     """Test that create_entity_from_markdown handles repository errors gracefully."""
     from unittest.mock import patch
 
@@ -1052,9 +1034,7 @@ async def test_edit_entity_find_replace_empty_find_text(entity_service: EntitySe
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_find_replace_multiline(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_find_replace_multiline(entity_service: EntityService, file_service: FileService):
     """Test find_replace with multiline text."""
     # Create test entity with multiline content
     content = dedent("""
@@ -1152,9 +1132,7 @@ async def test_edit_entity_replace_section_empty_section(entity_service: EntityS
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_replace_section_header_variations(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_replace_section_header_variations(entity_service: EntityService, file_service: FileService):
     """Test replace_section with different header formatting."""
     # Create entity with various header formats (avoiding "test" in frontmatter)
     content = dedent("""
@@ -1193,9 +1171,7 @@ async def test_edit_entity_replace_section_header_variations(
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_replace_section_at_end_of_document(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_replace_section_at_end_of_document(entity_service: EntityService, file_service: FileService):
     """Test replace_section when section is at the end of document."""
     # Create test entity with section at end
     content = dedent("""
@@ -1233,9 +1209,7 @@ async def test_edit_entity_replace_section_at_end_of_document(
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_replace_section_with_subsections(
-    entity_service: EntityService, file_service: FileService
-):
+async def test_edit_entity_replace_section_with_subsections(entity_service: EntityService, file_service: FileService):
     """Test replace_section preserves subsections (stops at any header)."""
     # Create test entity with nested sections
     content = dedent("""
@@ -1718,12 +1692,12 @@ async def test_move_entity_with_complex_observations(
     moved_entity = await entity_service.link_resolver.resolve_link("moved/complex-note.md")
 
     # Check observations with tags and context
-    design_obs = [obs for obs in moved_entity.observations if obs.category == "design"][0]
+    design_obs = next(obs for obs in moved_entity.observations if obs.category == "design")
     assert "git" in design_obs.tags
     assert "workflow" in design_obs.tags
     assert design_obs.context == "Reduces merge conflicts"
 
-    tech_obs = [obs for obs in moved_entity.observations if obs.category == "tech"][0]
+    tech_obs = next(obs for obs in moved_entity.observations if obs.category == "tech")
     assert "implementation" in tech_obs.tags
     assert tech_obs.context == "Fast and reliable"
 

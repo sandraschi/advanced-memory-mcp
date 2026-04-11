@@ -15,6 +15,7 @@ from advanced_memory import db
 from advanced_memory.config import ConfigManager
 from advanced_memory.repository import ProjectRepository
 from advanced_memory.services.document_converter import DocumentConverter
+
 # from advanced_memory.deps import get_sync_service (moved to method to break circularity)
 
 
@@ -287,13 +288,12 @@ class InboxProcessor:
                 project = await project_repo.get_by_name(project_config.project)
 
                 if not project:
-                    logger.error(
-                        f"Project '{project_config.project}' not found during sync trigger"
-                    )
+                    logger.error(f"Project '{project_config.project}' not found during sync trigger")
                     return
 
                 # 3. Initialize SyncService and sync the file
                 from advanced_memory.sync.sync_service import get_sync_service
+
                 sync_service = await get_sync_service(project)
 
                 # Calculate relative path for sync_service

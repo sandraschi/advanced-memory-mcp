@@ -87,9 +87,7 @@ async def get_engine_factory(
     return engine, session_maker
 
 
-EngineFactoryDep = Annotated[
-    tuple[AsyncEngine, async_sessionmaker[AsyncSession]], Depends(get_engine_factory)
-]
+EngineFactoryDep = Annotated[tuple[AsyncEngine, async_sessionmaker[AsyncSession]], Depends(get_engine_factory)]
 
 
 async def get_session_maker(
@@ -240,12 +238,8 @@ async def get_markdown_processor(entity_parser: EntityParserDep) -> MarkdownProc
 MarkdownProcessorDep = Annotated[MarkdownProcessor, Depends(get_markdown_processor)]
 
 
-async def get_file_service(
-    project_config: ProjectConfigDep, markdown_processor: MarkdownProcessorDep
-) -> FileService:
-    logger.debug(
-        f"Creating FileService for project: {project_config.name}, base_path: {project_config.home}"
-    )
+async def get_file_service(project_config: ProjectConfigDep, markdown_processor: MarkdownProcessorDep) -> FileService:
+    logger.debug(f"Creating FileService for project: {project_config.name}, base_path: {project_config.home}")
     file_service = FileService(project_config.home, markdown_processor)
     logger.debug(f"Created FileService for project: {file_service} ")
     return file_service
@@ -296,9 +290,7 @@ async def get_search_service(
 SearchServiceDep = Annotated[SearchService, Depends(get_search_service)]
 
 
-async def get_link_resolver(
-    entity_repository: EntityRepositoryDep, search_service: SearchServiceDep
-) -> LinkResolver:
+async def get_link_resolver(entity_repository: EntityRepositoryDep, search_service: SearchServiceDep) -> LinkResolver:
     return LinkResolver(entity_repository=entity_repository, search_service=search_service)
 
 
@@ -389,9 +381,7 @@ async def get_claude_conversations_importer(
     return ClaudeConversationsImporter(project_config.home, markdown_processor)
 
 
-ClaudeConversationsImporterDep = Annotated[
-    ClaudeConversationsImporter, Depends(get_claude_conversations_importer)
-]
+ClaudeConversationsImporterDep = Annotated[ClaudeConversationsImporter, Depends(get_claude_conversations_importer)]
 
 
 async def get_claude_projects_importer(

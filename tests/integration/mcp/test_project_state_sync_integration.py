@@ -40,9 +40,7 @@ async def test_project_state_sync_after_default_change(mcp_server, app, config_m
 
         # Step 3: Change default project to minerva via set_default_project tool
         # This simulates the CLI command `basic-memory project default minerva`
-        set_default_result = await client.call_tool(
-            "set_default_project", {"project_name": "minerva"}
-        )
+        set_default_result = await client.call_tool("set_default_project", {"project_name": "minerva"})
         assert len(set_default_result.content) == 1
         assert "✓" in set_default_result.content[0].text
         assert "minerva" in set_default_result.content[0].text
@@ -89,15 +87,10 @@ async def test_project_state_sync_after_default_change(mcp_server, app, config_m
             },
         )
         assert len(edit_result.content) == 1
-        assert (
-            "added" in edit_result.content[0].text.lower()
-            and "lines" in edit_result.content[0].text.lower()
-        )
+        assert "added" in edit_result.content[0].text.lower() and "lines" in edit_result.content[0].text.lower()
 
         # Step 9: Verify the edit was applied
-        final_read_result = await client.call_tool(
-            "read_note", {"identifier": "Test Consistency Note"}
-        )
+        final_read_result = await client.call_tool("read_note", {"identifier": "Test Consistency Note"})
         assert len(final_read_result.content) == 1
         final_content = final_read_result.content[0].text
         assert "Edit operation successful" in final_content
@@ -126,9 +119,7 @@ async def test_multiple_project_switches_maintain_consistency(mcp_server, app, c
         # Test switching between projects multiple times
         for project_name in ["project-a", "project-b", "project-c", "test-project"]:
             # Set as default
-            set_result = await client.call_tool(
-                "set_default_project", {"project_name": project_name}
-            )
+            set_result = await client.call_tool("set_default_project", {"project_name": project_name})
             assert "✓" in set_result.content[0].text
 
             # Verify MCP session immediately reflects the change
@@ -161,9 +152,7 @@ async def test_session_handles_nonexistent_project_gracefully(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Try to switch to a project that doesn't exist
-        switch_result = await client.call_tool(
-            "switch_project", {"project_name": "nonexistent-project"}
-        )
+        switch_result = await client.call_tool("switch_project", {"project_name": "nonexistent-project"})
         assert len(switch_result.content) == 1
         result_text = switch_result.content[0].text
 

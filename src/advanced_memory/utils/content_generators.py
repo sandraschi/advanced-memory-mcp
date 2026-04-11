@@ -289,9 +289,7 @@ def generate_changelog(
     if project_name:
         changelog += f"# {project_name}\n\n"
         changelog += "All notable changes to this project will be documented in this file.\n\n"
-        changelog += (
-            "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n"
-        )
+        changelog += "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\n"
         changelog += "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n"
         changelog += "---\n\n"
 

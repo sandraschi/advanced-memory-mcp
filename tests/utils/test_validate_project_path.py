@@ -31,9 +31,7 @@ class TestValidateProjectPathSafety:
         ]
 
         for path in safe_paths:
-            assert validate_project_path(path, project_path), (
-                f"Safe path '{path}' should be allowed"
-            )
+            assert validate_project_path(path, project_path), f"Safe path '{path}' should be allowed"
 
     def test_empty_and_current_directory(self, tmp_path):
         """Test handling of empty paths and current directory references."""
@@ -58,9 +56,7 @@ class TestValidateProjectPathSafety:
         ]
 
         for path in nested_paths:
-            assert validate_project_path(path, project_path), (
-                f"Nested path '{path}' should be allowed"
-            )
+            assert validate_project_path(path, project_path), f"Nested path '{path}' should be allowed"
 
 
 class TestValidateProjectPathAttacks:
@@ -87,9 +83,7 @@ class TestValidateProjectPathAttacks:
         ]
 
         for path in attack_paths:
-            assert not validate_project_path(path, project_path), (
-                f"Attack path '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Attack path '{path}' should be blocked"
 
     def test_windows_path_traversal(self, tmp_path):
         """Test that Windows-style path traversal is blocked."""
@@ -109,9 +103,7 @@ class TestValidateProjectPathAttacks:
         ]
 
         for path in attack_paths:
-            assert not validate_project_path(path, project_path), (
-                f"Windows attack path '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Windows attack path '{path}' should be blocked"
 
     def test_mixed_traversal_patterns(self, tmp_path):
         """Test paths that mix legitimate content with traversal."""
@@ -128,9 +120,7 @@ class TestValidateProjectPathAttacks:
         ]
 
         for path in mixed_attacks:
-            assert not validate_project_path(path, project_path), (
-                f"Mixed attack path '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Mixed attack path '{path}' should be blocked"
 
     def test_home_directory_access(self, tmp_path):
         """Test that home directory access patterns are blocked."""
@@ -148,9 +138,7 @@ class TestValidateProjectPathAttacks:
         ]
 
         for path in home_attacks:
-            assert not validate_project_path(path, project_path), (
-                f"Home directory attack '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Home directory attack '{path}' should be blocked"
 
     def test_unc_and_network_paths(self, tmp_path):
         """Test that UNC and network paths are blocked."""
@@ -165,9 +153,7 @@ class TestValidateProjectPathAttacks:
         ]
 
         for path in network_attacks:
-            assert not validate_project_path(path, project_path), (
-                f"Network path attack '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Network path attack '{path}' should be blocked"
 
     def test_absolute_paths(self, tmp_path):
         """Test that absolute paths are blocked (if they contain traversal)."""
@@ -215,7 +201,7 @@ class TestValidateProjectPathEdgeCases:
             try:
                 result = validate_project_path(path, project_path)
                 if path.strip():  # Non-empty paths with control chars should be blocked
-                    assert not result, f"Malformed path '{repr(path)}' should be blocked"
+                    assert not result, f"Malformed path '{path!r}' should be blocked"
             except (ValueError, OSError):
                 # It's acceptable for these to raise exceptions
                 pass
@@ -284,9 +270,7 @@ class TestValidateProjectPathEdgeCases:
         ]
 
         for path in case_variations:
-            assert not validate_project_path(path, project_path), (
-                f"Case variation '{path}' should be blocked"
-            )
+            assert not validate_project_path(path, project_path), f"Case variation '{path}' should be blocked"
 
     def test_symbolic_link_behavior(self, tmp_path):
         """Test behavior with symbolic links (if supported by filesystem)."""

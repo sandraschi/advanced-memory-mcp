@@ -3973,8 +3973,8 @@ wheels = [
 ]
 
 [[package]]
-name = "schi-mcp-advanced-memory"
-version = "1.6.1"
+name = "schip-mcp-advanced-memory"
+version = "1.7.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },

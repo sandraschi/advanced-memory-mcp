@@ -386,13 +386,9 @@ async def test_search_e2e_write_search_delete(client):
     assert delete_result is True
 
     # Confirm no results
-    post_delete_response = await search_notes.fn(
-        query="Butterfly Lifecycle Notes", search_type="title"
-    )
+    post_delete_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
     assert isinstance(post_delete_response, SearchResponse)
-    assert not any(
-        r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results
-    )
+    assert not any(r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results)
 
 
 @pytest.mark.asyncio
@@ -550,9 +546,7 @@ class TestSearchToolErrorHandling:
         with patch("advanced_memory.mcp.tools.search.get_active_project") as mock_get_project:
             mock_get_project.return_value.project_url = "http://test"
 
-            with patch(
-                "advanced_memory.mcp.tools.search.call_post", side_effect=Exception("syntax error")
-            ):
+            with patch("advanced_memory.mcp.tools.search.call_post", side_effect=Exception("syntax error")):
                 result = await search_notes.fn("test query")
 
                 assert isinstance(result, str)

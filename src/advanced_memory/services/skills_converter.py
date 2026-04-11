@@ -89,9 +89,7 @@ class SkillsConverter:
 
         if not description:
             # Generate from title
-            description = (
-                f"Guide for {title}. Use when working with {title.lower()} or related topics."
-            )
+            description = f"Guide for {title}. Use when working with {title.lower()} or related topics."
 
         # OPTIONAL: License (default MIT for open source)
         license_text = zettel_frontmatter.get("license", "MIT")

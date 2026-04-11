@@ -48,9 +48,7 @@ def render_skill_markdown(
     frontmatter_lines.append("---")
 
     confidence_label = CONFIDENCE_LABELS.get(confidence.lower(), confidence.title())
-    confidence_line = (
-        f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
-    )
+    confidence_line = f"{confidence_label} — {confidence_note}" if confidence_note else confidence_label
 
     status_line = status or "⚠️ Requires web research before use"
     last_validated_line = last_validated or today_iso()
@@ -89,8 +87,7 @@ def render_skill_markdown(
 def render_core_guidance(content: str | None = None) -> str:
     """Render the core-guidance module."""
     body = content or (
-        "# Core Guidance\n\n"
-        "Replace this section with validated, imperative instructions once research is complete."
+        "# Core Guidance\n\nReplace this section with validated, imperative instructions once research is complete."
     )
     return (
         dedent(

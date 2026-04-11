@@ -21,9 +21,7 @@ async def test_suggest_tags(mock_llm_client, test_project):
     assert "created" in create_result.lower() or "updated" in create_result.lower()
 
     # Mock LLM response
-    mock_llm_client.generate_json = AsyncMock(
-        return_value=["butterflies", "biology", "insects", "nature", "science"]
-    )
+    mock_llm_client.generate_json = AsyncMock(return_value=["butterflies", "biology", "insects", "nature", "science"])
 
     result = await adn_content.fn(operation="suggest_tags", identifier="Test Note")
     assert "Tag Suggestions" in result
@@ -70,9 +68,7 @@ async def test_enhance(mock_llm_client, test_project):
     assert "created" in create_result.lower() or "updated" in create_result.lower()
 
     # Mock LLM response
-    mock_llm_client.generate = AsyncMock(
-        return_value="# Test\n\n## Introduction\n\nSome enhanced content here."
-    )
+    mock_llm_client.generate = AsyncMock(return_value="# Test\n\n## Introduction\n\nSome enhanced content here.")
 
     result = await adn_content.fn(operation="enhance", identifier="Test Note")
     assert "Note Enhanced" in result
@@ -89,9 +85,7 @@ async def test_generate(mock_llm_client, test_project):
         return_value="# Python Functions\n\nPython functions are reusable blocks of code..."
     )
 
-    result = await adn_content.fn(
-        operation="generate", content="Python functions tutorial", folder="tutorials"
-    )
+    result = await adn_content.fn(operation="generate", content="Python functions tutorial", folder="tutorials")
     assert "created" in result.lower() or "updated" in result.lower()
 
     # Verify LLM was called

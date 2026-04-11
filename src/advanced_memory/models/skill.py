@@ -16,9 +16,7 @@ class Skill(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True, index=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    entity_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("entity.id"), nullable=True, index=True
-    )
+    entity_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("entity.id"), nullable=True, index=True)
     version: Mapped[str] = mapped_column(String, nullable=False, server_default="1.0.0")
     category: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     difficulty: Mapped[str | None] = mapped_column(String, nullable=True)

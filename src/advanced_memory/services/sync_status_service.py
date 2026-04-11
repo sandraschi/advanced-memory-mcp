@@ -162,11 +162,7 @@ class SyncStatusTracker:
         elif self._global_status == SyncStatus.COMPLETED:
             return "OK All projects synced successfully"
         elif self._global_status == SyncStatus.FAILED:
-            failed_projects = [
-                p.project_name
-                for p in self._project_statuses.values()
-                if p.status == SyncStatus.FAILED
-            ]
+            failed_projects = [p.project_name for p in self._project_statuses.values() if p.status == SyncStatus.FAILED]
             return f"ERROR Sync failed for: {', '.join(failed_projects)}"
         else:
             active_projects = [
@@ -186,9 +182,7 @@ class SyncStatusTracker:
     def clear_completed(self) -> None:
         """Remove completed project statuses to clean up memory."""
         self._project_statuses = {
-            name: status
-            for name, status in self._project_statuses.items()
-            if status.status != SyncStatus.COMPLETED
+            name: status for name, status in self._project_statuses.items() if status.status != SyncStatus.COMPLETED
         }
         self._update_global_status()
 

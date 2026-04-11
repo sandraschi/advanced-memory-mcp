@@ -110,8 +110,7 @@ def verify_not_production():
         # Check if config points to production
         if config.database_path and is_production_path(Path(config.database_path)):
             pytest.exit(
-                "FATAL: Current config uses production database! "
-                "Megatest cannot run with production configuration.",
+                "FATAL: Current config uses production database! Megatest cannot run with production configuration.",
                 returncode=1,
             )
 
@@ -190,9 +189,9 @@ def isolated_test_env() -> Generator[dict, None, None]:
     print("║" + " " * 15 + "MEGATEST ENVIRONMENT - ISOLATED" + " " * 12 + "║")
     print("╠" + "═" * 58 + "╣")
     if prod_db:
-        print(f"║ Production DB:   {str(prod_db):<40} [PROTECTED] ║")
-    print(f"║ Test DB:         {str(test_db):<40} [TEST ONLY] ║")
-    print(f"║ Test Home:       {str(test_dir):<40} [TEST ONLY] ║")
+        print(f"║ Production DB:   {prod_db!s:<40} [PROTECTED] ║")
+    print(f"║ Test DB:         {test_db!s:<40} [TEST ONLY] ║")
+    print(f"║ Test Home:       {test_dir!s:<40} [TEST ONLY] ║")
     print("║                                                            ║")
     print("║ Status: ✅ ISOLATED - Safe to proceed                      ║")
     print("╚" + "═" * 58 + "╝\n")
@@ -266,15 +265,9 @@ def assert_production_safe():
 
 def pytest_configure(config):
     """Register custom markers."""
-    config.addinivalue_line(
-        "markers", "megatest: Comprehensive integration test (90+ minutes, ISOLATED environment)"
-    )
-    config.addinivalue_line(
-        "markers", "megatest_quick: Quick validation (10 minutes, ISOLATED environment)"
-    )
-    config.addinivalue_line(
-        "markers", "destructive: Test performs destructive operations (MUST be isolated)"
-    )
+    config.addinivalue_line("markers", "megatest: Comprehensive integration test (90+ minutes, ISOLATED environment)")
+    config.addinivalue_line("markers", "megatest_quick: Quick validation (10 minutes, ISOLATED environment)")
+    config.addinivalue_line("markers", "destructive: Test performs destructive operations (MUST be isolated)")
 
 
 # ============================================================================

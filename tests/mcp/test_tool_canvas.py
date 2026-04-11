@@ -123,9 +123,7 @@ async def test_update_existing_canvas(app, project_config):
             "height": 200,
         }
     ]
-    updated_edges = [
-        {"id": "new-edge", "fromNode": "updated", "toNode": "other", "label": "new connection"}
-    ]
+    updated_edges = [{"id": "new-edge", "fromNode": "updated", "toNode": "other", "label": "new connection"}]
 
     # Execute update
     result = await canvas.fn(nodes=updated_nodes, edges=updated_edges, title=title, folder=folder)
@@ -258,16 +256,10 @@ async def test_create_canvas_complex_content(app, project_config):
 
     # Verify specific content elements are preserved
     assert any(node["type"] == "text" and "#" in node["text"] for node in content["nodes"])
-    assert any(
-        node["type"] == "file" and "test-file.md" in node["file"] for node in content["nodes"]
-    )
+    assert any(node["type"] == "file" and "test-file.md" in node["file"] for node in content["nodes"])
     assert any(node["type"] == "link" and "example.com" in node["url"] for node in content["nodes"])
-    assert any(
-        node["type"] == "group" and "Group Label" == node["label"] for node in content["nodes"]
-    )
+    assert any(node["type"] == "group" and "Group Label" == node["label"] for node in content["nodes"])
 
     # Verify edge properties
-    assert any(
-        edge["fromSide"] == "right" and edge["toSide"] == "left" for edge in content["edges"]
-    )
+    assert any(edge["fromSide"] == "right" and edge["toSide"] == "left" for edge in content["edges"])
     assert any(edge["label"] == "belongs to" and edge["color"] == "6" for edge in content["edges"])

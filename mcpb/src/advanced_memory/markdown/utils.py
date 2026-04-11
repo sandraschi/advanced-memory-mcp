@@ -11,9 +11,7 @@ from advanced_memory.models import Entity
 from advanced_memory.models import Observation as ObservationModel
 
 
-def entity_model_from_markdown(
-    file_path: Path, markdown: EntityMarkdown, entity: Entity | None = None
-) -> Entity:
+def entity_model_from_markdown(file_path: Path, markdown: EntityMarkdown, entity: Entity | None = None) -> Entity:
     """
     Convert markdown entity to model. Does not include relations.
 

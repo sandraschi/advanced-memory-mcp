@@ -6,10 +6,10 @@ import typer
 from loguru import logger
 
 # Import prompts to register them
-import advanced_memory.mcp.prompts  # noqa: F401  # pragma: no cover
+import advanced_memory.mcp.prompts  # pragma: no cover
 
 # Import mcp tools to register them
-import advanced_memory.mcp.tools  # noqa: F401  # pragma: no cover
+import advanced_memory.mcp.tools  # pragma: no cover
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager
 

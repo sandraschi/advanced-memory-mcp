@@ -87,9 +87,7 @@ async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
 
     mock_repository = AsyncMock()
     mock_project_service = AsyncMock()
-    mock_project_service.synchronize_projects = AsyncMock(
-        side_effect=ValueError("Project synchronization error")
-    )
+    mock_project_service.synchronize_projects = AsyncMock(side_effect=ValueError("Project synchronization error"))
 
     # Mock the repository and project service
     with (
@@ -115,12 +113,8 @@ async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
         mock_project_service.synchronize_projects.assert_called_once()
 
         # Verify error was logged
-        mock_logger.error.assert_called_once_with(
-            "Error during project synchronization: Project synchronization error"
-        )
-        mock_logger.info.assert_any_call(
-            "Continuing with initialization despite synchronization error"
-        )
+        mock_logger.error.assert_called_once_with("Error during project synchronization: Project synchronization error")
+        mock_logger.info.assert_any_call("Continuing with initialization despite synchronization error")
 
 
 @pytest.mark.asyncio
@@ -172,12 +166,8 @@ async def test_initialize_file_sync_sequential(
 
         # Should call sync on each project
         assert mock_sync_service.sync.call_count == 2
-        mock_sync_service.sync.assert_any_call(
-            Path(mock_project1.path), project_name=mock_project1.name
-        )
-        mock_sync_service.sync.assert_any_call(
-            Path(mock_project2.path), project_name=mock_project2.name
-        )
+        mock_sync_service.sync.assert_any_call(Path(mock_project1.path), project_name=mock_project1.name)
+        mock_sync_service.sync.assert_any_call(Path(mock_project2.path), project_name=mock_project2.name)
 
         # Should start the watch service
         mock_watch_service.run.assert_called_once()

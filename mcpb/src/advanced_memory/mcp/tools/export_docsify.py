@@ -75,9 +75,7 @@ async def export_docsify_enhanced(
         logger.info(f"Starting Enhanced Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(
-            source_folder, include_subfolders, project, export_all
-        )
+        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
 
         if not notes_data:
             # Try to provide helpful folder suggestions
@@ -163,7 +161,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
                 logger.info(f"Exported enhanced note: {note_info['title']} -> {md_path}")
 
             except Exception as e:
-                logger.error(f"Failed to export note {note_info['title']}: {str(e)}")
+                logger.error(f"Failed to export note {note_info['title']}: {e!s}")
 
         # NOW create enhanced sidebar with icons and metadata (uses exported_files)
         enhanced_sidebar = _create_enhanced_sidebar(exported_files, export_path_obj)
@@ -264,9 +262,7 @@ async def _legacy_export_docsify(
         logger.info(f"Starting legacy Docsify export: {source_folder} -> {export_path}")
 
         # Get all notes from the source folder
-        notes_data = await _get_notes_from_folder(
-            source_folder, include_subfolders, project, export_all
-        )
+        notes_data = await _get_notes_from_folder(source_folder, include_subfolders, project, export_all)
 
         if not notes_data:
             return f"# Docsify Export Complete\n\nNo notes found in folder: {source_folder}"
@@ -851,20 +847,14 @@ def _get_folder_icon(folder: str) -> str:
     return "[FOLDER]"  # default folder icon
 
 
-def _create_enhanced_readme(
-    site_title: str, site_description: str, analysis: dict[str, Any]
-) -> str:
+def _create_enhanced_readme(site_title: str, site_description: str, analysis: dict[str, Any]) -> str:
     """Create enhanced README with feature overview and statistics."""
 
     features = []
     features.append("## [UNICODE] Enhanced Features\n")
-    features.append(
-        "This documentation site includes advanced features for better navigation and user experience:\n"
-    )
+    features.append("This documentation site includes advanced features for better navigation and user experience:\n")
     features.append("- [SEARCH] **Enhanced Search** - Fast, full-text search across all documents")
-    features.append(
-        "- [BOOK] **Auto TOC** - Automatically generated table of contents for each page"
-    )
+    features.append("- [BOOK] **Auto TOC** - Automatically generated table of contents for each page")
     features.append("- [UNICODE][UNICODE] **Theme Toggle** - Switch between light and dark themes")
     features.append("- [CHART] **Reading Progress** - Visual progress bar")
     features.append("- [LIST] **Copy Code** - One-click code block copying")
@@ -1454,9 +1444,7 @@ async def _get_notes_from_folder(
 
         notes_data = []
         total_notes_found = len(search_result.results)
-        logger.info(
-            f"Found {total_notes_found} total notes in search, filtering for folder: {source_folder}"
-        )
+        logger.info(f"Found {total_notes_found} total notes in search, filtering for folder: {source_folder}")
 
         # Track matching folders for ambiguity detection
         matching_folders: set[str] = set()
@@ -1499,7 +1487,9 @@ async def _get_notes_from_folder(
 
                 # Read the actual note content
                 try:
-                    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=note_title, project=project)
+                    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+                        identifier=note_title, project=project
+                    )
 
                     # Extract just the markdown content (remove any artifact formatting)
                     content = note_content
@@ -1510,15 +1500,11 @@ async def _get_notes_from_folder(
                         filtered_lines = []
                         skip_until_content = False
                         for line in lines:
-                            if line.startswith("*Original path:*") or line.startswith(
-                                "*Exported:*"
-                            ):
+                            if line.startswith("*Original path:*") or line.startswith("*Exported:*"):
                                 continue
                             if line.strip() == "---" and not skip_until_content:
                                 continue
-                            if line.startswith("## Content") or line.startswith(
-                                "This note has been exported"
-                            ):
+                            if line.startswith("## Content") or line.startswith("This note has been exported"):
                                 skip_until_content = True
                                 continue
                             if skip_until_content or not line.startswith("*Generated by"):
@@ -1569,17 +1555,13 @@ async def _get_notes_from_folder(
         # Log info about multiple matches even when export_all=True
         if len(matching_folders) > 1 and source_folder.strip("/"):
             folder_list = ", ".join(sorted(matching_folders))
-            logger.info(
-                f"Folder '{source_folder}' matched multiple locations: {folder_list}. Exporting from all."
-            )
+            logger.info(f"Folder '{source_folder}' matched multiple locations: {folder_list}. Exporting from all.")
 
         # If no notes found, log helpful debug info
         if len(notes_data) == 0 and total_notes_found > 0:
             # Show some example paths to help user debug
             example_paths = [note.file_path for note in list(search_result.results)[:5]]
-            logger.warning(
-                f"No notes matched folder '{source_folder}'. Example paths in system: {example_paths}"
-            )
+            logger.warning(f"No notes matched folder '{source_folder}'. Example paths in system: {example_paths}")
 
     except Exception as e:
         logger.error(f"Error getting notes from folder {source_folder}: {e}")
@@ -1655,9 +1637,7 @@ def _create_markdown_content(note_info: dict[str, Any], project: str | None) -> 
     """Create markdown content for a note using the pre-loaded content."""
     try:
         # Use the content that was already loaded in _get_notes_from_folder
-        content = note_info.get(
-            "content", f"# {note_info['title']}\n\n*Content could not be loaded*"
-        )
+        content = note_info.get("content", f"# {note_info['title']}\n\n*Content could not be loaded*")
 
         # Ensure it has proper formatting
         if not content.strip():
@@ -1869,11 +1849,7 @@ async def _start_local_server(export_path: Path, port: int) -> str:
             logger.warning(f"Could not auto-open browser: {e}")
             browser_opened = False
 
-        browser_msg = (
-            "✅ Browser opened automatically"
-            if browser_opened
-            else "⚠️ Please open browser manually"
-        )
+        browser_msg = "✅ Browser opened automatically" if browser_opened else "⚠️ Please open browser manually"
 
         return f"""## 🌐 Local Server Started
 

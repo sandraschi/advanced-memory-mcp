@@ -31,9 +31,7 @@ class TestLLMClient:
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {"response": "Test response"}
-            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
-                return_value=mock_response
-            )
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
 
             result = await client.generate("Test prompt")
             assert result == "Test response"
@@ -41,19 +39,13 @@ class TestLLMClient:
     @pytest.mark.asyncio
     async def test_generate_lmstudio(self):
         """Test LM Studio generation."""
-        client = LLMClient(
-            provider="lmstudio", model="local-model", base_url="http://localhost:1234"
-        )
+        client = LLMClient(provider="lmstudio", model="local-model", base_url="http://localhost:1234")
 
         with patch("httpx.AsyncClient") as mock_client:
             mock_response = MagicMock()
             mock_response.status_code = 200
-            mock_response.json.return_value = {
-                "choices": [{"message": {"content": "Test response"}}]
-            }
-            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
-                return_value=mock_response
-            )
+            mock_response.json.return_value = {"choices": [{"message": {"content": "Test response"}}]}
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
 
             result = await client.generate("Test prompt")
             assert result == "Test response"
@@ -70,9 +62,7 @@ class TestLLMClient:
                 mock_response = MagicMock()
                 mock_response.choices = [MagicMock()]
                 mock_response.choices[0].message.content = "Test response"
-                mock_openai.return_value.chat.completions.create = AsyncMock(
-                    return_value=mock_response
-                )
+                mock_openai.return_value.chat.completions.create = AsyncMock(return_value=mock_response)
 
                 result = await client.generate("Test prompt")
                 assert result == "Test response"
@@ -86,9 +76,7 @@ class TestLLMClient:
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {"response": '{"key": "value"}'}
-            mock_client.return_value.__aenter__.return_value.post = AsyncMock(
-                return_value=mock_response
-            )
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
 
             result = await client.generate_json("Test prompt")
             assert result == {"key": "value"}

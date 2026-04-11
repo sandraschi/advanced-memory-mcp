@@ -157,7 +157,7 @@ def check_skill_validation():
     except subprocess.TimeoutExpired:
         print("[SKIP] Skill validation timed out")
         return False
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"[FAIL] Skill validation error: {exc}")
         return False
 

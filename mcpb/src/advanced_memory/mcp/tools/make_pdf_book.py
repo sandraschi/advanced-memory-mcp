@@ -102,7 +102,7 @@ async def make_pdf_book(
             return "[UNICODE] PDF book creation failed. Check that Pandoc and LaTeX are installed."
 
     except Exception as e:
-        return f"[UNICODE] Error creating PDF book: {str(e)}"
+        return f"[UNICODE] Error creating PDF book: {e!s}"
 
 
 async def _get_book_notes(
@@ -113,9 +113,7 @@ async def _get_book_notes(
     """
     try:
         # Get all notes from the folder (with optional tag filtering)
-        notes_data = await _get_notes_from_folder(
-            source_folder, tag_filter, include_subfolders, project
-        )
+        notes_data = await _get_notes_from_folder(source_folder, tag_filter, include_subfolders, project)
 
         if not notes_data:
             return []
@@ -295,9 +293,7 @@ def _prepare_chapter_content(content: str) -> str:
     return content
 
 
-async def _generate_pdf_book(
-    book_md_path: Path, pdf_path: Path, toc_depth: int, paper_size: str
-) -> bool:
+async def _generate_pdf_book(book_md_path: Path, pdf_path: Path, toc_depth: int, paper_size: str) -> bool:
     """
     Generate PDF book using Pandoc.
     """

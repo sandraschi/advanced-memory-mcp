@@ -117,7 +117,7 @@ def extract_readable_text(html: str) -> str:
         return result
 
     except Exception as e:
-        return f"Error: Could not extract readable text from HTML content. {str(e)}"
+        return f"Error: Could not extract readable text from HTML content. {e!s}"
 
 
 def extract_text_summary(html: str, max_length: int = 300) -> str:

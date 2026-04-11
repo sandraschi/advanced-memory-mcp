@@ -74,9 +74,7 @@ class ProjectRepository(Repository):
         """
         async with db.scoped_session(self.session_maker) as session:
             # First, clear the default flag for all projects using direct SQL
-            await session.execute(
-                text("UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL")
-            )
+            await session.execute(text("UPDATE project SET is_default = NULL WHERE is_default IS NOT NULL"))
             await session.flush()
 
             # Set the new default project

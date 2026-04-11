@@ -47,9 +47,7 @@ async def search_prompt(
     project_url = get_project_config().project_url
 
     # Call the prompt API endpoint
-    response = await call_post(
-        client, f"{project_url}/prompt/search", json=request.model_dump(exclude_none=True)
-    )
+    response = await call_post(client, f"{project_url}/prompt/search", json=request.model_dump(exclude_none=True))
 
     # Extract the rendered prompt from the response
     result = response.json()

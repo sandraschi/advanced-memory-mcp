@@ -30,9 +30,7 @@ def search_prompt_template() -> str:
 
     if not template_path.exists():
         # Fallback: try mcpb path structure (resources -> mcp -> advanced_memory -> src -> templates)
-        template_path = (
-            Path(__file__).parent.parent.parent.parent / "templates" / "prompts" / "search.hbs"
-        )
+        template_path = Path(__file__).parent.parent.parent.parent / "templates" / "prompts" / "search.hbs"
 
     if not template_path.exists():
         logger.warning(f"Search template not found, tried: {template_path}")
@@ -58,17 +56,12 @@ def continue_conversation_prompt_template() -> str:
     """
     logger.info("Loading continue conversation prompt template")
     # Try src structure first (resources -> mcp -> advanced_memory -> templates)
-    template_path = (
-        Path(__file__).parent.parent.parent / "templates" / "prompts" / "continue_conversation.hbs"
-    )
+    template_path = Path(__file__).parent.parent.parent / "templates" / "prompts" / "continue_conversation.hbs"
 
     if not template_path.exists():
         # Fallback: try mcpb path structure (resources -> mcp -> advanced_memory -> src -> templates)
         template_path = (
-            Path(__file__).parent.parent.parent.parent
-            / "templates"
-            / "prompts"
-            / "continue_conversation.hbs"
+            Path(__file__).parent.parent.parent.parent / "templates" / "prompts" / "continue_conversation.hbs"
         )
 
     if not template_path.exists():

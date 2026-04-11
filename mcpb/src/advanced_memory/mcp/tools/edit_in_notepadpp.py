@@ -28,9 +28,7 @@ from advanced_memory.mcp.tools import write_note as mcp_write_note
 
 
 @mcp.tool
-async def edit_in_notepadpp(
-    note_identifier: str, workspace_path: str | None = None, create_backup: bool = True
-) -> str:
+async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = None, create_backup: bool = True) -> str:
     """
     Export an Advanced Memory note to Notepad++ for editing.
 
@@ -58,9 +56,7 @@ async def edit_in_notepadpp(
         # Create safe filename
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
-        backup_file = (
-            workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        )
+        backup_file = workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
 
         # Create backup if requested
         if create_backup:
@@ -82,7 +78,7 @@ async def edit_in_notepadpp(
             subprocess.Popen([str(notepadpp_path), str(md_file)])
             logger.info(f"Opened {md_file} in Notepad++")
         except Exception as e:
-            return f"[UNICODE] Failed to open Notepad++: {str(e)}"
+            return f"[UNICODE] Failed to open Notepad++: {e!s}"
 
         return f"""[UNICODE] **Note exported to Notepad++ workspace!**
 
@@ -104,7 +100,7 @@ async def edit_in_notepadpp(
 
     except Exception as e:
         logger.error(f"Error in edit_in_notepadpp: {e}")
-        return f"[UNICODE] Error exporting note to Notepad++: {str(e)}"
+        return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
 
 
 @mcp.tool
@@ -183,7 +179,7 @@ The content in Notepad++ workspace is identical to the original note.
 
     except Exception as e:
         logger.error(f"Error in import_from_notepadpp: {e}")
-        return f"[UNICODE] Error importing note from Notepad++: {str(e)}"
+        return f"[UNICODE] Error importing note from Notepad++: {e!s}"
 
 
 def _find_notepadpp_executable() -> Path | None:

@@ -65,11 +65,7 @@ async def get_resource_content(
     # search using the identifier as a permalink
     if not results:
         # if the identifier contains a wildcard, use GLOB search
-        query = (
-            SearchQuery(permalink_match=identifier)
-            if "*" in identifier
-            else SearchQuery(permalink=identifier)
-        )
+        query = SearchQuery(permalink_match=identifier) if "*" in identifier else SearchQuery(permalink=identifier)
         search_results = await search_service.search(query, limit, offset)
         if not search_results:
             raise HTTPException(status_code=404, detail=f"Resource not found: {identifier}")
@@ -222,4 +218,4 @@ async def write_resource(
         )
     except Exception as e:  # pragma: no cover
         logger.error(f"Error writing resource {file_path}: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to write resource: {str(e)}") from e
+        raise HTTPException(status_code=500, detail=f"Failed to write resource: {e!s}") from e

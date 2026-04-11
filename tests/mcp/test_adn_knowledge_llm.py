@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge
+from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge_legacy as adn_knowledge
 
 
 @pytest.mark.asyncio
@@ -35,9 +35,7 @@ async def test_analyze_quality(mock_llm_client, test_project):
         ]
     )
 
-    result = await adn_knowledge.fn(
-        operation="analyze_quality", filters={"query": "test"}, limit=10
-    )
+    result = await adn_knowledge.fn(operation="analyze_quality", filters={"query": "test"}, limit=10)
     assert "Quality Analysis" in result
     assert "Test Note 1" in result
 
@@ -77,9 +75,7 @@ async def test_suggest_relationships(mock_llm_client, test_project):
         ]
     )
 
-    result = await adn_knowledge.fn(
-        operation="suggest_relationships", filters={"note_id": "Note A"}
-    )
+    result = await adn_knowledge.fn(operation="suggest_relationships", filters={"note_id": "Note A"})
     assert "Relationship Suggestions" in result
     assert "Note A" in result
     assert "Note B" in result

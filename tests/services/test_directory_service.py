@@ -132,9 +132,7 @@ async def test_list_directory_with_markdown_filter(directory_service: DirectoryS
 
 
 @pytest.mark.asyncio
-async def test_list_directory_with_specific_file_filter(
-    directory_service: DirectoryService, test_graph
-):
+async def test_list_directory_with_specific_file_filter(directory_service: DirectoryService, test_graph):
     """Test listing directory with specific file pattern."""
     result = await directory_service.list_directory(dir_name="/test", file_name_glob="Root.*")
 
@@ -174,9 +172,7 @@ async def test_list_directory_path_normalization(directory_service: DirectorySer
 @pytest.mark.asyncio
 async def test_list_directory_glob_no_matches(directory_service: DirectoryService, test_graph):
     """Test listing directory with glob that matches nothing."""
-    result = await directory_service.list_directory(
-        dir_name="/test", file_name_glob="*.nonexistent"
-    )
+    result = await directory_service.list_directory(dir_name="/test", file_name_glob="*.nonexistent")
     assert result.nodes == []
     assert result.total == 0
 

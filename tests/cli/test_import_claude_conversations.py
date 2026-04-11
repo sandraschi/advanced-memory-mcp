@@ -6,7 +6,7 @@ import pytest
 from typer.testing import CliRunner
 
 from advanced_memory.cli.app import app
-from advanced_memory.cli.commands import import_claude_conversations  # noqa
+from advanced_memory.cli.commands import import_claude_conversations
 from advanced_memory.config import get_project_config
 
 # Set up CLI runner
@@ -63,9 +63,7 @@ def test_import_conversations_command_success(tmp_path, sample_conversations_jso
     monkeypatch.setenv("HOME", str(tmp_path))
 
     # Run import
-    result = runner.invoke(
-        app, ["import", "claude", "conversations", str(sample_conversations_json)]
-    )
+    result = runner.invoke(app, ["import", "claude", "conversations", str(sample_conversations_json)])
     assert result.exit_code == 0
     assert "Import complete" in result.output
     assert "Imported 1 conversations" in result.output
@@ -124,9 +122,7 @@ def test_import_conversation_with_attachments(tmp_path):
                 "sender": "human",
                 "created_at": "2025-01-05T20:55:32.499880+00:00",
                 "content": [{"type": "text", "text": "Here's a file"}],
-                "attachments": [
-                    {"file_name": "test.txt", "extracted_content": "Test file content"}
-                ],
+                "attachments": [{"file_name": "test.txt", "extracted_content": "Test file content"}],
             }
         ],
     }

@@ -64,9 +64,7 @@ async def test_continue_conversation_endpoint(
 
 
 @pytest.mark.asyncio
-async def test_search_prompt_endpoint(
-    client: AsyncClient, entity_service, search_service, test_graph, project_url
-):
+async def test_search_prompt_endpoint(client: AsyncClient, entity_service, search_service, test_graph, project_url):
     """Test the search_prompt endpoint with real services."""
     # Create request data
     request_data = {
@@ -97,9 +95,7 @@ async def test_search_prompt_endpoint(
 
 
 @pytest.mark.asyncio
-async def test_search_prompt_no_results(
-    client: AsyncClient, entity_service, search_service, project_url
-):
+async def test_search_prompt_no_results(client: AsyncClient, entity_service, search_service, project_url):
     """Test the search_prompt endpoint with a query that returns no results."""
     # Create request data with a query that shouldn't match anything
     request_data = {"query": "NonExistentQuery12345", "timeframe": "7d"}
@@ -146,9 +142,7 @@ async def test_error_handling(client: AsyncClient, monkeypatch, project_url):
     assert "Template error" in response.json()["detail"]
 
     # Test search_prompt error handling
-    response = await client.post(
-        f"{project_url}/prompt/search", json={"query": "test error", "timeframe": "7d"}
-    )
+    response = await client.post(f"{project_url}/prompt/search", json={"query": "test error", "timeframe": "7d"})
 
     assert response.status_code == 500
     assert "detail" in response.json()

@@ -112,7 +112,7 @@ async def export_pandoc(
                 else:
                     errors.append(f"Failed to export: {note_info['title']}")
             except Exception as e:
-                errors.append(f"Error exporting {note_info['title']}: {str(e)}")
+                errors.append(f"Error exporting {note_info['title']}: {e!s}")
 
         # Generate summary
         summary = _generate_export_summary(exported_files, errors, format_type, export_path)
@@ -129,12 +129,14 @@ async def export_pandoc(
             else:
                 # Multiple files - open the folder
                 success, msg = open_file_or_folder(export_dir)
-                summary += f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
+                summary += (
+                    f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
+                )
 
         return summary
 
     except Exception as e:
-        return f"Pandoc export failed: {str(e)}"
+        return f"Pandoc export failed: {e!s}"
 
 
 async def _get_notes_from_folder(
@@ -373,9 +375,7 @@ def _sanitize_filename(title: str) -> str:
     return title
 
 
-def _generate_export_summary(
-    exported_files: list[str], errors: list[str], format_type: str, export_path: str
-) -> str:
+def _generate_export_summary(exported_files: list[str], errors: list[str], format_type: str, export_path: str) -> str:
     """
     Generate a summary of the export operation.
     """

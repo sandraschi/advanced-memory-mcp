@@ -44,9 +44,7 @@ async def adn_tvtropes_research(
     ],
     query: str | None = None,
     trope_name: str | None = None,
-    media_type: Literal[
-        "all", "film", "literature", "tv", "video_games", "webcomics", "music"
-    ] = "all",
+    media_type: Literal["all", "film", "literature", "tv", "video_games", "webcomics", "music"] = "all",
     max_results: int = 5,
     include_examples: bool = False,
 ) -> dict[str, Any]:
@@ -265,7 +263,7 @@ async def adn_tvtropes_research(
                 ],
             }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_tvtropes_research_error: %s", exc, exc_info=True)
         return {
             "success": False,
@@ -388,9 +386,7 @@ async def _find_trope_examples(
     ][:max_results]
 
 
-async def _narrative_pattern_analysis(
-    base_url: str, query: str, max_results: int
-) -> dict[str, Any]:
+async def _narrative_pattern_analysis(base_url: str, query: str, max_results: int) -> dict[str, Any]:
     """Analyze narrative patterns and storytelling techniques."""
 
     return {
@@ -412,9 +408,7 @@ async def _narrative_pattern_analysis(
     }
 
 
-async def _character_archetype_research(
-    base_url: str, query: str, max_results: int
-) -> list[dict[str, Any]]:
+async def _character_archetype_research(base_url: str, query: str, max_results: int) -> list[dict[str, Any]]:
     """Research character archetypes and personality patterns."""
 
     return [
@@ -433,9 +427,7 @@ async def _character_archetype_research(
     ][:max_results]
 
 
-async def _plot_structure_research(
-    base_url: str, query: str, max_results: int
-) -> list[dict[str, Any]]:
+async def _plot_structure_research(base_url: str, query: str, max_results: int) -> list[dict[str, Any]]:
     """Research plot structures and story frameworks."""
 
     return [
@@ -454,9 +446,7 @@ async def _plot_structure_research(
     ][:max_results]
 
 
-async def _media_specific_analysis(
-    base_url: str, query: str, media_type: str, max_results: int
-) -> dict[str, Any]:
+async def _media_specific_analysis(base_url: str, query: str, media_type: str, max_results: int) -> dict[str, Any]:
     """Analyze tropes and patterns in specific media types."""
 
     return {

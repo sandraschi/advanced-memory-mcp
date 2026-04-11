@@ -23,9 +23,7 @@ class TextbookDistiller:
     def __init__(self):
         """Initialize textbook distiller."""
         if pypdf is None and pdfplumber is None:
-            raise ImportError(
-                "PDF parsing libraries required. Install with: pip install pypdf pdfplumber"
-            )
+            raise ImportError("PDF parsing libraries required. Install with: pip install pypdf pdfplumber")
         logger.debug("TextbookDistiller initialized")
 
     def extract_toc(self, pdf_path: Path) -> list[dict[str, Any]]:
@@ -171,7 +169,7 @@ class TextbookDistiller:
             }
         except Exception as e:
             logger.error(f"Error distilling textbook: {e}")
-            raise ValueError(f"Failed to distill textbook '{pdf_path}': {str(e)}") from e
+            raise ValueError(f"Failed to distill textbook '{pdf_path}': {e!s}") from e
 
     def _parse_outline(self, outline: list) -> list[dict[str, Any]]:
         """Parse PDF outline structure.
@@ -243,9 +241,7 @@ class TextbookDistiller:
                         toc.append({"title": line.strip(), "page": page_num, "level": 1})
         return toc
 
-    def _process_specific_chapters(
-        self, pdf_path: Path, chapters: list[int], toc: list[dict[str, Any]]
-    ) -> str:
+    def _process_specific_chapters(self, pdf_path: Path, chapters: list[int], toc: list[dict[str, Any]]) -> str:
         """Process specific chapters.
 
         Args:
@@ -263,10 +259,7 @@ class TextbookDistiller:
             # Find chapter in TOC
             chapter_info = None
             for entry in toc:
-                if (
-                    f"chapter {chapter_num}" in entry["title"].lower()
-                    or str(chapter_num) in entry["title"]
-                ):
+                if f"chapter {chapter_num}" in entry["title"].lower() or str(chapter_num) in entry["title"]:
                     chapter_info = entry
                     break
 

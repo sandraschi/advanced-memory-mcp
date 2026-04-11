@@ -26,9 +26,7 @@ class DocumentConverter:
         self.pandoc_available = self._check_pandoc()
 
         if not self.pandoc_available:
-            logger.warning(
-                "Pandoc not found. Install from https://pandoc.org for .docx and .html conversion"
-            )
+            logger.warning("Pandoc not found. Install from https://pandoc.org for .docx and .html conversion")
 
     def _check_pandoc(self) -> bool:
         """Check if Pandoc is installed and available
@@ -196,9 +194,7 @@ class DocumentConverter:
 
                 if not text_parts:
                     logger.warning(f"No text extracted from PDF: {file_path.name}")
-                    return self._create_placeholder(
-                        file_path, "PDF", "No extractable text found in PDF"
-                    )
+                    return self._create_placeholder(file_path, "PDF", "No extractable text found in PDF")
 
                 full_text = "\n\n".join(text_parts)
 
@@ -208,9 +204,7 @@ class DocumentConverter:
 
                 if not shutil.which("pdftotext"):
                     logger.error("Neither pypdf nor pdftotext available for PDF conversion")
-                    return self._create_placeholder(
-                        file_path, "PDF", "PDF extraction tools not installed"
-                    )
+                    return self._create_placeholder(file_path, "PDF", "PDF extraction tools not installed")
 
                 result = subprocess.run(
                     ["pdftotext", str(file_path), "-"],
@@ -223,9 +217,7 @@ class DocumentConverter:
 
                 if not full_text.strip():
                     logger.warning(f"No text extracted from PDF: {file_path.name}")
-                    return self._create_placeholder(
-                        file_path, "PDF", "No extractable text found in PDF"
-                    )
+                    return self._create_placeholder(file_path, "PDF", "No extractable text found in PDF")
 
             # Clean up extracted text
             full_text = self._clean_pdf_text(full_text)

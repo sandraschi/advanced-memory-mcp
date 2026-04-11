@@ -5,6 +5,39 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - Industrial Testing & Arcade Compliance (2026-04-11)
+
+### 🚀 **Industrial Testing Scaffold**
+
+#### Added - Prefab Infrastructure (SOTA v14.1.0)
+- **PrefabManager Hardening**: Implemented a robust, deterministic environment rehydration system with support for JSON-based environment templates ("prefabs").
+- **Relational Integrity**: Engineered a two-pass seeding mechanism to resolve relational dependencies (Entity -> Observation -> Relation) without `IntegrityError` collisions.
+- **Deterministic Seeding**: Integrated `EntityParser` and `generate_permalink` for consistent filename sanitization (`Project_Glenn.md`) and path resolution across Windows and Unix environments.
+- **Cascaded Cleanup**: Optimized environment teardown using SQLAlchemy cascaded deletions for zero-leak test isolation.
+
+### 🍱 **Industrial Interface & Documentation**
+
+#### Added - Modular Documentation (SOTA v14.1.0)
+- **Documentation Refactoring**: Transitioned from monolithic documentation to a modular `docs/` suite covering Architecture, Usage, Fleet Integration, and Compliance.
+- **Benny Protocol Integration**: Established the "Benny Anchor" (German Shepherd) as the emotional and security grounding protocol across all primary documentation.
+- **Premium Industrial Branding**: Deployed a cinematic 21:9 wide banner header for the primary README, aligning with the Schipal Fleet's contemporary "Knowledge Library" aesthetic.
+- **Pristine Root Architecture**: Offboarded redundant documentation and compliance manifests to the `docs/` hierarchy to maintain a clean, production-ready repository root.
+
+### 🛡️ **Arcade Compliance**
+
+#### Added - Static Scanner Optimization
+- **Shadow Unrolling**: Implemented the `ADVANCED_MEMORY_ARCADE_COMPLIANCE` layer to satisfy strict static analysis tools (e.g., toolbench.arcade.dev) that reject portmanteau patterns.
+- **Dual Presentation Mode**: Introduced `ADVANCED_MEMORY_FULL_TOOLS_MODE` to toggle between specialized tool sets and consolidated portmanteau entry points.
+
+### 🔧 **Technical Fixes**
+
+#### Fixed - Backend & Repository Stability
+- **LanceDB API Alignment**: Resolved `DeprecationWarning` and functional regressions by migrating `table_names()` to `list_tables()`.
+- **Path Resolution**: Fixed critical Windows-specific path resolution bugs where `base_path` was incorrectly handled during prefab discovery.
+- **Unified Error Handling**: Standardized conversational error responses across all core tools for superior agentic feedback loops.
+
+---
+
 ## [1.6.1] - Tool Modernization & Zero Noise Docs (2026-03-30)
 
 ### 🚀 **FastMCP 3.1 Modernization**

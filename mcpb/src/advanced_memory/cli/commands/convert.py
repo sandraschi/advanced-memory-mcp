@@ -121,7 +121,7 @@ def convert_info() -> None:
     pandoc_available = converter.pandoc_available
 
     try:
-        import pypdf  # noqa: F401
+        import pypdf
 
         pypdf_available = True
     except ImportError:

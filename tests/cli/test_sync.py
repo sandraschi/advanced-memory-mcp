@@ -108,9 +108,7 @@ def test_sync_command():
     from unittest.mock import AsyncMock, patch
 
     # Mock the async run_sync function to avoid event loop issues
-    with patch(
-        "advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock
-    ) as mock_run_sync:
+    with patch("advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
         # Mock successful execution (no return value needed since it just prints)
         mock_run_sync.return_value = None
 
@@ -130,9 +128,7 @@ def test_sync_command_error():
     from unittest.mock import AsyncMock, patch
 
     # Mock the async run_sync function to raise an exception
-    with patch(
-        "advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock
-    ) as mock_run_sync:
+    with patch("advanced_memory.cli.commands.sync.run_sync", new_callable=AsyncMock) as mock_run_sync:
         # Mock an error
         mock_run_sync.side_effect = Exception("Sync failed")
 

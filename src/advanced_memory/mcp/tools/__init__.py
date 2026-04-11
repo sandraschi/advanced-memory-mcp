@@ -27,8 +27,8 @@ from .help import help  # noqa: F401
 # Set ADVANCED_MEMORY_FULL_TOOLS_MODE=true to expose all individual tools.
 
 if os.getenv("ADVANCED_MEMORY_FULL_TOOLS_MODE", "").lower() == "true":
-    from .adn_knowledge import adn_knowledge as _adn_knowledge_full  # noqa: F401
-    from .adn_search import search_notes  # noqa: F401
+    from .adn_knowledge import adn_knowledge_legacy  # noqa: F401
+    from .search import search_notes  # noqa: F401
     from .adn_rag import adn_rag  # noqa: F401
     from .adn_document_ingest import adn_document_ingest  # noqa: F401
     from .adn_llm import adn_llm  # noqa: F401
@@ -48,13 +48,13 @@ if os.getenv("ADVANCED_MEMORY_FULL_TOOLS_MODE", "").lower() == "true":
     from .canvas import canvas  # noqa: F401
     from .delete_note import delete_note  # noqa: F401
     from .edit_note import edit_note  # noqa: F401
-    from .external_mcp_clients import external_mcp_clients  # noqa: F401
+    from .external_mcp_clients import skeleton_key, call_external_mcp_tool, list_external_mcp_tools  # noqa: F401
     from .inter_server_tools import agentic_content_workflow  # noqa: F401
-    from .knowledge_operations import knowledge_operations  # noqa: F401
+    from .knowledge_operations import adn_knowledge_bulk  # noqa: F401
     from .list_directory import list_directory  # noqa: F401
     from .move_note import move_note  # noqa: F401
-    from .project_management import project_management  # noqa: F401
-    from .project_manager import project_manager  # noqa: F401
+    from .project_management import list_memory_projects, switch_project, get_current_project, set_default_project, create_memory_project  # noqa: F401
+    from .project_manager import adn_project  # noqa: F401
     from .read_note import read_note  # noqa: F401
     from .recent_activity import recent_activity  # noqa: F401
     from .research_orchestrator import research_orchestrator  # noqa: F401

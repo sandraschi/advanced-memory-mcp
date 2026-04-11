@@ -72,9 +72,7 @@ async def search_joplin_vault(
         if not vault_path_obj.is_dir():
             return f"# Joplin Search Failed\n\nPath is not a directory: {vault_path}"
 
-        logger.info(
-            f"Searching Joplin vault: {vault_path} for query: '{query}' (type: {search_type})"
-        )
+        logger.info(f"Searching Joplin vault: {vault_path} for query: '{query}' (type: {search_type})")
 
         # Find all Joplin note files (markdown files with corresponding JSON metadata)
         joplin_files = await _find_joplin_files(vault_path_obj)
@@ -168,8 +166,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
 
             joplin_files_raw = await scan_recursive(str(vault_path))
             joplin_files = [
-                {"md": Path(f["md"]), "json": Path(f["json"]), "base_name": f["base_name"]}
-                for f in joplin_files_raw
+                {"md": Path(f["md"]), "json": Path(f["json"]), "base_name": f["base_name"]} for f in joplin_files_raw
             ]
 
         except ImportError:
@@ -193,9 +190,7 @@ async def _find_joplin_files(vault_path: Path) -> list[dict[str, Path]]:
             # Only include complete pairs
             for base_name, file_dict in file_groups.items():
                 if "md" in file_dict and "json" in file_dict:
-                    joplin_files.append(
-                        {"md": file_dict["md"], "json": file_dict["json"], "base_name": base_name}
-                    )
+                    joplin_files.append({"md": file_dict["md"], "json": file_dict["json"], "base_name": base_name})
 
     except Exception as e:
         logger.error(f"Error finding Joplin files: {e}")
@@ -302,9 +297,7 @@ async def _search_tags(joplin_files: list[dict[str, Path]], query: str) -> list[
     return results
 
 
-async def _search_notebooks(
-    joplin_files: list[dict[str, Path]], query: str
-) -> list[dict[str, Any]]:
+async def _search_notebooks(joplin_files: list[dict[str, Path]], query: str) -> list[dict[str, Any]]:
     """Search for notes in specific notebooks/folders."""
     results = []
     query_lower = query.lower()
@@ -519,7 +512,7 @@ def _format_search_results(
             output_lines.append(f"**Notebook:** {notebook_path}")
 
         # Add specific match information
-        if "matches" in result and result["matches"]:
+        if result.get("matches"):
             output_lines.append(f"**Matches:** {result['total_matches']} total")
             if include_content:
                 for line_num, line_content in result["matches"][:3]:  # Show first 3 matches

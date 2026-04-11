@@ -39,9 +39,7 @@ async def create_entity(
     search_service: SearchServiceDep,
 ) -> EntityResponse:
     """Create an entity."""
-    logger.info(
-        "API request", endpoint="create_entity", entity_type=data.entity_type, title=data.title
-    )
+    logger.info("API request", endpoint="create_entity", entity_type=data.entity_type, title=data.title)
 
     entity = await entity_service.create_entity(data)
 
@@ -101,9 +99,7 @@ async def create_or_update_entity(
 
     result = EntityResponse.model_validate(entity)
 
-    logger.info(
-        f"API response: {result.title=}, {result.permalink=}, {created=}, status_code={response.status_code}"
-    )
+    logger.info(f"API response: {result.title=}, {result.permalink=}, {created=}, status_code={response.status_code}")
     return result
 
 
@@ -119,9 +115,7 @@ async def edit_entity(
 
     This endpoint allows for targeted edits without requiring the full entity content.
     """
-    logger.info(
-        f"API request: endpoint='edit_entity', identifier='{identifier}', operation='{data.operation}'"
-    )
+    logger.info(f"API request: endpoint='edit_entity', identifier='{identifier}', operation='{data.operation}'")
 
     try:
         # Edit the entity using the service
@@ -260,9 +254,7 @@ async def get_entities(
     logger.info(f"request: get_entities with permalinks={permalink}")
 
     entities = await entity_service.get_entities_by_permalinks(permalink) if permalink else []
-    result = EntityListResponse(
-        entities=[EntityResponse.model_validate(entity) for entity in entities]
-    )
+    result = EntityListResponse(entities=[EntityResponse.model_validate(entity) for entity in entities])
     return result
 
 

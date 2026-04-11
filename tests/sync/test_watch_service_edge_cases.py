@@ -9,42 +9,23 @@ from watchfiles import Change
 def test_filter_changes_valid_path(watch_service, project_config):
     """Test the filter_changes method with valid non-hidden paths."""
     # Regular file path
-    assert (
-        watch_service.filter_changes(Change.added, str(project_config.home / "valid_file.txt"))
-        is True
-    )
+    assert watch_service.filter_changes(Change.added, str(project_config.home / "valid_file.txt")) is True
 
     # Nested path
-    assert (
-        watch_service.filter_changes(
-            Change.added, str(project_config.home / "nested" / "valid_file.txt")
-        )
-        is True
-    )
+    assert watch_service.filter_changes(Change.added, str(project_config.home / "nested" / "valid_file.txt")) is True
 
 
 def test_filter_changes_hidden_path(watch_service, project_config):
     """Test the filter_changes method with hidden files/directories."""
     # Hidden file (starts with dot)
-    assert (
-        watch_service.filter_changes(Change.added, str(project_config.home / ".hidden_file.txt"))
-        is False
-    )
+    assert watch_service.filter_changes(Change.added, str(project_config.home / ".hidden_file.txt")) is False
 
     # File in hidden directory
-    assert (
-        watch_service.filter_changes(
-            Change.added, str(project_config.home / ".hidden_dir" / "file.txt")
-        )
-        is False
-    )
+    assert watch_service.filter_changes(Change.added, str(project_config.home / ".hidden_dir" / "file.txt")) is False
 
     # Deeply nested hidden directory
     assert (
-        watch_service.filter_changes(
-            Change.added, str(project_config.home / "valid" / ".hidden" / "file.txt")
-        )
-        is False
+        watch_service.filter_changes(Change.added, str(project_config.home / "valid" / ".hidden" / "file.txt")) is False
     )
 
 

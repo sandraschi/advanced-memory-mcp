@@ -1,38 +1,49 @@
 {
-  "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": ["sandraschi"],
-  "name": "advanced-memory-mcp",
-  "description": "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs. 15 portmanteau tools for Claude Desktop integration. Experimental Claude Skills support.",
-  "type": "mcp_server",
-  "status": "beta",
-  "framework": "MCP SDK",
-  "tools": 15,
-  "transport": ["stdio"],
-  "keywords": [
-    "knowledge-management",
-    "zettelkasten",
-    "knowledge-graph",
-    "mcp-server",
-    "note-taking",
-    "claude-skills",
-    "pkm",
-    "local-first"
-  ],
-  "features": {
-    "knowledge_management": {
-      "enabled": true,
-      "modes": ["portmanteau", "full"],
-      "note": "Portmanteau mode (15 tools) is default, full mode (56 tools) is opt-in"
-    },
-    "zettelkasten": {
-      "enabled": true
-    },
-    "knowledge_graph": {
-      "enabled": true
-    },
-    "claude_skills": {
-      "enabled": true,
-      "status": "experimental"
-    }
-  }
+    "$schema":  "https://glama.ai/mcp/schemas/server.json",
+    "maintainers":  [
+                        "sandraschi"
+                    ],
+    "name":  "advanced-memory-mcp",
+    "description":  "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs. 15 portmanteau tools for Claude Desktop integration. Experimental Claude Skills support.",
+    "type":  "mcp_server",
+    "status":  "beta",
+    "framework":  "MCP SDK",
+    "tools":  15,
+    "transport":  [
+                      "stdio"
+                  ],
+    "keywords":  [
+                     "knowledge-management",
+                     "zettelkasten",
+                     "knowledge-graph",
+                     "mcp-server",
+                     "note-taking",
+                     "claude-skills",
+                     "pkm",
+                     "local-first"
+                 ],
+    "features":  {
+                     "knowledge_management":  {
+                                                  "enabled":  true,
+                                                  "modes":  [
+                                                                "portmanteau",
+                                                                "full"
+                                                            ],
+                                                  "note":  "Portmanteau mode (15 tools) is default, full mode (56 tools) is opt-in"
+                                              },
+                     "zettelkasten":  {
+                                          "enabled":  true
+                                      },
+                     "knowledge_graph":  {
+                                             "enabled":  true
+                                         },
+                     "claude_skills":  {
+                                           "enabled":  true,
+                                           "status":  "experimental"
+                                       }
+                 },
+    "fleet":  {
+                  "stars":  "★★★★★",
+                  "tier":  1
+              }
 }

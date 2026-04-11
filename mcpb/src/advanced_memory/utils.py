@@ -108,12 +108,8 @@ def generate_permalink(file_path: Path | str | Any) -> str:
 
     # NOW insert dash between Chinese and Latin character boundaries (after cleanup)
     # This handles cases like "中文english" -> "中文-english" and "english中文" -> "english-中文"
-    clean_text = re.sub(
-        r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
-    )
-    clean_text = re.sub(
-        r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text
-    )
+    clean_text = re.sub(r"([\u4e00-\u9fff])([a-z])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
+    clean_text = re.sub(r"([a-z])([\u4e00-\u9fff])", lambda m: f"{m.group(1)}-{m.group(2)}", clean_text)
 
     # Clean each path segment
     segments = clean_text.split("/")

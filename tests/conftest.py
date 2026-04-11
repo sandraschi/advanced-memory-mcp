@@ -1,5 +1,4 @@
-"""Common test fixtures."""
-
+import os
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime
@@ -8,17 +7,13 @@ from textwrap import dedent
 
 # Python 3.10 compatibility - UTC was added in 3.11
 try:
-    # UTC is available in Python 3.11+, for older versions use timezone.utc
     try:
         from datetime import UTC
     except ImportError:
         from datetime import timezone
-
-        UTC = UTC
+        UTC = timezone.utc
 except (ImportError, AttributeError):
     from datetime import timedelta, timezone
-
-    # Fallback for Python < 3.11
     UTC = timezone(timedelta(0))
 
 import pytest
@@ -50,6 +45,13 @@ from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.search_service import SearchService
 from advanced_memory.sync.sync_service import SyncService
 from advanced_memory.sync.watch_service import WatchService
+from tests.utils.prefab_manager import PrefabManager
+
+
+def pytest_configure(config):
+    """Early configuration of the test environment."""
+    # Force full tools mode for all tests to ensure integration tests pass
+    os.environ["ADVANCED_MEMORY_FULL_TOOLS_MODE"] = "true"
 
 
 @pytest.fixture
@@ -71,6 +73,19 @@ def mock_llm_client(monkeypatch):
 @pytest.fixture
 def anyio_backend():
     return "asyncio"
+
+
+@pytest.fixture
+def prefab_manager(request, session_maker, file_service, app_config) -> PrefabManager:
+    """Fixture for PrefabManager."""
+    prefabs_dir = Path(__file__).parent / "prefabs"
+    return PrefabManager(prefabs_dir, session_maker, file_service, app_config)
+
+
+@pytest_asyncio.fixture
+async def prefab_standard(prefab_manager) -> None:
+    """Load the 'standard' prefab for high-fidelity search/RAG testing."""
+    await prefab_manager.load_prefab("standard")
 
 
 @pytest.fixture
@@ -160,9 +175,10 @@ async def engine_factory(
     app_config,
 ) -> AsyncGenerator[tuple[AsyncEngine, async_sessionmaker[AsyncSession]], None]:
     """Create an engine and session factory using an in-memory SQLite database."""
-    async with db.engine_session_factory(
-        db_path=app_config.database_path, db_type=DatabaseType.MEMORY
-    ) as (engine, session_maker):
+    async with db.engine_session_factory(db_path=app_config.database_path, db_type=DatabaseType.MEMORY) as (
+        engine,
+        session_maker,
+    ):
         # Create all tables for the DB the engine is connected to
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -181,9 +197,7 @@ async def session_maker(engine_factory) -> async_sessionmaker[AsyncSession]:
 
 
 @pytest_asyncio.fixture(scope="function")
-async def entity_repository(
-    session_maker: async_sessionmaker[AsyncSession], test_project: Project
-) -> EntityRepository:
+async def entity_repository(session_maker: async_sessionmaker[AsyncSession], test_project: Project) -> EntityRepository:
     """Create an EntityRepository instance with project context."""
     return EntityRepository(session_maker, project_id=test_project.id)
 
@@ -252,9 +266,7 @@ async def entity_service(
 
 
 @pytest.fixture
-def file_service(
-    project_config: ProjectConfig, markdown_processor: MarkdownProcessor
-) -> FileService:
+def file_service(project_config: ProjectConfig, markdown_processor: MarkdownProcessor) -> FileService:
     """Create FileService instance."""
     return FileService(project_config.home, markdown_processor)
 

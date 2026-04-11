@@ -88,9 +88,7 @@ Multiple sections found with the same header in note '{identifier}'.
 Use `find_replace` to update specific text within the duplicate sections."""
 
     # Generic server/request errors
-    if (
-        "Invalid request" in error_message or "malformed" in error_message.lower()
-    ):  # pragma: no cover
+    if "Invalid request" in error_message or "malformed" in error_message.lower():  # pragma: no cover
         return f"""# Edit Failed - Request Error
 
 There was a problem with the edit request to note '{identifier}': {error_message}.
@@ -523,6 +521,4 @@ edit_note(
 
     except Exception as e:
         logger.error(f"Error editing note: {e}")
-        return _format_error_response(
-            str(e), operation, identifier, find_text, expected_replacements
-        )
+        return _format_error_response(str(e), operation, identifier, find_text, expected_replacements)

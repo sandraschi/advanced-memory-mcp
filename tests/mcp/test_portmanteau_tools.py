@@ -432,9 +432,7 @@ class TestAdnEditorBasic:
         pass
 
 
-@pytest.mark.skip(
-    reason="Error payloads vary (markdown str vs dict; error vs error_code); refresh when standardized"
-)
+@pytest.mark.skip(reason="Error payloads vary (markdown str vs dict; error vs error_code); refresh when standardized")
 class TestStructuredResponses:
     """Test FastMCP 2.14.3 structured response format compliance.
 
@@ -454,9 +452,7 @@ class TestStructuredResponses:
         assert isinstance(result, dict), f"Response should be dict, got {type(result)}"
         assert result["success"] is True, f"Success should be True, got {result.get('success')}"
         assert "operation" in result, "Success response should have 'operation' field"
-        assert result["operation"] == expected_operation, (
-            f"Operation should be '{expected_operation}'"
-        )
+        assert result["operation"] == expected_operation, f"Operation should be '{expected_operation}'"
         assert "summary" in result, "Success response should have 'summary' field"
         assert "result" in result, "Success response should have 'result' field"
         assert isinstance(result["result"], dict), "Result field should be a dict"
@@ -482,9 +478,7 @@ class TestStructuredResponses:
         import asyncio
 
         # Test invalid operation
-        result = asyncio.run(
-            self._test_tool_error_response(adn_content_fn, operation="invalid_operation")
-        )
+        result = asyncio.run(self._test_tool_error_response(adn_content_fn, operation="invalid_operation"))
         msg = result["message"]
         assert (
             "Invalid operation" in msg
@@ -502,9 +496,7 @@ class TestStructuredResponses:
         import asyncio
 
         # Test invalid operation
-        result = asyncio.run(
-            self._test_tool_error_response(adn_project_fn, operation="invalid_operation")
-        )
+        result = asyncio.run(self._test_tool_error_response(adn_project_fn, operation="invalid_operation"))
         msg = result["message"]
         assert (
             "Invalid operation" in msg
@@ -523,9 +515,7 @@ class TestStructuredResponses:
 
         # Test invalid operation
         result = asyncio.run(
-            self._test_tool_error_response(
-                adn_export_fn, operation="invalid_operation", export_path="/tmp/test"
-            )
+            self._test_tool_error_response(adn_export_fn, operation="invalid_operation", export_path="/tmp/test")
         )
         msg = result["message"]
         assert (
@@ -541,9 +531,7 @@ class TestStructuredResponses:
 
         # Test invalid operation
         result = asyncio.run(
-            self._test_tool_error_response(
-                adn_import_fn, operation="invalid_operation", source_path="/tmp/test"
-            )
+            self._test_tool_error_response(adn_import_fn, operation="invalid_operation", source_path="/tmp/test")
         )
         msg = result["message"]
         assert (
@@ -558,11 +546,7 @@ class TestStructuredResponses:
         import asyncio
 
         # Test invalid operation
-        result = asyncio.run(
-            self._test_tool_error_response(
-                adn_search_fn, operation="invalid_operation", query="test"
-            )
-        )
+        result = asyncio.run(self._test_tool_error_response(adn_search_fn, operation="invalid_operation", query="test"))
         msg = result["message"]
         assert (
             "Invalid operation" in msg
@@ -576,9 +560,7 @@ class TestStructuredResponses:
         import asyncio
 
         # Test invalid operation
-        result = asyncio.run(
-            self._test_tool_error_response(adn_knowledge_fn, operation="invalid_operation")
-        )
+        result = asyncio.run(self._test_tool_error_response(adn_knowledge_fn, operation="invalid_operation"))
         msg = result["message"]
         assert (
             "Invalid operation" in msg
@@ -592,9 +574,7 @@ class TestStructuredResponses:
         import asyncio
 
         # Test invalid operation
-        result = asyncio.run(
-            self._test_tool_error_response(adn_navigation_fn, operation="invalid_operation")
-        )
+        result = asyncio.run(self._test_tool_error_response(adn_navigation_fn, operation="invalid_operation"))
         msg = result["message"]
         assert (
             "Invalid operation" in msg
@@ -620,7 +600,5 @@ class TestStructuredResponses:
 
         for tool_fn, kwargs in tools_to_test:
             result = asyncio.run(tool_fn(**kwargs))
-            assert isinstance(result, dict), (
-                f"{tool_fn.__name__} should return dict, got {type(result)}"
-            )
+            assert isinstance(result, dict), f"{tool_fn.__name__} should return dict, got {type(result)}"
             assert "success" in result, f"{tool_fn.__name__} response should have 'success' field"

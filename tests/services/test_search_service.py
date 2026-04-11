@@ -32,9 +32,7 @@ async def test_search_limit_offset(search_service, test_graph):
     num_results = len(results)
 
     # assert offset
-    offset_results = await search_service.search(
-        SearchQuery(permalink_match="test/*"), limit=100, offset=1
-    )
+    offset_results = await search_service.search(SearchQuery(permalink_match="test/*"), limit=100, offset=1)
     assert len(offset_results) == num_results - 1
 
 
@@ -74,9 +72,7 @@ async def test_search_permalink_wildcard2(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_text(search_service, test_graph):
     """Full-text search"""
-    results = await search_service.search(
-        SearchQuery(text="Root Entity", entity_types=[SearchItemType.ENTITY])
-    )
+    results = await search_service.search(SearchQuery(text="Root Entity", entity_types=[SearchItemType.ENTITY]))
     assert len(results) >= 1
     assert results[0].permalink == "test/root"
 
@@ -84,9 +80,7 @@ async def test_search_text(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_title(search_service, test_graph):
     """Title only search"""
-    results = await search_service.search(
-        SearchQuery(title="Root", entity_types=[SearchItemType.ENTITY])
-    )
+    results = await search_service.search(SearchQuery(title="Root", entity_types=[SearchItemType.ENTITY]))
     assert len(results) >= 1
     assert results[0].permalink == "test/root"
 
@@ -287,9 +281,7 @@ async def test_boolean_and_search(search_service, test_graph):
     found = False
     for result in results:
         if (result.title and "Root" in result.title and "Entity" in result.title) or (
-            result.content_snippet
-            and "Root" in result.content_snippet
-            and "Entity" in result.content_snippet
+            result.content_snippet and "Root" in result.content_snippet and "Entity" in result.content_snippet
         ):
             found = True
             break
@@ -331,9 +323,7 @@ async def test_boolean_not_search(search_service, test_graph):
 
     # Should find "Root Entity" but not "Connected Entity"
     for result in results:
-        assert "connected" not in result.permalink.lower(), (
-            "Boolean NOT search returned excluded term"
-        )
+        assert "connected" not in result.permalink.lower(), "Boolean NOT search returned excluded term"
 
 
 @pytest.mark.asyncio
@@ -387,9 +377,7 @@ async def test_boolean_operators_detection(search_service):
 
     for query_text in non_boolean_queries:
         query = SearchQuery(text=query_text)
-        assert not query.has_boolean_operators(), (
-            f"Incorrectly detected boolean operators in: {query_text}"
-        )
+        assert not query.has_boolean_operators(), f"Incorrectly detected boolean operators in: {query_text}"
 
 
 # Tests for frontmatter tag search functionality

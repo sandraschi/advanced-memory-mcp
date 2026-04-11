@@ -273,15 +273,11 @@ async def adn_skills(
 
     # Route to appropriate operation
     if operation == "create":
-        return await _create_operation(
-            skill_name, description, category, difficulty, metadata, project
-        )
+        return await _create_operation(skill_name, description, category, difficulty, metadata, project)
     elif operation == "read":
         return await _read_operation(identifier or skill_name, project)
     elif operation == "update":
-        return await _update_operation(
-            identifier, description, content, category, metadata, project
-        )
+        return await _update_operation(identifier, description, content, category, metadata, project)
     elif operation == "delete":
         return await _delete_operation(identifier, project)
     elif operation == "list":
@@ -299,27 +295,17 @@ async def adn_skills(
     elif operation == "to_zettel":
         return await _to_zettel_operation(identifier, project)
     elif operation == "import_from_github":
-        return await _import_from_github_operation(
-            repository, source_path, branch, category, project
-        )
+        return await _import_from_github_operation(repository, source_path, branch, category, project)
     elif operation == "distill_from_wikipedia":
-        return await _distill_from_wikipedia_operation(
-            topic, depth, include_related, quality, category, project
-        )
+        return await _distill_from_wikipedia_operation(topic, depth, include_related, quality, category, project)
     elif operation == "distill_from_arxiv":
-        return await _distill_from_arxiv_operation(
-            query, max_papers, synthesis_level, category, project
-        )
+        return await _distill_from_arxiv_operation(query, max_papers, synthesis_level, category, project)
     elif operation == "distill_from_textbook":
         return await _distill_from_textbook_operation(pdf_path, chapters, level, category, project)
     elif operation == "distill_from_text":
-        return await _distill_from_text_operation(
-            text_path, focus, context_level, category, project
-        )
+        return await _distill_from_text_operation(text_path, focus, context_level, category, project)
     elif operation == "distill_from_expert":
-        return await _distill_from_expert_operation(
-            expert_name, source_types, focus_area, category, project
-        )
+        return await _distill_from_expert_operation(expert_name, source_types, focus_area, category, project)
     else:
         return f"""# Error: Invalid Skills Operation
 
@@ -687,13 +673,13 @@ adn_skills(
 
     from advanced_memory.mcp.tools.delete_note import delete_note
 
-    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(identifier=identifier, project=project)
+    result = await (delete_note.fn if hasattr(delete_note, "fn") else delete_note)(
+        identifier=identifier, project=project
+    )
     return f"# Skill Deleted\n\n{result}\n\n✅ Skill removed from knowledge base"
 
 
-async def _list_operation(
-    filters: dict | None, page: int, page_size: int, project: str | None
-) -> str:
+async def _list_operation(filters: dict | None, page: int, page_size: int, project: str | None) -> str:
     """List all skills with optional filtering."""
 
     skills_root = Path("skills")
@@ -747,7 +733,7 @@ adn_skills("create", skill_name="my-skill", description="My first skill")
     for skill_file in sorted(skills_root.glob("**/SKILL.md")):
         try:
             post = frontmatter.loads(skill_file.read_text(encoding="utf-8"))
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.warning(f"Failed to parse {skill_file}: {exc}")
             skill_records.append(
                 {
@@ -1101,7 +1087,7 @@ description: When to use this skill
 
 **Problem:** Could not parse YAML frontmatter
 
-**Error details:** {str(e)}
+**Error details:** {e!s}
 
 **Common issues:**
 - Indentation errors (use spaces, not tabs)
@@ -1169,9 +1155,7 @@ description: When to use this skill
 ✅ Skill successfully imported from Claude Skills format!"""
 
 
-async def _package_operation(
-    identifier: str | None, export_path: str | None, project: str | None
-) -> str:
+async def _package_operation(identifier: str | None, export_path: str | None, project: str | None) -> str:
     """Package skill as distributable .zip."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -1243,7 +1227,9 @@ adn_skills(
     # Read the note
     from advanced_memory.mcp.tools.read_note import read_note
 
-    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
+    note_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+        identifier=identifier, project=project
+    )
 
     if "# Note Not Found:" in note_content:
         return note_content
@@ -1333,7 +1319,9 @@ adn_skills(
     # Read the skill
     from advanced_memory.mcp.tools.read_note import read_note
 
-    skill_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(identifier=identifier, project=project)
+    skill_content = await (read_note.fn if hasattr(read_note, "fn") else read_note)(
+        identifier=identifier, project=project
+    )
 
     if "# Note Not Found:" in skill_content:
         return skill_content
@@ -1439,7 +1427,7 @@ async def _validate_operation(identifier: str | None, project: str | None) -> st
     try:
         frontmatter = yaml.safe_load(match.group(1))
     except Exception as e:
-        return f"# Validation Failed\n\n❌ Invalid YAML frontmatter\n\nError: {str(e)}"
+        return f"# Validation Failed\n\n❌ Invalid YAML frontmatter\n\nError: {e!s}"
 
     errors = []
     warnings = []

@@ -314,9 +314,7 @@ Regular content about development practices."""
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(
-    reason="Pre-existing test failure - pagination JSON format assertions need update"
-)
+@pytest.mark.skip(reason="Pre-existing test failure - pagination JSON format assertions need update")
 async def test_search_pagination(mcp_server, app):
     """Test search result pagination."""
 

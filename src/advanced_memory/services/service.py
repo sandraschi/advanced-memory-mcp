@@ -1,13 +1,13 @@
 """Base service class."""
 
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from advanced_memory.models import Base
 
 T = TypeVar("T", bound=Base)
 
 
-class BaseService(Generic[T]):
+class BaseService[T: Base]:
     """Base service that takes a repository."""
 
     def __init__(self, repository) -> None:  # type: ignore[no-untyped-def]

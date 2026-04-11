@@ -61,9 +61,7 @@ async def test_get_resource_pagination(client, project_config, entity_repository
     )
 
     # Test getting the content
-    response = await client.get(
-        f"{project_url}/resource/{entity.permalink}", params={"page": 1, "page_size": 1}
-    )
+    response = await client.get(f"{project_url}/resource/{entity.permalink}", params={"page": 1, "page_size": 1})
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
     assert response.text.replace("\r\n", "\n") == content
@@ -212,9 +210,7 @@ async def test_get_resource_entities(client, project_config, entity_repository, 
 
 
 @pytest.mark.asyncio
-async def test_get_resource_entities_pagination(
-    client, project_config, entity_repository, project_url
-):
+async def test_get_resource_entities_pagination(client, project_config, entity_repository, project_url):
     """Test getting content by permalink match."""
     # Create entity
     content1 = "# Test Content\n"
@@ -243,9 +239,7 @@ async def test_get_resource_entities_pagination(
     assert len(entity2.relations) == 1
 
     # Test getting second result
-    response = await client.get(
-        f"{project_url}/resource/test/*", params={"page": 2, "page_size": 1}
-    )
+    response = await client.get(f"{project_url}/resource/test/*", params={"page": 2, "page_size": 1})
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/markdown; charset=utf-8"
     assert (
@@ -313,9 +307,7 @@ async def test_get_resource_relation(client, project_config, entity_repository, 
 
 
 @pytest.mark.asyncio
-async def test_put_resource_new_file(
-    client, project_config, entity_repository, search_repository, project_url
-):
+async def test_put_resource_new_file(client, project_config, entity_repository, search_repository, project_url):
     """Test creating a new file via PUT."""
     # Test data
     file_path = "visualizations/test.canvas"
@@ -340,9 +332,7 @@ async def test_put_resource_new_file(
         full_path.unlink()
 
     # Execute PUT request
-    response = await client.put(
-        f"{project_url}/resource/{file_path}", json=json.dumps(canvas_data, indent=2)
-    )
+    response = await client.put(f"{project_url}/resource/{file_path}", json=json.dumps(canvas_data, indent=2))
 
     # Verify response
     assert response.status_code == 201
@@ -424,9 +414,7 @@ async def test_put_resource_update_existing(client, project_config, entity_repos
     }
 
     # Execute PUT request to update
-    response = await client.put(
-        f"{project_url}/resource/{file_path}", json=json.dumps(updated_data, indent=2)
-    )
+    response = await client.put(f"{project_url}/resource/{file_path}", json=json.dumps(updated_data, indent=2))
 
     # Verify response
     assert response.status_code == 200

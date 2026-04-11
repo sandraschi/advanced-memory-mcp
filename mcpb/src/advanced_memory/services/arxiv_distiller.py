@@ -149,7 +149,7 @@ class ArXivDistiller:
             }
         except Exception as e:
             logger.error(f"Error distilling arXiv papers: {e}")
-            raise ValueError(f"Failed to distill papers for '{query}': {str(e)}") from e
+            raise ValueError(f"Failed to distill papers for '{query}': {e!s}") from e
 
     def _slugify(self, text: str) -> str:
         """Convert text to hyphen-case slug.

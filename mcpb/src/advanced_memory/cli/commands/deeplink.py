@@ -52,9 +52,7 @@ def deeplink(
         if transport == "stdio":
             rprint("[dim]This will install Advanced Memory MCP locally (stdio transport)[/dim]")
         else:
-            rprint(
-                f"[dim]This will connect to Advanced Memory MCP at {transport}://{host}:{port}/mcp[/dim]"
-            )
+            rprint(f"[dim]This will connect to Advanced Memory MCP at {transport}://{host}:{port}/mcp[/dim]")
 
     elif client_lower == "vscode":
         link = generate_vscode_deeplink("advanced-memory", transport, host, port)  # type: ignore
@@ -72,9 +70,7 @@ def deeplink(
         if transport == "stdio":
             rprint("[dim]This will install Advanced Memory MCP locally (stdio transport)[/dim]")
         else:
-            rprint(
-                f"[dim]This will connect to Advanced Memory MCP at {transport}://{host}:{port}/mcp[/dim]"
-            )
+            rprint(f"[dim]This will connect to Advanced Memory MCP at {transport}://{host}:{port}/mcp[/dim]")
 
     elif client_lower == "claude-desktop":
         config = generate_claude_config("advanced-memory", transport, host, port)  # type: ignore
@@ -90,9 +86,7 @@ def deeplink(
         rprint("\n[yellow]NOTE: Claude Desktop doesn't support deeplinks.[/yellow]")
         rprint("[green]Add the config above to your claude_desktop_config.json file.[/green]")
         rprint("\n[dim]Config location:[/dim]")
-        rprint(
-            "[dim]  • macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]"
-        )
+        rprint("[dim]  • macOS: ~/Library/Application Support/Claude/claude_desktop_config.json[/dim]")
         rprint("[dim]  • Windows: %APPDATA%\\Claude\\claude_desktop_config.json[/dim]")
         rprint("[dim]  • Linux: ~/.config/Claude/claude_desktop_config.json[/dim]\n")
 

@@ -120,14 +120,10 @@ This is the second entity.
         # Should show entity and observation counts
         assert "Current project: test-project" in current_text
         # Should show at least the entities we created
-        assert (
-            "2 entities" in current_text or "3 entities" in current_text
-        )  # May include other entities from setup
+        assert "2 entities" in current_text or "3 entities" in current_text  # May include other entities from setup
         # Should show observations from our entities
         assert (
-            "4 observations" in current_text
-            or "5 observations" in current_text
-            or "6 observations" in current_text
+            "4 observations" in current_text or "5 observations" in current_text or "6 observations" in current_text
         )  # Our 4 + possibly more from setup
 
 
@@ -433,9 +429,7 @@ async def test_create_project_duplicate_name(mcp_server, app):
         error_message = str(exc_info.value)
         assert "create_memory_project" in error_message
         assert (
-            "duplicate-test" in error_message
-            or "already exists" in error_message
-            or "Invalid request" in error_message
+            "duplicate-test" in error_message or "already exists" in error_message or "Invalid request" in error_message
         )
 
 
@@ -893,10 +887,7 @@ async def test_session_state_consistency_after_case_switch(mcp_server, app):
                 assert f"Current project: {project_name}" in result.content[0].text
             elif op_name == "list_memory_projects":
                 assert project_name in result.content[0].text
-                assert (
-                    "(current)" in result.content[0].text
-                    or "current" in result.content[0].text.lower()
-                )
+                assert "(current)" in result.content[0].text or "current" in result.content[0].text.lower()
 
             # All operations should include project metadata with canonical name
             # FIXME

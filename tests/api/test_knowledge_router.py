@@ -102,9 +102,7 @@ async def test_relation_resolution_after_creation(client: AsyncClient, project_u
         "entity_type": "test",
         "content": "This entity references [[EntityTwo]]",
     }
-    response1 = await client.put(
-        f"{project_url}/knowledge/entities/test/entity-one", json=entity1_data
-    )
+    response1 = await client.put(f"{project_url}/knowledge/entities/test/entity-one", json=entity1_data)
     assert response1.status_code == 201
     entity1 = response1.json()
 
@@ -120,9 +118,7 @@ async def test_relation_resolution_after_creation(client: AsyncClient, project_u
         "entity_type": "test",
         "content": "This is the referenced entity",
     }
-    response2 = await client.put(
-        f"{project_url}/knowledge/entities/test/entity-two", json=entity2_data
-    )
+    response2 = await client.put(f"{project_url}/knowledge/entities/test/entity-two", json=entity2_data)
     assert response2.status_code == 201
 
     # Verify the original entity's relation was resolved
@@ -132,9 +128,7 @@ async def test_relation_resolution_after_creation(client: AsyncClient, project_u
 
     # The relation should now be resolved via the automatic resolution after entity creation
     resolved_relations = [r for r in updated_entity1["relations"] if r["to_id"] is not None]
-    assert (
-        len(resolved_relations) >= 0
-    )  # May or may not be resolved immediately depending on timing
+    assert len(resolved_relations) >= 0  # May or may not be resolved immediately depending on timing
 
 
 @pytest.mark.asyncio
@@ -162,9 +156,7 @@ async def test_relation_resolution_exception_handling(client: AsyncClient, proje
         mock_sync_service_dep.return_value = mock_sync_service
 
         # This should still succeed even though relation resolution fails
-        response = await client.put(
-            f"{project_url}/knowledge/entities/test/exception-test", json=entity_data
-        )
+        response = await client.put(f"{project_url}/knowledge/entities/test/exception-test", json=entity_data)
         assert response.status_code == 201
         entity = response.json()
 
@@ -281,9 +273,7 @@ async def test_delete_entity(client: AsyncClient, project_url):
     await client.post(f"{project_url}/knowledge/entities", json=entity_data)
 
     # Test deletion
-    response = await client.post(
-        f"{project_url}/knowledge/entities/delete", json={"permalinks": ["test-entity"]}
-    )
+    response = await client.post(f"{project_url}/knowledge/entities/delete", json={"permalinks": ["test-entity"]})
     assert response.status_code == 200
     assert response.json() == {"deleted": True}
 
@@ -345,12 +335,8 @@ async def test_delete_single_entity_not_found(client: AsyncClient, project_url):
 async def test_delete_entity_bulk(client: AsyncClient, project_url):
     """Test bulk entity deletion using path IDs."""
     # Create test entities
-    await client.post(
-        f"{project_url}/knowledge/entities", json={"file_path": "Entity1", "entity_type": "test"}
-    )
-    await client.post(
-        f"{project_url}/knowledge/entities", json={"file_path": "Entity2", "entity_type": "test"}
-    )
+    await client.post(f"{project_url}/knowledge/entities", json={"file_path": "Entity1", "entity_type": "test"})
+    await client.post(f"{project_url}/knowledge/entities", json={"file_path": "Entity2", "entity_type": "test"})
 
     # Test deletion
     response = await client.post(
@@ -369,9 +355,7 @@ async def test_delete_entity_bulk(client: AsyncClient, project_url):
 @pytest.mark.asyncio
 async def test_delete_nonexistent_entity(client: AsyncClient, project_url):
     """Test deleting a nonexistent entity by path ID."""
-    response = await client.post(
-        f"{project_url}/knowledge/entities/delete", json={"permalinks": ["non_existent"]}
-    )
+    response = await client.post(f"{project_url}/knowledge/entities/delete", json={"permalinks": ["non_existent"]})
     assert response.status_code == 200
     assert response.json() == {"deleted": True}
 
@@ -463,9 +447,7 @@ async def test_update_entity_basic(client: AsyncClient, project_url):
     entity.entity_metadata["status"] = "final"
     entity.content = "Updated summary"
 
-    response = await client.put(
-        f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump())
     assert response.status_code == 200
     updated = response.json()
 
@@ -493,9 +475,7 @@ async def test_update_entity_content(client: AsyncClient, project_url):
     entity = Entity(**note, folder="")
     entity.content = "# Updated Note\n\nNew content."
 
-    response = await client.put(
-        f"{project_url}/knowledge/entities/{note['permalink']}", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/{note['permalink']}", json=entity.model_dump())
     assert response.status_code == 200
     updated = response.json()
 
@@ -526,9 +506,7 @@ async def test_update_entity_type_conversion(client: AsyncClient, project_url):
     entity = Entity(**note, folder="")
     entity.entity_type = "test"
 
-    response = await client.put(
-        f"{project_url}/knowledge/entities/{note['permalink']}", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/{note['permalink']}", json=entity.model_dump())
     assert response.status_code == 200
     updated = response.json()
 
@@ -560,9 +538,7 @@ async def test_update_entity_metadata(client: AsyncClient, project_url):
     entity.entity_metadata["reviewed"] = True
 
     # Update metadata
-    response = await client.put(
-        f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump())
     assert response.status_code == 200
     updated = response.json()
 
@@ -582,9 +558,7 @@ async def test_update_entity_not_found_does_create(client: AsyncClient, project_
         "observations": ["First observation", "Second observation"],
     }
     entity = Entity(**data)
-    response = await client.put(
-        f"{project_url}/knowledge/entities/nonexistent", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/nonexistent", json=entity.model_dump())
     assert response.status_code == 201
 
 
@@ -599,9 +573,7 @@ async def test_update_entity_incorrect_permalink(client: AsyncClient, project_ur
         "observations": ["First observation", "Second observation"],
     }
     entity = Entity(**data)
-    response = await client.put(
-        f"{project_url}/knowledge/entities/nonexistent", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/nonexistent", json=entity.model_dump())
     assert response.status_code == 400
 
 
@@ -622,9 +594,7 @@ async def test_update_entity_search_index(client: AsyncClient, project_url):
     entity = Entity(**entity_response, folder="")
     entity.content = "Updated with unique sphinx marker"
 
-    response = await client.put(
-        f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump()
-    )
+    response = await client.put(f"{project_url}/knowledge/entities/{entity.permalink}", json=entity.model_dump())
     assert response.status_code == 200
 
     # Search should find new content
@@ -751,9 +721,7 @@ async def test_edit_entity_find_replace(client: AsyncClient, project_url):
 
 
 @pytest.mark.asyncio
-async def test_edit_entity_find_replace_with_expected_replacements(
-    client: AsyncClient, project_url
-):
+async def test_edit_entity_find_replace_with_expected_replacements(client: AsyncClient, project_url):
     """Test find and replace with expected_replacements parameter."""
     # Create test entity with repeated text
     response = await client.post(

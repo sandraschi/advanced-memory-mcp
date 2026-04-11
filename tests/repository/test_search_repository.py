@@ -115,9 +115,7 @@ async def test_index_item(search_repository, search_entity):
 
 
 @pytest.mark.asyncio
-async def test_project_isolation(
-    search_repository, second_project_repository, search_entity, second_entity
-):
+async def test_project_isolation(search_repository, second_project_repository, search_entity, second_entity):
     """Test that search is isolated by project."""
     # Index entities in both projects
     search_row1 = SearchIndexRow(
@@ -321,13 +319,8 @@ class TestSearchTermPreparation:
         """Boolean operators should be preserved without modification."""
         assert search_repository._prepare_search_term("hello AND world") == "hello AND world"
         assert search_repository._prepare_search_term("cat OR dog") == "cat OR dog"
-        assert (
-            search_repository._prepare_search_term("project NOT meeting") == "project NOT meeting"
-        )
-        assert (
-            search_repository._prepare_search_term("(hello AND world) OR test")
-            == "(hello AND world) OR test"
-        )
+        assert search_repository._prepare_search_term("project NOT meeting") == "project NOT meeting"
+        assert search_repository._prepare_search_term("(hello AND world) OR test") == "(hello AND world) OR test"
 
     def test_hyphenated_terms_with_boolean_operators(self, search_repository):
         """Hyphenated terms with Boolean operators should be properly quoted."""
@@ -336,13 +329,9 @@ class TestSearchTermPreparation:
         assert result == '"tier1-test" AND unicode'
 
         # Test other hyphenated Boolean combinations
+        assert search_repository._prepare_search_term("multi-word OR single") == '"multi-word" OR single'
         assert (
-            search_repository._prepare_search_term("multi-word OR single")
-            == '"multi-word" OR single'
-        )
-        assert (
-            search_repository._prepare_search_term("well-formed NOT badly-formed")
-            == '"well-formed" NOT "badly-formed"'
+            search_repository._prepare_search_term("well-formed NOT badly-formed") == '"well-formed" NOT "badly-formed"'
         )
         assert (
             search_repository._prepare_search_term("test-case AND (hello OR world)")
@@ -350,14 +339,8 @@ class TestSearchTermPreparation:
         )
 
         # Test mixed special characters with Boolean operators
-        assert (
-            search_repository._prepare_search_term("config.json AND test-file")
-            == '"config.json" AND "test-file"'
-        )
-        assert (
-            search_repository._prepare_search_term("C++ OR python-script")
-            == '"C++" OR "python-script"'
-        )
+        assert search_repository._prepare_search_term("config.json AND test-file") == '"config.json" AND "test-file"'
+        assert search_repository._prepare_search_term("C++ OR python-script") == '"C++" OR "python-script"'
 
     def test_programming_terms_should_work(self, search_repository):
         """Programming-related terms with special chars should be searchable."""
@@ -382,21 +365,13 @@ class TestSearchTermPreparation:
 
     def test_file_paths_no_prefix_wildcard(self, search_repository):
         """File paths should not get prefix wildcards."""
-        assert (
-            search_repository._prepare_search_term("config.json", is_prefix=False)
-            == '"config.json"'
-        )
-        assert (
-            search_repository._prepare_search_term("docs/readme.md", is_prefix=False)
-            == '"docs/readme.md"'
-        )
+        assert search_repository._prepare_search_term("config.json", is_prefix=False) == '"config.json"'
+        assert search_repository._prepare_search_term("docs/readme.md", is_prefix=False) == '"docs/readme.md"'
 
     def test_spaces_handled_correctly(self, search_repository):
         """Terms with spaces should use boolean AND for word order independence."""
         assert search_repository._prepare_search_term("hello world") == "hello* AND world*"
-        assert (
-            search_repository._prepare_search_term("project planning") == "project* AND planning*"
-        )
+        assert search_repository._prepare_search_term("project planning") == "project* AND planning*"
 
     def test_version_strings_with_dots_handled_correctly(self, search_repository):
         """Version strings with dots should be quoted to prevent FTS5 syntax errors."""
@@ -410,10 +385,7 @@ class TestSearchTermPreparation:
         """Multi-word queries with special characters in any word should be fully quoted."""
         # Any word containing special characters should cause the entire phrase to be quoted
         assert search_repository._prepare_search_term("config.json file") == '"config.json file"*'
-        assert (
-            search_repository._prepare_search_term("user@email.com account")
-            == '"user@email.com account"*'
-        )
+        assert search_repository._prepare_search_term("user@email.com account") == '"user@email.com account"*'
         assert search_repository._prepare_search_term("node.js and react") == '"node.js and react"*'
 
     @pytest.mark.asyncio
@@ -551,9 +523,7 @@ class TestSearchTermPreparation:
     def test_boolean_query_empty_parts_coverage(self, search_repository):
         """Test Boolean query parsing with empty parts (line 143 coverage)."""
         # Create queries that will result in empty parts after splitting
-        result1 = search_repository._prepare_boolean_query(
-            "hello AND  AND world"
-        )  # Double operator
+        result1 = search_repository._prepare_boolean_query("hello AND  AND world")  # Double operator
         assert "hello" in result1 and "world" in result1
 
         result2 = search_repository._prepare_boolean_query("  OR test")  # Leading operator

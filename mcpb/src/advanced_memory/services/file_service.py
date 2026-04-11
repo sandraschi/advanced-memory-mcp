@@ -140,14 +140,10 @@ class FileService:
             # Check if file exists and handle accordingly
             if full_path.exists():
                 if not overwrite:
-                    raise FileOperationError(
-                        f"File already exists and overwrite=False: {full_path}"
-                    )
+                    raise FileOperationError(f"File already exists and overwrite=False: {full_path}")
 
                 # Create backup before overwriting
-                backup_path = full_path.with_suffix(
-                    f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.bak"
-                )
+                backup_path = full_path.with_suffix(f".{datetime.now().strftime('%Y%m%d_%H%M%S')}.bak")
             # Ensure the parent directory exists
             parent_dir = full_path.parent
             await file_utils.ensure_directory(parent_dir)
@@ -173,7 +169,7 @@ class FileService:
             return checksum
 
         except (OSError, PermissionError, ValueError, UnicodeEncodeError) as e:
-            error_msg = f"Failed to write file {full_path}: {str(e)}"
+            error_msg = f"Failed to write file {full_path}: {e!s}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 
@@ -224,9 +220,7 @@ class FileService:
                     content = full_path.read_text(encoding="latin-1")
                     logger.warning(f"Read file with latin-1 encoding: {full_path}")
                 except (UnicodeDecodeError, OSError) as e:
-                    raise FileOperationError(
-                        f"Failed to decode file {full_path}: {str(e)}"
-                    ) from ude
+                    raise FileOperationError(f"Failed to decode file {full_path}: {e!s}") from ude
 
             # Compute checksum of the file content
             checksum = await file_utils.compute_checksum(content)
@@ -241,7 +235,7 @@ class FileService:
             raise  # Re-raise our own exceptions
 
         except (OSError, PermissionError, ValueError, UnicodeDecodeError) as e:
-            error_msg = f"Failed to read file {full_path}: {str(e)}"
+            error_msg = f"Failed to read file {full_path}: {e!s}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 
@@ -293,7 +287,7 @@ class FileService:
             return True
 
         except (OSError, PermissionError, ValueError) as e:
-            error_msg = f"Failed to delete {full_path}: {str(e)}"
+            error_msg = f"Failed to delete {full_path}: {e!s}"
             logger.error(error_msg, exc_info=True)
             raise FileOperationError(error_msg) from e
 

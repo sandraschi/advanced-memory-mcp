@@ -130,7 +130,7 @@ async def export_notion_compatible(
                 }
             )
         except Exception as e:
-            errors.append(f"{entity.get('title', 'Unknown')}: {str(e)}")
+            errors.append(f"{entity.get('title', 'Unknown')}: {e!s}")
 
     # Generate summary
     summary = "## Notion Export Complete\n\n"

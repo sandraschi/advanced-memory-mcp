@@ -136,9 +136,7 @@ def _validate_frontmatter(path: Path, issues: list[SkillValidationIssue]) -> dic
             )
         )
 
-    status_line_present = any(
-        marker in body for marker in ("⚠️", "✅", "Research complete", "Requires web research")
-    )
+    status_line_present = any(marker in body for marker in ("⚠️", "✅", "Research complete", "Requires web research"))
     if not status_line_present:
         issues.append(
             SkillValidationIssue(

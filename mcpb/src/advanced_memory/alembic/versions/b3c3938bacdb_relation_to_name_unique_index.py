@@ -25,12 +25,8 @@ def upgrade() -> None:
         batch_op.drop_constraint("uix_relation", type_="unique")
 
         # Add new constraints
-        batch_op.create_unique_constraint(
-            "uix_relation_from_id_to_id", ["from_id", "to_id", "relation_type"]
-        )
-        batch_op.create_unique_constraint(
-            "uix_relation_from_id_to_name", ["from_id", "to_name", "relation_type"]
-        )
+        batch_op.create_unique_constraint("uix_relation_from_id_to_id", ["from_id", "to_id", "relation_type"])
+        batch_op.create_unique_constraint("uix_relation_from_id_to_name", ["from_id", "to_name", "relation_type"])
 
 
 def downgrade() -> None:

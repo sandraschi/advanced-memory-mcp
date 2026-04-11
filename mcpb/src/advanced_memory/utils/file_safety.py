@@ -91,11 +91,7 @@ class FileSafety:
 
     def _log_operation(self, operation: str, path: FilePath, **kwargs) -> None:
         """Log a file operation."""
-        path_str = str(
-            Path(path).relative_to(self.base_path)
-            if Path(path).is_relative_to(self.base_path)
-            else path
-        )
+        path_str = str(Path(path).relative_to(self.base_path) if Path(path).is_relative_to(self.base_path) else path)
         log_msg = {"operation": operation, "path": path_str, **kwargs}
         logger.info(str(log_msg))
 
@@ -151,7 +147,7 @@ class FileSafety:
             shutil.move(str(path), str(trash_path))
             # Save original path in metadata
             (trash_path.with_suffix(trash_path.suffix + ".meta")).write_text(
-                f"original_path={str(path.absolute())}\ndeleted_at={datetime.now().isoformat()}\n",
+                f"original_path={path.absolute()!s}\ndeleted_at={datetime.now().isoformat()}\n",
                 encoding="utf-8",
             )
             return trash_path

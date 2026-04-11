@@ -265,9 +265,7 @@ class RAGSystem:
         """Get information about a stored document."""
 
         try:
-            results = self.documents_collection.get(
-                ids=[document_id], include=["metadatas", "documents"]
-            )
+            results = self.documents_collection.get(ids=[document_id], include=["metadatas", "documents"])
 
             if results["metadatas"]:
                 metadata = results["metadatas"][0]

@@ -47,9 +47,7 @@ def upgrade_skill(skill_path: str | Path) -> Path:
     if isinstance(meta_block, dict):
         category = meta_block.get("category", "general")
         confidence = meta_block.get("confidence", "low")
-        status_note = meta_block.get(
-            "status", "Legacy content converted — complete research checklist before use"
-        )
+        status_note = meta_block.get("status", "Legacy content converted — complete research checklist before use")
         last_validated = meta_block.get("last_validated")
         requires_research = meta_block.get("requires_web_research", True)
     else:
@@ -93,9 +91,7 @@ def upgrade_skill(skill_path: str | Path) -> Path:
     (skill_root / "_toc.md").write_text(render_toc(), encoding="utf-8")
     (modules_dir / "core-guidance.md").write_text(render_core_guidance(body), encoding="utf-8")
     (modules_dir / "known-gaps.md").write_text(render_known_gaps(), encoding="utf-8")
-    (modules_dir / "research-checklist.md").write_text(
-        render_research_checklist(), encoding="utf-8"
-    )
+    (modules_dir / "research-checklist.md").write_text(render_research_checklist(), encoding="utf-8")
 
     logger.info("Skill upgraded to modular architecture: %s", skill_root)
     return skill_root

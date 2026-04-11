@@ -101,11 +101,7 @@ async def _status_operation(ctx: Context | None) -> str:
     inbox_files = []
     if inbox_dir.exists():
         inbox_files = [f for f in inbox_dir.iterdir() if f.is_file()]
-        inbox_files = [
-            f
-            for f in inbox_files
-            if f.name not in ["README.md", ".gitkeep"] and not f.name.startswith(".")
-        ]
+        inbox_files = [f for f in inbox_files if f.name not in ["README.md", ".gitkeep"] and not f.name.startswith(".")]
 
     # Count files in converted
     converted_files = []
@@ -268,15 +264,9 @@ async def _process_operation(file_name: str | None, ctx: Context | None) -> str:
             "unsupported": "⚠️",
         }.get(result["status"], "❓")
 
-        file_name = (
-            result.get("source", "").split("/")[-1].split("\\")[-1]
-            if "source" in result
-            else "unknown"
-        )
+        file_name = result.get("source", "").split("/")[-1].split("\\")[-1] if "source" in result else "unknown"
 
-        results_text.append(
-            f"{status_icon} **{file_name}** - {result.get('message', result['status'])}"
-        )
+        results_text.append(f"{status_icon} **{file_name}** - {result.get('message', result['status'])}")
 
     result = dedent(
         f"""

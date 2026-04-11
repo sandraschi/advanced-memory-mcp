@@ -45,9 +45,7 @@ def _extract_tags_from_query_string(query: str) -> tuple[str, list[str]]:
     return cleaned_query, extracted_tags
 
 
-def _format_search_results_as_markdown(
-    search_response: SearchResponse, query: str, projects: list[str]
-) -> str:
+def _format_search_results_as_markdown(search_response: SearchResponse, query: str, projects: list[str]) -> str:
     """Convert SearchResponse to formatted markdown string for MCP compliance."""
     output = [f'# Search Results for: "{query}"\n']
 
@@ -60,9 +58,7 @@ def _format_search_results_as_markdown(
         output.append("- Try recent_activity() to see latest notes")
         return "\n".join(output)
 
-    output.append(
-        f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n"
-    )
+    output.append(f"Found {len(search_response.results)} result(s) from project(s): {', '.join(projects)}\n")
 
     for idx, item in enumerate(search_response.results, 1):
         title = item.title or "Untitled"
@@ -81,11 +77,7 @@ def _format_search_results_as_markdown(
         output.append("")
 
     # Add pagination info
-    total_pages = (
-        (len(search_response.results) // search_response.page_size) + 1
-        if search_response.results
-        else 1
-    )
+    total_pages = (len(search_response.results) // search_response.page_size) + 1 if search_response.results else 1
     output.append(f"**Page:** {search_response.current_page} of {total_pages}")
 
     return "\n".join(output)
@@ -96,13 +88,7 @@ def _format_search_error_response(error_message: str, query: str, search_type: s
 
     # FTS5 syntax errors
     if "syntax error" in error_message.lower() or "fts5" in error_message.lower():
-        clean_query = (
-            query.replace('"', "")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("+", "")
-            .replace("*", "")
-        )
+        clean_query = query.replace('"', "").replace("(", "").replace(")", "").replace("+", "").replace("*", "")
         return dedent(f"""
             # Search Failed - Invalid Syntax
 
@@ -158,11 +144,7 @@ def _format_search_error_response(error_message: str, query: str, search_type: s
     # No results found
     if "no results" in error_message.lower() or "not found" in error_message.lower():
         simplified_query = (
-            " ".join(query.split()[:2])
-            if len(query.split()) > 2
-            else query.split()[0]
-            if query.split()
-            else "notes"
+            " ".join(query.split()[:2]) if len(query.split()) > 2 else query.split()[0] if query.split() else "notes"
         )
         return dedent(f"""
             # Search Complete - No Results Found
@@ -510,9 +492,7 @@ async def search_notes(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_entity_types.append(t)
-                logger.warning(
-                    f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types."
-                )
+                logger.warning(f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types.")
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_entity_types:
@@ -573,9 +553,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             logger.info(f"Searching ALL projects except: {excluded}")
             projects_response = await call_post(client, "/projects/projects", json={})
             project_list = ProjectList.model_validate(projects_response.json())
-            project_names_to_search = [
-                p.name for p in project_list.projects if p.name not in excluded
-            ]
+            project_names_to_search = [p.name for p in project_list.projects if p.name not in excluded]
             search_multiple = True
 
         elif "," in projects:
@@ -619,9 +597,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
                 continue
 
         # Return merged results with project context
-        logger.info(
-            f"Searched {len(searched_projects)} projects, found {len(all_results)} total results"
-        )
+        logger.info(f"Searched {len(searched_projects)} projects, found {len(all_results)} total results")
 
         # Format as markdown string for MCP compliance
         search_response = SearchResponse(
@@ -632,9 +608,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
         return search_response
 
     # Single project search (default behavior)
-    active_project = get_active_project(
-        projects
-    )  # Will use projects as single project name, or current if None
+    active_project = get_active_project(projects)  # Will use projects as single project name, or current if None
     project_url = active_project.project_url
 
     logger.info(f"Searching for {search_query}")

@@ -29,8 +29,7 @@ def render_skill_markdown(
     """Render the SKILL.md body following Anthropic's official skills specification."""
 
     description_text = (
-        description
-        or "[TODO] Add a concise description explaining what this skill does and when Claude should use it."
+        description or "[TODO] Add a concise description explaining what this skill does and when Claude should use it."
     )
     allowed_tools = [tool for tool in (allowed_tools or []) if tool]
 
@@ -76,8 +75,7 @@ This skill provides specialized knowledge and workflows for {title.lower()}. Use
 def render_core_guidance(content: str | None = None) -> str:
     """Render the core-guidance module."""
     body = content or (
-        "# Core Guidance\n\n"
-        "Replace this section with validated, imperative instructions once research is complete."
+        "# Core Guidance\n\nReplace this section with validated, imperative instructions once research is complete."
     )
     return (
         dedent(

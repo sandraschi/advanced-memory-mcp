@@ -20,6 +20,94 @@ from advanced_memory.services.github_skills_importer import GitHubSkillsImporter
 from advanced_memory.services.skill_distiller import SkillDistiller
 
 
+async def adn_skills_operations(operation: str, **parameters) -> str:
+    """Dispatcher for advanced skill operations.
+
+    Args:
+        operation: The advanced operation to perform
+        **parameters: Parameters for the operation
+
+    Returns:
+        Formatted result string from the operation
+    """
+    try:
+        if operation == "list":
+            # List available advanced operations
+            ops = [
+                "import_from_github",
+                "distill_from_wikipedia",
+                "distill_from_arxiv",
+                "distill_from_textbook",
+                "distill_from_text",
+                "distill_from_expert",
+            ]
+            return f"# Advanced Skill Operations\n\nAvailable operations:\n\n" + "\n".join(
+                f"- {op}" for op in ops
+            )
+
+        elif operation == "import_from_github":
+            return await _import_from_github_operation(
+                repository=parameters.get("repository"),
+                skill_path=parameters.get("skill_path"),
+                branch=parameters.get("branch", "main"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        elif operation == "distill_from_wikipedia":
+            return await _distill_from_wikipedia_operation(
+                topic=parameters.get("topic"),
+                depth=parameters.get("depth", 0),
+                include_related=parameters.get("include_related", False),
+                quality=parameters.get("quality"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        elif operation == "distill_from_arxiv":
+            return await _distill_from_arxiv_operation(
+                query=parameters.get("query"),
+                max_papers=parameters.get("max_papers", 5),
+                synthesis_level=parameters.get("synthesis_level"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        elif operation == "distill_from_textbook":
+            return await _distill_from_textbook_operation(
+                pdf_path=parameters.get("pdf_path"),
+                chapters=parameters.get("chapters"),
+                level=parameters.get("level"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        elif operation == "distill_from_text":
+            return await _distill_from_text_operation(
+                text_path=parameters.get("text_path"),
+                focus=parameters.get("focus"),
+                context_level=parameters.get("context_level"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        elif operation == "distill_from_expert":
+            return await _distill_from_expert_operation(
+                expert_name=parameters.get("expert_name"),
+                source_types=parameters.get("source_types"),
+                focus_area=parameters.get("focus_area"),
+                category=parameters.get("category"),
+                project=parameters.get("project"),
+            )
+
+        else:
+            return f"# Error: Unknown Advanced Operation\n\nOperation '{operation}' is not supported."
+
+    except Exception as e:
+        logger.error(f"Advanced skill operation '{operation}' failed: {e}")
+        return f"# Error: Operation Failed\n\n{str(e)}"
+
+
 async def _import_from_github_operation(
     repository: str | None,
     skill_path: str | None,

@@ -55,9 +55,7 @@ async def test_build_context_invalid_urls_fail_validation(mcp_server, app):
                 await client.call_tool("build_context", {"url": invalid_url})
 
             error_message = str(exc_info.value).lower()
-            assert expected_error in error_message, (
-                f"URL '{invalid_url}' should fail with '{expected_error}' error"
-            )
+            assert expected_error in error_message, f"URL '{invalid_url}' should fail with '{expected_error}' error"
 
 
 @pytest.mark.asyncio
@@ -121,11 +119,7 @@ async def test_build_context_error_messages_are_helpful(mcp_server, app):
 
         error_msg = str(exc_info.value).lower()
         # Should contain validation error info
-        assert (
-            "double slashes" in error_msg
-            or "value_error" in error_msg
-            or "validation error" in error_msg
-        )
+        assert "double slashes" in error_msg or "value_error" in error_msg or "validation error" in error_msg
 
         # Test protocol scheme error message
         with pytest.raises(Exception) as exc_info:

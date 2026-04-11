@@ -93,9 +93,7 @@ class TemplateLoader:
             if topic_templates:
                 templates[topic_dir.name] = topic_templates
 
-        logger.info(
-            f"Loaded {sum(len(t) for t in templates.values())} templates for category '{category}'"
-        )
+        logger.info(f"Loaded {sum(len(t) for t in templates.values())} templates for category '{category}'")
         return templates
 
     def _extract_title(self, content: str, fallback: str) -> str:

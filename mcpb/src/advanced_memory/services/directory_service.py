@@ -45,15 +45,11 @@ class DirectoryService:
             for _i, part in enumerate(parts[:-1]):  # Skip the filename
                 parent_path = current_path
                 # Build the directory path
-                current_path = (
-                    f"{current_path}{part}" if current_path == "/" else f"{current_path}/{part}"
-                )
+                current_path = f"{current_path}{part}" if current_path == "/" else f"{current_path}/{part}"
 
                 # Create directory node if it doesn't exist
                 if current_path not in dir_map:
-                    dir_node = DirectoryNode(
-                        name=part, directory_path=current_path, type="directory"
-                    )
+                    dir_node = DirectoryNode(name=part, directory_path=current_path, type="directory")
                     dir_map[current_path] = dir_node
 
                     # Add to parent's children
@@ -161,6 +157,4 @@ class DirectoryService:
 
             # Recurse into subdirectories if we haven't reached max depth
             if child.type == "directory" and current_depth < max_depth:
-                self._collect_nodes_recursive(
-                    child, result, max_depth, file_name_glob, current_depth + 1
-                )
+                self._collect_nodes_recursive(child, result, max_depth, file_name_glob, current_depth + 1)

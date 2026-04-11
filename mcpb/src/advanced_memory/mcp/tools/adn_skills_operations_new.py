@@ -70,9 +70,7 @@ adn_skills(
         importer = GitHubSkillsImporter(github_token=github_token)
 
         # Import skill
-        skill_data = importer.import_skill_from_repo(
-            repository=repository, skill_path=skill_path, branch=branch
-        )
+        skill_data = importer.import_skill_from_repo(repository=repository, skill_path=skill_path, branch=branch)
 
         # Parse SKILL.md content
         content = skill_data["content"]
@@ -99,7 +97,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 
 **Problem:** Could not parse YAML frontmatter
 
-**Error:** {str(e)}
+**Error:** {e!s}
 
 **Fix the YAML syntax in the repository's SKILL.md file.**"""
 
@@ -156,7 +154,7 @@ Claude Skills must start with YAML frontmatter. The imported file doesn't match 
 **Operation:** import_from_github
 **Repository:** {repository}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - Repository not found or private (need GITHUB_TOKEN environment variable)
@@ -283,7 +281,7 @@ adn_skills(
 **Operation:** distill_from_wikipedia
 **Topic:** {topic}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - Article not found (check title spelling)
@@ -348,9 +346,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_arxiv(
-            query=query, max_papers=max_papers, synthesis_level=synthesis
-        )
+        skill_data = distiller.distill_from_arxiv(query=query, max_papers=max_papers, synthesis_level=synthesis)
 
         # Create skill in Advanced Memory
         skill_category = category or "research"
@@ -405,7 +401,7 @@ adn_skills(
 **Operation:** distill_from_arxiv
 **Query:** {query}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - No papers found for query
@@ -471,9 +467,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_textbook(
-            pdf_path=pdf_path, chapters=chapters, level=skill_level
-        )
+        skill_data = distiller.distill_from_textbook(pdf_path=pdf_path, chapters=chapters, level=skill_level)
 
         # Create skill in Advanced Memory
         skill_category = category or "education"
@@ -532,7 +526,7 @@ adn_skills(
 **Operation:** distill_from_textbook
 **PDF Path:** {pdf_path}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - PDF file not found
@@ -600,9 +594,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_text(
-            text_path=text_path, focus=focus_type, context_level=context
-        )
+        skill_data = distiller.distill_from_text(text_path=text_path, focus=focus_type, context_level=context)
 
         # Create skill in Advanced Memory
         skill_category = category or "philosophy"
@@ -661,7 +653,7 @@ adn_skills(
 **Operation:** distill_from_text
 **Text Path:** {text_path}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - File not found
@@ -789,7 +781,7 @@ adn_skills(
 **Operation:** distill_from_expert
 **Expert:** {expert_name}
 
-**Problem:** {str(e)}
+**Problem:** {e!s}
 
 **Common issues:**
 - No content found for expert

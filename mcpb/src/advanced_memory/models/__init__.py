@@ -10,8 +10,8 @@ __all__ = [
     "Base",
     "Entity",
     "Observation",
-    "Relation",
     "Project",
+    "Relation",
     "Skill",
     "basic_memory",
 ]

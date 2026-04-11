@@ -38,17 +38,11 @@ def upgrade() -> None:
         if_not_exists=True,
     )
     with op.batch_alter_table("project", schema=None) as batch_op:
-        batch_op.create_index(
-            "ix_project_created_at", ["created_at"], unique=False, if_not_exists=True
-        )
+        batch_op.create_index("ix_project_created_at", ["created_at"], unique=False, if_not_exists=True)
         batch_op.create_index("ix_project_name", ["name"], unique=True, if_not_exists=True)
         batch_op.create_index("ix_project_path", ["path"], unique=False, if_not_exists=True)
-        batch_op.create_index(
-            "ix_project_permalink", ["permalink"], unique=True, if_not_exists=True
-        )
-        batch_op.create_index(
-            "ix_project_updated_at", ["updated_at"], unique=False, if_not_exists=True
-        )
+        batch_op.create_index("ix_project_permalink", ["permalink"], unique=True, if_not_exists=True)
+        batch_op.create_index("ix_project_updated_at", ["updated_at"], unique=False, if_not_exists=True)
 
     with op.batch_alter_table("entity", schema=None) as batch_op:
         batch_op.add_column(sa.Column("project_id", sa.Integer(), nullable=False))
@@ -59,9 +53,7 @@ def upgrade() -> None:
         batch_op.drop_index("ix_entity_file_path")
         batch_op.create_index(batch_op.f("ix_entity_file_path"), ["file_path"], unique=False)
         batch_op.create_index("ix_entity_project_id", ["project_id"], unique=False)
-        batch_op.create_index(
-            "uix_entity_file_path_project", ["file_path", "project_id"], unique=True
-        )
+        batch_op.create_index("uix_entity_file_path_project", ["file_path", "project_id"], unique=True)
         batch_op.create_index(
             "uix_entity_permalink_project",
             ["permalink", "project_id"],

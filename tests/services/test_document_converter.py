@@ -225,9 +225,7 @@ async def test_pandoc_failure_handling(converter, tmp_path):
     docx_file.write_text("invalid content")
 
     # Mock subprocess to raise error
-    with patch(
-        "subprocess.run", side_effect=subprocess.CalledProcessError(1, "pandoc", stderr="Error")
-    ):
+    with patch("subprocess.run", side_effect=subprocess.CalledProcessError(1, "pandoc", stderr="Error")):
         result = await converter.convert_docx(docx_file)
 
     # Should return placeholder with error

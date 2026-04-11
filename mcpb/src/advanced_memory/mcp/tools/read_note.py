@@ -14,9 +14,7 @@ from advanced_memory.utils import sanitize_filename, validate_project_path
 
 
 @mcp.tool
-async def read_note(
-    identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
-) -> str:
+async def read_note(identifier: str, page: int = 1, page_size: int = 10, project: str | None = None) -> str:
     """Read a markdown note from the knowledge base.
 
     This tool finds and retrieves a note by its title, permalink, or content search,
@@ -56,9 +54,7 @@ async def read_note(
     # Check migration status and wait briefly if needed
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
-    migration_status = await wait_for_migration_or_return_status(
-        timeout=5.0, project_name=active_project.name
-    )
+    migration_status = await wait_for_migration_or_return_status(timeout=5.0, project_name=active_project.name)
     if migration_status:  # pragma: no cover
         return f"# System Status\n\n{migration_status}\n\nPlease wait for migration to complete before reading notes."
     project_url = active_project.project_url
@@ -92,19 +88,13 @@ async def read_note(
 
     # If direct lookup failed and identifier looks like a title (not a permalink),
     # try with sanitized filename for markdown files
-    if (
-        not identifier.startswith("memory://")
-        and "/" not in identifier
-        and not identifier.endswith(".md")
-    ):
+    if not identifier.startswith("memory://") and "/" not in identifier and not identifier.endswith(".md"):
         sanitized_path = sanitize_filename(identifier)
         if sanitized_path != identifier:  # Only try if different
             sanitized_full_path = f"{project_url}/resource/{sanitized_path}.md"
             logger.info(f"Trying sanitized path: {sanitized_full_path}")
             try:
-                response = await call_get(
-                    client, sanitized_full_path, params={"page": page, "page_size": page_size}
-                )
+                response = await call_get(client, sanitized_full_path, params={"page": page, "page_size": page_size})
                 if response.status_code == 200:
                     logger.info(f"Found note using sanitized path: {sanitized_full_path}")
                     return response.text
@@ -114,7 +104,9 @@ async def read_note(
 
     # Fallback 1: Try title search via API
     logger.info(f"Search title for: {identifier}")
-    title_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(query=identifier, search_type="title", project=project)
+    title_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
+        query=identifier, search_type="title", project=project
+    )
 
     if title_results and title_results.results:
         result = title_results.results[0]  # Get the first/best match
@@ -122,23 +114,21 @@ async def read_note(
             try:
                 # Try to fetch the content using the found permalink
                 path = f"{project_url}/resource/{result.permalink}"
-                response = await call_get(
-                    client, path, params={"page": page, "page_size": page_size}
-                )
+                response = await call_get(client, path, params={"page": page, "page_size": page_size})
 
                 if response.status_code == 200:
                     logger.info(f"Found note by title search: {result.permalink}")
                     return response.text
             except Exception as e:  # pragma: no cover
-                logger.info(
-                    f"Failed to fetch content for found title match {result.permalink}: {e}"
-                )
+                logger.info(f"Failed to fetch content for found title match {result.permalink}: {e}")
     else:
         logger.info(f"No results in title search for: {identifier}")
 
     # Fallback 2: Text search as a last resort
     logger.info(f"Title search failed, trying text search for: {identifier}")
-    text_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(query=identifier, search_type="text", project=project)
+    text_results = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
+        query=identifier, search_type="text", project=project
+    )
 
     # We didn't find a direct match, construct a helpful error message
     if not text_results or not text_results.results:

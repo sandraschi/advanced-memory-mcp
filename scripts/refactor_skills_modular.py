@@ -20,7 +20,7 @@ def main() -> None:
                 continue
             upgrade_skill(skill_file.parent)
             converted.append(str(skill_file))
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             skipped.append(str(skill_file))
             print(f"[WARN] Skipped {skill_file}: {exc}")
 

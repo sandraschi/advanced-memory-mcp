@@ -109,9 +109,7 @@ async def adn_knowledge(
         "note_blueprint",
         "research_workflow",
     ]:
-        return await _research_orchestrator(
-            operation, topic, topic_type, research_type, step, parameters
-        )
+        return await _research_orchestrator(operation, topic, topic_type, research_type, step, parameters)
     else:
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: bulk_update, tag_analytics, research_plan, research_methodology, research_questions, note_blueprint, research_workflow, consolidate_tags, validate_content, project_stats, find_duplicates"
 
@@ -127,7 +125,9 @@ async def _knowledge_operations(
     """Handle knowledge operations."""
     from advanced_memory.mcp.tools.knowledge_operations import knowledge_operations
 
-    return await (knowledge_operations.fn if hasattr(knowledge_operations, "fn") else knowledge_operations)(operation, filters, action, dry_run, limit, project)  # type: ignore[operator,no-any-return]
+    return await (knowledge_operations.fn if hasattr(knowledge_operations, "fn") else knowledge_operations)(
+        operation, filters, action, dry_run, limit, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _research_orchestrator(
@@ -141,6 +141,4 @@ async def _research_orchestrator(
     """Handle research orchestrator operations."""
     from advanced_memory.mcp.tools.research_orchestrator import research_orchestrator
 
-    return await research_orchestrator(
-        operation, topic, topic_type, research_type, step, parameters
-    )  # type: ignore[operator,no-any-return]
+    return await research_orchestrator(operation, topic, topic_type, research_type, step, parameters)  # type: ignore[operator,no-any-return]

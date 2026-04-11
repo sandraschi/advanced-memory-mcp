@@ -14,9 +14,7 @@ logger = logging.getLogger(__name__)
 class ClaudeProjectsImporter(Importer):
     """Service for importing Claude projects."""
 
-    async def import_data(
-        self, source_data: Any, destination_folder: str, **kwargs: Any
-    ) -> ProjectImportResult:
+    async def import_data(self, source_data: Any, destination_folder: str, **kwargs: Any) -> ProjectImportResult:
         """Import projects from Claude JSON export.
 
         Args:
@@ -70,9 +68,7 @@ class ClaudeProjectsImporter(Importer):
             logger.exception("Failed to import Claude projects")
             return self.handle_error("Failed to import Claude projects", e)  # pyright: ignore [reportReturnType]
 
-    def _format_project_markdown(
-        self, project: dict[str, Any], doc: dict[str, Any]
-    ) -> EntityMarkdown:
+    def _format_project_markdown(self, project: dict[str, Any], doc: dict[str, Any]) -> EntityMarkdown:
         """Format a project document as an Advanced Memory entity.
 
         Args:

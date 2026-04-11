@@ -291,9 +291,9 @@ async def adn_arxiv_research(
 
             # This is a simplified version - in practice, you'd need citation data
             # For now, we'll find papers with similar titles/abstracts
-            paper_details = await (
-                adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research
-            )(operation="get_paper_details", paper_id=paper_id)
+            paper_details = await (adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research)(
+                operation="get_paper_details", paper_id=paper_id
+            )
 
             if "error" in paper_details:
                 return paper_details
@@ -339,7 +339,7 @@ async def adn_arxiv_research(
                 ],
             }
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.error("adn_arxiv_research_error: %s", exc, exc_info=True)
         return {
             "success": False,
@@ -400,15 +400,9 @@ def _parse_arxiv_xml(xml_text: str) -> dict[str, Any]:
         entries = []
         for entry in root.findall(".//atom:entry", ns):
             paper_data = {
-                "id": entry.find("atom:id", ns).text
-                if entry.find("atom:id", ns) is not None
-                else "",
-                "title": entry.find("atom:title", ns).text
-                if entry.find("atom:title", ns) is not None
-                else "",
-                "summary": entry.find("atom:summary", ns).text
-                if entry.find("atom:summary", ns) is not None
-                else "",
+                "id": entry.find("atom:id", ns).text if entry.find("atom:id", ns) is not None else "",
+                "title": entry.find("atom:title", ns).text if entry.find("atom:title", ns) is not None else "",
+                "summary": entry.find("atom:summary", ns).text if entry.find("atom:summary", ns) is not None else "",
                 "authors": [],
                 "categories": [],
                 "links": [],
@@ -489,9 +483,7 @@ def _build_search_params(
                 if month in ["04", "06", "09", "11"]
                 else "28"
             )
-            params["search_query"] += (
-                f" AND submittedDate:[{date_range}01 TO {year}{month}{last_day}]"
-            )
+            params["search_query"] += f" AND submittedDate:[{date_range}01 TO {year}{month}{last_day}]"
 
     return params
 
@@ -618,8 +610,7 @@ def _analyze_paper_trends(api_response: dict[str, Any]) -> dict[str, Any]:
         },
         "collaboration_patterns": {
             "author_count_distribution": authors_count,
-            "avg_authors_per_paper": sum(k * v for k, v in authors_count.items())
-            / sum(authors_count.values()),
+            "avg_authors_per_paper": sum(k * v for k, v in authors_count.items()) / sum(authors_count.values()),
         },
     }
 

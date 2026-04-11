@@ -91,9 +91,7 @@ async def adn_audio(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak"
 
 
-async def _dictate_operation(
-    active_project, audio_path: str | None, record_duration: int | None, tags: TagType
-) -> str:
+async def _dictate_operation(active_project, audio_path: str | None, record_duration: int | None, tags: TagType) -> str:
     """Handle dictate operation - speech-to-text note creation."""
     try:
         import whisper
@@ -145,7 +143,7 @@ Then restart and try again!"""
             logger.info(f"Recording saved to: {audio_path}")
 
         except Exception as e:
-            return f"# Recording Failed\n\nError: {str(e)}\n\nEnsure sounddevice and soundfile are installed."
+            return f"# Recording Failed\n\nError: {e!s}\n\nEnsure sounddevice and soundfile are installed."
 
     # Check if audio file exists
     if not audio_path or not Path(audio_path).exists():
@@ -209,7 +207,7 @@ Then restart and try again!"""
 
     except Exception as e:
         logger.error(f"Transcription error: {e}")
-        return f"# Transcription Failed\n\nError: {str(e)}\n\nTry a different audio file or check Whisper installation."
+        return f"# Transcription Failed\n\nError: {e!s}\n\nTry a different audio file or check Whisper installation."
 
 
 async def _speak_operation(
@@ -265,9 +263,7 @@ Then restart and try again!"""
             continue
         if not in_frontmatter:
             # Skip metadata lines like "title:", "permalink:", etc.
-            if not line.startswith(
-                ("title:", "permalink:", "created:", "updated:", "**", "file_path:")
-            ):
+            if not line.startswith(("title:", "permalink:", "created:", "updated:", "**", "file_path:")):
                 clean_lines.append(line)
 
     text_to_speak = "\n".join(clean_lines).strip()
@@ -329,4 +325,4 @@ Then restart and try again!"""
 
     except Exception as e:
         logger.error(f"TTS error: {e}")
-        return f"# Text-to-Speech Failed\n\nError: {str(e)}\n\nCheck pyttsx3 installation and audio drivers."
+        return f"# Text-to-Speech Failed\n\nError: {e!s}\n\nCheck pyttsx3 installation and audio drivers."

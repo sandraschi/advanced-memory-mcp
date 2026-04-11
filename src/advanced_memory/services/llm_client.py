@@ -15,9 +15,7 @@ from loguru import logger
 class LLMClient:
     """Unified LLM client that works with multiple providers."""
 
-    def __init__(
-        self, provider: str | None = None, model: str | None = None, base_url: str | None = None
-    ):
+    def __init__(self, provider: str | None = None, model: str | None = None, base_url: str | None = None):
         """Initialize LLM client.
 
         Args:
@@ -26,9 +24,7 @@ class LLMClient:
             base_url: Custom base URL (for ollama/lmstudio).
         """
         if provider and not self._check_provider_available(provider):
-            logger.warning(
-                f"Configured provider '{provider}' unavailable, falling back to auto-detect"
-            )
+            logger.warning(f"Configured provider '{provider}' unavailable, falling back to auto-detect")
             provider = None
             model = None  # Reset model when falling back to different provider
         self.provider = provider or self._auto_detect_provider()
@@ -152,11 +148,9 @@ class LLMClient:
                     data = response.json()
                     return data.get("response", "")
                 else:
-                    raise Exception(
-                        f"Ollama API error: HTTP {response.status_code} - {response.text}"
-                    )
+                    raise Exception(f"Ollama API error: HTTP {response.status_code} - {response.text}")
         except httpx.RequestError as e:
-            raise Exception(f"Failed to connect to Ollama: {str(e)}")
+            raise Exception(f"Failed to connect to Ollama: {e!s}")
 
     async def _generate_lmstudio(
         self, prompt: str, system_prompt: str | None, max_tokens: int, temperature: float
@@ -183,11 +177,9 @@ class LLMClient:
                     data = response.json()
                     return data["choices"][0]["message"]["content"]
                 else:
-                    raise Exception(
-                        f"LM Studio API error: HTTP {response.status_code} - {response.text}"
-                    )
+                    raise Exception(f"LM Studio API error: HTTP {response.status_code} - {response.text}")
         except httpx.RequestError as e:
-            raise Exception(f"Failed to connect to LM Studio: {str(e)}")
+            raise Exception(f"Failed to connect to LM Studio: {e!s}")
 
     async def _generate_openai(
         self, prompt: str, system_prompt: str | None, max_tokens: int, temperature: float
@@ -219,7 +211,7 @@ class LLMClient:
         except ImportError:
             raise Exception("OpenAI library not installed. Install with: pip install openai")
         except Exception as e:
-            raise Exception(f"OpenAI API error: {str(e)}")
+            raise Exception(f"OpenAI API error: {e!s}")
 
     async def generate_json(
         self,
@@ -274,7 +266,7 @@ class LLMClient:
             return json.loads(response)
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Failed to parse JSON from LLM response: {e}\nResponse: {response[:200]}")
-            raise Exception(f"LLM did not return valid JSON: {str(e)}")
+            raise Exception(f"LLM did not return valid JSON: {e!s}")
 
 
 def get_llm_client(provider: str | None = None, model: str | None = None) -> LLMClient:

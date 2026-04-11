@@ -36,9 +36,7 @@ class DatabaseConsolidator:
         """
         self.global_db_path = global_db_path
         self.project_roots = project_roots
-        self.backup_dir = (
-            Path.home() / ".advanced-memory" / "backups" / datetime.now().strftime("%Y%m%d_%H%M%S")
-        )
+        self.backup_dir = Path.home() / ".advanced-memory" / "backups" / datetime.now().strftime("%Y%m%d_%H%M%S")
 
     def find_per_project_databases(self) -> list[tuple[Path, Path]]:
         """Find all per-project database files.
@@ -59,9 +57,7 @@ class DatabaseConsolidator:
                 # Check if it's a real database (not empty)
                 if db_path.stat().st_size > 0:
                     found.append((root, db_path))
-                    logger.info(
-                        f"Found per-project database: {db_path} ({db_path.stat().st_size:,} bytes)"
-                    )
+                    logger.info(f"Found per-project database: {db_path} ({db_path.stat().st_size:,} bytes)")
 
         return found
 
@@ -83,9 +79,7 @@ class DatabaseConsolidator:
             # Walk the directory tree
             for dirpath, dirnames, _filenames in os.walk(str(base)):
                 # Skip hidden directories
-                dirnames[:] = [
-                    d for d in dirnames if not d.startswith(".") or d == ".advanced-memory"
-                ]
+                dirnames[:] = [d for d in dirnames if not d.startswith(".") or d == ".advanced-memory"]
 
                 # Check if this directory has .advanced-memory/memory.db
                 dir_path = Path(dirpath)
@@ -224,9 +218,7 @@ class DatabaseConsolidator:
         else:
             total_size = sum(s["size"] for s in project_stats)
             logger.info(f"\n! Found {len(per_project_dbs)} per-project databases")
-            logger.info(
-                f"  Total wasted space: {total_size:,} bytes ({total_size / 1024 / 1024:.2f} MB)"
-            )
+            logger.info(f"  Total wasted space: {total_size:,} bytes ({total_size / 1024 / 1024:.2f} MB)")
             logger.info(f"\nThe global database at {self.global_db_path} is the active database.")
             logger.info("Per-project databases are legacy/unused.")
             logger.info("\nTo remove them, run:")
@@ -237,9 +229,7 @@ class DatabaseConsolidator:
             "per_project": project_stats,
         }
 
-    def clean_empty_databases(
-        self, scan_paths: list[Path] | None = None, dry_run: bool = True
-    ) -> None:
+    def clean_empty_databases(self, scan_paths: list[Path] | None = None, dry_run: bool = True) -> None:
         """Remove empty or redundant per-project databases.
 
         Args:
@@ -314,9 +304,7 @@ Examples:
     )
 
     parser.add_argument("--analyze", action="store_true", help="Analyze database state")
-    parser.add_argument(
-        "--clean-empty", action="store_true", help="Remove empty per-project databases"
-    )
+    parser.add_argument("--clean-empty", action="store_true", help="Remove empty per-project databases")
     parser.add_argument("--scan", nargs="+", help="Directories to scan for databases")
     parser.add_argument("--no-dry-run", action="store_true", help="Actually perform deletions")
     parser.add_argument("--global-db", help="Path to global database (default: auto-detect)")

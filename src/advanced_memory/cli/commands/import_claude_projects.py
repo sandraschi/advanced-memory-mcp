@@ -27,12 +27,8 @@ async def get_markdown_processor() -> MarkdownProcessor:
 
 @claude_app.command(name="projects", help="Import projects from Claude.ai.")
 def import_projects(
-    projects_json: Annotated[Path, typer.Argument(..., help="Path to projects.json file")] = Path(
-        "projects.json"
-    ),
-    base_folder: Annotated[
-        str, typer.Option(help="The base folder to place project files in.")
-    ] = "projects",
+    projects_json: Annotated[Path, typer.Argument(..., help="Path to projects.json file")] = Path("projects.json"),
+    base_folder: Annotated[str, typer.Option(help="The base folder to place project files in.")] = "projects",
 ):
     """Import project data from Claude.ai.
 

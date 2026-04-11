@@ -9,10 +9,10 @@ import typer
 from loguru import logger
 
 # Import prompts to register them
-import advanced_memory.mcp.prompts  # noqa: F401  # pragma: no cover
+import advanced_memory.mcp.prompts  # pragma: no cover
 
 # Import mcp tools to register them
-import advanced_memory.mcp.tools  # noqa: F401  # pragma: no cover
+import advanced_memory.mcp.tools  # pragma: no cover
 from advanced_memory.cli.app import app
 from advanced_memory.config import ConfigManager
 
@@ -27,11 +27,7 @@ def _stdio_single_instance_lock():
         yield
         return
 
-    lock_path = (
-        Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home())))
-        / ".advanced-memory"
-        / "mcp-stdio.lock"
-    )
+    lock_path = Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home()))) / ".advanced-memory" / "mcp-stdio.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
 
     if os.name == "nt":
@@ -174,6 +170,7 @@ def mcp(
         # NEVER apply this in server.py module scope (breaks interactive use).
         if agentic:
             from fastmcp.experimental.transforms.code_mode import CodeMode
+
             mcp_server.add_transform(CodeMode())
 
         with _stdio_single_instance_lock():
@@ -185,6 +182,7 @@ def mcp(
         # Apply CodeMode for HTTP transports too if agentic mode requested
         if agentic:
             from fastmcp.experimental.transforms.code_mode import CodeMode
+
             mcp_server.add_transform(CodeMode())
 
         mcp_server.run(

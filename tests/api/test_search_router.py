@@ -42,9 +42,7 @@ async def test_search_basic(client, indexed_entity, project_url):
 @pytest.mark.asyncio
 async def test_search_basic_pagination(client, indexed_entity, project_url):
     """Test basic text search."""
-    response = await client.post(
-        f"{project_url}/search/?page=3&page_size=1", json={"text": "search"}
-    )
+    response = await client.post(f"{project_url}/search/?page=3&page_size=1", json={"text": "search"})
     assert response.status_code == 200
     search_results = SearchResponse.model_validate(response.json())
     assert len(search_results.results) == 1
@@ -96,17 +94,13 @@ async def test_search_with_date_filter(client, indexed_entity, project_url):
     """Test search with date filter."""
     # Should find with past date
     past_date = datetime(2020, 1, 1, tzinfo=UTC)
-    response = await client.post(
-        f"{project_url}/search/", json={"text": "test", "after_date": past_date.isoformat()}
-    )
+    response = await client.post(f"{project_url}/search/", json={"text": "test", "after_date": past_date.isoformat()})
     assert response.status_code == 200
     search_results = SearchResponse.model_validate(response.json())
 
     # Should not find with future date
     future_date = datetime(2030, 1, 1, tzinfo=UTC)
-    response = await client.post(
-        f"{project_url}/search/", json={"text": "test", "after_date": future_date.isoformat()}
-    )
+    response = await client.post(f"{project_url}/search/", json={"text": "test", "after_date": future_date.isoformat()})
     assert response.status_code == 200
     search_results = SearchResponse.model_validate(response.json())
     assert len(search_results.results) == 0

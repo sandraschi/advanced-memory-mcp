@@ -54,7 +54,7 @@ async def run_test(test: ToolTest) -> tuple[str, str, bool]:
         logger.debug(f"Executing {test.label} kwargs={test.kwargs}")
         outcome = await test.tool(**test.kwargs)
         return (test.label, serialize_result(outcome), True)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.exception(f"Tool invocation failed label={test.label}")
         return (test.label, f"Exception: {exc}", False)
 
@@ -100,9 +100,7 @@ def build_tests(include_heavy: bool) -> tuple[Iterable[ToolTest], list[Path]]:
     if pdf_engine_default and pdf_engine_default.default == "weasyprint":
         logger.info("✅ export_pandoc pdf_engine default is 'weasyprint' (pure Python)")
     else:
-        logger.warning(
-            f"⚠️ export_pandoc pdf_engine default is NOT 'weasyprint': {pdf_engine_default}"
-        )
+        logger.warning(f"⚠️ export_pandoc pdf_engine default is NOT 'weasyprint': {pdf_engine_default}")
 
     if include_heavy:
         export_dir = Path(tempfile.mkdtemp(prefix="am-export-"))
@@ -180,7 +178,7 @@ async def main() -> None:
                 shutil.rmtree(target, ignore_errors=True)
             elif target.exists():
                 target.unlink(missing_ok=True)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.warning(f"Cleanup failed target={target}: {exc}")
 
 

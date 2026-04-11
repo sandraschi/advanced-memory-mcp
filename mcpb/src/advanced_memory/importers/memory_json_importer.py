@@ -19,9 +19,7 @@ logger = logging.getLogger(__name__)
 class MemoryJsonImporter(Importer):
     """Service for importing memory.json format data."""
 
-    async def import_data(
-        self, source_data: Any, destination_folder: str = "", **kwargs: Any
-    ) -> EntityImportResult:
+    async def import_data(self, source_data: Any, destination_folder: str = "", **kwargs: Any) -> EntityImportResult:
         """Import entities and relations from a memory.json file.
 
         Args:

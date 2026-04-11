@@ -65,9 +65,7 @@ async def test_migration_deduplication_single_call(
 
 
 @pytest.mark.asyncio
-async def test_migration_force_parameter(
-    app_config, mock_alembic_config, mock_alembic_command, mock_search_repository
-):
+async def test_migration_force_parameter(app_config, mock_alembic_config, mock_alembic_command, mock_search_repository):
     """Test that migrations can be forced to run even if already completed."""
     # Reset module state
     db._migrations_completed = False
@@ -143,9 +141,7 @@ async def test_get_or_create_db_skips_migrations_when_disabled(
     db._session_maker = None
 
     # Call with ensure_migrations=False should skip migrations
-    engine, session_maker = await db.get_or_create_db(
-        app_config.database_path, ensure_migrations=False
-    )
+    engine, session_maker = await db.get_or_create_db(app_config.database_path, ensure_migrations=False)
 
     # Verify we got valid objects
     assert engine is not None

@@ -17,12 +17,10 @@ async def adn_search(
     operation: Literal["notes", "obsidian", "joplin", "notion", "evernote"],
     query: str,
     source_path: str | None = None,
-    search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"]
-    | None = "text",
+    search_type: Literal["text", "title", "permalink", "tag", "file", "link", "frontmatter"] | None = "text",
     page: int = 1,
     page_size: int = 10,
-    results_per_page: int
-    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
+    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     max_results: int = 20,
     case_sensitive: bool = False,
     include_content: bool = False,
@@ -247,14 +245,10 @@ async def adn_search(
         )
     elif operation == "obsidian":
         actual_search_type = search_type if search_type else "text"
-        return await _obsidian_search(
-            query, source_path, actual_search_type, max_results, include_content
-        )
+        return await _obsidian_search(query, source_path, actual_search_type, max_results, include_content)
     elif operation == "joplin":
         actual_search_type = search_type if search_type else "text"
-        return await _joplin_search(
-            query, source_path, actual_search_type, max_results, include_content
-        )
+        return await _joplin_search(query, source_path, actual_search_type, max_results, include_content)
     elif operation == "notion":
         return await _notion_search(query, source_path, case_sensitive, file_type, max_results)
     elif operation == "evernote":
@@ -382,9 +376,7 @@ adn_search(
 
     from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
 
-    return await search_obsidian_vault(
-        source_path, query, search_type, max_results, include_content
-    )  # type: ignore[operator,no-any-return]
+    return await search_obsidian_vault(source_path, query, search_type, max_results, include_content)  # type: ignore[operator,no-any-return]
 
 
 async def _joplin_search(

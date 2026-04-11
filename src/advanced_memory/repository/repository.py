@@ -55,9 +55,7 @@ class Repository:
             model.project_id = self.project_id  # type: ignore[attr-defined]
 
     def get_model_data(self, entity_data: dict[str, Any]) -> dict[str, Any]:
-        model_data = {
-            k: v for k, v in entity_data.items() if k in self.valid_columns and v is not None
-        }
+        model_data = {k: v for k, v in entity_data.items() if k in self.valid_columns and v is not None}
         return model_data
 
     def _add_project_filter(self, query: Select) -> Select:
@@ -69,21 +67,13 @@ class Repository:
         Returns:
             Updated query with project filter if applicable
         """
-        if (
-            self.has_project_id
-            and self.project_id is not None
-            and hasattr(self.Model, "project_id")
-        ):
+        if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
             query = query.filter(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
         return query
 
     async def select_by_id(self, session: AsyncSession, entity_id: int) -> T | None:
         """Select an entity by ID using an existing session."""
-        query = (
-            select(self.Model)
-            .filter(self.primary_key == entity_id)
-            .options(*self.get_load_options())
-        )
+        query = select(self.Model).filter(self.primary_key == entity_id).options(*self.get_load_options())
         # Add project filter if applicable
         query = self._add_project_filter(query)
 
@@ -92,9 +82,7 @@ class Repository:
 
     async def select_by_ids(self, session: AsyncSession, ids: list[int]) -> Sequence[T]:
         """Select multiple entities by IDs using an existing session."""
-        query = (
-            select(self.Model).where(self.primary_key.in_(ids)).options(*self.get_load_options())
-        )
+        query = select(self.Model).where(self.primary_key.in_(ids)).options(*self.get_load_options())
         # Add project filter if applicable
         query = self._add_project_filter(query)
 
@@ -211,11 +199,7 @@ class Repository:
             model_data = self.get_model_data(data)
 
             # Add project_id if applicable and not already provided
-            if (
-                self.has_project_id
-                and self.project_id is not None
-                and "project_id" not in model_data
-            ):
+            if self.has_project_id and self.project_id is not None and "project_id" not in model_data:
                 model_data["project_id"] = self.project_id
 
             model = self.Model(**model_data)
@@ -245,11 +229,7 @@ class Repository:
                 model_data = self.get_model_data(d)
 
                 # Add project_id if applicable and not already provided
-                if (
-                    self.has_project_id
-                    and self.project_id is not None
-                    and "project_id" not in model_data
-                ):
+                if self.has_project_id and self.project_id is not None and "project_id" not in model_data:
                     model_data["project_id"] = self.project_id  # pragma: no cover
 
                 model_list.append(self.Model(**model_data))
@@ -264,9 +244,7 @@ class Repository:
         logger.debug(f"Updating {self.Model.__name__} {entity_id} with data: {entity_data}")
         async with db.scoped_session(self.session_maker) as session:
             try:
-                result = await session.execute(
-                    select(self.Model).filter(self.primary_key == entity_id)
-                )
+                result = await session.execute(select(self.Model).filter(self.primary_key == entity_id))
                 entity = result.scalars().one()
 
                 if isinstance(entity_data, dict):
@@ -293,9 +271,7 @@ class Repository:
         logger.debug(f"Deleting {self.Model.__name__}: {entity_id}")
         async with db.scoped_session(self.session_maker) as session:
             try:
-                result = await session.execute(
-                    select(self.Model).filter(self.primary_key == entity_id)
-                )
+                result = await session.execute(select(self.Model).filter(self.primary_key == entity_id))
                 entity = result.scalars().one()
                 await session.delete(entity)
 
@@ -313,9 +289,7 @@ class Repository:
 
             # Add project_id filter if applicable
             if (
-                self.has_project_id
-                and self.project_id is not None
-                and hasattr(self.Model, "project_id")
+                self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id")
             ):  # pragma: no cover
                 conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
@@ -331,11 +305,7 @@ class Repository:
             conditions = [getattr(self.Model, field) == value for field, value in filters.items()]
 
             # Add project_id filter if applicable
-            if (
-                self.has_project_id
-                and self.project_id is not None
-                and hasattr(self.Model, "project_id")
-            ):
+            if self.has_project_id and self.project_id is not None and hasattr(self.Model, "project_id"):
                 conditions.append(self.Model.project_id == self.project_id)  # type: ignore[attr-defined]
 
             query = delete(self.Model).where(and_(*conditions))

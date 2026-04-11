@@ -182,11 +182,7 @@ def _dedent_helper(this, options: dict[str, Any]) -> str:
     content = options["fn"](this)
 
     # Convert to string if it's a strlist
-    if (
-        isinstance(content, list)
-        or hasattr(content, "__iter__")
-        and not isinstance(content, str | bytes)
-    ):
+    if isinstance(content, list) or (hasattr(content, "__iter__") and not isinstance(content, str | bytes)):
         content_str = "".join(str(item) for item in content)  # pragma: no cover
     else:
         content_str = str(content)  # pragma: no cover

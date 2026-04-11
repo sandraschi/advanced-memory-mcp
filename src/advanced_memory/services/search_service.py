@@ -66,9 +66,7 @@ class SearchService:
         # Vector indexing is handled inside index_entity
         logger.info("Reindex complete")
 
-    async def search(
-        self, query: SearchQuery, limit: int = 10, offset: int = 0
-    ) -> tuple[list[SearchIndexRow], int]:
+    async def search(self, query: SearchQuery, limit: int = 10, offset: int = 0) -> tuple[list[SearchIndexRow], int]:
         """Search across all indexed content.
 
         Supports three modes:
@@ -83,21 +81,13 @@ class SearchService:
         logger.trace(f"Searching with query: {query}")
 
         after_date = (
-            (
-                query.after_date
-                if isinstance(query.after_date, datetime)
-                else parse(query.after_date)
-            )
+            (query.after_date if isinstance(query.after_date, datetime) else parse(query.after_date))
             if query.after_date
             else None
         )
 
         before_date = (
-            (
-                query.before_date
-                if isinstance(query.before_date, datetime)
-                else parse(query.before_date)
-            )
+            (query.before_date if isinstance(query.before_date, datetime) else parse(query.before_date))
             if query.before_date
             else None
         )
@@ -125,16 +115,12 @@ class SearchService:
 
                 # Decide if we use native hybrid search or simple vector augmentation
                 candidate_limit = (
-                    self.app_config.rag_top_k_candidates
-                    if self.app_config.rag_use_reranker
-                    else limit * 2
+                    self.app_config.rag_top_k_candidates if self.app_config.rag_use_reranker else limit * 2
                 )
 
                 query_type = "hybrid" if self.app_config.rag_hybrid_search else "vector"
 
-                logger.debug(
-                    f"Performing vector/hybrid search (type={query_type}, limit={candidate_limit})"
-                )
+                logger.debug(f"Performing vector/hybrid search (type={query_type}, limit={candidate_limit})")
                 vector_results = await self.vector_repository.search(
                     query.text,
                     limit=candidate_limit,
@@ -151,9 +137,7 @@ class SearchService:
                     entity_id = v_res["metadata"]["entity_id"]
                     if entity_id not in existing_ids:
                         row = SearchIndexRow(
-                            id=int(v_res["id"].split("_")[0])
-                            if "_" in v_res["id"]
-                            else 0,  # Fallback
+                            id=int(v_res["id"].split("_")[0]) if "_" in v_res["id"] else 0,  # Fallback
                             entity_id=entity_id,
                             type=v_res["metadata"]["type"],
                             title=v_res["metadata"].get("title", "Vector Match"),
@@ -367,9 +351,7 @@ class SearchService:
         await self.vector_repository.delete_by_entity_id(entity_id=entity.id)
 
         # reindex
-        await self.index_entity_markdown(
-            entity
-        ) if entity.is_markdown else await self.index_entity_file(entity)
+        await self.index_entity_markdown(entity) if entity.is_markdown else await self.index_entity_file(entity)
 
     async def index_entity_file(
         self,
@@ -504,9 +486,7 @@ class SearchService:
         # Index each observation with permalink
         for obs in entity.observations:
             # Index with parent entity's file path since that's where it's defined
-            obs_content_stems = "\n".join(
-                p for p in self._generate_variants(obs.content) if p and p.strip()
-            )
+            obs_content_stems = "\n".join(p for p in self._generate_variants(obs.content) if p and p.strip())
             await self.repository.index_item(
                 SearchIndexRow(
                     id=obs.id,
@@ -531,14 +511,10 @@ class SearchService:
         for rel in entity.outgoing_relations:
             # Create descriptive title showing the relationship
             relation_title = (
-                f"{rel.from_entity.title} -> {rel.to_entity.title}"
-                if rel.to_entity
-                else f"{rel.from_entity.title}"
+                f"{rel.from_entity.title} -> {rel.to_entity.title}" if rel.to_entity else f"{rel.from_entity.title}"
             )
 
-            rel_content_stems = "\n".join(
-                p for p in self._generate_variants(relation_title) if p and p.strip()
-            )
+            rel_content_stems = "\n".join(p for p in self._generate_variants(relation_title) if p and p.strip())
             await self.repository.index_item(
                 SearchIndexRow(
                     id=rel.id,
@@ -583,10 +559,7 @@ class SearchService:
             + [r.permalink for r in entity.outgoing_relations]
         )
 
-        logger.debug(
-            f"Deleting search index entries for entity_id={entity.id}, "
-            f"index_entries={len(permalinks)}"
-        )
+        logger.debug(f"Deleting search index entries for entity_id={entity.id}, index_entries={len(permalinks)}")
 
         for permalink in permalinks:
             if permalink:

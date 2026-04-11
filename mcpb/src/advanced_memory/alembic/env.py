@@ -11,8 +11,8 @@ from advanced_memory.config import ConfigManager
 # set config.env to "test" for pytest to prevent logging to file in utils.setup_logging()
 os.environ["ADVANCED_MEMORY_ENV"] = "test"
 
-# Import after setting environment variable  # noqa: E402
-from advanced_memory.models import Base  # noqa: E402
+# Import after setting environment variable
+from advanced_memory.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

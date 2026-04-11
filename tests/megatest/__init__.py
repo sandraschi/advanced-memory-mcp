@@ -63,6 +63,6 @@ pytest tests/megatest/ -v -m megatest_full
 
 __all__ = [
     "MegatestContext",
-    "PhaseResult",
     "MetricsCollector",
+    "PhaseResult",
 ]

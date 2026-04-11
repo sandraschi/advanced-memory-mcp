@@ -24,9 +24,7 @@ class WikipediaDistiller:
             language: Wikipedia language code (default: "en")
         """
         if wikipediaapi is None:
-            raise ImportError(
-                "wikipedia-api package required. Install with: pip install wikipedia-api"
-            )
+            raise ImportError("wikipedia-api package required. Install with: pip install wikipedia-api")
 
         self.language = language
         self.wiki = wikipediaapi.Wikipedia(
@@ -96,7 +94,7 @@ class WikipediaDistiller:
             return result
         except Exception as e:
             logger.error(f"Error fetching Wikipedia article: {e}")
-            raise ValueError(f"Failed to fetch Wikipedia article '{title}': {str(e)}") from e
+            raise ValueError(f"Failed to fetch Wikipedia article '{title}': {e!s}") from e
 
     def search_articles(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Search Wikipedia for articles.
@@ -177,7 +175,7 @@ class WikipediaDistiller:
             }
         except Exception as e:
             logger.error(f"Error distilling Wikipedia article: {e}")
-            raise ValueError(f"Failed to distill article '{title}': {str(e)}") from e
+            raise ValueError(f"Failed to distill article '{title}': {e!s}") from e
 
     def _slugify(self, text: str) -> str:
         """Convert text to hyphen-case slug.
@@ -205,8 +203,7 @@ class WikipediaDistiller:
             Markdown content for basic skill
         """
         sections_text = "\n\n".join(
-            f"## {title}\n\n{content[:500]}..."
-            for title, content in list(article.get("sections", {}).items())[:3]
+            f"## {title}\n\n{content[:500]}..." for title, content in list(article.get("sections", {}).items())[:3]
         )
 
         return f"""# {article["title"]}
@@ -237,9 +234,7 @@ Based on Wikipedia article: {article["title"]}
 
         categories_text = ""
         if article.get("categories"):
-            categories_text = (
-                f"\n\n## Related Categories\n\n{', '.join(article['categories'][:10])}"
-            )
+            categories_text = f"\n\n## Related Categories\n\n{', '.join(article['categories'][:10])}"
 
         return f"""# {article["title"]}
 
@@ -256,9 +251,7 @@ Based on Wikipedia article: {article["title"]}
 Based on Wikipedia article: {article["title"]}
 """
 
-    def _create_expert_skill(
-        self, article: dict[str, Any], depth: int, related_links: list[str]
-    ) -> str:
+    def _create_expert_skill(self, article: dict[str, Any], depth: int, related_links: list[str]) -> str:
         """Create expert-level skill content with related articles.
 
         Args:

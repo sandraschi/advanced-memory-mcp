@@ -58,14 +58,10 @@ async def test_get_discussion_context_timeframe(client, test_graph):
 
     # Calculate total related items
     total_recent_related = (
-        sum(len(item.related_results) for item in recent_context.results)
-        if recent_context.results
-        else 0
+        sum(len(item.related_results) for item in recent_context.results) if recent_context.results else 0
     )
     total_older_related = (
-        sum(len(item.related_results) for item in older_context.results)
-        if older_context.results
-        else 0
+        sum(len(item.related_results) for item in older_context.results) if older_context.results else 0
     )
 
     assert total_older_related >= total_recent_related
@@ -103,12 +99,10 @@ async def test_build_context_timeframe_formats(client, test_graph):
     # Test each valid timeframe
     for timeframe in valid_timeframes:
         try:
-            result = await build_context.fn(
-                url=test_url, timeframe=timeframe, page=1, page_size=10, max_related=10
-            )
+            result = await build_context.fn(url=test_url, timeframe=timeframe, page=1, page_size=10, max_related=10)
             assert result is not None
         except Exception as e:
-            pytest.fail(f"Failed with valid timeframe '{timeframe}': {str(e)}")
+            pytest.fail(f"Failed with valid timeframe '{timeframe}': {e!s}")
 
     # Test invalid timeframes should raise ValidationError
     for timeframe in invalid_timeframes:

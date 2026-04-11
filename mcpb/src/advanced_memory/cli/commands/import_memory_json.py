@@ -27,12 +27,8 @@ async def get_markdown_processor() -> MarkdownProcessor:
 
 @import_app.command()
 def memory_json(
-    json_path: Annotated[Path, typer.Argument(..., help="Path to memory.json file")] = Path(
-        "memory.json"
-    ),
-    destination_folder: Annotated[
-        str, typer.Option(help="Optional destination folder within the project")
-    ] = "",
+    json_path: Annotated[Path, typer.Argument(..., help="Path to memory.json file")] = Path("memory.json"),
+    destination_folder: Annotated[str, typer.Option(help="Optional destination folder within the project")] = "",
 ):
     """Import entities and relations from a memory.json file.
 

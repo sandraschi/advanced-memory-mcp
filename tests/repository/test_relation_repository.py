@@ -89,9 +89,7 @@ async def related_entity(entity_repository):
 
 
 @pytest_asyncio.fixture(scope="function")
-async def sample_relation(
-    relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity
-):
+async def sample_relation(relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity):
     """Create a sample relation for testing"""
     relation_data = {
         "from_id": sample_entity.id,
@@ -104,9 +102,7 @@ async def sample_relation(
 
 
 @pytest_asyncio.fixture(scope="function")
-async def multiple_relations(
-    relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity
-):
+async def multiple_relations(relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity):
     """Create multiple relations for testing"""
     relations_data = [
         {
@@ -135,9 +131,7 @@ async def multiple_relations(
 
 
 @pytest.mark.asyncio
-async def test_create_relation(
-    relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity
-):
+async def test_create_relation(relation_repository: RelationRepository, sample_entity: Entity, related_entity: Entity):
     """Test creating a new relation"""
     relation_data = {
         "from_id": sample_entity.id,
@@ -265,9 +259,7 @@ async def test_delete_by_fields_multiple_fields(
 
 
 @pytest.mark.asyncio
-async def test_delete_by_fields_no_match(
-    relation_repository: RelationRepository, multiple_relations: list[Relation]
-):
+async def test_delete_by_fields_no_match(relation_repository: RelationRepository, multiple_relations: list[Relation]):
     """Test delete_by_fields when no relations match."""
     result = await relation_repository.delete_by_fields(
         relation_type="nonexistent_type"  # pyright: ignore [reportArgumentType]
@@ -330,13 +322,9 @@ async def test_delete_relations_by_type(relation_repository, test_relations):
 
 
 @pytest.mark.asyncio
-async def test_delete_relations_by_entities(
-    relation_repository, test_relations, source_entity, target_entity
-):
+async def test_delete_relations_by_entities(relation_repository, test_relations, source_entity, target_entity):
     """Test deleting relations between specific entities."""
-    result = await relation_repository.delete_by_fields(
-        from_id=source_entity.id, to_id=target_entity.id
-    )
+    result = await relation_repository.delete_by_fields(from_id=source_entity.id, to_id=target_entity.id)
     assert result is True
 
     # Verify all relations between entities were deleted

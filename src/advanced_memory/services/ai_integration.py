@@ -101,9 +101,7 @@ class AIIntegration:
                 raise ValueError("Claude response did not contain valid JSON array")
 
         except ImportError as e:
-            raise NotImplementedError(
-                "Anthropic library not installed. Install with: pip install anthropic"
-            ) from e
+            raise NotImplementedError("Anthropic library not installed. Install with: pip install anthropic") from e
         except Exception as e:
             logger.error(f"Error generating with Claude: {e}")
             raise
@@ -146,9 +144,7 @@ class AIIntegration:
                 raise ValueError("OpenAI response did not contain valid JSON array")
 
         except ImportError as e:
-            raise NotImplementedError(
-                "OpenAI library not installed. Install with: pip install openai"
-            ) from e
+            raise NotImplementedError("OpenAI library not installed. Install with: pip install openai") from e
         except Exception as e:
             logger.error(f"Error generating with OpenAI: {e}")
             raise

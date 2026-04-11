@@ -111,9 +111,7 @@ async def add_project(
         Response confirming the project was added
     """
     try:  # pragma: no cover
-        await project_service.add_project(
-            project_data.name, project_data.path, set_default=project_data.set_default
-        )
+        await project_service.add_project(project_data.name, project_data.path, set_default=project_data.set_default)
 
         return ProjectStatusResponse(  # pyright: ignore [reportCallIssue]
             message=f"Project '{project_data.name}' added successfully",
@@ -144,9 +142,7 @@ async def remove_project(
     try:
         old_project = await project_service.get_project(name)
         if not old_project:  # pragma: no cover
-            raise HTTPException(
-                status_code=404, detail=f"Project: '{name}' does not exist"
-            )  # pragma: no cover
+            raise HTTPException(status_code=404, detail=f"Project: '{name}' does not exist")  # pragma: no cover
 
         await project_service.remove_project(name)
 
@@ -187,9 +183,7 @@ async def set_default_project(
         # get the new project
         new_default_project = await project_service.get_project(name)
         if not new_default_project:  # pragma: no cover
-            raise HTTPException(
-                status_code=404, detail=f"Project: '{name}' does not exist"
-            )  # pragma: no cover
+            raise HTTPException(status_code=404, detail=f"Project: '{name}' does not exist")  # pragma: no cover
 
         await project_service.set_default_project(name)
 

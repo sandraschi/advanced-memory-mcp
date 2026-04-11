@@ -191,9 +191,7 @@ def parse_inline_relations(content: str) -> list[dict[str, Any]]:
             start = end + 2
 
         if len(relations) >= MAX_LINKS:
-            logger.warning(
-                f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links"
-            )
+            logger.warning(f"Hit link limit ({MAX_LINKS}) during parsing - file may have excessive links")
 
         return relations
 

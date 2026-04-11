@@ -7,7 +7,7 @@ import pytest
 
 # Check if fpdf2 is available for testing
 try:
-    from fpdf import FPDF  # noqa: F401
+    from fpdf import FPDF
 
     FPDF_AVAILABLE = True
 except ImportError:
@@ -328,7 +328,7 @@ class TestExportSingleNotePDF:
     @pytest.mark.asyncio
     async def test_complex_markdown(self, export_dir, edge_case_notes):
         """Test exporting note with complex markdown."""
-        complex_note = [n for n in edge_case_notes if n["title"] == "Complex Markdown"][0]
+        complex_note = next(n for n in edge_case_notes if n["title"] == "Complex Markdown")
 
         result = await _export_single_note_pdf(complex_note, export_dir)
 
@@ -340,7 +340,7 @@ class TestExportSingleNotePDF:
     @pytest.mark.asyncio
     async def test_code_blocks(self, export_dir, edge_case_notes):
         """Test exporting note with code blocks."""
-        code_note = [n for n in edge_case_notes if n["title"] == "Code Blocks"][0]
+        code_note = next(n for n in edge_case_notes if n["title"] == "Code Blocks")
 
         result = await _export_single_note_pdf(code_note, export_dir)
 
@@ -354,9 +354,7 @@ class TestExportPDFNative:
     @pytest.mark.asyncio
     async def test_export_single_note(self, export_dir, sample_note):
         """Test exporting a single note."""
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = [sample_note]
 
             result = await export_pdf_native(
@@ -371,9 +369,7 @@ class TestExportPDFNative:
     @pytest.mark.asyncio
     async def test_export_multiple_notes(self, export_dir, multiple_notes):
         """Test exporting multiple notes - stitched together concept."""
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = multiple_notes
 
             result = await export_pdf_native(
@@ -392,9 +388,7 @@ class TestExportPDFNative:
     @pytest.mark.asyncio
     async def test_export_empty_folder(self, export_dir):
         """Test exporting from empty folder."""
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = []
 
             result = await export_pdf_native(
@@ -408,9 +402,7 @@ class TestExportPDFNative:
     @pytest.mark.asyncio
     async def test_export_edge_cases(self, export_dir, edge_case_notes):
         """Test exporting notes with edge cases."""
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = edge_case_notes
 
             result = await export_pdf_native(
@@ -433,9 +425,7 @@ class TestExportPDFNative:
             "permalink": "test/error",
         }
 
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = [error_note]
 
             # Mock PDF creation to raise an error
@@ -463,9 +453,7 @@ class TestExportPDFNative:
             "permalink": "test/test",
         }
 
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = [sample_note]
 
             await export_pdf_native(
@@ -494,9 +482,7 @@ class TestExportPDFNative:
             },
         ]
 
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             mock_get.return_value = notes
 
             result = await export_pdf_native(
@@ -663,9 +649,7 @@ class TestPDFExportIntegration:
             await search_service.index_entity(entity)
 
         # Now export
-        with patch(
-            "advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder"
-        ) as mock_get:
+        with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
             # Mock to return our created entities
             mock_get.return_value = [
                 {

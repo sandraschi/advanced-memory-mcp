@@ -102,9 +102,7 @@ def _extract_snippets(result: dict[str, Any], source: str) -> list[dict[str, Any
 
     # web: returns {"results": [...]} or similar
     elif source == "web":
-        results = result.get(
-            "results", result.get("organic_results", result.get("web_results", []))
-        )
+        results = result.get("results", result.get("organic_results", result.get("web_results", [])))
         for r in results[:10] if isinstance(results, list) else []:
             if isinstance(r, dict):
                 title = r.get("title", r.get("name", ""))
@@ -147,11 +145,7 @@ async def _run_source(source: str, topic: str, limit: int) -> tuple[list[dict], 
                 adn_github_research,
             )
 
-            _fn = (
-                adn_github_research.fn
-                if hasattr(adn_github_research, "fn")
-                else adn_github_research
-            )
+            _fn = adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research
             out = await _fn(
                 operation="search_repositories",
                 query=topic,
@@ -183,7 +177,7 @@ async def _run_source(source: str, topic: str, limit: int) -> tuple[list[dict], 
                 if s.get("url"):
                     citations.append(s["url"])
 
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.warning("skill_research_chain: source %s failed: %s", source, exc)
     return snippets, citations
 
@@ -257,9 +251,7 @@ async def run_chain(
         bundle.iteration_count = iteration + 1
         bundle.sources_used = list(used)
 
-        snippets_text = "\n\n".join(
-            f"[{s.get('source', '?')}] {s.get('content', '')}" for s in batch_snippets
-        )
+        snippets_text = "\n\n".join(f"[{s.get('source', '?')}] {s.get('content', '')}" for s in batch_snippets)
         if not snippets_text.strip():
             logger.warning("skill_research_chain: no snippets in iteration %d", iteration + 1)
             break
@@ -278,9 +270,7 @@ async def run_chain(
             if isinstance(raw_dict, dict):
                 analysis = ResearchGapAnalysis(
                     synthesis=str(raw_dict.get("synthesis", "")),
-                    gaps=list(raw_dict.get("gaps", []))
-                    if isinstance(raw_dict.get("gaps"), list)
-                    else [],
+                    gaps=list(raw_dict.get("gaps", [])) if isinstance(raw_dict.get("gaps"), list) else [],
                     next_sources=list(raw_dict.get("next_sources", []))
                     if isinstance(raw_dict.get("next_sources"), list)
                     else [],
@@ -295,7 +285,7 @@ async def run_chain(
                     coverage_score=0.5,
                     should_continue=False,
                 )
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             logger.warning("skill_research_chain: gap analysis failed: %s", exc)
             analysis = ResearchGapAnalysis(
                 synthesis="Research collected; LLM analysis skipped.",

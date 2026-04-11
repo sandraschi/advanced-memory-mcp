@@ -56,9 +56,7 @@ async def test_handle_tmp_files(watch_service, project_config, test_project, syn
 
 
 @pytest.mark.asyncio
-async def test_atomic_write_tmp_file_handling(
-    watch_service, project_config, test_project, sync_service
-):
+async def test_atomic_write_tmp_file_handling(watch_service, project_config, test_project, sync_service):
     """Test handling of file changes during atomic write operations."""
     project_dir = project_config.home
 

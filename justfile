@@ -5,7 +5,7 @@ set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
 # Display the SOTA Industrial Dashboard
 default:
     @$lines = Get-Content '{{justfile()}}'; \
-    Write-Host ' [SOTA] Industrial Operations Dashboard v1.3.2' -ForegroundColor White -BackgroundColor Cyan; \
+    Write-Host ' [SOTA] Industrial Operations Dashboard v1.7.0' -ForegroundColor White -BackgroundColor Cyan; \
     Write-Host '' ; \
     $currentCategory = ''; \
     foreach ($line in $lines) { \
@@ -27,17 +27,17 @@ default:
             } \
         } \
     } \
-    Write-Host "`n  [System State: PROD/HARDENED]" -ForegroundColor DarkGray; \
+    Write-Host "`n  [System State: PROD/INDUSTRIALIZED]" -ForegroundColor DarkGray; \
     Write-Host ''
 
 # ── Quality ───────────────────────────────────────────────────────────────────
 
-# Execute Ruff SOTA v13.1 linting
+# Execute Ruff SOTA v14.1 linting
 lint:
     Set-Location '{{justfile_directory()}}'
     uv run ruff check .
 
-# Execute Ruff SOTA v13.1 fix and formatting
+# Execute Ruff SOTA v14.1 fix and formatting
 fix:
     Set-Location '{{justfile_directory()}}'
     uv run ruff check . --fix --unsafe-fixes
@@ -85,10 +85,13 @@ type-check:
 
 # Clean build artifacts and cache files
 clean:
-    find . -type f -name '*.pyc' -delete
-    find . -type d -name '__pycache__' -exec rm -r {} +
-    rm -rf installer/build/ installer/dist/ dist/
-    rm -f rw.*.dmg .coverage.*
+    @Get-ChildItem -Recurse -Filter "__pycache__" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    @Get-ChildItem -Recurse -Filter "*.pyc" | Remove-Item -Force -ErrorAction SilentlyContinue
+    @If (Test-Path "installer/build") { Remove-Item -Recurse -Force "installer/build" }
+    @If (Test-Path "installer/dist") { Remove-Item -Recurse -Force "installer/dist" }
+    @If (Test-Path "dist") { Remove-Item -Recurse -Force "dist" }
+    @If (Test-Path ".coverage") { Remove-Item -Force ".coverage" }
+    @Get-ChildItem -Filter "rw.*.dmg" | Remove-Item -Force -ErrorAction SilentlyContinue
 
 # Format code with ruff
 format:
