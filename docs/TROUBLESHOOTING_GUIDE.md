@@ -1,4 +1,4 @@
-# Advanced Memory MCP - Troubleshooting Guide
+﻿# Advanced Memory MCP - Troubleshooting Guide
 
 **Version:** 1.0.0b2
 **Purpose:** Comprehensive troubleshooting for common issues
@@ -35,7 +35,7 @@ tail -20 ~/.config/claude/logs/mcp-server-advanced-memory-mcp.log
 #### Diagnosis
 ```bash
 # Check if Advanced Memory is installed
-python -c "import advanced_memory; print('✅ Installed')"
+python -c "import advanced_memory; print('âœ… Installed')"
 
 # Check MCP server
 python -m advanced_memory.mcp.server --help
@@ -399,12 +399,12 @@ adn_content("read", identifier="test-note")
 #### Common Log Patterns
 ```
 # Success patterns
-✅ Operation completed successfully
+âœ… Operation completed successfully
 [INFO] File synced: /path/to/file.md
 [INFO] Entity created: entity-id
 
 # Error patterns
-❌ Error: Database is locked
+âŒ Error: Database is locked
 [ERROR] File not found: /path/to/file.md
 [ERROR] Permission denied: /path/to/directory
 ```
@@ -612,3 +612,37 @@ When reporting issues, include:
 ---
 
 This troubleshooting guide should help resolve most common issues with Advanced Memory MCP. For persistent problems, please create a GitHub issue with detailed information.
+---
+
+## Sync Performance
+
+### Symptom: sync takes hours on a large vault
+
+**Root cause (fixed in 1.7.1):** Prior to 1.7.1, `handle_move` called `index_entity`
+on every detected move — including pure Windows path-separator normalisation (`/` → `\`).
+Each call re-read the full file and rebuilt FTS trigram stems. On a vault with thousands
+of entities indexed on another OS (or with forward-slash paths in the db), the first sync
+on Windows would re-index every single entity.
+
+**Also:** `resolve_relations` called `index_entity` on every resolved wikilink target,
+adding further unnecessary re-indexing after every sync.
+
+**Fix:** Upgrade to 1.7.1+. Path-only moves now use a cheap SQL path update; relation
+resolution no longer triggers re-indexing.
+
+**If still slow after 1.7.1:** The remaining time in `resolve_relations` is genuine —
+each unresolved wikilink does a hybrid vector search to find the target entity. If you
+have many unresolved relations this is expected. Check the sync log for `Resolving
+forward references count=N` to see how many there are.
+
+### Symptom: sync hangs and never completes
+
+Check if a very large file (>1MB markdown) is being indexed. The trigram FTS indexer
+is O(n) on content length. Files over ~500KB with dense prose will take 30-60 seconds
+each. Check the sync log tail for which `entity_id` it last processed.
+
+To identify large files in your vault:
+```powershell
+Get-ChildItem "C:\Users\sandr\Documents\claude-depot" -Recurse -Filter "*.md" |
+  Sort-Object Length -Descending | Select-Object -First 10 FullName, Length
+```

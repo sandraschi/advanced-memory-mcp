@@ -88,9 +88,11 @@ async def app_lifespan(
     # Initialize project session with default project
     session.initialize(app_config.default_project)
 
-    # Start file watcher if sync_changes is enabled
+    # Start file watcher if sync_changes is enabled (skipped in read-only mode)
+    from advanced_memory.readonly import IS_READONLY
+
     watch_task = None
-    if app_config.sync_changes:
+    if app_config.sync_changes and not IS_READONLY:
         from advanced_memory.services.initialization import initialize_file_sync
 
         # Start watch service as a background task with proper exception handling
@@ -159,7 +161,7 @@ if __name__ == "__main__":
 
     # Override host/port defaults for advanced-memory-mcp
     host = args.host or os.environ.get("MCP_HOST", "0.0.0.0")
-    port = args.port or int(os.environ.get("MCP_HTTP_PORT", os.environ.get("MCP_PORT", "10732")))
+    port = args.port or int(os.environ.get("MCP_HTTP_PORT", os.environ.get("MCP_PORT", "10703")))
 
     # For HTTP/SSE, restore stdout so server logs are visible (no stdio JSON-RPC)
     if transport in ("http", "sse") and hasattr(sys, "_original_stdout"):

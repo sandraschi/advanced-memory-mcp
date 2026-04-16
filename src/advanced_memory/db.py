@@ -92,7 +92,15 @@ def _create_engine_and_session(
     db_path: Path, db_type: DatabaseType = DatabaseType.FILESYSTEM
 ) -> tuple[AsyncEngine, async_sessionmaker[AsyncSession]]:
     """Internal helper to create engine and session maker."""
+    from advanced_memory.readonly import IS_READONLY
+
     db_url = DatabaseType.get_db_url(db_path, db_type)
+
+    # In read-only mode, open the SQLite file with ?mode=ro so any write attempt
+    # raises an OperationalError immediately rather than silently corrupting state.
+    if IS_READONLY and db_type == DatabaseType.FILESYSTEM:
+        db_url = f"sqlite+aiosqlite:///file:{db_path}?mode=ro&uri=true"
+
     logger.debug(f"Creating engine for db_url: {db_url}")
 
     # Configure SQLite with timeout and WAL mode for better concurrency

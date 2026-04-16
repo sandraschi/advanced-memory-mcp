@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { apiService } from './services/api'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
@@ -84,12 +84,12 @@ function App() {
   }
 
   const handleMetadataEdit = () => {
-    console.log('Editing note')
+    // editing note - handler invoked
     // TODO: Implement edit functionality
   }
 
   const handleMetadataDelete = () => {
-    console.log('Deleting note')
+    // deleting note - handler invoked
     // TODO: Implement delete functionality
   }
 

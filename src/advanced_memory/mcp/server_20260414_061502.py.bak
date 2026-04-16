@@ -1,0 +1,301 @@
+"""
+Advanced Memory FastMCP server with console output suppression.
+"""
+
+# CRITICAL: Configure logging FIRST, before any imports that might log
+# Logging is configured in mcp_instance.py which is imported below
+# This ensures consistent logging configuration across all entry points
+import os
+import sys
+
+from advanced_memory.utils.stdio import setup_stdio_binary_mode, suppress_stdout_pollution
+
+# CRITICAL: Set stdio to binary mode on Windows for Antigravity IDE compatibility
+# MUST be done BEFORE patching stdout, otherwise DevNullStdout won't have fileno()
+# Antigravity IDE is strict about JSON-RPC protocol and interprets trailing \r as "invalid trailing data"
+setup_stdio_binary_mode()
+
+# Detect if we're running in stdio mode (MCP server)
+_is_stdio_mode = (
+    not sys.stdout.isatty()
+    or os.getenv("MCP_STDIO_MODE", "").lower() == "true"
+    or "stdio" in sys.argv
+    or __name__ == "__main__"
+)
+
+if _is_stdio_mode:
+    # CRITICAL: Patch stdout to prevent ANY writes during initialization
+    suppress_stdout_pollution()
+
+import asyncio
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+from dataclasses import dataclass
+from typing import Any
+
+from fastmcp import FastMCP
+
+from advanced_memory.config import ConfigManager
+from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.services.initialization import initialize_app_lightweight
+
+
+@dataclass
+class AppContext:
+    watch_task: asyncio.Task | None
+    migration_manager: Any | None = None
+
+
+@asynccontextmanager
+async def app_lifespan(
+    server: FastMCP,
+) -> AsyncIterator[AppContext]:  # pragma: no cover
+    """MCP server lifespan - handles initialization and cleanup including file watching.
+
+    CRITICAL: This function runs AFTER stdout is restored for JSON-RPC communication.
+    All logging MUST go to stderr only to prevent polluting the JSON-RPC stream.
+    """
+    # defer import so tests can monkeypatch
+    from advanced_memory.mcp.project_session import session
+
+    # CRITICAL: Ensure loguru is configured for stderr-only logging during lifespan
+    # This prevents any accidental stdout writes that would break JSON-RPC protocol
+    try:
+        from loguru import logger
+
+        # Remove any handlers that might write to stdout
+        logger.remove()
+        # Only log to stderr, and only CRITICAL level to minimize output
+        logger.add(sys.stderr, level="CRITICAL", format="{message}")
+    except ImportError:
+        pass
+
+    app_config = ConfigManager().config
+    # Use lightweight initialization for fast MCP startup
+    await initialize_app_lightweight(app_config)
+    migration_manager = None  # Not needed for lightweight mode
+
+    # Initialize MCP resources now that we're in server mode
+    try:
+        from advanced_memory.mcp.mcp_instance import initialize_mcp_resources
+
+        initialize_mcp_resources()
+        logger.info("MCP resources initialized")
+    except ImportError:
+        # initialize_mcp_resources might not exist or module not found
+        logger.info("MCP resources already initialized or not available")
+
+    # Initialize project session with default project
+    session.initialize(app_config.default_project)
+
+    # Start file watcher if sync_changes is enabled
+    watch_task = None
+    if app_config.sync_changes:
+        from advanced_memory.services.initialization import initialize_file_sync
+
+        # Start watch service as a background task with proper exception handling
+        watch_task = asyncio.create_task(initialize_file_sync(app_config), name="mcp-file-watcher")
+
+        # Add callback to handle task completion/errors
+        def watch_task_done_callback(task):
+            try:
+                if task.exception() is not None:
+                    logger.error(f"File watcher task failed: {task.exception()}")
+            except asyncio.CancelledError:
+                logger.info("File watcher task cancelled")
+
+        watch_task.add_done_callback(watch_task_done_callback)
+
+    try:
+        yield AppContext(watch_task=watch_task, migration_manager=migration_manager)
+    finally:
+        # Cleanup on shutdown - ensure proper task cancellation
+        if watch_task and not watch_task.done():
+            logger.info("Cancelling file watcher task")
+            watch_task.cancel()
+            try:
+                # Wait for cancellation with timeout to prevent hanging
+                await asyncio.wait_for(watch_task, timeout=5.0)
+            except TimeoutError:
+                logger.warning("File watcher task did not cancel within timeout")
+            except asyncio.CancelledError:
+                logger.info("File watcher task cancelled successfully")
+            except Exception as e:
+                logger.error(f"Error during file watcher cleanup: {e}")
+
+        # Additional cleanup for any remaining resources
+        try:
+            # Force cleanup of any remaining file watchers or connections
+            import gc
+
+            gc.collect()
+        except Exception as e:
+            logger.error(f"Error during garbage collection: {e}")
+
+
+# Logging is now configured at the top of the file before any imports
+
+# Register specialized RAG bridge
+from advanced_memory.mcp import tools
+
+tools.register_adn_knowledge_rag(mcp)
+
+# Set the lifespan on the server instance (not during module import to avoid slow startup)
+mcp.lifespan = app_lifespan
+
+# Use the shared MCP instance as the server
+server = mcp
+
+# Add dual-standard runner: stdio (default, for IDEs) or HTTP/SSE (for web/remote)
+if __name__ == "__main__":
+    # Use unified transport module for CLI parsing
+    from advanced_memory.transport import create_argument_parser, resolve_transport
+
+    parser = create_argument_parser("advanced-memory-mcp")
+    args = parser.parse_args()
+
+    # Resolve transport from args/env (supports --stdio, --http, --sse, MCP_TRANSPORT)
+    transport = resolve_transport(args)
+
+    # Override host/port defaults for advanced-memory-mcp
+    host = args.host or os.environ.get("MCP_HOST", "0.0.0.0")
+    port = args.port or int(os.environ.get("MCP_HTTP_PORT", os.environ.get("MCP_PORT", "10703")))
+
+    # For HTTP/SSE, restore stdout so server logs are visible (no stdio JSON-RPC)
+    if transport in ("http", "sse") and hasattr(sys, "_original_stdout"):
+        sys.stdout = sys._original_stdout
+
+    # CRITICAL: Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
+    # But ensure it's completely clean and in binary mode for Antigravity IDE compatibility
+    if transport == "stdio" and _is_stdio_mode and hasattr(sys, "_original_stdout"):
+        # Restore original stdout
+        # sys.stdout = sys._original_stdout
+
+        # CRITICAL: Wrap stdout to force \n (LF) line endings instead of \r\n (CRLF) on Windows
+        # Antigravity IDE strictly requires \n and fails with "invalid trailing data" on \r\n
+
+        class CRFilterBuffer:
+            """Wraps a binary stream and filters out carriage returns (\r)."""
+
+            def __init__(self, original_buffer):
+                self.original = original_buffer
+
+            def write(self, b: bytes) -> int:
+                try:
+                    # Filter out \r (byte 13)
+                    # This ensures even if TextIOWrapper sends \r\n, only \n hits the stream
+                    filtered = b.replace(b"\r", b"")
+                    if not filtered:
+                        return 0
+                    if hasattr(self.original, "closed") and self.original.closed:
+                        return len(b)
+                    self.original.write(filtered)
+                    return len(b)  # Return original length to satisfy caller expectations
+                except (ValueError, OSError):
+                    return len(b)
+
+            def flush(self):
+                try:
+                    if hasattr(self.original, "flush") and not (
+                        hasattr(self.original, "closed") and self.original.closed
+                    ):
+                        self.original.flush()
+                except (ValueError, OSError):
+                    pass
+
+            # Delegate other methods
+            def __getattr__(self, name):
+                return getattr(self.original, name)
+
+        class ForceLFStdout:
+            """Wraps stdout to ensure only LF (\n) is used for line endings."""
+
+            def __init__(self, original_stdout):
+                self.original = original_stdout
+                self.encoding = getattr(original_stdout, "encoding", "utf-8")
+
+            @property
+            def buffer(self):
+                try:
+                    original_buffer = getattr(self.original, "buffer", None)
+                    if original_buffer:
+                        return CRFilterBuffer(original_buffer)
+                    return None
+                except ValueError:  # closed file
+                    return None
+
+            def write(self, s: str) -> int:
+                try:
+                    if hasattr(self.original, "closed") and self.original.closed:
+                        return len(s)
+                    # Replace \r\n with \n to ensure strict LF line endings
+                    return self.original.write(s.replace("\r\n", "\n"))
+                except ValueError:  # I/O operation on closed file
+                    return len(s)
+
+            def flush(self) -> None:
+                try:
+                    if hasattr(self.original, "flush") and not (
+                        hasattr(self.original, "closed") and self.original.closed
+                    ):
+                        self.original.flush()
+                except ValueError:
+                    pass
+
+            def isatty(self) -> bool:
+                return getattr(self.original, "isatty", lambda: False)()
+
+            def readable(self) -> bool:
+                return getattr(self.original, "readable", lambda: False)()
+
+            def writable(self) -> bool:
+                return getattr(self.original, "writable", lambda: True)()
+
+            def seekable(self) -> bool:
+                return getattr(self.original, "seekable", lambda: False)()
+
+            def fileno(self) -> int:
+                return getattr(self.original, "fileno", lambda: 1)()
+
+        sys.stdout = ForceLFStdout(sys._original_stdout)
+
+        # CRITICAL: Set binary mode AFTER restoration for Antigravity IDE compatibility
+        # This must happen after restoration but before FastMCP starts
+        if os.name == "nt":  # Windows
+            try:
+                import msvcrt
+
+                # Set stdout to binary mode to prevent line ending conversion
+                # This fixes "invalid trailing data" errors with Antigravity IDE
+                # We need to access the underlying file descriptor of the original stream
+                msvcrt.setmode(sys._original_stdout.fileno(), os.O_BINARY)
+            except (ImportError, OSError, AttributeError):
+                pass  # If binary mode can't be set, continue anyway
+
+        # Ensure stdout is clean and unbuffered for JSON-RPC
+        sys.stdout.flush()
+        # Set unbuffered mode to prevent any buffering issues
+        os.environ.setdefault("PYTHONUNBUFFERED", "1")
+
+        # CRITICAL: Ensure loguru logger is configured to NEVER write to stdout
+        # This prevents any accidental stdout writes during lifespan initialization
+        try:
+            from loguru import logger
+
+            # Remove all handlers and ensure only stderr logging
+            logger.remove()
+            logger.add(sys.stderr, level="CRITICAL", format="{message}")
+        except ImportError:
+            pass
+
+    # FastMCP 2.14.4+: stdio (default for IDEs) or http/sse for web/remote
+    # CRITICAL: show_banner=False prevents FastMCP from writing banner to stdout
+    if transport == "stdio":
+        server.run(show_banner=False)
+    else:
+        server.run(
+            transport=transport,
+            host=host,
+            port=port,
+            show_banner=False,
+        )

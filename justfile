@@ -1,6 +1,6 @@
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
 
-# ── Dashboard ─────────────────────────────────────────────────────────────────
+# â”€â”€ Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 # Display the SOTA Industrial Dashboard
 default:
@@ -9,11 +9,11 @@ default:
     Write-Host '' ; \
     $currentCategory = ''; \
     foreach ($line in $lines) { \
-        if ($line -match '^# ── ([^─]+) ─') { \
+        if ($line -match '^# â”€â”€ ([^â”€]+) â”€') { \
             $currentCategory = $matches[1].Trim(); \
             Write-Host "`n  $currentCategory" -ForegroundColor Cyan; \
-            Write-Host ('  ' + ('─' * 45)) -ForegroundColor Gray; \
-        } elseif ($line -match '^# ([^─].+)') { \
+            Write-Host ('  ' + ('â”€' * 45)) -ForegroundColor Gray; \
+        } elseif ($line -match '^# ([^â”€].+)') { \
             $desc = $matches[1].Trim(); \
             $idx = [array]::IndexOf($lines, $line); \
             if ($idx -lt $lines.Count - 1) { \
@@ -30,20 +30,24 @@ default:
     Write-Host "`n  [System State: PROD/INDUSTRIALIZED]" -ForegroundColor DarkGray; \
     Write-Host ''
 
-# ── Quality ───────────────────────────────────────────────────────────────────
+# â”€â”€ Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-# Execute Ruff SOTA v14.1 linting
+# Execute repo-wide quality checks (Ruff + Biome)
 lint:
     Set-Location '{{justfile_directory()}}'
     uv run ruff check .
+    Set-Location '{{justfile_directory()}}/webapp/frontend'
+    npx biome check src
 
-# Execute Ruff SOTA v14.1 fix and formatting
+# Execute repo-wide auto-fixes and formatting (Ruff + Biome)
 fix:
     Set-Location '{{justfile_directory()}}'
     uv run ruff check . --fix --unsafe-fixes
     uv run ruff format .
+    Set-Location '{{justfile_directory()}}/webapp/frontend'
+    npx biome check --write src
 
-# ── Hardening ─────────────────────────────────────────────────────────────────
+# â”€â”€ Hardening â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 # Execute Bandit security audit
 check-sec:
@@ -65,7 +69,7 @@ install:
     pip install -e ".[dev]"
     uv sync
     @echo ""
-    @echo "💡 Remember to activate the virtual environment by running: source .venv/bin/activate"
+    @echo "ðŸ’¡ Remember to activate the virtual environment by running: source .venv/bin/activate"
 
 # Run unit tests in parallel
 test-unit:
@@ -93,9 +97,11 @@ clean:
     @If (Test-Path ".coverage") { Remove-Item -Force ".coverage" }
     @Get-ChildItem -Filter "rw.*.dmg" | Remove-Item -Force -ErrorAction SilentlyContinue
 
-# Format code with ruff
+# Format code with ruff and Biome
 format:
     uv run ruff format .
+    Set-Location '{{justfile_directory()}}/webapp/frontend'
+    npx biome check --write src
 
 # Run MCP inspector tool
 run-inspector:
@@ -135,40 +141,40 @@ release version:
 
     # Validate version format
     if [[ ! "{{version}}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "❌ Invalid version format. Use: v1.6.2"
+        echo "âŒ Invalid version format. Use: v1.6.2"
         exit 1
     fi
 
     # Extract version number without 'v' prefix
     VERSION_NUM=$(echo "{{version}}" | sed 's/^v//')
 
-    echo "🚀 Creating SOTA stable release {{version}}"
+    echo "ðŸš€ Creating SOTA stable release {{version}}"
 
     # Pre-flight checks
-    echo "📋 Running pre-flight checks..."
+    echo "ðŸ“‹ Running pre-flight checks..."
     if [[ -n $(git status --porcelain) ]]; then
-        echo "❌ Uncommitted changes found. Please commit or stash them first."
+        echo "âŒ Uncommitted changes found. Please commit or stash them first."
         exit 1
     fi
 
     if [[ $(git branch --show-current) != "main" ]]; then
-        echo "❌ Not on main branch. Switch to main first."
+        echo "âŒ Not on main branch. Switch to main first."
         exit 1
     fi
 
     # Check if tag already exists
     if git tag -l "{{version}}" | grep -q "{{version}}"; then
-        echo "❌ Tag {{version}} already exists"
+        echo "âŒ Tag {{version}} already exists"
         exit 1
     fi
 
     # Run quality checks
-    echo "🔍 Running quality checks..."
+    echo "ðŸ” Running quality checks..."
     just check
 
     # Update version in __init__.py (if it exists)
     if [ -f src/advanced_memory/__init__.py ]; then
-        echo "📝 Updating version in src/advanced_memory/__init__.py..."
+        echo "ðŸ“ Updating version in src/advanced_memory/__init__.py..."
         sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/advanced_memory/__init__.py
         rm -f src/advanced_memory/__init__.py.bak
         git add src/advanced_memory/__init__.py
@@ -176,16 +182,16 @@ release version:
     fi
 
     # Create and push tag
-    echo "🏷️  Creating tag {{version}}..."
+    echo "ðŸ·ï¸  Creating tag {{version}}..."
     git tag "{{version}}"
 
-    echo "📤 Pushing to GitHub..."
+    echo "ðŸ“¤ Pushing to GitHub..."
     git push origin main
     git push origin "{{version}}"
 
-    echo "✅ Release {{version}} created successfully!"
-    echo "📦 Industrial Launch initiated (OIDC Handshake)."
-    echo "🔗 Monitor at: https://github.com/sandraschi/advanced-memory-mcp/actions"
+    echo "âœ… Release {{version}} created successfully!"
+    echo "ðŸ“¦ Industrial Launch initiated (OIDC Handshake)."
+    echo "ðŸ”— Monitor at: https://github.com/sandraschi/advanced-memory-mcp/actions"
 
 # Create a beta release (e.g., just beta v0.13.2b1)
 beta version:
@@ -194,39 +200,39 @@ beta version:
 
     # Validate version format (allow beta/rc suffixes)
     if [[ ! "{{version}}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(b[0-9]+|rc[0-9]+)$ ]]; then
-        echo "❌ Invalid beta version format. Use: v0.13.2b1 or v0.13.2rc1"
+        echo "âŒ Invalid beta version format. Use: v0.13.2b1 or v0.13.2rc1"
         exit 1
     fi
 
     # Extract version number without 'v' prefix
     VERSION_NUM=$(echo "{{version}}" | sed 's/^v//')
 
-    echo "🧪 Creating beta release {{version}}"
+    echo "ðŸ§ª Creating beta release {{version}}"
 
     # Pre-flight checks
-    echo "📋 Running pre-flight checks..."
+    echo "ðŸ“‹ Running pre-flight checks..."
     if [[ -n $(git status --porcelain) ]]; then
-        echo "❌ Uncommitted changes found. Please commit or stash them first."
+        echo "âŒ Uncommitted changes found. Please commit or stash them first."
         exit 1
     fi
 
     if [[ $(git branch --show-current) != "main" ]]; then
-        echo "❌ Not on main branch. Switch to main first."
+        echo "âŒ Not on main branch. Switch to main first."
         exit 1
     fi
 
     # Check if tag already exists
     if git tag -l "{{version}}" | grep -q "{{version}}"; then
-        echo "❌ Tag {{version}} already exists"
+        echo "âŒ Tag {{version}} already exists"
         exit 1
     fi
 
     # Run quality checks
-    echo "🔍 Running quality checks..."
+    echo "ðŸ” Running quality checks..."
     just check
 
     # Update version in __init__.py
-    echo "📝 Updating version in __init__.py..."
+    echo "ðŸ“ Updating version in __init__.py..."
     sed -i.bak "s/__version__ = \".*\"/__version__ = \"$VERSION_NUM\"/" src/basic_memory/__init__.py
     rm -f src/basic_memory/__init__.py.bak
 
@@ -235,85 +241,85 @@ beta version:
     git commit -m "chore: update version to $VERSION_NUM for {{version}} beta release"
 
     # Create and push tag
-    echo "🏷️  Creating tag {{version}}..."
+    echo "ðŸ·ï¸  Creating tag {{version}}..."
     git tag "{{version}}"
 
-    echo "📤 Pushing to GitHub..."
+    echo "ðŸ“¤ Pushing to GitHub..."
     git push origin main
     git push origin "{{version}}"
 
-    echo "✅ Beta release {{version}} created successfully!"
-    echo "📦 GitHub Actions will build and publish to PyPI as pre-release"
-    echo "🔗 Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
-    echo "📥 Install with: uv tool install advanced-memory --pre"
+    echo "âœ… Beta release {{version}} created successfully!"
+    echo "ðŸ“¦ GitHub Actions will build and publish to PyPI as pre-release"
+    echo "ðŸ”— Monitor at: https://github.com/advanced-memory/advanced-memory/actions"
+    echo "ðŸ“¥ Install with: uv tool install advanced-memory --pre"
 
 # List all available recipes
-# ═══════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # CI/CD AUTOMATION - Never break GitHub Actions again!
-# ═══════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 # Pre-push validation (run before every push!)
 pre-push:
-    @echo "🔍 Running pre-push validation..."
+    @echo "ðŸ” Running pre-push validation..."
     @pwsh ./scripts/pre-push-check.ps1
 
 # Quick validation (faster, skips coverage)
 quick-check:
-    @echo "⚡ Quick validation..."
+    @echo "âš¡ Quick validation..."
     @pwsh ./scripts/pre-push-check.ps1 -Quick
 
 # Safe push with validation + monitoring
 safe-push message:
-    @echo "🚀 Safe push with validation..."
+    @echo "ðŸš€ Safe push with validation..."
     @pwsh ./scripts/safe-push.ps1 -Message "{{message}}"
 
 # Monitor CI after manual push
 monitor:
-    @echo "🔍 Monitoring CI workflows..."
+    @echo "ðŸ” Monitoring CI workflows..."
     @pwsh ./scripts/monitor-ci.ps1 -AutoFix -Continuous
 
 # Check CI success metrics
 ci-stats:
-    @echo "📊 CI success metrics..."
+    @echo "ðŸ“Š CI success metrics..."
     @pwsh ./scripts/ci-metrics.ps1
 
 # Detailed CI metrics with history
 ci-stats-detailed:
-    @echo "📊 Detailed CI metrics..."
+    @echo "ðŸ“Š Detailed CI metrics..."
     @pwsh ./scripts/ci-metrics.ps1 -Detailed
 
 # Install pre-commit hooks (one-time setup)
 setup-hooks:
-    @echo "🔧 Installing pre-commit hooks..."
+    @echo "ðŸ”§ Installing pre-commit hooks..."
     uv run pre-commit install
-    @echo "✅ Pre-commit hooks installed"
-    @echo "💡 Hooks will run automatically before every commit"
+    @echo "âœ… Pre-commit hooks installed"
+    @echo "ðŸ’¡ Hooks will run automatically before every commit"
 
 # Run pre-commit on all files
 pre-commit-all:
-    @echo "🔍 Running pre-commit on all files..."
+    @echo "ðŸ” Running pre-commit on all files..."
     uv run pre-commit run --all-files
 
-# ═══════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # REPOSITORY BACKUP - Automated backups excluding caches & venvs
-# ═══════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 # Create repository backup (excludes .venv, caches, ~30-40 MB)
 backup:
-    @echo "📦 Creating repository backup..."
+    @echo "ðŸ“¦ Creating repository backup..."
     @pwsh ./scripts/backup-repo.ps1
 
 # Create backup including dist/ folder
 backup-with-dist:
-    @echo "📦 Creating repository backup (with dist/)..."
+    @echo "ðŸ“¦ Creating repository backup (with dist/)..."
     @pwsh ./scripts/backup-repo.ps1 -IncludeDist
 
 # Create backup to specific location
 backup-to path:
-    @echo "📦 Creating repository backup to {{path}}..."
+    @echo "ðŸ“¦ Creating repository backup to {{path}}..."
     @pwsh ./scripts/backup-repo.ps1 -OutputPath "{{path}}"
 
 # Create backup with WinRAR instead of 7-Zip
 backup-winrar:
-    @echo "📦 Creating repository backup (WinRAR)..."
+    @echo "ðŸ“¦ Creating repository backup (WinRAR)..."
     @pwsh ./scripts/backup-repo.ps1 -UseWinRAR

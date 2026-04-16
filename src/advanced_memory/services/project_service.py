@@ -83,7 +83,7 @@ class ProjectService:
         return os.environ.get("ADVANCED_MEMORY_PROJECT", self.config_manager.default_project)
 
     async def list_projects(self) -> Sequence[Project]:
-        return await self.repository.find_all()
+        return await self.repository.get_active_projects()
 
     async def get_project(self, name: str) -> Project | None:
         """Get the file path for a project by name or permalink."""

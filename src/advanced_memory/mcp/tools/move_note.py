@@ -8,6 +8,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_get, call_post
+from advanced_memory.readonly import IS_READONLY, READONLY_ERROR
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.project_info import ProjectList
 from advanced_memory.utils import validate_project_path
@@ -386,6 +387,8 @@ async def move_note(
     - Re-indexes the entity for search
     - Maintains all observations and relations
     """
+    if IS_READONLY:
+        return READONLY_ERROR
     logger.debug(f"Moving note: {identifier} to {destination_path}")
 
     active_project = get_active_project(project)

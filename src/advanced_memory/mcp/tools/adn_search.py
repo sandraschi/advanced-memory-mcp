@@ -269,12 +269,12 @@ async def _notes_search(
 
     # Prepare structured search results
     formatted_results = []
-    print(f"DEBUG: result type: {type(result)}")
+    logger.debug(f"result type: {type(result)}")
     if hasattr(result, "results"):
-        print(f"DEBUG: result.results type: {type(result.results)}")
+        logger.debug(f"result.results type: {type(result.results)}")
         if result.results:
-            print(f"DEBUG: result.results[0] type: {type(result.results[0])}")
-            print(f"DEBUG: result.results[0] content: {result.results[0]}")
+            logger.debug(f"result.results[0] type: {type(result.results[0])}")
+            logger.debug(f"result.results[0] content: {result.results[0]}")
 
     for idx, item in enumerate(result.results, 1):
         title = item.title or "Untitled"

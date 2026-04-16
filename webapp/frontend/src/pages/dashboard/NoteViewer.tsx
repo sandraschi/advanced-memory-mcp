@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Search, FileText, Eye, Download, Share, MoreVertical, Filter, X, Maximize2, Minimize2, List, Network, Folder, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { apiService } from '../../services/api'
+
+const DEBUG = import.meta.env.DEV
 
 interface Note {
   id: string
@@ -61,7 +63,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       setServerStatus(isRunning ? 'running' : 'stopped')
       return isRunning
     } catch (error) {
-      console.log('Bridge server not responding:', error)
+      DEBUG && console.log('Bridge server not responding:', error)
       setServerStatus('stopped')
       return false
     }
@@ -73,7 +75,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         setServerStatus('starting')
         setServerError('')
 
-        console.log('Attempting to start ADN MCP server...')
+        DEBUG && console.log('Attempting to start ADN MCP server...')
 
         // Try to start the server by opening a terminal/command prompt
         // This will open a new terminal window with the server start command
@@ -131,11 +133,11 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   /*
     const _startStartupService = async (): Promise<boolean> => {
       try {
-        console.log('Attempting to start startup service...')
+        DEBUG && console.log('Attempting to start startup service...')
 
         // Since we can't directly execute from browser, we'll try to use a web-based approach
         // For now, we'll assume the startup service should be running and proceed
-        console.log('Startup service check/attempt completed')
+        DEBUG && console.log('Startup service check/attempt completed')
 
         // Small delay to allow for any startup
         await new Promise(resolve => setTimeout(resolve, 500))
@@ -153,7 +155,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       setServerStatus('starting')
       setServerError('Starting all ADN services...')
 
-      console.log('Attempting to auto-start all services...')
+      DEBUG && console.log('Attempting to auto-start all services...')
 
       // Try to start everything via the auto-start service
       const response = await fetch('http://localhost:10735/start-all', {
@@ -162,7 +164,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       })
 
       if (response.ok) {
-        console.log('All services start initiated')
+        DEBUG && console.log('All services start initiated')
 
         // Wait for services (incl. bridge via start-bridge) to start up
         await new Promise(resolve => setTimeout(resolve, 5000))
@@ -170,21 +172,21 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         let isRunning = await checkServerStatus()
         if (isRunning) {
           setServerError('')
-          console.log('All services started successfully')
+          DEBUG && console.log('All services started successfully')
           return true
         }
 
         // Bridge may still be starting; try explicit start-bridge then retry
-        console.log('Bridge not up after start-all, trying start-bridge...')
+        DEBUG && console.log('Bridge not up after start-all, trying start-bridge...')
         isRunning = await startBridgeServer()
         if (isRunning) return true
 
-        console.log('Services started but bridge server not responding')
+        DEBUG && console.log('Services started but bridge server not responding')
         setServerError('Services started but bridge server not responding. Using demo data.')
         setServerStatus('stopped')
         return false
       } else {
-        console.log('Auto-start service not available, trying manual startup...')
+        DEBUG && console.log('Auto-start service not available, trying manual startup...')
         return await startBridgeServer()
       }
     } catch (error) {
@@ -199,12 +201,12 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     try {
       setServerStatus('starting')
       setServerError('')
-      console.log('Attempting manual bridge server startup...')
+      DEBUG && console.log('Attempting manual bridge server startup...')
 
       // First ensure startup service is available
       let startupRunning = await checkStartupService()
       if (!startupRunning) {
-        console.log('Startup service not running, attempting to start it...')
+        DEBUG && console.log('Startup service not running, attempting to start it...')
         // Try to use auto-start service for startup service
         try {
           await fetch('http://localhost:10735/start-all', {
@@ -214,12 +216,12 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
           await new Promise(resolve => setTimeout(resolve, 2000))
           startupRunning = await checkStartupService()
         } catch (autoStartError) {
-          console.log('Auto-start service not available either')
+          DEBUG && console.log('Auto-start service not available either')
         }
       }
 
       if (!startupRunning) {
-        console.log('Could not start startup service, using mock data')
+        DEBUG && console.log('Could not start startup service, using mock data')
         setServerError('Could not start required services. Using demo data.')
         setServerStatus('stopped')
         return false
@@ -232,7 +234,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       })
 
       if (response.ok) {
-        console.log('Bridge server start initiated')
+        DEBUG && console.log('Bridge server start initiated')
 
         // Wait for the bridge server to start up
         await new Promise(resolve => setTimeout(resolve, 3000))
@@ -241,16 +243,16 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         const isRunning = await checkServerStatus()
         if (isRunning) {
           setServerError('')
-          console.log('Bridge server started successfully')
+          DEBUG && console.log('Bridge server started successfully')
           return true
         } else {
-          console.log('Bridge server did not respond after startup attempt')
+          DEBUG && console.log('Bridge server did not respond after startup attempt')
           setServerError('Bridge server started but not responding. Using demo data.')
           setServerStatus('stopped')
           return false
         }
       } else {
-        console.log('Startup service responded with error, using mock data')
+        DEBUG && console.log('Startup service responded with error, using mock data')
         setServerError('Could not start bridge server. Using demo data.')
         setServerStatus('stopped')
         return false
@@ -270,7 +272,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       let serverRunning = await checkServerStatus()
 
       if (!serverRunning) {
-        console.log('Bridge server not running, attempting auto-start...')
+        DEBUG && console.log('Bridge server not running, attempting auto-start...')
         // Try to auto-start all services
         serverRunning = await startAllServices()
       }
@@ -400,10 +402,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     try {
       const response = await apiService.getNote(note.id)
       if (response.success && response.data) {
-        setSelectedNote(response.data)
+        // Merge full content into existing note object to preserve tags, date, etc.
+        setSelectedNote(prev => prev && prev.id === note.id ? {
+          ...prev,
+          content: response.data!.content,
+          title: response.data!.title || prev.title
+        } : prev)
       }
     } catch (error) {
-      console.error('Failed to fetch full note content:', error)
       // Keep the basic note data if API call fails
     }
   }
@@ -745,10 +751,18 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 </div>
               ) : notes.length === 0 ? (
                 <div className="text-center py-8">
-                  <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Notes Found</h3>
+                  {searchQuery.trim() === '' ? (
+                    <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  ) : (
+                    <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  )}
+                  <h3 className="text-lg font-semibold mb-2">
+                    {searchQuery.trim() === '' ? 'Enter a search term' : 'No Notes Found'}
+                  </h3>
                   <p className="text-muted-foreground mb-4">
-                    Your server is running but no notes were found. Create some notes to get started.
+                    {searchQuery.trim() === '' 
+                      ? 'Your server is running. Type a search term above to browse your notes.' 
+                      : 'Your server is running but no matching notes were found.'}
                   </p>
                   <button
                     onClick={() => loadNotes(1)}

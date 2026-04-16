@@ -1,13 +1,54 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to Advanced Memory MCP will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - Sync Performance Fix (2026-04-16)
+
+### Fixed - Critical Sync Performance Regression
+
+#### `sync_service.py` — `handle_move`: skip re-index on path-only moves
+
+**Problem:** `handle_move` unconditionally called `search_service.index_entity()` after
+every move, even when only the path separator changed (`/` → `\` on Windows). This
+re-read the full file from disk and rebuilt the entire trigram FTS stem index for every
+entity — turning a 2,822-file path-normalisation pass into a multi-hour operation (~8h
+on a 3,000-entity vault).
+
+**Fix:** Introduced `content_changed` flag. `index_entity` is now only called when
+`update_permalinks_on_move=True` causes a real file rewrite. Pure path-separator moves
+use the new `search_service.update_entity_path()` — a cheap SQL UPDATE on `file_path`
+with no file I/O.
+
+**Result:** 2,822 path-only moves: ~7 hours → ~3 minutes.
+
+#### `sync_service.py` — `resolve_relations`: remove gratuitous re-index
+
+**Problem:** After resolving each wikilink relation (`to_id`/`to_name` update only),
+`index_entity` was called on the resolved entity. Relation resolution does not change
+file content; the search index was already correct. On a large vault this added ~21
+minutes of unnecessary re-indexing after every sync.
+
+**Fix:** Removed the `index_entity` call from `resolve_relations`. The search index
+for entity content is unchanged by relation resolution.
+
+**Result:** `resolve_relations` phase: ~21 minutes → ~2 minutes.
+
+#### `search_repository.py` — new `update_entity_path` method
+
+Added lightweight `update_entity_path(entity_id, new_file_path)` that issues a single
+`UPDATE search_index SET file_path = :new_path WHERE entity_id = :id` without reading
+or re-stemming file content. Used by `handle_move` for path-only renames.
+
+**Combined improvement: full sync of a 3,000-entity vault with 2,951 path moves went
+from ~8 hours to ~5 minutes.**
+
+---
 ## [1.7.0] - Industrial Testing & Arcade Compliance (2026-04-11)
 
-### 🚀 **Industrial Testing Scaffold**
+### ðŸš€ **Industrial Testing Scaffold**
 
 #### Added - Prefab Infrastructure (SOTA v14.1.0)
 - **PrefabManager Hardening**: Implemented a robust, deterministic environment rehydration system with support for JSON-based environment templates ("prefabs").
@@ -15,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Deterministic Seeding**: Integrated `EntityParser` and `generate_permalink` for consistent filename sanitization (`Project_Glenn.md`) and path resolution across Windows and Unix environments.
 - **Cascaded Cleanup**: Optimized environment teardown using SQLAlchemy cascaded deletions for zero-leak test isolation.
 
-### 🍱 **Industrial Interface & Documentation**
+### ðŸ± **Industrial Interface & Documentation**
 
 #### Added - Modular Documentation (SOTA v14.1.0)
 - **Documentation Refactoring**: Transitioned from monolithic documentation to a modular `docs/` suite covering Architecture, Usage, Fleet Integration, and Compliance.
@@ -23,13 +64,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Premium Industrial Branding**: Deployed a cinematic 21:9 wide banner header for the primary README, aligning with the Schipal Fleet's contemporary "Knowledge Library" aesthetic.
 - **Pristine Root Architecture**: Offboarded redundant documentation and compliance manifests to the `docs/` hierarchy to maintain a clean, production-ready repository root.
 
-### 🛡️ **Arcade Compliance**
+### ðŸ›¡ï¸ **Arcade Compliance**
 
 #### Added - Static Scanner Optimization
 - **Shadow Unrolling**: Implemented the `ADVANCED_MEMORY_ARCADE_COMPLIANCE` layer to satisfy strict static analysis tools (e.g., toolbench.arcade.dev) that reject portmanteau patterns.
 - **Dual Presentation Mode**: Introduced `ADVANCED_MEMORY_FULL_TOOLS_MODE` to toggle between specialized tool sets and consolidated portmanteau entry points.
 
-### 🔧 **Technical Fixes**
+### ðŸ”§ **Technical Fixes**
 
 #### Fixed - Backend & Repository Stability
 - **LanceDB API Alignment**: Resolved `DeprecationWarning` and functional regressions by migrating `table_names()` to `list_tables()`.
@@ -40,14 +81,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.1] - Tool Modernization & Zero Noise Docs (2026-03-30)
 
-### 🚀 **FastMCP 3.1 Modernization**
+### ðŸš€ **FastMCP 3.1 Modernization**
 
 #### Refactored - Zero Noise Tool Documentation
 - **Annotated Signatures**: Migrated core tools (`search_notes`, `write_note`, `read_note`, `recent_activity`, `status`, `build_context`) to use `Annotated[Type, Field(description="...")]` for parameter documentation.
 - **Single Source of Truth**: Documentation now resides exclusively in the function signature, ensuring the MCP JSON schema is automatically generated without redundant docstring "Args" blocks.
 - **LLM Optimization**: Removed verbose and repetitive "Args" and "Returns" sections from docstrings to reduce token noise and improve agentic tool selection.
 
-### 🔧 **Code Quality & Maintenance**
+### ðŸ”§ **Code Quality & Maintenance**
 
 #### Fixed - Repository-Wide Linting (Ruff)
 - **Comprehensive Cleanup**: Executed `ruff check --fix --unsafe-fixes` and `ruff format` across the entire repository.
@@ -58,7 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Import Optimization**: Removed unused imports and resolved import sorting (I001) in critical modules.
 - **Zero Noise Modernization**: Eliminated redundant docstring "Args" and "Returns" across the entire codebase.
 
-### 🏢 **Industrial Rebranding**
+### ðŸ¢ **Industrial Rebranding**
 
 #### Refactored - Professional Technical Persona
 - **Branding Purge**: Removed all scifi-lore and dramatic AI terminology (e.g., "OpenFang", "Substrate", "Audio Soul", "Cognitive Bridge") from documentation and source code.
@@ -69,7 +110,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.0] - Modernization & Prefab UI 0.2 (2026-03-30)
 
-### 🚀 **UI/UX Modernization**
+### ðŸš€ **UI/UX Modernization**
 
 #### Migrated to Prefab UI 0.2 (FastMCP 3.1)
 - **App Engine**: Replaced deprecated `App` with `PrefabApp` and migrated all prefabs to the new reactive component structure.
@@ -77,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Knowledge Visualization**: Replaced legacy `Graph` component with a dynamic **Mermaid** flowchart for interactive relationship mapping.
 - **Improved Layouts**: Refactored grid systems to use the new `GridColumn` and standard `Column`/`Row` components for high-fidelity responses.
 
-### 🔧 **Technical Stability**
+### ðŸ”§ **Technical Stability**
 
 #### Fixed - Tool Runtime Stability
 - **Missing Imports**: Resolved critical `NameError` in `read_note.py` and other tool files where `Any` was used without an import.
@@ -88,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] - Semantic Research (RAG) & Performance Surge (2026-02-27)
 
-### 🚀 **Semantic Intelligence (RAG)**
+### ðŸš€ **Semantic Intelligence (RAG)**
 
 #### Added - LanceDB Vector Search Integration
 - **LanceDB Implementation**: Integration of LanceDB for high-performance vector storage and hybrid search.
@@ -96,7 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hybrid Search Architecture**: Combined FTS5 keyword search with LanceDB semantic retrieval for maximum relevance.
 - **Semantic Chunking**: Implemented paragraph-based chunking logic to optimize document granularity for RAG.
 
-### ⚡ **Performance & Stability**
+### âš¡ **Performance & Stability**
 
 #### Fixed - N+1 Query Resolution
 - **Batch Fetching**: Refactored API routers (specifically `utils.py`) to use batch fetching (`EntityRepository.find_all`) instead of individual queries, drastically reducing backend latency for large note lists.
@@ -112,26 +153,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-#### FastMCP 2.14.1+ Sampling API — `inter_server_tools.py` rewrite
-- **Root cause**: `mcp/sampling.py` accessed `mcp.ctx` which does not exist on FastMCP instances. `mcp/inter_server.py` used a manual tool-call loop with dict-formatted tools — the pre-2.14.1 low-level pattern incompatible with `ctx.sample(tools=[...])`.
+#### FastMCP 2.14.1+ Sampling API â€” `inter_server_tools.py` rewrite
+- **Root cause**: `mcp/sampling.py` accessed `mcp.ctx` which does not exist on FastMCP instances. `mcp/inter_server.py` used a manual tool-call loop with dict-formatted tools â€” the pre-2.14.1 low-level pattern incompatible with `ctx.sample(tools=[...])`.
 - **Symptom**: All three agentic meta-tools (`agentic_content_workflow`, `intelligent_batch_processor`, `sampling_capabilities_status`) raised `AttributeError` at call time.
-- **Fix — `mcp/tools/inter_server_tools.py`**: Full rewrite using the correct FastMCP 2.14.1+ SEP-1577 pattern:
+- **Fix â€” `mcp/tools/inter_server_tools.py`**: Full rewrite using the correct FastMCP 2.14.1+ SEP-1577 pattern:
   - 5 real async leaf-tool functions (no mocks, no lambdas), each calling the actual service layer
-  - `ctx: Context` parameter — correct name for FastMCP auto-injection (old code used `context`)
+  - `ctx: Context` parameter â€” correct name for FastMCP auto-injection (old code used `context`)
   - `ctx.sample(messages=..., tools=[fn,...], result_type=PydanticModel)` for LLM orchestration
   - `WorkflowResult` and `BatchResult` Pydantic models for validated structured output
   - Tool group registry mapping `available_tools` strings to Python callables
-- **Fix — `mcp/inter_server.py`**: Gutted. Entire `AgenticWorkflow` / `sample_with_tools` / `create_tool_spec` machinery removed. Kept as import stub.
-- **Fix — `mcp/sampling.py`**: Gutted. Broken `SamplingClient` wrapper removed. Kept as import stub.
+- **Fix â€” `mcp/inter_server.py`**: Gutted. Entire `AgenticWorkflow` / `sample_with_tools` / `create_tool_spec` machinery removed. Kept as import stub.
+- **Fix â€” `mcp/sampling.py`**: Gutted. Broken `SamplingClient` wrapper removed. Kept as import stub.
 
 ---
 
 ## [1.4.0] - Ecosystem Integration & Advanced Collaboration (2026-02-17)
 
-### 🚀 **Ecosystem Observability**
+### ðŸš€ **Ecosystem Observability**
 
 #### Added - Apps Hub (Fleet Discovery)
-- **Fleet Scanning**: Implementation of `AppsHub.tsx` for real-time monitoring of active MCP instances across the reserved port range (10700–10800+).
+- **Fleet Scanning**: Implementation of `AppsHub.tsx` for real-time monitoring of active MCP instances across the reserved port range (10700â€“10800+).
 - **Service Detection**: Automated discovery of Robotics MCP, GroxTools, and Security services with status indicators and port analysis.
 - **Search & Filtering**: Fleet-wide search for active services by name, type, or port.
 
@@ -145,7 +186,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Substrate Telemetry**: Real-time tracking of GPU (RTX 4094), CPU (24-core), and System Memory utilization.
 - **Hardware Optimization**: Native `api.ts` methods for substrate detection (`detectHardware`) and model parameter optimization (`optimizeModelParams`).
 
-### 🔧 **UI/UX Enhancements**
+### ðŸ”§ **UI/UX Enhancements**
 
 - **Navigation Integration**: Added "Apps Hub" and "Control Room" to the main application routing and sidebar navigation.
 - **Visual Polish**: Glassmorphism and micro-animations applied to all Phase 4 components for SOTA-compliant aesthetic.
@@ -180,7 +221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **start.ps1**: Run npm install and Vite from `webapp/frontend/` (where `package.json` lives) instead of `webapp/` to avoid ENOENT. Start Python backend from repository root so `advanced_memory` is importable.
 - **Backend health check**: After starting the backend, wait up to ~12s and verify port 10705 is listening; print "Backend is up" or a warning before starting Vite.
-- **main.css**: Fix Tailwind `@apply` for `.indigo-glow` — use `rgba(99_102_241_0.3)` (underscores) so commas in arbitrary values are not parsed as class separators (PostCSS error resolved).
+- **main.css**: Fix Tailwind `@apply` for `.indigo-glow` â€” use `rgba(99_102_241_0.3)` (underscores) so commas in arbitrary values are not parsed as class separators (PostCSS error resolved).
 - **Docs**: Dedicated [webapp/README.md](webapp/README.md) for webapp architecture, ports, start.ps1/start.bat, and troubleshooting. Main README links to it under Web Interface and Standalone Web Application.
 
 ### Added - Skills Factory (Research Chaining + LLM-Guided Loop) (2026-02-10)
@@ -219,7 +260,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - Skill Directory Configuration (2026-01-21)
 
-### 🚀 **Content Enhancement**
+### ðŸš€ **Content Enhancement**
 
 #### Added - find_runts and find_junk (2026-01-31)
 - **find_runts**: Find short/runt notes (content under max_content_length) for batch enhancement. Available via adn_content and adn_knowledge_bulk.
@@ -241,7 +282,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **edit_note replace_section**: Clearer error message when section is missing; suggests `replace_body` for full replacement.
 - **Documentation**: PORTMANTEAU_TOOLS_REFERENCE.md and TOOLS_REFERENCE.md updated with full enhance docs.
 
-### 🔧 **Technical Fixes**
+### ðŸ”§ **Technical Fixes**
 
 #### Fixed - Windsurf/Antigravity Skills Not Loading (2026-01-28)
 - **Recursive skill scan**: Bridge now discovers `SKILL.md` in nested directories (e.g. `skills/category/skill-name/SKILL.md`, WindSurf/Antigravity flat layout).
@@ -283,7 +324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive error handling and logging
   - Concurrent request processing and performance optimization
 
-### 📚 **Documentation**
+### ðŸ“š **Documentation**
 
 #### Added - Skill System Documentation
 - **Skill Parsing Architecture**: Comprehensive guide to how skills are discovered and parsed
@@ -292,7 +333,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.0] - Monorepo Architecture & Web Interface (2026-01-20)
 
-### 🚀 **Monorepo Architecture**
+### ðŸš€ **Monorepo Architecture**
 
 #### Added - Monorepo Structure
 - **Unified Repository**: Consolidated MCP server and web interface in single repository
@@ -315,7 +356,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Logger Modal**: Real-time application logging with export capabilities
 - **Help System**: Integrated documentation and quick action guides
 
-### 🔧 **Technical Infrastructure**
+### ðŸ”§ **Technical Infrastructure**
 
 #### Added - Development Tools
 - **TypeScript Setup**: Full TypeScript configuration for web application
@@ -334,7 +375,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Build Scripts**: Automated build and deployment pipelines
 - **Environment Configuration**: Development, staging, and production setups
 
-### 📚 **Documentation Architecture**
+### ðŸ“š **Documentation Architecture**
 
 #### Added - Documentation Restructuring
 - **Compact Main README**: Focused overview with comprehensive documentation links
@@ -348,7 +389,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Web Interface Documentation**: React application usage and development guide
 - **API Documentation**: Enhanced MCP tools and HTTP API references
 
-### 🔗 **Integration Improvements**
+### ðŸ”— **Integration Improvements**
 
 #### Added - Standalone Usage
 - **Web Interface**: Direct usage without MCP client requirements
@@ -361,7 +402,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Client Flexibility**: Support for various MCP clients and direct web usage
 - **Configuration Options**: Multiple setup methods for different environments
 
-### 📊 **Project Evolution**
+### ðŸ“Š **Project Evolution**
 
 #### Recognition of Foundation
 - **Basic Memory MCP**: Acknowledged as predecessor and core inspiration
@@ -369,7 +410,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Backward Compatibility**: Maintained compatibility with existing implementations
 - **Enhanced Reliability**: Production-grade testing and error handling
 
-### 🧪 **Quality Metrics**
+### ðŸ§ª **Quality Metrics**
 
 #### Improved Testing Coverage
 - **Web Application Tests**: Component, integration, and E2E test suites
@@ -383,7 +424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Security Audits**: Input validation and secure API key handling
 - **Performance Monitoring**: Bundle analysis and optimization tracking
 
-### 📈 **Scalability Improvements**
+### ðŸ“ˆ **Scalability Improvements**
 
 #### Architecture Enhancements
 - **Modular Design**: Separable MCP server and web interface components
@@ -397,7 +438,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Updated assessment date: 2026-01-20*
 
-### 🚀 **Complete Research Integration Suite**
+### ðŸš€ **Complete Research Integration Suite**
 
 #### Added - Research Capabilities
 - **Web Search Integration**: `adn_web_search` tool with multi-provider support
@@ -430,7 +471,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Narrative pattern identification
   - Genre convention studies
   - Creative writing guidance
-  - ⚠️ Full compliance with TV Tropes terms of service
+  - âš ï¸ Full compliance with TV Tropes terms of service
 
 #### Added - Document Processing
 - **Document Ingestion System**: `adn_document_ingest` tool for primary source analysis
@@ -492,7 +533,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `sentence-transformers`: Text embeddings
 - `aiohttp`: Async HTTP client for web research
 
-### 🎯 **Research Ecosystem Impact**
+### ðŸŽ¯ **Research Ecosystem Impact**
 
 This release transforms Advanced Memory from a knowledge management system into a **comprehensive research platform** capable of:
 
@@ -503,7 +544,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 - **Narrative Intelligence**: Storytelling patterns and creative writing support
 - **Skill Synthesis**: Automated expert creation from multi-source research
 
-### 📊 **Performance & Scale**
+### ðŸ“Š **Performance & Scale**
 - **Multi-Source Parallel Research**: Concurrent queries across different APIs
 - **Large Document Processing**: RAG-enabled analysis of books and long documents
 - **Vector Search Performance**: Sub-second semantic retrieval
@@ -512,13 +553,13 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.1.0b1] - 2025-12-20
 
-### 🎯 Revolutionary Dual STT Architecture (ikubaysan Integration)
+### ðŸŽ¯ Revolutionary Dual STT Architecture (ikubaysan Integration)
 
 #### Added
 - **Complete Dual STT Pipeline**: Integrated ikubaysan dual STT architecture from vr-ai-chatbot
   - Sphinx wake-word detection (fast, always-on, ~1-2% CPU)
   - Google Cloud Speech accurate transcription (high accuracy, on-demand)
-  - Character state machine (Wandering → Conversing → Performing Actions)
+  - Character state machine (Wandering â†’ Conversing â†’ Performing Actions)
   - Structured AI response types (TYPE_NORMAL, TYPE_ENDING, TYPE_YES, TYPE_NO, TYPE_CMD)
 
 - **Enhanced Audio Tool**: New `adn_audio_dual_stt` MCP tool with advanced capabilities
@@ -528,7 +569,7 @@ This release transforms Advanced Memory from a knowledge management system into 
   - Real-time conversation state tracking
 
 - **Performance Optimizations**:
-  - 10x CPU reduction for wake word detection (15-25% → 1-2%)
+  - 10x CPU reduction for wake word detection (15-25% â†’ 1-2%)
   - 95%+ transcription accuracy with Google Cloud
   - Smart audio buffering with circular buffers
   - Background thread management for non-blocking processing
@@ -573,7 +614,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.0.0b9] - 2025-12-17
 
-### 🎉 MCP Studio ADN Documentation & System Updates
+### ðŸŽ‰ MCP Studio ADN Documentation & System Updates
 
 
 #### Added
@@ -630,7 +671,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.5.0] - 2026-02-12
 
-### 🚀 FastMCP 2.14.3 Advanced Features & Ecosystem Expansion
+### ðŸš€ FastMCP 2.14.3 Advanced Features & Ecosystem Expansion
 
 #### Major Framework Upgrades
 - **SEP-1577 Sampling with Tools Implementation**: Complete FastMCP 2.14.3 compliance with server-to-server communication and advanced sampling capabilities
@@ -683,7 +724,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.1.0b2] - 2026-01-13
 
-### 🏗️ Repository Modernization & SOTA Compliance
+### ðŸ—ï¸ Repository Modernization & SOTA Compliance
 
 #### Major Infrastructure Overhaul
 - **SOTA MCP Standards v12.0 Integration**: Complete documentation modernization with Three Pillars compliance (Architecture, Behavior, Operations)
@@ -698,7 +739,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 - **Quality Assurance**: Automated freshness checks and version synchronization
 
 #### Technical Improvements
-- **Portmanteau Tool Consolidation**: 56 tools → 10 portmanteau tools for better discoverability
+- **Portmanteau Tool Consolidation**: 56 tools â†’ 10 portmanteau tools for better discoverability
 - **Cross-Platform Compatibility**: Enhanced pathlib usage and environment detection
 - **Code Quality**: Ruff linting/formatting, reduced violations from 87 to acceptable levels
 - **Build System**: Clean MCPB packaging with proper version synchronization
@@ -711,7 +752,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.1.0b1] - 2026-01-05
 
-### 🎙️ Audio Soul 2026 Upgrade
+### ðŸŽ™ï¸ Audio Soul 2026 Upgrade
 
 **Major overhaul** of the audio stack, transitioning from generic to "soulful" and high-performance FOSS components.
 
@@ -725,7 +766,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 - Moved all audio operations to use CUDA-accelerated `float16` precision by default on supported systems.
 - Optimized wake word detection and command transcription latency.
 
-### 🧠 SOTA Docstring Refactoring
+### ðŸ§  SOTA Docstring Refactoring
 
 **Scannability overhaul** for all core portmanteau tools to ensure peak performance in agentic IDEs like Antigravity.
 
@@ -751,7 +792,7 @@ This release transforms Advanced Memory from a knowledge management system into 
 
 ## [1.0.0b2] - 2025-10-15
 
-### 🎉 100% Production-Ready Beta Release
+### ðŸŽ‰ 100% Production-Ready Beta Release
 
 This release achieves **complete code quality** with **zero type errors**, **zero linting errors**, and **zero formatting issues**. All GitHub Actions workflows are now fully functional.
 
@@ -799,7 +840,7 @@ This release achieves **complete code quality** with **zero type errors**, **zer
 
 - **GitHub CI: Mypy strict mode progress tracking** - Shows type safety metrics in every CI run
   - Displays error count, fixed count, and progress percentage
-  - Shows milestone achievements (Sub-500 ✅, Sub-450 ✅, Sub-410 ✅)
+  - Shows milestone achievements (Sub-500 âœ…, Sub-450 âœ…, Sub-410 âœ…)
   - Assigns quality grade (A+/B+/C+/D based on progress)
   - Non-blocking (continue-on-error) to avoid breaking builds
 - **Export tool test infrastructure** - First comprehensive tests for export tools (previously 0% coverage)
@@ -853,7 +894,7 @@ This release achieves **complete code quality** with **zero type errors**, **zer
 
 ### Fixed
 - Test import errors in integration tests
-- Configuration class naming (`BasicMemoryConfig` → `AdvancedMemoryConfig`)
+- Configuration class naming (`BasicMemoryConfig` â†’ `AdvancedMemoryConfig`)
 - Missing dependencies in MCP server
 - CI workflow trigger conditions
 - MCPB package structure and manifest

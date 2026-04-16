@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Search, Tag, Calendar, Download, Share, Plus, X, Save, Sparkles, Bot, Trash2 } from 'lucide-react'
 import { apiService } from '../../services/api'
 
@@ -97,10 +97,10 @@ Skills are stored as directories containing a \`SKILL.md\` file.
 ### Directory Layout
 \`\`\`
 skill-name/
-├── SKILL.md              # Required - main instructions
-├── reference.md          # Optional - detailed documentation
-├── examples.md           # Optional - usage examples
-└── scripts/              # Optional - utility scripts
+â”œâ”€â”€ SKILL.md              # Required - main instructions
+â”œâ”€â”€ reference.md          # Optional - detailed documentation
+â”œâ”€â”€ examples.md           # Optional - usage examples
+â””â”€â”€ scripts/              # Optional - utility scripts
 \`\`\`
 
 ### File Format
@@ -806,7 +806,7 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
         return
       }
 
-      console.log('Bridge server not available - showing mock skills for demo')
+      console.warn('Bridge server not available - showing mock skills for demo')
       setTimeout(() => {
         const folderSkills =
           currentFolder === 'all'

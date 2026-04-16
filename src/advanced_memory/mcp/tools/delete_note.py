@@ -6,6 +6,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_delete
+from advanced_memory.readonly import IS_READONLY, READONLY_ERROR
 from advanced_memory.schemas import DeleteEntitiesResponse
 
 
@@ -176,6 +177,8 @@ async def delete_note(identifier: str, project: str | None = None) -> bool | str
         - "System Error": Returned for temporary system issues, filesystem errors, or disk space problems.
         - "Database Error": Returned if a sync conflict, database lock, or database entry corruption occurs.
     """
+    if IS_READONLY:
+        return READONLY_ERROR
     active_project = get_active_project(project)
     project_url = active_project.project_url
 

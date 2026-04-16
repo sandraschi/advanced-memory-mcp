@@ -114,6 +114,8 @@ def mcp(
 
     from advanced_memory.services.initialization import initialize_file_sync
 
+    from advanced_memory.readonly import IS_READONLY
+
     app_config = ConfigManager().config
 
     def run_file_sync():
@@ -141,8 +143,8 @@ def mcp(
         # For HTTP transports, normal logging is fine
         logger.info(f"Sync changes enabled: {app_config.sync_changes}")
 
-    if app_config.sync_changes:
-        # Start the sync thread
+    if app_config.sync_changes and not IS_READONLY:
+        # Start the sync thread (skipped in read-only mode)
         sync_thread = threading.Thread(target=run_file_sync, daemon=True)
         sync_thread.start()
         if transport != "stdio":
@@ -173,11 +175,18 @@ def mcp(
 
             mcp_server.add_transform(CodeMode())
 
-        with _stdio_single_instance_lock():
+        if IS_READONLY:
+            # Read-only mode: bypass single-instance lock so multiple IDEs can connect
             mcp_server.run(
                 transport=transport,
                 show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution
             )
+        else:
+            with _stdio_single_instance_lock():
+                mcp_server.run(
+                    transport=transport,
+                    show_banner=False,  # CRITICAL: Suppress banner to prevent stdout pollution
+                )
     elif transport == "streamable-http" or transport == "sse":
         # Apply CodeMode for HTTP transports too if agentic mode requested
         if agentic:

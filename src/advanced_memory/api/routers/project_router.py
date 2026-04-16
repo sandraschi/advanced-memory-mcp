@@ -69,7 +69,7 @@ async def update_project(
 
 
 # List all available projects
-@project_resource_router.get("/projects", response_model=ProjectList)
+@project_resource_router.get("", response_model=ProjectList)
 async def list_projects(
     project_service: ProjectServiceDep,
 ) -> ProjectList:
@@ -97,7 +97,7 @@ async def list_projects(
 
 
 # Add a new project
-@project_resource_router.post("/projects", response_model=ProjectStatusResponse)
+@project_resource_router.post("", response_model=ProjectStatusResponse)
 async def add_project(
     project_data: ProjectInfoRequest,
     project_service: ProjectServiceDep,

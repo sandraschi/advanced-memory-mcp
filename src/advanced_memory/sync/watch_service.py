@@ -312,7 +312,7 @@ class WatchService:
                                 action="moved",
                                 status="success",
                             )
-                            self.console.print(f"[blue]->[/blue] {deleted_path} -> {added_path}")
+                            logger.info(f"Move detected: {deleted_path} -> {added_path}")
                             logger.info(f"move: {deleted_path} -> {added_path}")
                             processed.add(added_path)
                             processed.add(deleted_path)
@@ -337,7 +337,7 @@ class WatchService:
                 logger.debug("Processing deleted file", path=path)
                 await sync_service.handle_delete(path)
                 self.state.add_event(path=path, action="deleted", status="success")
-                self.console.print(f"[red]X[/red] {path}")
+                logger.info(f"Deleted: {path}")
                 logger.info(f"deleted: {path}")
                 processed.add(path)
                 delete_count += 1
@@ -356,7 +356,7 @@ class WatchService:
                 entity, checksum = await sync_service.sync_file(path, new=True)
                 if checksum:
                     self.state.add_event(path=path, action="new", status="success", checksum=checksum)
-                    self.console.print(f"[green]OK[/green] {path}")
+                    logger.info(f"New file: {path}")
                     logger.info(
                         "new file processed",
                         f"path={path}",
@@ -366,7 +366,7 @@ class WatchService:
                     add_count += 1
                 else:  # pragma: no cover
                     logger.warning(f"Error syncing new file, path={path}")  # pragma: no cover
-                    self.console.print(f"[orange]?[/orange] Error syncing: {path}")  # pragma: no cover
+                    logger.warning(f"Error syncing: {path}")  # pragma: no cover
 
         # Process modifies - detect repeats
         last_modified_path = None
@@ -390,10 +390,10 @@ class WatchService:
                     repeat_count += 1  # pragma: no cover
                     # Only show a message for the first repeat
                     if repeat_count == 1:  # pragma: no cover
-                        self.console.print(f"[yellow]...[/yellow] Repeated changes to {path}")  # pragma: no cover
+                        logger.info(f"Repeated changes to {path}")
                 else:
                     # haven't processed this file
-                    self.console.print(f"[yellow]EDIT[/yellow] {path}")
+                    logger.info(f"EDIT {path}")
                     logger.info(f"modified: {path}")
                     last_modified_path = path
                     repeat_count = 0
@@ -407,7 +407,7 @@ class WatchService:
                 )
                 processed.add(path)
 
-        # Add a concise summary instead of a divider
+        # Add a concise summary
         if processed:
             changes = []  # pyright: ignore
             if add_count > 0:
@@ -420,7 +420,8 @@ class WatchService:
                 changes.append(f"[red]{delete_count} deleted[/red]")  # pyright: ignore
 
             if changes:
-                self.console.print(f"{', '.join(changes)}", style="dim")  # pyright: ignore
+                summary_msg = f"Sync Summary: {', '.join(changes)}"
+                logger.info(summary_msg)
                 logger.info(f"changes: {len(changes)}")
 
         duration_ms = int((time.time() - start_time) * 1000)

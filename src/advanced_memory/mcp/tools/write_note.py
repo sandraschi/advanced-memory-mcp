@@ -9,6 +9,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_put
+from advanced_memory.readonly import IS_READONLY, READONLY_ERROR
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
 from advanced_memory.utils import parse_tags, validate_project_path
@@ -39,6 +40,9 @@ async def write_note(
     Relations: `- relation_type [[Entity]] (optional context)`
     """
     logger.info(f"MCP tool call tool=write_note folder={folder}, title={title}, tags={tags}")
+
+    if IS_READONLY:
+        return READONLY_ERROR
 
     # Get the active project first to check project-specific sync status
     active_project = get_active_project(project)

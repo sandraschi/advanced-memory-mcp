@@ -6,6 +6,7 @@ from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_patch
+from advanced_memory.readonly import IS_READONLY, READONLY_ERROR
 from advanced_memory.schemas import EntityResponse
 
 
@@ -434,6 +435,9 @@ async def edit_note(
     project_url = active_project.project_url
 
     logger.info("MCP tool call", tool="edit_note", identifier=identifier, operation=operation)
+
+    if IS_READONLY:
+        return READONLY_ERROR
 
     # Validate operation with helpful error message
     valid_operations = ["append", "prepend", "find_replace", "replace_section", "replace_body"]

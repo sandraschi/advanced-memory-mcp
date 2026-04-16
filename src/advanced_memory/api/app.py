@@ -59,6 +59,8 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     await db.shutdown_db()
 
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # Initialize FastAPI app
 app = FastAPI(
     title="Advanced Memory API",
@@ -67,8 +69,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include routers
+
 app.include_router(hardware_router.router, prefix="/api/v1")
 app.include_router(hardware_router.model_router, prefix="/api/v1")
 app.include_router(importer_router.router, prefix="/api/v1")
@@ -88,6 +98,11 @@ app.include_router(management.router, prefix="/api/v1")
 app.include_router(tests_router.router, prefix="/api/v1")
 
 # Auth routes are handled by FastMCP automatically when auth is enabled
+
+
+@app.get("/api/v1/health")
+async def health_check():
+    return {"status": "ok"}
 
 
 @app.exception_handler(Exception)

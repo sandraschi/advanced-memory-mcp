@@ -1,4 +1,4 @@
-"""Repository for search operations."""
+﻿"""Repository for search operations."""
 
 import json
 import re
@@ -609,6 +609,27 @@ class SearchRepository:
             )
             logger.debug(f"indexed row {search_index_row}")
             await session.commit()
+
+    async def update_entity_path(self, entity_id: int, new_file_path: str) -> None:
+        """Update only the file_path for all search index rows belonging to entity_id.
+
+        This is a cheap alternative to index_entity for pure path renames where
+        content/checksum has not changed (e.g. slash-normalisation on Windows).
+        Avoids reading file content and rebuilding trigram stems.
+        """
+        async with self.session_maker() as session:
+            from sqlalchemy import text
+            await session.execute(
+                text(
+                    "UPDATE search_index SET file_path = :new_path "
+                    "WHERE entity_id = :entity_id AND project_id = :project_id"
+                ),
+                {"new_path": new_file_path, "entity_id": entity_id, "project_id": self.project_id},
+            )
+            await session.commit()
+        logger.debug(
+            f"Search index path updated entity_id={entity_id} new_file_path={new_file_path}"
+        )
 
     async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index by entity_id."""

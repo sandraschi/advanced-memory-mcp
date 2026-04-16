@@ -8,6 +8,7 @@ Based on the JavaScript extractReadableText function from read-all-pages.js
 """
 
 import re
+from loguru import logger
 
 from bs4 import BeautifulSoup
 
@@ -163,10 +164,10 @@ if __name__ == "__main__":
     """
 
     readable_text = extract_readable_text(sample_html)
-    print("Extracted text:")
-    print(readable_text)
-    print("\n" + "=" * 50 + "\n")
+    logger.info("Extracted text:")
+    logger.info(readable_text)
+    logger.info("\n" + "=" * 50 + "\n")
 
     summary = extract_text_summary(sample_html, max_length=100)
-    print("Summary:")
-    print(summary)
+    logger.info("Summary:")
+    logger.info(summary)

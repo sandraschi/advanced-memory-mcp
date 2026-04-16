@@ -1,6 +1,6 @@
-[project]
+﻿[project]
 name = "schip-mcp-advanced-memory"
-version = "1.7.0"
+version = "1.7.1"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
 readme = "README.md"
 requires-python = ">=3.12"

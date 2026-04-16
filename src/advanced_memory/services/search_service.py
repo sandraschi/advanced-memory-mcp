@@ -1,4 +1,4 @@
-"""Service for search operations."""
+﻿"""Service for search operations."""
 
 import ast
 from collections.abc import Sequence
@@ -536,6 +536,10 @@ class SearchService:
     async def delete_by_permalink(self, permalink: str) -> None:
         """Delete an item from the search index."""
         await self.repository.delete_by_permalink(permalink)
+
+    async def update_entity_path(self, entity_id: int, new_file_path: str) -> None:
+        """Cheap path-only update in the search index — no file read, no re-stemming."""
+        await self.repository.update_entity_path(entity_id, new_file_path)
 
     async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index."""

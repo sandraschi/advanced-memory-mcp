@@ -1,4 +1,4 @@
-"""Service for syncing files between filesystem and database."""
+﻿"""Service for syncing files between filesystem and database."""
 
 import asyncio
 import os
@@ -22,6 +22,7 @@ from advanced_memory.repository import (
     RelationRepository,
 )
 from advanced_memory.repository.search_repository import SearchRepository
+from advanced_memory.repository.vector_repository import VectorRepository
 from advanced_memory.services import EntityService, FileService
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.search_service import SearchService
@@ -150,8 +151,18 @@ async def get_sync_service(project: Project) -> "SyncService":  # pragma: no cov
     relation_repository = RelationRepository(session_maker, project_id=project.id)
     search_repository = SearchRepository(session_maker, project_id=project.id)
 
+    # Initialize vector repository
+    vector_db_path = str(app_config.app_database_path.parent / "vectors")
+    vector_repository = VectorRepository(vector_db_path, passphrase=app_config.rag_storage_passphrase)
+
     # Initialize services
-    search_service = SearchService(search_repository, entity_repository, file_service)
+    search_service = SearchService(
+        search_repository,
+        entity_repository,
+        vector_repository,
+        file_service,
+        app_config,
+    )
     link_resolver = LinkResolver(entity_repository, search_service)
 
     # Initialize services
@@ -734,6 +745,9 @@ class SyncService:
             normalized_new_path = normalize_file_path(new_path)
             updates = {"file_path": normalized_new_path}
 
+            # Track whether content changed (permalink rewrite changes checksum).
+            content_changed = False
+
             # If configured, also update permalink to match new path
             if self.app_config.update_permalinks_on_move and self.file_service.is_markdown(normalized_new_path):
                 # generate new permalink value
@@ -744,6 +758,7 @@ class SyncService:
 
                 updates["permalink"] = new_permalink
                 updates["checksum"] = new_checksum
+                content_changed = True
 
                 logger.info(
                     f"Updating permalink on move,old_permalink={entity.permalink}"
@@ -779,8 +794,15 @@ class SyncService:
                 f"new_path={new_path} "
             )
 
-            # update search index
-            await self.search_service.index_entity(updated)
+            # Only re-index if content actually changed (permalink rewrite).
+            # Pure path-separator normalisation (/ -> \) leaves content and
+            # checksum identical — re-reading and re-stemming every file for
+            # those was the primary cause of multi-hour sync times on large
+            # vaults.
+            if content_changed:
+                await self.search_service.index_entity(updated)
+            else:
+                await self.search_service.update_entity_path(entity.id, normalized_new_path)
 
     async def resolve_relations(self) -> None:
         """Try to resolve any unresolved relations"""
@@ -825,8 +847,11 @@ class SyncService:
                         f"to_name={relation.to_name}"
                     )
 
-                # update search index
-                await self.search_service.index_entity(resolved_entity)
+                # Relation resolution only updates to_id/to_name on the relation
+                # row — it does not change file content. Re-indexing the entity
+                # here re-reads and re-stems the full file for every resolved
+                # wikilink, which dominated sync time on large vaults.
+                # The search index for the entity content is already correct.
 
     async def scan_directory(self, directory: Path) -> ScanResult:
         """
