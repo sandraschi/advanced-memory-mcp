@@ -1,4 +1,4 @@
-﻿"""Service for search operations."""
+"""Service for search operations."""
 
 import ast
 from collections.abc import Sequence
@@ -57,6 +57,8 @@ class SearchService:
         await self.repository.execute_query(text("DROP TABLE IF EXISTS search_index"), params={})
         await self.init_search_index()
 
+        # Clear LanceDB vector table to prevent stale/duplicate chunks on full reindex
+        await self.vector_repository.drop_table()
         # Reindex all entities
         logger.debug("Indexing entities")
         entities: Sequence[Entity] = await self.entity_repository.find_all()

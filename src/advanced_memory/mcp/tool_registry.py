@@ -19,18 +19,20 @@ def register_portmanteau_tool(mcp: FastMCP, func: Callable) -> None:
     """
     Register a tool as either a consolidated portmanteau or a set of atomic tools.
 
-    In Industrial Mode (default): Registers the function as a single portmanteau.
-    In Compliance Mode: Registers individual shadow tools for each operation.
+    SOTA 2026 Mode (default): Registers individual shadow tools for each operation (Namespaced).
+    Reduced Mode: Registers the function as a single portmanteau.
     """
-    compliance_mode = os.getenv("ADVANCED_MEMORY_ARCADE_COMPLIANCE", "").lower() == "true"
+    # Invert the logic: Default to unrolling (SOTA) unless Reduced Mode is explicitly requested
+    reduced_mode = os.getenv("ADVANCED_MEMORY_REDUCED_MODE", "").lower() == "true"
 
-    if not compliance_mode:
-        # Standard Industrial Mode: Register the portmanteau tool as-is
+    if reduced_mode:
+        # Reduced Mode: Register the portmanteau tool as-is (Switch-Case view)
         mcp.add_tool(func)
         return
 
-    # Compliance Mode: Unroll the portmanteau into atomic tools
-    logger.info(f"Arcade Compliance Mode: Unrolling portmanteau tool '{func.__name__}'")
+    # SOTA 2026 Mode: Unroll the portmanteau into namespaced atomic tools
+    # This improves BM25 discovery in Cursor and ToolBench rankings.
+    logger.info(f"SOTA Mode: Unrolling portmanteau tool '{func.__name__}'")
 
     # 1. Identify the 'operation' parameter and its Literal values
     type_hints = get_type_hints(func, include_extras=True)
@@ -58,8 +60,10 @@ def register_portmanteau_tool(mcp: FastMCP, func: Callable) -> None:
         return
 
     # 2. For each operation, create and register a shadow tool
+    prefix = func.__name__.replace("adn_", "")
     for op in literal_values:
-        shadow_name = f"{func.__name__}_{op}"
+        # Use SLASH separator for optimal BM25 tokenization in Cursor
+        shadow_name = f"{prefix}/{op}"
 
         # Create a wrapper that fixes the operation parameter
         @functools.wraps(func)
@@ -70,11 +74,10 @@ def register_portmanteau_tool(mcp: FastMCP, func: Callable) -> None:
         # Override the name and update the docstring to be specialized
         shadow_tool.__name__ = shadow_name
         if func.__doc__:
-            shadow_tool.__doc__ = f"Atomic version of {func.__name__} for operation: {op}\n\n{func.__doc__}"
+            # Strip the generic portmanteau header if present
+            clean_doc = func.__doc__.split("For full documentation")[0].strip()
+            shadow_tool.__doc__ = f"Atomic operation: {op}\n\n{clean_doc}"
 
-        # Register the shadow tool
-        # Note: We rely on FastMCP to handle the schema generation from the wrapper
-        # In a more advanced implementation, we could prune the 'operation' arg from the signature
-        # but for Arcade, just having distinct names is usually enough to pass static checks.
+        # Register the namespaced shadow tool
         mcp.add_tool(shadow_tool)
-        logger.debug(f"Registered shadow tool: {shadow_name}")
+        logger.debug(f"Registered namespaced tool: {shadow_name}")

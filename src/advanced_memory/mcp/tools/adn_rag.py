@@ -17,94 +17,53 @@ from advanced_memory.rag.system import get_rag_system
 
 @mcp.tool
 async def adn_rag(
-    operation: Literal[
-        "ingest_document",
-        "query_knowledge",
-        "list_documents",
-        "get_document_info",
-        "delete_document",
-        "search_similar",
-    ],
-    document_path: str | None = None,
-    query: str | None = None,
-    document_id: str | None = None,
-    chunk_method: Literal["fixed", "semantic", "sentence"] = "fixed",
-    max_results: int = 5,
-    document_filter: list[str] | None = None,
-) -> dict[str, Any]:
-    """
-    RAG (Retrieval Augmented Generation) system for deep document analysis and knowledge retrieval.
-
-    PORTMANTEAU PATTERN RATIONALE:
-    Consolidates document chunking, vector storage, and semantic retrieval into one tool
-    for comprehensive RAG capabilities that enhance skill generation with primary sources.
-
-    SUPPORTED OPERATIONS:
-
-    ingest_document: Process and store a document in the vector database
-    - Chunks documents intelligently and creates vector embeddings
-    - Enables semantic search across large documents
-    - Required: document_path
-
-    query_knowledge: Search for relevant information across all documents
-    - Performs semantic similarity search using vector embeddings
-    - Returns most relevant chunks with similarity scores
-    - Required: query
-
-    list_documents: Show all documents in the knowledge base
-    - Lists stored documents with metadata and chunk counts
-
-    get_document_info: Get detailed information about a specific document
-    - Shows document metadata, summary, and processing statistics
-    - Required: document_id
-
-    delete_document: Remove a document and all its chunks
-    - Cleans up vector database and frees storage
-    - Required: document_id
-
-    search_similar: Find documents similar to query or example text
-    - Uses embeddings to find semantically similar content
-    - Useful for discovering related information
-
-    RAG ENHANCEMENT:
-    This tool enables processing documents larger than LLM context windows,
-    providing persistent knowledge storage and intelligent retrieval for:
-    - Academic papers and research
-    - Historical texts and primary sources
-    - Technical documentation
-    - Books and lengthy manuscripts
-
-    Args:
-        operation: The RAG operation to perform
-        document_path: Path to document file (for ingest_document)
-        query: Search query (for query_knowledge, search_similar)
-        document_id: Document identifier (for get_document_info, delete_document)
-        chunk_method: Chunking strategy (fixed, semantic, sentence)
-        max_results: Maximum results to return
-        document_filter: Limit search to specific documents
-
-    Returns:
-        Operation-specific results with document/chunk data and metadata
-
-    Examples:
-        # Ingest Schreber's memoirs for deep psychological analysis
-        await adn_rag("ingest_document", document_path="/books/schreber-memoirs.pdf")
-
-        # Query for delusional content across all documents
-        await adn_rag("query_knowledge", query="divine mission delusions")
-
-        # Find Transformer architecture details in the original paper
-        await adn_rag("query_knowledge", query="attention mechanism equations")
-
-        # Search within specific documents
-        await adn_rag(
+    operation: Annotated[
+        Literal[
+            "ingest_document",
             "query_knowledge",
-            query="witchcraft theology",
-            document_filter=["malleus-maleficarum"]
-        )
+            "list_documents",
+            "get_document_info",
+            "delete_document",
+            "search_similar",
+        ],
+        Field(description="RAG action: ingest, query, list, info, delete, or similarity search"),
+    ],
+    document_path: Annotated[
+        str | None, Field(description="Local path to file (PDF, TXT, MD, Code)")
+    ] = None,
+    query: Annotated[
+        str | None, Field(description="Semantic query or example text for vector search")
+    ] = None,
+    document_id: Annotated[
+        str | None, Field(description="Canonical ID of the document (slugified path)")
+    ] = None,
+    chunk_method: Annotated[
+        Literal["fixed", "semantic", "sentence"],
+        Field(description="Strategy for breaking text into vector snippets"),
+    ] = "fixed",
+    max_results: Annotated[
+        int, Field(description="Total chunks to retrieve for context injection")
+    ] = 5,
+    document_filter: Annotated[
+        list[str] | None, Field(description="Limit search to these specific document IDs")
+    ] = None,
+) -> dict[str, Any]:
+    """Retrieval Augmented Generation (RAG) system for high-fidelity document grounding.
 
-        # Get document processing statistics
-        await adn_rag("get_document_info", document_id="attention-is-all-you-need")
+    Consolidates document chunking, vector storage, and semantic retrieval to enhance
+    knowledge generation with primary source grounding.
+
+    ## Return Format
+    - JSON dictionary containing operation `success` status.
+    - `results`: List of chunks with `content`, `score`, and `metadata`.
+    - `info`: Document statistics (chunk count, size, timestamp).
+
+    ## Examples
+    ```python
+    adn_rag(operation="ingest_document", document_path="./manual.pdf")
+    adn_rag(operation="query_knowledge", query="How to configure the reactor?", max_results=3)
+    adn_rag(operation="search_similar", query="theology of the machine")
+    ```
     """
 
     try:

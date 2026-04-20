@@ -95,7 +95,7 @@ def _load_text_embedding(model_name: str, max_retries: int = 2) -> Any:
             )
             if is_onnx_error and attempt < max_retries - 1:
                 logger.warning(
-                    "ONNX model load failed (attempt %d/%d): %s — purging cache and retrying.",
+                    "ONNX model load failed (attempt %d/%d): %s â€” purging cache and retrying.",
                     attempt + 1,
                     max_retries,
                     e,
@@ -204,9 +204,9 @@ class VectorRepository:
             os.makedirs(self.db_path, exist_ok=True)
             self.db = lancedb.connect(self.db_path)
 
-        tables = self.db.table_names() if hasattr(self.db, "table_names") else self.db.list_tables()
-        # Handle cases where list_tables returns a list-like object or a results object
-        table_list = tables if isinstance(tables, list) else getattr(tables, "tables", [])
+        # list_tables() is the current API; table_names() was deprecated in lancedb 0.20+
+        tables = self.db.list_tables()
+        table_list = tables if isinstance(tables, list) else list(tables)
 
         if self.table_name not in table_list:
             # Initial schema definition will happen on first add if not explicitly created
@@ -313,6 +313,18 @@ class VectorRepository:
         await self.connect()
         if self.table:
             self.table.delete(f"id = '{doc_id}'")
+
+    async def drop_table(self) -> None:
+        """Drop the vector table entirely — used before a full reindex to prevent stale chunks."""
+        await self.connect()
+        tables = self.db.list_tables()
+        table_list = tables if isinstance(tables, list) else list(tables)
+        if self.table_name in table_list:
+            self.db.drop_table(self.table_name)
+            self.table = None
+            logger.info(f"Dropped vector table: {self.table_name}")
+        else:
+            logger.debug(f"drop_table: {self.table_name} does not exist, nothing to drop")
 
     async def delete_by_entity_id(self, entity_id: int):
         """Delete all chunks for a specific entity."""

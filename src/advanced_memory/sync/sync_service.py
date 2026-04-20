@@ -1,4 +1,4 @@
-﻿"""Service for syncing files between filesystem and database."""
+"""Service for syncing files between filesystem and database."""
 
 import asyncio
 import os

@@ -35,26 +35,40 @@ class ResearchStep:
 
 @mcp.tool
 async def research_orchestrator(
-    operation: str,
-    topic: str | None = None,
-    topic_type: str | None = None,
-    research_type: str | None = None,
-    step: int | None = None,
-    parameters: dict[str, Any] | None = None,
+    operation: Annotated[
+        str,
+        Field(
+            description="Workflow action: 'research_plan', 'research_methodology', 'research_questions', 'note_blueprint', 'research_workflow'"
+        ),
+    ],
+    topic: Annotated[
+        str | None, Field(description="The primary research subject or knowledge entity")
+    ] = None,
+    topic_type: Annotated[
+        str | None, Field(description="Domain: 'technical', 'business', 'academic', 'general'")
+    ] = None,
+    research_type: Annotated[
+        str | None,
+        Field(description="Depth: 'exploratory', 'deep_dive', 'comparative', 'analysis'"),
+    ] = None,
+    step: Annotated[int | None, Field(description="Workflow step number (1-6)")] = None,
+    parameters: Annotated[
+        dict[str, Any] | None, Field(description="Contextual overrides (depth, scope, etc.)")
+    ] = None,
 ) -> str:
-    """
-    Research orchestrator tool for AI-guided knowledge building.
+    """Orchestrate AI-guided research workflows and note creation structures.
 
-    Args:
-        operation: Type of research operation
-        topic: Research topic
-        topic_type: Type of topic (technical, business, academic, etc.)
-        research_type: Type of research (exploratory, deep_dive, comparative, etc.)
-        step: Current step in workflow
-        parameters: Additional parameters
+    ## Return Format
+    - Structured Markdown guidance with emojis and clear directives.
+    - Includes JSON blueprints for complex structures.
+    - Provides specific tool usage instructions for each step.
 
-    Returns:
-        Structured research guidance and instructions
+    ## Examples
+    ```python
+    research_orchestrator(operation="research_plan", topic="quantum computing")
+    research_orchestrator(operation="research_workflow", topic="blockchain", step=1)
+    research_orchestrator(operation="note_blueprint", topic="AI Ethics", research_type="analysis")
+    ```
     """
     try:
         if operation == "research_plan":

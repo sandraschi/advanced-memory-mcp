@@ -20,24 +20,40 @@ TagType = list[str] | str | None
 
 @mcp.tool
 async def write_note(
-    title: Annotated[str, Field(description="The title of the note")],
-    content: Annotated[str, Field(description="Markdown content with observations/relations")],
+    title: Annotated[str, Field(description="The unique title of the note")],
+    content: Annotated[
+        str,
+        Field(
+            description="Markdown content. Support observations '- [key] val' and relations '- type [[Target]]'"
+        ),
+    ],
     folder: Annotated[
-        str, Field(description="Folder path relative to project root (e.g. 'notes')")
+        str,
+        Field(
+            description="Folder path relative to project root (e.g. 'notes'). Must exist or will be created."
+        ),
     ],
     tags: Annotated[
         str | list[str] | None,
-        Field(description="Tags as list or comma-separated string"),
+        Field(description="Tags list or comma-separated string to classify the knowledge"),
     ] = None,
     entity_type: Annotated[
-        str, Field(description="Type of entity to create (default: 'note')")
+        str, Field(description="Category of the entity (default: 'note', 'person', 'event')")
     ] = "note",
-    project: Annotated[str | None, Field(description="Optional project name")] = None,
+    project: Annotated[str | None, Field(description="Override current active project name")] = None,
 ) -> str:
     """Write a markdown note with semantic observations and relations.
 
-    Observations: `- [category] Observation text #tag1 #tag2 (optional context)`
-    Relations: `- relation_type [[Entity]] (optional context)`
+    ## Return Format
+    - A markdown summary of the operation result.
+    - Includes `file_path`, `permalink`, and `checksum`.
+    - Lists counted `Observations` and `Relations` (resolved/unresolved).
+
+    ## Examples
+    ```python
+    write_note(title="Project Alpha", content="- [status] Ongoing", folder="projects")
+    write_note(title="Meeting Notes", content="- discussed [[Budget]]", folder="meetings", tags="work,finance")
+    ```
     """
     logger.info(f"MCP tool call tool=write_note folder={folder}, title={title}, tags={tags}")
 

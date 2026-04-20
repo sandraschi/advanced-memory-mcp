@@ -290,6 +290,11 @@ if __name__ == "__main__":
         except ImportError:
             pass
 
+    # CRITICAL: Clean sys.argv before FastMCP.run() to prevent redundant parsing
+    # and "unrecognized argument" errors from FastMCP's internal parser.
+    # We've already parsed everything we need into 'args' and 'transport'.
+    sys.argv = [sys.argv[0]]
+
     # FastMCP 2.14.4+: stdio (default for IDEs) or http/sse for web/remote
     # CRITICAL: show_banner=False prevents FastMCP from writing banner to stdout
     if transport == "stdio":

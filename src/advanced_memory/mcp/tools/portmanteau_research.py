@@ -11,10 +11,10 @@ from loguru import logger
 from pydantic import Field
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tool_registry import register_portmanteau_tool
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
-@mcp.tool
 async def adn_research(
     operation: Annotated[
         Literal[
@@ -186,3 +186,7 @@ async def adn_research(
         return build_error_response(
             "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
         )
+
+
+# Register the tool using the SOTA unrolling registry
+register_portmanteau_tool(mcp, adn_research)

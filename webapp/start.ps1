@@ -1,4 +1,14 @@
-﻿# Webapp: Python FastAPI backend + Vite frontend (single supported launcher)
+﻿Param([switch]$Headless)
+
+# --- SOTA Headless Standard ---
+if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
+    Start-Process pwsh -ArgumentList '-NoProfile', '-File', $PSCommandPath, '-Headless' -WindowStyle Hidden
+    exit
+}
+$WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
+# ------------------------------
+
+# Webapp: Python FastAPI backend + Vite frontend (single supported launcher)
 $WebPort = 10704
 $BackendPort = 10705
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -52,6 +62,7 @@ Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Hidden", "
 
 Write-Host "Browser will open automatically when Vite is ready." -ForegroundColor Gray
 npm run dev -- --port $WebPort --host
+
 
 
 

@@ -283,54 +283,56 @@ Error searching for '{query}': {error_message}
 @mcp.tool
 async def search_notes(
     query: Annotated[
-        str, Field(description="Search query (supports boolean operators and tag:value)")
+        str,
+        Field(
+            description="Search term/logic (e.g. 'planning AND project', 'tag:work', '\"exact phrase\"')"
+        ),
     ],
-    page: Annotated[int, Field(description="Results page number")] = 1,
+    page: Annotated[int, Field(description="Results page number for large result sets")] = 1,
     results_per_page: Annotated[
-        int, Field(description="Number of results per page (max: 50)")
+        int, Field(description="Number of results to return (max: 50)")
     ] = 10,
     search_type: Annotated[
-        str | None, Field(description="Search mode: 'text', 'title', or 'permalink'")
+        str | None,
+        Field(description="Scope: 'text' (full-text), 'title' (titles only), 'permalink' (paths)"),
     ] = "text",
     types: Annotated[
-        list[str] | None, Field(description="Filter by categories (e.g. ['note'])")
+        list[str] | None, Field(description="Filter by primary category (e.g. ['note'])")
     ] = None,
     entity_types: Annotated[
         list[str] | None,
-        Field(description="Structural types: 'entity', 'observation', 'relation'"),
+        Field(description="Structural filter: 'entity', 'observation', 'relation'"),
     ] = None,
     after_date: Annotated[
-        str | None, Field(description="Results FROM this date (e.g. '1 week')")
+        str | None, Field(description="Results FROM this date (e.g. '1 week ago', '2026-01-01')")
     ] = None,
     before_date: Annotated[
-        str | None, Field(description="Results UNTIL this date (e.g. '2024-12-31')")
+        str | None, Field(description="Results UNTIL this date (e.g. 'yesterday')")
     ] = None,
     tags: Annotated[
-        list[str] | None, Field(description="List of tags to match (must have ALL)")
+        list[str] | None, Field(description="Match all tags in this list")
     ] = None,
     projects: Annotated[
-        str | None, Field(description="Project scope: 'name', 'p1,p2', or 'ALL'")
+        str | None, Field(description="Match specific projects: 'p1,p2' or 'ALL'")
     ] = None,
-    project: Annotated[str | None, Field(description="Alias for projects")] = None,
+    project: Annotated[str | None, Field(description="Alias for projects parameter")] = None,
     search_all_projects: Annotated[
-        bool, Field(description="Boolean shortcut for projects='ALL'")
+        bool, Field(description="Shortcut to search across all accessible projects")
     ] = False,
 ) -> str:
-    """Advanced search with boolean logic and metadata filtering.
+    """Advanced search with boolean logic and semantic filtering.
 
-    ⚠️ IMPORTANT: Searches CONTENT (text), not metadata recency.
-    - For recent activity: Use `adn_navigation("recent_activity", timeframe="1d")`.
-    - For precise date filtering: Use `after_date` / `before_date`.
+    ## Return Format
+    - A Markdown-formatted list of search results.
+    - Includes title, type, permalink, score, and content snippet for each result.
+    - Provides pagination info at the bottom.
 
-    ## Syntax & Capabilities
-    - **Boolean**: `term1 AND term2`, `term1 OR term2`, `term1 NOT term2`
-    - **Phrases & Grouping**: `"exact phrase"`, `(logic OR group) AND match`
-    - **Shortcuts**: `tag:foo`, `category:observation`, `author:user`
-    - **Wildcards**: `docs/2024-*` (with `search_type="permalink"`)
-
-    Examples:
-        - `search_notes("project AND planning", types=["entity"])`
-        - `search_notes("\"standup meeting\"", project="work")`
+    ## Examples
+    ```python
+    search_notes(query="project AND planning", types=["note"])
+    search_notes(query="tag:urgent", projects="ALL")
+    search_notes(query="docs/2026-*", search_type="permalink")
+    ```
     """
     # Normalize query and extract inline tag filters when applicable
     raw_query = (query or "").strip()

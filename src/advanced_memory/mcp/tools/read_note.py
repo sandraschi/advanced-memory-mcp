@@ -17,12 +17,25 @@ from advanced_memory.utils import sanitize_filename, validate_project_path
 
 @mcp.tool
 async def read_note(
-    identifier: Annotated[str, Field(description="Title, permalink, or memory:// URL")],
-    page: Annotated[int, Field(description="Page number for paginated results")] = 1,
-    page_size: Annotated[int, Field(description="Results per page")] = 10,
+    identifier: Annotated[
+        str, Field(description="Title, permalink, or memory:// URL to retrieve")
+    ],
+    page: Annotated[int, Field(description="Page number for paginated large notes")] = 1,
+    page_size: Annotated[int, Field(description="Number of results per page")] = 10,
     project: Annotated[str | None, Field(description="Optional project override")] = None,
 ) -> Any:
-    """Read a markdown note by title, permalink, or content lookup."""
+    """Read a markdown note by title, permalink, or content lookup.
+
+    ## Return Format
+    - Raw Markdown content if found.
+    - If exact match fails, returns a list of **Related Results** or a helpful **Not Found** guide.
+
+    ## Examples
+    ```python
+    read_note(identifier="Project Alpha")
+    read_note(identifier="meetings/budget_2026.md")
+    ```
+    """
     active_project = get_active_project(project)
 
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status

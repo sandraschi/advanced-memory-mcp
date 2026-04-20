@@ -96,6 +96,7 @@ Examples:
     transport_group.add_argument("--stdio", action="store_true", help="Run in STDIO (JSON-RPC) mode (default)")
     transport_group.add_argument("--http", action="store_true", help="Run in HTTP Streamable mode (FastMCP 2.14.4+)")
     transport_group.add_argument("--sse", action="store_true", help="Run in SSE mode (deprecated, use --http)")
+    transport_group.add_argument("--transport", help="Transport mode: stdio, http, sse")
 
     parser.add_argument("--host", default=None, help=f"Host to bind to (default: ${ENV_HOST} or 127.0.0.1)")
     parser.add_argument("--port", type=int, default=None, help=f"Port to listen on (default: ${ENV_PORT} or 10704)")
@@ -120,6 +121,14 @@ def resolve_transport(args: argparse.Namespace) -> TransportType:
     Returns:
         Transport type string.
     """
+    if getattr(args, "transport", None):
+        t = args.transport.lower()
+        if t in ("stdio", "http", "sse"):
+            if t == "sse":
+                logger.warning("SSE transport is deprecated. Consider using http instead.")
+            return t  # type: ignore
+        logger.warning(f"Invalid --transport='{t}', falling back to other arguments/environment")
+
     if args.http:
         return "http"
     elif args.sse:
