@@ -192,13 +192,13 @@ async def test_list_directory_endpoint_with_depth(test_graph, client, project_ur
     response_depth_1 = await client.get(f"{project_url}/directory/list?dir_name=/&depth=1")
     assert response_depth_1.status_code == 200
     data_depth_1 = response_depth_1.json()
-    assert len(data_depth_1) == 1  # Just the test directory
+    assert len(data_depth_1["nodes"]) == 1  # Just the test directory
 
     # Test depth=2 (should include files in test directory)
     response_depth_2 = await client.get(f"{project_url}/directory/list?dir_name=/&depth=2")
     assert response_depth_2.status_code == 200
     data_depth_2 = response_depth_2.json()
-    assert len(data_depth_2) == 6  # test directory + 5 files
+    assert len(data_depth_2["nodes"]) == 6  # test directory + 5 files
 
 
 @pytest.mark.asyncio

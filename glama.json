@@ -4,11 +4,11 @@
                         "sandraschi"
                     ],
     "name":  "advanced-memory-mcp",
-    "description":  "Independent local-first knowledge management system combining Zettelkasten with knowledge graphs. 15 portmanteau tools for Claude Desktop integration. Experimental Claude Skills support.",
+    "description":  "Local-first knowledge graph and notes: FastMCP 3.2 GA, 12 Managed Namespaces (79 tools), SQLite FTS5 + LanceDB RAG, optional extra document roots, webapp.",
     "type":  "mcp_server",
     "status":  "beta",
-    "framework":  "MCP SDK",
-    "tools":  15,
+    "framework":  "FastMCP 3.2",
+    "tools":  79,
     "transport":  [
                       "stdio"
                   ],
@@ -26,10 +26,9 @@
                      "knowledge_management":  {
                                                   "enabled":  true,
                                                   "modes":  [
-                                                                "portmanteau",
-                                                                "full"
+                                                                "managed-namespaces"
                                                             ],
-                                                  "note":  "Portmanteau mode (15 tools) is default, full mode (56 tools) is opt-in"
+                                                  "note":  "79 tools across 12 namespaces (FastMCP 3.2 GA)"
                                               },
                      "zettelkasten":  {
                                           "enabled":  true

@@ -2,6 +2,7 @@
 
 import asyncio
 import os
+import traceback
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -15,36 +16,7 @@ from watchfiles.main import Change, FileChange
 from advanced_memory.config import WATCH_STATUS_JSON, AdvancedMemoryConfig
 from advanced_memory.models import Project
 from advanced_memory.repository import ProjectRepository
-
-# Common directories to ignore during file watching and sync
-IGNORE_PATTERNS = {
-    # Node.js
-    "node_modules",
-    # Build outputs
-    "dist",
-    "build",
-    "target",
-    "out",
-    ".next",
-    ".nuxt",
-    # Python
-    "__pycache__",
-    ".pytest_cache",
-    ".tox",
-    "venv",
-    ".venv",
-    # Other package managers / build tools
-    "vendor",
-    ".gradle",
-    ".cargo",
-    "coverage",
-    # IDE and editor files
-    ".vscode",
-    ".idea",
-    # OS files
-    ".DS_Store",
-    "Thumbs.db",
-}
+from advanced_memory.sync.ignore_patterns import IGNORE_PATTERNS
 
 
 class WatchEvent(BaseModel):
@@ -164,23 +136,33 @@ class WatchService:
 
                 # process changes with error isolation - don't let one project crash the whole service
                 if change_handlers:
-                    try:
-                        await asyncio.gather(*change_handlers, return_exceptions=True)
-                    except Exception as e:
-                        logger.error(f"Error processing file changes: {e}")
-                        self.state.record_error(f"Change processing error: {e}")
+                    results = await asyncio.gather(*change_handlers, return_exceptions=True)
+                    for idx, result in enumerate(results):
+                        if isinstance(result, BaseException):
+                            tb = "".join(
+                                traceback.format_exception(
+                                    type(result), result, result.__traceback__
+                                )
+                            )
+                            logger.error(
+                                "handle_changes failed (batch index={}): {}\n{}",
+                                idx,
+                                result,
+                                tb,
+                            )
+                            self.state.record_error(f"Change handler error: {result}")
 
         except asyncio.CancelledError:
             # Clean cancellation - this is expected when the service is shut down
             logger.info("Watch service cancelled")
             raise
         except (OSError, PermissionError) as e:
-            logger.exception("Watch service filesystem error", error=str(e))
+            logger.exception("Watch service filesystem error: {}", e)
             self.state.record_error(f"Filesystem error: {e}")
             raise
         except Exception as e:
             # Catch any other unexpected errors to prevent service crash
-            logger.exception("Watch service unexpected error", error=str(e))
+            logger.exception("Watch service unexpected error: {}", e)
             self.state.record_error(f"Unexpected error: {e}")
             raise
 

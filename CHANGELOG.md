@@ -5,6 +5,38 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - Extra RAG folders & LanceDB storage docs (2026-04-21)
+
+### Added
+
+- **`rag_extra_roots`** in `AdvancedMemoryConfig` (persisted in `~/.advanced-memory/config.json`): optional list of **absolute directories on the API host** whose `.md`, `.mdx`, and `.txt` files are chunked into LanceDB when you run a full **Rebuild search index**. Chunks are tagged as global extras and included in semantic / hybrid search for **every** vault project (`SearchService.index_rag_extra_roots`, widened vector metadata filter).
+- **Management API:** `GET` / `PUT /api/v1/management/rag-extra-roots`, `POST /api/v1/management/rag-extra-roots/validate`.
+- **Webapp Vault sync:** section **Extra RAG folders (LanceDB)** — list paths, save to config, validate on server, reload; **Folder hint** uses `showDirectoryPicker()` when available (browsers still cannot supply a drive letter; users paste the full server path).
+
+### Documentation
+
+- **LanceDB on disk:** the vector store directory is **`{parent of the app SQLite file}/vectors`**, typically `%USERPROFILE%\.advanced-memory\vectors` next to `memory.db` (or under `ADVANCED_MEMORY_HOME` if set). It is **not** under the git checkout by default. The config field **`rag_persist_dir` / `RAG_PERSIST_DIR`** remains legacy naming and is **not** used to choose the LanceDB path for `VectorRepository` (implementation uses the `vectors` sibling path in `deps.py` / `sync_service.py`).
+- **Cross-repo clarity:** other documentation stacks (for example **mcp-central-docs**) keep their **own** LanceDB directory (that project defaults to `src/docs_mcp/data/lancedb` inside its repo). Advanced Memory does **not** share one database with unrelated repos unless an operator deliberately points two apps at the same path.
+- Updated **README**, **docs/README**, **docs/PRD**, **docs/USAGE**, **docs/AI-FEATURES**, **docs/ARCHITECTURE**, **webapp/README** for the above.
+
+### Tests
+
+- `tests/test_search_rag_extra_helpers.py` — paragraph chunking and extra-root metadata helpers.
+
+### Changed
+
+- **`prefab-ui`:** dependency floor raised from **0.1.3** to **≥0.19.0** (lock resolves **0.19.1**) so installs align with the current FastMCP 3.2 Prefab / `ToolResult` stack.
+
+### Fixed
+
+- **FastAPI management watch:** `app.state.watch_task` is initialized in the HTTP app lifespan and management routes read it with `getattr`, so `GET /api/v1/management/watch/status` no longer raises when the watch task field was never set.
+- **Webapp Note Vault (`/notes`):** Missing imports for `useBackendAutoReconnect` and the offline recovery clipboard helpers caused a runtime `ReferenceError` on every visit; the page loads again.
+- **Webapp Note Vault:** Search hits and list rows may ship `tags` as an array, a JSON string, or a single string; the UI normalizes them before filtering and rendering. Opening a note from **Recent Activity** via `/notes?id=<permalink>` waits until the vault project is selected, then loads content through the knowledge entity **content** endpoint without assuming a full note DTO.
+- **Webapp:** `App` metadata for the right-hand sidebar maps the slim content response safely (word counts and file size derived from body text when the API omits those fields).
+- **Webapp Note Vault (tree view):** Tree building and sort no longer assume every note has a non-empty title or permalink segment.
+
+---
+
 ## [1.8.0] - FastMCP 3.2 GA Managed Namespaces (2026-04-21)
 
 ### Changed - Tool surface decomposed into 12 mounted sub-apps

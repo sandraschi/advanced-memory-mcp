@@ -1,6 +1,16 @@
-import { ArrowLeft, Eye, EyeOff, FolderSync, HardDrive, Library, RefreshCw } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  FolderOpen,
+  FolderSync,
+  HardDrive,
+  Library,
+  RefreshCw,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { KnowledgeModelExplainer } from "../../components/KnowledgeModelExplainer";
 import { apiService } from "../../services/api";
 
 type ProjectRow = { name: string; path: string; is_default?: boolean };
@@ -30,8 +40,19 @@ export default function VaultSync() {
   const [busy, setBusy] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatusPayload | null>(null);
   const [reindexSeconds, setReindexSeconds] = useState(0);
+  const [ragExtraPaths, setRagExtraPaths] = useState<string[]>([]);
+  const [ragDraft, setRagDraft] = useState("");
+  const [ragBusy, setRagBusy] = useState(false);
+  const [ragPickerNote, setRagPickerNote] = useState<string | null>(null);
   const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reindexTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const refreshRagRoots = useCallback(async () => {
+    const res = await apiService.getRagExtraRoots();
+    if (res.success && res.data) {
+      setRagExtraPaths(res.data.paths);
+    }
+  }, []);
 
   const refreshProjects = useCallback(async () => {
     const res = await apiService.getProjects();
@@ -56,6 +77,10 @@ export default function VaultSync() {
   useEffect(() => {
     void refreshProjects();
   }, [refreshProjects]);
+
+  useEffect(() => {
+    void refreshRagRoots();
+  }, [refreshRagRoots]);
 
   useEffect(() => {
     void pollWatch();
@@ -135,6 +160,63 @@ export default function VaultSync() {
     }
   };
 
+  const pickRagFolderHint = async () => {
+    const w = window as Window & {
+      showDirectoryPicker?: () => Promise<FileSystemDirectoryHandle>;
+    };
+    if (!w.showDirectoryPicker) {
+      setRagPickerNote(
+        "This browser cannot turn a folder pick into a drive path. Enter the full server path manually (e.g. D:\\Dev\\repos\\mcp-central-docs).",
+      );
+      return;
+    }
+    try {
+      const handle = await w.showDirectoryPicker();
+      setRagPickerNote(
+        `Folder name: "${handle.name}". Paste the full path the API machine uses (Explorer address bar, or Shift+Right-click → Copy as path), then Add.`,
+      );
+    } catch {
+      setRagPickerNote(null);
+    }
+  };
+
+  const saveRagRoots = async () => {
+    setRagBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const out = await apiService.setRagExtraRoots(ragExtraPaths);
+      if (out.success) {
+        setMessage(JSON.stringify(out.data, null, 2));
+        await refreshRagRoots();
+      } else {
+        setError(out.error || "Save failed");
+      }
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setRagBusy(false);
+    }
+  };
+
+  const validateRagRoots = async () => {
+    setRagBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const out = await apiService.validateRagExtraRoots(ragExtraPaths);
+      if (out.success && out.data) {
+        setMessage(JSON.stringify(out.data, null, 2));
+      } else {
+        setError(out.error || "Validate failed");
+      }
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setRagBusy(false);
+    }
+  };
+
   const runReindex = async () => {
     setBusy("reindex");
     setError(null);
@@ -200,6 +282,7 @@ export default function VaultSync() {
           <code className="rounded bg-muted px-1 text-xs">start.ps1</code>). They do not replace
           starting the backend itself.
         </p>
+        <KnowledgeModelExplainer className="mt-4" />
       </div>
 
       <section className="rounded-xl border border-border bg-card/40 p-5 space-y-4">
@@ -218,12 +301,121 @@ export default function VaultSync() {
           }}
         >
           {projects.map((p) => (
-            <option key={p.name} value={p.name}>
+            <option key={p.name} value={p.name} title={p.path}>
               {p.name}
-              {p.is_default ? " (default)" : ""}
+              {p.is_default ? " (default)" : ""} — {p.path}
             </option>
           ))}
         </select>
+        {(() => {
+          const sel = projects.find((p) => p.name === targetName);
+          return sel ? (
+            <p className="rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs leading-relaxed">
+              <span className="font-medium text-foreground">Vault folder: </span>
+              <code className="break-all text-muted-foreground">{sel.path}</code>
+            </p>
+          ) : null;
+        })()}
+      </section>
+
+      <section className="rounded-xl border border-border bg-card/40 p-5 space-y-4">
+        <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <FolderOpen className="h-4 w-4" />
+          Extra RAG folders (LanceDB)
+        </h2>
+        <p className="text-xs text-muted-foreground">
+          Absolute folders on the <strong className="text-foreground/90">machine running the API</strong> whose{" "}
+          <code className="rounded bg-muted/80 px-1">.md</code>,{" "}
+          <code className="rounded bg-muted/80 px-1">.mdx</code>, and{" "}
+          <code className="rounded bg-muted/80 px-1">.txt</code> files are chunked into the vector index on{" "}
+          <strong className="text-foreground/90">Rebuild search index</strong>. These chunks are included in semantic
+          search for every vault project.
+        </p>
+        {ragPickerNote ? (
+          <p className="rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
+            {ragPickerNote}
+          </p>
+        ) : null}
+        <ul className="space-y-2">
+          {ragExtraPaths.map((p) => (
+            <li
+              key={p}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/60 bg-muted/10 px-3 py-2 text-xs"
+            >
+              <code className="break-all text-muted-foreground">{p}</code>
+              <button
+                type="button"
+                disabled={ragBusy}
+                onClick={() => setRagExtraPaths(ragExtraPaths.filter((x) => x !== p))}
+                className="shrink-0 rounded border border-border px-2 py-1 text-[11px] hover:bg-muted disabled:opacity-50"
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <input
+            type="text"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm font-mono"
+            placeholder="D:\Dev\repos\mcp-central-docs"
+            value={ragDraft}
+            onChange={(e) => setRagDraft(e.target.value)}
+            disabled={ragBusy}
+          />
+          <button
+            type="button"
+            disabled={ragBusy}
+            onClick={() => {
+              const t = ragDraft.trim();
+              if (!t) return;
+              if (ragExtraPaths.includes(t)) {
+                setRagDraft("");
+                return;
+              }
+              setRagExtraPaths([...ragExtraPaths, t]);
+              setRagDraft("");
+            }}
+            className="rounded-lg border border-border bg-background px-4 py-2 text-sm hover:bg-muted disabled:opacity-50"
+          >
+            Add path
+          </button>
+          <button
+            type="button"
+            disabled={ragBusy}
+            onClick={() => void pickRagFolderHint()}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm hover:bg-muted disabled:opacity-50"
+          >
+            <FolderOpen className="h-4 w-4" />
+            Folder hint
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            disabled={ragBusy}
+            onClick={() => void saveRagRoots()}
+            className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          >
+            Save to config
+          </button>
+          <button
+            type="button"
+            disabled={ragBusy}
+            onClick={() => void validateRagRoots()}
+            className="rounded-lg border border-border bg-background px-4 py-2 text-sm hover:bg-muted disabled:opacity-50"
+          >
+            Validate on server
+          </button>
+          <button
+            type="button"
+            disabled={ragBusy}
+            onClick={() => void refreshRagRoots()}
+            className="text-sm text-muted-foreground underline"
+          >
+            Reload from server
+          </button>
+        </div>
       </section>
 
       <section className="rounded-xl border border-border bg-card/40 p-5 space-y-4">
@@ -288,8 +480,8 @@ export default function VaultSync() {
             (heavy on large vaults).
           </li>
           <li>
-            <strong>Rebuild search index</strong> — FTS rebuild for the active API project segment
-            (long-running).
+            <strong>Rebuild search index</strong> — rebuilds SQLite FTS <em>and</em> the LanceDB
+            vector store used for semantic / hybrid search (long-running).
           </li>
           <li>
             <strong>Sync project registry</strong> — align configured projects with the database

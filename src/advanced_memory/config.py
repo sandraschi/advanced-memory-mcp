@@ -26,10 +26,50 @@ else:
 DATABASE_NAME = "memory.db"
 APP_DATABASE_NAME = "memory.db"  # Using the same name but in the app directory
 DATA_DIR_NAME = ".advanced-memory"
+VAULT_DIR_NAME = "vault"
 CONFIG_FILE_NAME = "config.json"
 WATCH_STATUS_JSON = "watch-status.json"
 
 Environment = Literal["test", "dev", "user"]
+
+
+def default_main_vault_path_str() -> str:
+    """Default vault directory for project ``main``: always ``~/.advanced-memory/vault``.
+
+    Intentionally **not** tied to ``ADVANCED_MEMORY_HOME`` (that only affects the DB path via
+    ``app_database_path``) so the default note store stays under the user profile app dir.
+    """
+    return str(Path.home() / DATA_DIR_NAME / VAULT_DIR_NAME)
+
+
+def _migrate_projects_away_from_profile_root(data: dict[str, Any]) -> dict[str, Any]:
+    """Rewrite legacy configs that stored a project path as the user profile root."""
+    raw = data.get("projects")
+    if not isinstance(raw, dict):
+        return data
+    try:
+        profile = Path.home().resolve()
+    except Exception:
+        return data
+    out_projects = dict(raw)
+    changed = False
+    for name, p in list(raw.items()):
+        if not isinstance(p, str):
+            continue
+        try:
+            if Path(p).resolve() == profile:
+                out_projects[name] = default_main_vault_path_str()
+                changed = True
+                logger.warning(
+                    "Migrated project {!r} off user profile root to default vault {}",
+                    name,
+                    out_projects[name],
+                )
+        except (OSError, RuntimeError, ValueError):
+            continue
+    if not changed:
+        return data
+    return {**data, "projects": out_projects}
 
 
 @dataclass
@@ -58,8 +98,8 @@ class AdvancedMemoryConfig(BaseSettings):
     env: Environment = Field(default="dev", description="Environment name")
 
     projects: dict[str, str] = Field(
-        default_factory=lambda: {"main": str(Path(os.getenv("ADVANCED_MEMORY_HOME", Path.home())))},
-        description="Mapping of project names to their filesystem paths",
+        default_factory=lambda: {"main": default_main_vault_path_str()},
+        description="Mapping of project names to their vault (filesystem) roots — never the bare user profile",
     )
     default_project: str = Field(
         default="main",
@@ -139,6 +179,14 @@ class AdvancedMemoryConfig(BaseSettings):
     rag_fts_weight: float = Field(default=0.5, env="RAG_FTS_WEIGHT")
     rag_storage_passphrase: str | None = Field(default=None, env="RAG_STORAGE_PASSPHRASE")
     rag_attn_implementation: str = Field(default="flash_attention_2", env="RAG_ATTN_IMPLEMENTATION")
+
+    rag_extra_roots: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Absolute folders (on the API host) whose .md/.mdx/.txt files are chunked into LanceDB "
+            "on full reindex. Chunks are visible to semantic search for every project (global RAG layer)."
+        ),
+    )
 
     model_config = SettingsConfigDict(
         env_prefix="ADVANCED_MEMORY_",
@@ -239,8 +287,14 @@ class ConfigManager:
 
         if self.config_file.exists():
             try:
-                data = json.loads(self.config_file.read_text(encoding="utf-8"))
-                return AdvancedMemoryConfig(**data)
+                raw = json.loads(self.config_file.read_text(encoding="utf-8"))
+                migrated = (
+                    _migrate_projects_away_from_profile_root(raw) if isinstance(raw, dict) else raw
+                )
+                config = AdvancedMemoryConfig(**migrated)
+                if isinstance(raw, dict) and migrated != raw:
+                    self.save_config(config)
+                return config
             except Exception as e:  # pragma: no cover
                 logger.error(f"Failed to load config: {e}")
                 config = AdvancedMemoryConfig()

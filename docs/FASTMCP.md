@@ -66,7 +66,9 @@ Starting the MCP with **`--agentic`** applies FastMCP's **CodeMode** transform, 
 
 ## Rich results: `ToolResult` and **prefabs**
 
-FastMCP lets a tool return structured UI for clients that support it. This repo uses the **`prefab-ui`** package and the helpers in **`advanced_memory/mcp/prefabs.py`**:
+FastMCP lets a tool return structured UI for clients that support it. This repo pins **`prefab-ui` ≥ 0.19** (see `pyproject.toml`) and the helpers in **`advanced_memory/mcp/prefabs.py`**:
+
+**Where it renders.** Prefabs ship as **structured tool result content** plus the Prefab renderer resource (`ui://prefab/...`). The chat surface must **implement that renderer** to show grids, Mermaid, and buttons—not just print JSON. **Google Antigravity** is one IDE that advertises this path. **Cursor** (as of early 2026) generally surfaces MCP tool output as **text/markdown** in the agent transcript; if your build does not show interactive Prefab panels, use **`fastmcp dev apps`** from the FastMCP CLI to preview app tools in a browser while developing.
 
 | Prefab helper | Role |
 | :--- | :--- |

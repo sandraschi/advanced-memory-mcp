@@ -1,8 +1,8 @@
 {
   "manifest_version": "0.2",
   "name": "advanced-memory-mcp",
-  "version": "1.7.0",
-  "description": "Advanced Memory MCP — research and knowledge platform with FastMCP, portmanteau tools, RAG, and webapp.",
+  "version": "1.8.1",
+  "description": "Advanced Memory MCP — local-first knowledge graph with FastMCP 3.2 GA (12 Managed Namespaces, 79 tools), SQLite FTS5 + LanceDB RAG, optional extra document roots, and webapp.",
   "author": {
     "name": "Sandra Schipal",
     "email": "sandra@schipal.at",
@@ -22,7 +22,8 @@
     "memory",
     "notes",
     "fastmcp",
-    "portmanteau-tools"
+    "managed-namespaces",
+    "lancedb"
   ],
   "server": {
     "type": "python",

@@ -69,6 +69,8 @@ Browser UI: Vite frontend + FastAPI backend. **Details:** [webapp/README.md](../
 
 Then open **http://localhost:10704/** . Frontend is port **10704**, API **10705** (defaults in `start.ps1`).
 
+**Vault sync (1.8.1+):** the **Extra RAG folders** section edits `rag_extra_roots` in `~/.advanced-memory/config.json` (paths on the **API host**). After saving, run **Rebuild search index** so LanceDB picks up those trees. Semantic search reads vectors from **`vectors`** next to `memory.db`, not from your git clone — see [AI-FEATURES.md](AI-FEATURES.md#where-lancedb-is-stored).
+
 ---
 
 ## 3. Advanced / related docs

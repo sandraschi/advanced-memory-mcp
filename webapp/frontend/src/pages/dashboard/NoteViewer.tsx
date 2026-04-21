@@ -2,6 +2,7 @@
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
   Eye,
   FileText,
@@ -17,12 +18,37 @@
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getApiBaseUrl } from "../../config/apiBase";
 import { devError } from "../../devConsole";
+import { useBackendAutoReconnect } from "../../hooks/useBackendAutoReconnect";
 import { apiService } from "../../services/api";
+import {
+  copyRecoveryCommand,
+  UVICORN_RESTART_LINE,
+  WEBAPP_START_FROM_ROOT,
+} from "../../utils/backendRecovery";
 
 const DEBUG = import.meta.env.DEV;
+
+/** API / list state may still carry non-array tags; never assume `.tags` is an array. */
+function noteTags(note: { tags?: unknown }): string[] {
+  if (Array.isArray(note.tags)) {
+    return note.tags as string[];
+  }
+  if (typeof note.tags === "string" && note.tags.trim()) {
+    try {
+      const p = JSON.parse(note.tags) as unknown;
+      if (Array.isArray(p)) {
+        return p.map((x) => String(x)).filter((t) => t.length > 0);
+      }
+    } catch {
+      return [note.tags.trim()];
+    }
+    return [note.tags.trim()];
+  }
+  return [];
+}
 
 interface Note {
   id: string;
@@ -43,6 +69,7 @@ interface NoteViewerProps {
 type ProjectRow = { name: string; path: string; is_default?: boolean };
 
 export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerProps) {
+  const [searchParams] = useSearchParams();
   const [notes, setNotes] = useState<Note[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,80 +101,130 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [vaultProject, setVaultProject] = useState("");
+  const [recoveryCopied, setRecoveryCopied] = useState<null | "uvicorn" | "start">(null);
 
   /** Bumps on effect cleanup (Strict Mode remount, /notes unmount) so stale loadNotes cannot clear a good list. */
   const listFetchGen = useRef(0);
+  const notesRef = useRef<Note[]>([]);
+  const totalNotesRef = useRef(0);
+  const currentPageRef = useRef(1);
+  notesRef.current = notes;
+  totalNotesRef.current = totalNotes;
+  currentPageRef.current = currentPage;
+
+  /** Background polls must not flip the UI offline on one slow or dropped /health (common under load). */
+  const HEALTH_TIMEOUT_MS = 10_000;
 
   const probeBackend = async (opts?: { silent?: boolean }): Promise<boolean> => {
+    const silent = Boolean(opts?.silent);
     try {
-      if (!opts?.silent) {
+      if (!silent) {
         setBackendReachable("checking");
       }
       const healthUrl = `${getApiBaseUrl()}/health`;
       const response = await fetch(healthUrl, {
         method: "GET",
-        signal: AbortSignal.timeout(2000),
+        signal: AbortSignal.timeout(HEALTH_TIMEOUT_MS),
       });
       const ok = response.ok;
-      setBackendReachable(ok ? "online" : "offline");
-      return ok;
+      if (ok) {
+        setBackendReachable("online");
+        return true;
+      }
+      if (!silent) {
+        setBackendReachable("offline");
+      }
+      return false;
     } catch (error) {
       DEBUG && devError("Backend health check failed:", error);
-      setBackendReachable("offline");
+      if (!silent) {
+        setBackendReachable("offline");
+      }
       return false;
     }
   };
 
-  const loadNotes = async (page = 1) => {
+  const loadNotes = async (page = 1, opts?: { skipHealthProbe?: boolean }) => {
     const myGen = ++listFetchGen.current;
     const stillCurrent = () => myGen === listFetchGen.current;
+    const skipHealth = Boolean(opts?.skipHealthProbe);
 
     setIsLoading(true);
     setListError("");
     try {
-      const apiUp = await probeBackend();
-      if (!stillCurrent()) {
-        return;
-      }
-
-      if (apiUp) {
-        try {
-          const response = await (searchQuery.trim() !== ""
-            ? apiService.searchNotes(searchQuery, page, 50, selectedTags)
-            : apiService.getNotes(page, 50));
-
+      if (!skipHealth) {
+        const apiUp = await probeBackend();
+        if (!stillCurrent()) {
+          return;
+        }
+        if (!apiUp) {
           if (!stillCurrent()) {
             return;
           }
-
-          if (response.success && Array.isArray(response.data?.notes)) {
-            const notesData = response.data.notes;
-            setNotes(notesData);
-            setFilteredNotes(notesData);
-            setCurrentPage(response.data.page || page);
-            setTotalPages(response.data.pages || 1);
-            setTotalNotes(response.data.total ?? notesData.length);
-
-            // Extract available tags
-            const allTags = new Set<string>();
-            notesData.forEach((note) => {
-              if (Array.isArray(note.tags)) {
-                note.tags.forEach((tag) => allTags.add(tag));
-              }
-            });
-            setAvailableTags(Array.from(allTags).sort());
+          const preserveCache =
+            notesRef.current.length > 0 || totalNotesRef.current > 0;
+          if (preserveCache) {
+            setBackendReachable("offline");
+            setListError("Health check failed; showing the last loaded list.");
             setIsLoading(false);
             return;
-          } else {
-            setListError(response.error || "Could not load notes from the API.");
           }
-        } catch (apiError) {
-          devError("API call failed:", apiError);
-          setListError("Could not load notes from the API.");
+          setNotes([]);
+          setFilteredNotes([]);
+          setAvailableTags([]);
+          setTotalNotes(0);
+          setTotalPages(1);
+          setCurrentPage(1);
+          setIsLoading(false);
+          return;
         }
       }
 
+      try {
+        const response = await (searchQuery.trim() !== ""
+          ? apiService.searchNotes(searchQuery, page, 50, selectedTags)
+          : apiService.getNotes(page, 50));
+
+        if (!stillCurrent()) {
+          return;
+        }
+
+        if (response.success && Array.isArray(response.data?.notes)) {
+          const notesData = response.data.notes;
+          setNotes(notesData);
+          setFilteredNotes(notesData);
+          setCurrentPage(response.data.page || page);
+          setTotalPages(response.data.pages || 1);
+          setTotalNotes(response.data.total ?? notesData.length);
+          setBackendReachable("online");
+
+          // Extract available tags
+          const allTags = new Set<string>();
+          notesData.forEach((note) => {
+            if (Array.isArray(note.tags)) {
+              note.tags.forEach((tag) => allTags.add(tag));
+            }
+          });
+          setAvailableTags(Array.from(allTags).sort());
+          setIsLoading(false);
+          return;
+        } else {
+          setListError(response.error || "Could not load notes from the API.");
+        }
+      } catch (apiError) {
+        devError("API call failed:", apiError);
+        setListError("Could not load notes from the API.");
+      }
+
       if (!stillCurrent()) {
+        return;
+      }
+      const preserveAfterApiFailure =
+        skipHealth && (notesRef.current.length > 0 || totalNotesRef.current > 0);
+      if (preserveAfterApiFailure) {
+        setBackendReachable("offline");
+        setListError("Notes API still unreachable; cached list kept.");
+        setIsLoading(false);
         return;
       }
       setNotes([]);
@@ -162,6 +239,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       if (!stillCurrent()) {
         return;
       }
+      const preserveUnexpected =
+        skipHealth && (notesRef.current.length > 0 || totalNotesRef.current > 0);
+      if (preserveUnexpected) {
+        setBackendReachable("offline");
+        setListError("Unexpected error while refreshing; cached list kept.");
+        setIsLoading(false);
+        return;
+      }
       setListError("An unexpected error occurred while loading notes.");
       setNotes([]);
       setFilteredNotes([]);
@@ -172,6 +257,16 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       setIsLoading(false);
     }
   };
+
+  const loadNotesRef = useRef(loadNotes);
+  loadNotesRef.current = loadNotes;
+
+  useBackendAutoReconnect(
+    backendReachable === "offline" && !isLoading,
+    async () => {
+      await loadNotesRef.current(currentPageRef.current, { skipHealthProbe: true });
+    },
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -197,7 +292,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
     const interval = setInterval(() => {
       void probeBackend({ silent: true });
-    }, 10000);
+    }, 45_000);
 
     return () => {
       cancelled = true;
@@ -231,19 +326,21 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       filtered = filtered.filter((note) => {
         const title = String(note.title ?? "").toLowerCase();
         const body = String(note.content ?? "").toLowerCase();
+        const tags = noteTags(note);
         return (
           title.includes(q) ||
           body.includes(q) ||
-          note.tags.some((tag) => String(tag).toLowerCase().includes(q))
+          tags.some((tag) => String(tag).toLowerCase().includes(q))
         );
       });
     }
 
     // Tag filter
     if (selectedTags.length > 0) {
-      filtered = filtered.filter((note) =>
-        selectedTags.some((selectedTag) => note.tags.includes(selectedTag)),
-      );
+      filtered = filtered.filter((note) => {
+        const tags = noteTags(note);
+        return selectedTags.some((selectedTag) => tags.includes(selectedTag));
+      });
     }
 
     // Date filters
@@ -300,13 +397,16 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     try {
       const response = await apiService.getNote(note.id);
       if (response.success && response.data) {
+        const payload = response.data as { content?: string; title?: string };
+        const body = typeof payload.content === "string" ? payload.content : "";
+        const title = typeof payload.title === "string" ? payload.title : undefined;
         // Merge full content into existing note object to preserve tags, date, etc.
         setSelectedNote((prev) =>
           prev && prev.id === note.id
             ? {
                 ...prev,
-                content: response.data!.content,
-                title: response.data!.title || prev.title,
+                content: body,
+                title: title || prev.title,
               }
             : prev,
         );
@@ -315,6 +415,52 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       // Keep the basic note data if API call fails
     }
   };
+
+  const handleNoteSelectRef = useRef(handleNoteSelect);
+  handleNoteSelectRef.current = handleNoteSelect;
+  /** ``project:decodedId`` so we re-open after vault project switch. */
+  const lastUrlOpenKey = useRef<string | null>(null);
+
+  /** Open note from ``/notes?id=<permalink>`` (e.g. Recent Activity links). */
+  useEffect(() => {
+    if (!vaultProject) {
+      return;
+    }
+    const raw = searchParams.get("id");
+    if (raw === null || raw === "") {
+      lastUrlOpenKey.current = null;
+      return;
+    }
+    let id: string;
+    try {
+      id = decodeURIComponent(raw);
+    } catch {
+      devError("Invalid id query parameter", raw);
+      return;
+    }
+    const trimmed = id.trim();
+    if (!trimmed) {
+      return;
+    }
+    const openKey = `${vaultProject}:${trimmed}`;
+    if (lastUrlOpenKey.current === openKey) {
+      return;
+    }
+    lastUrlOpenKey.current = openKey;
+
+    const fromList = notesRef.current.find((n) => n.id === trimmed);
+    const stub: Note = {
+      id: trimmed,
+      title: trimmed,
+      content: "",
+      tags: [],
+      created: new Date().toISOString(),
+      modified: new Date().toISOString(),
+      wordCount: 0,
+      connections: 0,
+    };
+    void handleNoteSelectRef.current(fromList ?? stub);
+  }, [searchParams, vaultProject]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -338,8 +484,13 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     const root: Record<string, TreeNode> = {};
 
     notesList.forEach((note) => {
-      const permalink = (note as any).permalink || note.title || "";
-      const pathParts = permalink.includes("/") ? permalink.split("/") : [note.title];
+      const fallbackId = String(note.id ?? "untitled");
+      const permalink = String(
+        (note as { permalink?: string }).permalink || note.title || note.id || "untitled",
+      );
+      const pathParts = permalink.includes("/")
+        ? permalink.split("/").filter((p) => p.length > 0)
+        : [permalink || fallbackId];
 
       let currentLevel = root;
       let currentPath = "";
@@ -365,7 +516,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         const aIsFolder = Object.keys(a.children).length > 0 && !a.note;
         const bIsFolder = Object.keys(b.children).length > 0 && !b.note;
         if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
-        return a.name.localeCompare(b.name);
+        return String(a.name).localeCompare(String(b.name));
       });
       sorted.forEach((node) => {
         const sortedChildren = recursiveSort(Object.values(node.children));
@@ -442,6 +593,11 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
       );
     });
   };
+
+  const hasCachedVaultList = notes.length > 0 || totalNotes > 0;
+  const showHardOfflinePanel = !isLoading && backendReachable === "offline" && !hasCachedVaultList;
+  const showStaleConnectionBanner =
+    !isLoading && backendReachable === "offline" && hasCachedVaultList;
 
   return (
     <div className="h-full min-h-0 flex flex-col">
@@ -676,7 +832,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent"></div>
                   <span className="ml-2 text-muted-foreground">Loading notes…</span>
                 </div>
-              ) : backendReachable === "offline" ? (
+              ) : showHardOfflinePanel ? (
                 <div className="text-center py-8">
                   <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
@@ -684,31 +840,83 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold mb-2">Cannot reach the vault API</h3>
-                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                  <p className="text-muted-foreground mb-3 max-w-md mx-auto">
                     This page does not start the backend. Run{" "}
                     <code className="text-xs bg-muted px-1 rounded">.\start.ps1</code> from the{" "}
                     <code className="text-xs bg-muted px-1 rounded">webapp</code> folder (it starts
-                    FastAPI on port 10705 and Vite on 10704), or run uvicorn from the repo root:{" "}
-                    <code className="text-xs bg-muted px-1 rounded">
-                      uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port 10705
-                    </code>
-                    . If you opened the UI from another device, set{" "}
+                    FastAPI on port 10705 and Vite on 10704), or run uvicorn from the repo root. If
+                    you opened the UI from another device, set{" "}
                     <code className="text-xs bg-muted px-1 rounded">VITE_API_URL</code> to a
                     reachable base ending in{" "}
                     <code className="text-xs bg-muted px-1 rounded">/api/v1</code>.
                   </p>
+                  <p className="text-xs text-muted-foreground mb-3 max-w-md mx-auto">
+                    A browser cannot restart the API after a process crash. After you start it
+                    again in a terminal, this page polls <code className="text-xs">/health</code>{" "}
+                    about every 12 seconds and reloads notes when it responds.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2 mb-2">
+                    <button
+                      type="button"
+                      className="btn btn-outline btn-sm inline-flex items-center gap-1"
+                      onClick={async () => {
+                        const ok = await copyRecoveryCommand(UVICORN_RESTART_LINE);
+                        if (ok) {
+                          setRecoveryCopied("uvicorn");
+                          window.setTimeout(() => setRecoveryCopied(null), 2500);
+                        }
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copy uvicorn
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline btn-sm inline-flex items-center gap-1"
+                      onClick={async () => {
+                        const ok = await copyRecoveryCommand(WEBAPP_START_FROM_ROOT);
+                        if (ok) {
+                          setRecoveryCopied("start");
+                          window.setTimeout(() => setRecoveryCopied(null), 2500);
+                        }
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copy start.ps1
+                    </button>
+                  </div>
+                  {recoveryCopied ? (
+                    <p className="text-xs text-green-600 dark:text-green-400 mb-3">Copied.</p>
+                  ) : null}
                   <button
                     type="button"
                     onClick={async () => {
                       await probeBackend();
-                      loadNotes();
+                      void loadNotes(1);
                     }}
                     className="btn btn-primary"
                   >
                     Try again
                   </button>
                 </div>
-              ) : notes.length === 0 ? (
+              ) : (
+                <>
+                  {showStaleConnectionBanner ? (
+                    <div className="m-3 rounded-lg border border-amber-500/40 bg-amber-950/25 px-3 py-2 text-xs text-amber-100">
+                      <p className="font-medium text-amber-50">Could not reach /health just now</p>
+                      <p className="mt-1 text-amber-100/90">
+                        Showing the last loaded list. The API may be busy; try again if actions fail.
+                      </p>
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-sm mt-2 border-amber-500/50 text-amber-50 hover:bg-amber-900/40"
+                        onClick={() => void loadNotes(currentPage)}
+                      >
+                        Retry connection
+                      </button>
+                    </div>
+                  ) : null}
+              {notes.length === 0 ? (
                 <div className="text-center py-8">
                   {searchQuery.trim() === "" ? (
                     <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -755,7 +963,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 <div className="flex-1 flex flex-col">
                   {viewMode === "list" ? (
                     <div className="divide-y divide-border flex-1 overflow-auto">
-                      {filteredNotes.map((note) => (
+                      {filteredNotes.map((note) => {
+                        const rowTags = noteTags(note);
+                        return (
                         <div
                           key={note.id}
                           onClick={() => handleNoteSelect(note)}
@@ -776,9 +986,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                               <span>{note.connections} links</span>
                             </div>
                           </div>
-                          {note.tags && note.tags.length > 0 && (
+                          {rowTags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
-                              {note.tags.slice(0, 3).map((tag) => (
+                              {rowTags.slice(0, 3).map((tag) => (
                                 <span
                                   key={tag}
                                   className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-md"
@@ -786,15 +996,16 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                                   {tag}
                                 </span>
                               ))}
-                              {note.tags.length > 3 && (
+                              {rowTags.length > 3 && (
                                 <span className="text-xs text-muted-foreground">
-                                  +{note.tags.length - 3}
+                                  +{rowTags.length - 3}
                                 </span>
                               )}
                             </div>
                           )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="py-2 flex-1 overflow-auto">
@@ -802,6 +1013,8 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     </div>
                   )}
                 </div>
+              )}
+                </>
               )}
             </div>
 
@@ -847,9 +1060,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                       <span>Modified: {formatDate(selectedNote.modified)}</span>
                       <span>{selectedNote.wordCount} words</span>
                     </div>
-                    {selectedNote.tags.length > 0 && (
+                    {noteTags(selectedNote).length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
-                        {selectedNote.tags.map((tag) => (
+                        {noteTags(selectedNote).map((tag) => (
                           <span
                             key={tag}
                             className="px-3 py-1 bg-accent/20 text-accent text-sm rounded-full"

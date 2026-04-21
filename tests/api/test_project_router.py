@@ -2,6 +2,8 @@
 
 import pytest
 
+from tests.api.route_prefixes import PROJECTS_API_ROOT
+
 
 @pytest.mark.asyncio
 async def test_get_project_info_endpoint(test_graph, client, project_config, project_url):
@@ -74,10 +76,10 @@ async def test_get_project_info_content(test_graph, client, project_config, proj
 
 
 @pytest.mark.asyncio
-async def test_list_projects_endpoint(test_config, test_graph, client, project_config, project_url):
+async def test_list_projects_endpoint(test_config, test_graph, client, project_config):
     """Test the list projects endpoint returns correctly structured data."""
     # Call the endpoint
-    response = await client.get("/projects/projects")
+    response = await client.get(PROJECTS_API_ROOT)
 
     # Verify response
     assert response.status_code == 200
@@ -118,7 +120,7 @@ async def test_remove_project_endpoint(test_config, client, project_service):
     assert project is not None
 
     # Remove the project
-    response = await client.delete(f"/projects/{test_project_name}")
+    response = await client.delete(f"/api/v1/projects/{test_project_name}")
 
     # Verify response
     assert response.status_code == 200
@@ -144,7 +146,7 @@ async def test_set_default_project_endpoint(test_config, client, project_service
     await project_service.add_project(test_project_name, "/tmp/test-default-project")
 
     # Set it as default
-    response = await client.put(f"/projects/{test_project_name}/default")
+    response = await client.put(f"{PROJECTS_API_ROOT}/{test_project_name}/default")
 
     # Verify response
     assert response.status_code == 200

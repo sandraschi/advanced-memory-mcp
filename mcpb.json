@@ -1,6 +1,6 @@
 {
     "name": "advanced-memory-mcp",
-    "version": "1.7.0",
+    "version": "1.8.1",
     "type": "server",
     "runtime": "python",
     "entry_point": "src/advanced_memory/mcp/server.py",

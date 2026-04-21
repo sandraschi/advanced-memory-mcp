@@ -5,7 +5,7 @@
 # Advanced Memory (Memops)
 
 [![Docs: compliance](https://img.shields.io/badge/Docs-compliance-gold.svg)](docs/COMPLIANCE_AND_STANDARDS.md)
-[![Package: v1.8.0](https://img.shields.io/badge/Package-v1.8.0-blue.svg)](pyproject.toml)
+[![Package: v1.8.1](https://img.shields.io/badge/Package-v1.8.1-blue.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 - **Why** — Give an MCP-capable assistant a **durable place** for notes, research, and retrieval: search and RAG over *your* content instead of losing context every session.
@@ -20,12 +20,13 @@
 - [Usage](docs/USAGE.md) — MCP clients, webapp, advanced topics
 - [AI features](docs/AI-FEATURES.md) — RAG, agentic mode, sampling
 - [FastMCP 3.2](docs/FASTMCP.md) — Managed Namespaces, prefabs, CodeMode, transports
-- [Product requirements (PRD)](docs/PRD.md) — current mission, scope, KPIs for 1.8.0
+- [Product requirements (PRD)](docs/PRD.md) — current mission, scope, KPIs (1.8.x)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Fleet / multi-node](docs/FLEET.md)
 - [Compliance & standards](docs/COMPLIANCE_AND_STANDARDS.md)
 - [Development](docs/DEVELOPMENT.md) — `just` recipes (lint, test, pack)
 - [Changelog](CHANGELOG.md)
+- [Release checklist (MCPB + Git tag)](docs/operations/RELEASE_CHECKLIST.md)
 
 ---
 

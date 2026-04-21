@@ -1,6 +1,15 @@
 """Test configuration management."""
 
-from advanced_memory.config import AdvancedMemoryConfig
+import json
+from pathlib import Path
+
+from advanced_memory.config import (
+    APP_DATABASE_NAME,
+    AdvancedMemoryConfig,
+    DATA_DIR_NAME,
+    VAULT_DIR_NAME,
+    ConfigManager,
+)
 
 
 class TestAdvancedMemoryConfig:
@@ -13,20 +22,19 @@ class TestAdvancedMemoryConfig:
 
         config = AdvancedMemoryConfig()
 
-        # Should use the home directory directly (Path.home())
-        # Note: config_home fixture sets HOME to tmp_path, so Path.home() returns tmp_path
-        expected_path = str(config_home)
+        # Default vault is under ~/.advanced-memory/vault (never bare profile root)
+        expected_path = str(config_home / DATA_DIR_NAME / VAULT_DIR_NAME)
         assert config.projects["main"] == expected_path
 
-    def test_respects_advanced_memory_home_environment_variable(self, config_home, monkeypatch):
-        """Test that config respects ADVANCED_MEMORY_HOME environment variable."""
+    def test_advanced_memory_home_moves_database_not_default_vault(self, config_home, monkeypatch):
+        """``ADVANCED_MEMORY_HOME`` affects ``app_database_path`` only; default vault stays under ``Path.home()``."""
         custom_path = str(config_home / "app" / "data")
         monkeypatch.setenv("ADVANCED_MEMORY_HOME", custom_path)
 
         config = AdvancedMemoryConfig()
 
-        # Should use the custom path from environment variable
-        assert config.projects["main"] == custom_path
+        assert config.projects["main"] == str(config_home / DATA_DIR_NAME / VAULT_DIR_NAME)
+        assert config.app_database_path == Path(custom_path) / DATA_DIR_NAME / APP_DATABASE_NAME
 
     def test_model_post_init_respects_advanced_memory_home(self, config_home, monkeypatch):
         """Test that model_post_init no longer auto-creates main project."""
@@ -58,19 +66,15 @@ class TestAdvancedMemoryConfig:
         # Default should be set to first available project
         assert config.default_project == "other"
 
-    def test_advanced_memory_home_with_relative_path(self, config_home, monkeypatch):
-        """Test that ADVANCED_MEMORY_HOME works with relative paths."""
+    def test_relative_advanced_memory_home_affects_db_only(self, config_home, monkeypatch):
+        """Relative ``ADVANCED_MEMORY_HOME`` still does not move the default vault."""
         relative_path = "relative/memory/path"
         monkeypatch.setenv("ADVANCED_MEMORY_HOME", relative_path)
 
         config = AdvancedMemoryConfig()
 
-        # Should use the exact value from environment variable
-        # Note: Path conversion may change separators on Windows
-        import os
-
-        expected_path = os.path.normpath(relative_path)
-        assert config.projects["main"] == expected_path
+        assert config.projects["main"] == str(config_home / DATA_DIR_NAME / VAULT_DIR_NAME)
+        assert config.app_database_path == Path(relative_path) / DATA_DIR_NAME / APP_DATABASE_NAME
 
     def test_advanced_memory_home_overrides_existing_main_project(self, config_home, monkeypatch):
         """Test that ADVANCED_MEMORY_HOME is not used when a map is passed in the constructor."""
@@ -81,6 +85,29 @@ class TestAdvancedMemoryConfig:
         original_path = str(config_home / "original" / "path")
         config = AdvancedMemoryConfig(projects={"main": original_path})
 
-        # The default_factory should override with ADVANCED_MEMORY_HOME value
-        # Note: This tests the current behavior where default_factory takes precedence
+        # Explicit ``projects=`` wins over env / defaults
         assert config.projects["main"] == original_path
+
+    def test_load_config_migrates_main_off_profile_root(self, tmp_path, monkeypatch):
+        """Legacy ``main`` == profile root is rewritten to the default vault and saved."""
+        monkeypatch.setenv("HOME", str(tmp_path))
+        monkeypatch.setenv("USERPROFILE", str(tmp_path))
+        monkeypatch.delenv("ADVANCED_MEMORY_HOME", raising=False)
+
+        cfg_dir = tmp_path / ".advanced-memory"
+        cfg_dir.mkdir(parents=True, exist_ok=True)
+        cfg_file = cfg_dir / "config.json"
+        cfg_file.write_text(
+            json.dumps({"projects": {"main": str(tmp_path)}, "default_project": "main"}),
+            encoding="utf-8",
+        )
+
+        mgr = ConfigManager()
+        mgr.config_dir = cfg_dir
+        mgr.config_file = cfg_file
+
+        cfg = mgr.load_config()
+        expected = str(tmp_path / DATA_DIR_NAME / VAULT_DIR_NAME)
+        assert cfg.projects["main"] == expected
+        on_disk = json.loads(cfg_file.read_text(encoding="utf-8"))
+        assert on_disk["projects"]["main"] == expected

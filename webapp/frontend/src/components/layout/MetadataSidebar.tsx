@@ -17,7 +17,7 @@ import { useState } from "react";
 interface NoteMetadata {
   id: string;
   title: string;
-  tags: string[];
+  tags?: string[];
   created: string;
   modified: string;
   wordCount: number;
@@ -162,9 +162,9 @@ export default function MetadataSidebar({
                 <div>
                   <h3 className="font-medium mb-3 flex items-center">
                     <Tag className="h-4 w-4 mr-2" />
-                    Tags ({note.tags.length})
+                    Tags ({Array.isArray(note.tags) ? note.tags.length : 0})
                   </h3>
-                  {note.tags.length > 0 ? (
+                  {Array.isArray(note.tags) && note.tags.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {note.tags.map((tag) => (
                         <span

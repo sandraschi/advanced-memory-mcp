@@ -1,16 +1,23 @@
 """Management router for advanced-memory API."""
 
 import asyncio
+from pathlib import Path
 
 from fastapi import APIRouter, Request
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from advanced_memory.config import ConfigManager
 from advanced_memory.deps import ProjectRepositoryDep, SyncServiceDep
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
 router = APIRouter(prefix="/management", tags=["management"])
+
+
+class RagExtraRootsPayload(BaseModel):
+    """Paths on the API server machine to include in LanceDB on the next full reindex."""
+
+    paths: list[str] = Field(default_factory=list)
 
 
 class WatchStatusResponse(BaseModel):
@@ -49,9 +56,8 @@ async def get_file_sync_status() -> dict:
 @router.get("/watch/status", response_model=WatchStatusResponse)
 async def get_watch_status(request: Request) -> WatchStatusResponse:
     """Get the current status of the watch service."""
-    return WatchStatusResponse(
-        running=request.app.state.watch_task is not None and not request.app.state.watch_task.done()
-    )
+    watch_task = getattr(request.app.state, "watch_task", None)
+    return WatchStatusResponse(running=watch_task is not None and not watch_task.done())
 
 
 @router.post("/watch/start", response_model=WatchStatusResponse)
@@ -64,7 +70,8 @@ async def start_watch_service(
     from advanced_memory.sync import WatchService
     from advanced_memory.sync.background_sync import create_background_sync_task
 
-    if request.app.state.watch_task is not None and not request.app.state.watch_task.done():
+    watch_existing = getattr(request.app.state, "watch_task", None)
+    if watch_existing is not None and not watch_existing.done():
         # Watch service is already running
         return WatchStatusResponse(running=True)
 
@@ -89,19 +96,67 @@ async def start_watch_service(
 @router.post("/watch/stop", response_model=WatchStatusResponse)
 async def stop_watch_service(request: Request) -> WatchStatusResponse:  # pragma: no cover
     """Stop the watch service if it's running."""
-    if request.app.state.watch_task is None or request.app.state.watch_task.done():
+    watch_task = getattr(request.app.state, "watch_task", None)
+    if watch_task is None or watch_task.done():
         # Watch service is not running
         return WatchStatusResponse(running=False)
 
     # Cancel the running task
     logger.info("Stopping watch service via management API")
-    request.app.state.watch_task.cancel()
+    watch_task.cancel()
 
     # Wait for it to be properly cancelled
     try:
-        await request.app.state.watch_task
+        await watch_task
     except asyncio.CancelledError:
         pass
 
     request.app.state.watch_task = None
     return WatchStatusResponse(running=False)
+
+
+@router.get("/rag-extra-roots")
+async def get_rag_extra_roots() -> dict:
+    """Configured LanceDB extra document roots (server paths)."""
+    cfg = ConfigManager().load_config()
+    return {"success": True, "data": {"paths": list(cfg.rag_extra_roots)}}
+
+
+@router.put("/rag-extra-roots")
+async def put_rag_extra_roots(body: RagExtraRootsPayload) -> dict:
+    """Replace the list of extra RAG folder paths; persists to config.json."""
+    cm = ConfigManager()
+    cfg = cm.load_config()
+    cleaned: list[str] = []
+    seen: set[str] = set()
+    for raw in body.paths:
+        s = (raw or "").strip()
+        if not s or s in seen:
+            continue
+        seen.add(s)
+        cleaned.append(s)
+    cfg.rag_extra_roots = cleaned
+    cm.save_config(cfg)
+    logger.info("Updated rag_extra_roots: {} path(s)", len(cleaned))
+    return {"success": True, "data": {"paths": cleaned}}
+
+
+@router.post("/rag-extra-roots/validate")
+async def validate_rag_extra_roots(body: RagExtraRootsPayload) -> dict:
+    """Check which paths exist as directories on the API host."""
+    items: list[dict] = []
+    for raw in body.paths:
+        s = (raw or "").strip()
+        if not s:
+            continue
+        p = Path(s)
+        try:
+            ok = p.is_dir()
+            resolved = str(p.resolve()) if ok else str(p)
+        except OSError as e:
+            ok = False
+            resolved = str(p)
+            items.append({"path": s, "ok": False, "resolved": resolved, "error": str(e)})
+            continue
+        items.append({"path": s, "ok": ok, "resolved": resolved})
+    return {"success": True, "data": {"items": items}}

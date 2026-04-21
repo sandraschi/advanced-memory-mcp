@@ -134,11 +134,20 @@ async def to_graph_context(
     )
 
 
+def _search_item_type_from_row(type_value: str | None) -> SearchItemType:
+    if not type_value:
+        return SearchItemType.ENTITY
+    try:
+        return SearchItemType(type_value)
+    except ValueError:
+        return SearchItemType.ENTITY
+
+
 async def to_search_results(entity_service: EntityService, results: list[SearchIndexRow]) -> list[SearchResult]:
     # 1. Collect all entity IDs needed for batch fetch
     all_entity_ids: set[int] = set()
     for r in results:
-        if r.entity_id:
+        if r.entity_id is not None and r.entity_id > 0:
             all_entity_ids.add(r.entity_id)
         if r.from_id:
             all_entity_ids.add(r.from_id)
@@ -161,7 +170,7 @@ async def to_search_results(entity_service: EntityService, results: list[SearchI
         search_results.append(
             SearchResult(
                 title=r.title or "",
-                type=SearchItemType(r.type) if r.type else SearchItemType.ENTITY,
+                type=_search_item_type_from_row(r.type),
                 permalink=r.permalink,
                 score=r.score or 0.0,
                 entity=main_entity.permalink if main_entity else None,

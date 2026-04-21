@@ -2,6 +2,8 @@
 
 import pytest
 
+from tests.api.route_prefixes import PROJECTS_API_ROOT
+
 
 @pytest.mark.asyncio
 async def test_get_project_info_additional(client, test_graph, project_url):
@@ -27,10 +29,10 @@ async def test_get_project_info_additional(client, test_graph, project_url):
 
 
 @pytest.mark.asyncio
-async def test_project_list_additional(client, project_url):
+async def test_project_list_additional(client):
     """Test additional fields in the project list endpoint."""
     # Call the endpoint
-    response = await client.get("/projects/projects")
+    response = await client.get(PROJECTS_API_ROOT)
 
     # Verify response
     assert response.status_code == 200

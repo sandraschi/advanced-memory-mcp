@@ -1,7 +1,7 @@
 # Advanced Memory MCP — Product Requirements Document
 
-**Version:** 1.8.0
-**Status:** Stable — FastMCP 3.2 GA Managed Namespaces
+**Version:** 1.8.1
+**Status:** Stable — FastMCP 3.2 GA Managed Namespaces + documented RAG storage
 **Last Updated:** 2026-04-21
 **Supersedes:** [docs/archive/PRD-1.0.0.md](archive/PRD-1.0.0.md)
 
@@ -11,7 +11,9 @@
 
 Advanced Memory (Memops) is a **local-first MCP memory substrate** for AI assistants. It gives an MCP-capable client a durable place for notes, research results, and retrieval over the user's own content, instead of losing context each session.
 
-Release **1.8.0** decomposes the old portmanteau tool surface into **12 FastMCP 3.2 GA Managed Namespaces** (`audio`, `inbox`, `skills`, `zettel`, `nav`, `notes`, `search`, `knowledge`, `project`, `system`, `mcp`, `typora`), exposing **79 first-class tools**. This is a pure interface-quality change — storage, RAG, import / export, and the webapp are unchanged — aimed squarely at improving model tool-selection accuracy and satisfying strict static scanners (toolbench.arcade.dev) without shadow tools.
+Release **1.8.0** decomposes the old portmanteau tool surface into **12 FastMCP 3.2 GA Managed Namespaces** (`audio`, `inbox`, `skills`, `zettel`, `nav`, `notes`, `search`, `knowledge`, `project`, `system`, `mcp`, `typora`), exposing **79 first-class tools**. That work was a pure interface-quality change — aimed at improving model tool-selection accuracy and satisfying strict static scanners (toolbench.arcade.dev) without shadow tools — without altering SQLite layout, import / export, or the core indexing pipeline.
+
+Release **1.8.1** documents **where LanceDB lives on disk**, clarifies that **`rag_persist_dir` is not** the Lance path, and adds optional **`rag_extra_roots`**: extra absolute folders on the API host (for example a central documentation checkout) whose markdown/text files are chunked into the **same** vector table on full reindex, visible to semantic search across all projects. Configuration is exposed via the **management API** and the **webapp Vault sync** page.
 
 ---
 
@@ -24,6 +26,11 @@ Release **1.8.0** decomposes the old portmanteau tool surface into **12 FastMCP 
 ---
 
 ## 3. Scope & Non-Goals
+
+### In scope (1.8.1 additions)
+
+- Optional **extra RAG document roots** (`rag_extra_roots` in global config): additional server directories indexed into LanceDB on full reindex; management REST endpoints; webapp controls on **Vault sync**.
+- **Operator documentation** for vector storage layout and distinction from other repos’ LanceDB defaults (no automatic sharing).
 
 ### In scope (1.8.0)
 
@@ -70,7 +77,7 @@ Release **1.8.0** decomposes the old portmanteau tool surface into **12 FastMCP 
 
 ---
 
-## 5. Core Features (1.8.0 snapshot)
+## 5. Core Features (1.8.x snapshot)
 
 ### 5.1 MCP tool surface — 12 Managed Namespaces, 79 tools
 
@@ -95,10 +102,11 @@ The legacy `adn_*` / `portmanteau_*` functions remain importable as **logic prov
 
 ### 5.2 Semantic memory (RAG)
 
-- LanceDB vector store (local).
+- LanceDB vector store (local); **single directory per Advanced Memory install**: `vectors` as a sibling of the app SQLite file (`memory.db`), i.e. typically `%USERPROFILE%\.advanced-memory\vectors` (or under `ADVANCED_MEMORY_HOME` when that env var relocates the app dir). **Not** the git checkout path by default.
 - FastEmbed embeddings (`BAAI/bge-small-en-v1.5`).
-- Hybrid retrieval combining FTS5 keyword + vector similarity.
+- Hybrid retrieval combining FTS5 keyword + vector similarity; vector rows are filtered by **`metadata.project_id`** for vault chunks and by a **global extra-root** flag for optional **`rag_extra_roots`** content.
 - Ingestion pipeline for PDF, EPUB, Markdown with chunk-aware segmentation.
+- **Optional extra roots:** operator-configured absolute paths (e.g. `D:\Dev\repos\mcp-central-docs`) ingested only into LanceDB on **full reindex** (FTS remains vault-centric). Unrelated products that also use LanceDB (same machine) use **their own** configured paths unless deliberately aligned by the operator.
 
 ### 5.3 Knowledge graph
 
@@ -117,6 +125,7 @@ The legacy `adn_*` / `portmanteau_*` functions remain importable as **logic prov
 
 - React + Tailwind frontend (port 10704), FastAPI bridge (port 10705).
 - Note viewer, search explorer, knowledge-graph (Mermaid), skill studio.
+- **Vault sync** surfaces **extra RAG folders** (paths on the API host), validation, and the existing scan / reindex / watch controls.
 - Not required to use the MCP server.
 
 ### 5.6 Prefab UI responses
@@ -179,6 +188,7 @@ Tools that support it return `fastmcp.tools.ToolResult` with attached prefab app
 - **FR-1.3.** Hybrid search (FTS5 + vector) with tag / type / date filters.
 - **FR-1.4.** Boolean query parser (`AND`, `OR`, `NOT`, grouping, `"exact phrases"`, `tag:x`).
 - **FR-1.5.** Context expansion across relations for a given entity.
+- **FR-1.6.** (1.8.1) Optional **extra document roots** for LanceDB: configurable list of server directories; persisted in global config; REST management API; webapp editor; chunks appear in semantic / hybrid search for all projects after full reindex.
 
 ### FR-2 — Projects
 
@@ -283,11 +293,12 @@ Tools that support it return `fastmcp.tools.ToolResult` with attached prefab app
 ### Versioning
 
 - SemVer. `1.8.0` is a minor bump because the Python API is backward-compatible; MCP tool names changed but no client was contractually guaranteed the old names.
+- `1.8.1` is a patch bump: documentation clarity, operator-facing RAG path documentation, and additive config (`rag_extra_roots`) with no breaking API for existing clients.
 - `CHANGELOG.md` follows Keep a Changelog.
 
 ---
 
-## 12. Roadmap signals (post-1.8.0)
+## 12. Roadmap signals (post-1.8.x)
 
 - **Per-tool eval harness** against a benchmark prompt set to keep namespace tool-selection above the target KPI.
 - **`task=True` coverage.** Extend task-tool usage beyond `audio_dictate` to long ingestion / sync jobs so clients can show progress + cancel.
@@ -320,4 +331,4 @@ Explicitly **not** promised:
 ---
 
 **Document owner:** Advanced Memory maintainers
-**Status:** Production stable (1.8.0)
+**Status:** Production stable (1.8.1)

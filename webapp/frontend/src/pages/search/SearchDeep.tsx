@@ -82,7 +82,8 @@ export default function SearchDeep() {
             <div className="space-y-1">
               <h1 className="text-3xl font-bold tracking-tight">Deep Intelligence Search</h1>
               <p className="text-sm text-muted-foreground">
-                Cross-project semantic retrieval across your entire knowledge base.
+                Meaning-based retrieval (LanceDB vectors) — not the same as keyword search in the
+                Note Vault or wikilinks in the graph.
               </p>
             </div>
             <div className="flex items-center space-x-2 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full">
@@ -163,7 +164,7 @@ export default function SearchDeep() {
                   Querying Semantic Index
                 </p>
                 <p className="text-[10px] text-muted-foreground uppercase font-mono italic">
-                  Scanning 14,287 intelligence nodes...
+                  Querying vector index for this project…
                 </p>
               </div>
             </div>

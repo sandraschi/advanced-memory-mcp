@@ -10,6 +10,8 @@ from httpx import ASGITransport, AsyncClient
 from advanced_memory.deps import get_app_config, get_engine_factory, get_project_config
 from advanced_memory.models import Project
 
+from tests.api.route_prefixes import project_api_root
+
 
 @pytest_asyncio.fixture
 async def app(test_config, engine_factory, app_config) -> FastAPI:
@@ -33,8 +35,7 @@ async def client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
 def project_url(test_project: Project) -> str:
     """Create a URL prefix for the project routes.
 
-    This helps tests generate the correct URL for project-scoped routes.
+    Project-scoped routers are mounted at ``/api/v1/{project}`` where ``{project}`` is the
+    project's permalink (see ``get_project_id`` / ``get_project_config`` in deps).
     """
-    # Make sure this matches what's in tests/conftest.py for test_project creation
-    # The permalink should be generated from "Test Project Context"
-    return f"/{test_project.permalink}"
+    return project_api_root(test_project.permalink)

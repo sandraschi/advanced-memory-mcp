@@ -97,18 +97,10 @@ async def app_lifespan(
     if app_config.sync_changes and not IS_READONLY:
         from advanced_memory.services.initialization import initialize_file_sync
 
-        # Start watch service as a background task with proper exception handling
+        from advanced_memory.utils.task_logging import attach_task_failure_logging
+
         watch_task = asyncio.create_task(initialize_file_sync(app_config), name="mcp-file-watcher")
-
-        # Add callback to handle task completion/errors
-        def watch_task_done_callback(task):
-            try:
-                if task.exception() is not None:
-                    logger.error(f"File watcher task failed: {task.exception()}")
-            except asyncio.CancelledError:
-                logger.info("File watcher task cancelled")
-
-        watch_task.add_done_callback(watch_task_done_callback)
+        attach_task_failure_logging(watch_task, "mcp_lifespan_file_watcher")
 
     try:
         yield AppContext(watch_task=watch_task, migration_manager=migration_manager)

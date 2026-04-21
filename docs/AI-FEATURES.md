@@ -13,6 +13,23 @@ Most day‑to‑day “find related notes” behavior uses:
 
 That path is what backs typical vault search and the webapp’s semantic search API. Content has to be **indexed** (ingestion / normal entity indexing) before vectors are meaningful—empty vaults do not magically retrieve well.
 
+### Where LanceDB is stored
+
+The running code opens LanceDB at:
+
+**`{parent directory of the app SQLite DB}/vectors`**
+
+`AdvancedMemoryConfig.app_database_path` defaults to **`%USERPROFILE%\.advanced-memory\memory.db`** (unless `ADVANCED_MEMORY_HOME` moves the `.advanced-memory` layout). So the usual vector directory is **`%USERPROFILE%\.advanced-memory\vectors`** — alongside `memory.db`, **not** inside your `advanced-memory-mcp` git clone.
+
+- **One store per install:** all vault **projects** share this LanceDB directory; rows carry **`metadata.project_id`** (and optional **global extra-root** rows from **`rag_extra_roots`**).
+- **`rag_persist_dir` / `RAG_PERSIST_DIR`:** present in config for historical / env reasons; **`VectorRepository` does not use this field for its path** (the implementation hard-wires the `vectors` sibling path — see `src/advanced_memory/deps.py`).
+
+### Extra RAG folders (`rag_extra_roots`)
+
+From **1.8.1**, global config may list additional **absolute** directories on the machine running the API. Their `.md` / `.mdx` / `.txt` files are chunked into LanceDB when you run a **full Rebuild search index** (webapp **Vault sync** or `POST .../search/reindex`). Use the management API **`/api/v1/management/rag-extra-roots`** to read or replace the list.
+
+**Other documentation products** (for example a separate **mcp-central-docs** checkout with its own RAG stack) keep **their own** LanceDB path by default (`src/docs_mcp/data/lancedb` in that repo). Advanced Memory does **not** automatically share or merge with those stores.
+
 ---
 
 ## The `adn_rag` tool vs the core vector store

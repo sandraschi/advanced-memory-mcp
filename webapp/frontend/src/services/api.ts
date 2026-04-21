@@ -5,6 +5,9 @@ import axios, { type AxiosInstance, type AxiosResponse } from "axios";
 
 import { getApiBaseUrl } from "../config/apiBase";
 
+/** Client wait for full vault scan or FTS + LanceDB reindex (20 minutes). */
+const VAULT_LONG_OPERATION_TIMEOUT_MS = 1_200_000;
+
 interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -43,6 +46,31 @@ interface NoteResult {
   readingTime: number;
   fileSize: string;
   permalink?: string;
+}
+
+/** Search hits may expose tags as an array, a JSON string, a bare string, or omit them. */
+function normalizeNoteTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.map((t) => String(t)).filter((t) => t.length > 0);
+  }
+  if (typeof raw === "string") {
+    const s = raw.trim();
+    if (!s) {
+      return [];
+    }
+    if (s.startsWith("[") || s.startsWith("{")) {
+      try {
+        const p = JSON.parse(s) as unknown;
+        if (Array.isArray(p)) {
+          return p.map((x) => String(x)).filter((t) => t.length > 0);
+        }
+      } catch {
+        /* treat as single tag */
+      }
+    }
+    return [s];
+  }
+  return [];
 }
 
 interface SkillResult {
@@ -248,7 +276,7 @@ class ApiService {
         content: r.content || r.content_snippet || "",
         created: r.created_at || new Date().toISOString(),
         modified: r.updated_at || new Date().toISOString(),
-        tags: r.metadata?.tags || [],
+        tags: normalizeNoteTags(r.metadata?.tags),
         wordCount: 0,
         connections: 0,
       }));
@@ -621,7 +649,7 @@ class ApiService {
       const response = await this.client.post(
         `/projects/${encodeURIComponent(name)}/sync`,
         {},
-        { timeout: 600000 },
+        { timeout: VAULT_LONG_OPERATION_TIMEOUT_MS },
       );
       return { success: true, data: response.data as Record<string, unknown> };
     } catch (error: any) {
@@ -645,10 +673,64 @@ class ApiService {
   async reindexSearch(project?: string): Promise<ApiResponse> {
     try {
       const p = encodeURIComponent(project || this.activeProject);
-      const response = await this.client.post(`/${p}/search/reindex`, {}, { timeout: 600000 });
+      const response = await this.client.post(
+        `/${p}/search/reindex`,
+        {},
+        { timeout: VAULT_LONG_OPERATION_TIMEOUT_MS },
+      );
       return { success: true, data: response.data };
     } catch (error: any) {
       const detail = error?.response?.data?.detail ?? error?.message ?? "Reindex failed";
+      return { success: false, error: String(detail) };
+    }
+  }
+
+  /** Extra LanceDB roots (absolute paths on the API host). Persisted in config.json. */
+  async getRagExtraRoots(): Promise<ApiResponse<{ paths: string[] }>> {
+    try {
+      const response = await this.client.get("/management/rag-extra-roots");
+      const body = response.data as { success?: boolean; data?: { paths: string[] } };
+      if (body?.data?.paths !== undefined) {
+        return { success: true, data: { paths: body.data.paths } };
+      }
+      return { success: false, error: "Unexpected response from rag-extra-roots" };
+    } catch (error: any) {
+      const detail = error?.response?.data?.detail ?? error?.message ?? "Failed to load RAG extra roots";
+      return { success: false, error: String(detail) };
+    }
+  }
+
+  async setRagExtraRoots(paths: string[]): Promise<ApiResponse<{ paths: string[] }>> {
+    try {
+      const response = await this.client.put("/management/rag-extra-roots", { paths });
+      const body = response.data as { success?: boolean; data?: { paths: string[] } };
+      if (body?.data?.paths !== undefined) {
+        return { success: true, data: { paths: body.data.paths } };
+      }
+      return { success: false, error: "Unexpected response from rag-extra-roots" };
+    } catch (error: any) {
+      const detail = error?.response?.data?.detail ?? error?.message ?? "Failed to save RAG extra roots";
+      return { success: false, error: String(detail) };
+    }
+  }
+
+  async validateRagExtraRoots(paths: string[]): Promise<
+    ApiResponse<{
+      items: Array<{ path: string; ok: boolean; resolved: string; error?: string }>;
+    }>
+  > {
+    try {
+      const response = await this.client.post("/management/rag-extra-roots/validate", { paths });
+      const body = response.data as {
+        success?: boolean;
+        data?: { items: Array<{ path: string; ok: boolean; resolved: string; error?: string }> };
+      };
+      if (body?.data?.items !== undefined) {
+        return { success: true, data: { items: body.data.items } };
+      }
+      return { success: false, error: "Unexpected response from validate" };
+    } catch (error: any) {
+      const detail = error?.response?.data?.detail ?? error?.message ?? "Validate failed";
       return { success: false, error: String(detail) };
     }
   }

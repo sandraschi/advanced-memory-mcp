@@ -81,7 +81,13 @@ To enable pytest from the **Tests** page, start the backend with `ENABLE_WEBAPP_
 - **Note content (full note for chunk click)**  
   `GET /api/v1/{project}/knowledge/entities/{permalink}/content` — full note body for the modal.
 
+- **Extra RAG folders (Vault sync page, 1.8.1+)**  
+  `GET` / `PUT /api/v1/management/rag-extra-roots` — read or replace the list of absolute server paths (`rag_extra_roots` in config).  
+  `POST /api/v1/management/rag-extra-roots/validate` — check which paths exist as directories on the API host.
+
 `{project}` is the current project name/permalink from the projects API.
+
+**Where vectors live:** LanceDB data for Advanced Memory is stored in the **`vectors`** folder **next to** the app SQLite file (`memory.db`), typically under `%USERPROFILE%\.advanced-memory\`. It is separate from other projects’ RAG stores (for example another repo’s own LanceDB default).
 
 ## Shutdown
 

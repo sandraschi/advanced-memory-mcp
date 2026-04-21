@@ -1,6 +1,8 @@
 import { Activity, ArrowLeft, BarChart2, Database, FolderOpen, RefreshCw } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { KnowledgeModelExplainer } from "../../components/KnowledgeModelExplainer";
+import { useBackendAutoReconnect } from "../../hooks/useBackendAutoReconnect";
 import { apiService } from "../../services/api";
 
 type ProjectRow = { name: string; path: string; is_default?: boolean };
@@ -41,11 +43,11 @@ export default function VaultStats() {
         setData(res.data);
       } else {
         setError(res.error || "Could not load stats");
-        setData(null);
+        setData((prev) => prev);
       }
     } catch (e) {
       setError(String(e));
-      setData(null);
+      setData((prev) => prev);
     } finally {
       setLoading(false);
     }
@@ -54,6 +56,13 @@ export default function VaultStats() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const loadRef = useRef(load);
+  loadRef.current = load;
+
+  useBackendAutoReconnect(!!error && !loading, async () => {
+    await loadRef.current();
+  });
 
   const stats = (data?.statistics as Record<string, unknown> | undefined) || {};
   const activity = (data?.activity as Record<string, unknown> | undefined) || {};
@@ -80,18 +89,28 @@ export default function VaultStats() {
           <p className="mt-1 text-sm text-muted-foreground">
             Live counts from the project info API.
           </p>
+          <KnowledgeModelExplainer className="mt-4 max-w-3xl" />
           <select
             className="mt-3 max-w-md rounded-lg border border-border bg-background px-3 py-2 text-sm"
             value={targetName}
             onChange={(e) => setTargetName(e.target.value)}
           >
             {projects.map((p) => (
-              <option key={p.name} value={p.name}>
+              <option key={p.name} value={p.name} title={p.path}>
                 {p.name}
-                {p.is_default ? " (default)" : ""}
+                {p.is_default ? " (default)" : ""} — {p.path}
               </option>
             ))}
           </select>
+          {(() => {
+            const sel = projects.find((p) => p.name === targetName);
+            return sel ? (
+              <p className="mt-2 max-w-3xl rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs leading-relaxed">
+                <span className="font-medium text-foreground">Vault folder: </span>
+                <code className="break-all text-muted-foreground">{sel.path}</code>
+              </p>
+            ) : null;
+          })()}
         </div>
         <button
           type="button"
@@ -106,7 +125,18 @@ export default function VaultStats() {
 
       {error && (
         <div className="rounded-lg border border-red-500/40 bg-red-950/30 px-4 py-3 text-sm text-red-200">
-          {error}
+          <p>{error}</p>
+          {data ? (
+            <p className="mt-2 text-xs text-red-200/80">
+              Showing last successful stats. Polling /health about every 12 seconds until the API
+              responds again.
+            </p>
+          ) : (
+            <p className="mt-2 text-xs text-red-200/80">
+              Polling /health about every 12 seconds. After you restart the API, stats will reload
+              automatically.
+            </p>
+          )}
         </div>
       )}
 

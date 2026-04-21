@@ -33,6 +33,14 @@ import Tests from "./pages/tests/Tests";
 import ZettelMaster from "./pages/zettelkasten/ZettelMaster";
 import { apiService } from "./services/api";
 
+/** ``GET .../content`` returns ``NoteContentResponse`` (title, permalink, content) — not full ``NoteResult``. */
+function metadataTagsFromApi(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.map((t) => String(t)).filter((t) => t.length > 0);
+  }
+  return [];
+}
+
 function App() {
   const [selectedNoteId, setSelectedNoteId] = useState<string | undefined>();
   const [selectedNoteMetadata, setSelectedNoteMetadata] = useState<any>(null);
@@ -49,18 +57,38 @@ function App() {
       // Try to fetch real note metadata from API
       const response = await apiService.getNote(noteId);
       if (response.success && response.data) {
+        const d = response.data as {
+          title?: string;
+          permalink?: string;
+          content?: string;
+          tags?: unknown;
+          created?: string;
+          modified?: string;
+          wordCount?: number;
+          connections?: number;
+          backlinks?: number;
+          readingTime?: number;
+          fileSize?: string;
+          id?: string;
+        };
+        const contentStr = typeof d.content === "string" ? d.content : "";
+        const wordCount =
+          typeof d.wordCount === "number" ? d.wordCount : Math.max(0, Math.round(contentStr.length / 5));
+        const readingTime =
+          typeof d.readingTime === "number"
+            ? d.readingTime
+            : Math.max(1, Math.ceil(wordCount / 200) || 1);
         setSelectedNoteMetadata({
-          id: response.data.id,
-          title: response.data.title,
-          tags: response.data.tags,
-          created: response.data.created,
-          modified: response.data.modified,
-          wordCount: response.data.wordCount,
-          connections: response.data.connections,
-          backlinks: response.data.backlinks || 0,
-          readingTime: response.data.readingTime || Math.ceil(response.data.wordCount / 200),
-          fileSize:
-            response.data.fileSize || `${(response.data.content.length * 0.001).toFixed(1)} KB`,
+          id: d.id ?? noteId,
+          title: d.title ?? "Untitled",
+          tags: metadataTagsFromApi(d.tags),
+          created: d.created ?? new Date().toISOString(),
+          modified: d.modified ?? new Date().toISOString(),
+          wordCount,
+          connections: typeof d.connections === "number" ? d.connections : 0,
+          backlinks: typeof d.backlinks === "number" ? d.backlinks : 0,
+          readingTime,
+          fileSize: d.fileSize ?? `${(contentStr.length * 0.001).toFixed(1)} KB`,
         });
         return;
       }

@@ -27,6 +27,7 @@ from advanced_memory.services import EntityService, FileService
 from advanced_memory.services.link_resolver import LinkResolver
 from advanced_memory.services.search_service import SearchService
 from advanced_memory.services.sync_status_service import SyncStatus, sync_status_tracker
+from advanced_memory.sync.ignore_patterns import IGNORE_PATTERNS
 
 
 def normalize_file_path(path: str) -> str:
@@ -45,36 +46,6 @@ def normalize_file_path(path: str) -> str:
         normalized = normalized[1:]
     return normalized
 
-
-# Common directories to ignore during file scanning and sync
-IGNORE_PATTERNS = {
-    # Node.js
-    "node_modules",
-    # Build outputs
-    "dist",
-    "build",
-    "target",
-    "out",
-    ".next",
-    ".nuxt",
-    # Python
-    "__pycache__",
-    ".pytest_cache",
-    ".tox",
-    "venv",
-    ".venv",
-    # Other package managers / build tools
-    "vendor",
-    ".gradle",
-    ".cargo",
-    "coverage",
-    # IDE and editor files
-    ".vscode",
-    ".idea",
-    # OS files
-    ".DS_Store",
-    "Thumbs.db",
-}
 
 # Patterns for archived/obsolete content that should be preserved but not indexed
 ARCHIVE_PATTERNS = {

@@ -4,6 +4,7 @@ from loguru import logger
 
 from advanced_memory.config import get_project_config
 from advanced_memory.sync import SyncService, WatchService
+from advanced_memory.utils.task_logging import attach_task_failure_logging
 
 
 async def sync_and_watch(sync_service: SyncService, watch_service: WatchService) -> None:  # pragma: no cover
@@ -19,4 +20,9 @@ async def sync_and_watch(sync_service: SyncService, watch_service: WatchService)
 
 
 async def create_background_sync_task(sync_service: SyncService, watch_service: WatchService):  # pragma: no cover
-    return asyncio.create_task(sync_and_watch(sync_service, watch_service))
+    task = asyncio.create_task(
+        sync_and_watch(sync_service, watch_service),
+        name="management_sync_and_watch",
+    )
+    attach_task_failure_logging(task, "management_sync_and_watch")
+    return task

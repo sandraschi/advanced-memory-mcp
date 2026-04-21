@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from httpx import AsyncClient
 
+from tests.api.route_prefixes import IMPORT_API_ROOT
 from advanced_memory.schemas.importer import (
     ChatImportResult,
     EntityImportResult,
@@ -144,7 +145,7 @@ async def create_test_upload_file(tmp_path, content):
 
 @pytest.mark.asyncio
 async def test_import_chatgpt(
-    project_config, client: AsyncClient, tmp_path, chatgpt_json_content, file_service, project_url
+    project_config, client: AsyncClient, tmp_path, chatgpt_json_content, file_service
 ):
     """Test importing ChatGPT conversations."""
     # Create a test file
@@ -156,7 +157,7 @@ async def test_import_chatgpt(
         data = {"folder": "test_chatgpt"}
 
         # Send request
-        response = await client.post(f"{project_url}/import/chatgpt", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/chatgpt", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -176,7 +177,7 @@ async def test_import_chatgpt(
 
 
 @pytest.mark.asyncio
-async def test_import_chatgpt_invalid_file(client: AsyncClient, tmp_path, project_url):
+async def test_import_chatgpt_invalid_file(client: AsyncClient, tmp_path):
     """Test importing invalid ChatGPT file."""
     # Create invalid file
     file_path = tmp_path / "invalid.json"
@@ -189,7 +190,7 @@ async def test_import_chatgpt_invalid_file(client: AsyncClient, tmp_path, projec
         data = {"folder": "test_chatgpt"}
 
         # Send request - this should return an error
-        response = await client.post(f"{project_url}/import/chatgpt", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/chatgpt", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -198,7 +199,7 @@ async def test_import_chatgpt_invalid_file(client: AsyncClient, tmp_path, projec
 
 @pytest.mark.asyncio
 async def test_import_claude_conversations(
-    client: AsyncClient, tmp_path, claude_conversations_json_content, file_service, project_url
+    client: AsyncClient, tmp_path, claude_conversations_json_content, file_service
 ):
     """Test importing Claude conversations."""
     # Create a test file
@@ -210,7 +211,7 @@ async def test_import_claude_conversations(
         data = {"folder": "test_claude_conversations"}
 
         # Send request
-        response = await client.post(f"{project_url}/import/claude/conversations", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/claude/conversations", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -230,7 +231,7 @@ async def test_import_claude_conversations(
 
 
 @pytest.mark.asyncio
-async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp_path, project_url):
+async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp_path):
     """Test importing invalid Claude conversations file."""
     # Create invalid file
     file_path = tmp_path / "invalid.json"
@@ -243,7 +244,7 @@ async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp
         data = {"folder": "test_claude_conversations"}
 
         # Send request - this should return an error
-        response = await client.post(f"{project_url}/import/claude/conversations", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/claude/conversations", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -252,7 +253,7 @@ async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp
 
 @pytest.mark.asyncio
 async def test_import_claude_projects(
-    client: AsyncClient, tmp_path, claude_projects_json_content, file_service, project_url
+    client: AsyncClient, tmp_path, claude_projects_json_content, file_service
 ):
     """Test importing Claude projects."""
     # Create a test file
@@ -264,7 +265,7 @@ async def test_import_claude_projects(
         data = {"folder": "test_claude_projects"}
 
         # Send request
-        response = await client.post(f"{project_url}/import/claude/projects", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/claude/projects", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -302,7 +303,7 @@ async def test_import_claude_projects_invalid_file(client: AsyncClient, tmp_path
         data = {"folder": "test_claude_projects"}
 
         # Send request - this should return an error
-        response = await client.post(f"{project_url}/import/claude/projects", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/claude/projects", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -310,7 +311,7 @@ async def test_import_claude_projects_invalid_file(client: AsyncClient, tmp_path
 
 
 @pytest.mark.asyncio
-async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_content, file_service, project_url):
+async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_content, file_service):
     """Test importing memory.json file."""
     # Create a test file
     json_file = tmp_path / "memory.json"
@@ -324,7 +325,7 @@ async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_con
         data = {"folder": "test_memory_json"}
 
         # Send request
-        response = await client.post(f"{project_url}/import/memory-json", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/memory-json", files=files, data=data)
 
     # Check response
     assert response.status_code == 200
@@ -346,7 +347,7 @@ async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_con
 
 @pytest.mark.asyncio
 async def test_import_memory_json_without_folder(
-    client: AsyncClient, tmp_path, memory_json_content, file_service, project_url
+    client: AsyncClient, tmp_path, memory_json_content, file_service
 ):
     """Test importing memory.json file without specifying a destination folder."""
     # Create a test file
@@ -360,7 +361,7 @@ async def test_import_memory_json_without_folder(
         files = {"file": ("memory.json", f, "application/json")}
 
         # Send request without destination_folder
-        response = await client.post(f"{project_url}/import/memory-json", files=files)
+        response = await client.post(f"{IMPORT_API_ROOT}/memory-json", files=files)
 
     # Check response
     assert response.status_code == 200
@@ -375,7 +376,7 @@ async def test_import_memory_json_without_folder(
 
 
 @pytest.mark.asyncio
-async def test_import_memory_json_invalid_file(client: AsyncClient, tmp_path, project_url):
+async def test_import_memory_json_invalid_file(client: AsyncClient, tmp_path):
     """Test importing invalid memory.json file."""
     # Create invalid file
     file_path = tmp_path / "invalid.json"
@@ -388,7 +389,7 @@ async def test_import_memory_json_invalid_file(client: AsyncClient, tmp_path, pr
         data = {"destination_folder": "test_memory_json"}
 
         # Send request - this should return an error
-        response = await client.post(f"{project_url}/import/memory-json", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/memory-json", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -396,17 +397,17 @@ async def test_import_memory_json_invalid_file(client: AsyncClient, tmp_path, pr
 
 
 @pytest.mark.asyncio
-async def test_import_missing_file(client: AsyncClient, tmp_path, project_url):
+async def test_import_missing_file(client: AsyncClient, tmp_path):
     """Test importing with missing file."""
     # Send a request without a file
-    response = await client.post(f"{project_url}/import/chatgpt", data={"folder": "test_folder"})
+    response = await client.post(f"{IMPORT_API_ROOT}/chatgpt", data={"folder": "test_folder"})
 
     # Check that the request was rejected
     assert response.status_code in [400, 422]  # Either bad request or unprocessable entity
 
 
 @pytest.mark.asyncio
-async def test_import_empty_file(client: AsyncClient, tmp_path, project_url):
+async def test_import_empty_file(client: AsyncClient, tmp_path):
     """Test importing an empty file."""
     # Create an empty file
     file_path = tmp_path / "empty.json"
@@ -419,7 +420,7 @@ async def test_import_empty_file(client: AsyncClient, tmp_path, project_url):
         data = {"folder": "test_chatgpt"}
 
         # Send request
-        response = await client.post(f"{project_url}/import/chatgpt", files=files, data=data)
+        response = await client.post(f"{IMPORT_API_ROOT}/chatgpt", files=files, data=data)
 
     # Check response
     assert response.status_code == 500
@@ -427,7 +428,7 @@ async def test_import_empty_file(client: AsyncClient, tmp_path, project_url):
 
 
 @pytest.mark.asyncio
-async def test_import_malformed_json(client: AsyncClient, tmp_path, project_url):
+async def test_import_malformed_json(client: AsyncClient, tmp_path):
     """Test importing malformed JSON for all import endpoints."""
     # Create malformed JSON file
     file_path = tmp_path / "malformed.json"
@@ -436,10 +437,10 @@ async def test_import_malformed_json(client: AsyncClient, tmp_path, project_url)
 
     # Test all import endpoints
     endpoints = [
-        (f"{project_url}/import/chatgpt", {"folder": "test"}),
-        (f"{project_url}/import/claude/conversations", {"folder": "test"}),
-        (f"{project_url}/import/claude/projects", {"base_folder": "test"}),
-        (f"{project_url}/import/memory-json", {"destination_folder": "test"}),
+        (f"{IMPORT_API_ROOT}/chatgpt", {"folder": "test"}),
+        (f"{IMPORT_API_ROOT}/claude/conversations", {"folder": "test"}),
+        (f"{IMPORT_API_ROOT}/claude/projects", {"base_folder": "test"}),
+        (f"{IMPORT_API_ROOT}/memory-json", {"destination_folder": "test"}),
     ]
 
     for endpoint, data in endpoints:

@@ -1,8 +1,10 @@
 """Service for search operations."""
 
 import ast
+import hashlib
 from collections.abc import Sequence
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from dateparser import parse
@@ -20,6 +22,57 @@ from advanced_memory.repository.search_repository import (
 from advanced_memory.repository.vector_repository import VectorRepository
 from advanced_memory.schemas.search import SearchItemType, SearchQuery
 from advanced_memory.services.file_service import FileService
+
+_RAG_WALK_SKIP_DIR_NAMES = frozenset(
+    {
+        ".git",
+        "node_modules",
+        ".venv",
+        "venv",
+        "dist",
+        "build",
+        "__pycache__",
+        ".tox",
+        ".mypy_cache",
+        ".pytest_cache",
+    }
+)
+_RAG_TEXT_EXTENSIONS = frozenset({".md", ".mdx", ".txt"})
+
+
+def _chunk_text_by_paragraphs(content: str, max_chars: int) -> list[str]:
+    """Split text into chunks by paragraph boundaries, similar to entity vector indexing."""
+    if max_chars < 200:
+        max_chars = 200
+    chunks: list[str] = []
+    current_chunk = ""
+    for p in content.split("\n\n"):
+        segment = p + "\n\n"
+        if len(current_chunk) + len(segment) < max_chars:
+            current_chunk += segment
+        else:
+            if current_chunk.strip():
+                chunks.append(current_chunk.strip())
+            current_chunk = segment
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
+    return chunks
+
+
+def _external_chunk_entity_id(rel_key: str, chunk_index: int) -> int:
+    """Stable negative entity_id for extra-root chunks (never collides with positive DB ids)."""
+    digest = hashlib.sha256(f"{rel_key}\0{chunk_index}".encode("utf-8")).digest()
+    v = int.from_bytes(digest[:4], "big") & 0x7FFFFFFF
+    return -v if v != 0 else -1
+
+
+def _rag_walk_should_skip(path: Path) -> bool:
+    return any(part in _RAG_WALK_SKIP_DIR_NAMES for part in path.parts)
+
+
+def _is_rag_extra_metadata(meta: dict[str, Any]) -> bool:
+    flag = meta.get("rag_extra_root")
+    return flag is True or flag == 1 or flag == "true"
 
 
 class SearchService:
@@ -45,6 +98,11 @@ class SearchService:
         self.file_service = file_service
         self.app_config = app_config
 
+    def _vector_project_filter(self) -> str:
+        """LanceDB predicate: current project vault chunks plus global extra-root chunks."""
+        pid = int(self.repository.project_id)
+        return f"(metadata.project_id = {pid} OR metadata.rag_extra_root = true)"
+
     async def init_search_index(self) -> None:
         """Create FTS5 virtual table if it doesn't exist."""
         await self.repository.init_search_index()
@@ -66,7 +124,84 @@ class SearchService:
             await self.index_entity(entity, background_tasks)
 
         # Vector indexing is handled inside index_entity
+        await self.index_rag_extra_roots()
         logger.info("Reindex complete")
+
+    async def index_rag_extra_roots(self) -> None:
+        """Index markdown/text under ``rag_extra_roots`` into LanceDB (global semantic layer)."""
+        roots = self.app_config.rag_extra_roots or []
+        if not roots:
+            return
+
+        seen_roots: set[str] = set()
+        max_chars = self.app_config.rag_chunk_size
+        total_chunks = 0
+        for raw in roots:
+            s = (raw or "").strip()
+            if not s or s in seen_roots:
+                continue
+            seen_roots.add(s)
+            try:
+                root = Path(s).expanduser().resolve()
+            except OSError as e:
+                logger.warning("rag_extra_roots: skip invalid path {!r}: {}", s, e)
+                continue
+            if not root.is_dir():
+                logger.warning("rag_extra_roots: not a directory, skipping {}", root)
+                continue
+
+            root_label = root.name or str(root)
+            for path in root.rglob("*"):
+                if not path.is_file():
+                    continue
+                if path.suffix.lower() not in _RAG_TEXT_EXTENSIONS:
+                    continue
+                if _rag_walk_should_skip(path):
+                    continue
+                try:
+                    rel = path.relative_to(root)
+                except ValueError:
+                    rel = Path(path.name)
+                try:
+                    text = path.read_text(encoding="utf-8", errors="replace")
+                except OSError as e:
+                    logger.debug("rag_extra_roots: skip unreadable {}: {}", path, e)
+                    continue
+                if not text.strip():
+                    continue
+
+                chunks = _chunk_text_by_paragraphs(text, max_chars)
+                rel_key = str(path.resolve())
+                title = f"{root_label}: {rel.as_posix()}"
+                vector_docs: list[dict[str, Any]] = []
+                for i, chunk in enumerate(chunks):
+                    ext_eid = _external_chunk_entity_id(rel_key, i)
+                    doc_uid = hashlib.sha256(f"{rel_key}\0{i}".encode("utf-8")).hexdigest()[:40]
+                    vector_docs.append(
+                        {
+                            "id": f"xr_{doc_uid}",
+                            "text": f"Title: {title}\n\n{chunk}",
+                            "metadata": {
+                                "entity_id": ext_eid,
+                                "type": "external_corpus",
+                                "project_id": 0,
+                                "title": title,
+                                "chunk_index": i,
+                                "source_file": rel_key,
+                                "rag_extra_root": True,
+                            },
+                        }
+                    )
+                if vector_docs:
+                    await self.vector_repository.add_documents(vector_docs)
+                    total_chunks += len(vector_docs)
+
+        if total_chunks:
+            logger.info(
+                "rag_extra_roots: indexed {} chunk(s) from {} configured root(s)",
+                total_chunks,
+                len(seen_roots),
+            )
 
     async def search(self, query: SearchQuery, limit: int = 10, offset: int = 0) -> tuple[list[SearchIndexRow], int]:
         """Search across all indexed content.
@@ -112,8 +247,7 @@ class SearchService:
         # If query has text, augment with vector results or perform hybrid search
         if query.text and not query.permalink and not query.permalink_match:
             try:
-                # Use project filter for vector search
-                project_filter = f"metadata.project_id = {self.repository.project_id}"
+                project_filter = self._vector_project_filter()
 
                 # Decide if we use native hybrid search or simple vector augmentation
                 candidate_limit = (
@@ -136,15 +270,28 @@ class SearchService:
                 # Convert vector results to SearchIndexRow for merging/reranking
                 merged_results = list(results)
                 for v_res in vector_results:
-                    entity_id = v_res["metadata"]["entity_id"]
-                    if entity_id not in existing_ids:
+                    meta = v_res["metadata"]
+                    entity_id = meta["entity_id"]
+                    is_extra = _is_rag_extra_metadata(meta)
+                    if is_extra or entity_id not in existing_ids:
+                        row_pid = int(self.repository.project_id) if is_extra else int(meta["project_id"])
+                        raw_vid = str(v_res["id"])
+                        try:
+                            row_id = int(raw_vid.split("_", 1)[0])
+                        except ValueError:
+                            row_id = 0
+                        src = (meta.get("source_file") or "") if is_extra else ""
+                        row_type = SearchItemType.ENTITY.value if is_extra else meta["type"]
                         row = SearchIndexRow(
-                            id=int(v_res["id"].split("_")[0]) if "_" in v_res["id"] else 0,  # Fallback
+                            id=row_id,
                             entity_id=entity_id,
-                            type=v_res["metadata"]["type"],
-                            title=v_res["metadata"].get("title", "Vector Match"),
+                            type=row_type,
+                            title=meta.get("title", "Vector Match"),
                             content_snippet=v_res["text"][:250],
-                            project_id=v_res["metadata"]["project_id"],
+                            project_id=row_pid,
+                            permalink=src if is_extra else None,
+                            file_path=src if is_extra else "",
+                            metadata=dict(meta) if is_extra else None,
                             created_at=datetime.now(),
                             updated_at=datetime.now(),
                             score=v_res.get("_score", 0.0),  # Native LanceDB score if available
@@ -152,7 +299,8 @@ class SearchService:
                         # Store full text for reranker
                         row.content_stems = v_res["text"]
                         merged_results.append(row)
-                        existing_ids.add(entity_id)
+                        if not is_extra:
+                            existing_ids.add(entity_id)
 
                 # Perform reranking if enabled
                 if self.app_config.rag_use_reranker and merged_results:
@@ -201,7 +349,7 @@ class SearchService:
 
         Retrieves high-density knowledge context with reranking and FA2.
         """
-        project_filter = f"metadata.project_id = {self.repository.project_id}"
+        project_filter = self._vector_project_filter()
 
         # 1. Broad retrieval
         candidate_limit = self.app_config.rag_top_k_candidates
@@ -240,7 +388,7 @@ class SearchService:
 
     async def semantic_search_chunks(self, query: str, limit: int = 20) -> list[dict[str, Any]]:
         """Return RAG chunks with entity_id and permalink for UI (e.g. deep search page)."""
-        project_filter = f"metadata.project_id = {self.repository.project_id}"
+        project_filter = self._vector_project_filter()
         candidate_limit = self.app_config.rag_top_k_candidates
         vector_results = await self.vector_repository.search(
             query,
@@ -257,19 +405,26 @@ class SearchService:
             attn_implementation=self.app_config.rag_attn_implementation,
         )
         final = reranked_docs[:limit]
-        entity_ids = list({doc["metadata"]["entity_id"] for doc in final})
-        entities = await self.entity_repository.find_by_ids(entity_ids)
+        entity_ids = list(
+            {doc["metadata"]["entity_id"] for doc in final if doc["metadata"].get("entity_id", 0) > 0}
+        )
+        entities = await self.entity_repository.find_by_ids(entity_ids) if entity_ids else []
         permalink_by_id = {e.id: e.permalink for e in entities if e.id is not None}
         out = []
         for doc in final:
-            entity_id = doc["metadata"]["entity_id"]
-            title = doc["metadata"].get("title", "Unknown")
+            meta = doc["metadata"]
+            entity_id = meta["entity_id"]
+            title = meta.get("title", "Unknown")
             text = doc["text"]
             score = float(doc.get("rerank_score", doc.get("_score", 0.0)))
+            if _is_rag_extra_metadata(meta) or meta.get("type") == "external_corpus":
+                perm = meta.get("source_file")
+            else:
+                perm = permalink_by_id.get(entity_id)
             out.append(
                 {
                     "entity_id": entity_id,
-                    "permalink": permalink_by_id.get(entity_id),
+                    "permalink": perm,
                     "title": title,
                     "snippet": text[:300] + ("..." if len(text) > 300 else ""),
                     "chunk_text": text,
@@ -452,19 +607,7 @@ class SearchService:
 
         # Index entity in Vector store
         if content:
-            # Simple chunking: strategy - group by paragraphs, max 1000 chars
-            chunks = []
-            paragraphs = content.split("\n\n")
-            current_chunk = ""
-            for p in paragraphs:
-                if len(current_chunk) + len(p) < 1000:
-                    current_chunk += p + "\n\n"
-                else:
-                    if current_chunk:
-                        chunks.append(current_chunk.strip())
-                    current_chunk = p + "\n\n"
-            if current_chunk:
-                chunks.append(current_chunk.strip())
+            chunks = _chunk_text_by_paragraphs(content, self.app_config.rag_chunk_size)
 
             vector_docs = []
             for i, chunk in enumerate(chunks):

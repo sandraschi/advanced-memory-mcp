@@ -100,11 +100,9 @@ async def initialize_database(app_config: AdvancedMemoryConfig) -> None:
     try:
         await db.get_or_create_db(app_config.database_path)
         logger.info("Database initialization completed")
-    except Exception as e:
-        logger.error(f"Error initializing database: {e}")
-        # Allow application to continue - it might still work
-        # depending on what the error was, and will fail with a
-        # more specific error if the database is actually unusable
+    except Exception:
+        logger.exception("Database initialization failed — cannot continue without a working DB")
+        raise
 
 
 async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> None:
@@ -134,10 +132,10 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> No
         project_service = ProjectService(repository=project_repository)
         await project_service.synchronize_projects()
         logger.info("Projects successfully reconciled between config and database")
-    except Exception as e:
-        # Log the error but continue with initialization
-        logger.error(f"Error during project synchronization: {e}")
-        logger.info("Continuing with initialization despite synchronization error")
+    except Exception:
+        logger.exception(
+            "Project synchronization failed — continuing startup; some projects may be missing"
+        )
 
 
 async def initialize_file_sync(
@@ -173,18 +171,21 @@ async def initialize_file_sync(
     # Don't do expensive full sync during MCP server startup
     logger.info("Starting watch service for all projects (fast startup mode)")
     try:
-        # Start watch service as a background task - it will run indefinitely
-        # This is much faster than doing full sync during startup
-        watch_task = asyncio.create_task(watch_service.run(), name="mcp-file-watcher")
+        from advanced_memory.utils.task_logging import attach_task_failure_logging
 
-        # Store reference to prevent garbage collection
-        # The task will be cancelled when the MCP server lifespan ends
+        watch_task = asyncio.create_task(watch_service.run(), name="mcp-file-watcher")
+        attach_task_failure_logging(watch_task, "mcp-file-watcher")
+
         global _background_watch_task
         _background_watch_task = watch_task
 
-        logger.info("Watch service started successfully (fast startup mode)")
-    except Exception as e:  # pragma: no cover
-        logger.error(f"Error starting watch service: {e}")
+        logger.info("Watch service task started; awaiting until shutdown or error")
+        await watch_task
+    except asyncio.CancelledError:
+        logger.info("Watch service task cancelled during shutdown")
+        raise
+    except Exception:  # pragma: no cover
+        logger.exception("Watch service task failed")
         raise
 
 

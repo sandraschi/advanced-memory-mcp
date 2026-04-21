@@ -41,8 +41,12 @@ graph TD
 - **FastAPI**: Provides a RESTful backbone for the premium web interface and external integrations.
 
 ### 2. Semantic Memory (RAG)
-- Uses **LanceDB** for ultra-fast billion-scale vector search.
-- Native integration with **BGE-Reranker-v2-m3** ensures that AI retrieval is mathematically precise.
+- Uses **LanceDB** for ultra-fast billion-scale vector search (FastEmbed + optional cross-encoder reranker).
+- **On disk:** the connection path is the **`vectors`** directory next to the app SQLite file (`memory.db`), not the repository root — see [AI-FEATURES.md](AI-FEATURES.md#where-lancedb-is-stored) for the exact resolution rules and optional **`rag_extra_roots`**.
+
+### 2b. Layout vs. other repos
+
+Each application chooses its own LanceDB directory. Advanced Memory’s default is under the user’s **`.advanced-memory`** app data next to `memory.db`. Another repo (for example a documentation MCP with its own RAG) may default to a path **inside that other checkout**; there is **no** automatic sharing unless an operator points two configs at the same folder on purpose.
 
 ### 3. Synchronization & Persistence
 - **Dual-Write Consistency**: Changes are written to both the relational database and the local filesystem, ensuring your knowledge is never trapped in a proprietary format.
@@ -57,8 +61,9 @@ graph TD
 ---
 
 ### Integration Patterns
-- **Portmanteau Gateway**: Consolidates 50+ tools into 8 high-density entry points.
-- **Shadow Unrolling**: Dynamically switches signatures to satisfy legacy scanners (e.g., Arcade) while preserving advanced functionality.
+
+- **FastMCP 3.2 Managed Namespaces (1.8.0+):** tools are grouped into mounted sub-apps (`audio_*`, `notes_*`, …) instead of a single `operation=` dispatcher on the wire.
+- **Legacy note:** older docs referred to portmanteau gateways and Arcade “shadow” signatures; the namespaced surface is now the primary integration contract.
 
 ---
 

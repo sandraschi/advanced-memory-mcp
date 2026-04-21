@@ -28,6 +28,9 @@ installer/build/
 installer/dist/
 rw.*.dmg  # Temporary disk images
 
+# Test-run artifact when ADVANCED_MEMORY_HOME is set to a relative path (see tests/test_config.py)
+/relative/
+
 # Virtual environments
 .env
 .venv
