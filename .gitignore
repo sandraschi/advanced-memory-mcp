@@ -64,6 +64,18 @@ claude-output
 # JavaScript dependencies (never commit)
 node_modules/
 
+# Repo-root scratch (local MCP / pytest / junit); never commit
+/_out.txt
+/adn-proj.txt
+/proj-one.txt
+/pytest*.txt
+/mcp_junit.xml
+/pc.xml
+/pc2.xml
+/full-mcp.xml
+/full2.xml
+/edit_junit.xml
+
 # Playwright (webapp frontend)
 webapp/frontend/playwright-report/
 webapp/frontend/test-results/
