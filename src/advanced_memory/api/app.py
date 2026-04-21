@@ -9,6 +9,7 @@ from loguru import logger
 
 from advanced_memory import __version__ as version
 from advanced_memory import db
+from advanced_memory.api.log_buffer import install_api_log_buffer_sink
 from advanced_memory.api.routers import (
     directory_router,
     hardware_router,
@@ -20,6 +21,7 @@ from advanced_memory.api.routers import (
     prompt_router,
     resource,
     search,
+    system_router,
     tests_router,
 )
 from advanced_memory.config import ConfigManager
@@ -34,6 +36,7 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     from advanced_memory.config import setup_advanced_memory_logging
 
     setup_advanced_memory_logging()
+    install_api_log_buffer_sink()
 
     app_config = ConfigManager().config
     # Initialize app and database
@@ -95,6 +98,7 @@ app.include_router(prompt_router.router, prefix="/api/v1/{project}")
 # Non-project specific routers
 app.include_router(project.project_resource_router, prefix="/api/v1")
 app.include_router(management.router, prefix="/api/v1")
+app.include_router(system_router.router, prefix="/api/v1")
 app.include_router(tests_router.router, prefix="/api/v1")
 
 # Auth routes are handled by FastMCP automatically when auth is enabled

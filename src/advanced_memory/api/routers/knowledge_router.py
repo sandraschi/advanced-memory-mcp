@@ -7,12 +7,15 @@ from loguru import logger
 
 from advanced_memory.deps import (
     AppConfigDep,
+    EntityRepositoryDep,
     EntityServiceDep,
     FileServiceDep,
     LinkResolverDep,
     ProjectConfigDep,
+    ProjectIdDep,
     ProjectPathDep,
     SearchServiceDep,
+    SessionMakerDep,
     SyncServiceDep,
     get_search_service,
 )
@@ -25,6 +28,7 @@ from advanced_memory.schemas import (
 )
 from advanced_memory.schemas.base import Entity, Permalink
 from advanced_memory.schemas.request import EditEntityRequest, MoveEntityRequest
+from advanced_memory.services.graph_subgraph import fetch_link_subgraph
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
@@ -256,6 +260,33 @@ async def get_entities(
     entities = await entity_service.get_entities_by_permalinks(permalink) if permalink else []
     result = EntityListResponse(entities=[EntityResponse.model_validate(entity) for entity in entities])
     return result
+
+
+@router.get("/graph/subgraph")
+async def knowledge_graph_subgraph(
+    project_id: ProjectIdDep,
+    session_maker: SessionMakerDep,
+    entity_repository: EntityRepositoryDep,
+    center: Annotated[str | None, Query(description="Focus permalink or entity:<numeric_id>")] = None,
+    depth: Annotated[int, Query(ge=1, le=5)] = 2,
+    max_nodes: Annotated[int, Query(ge=10, le=5000)] = 400,
+    max_edges: Annotated[int, Query(ge=10, le=20000)] = 800,
+    include_unresolved: Annotated[bool, Query()] = True,
+) -> dict:
+    """Bounded link graph for the vault (BFS from ``center`` or recent notes).
+
+    Returns JSON ``{ nodes, links, meta }`` suitable for force-graph UIs.
+    """
+    return await fetch_link_subgraph(
+        session_maker,
+        project_id,
+        entity_repository,
+        center=center,
+        depth=depth,
+        max_nodes=max_nodes,
+        max_edges=max_edges,
+        include_unresolved=include_unresolved,
+    )
 
 
 ## Delete endpoints

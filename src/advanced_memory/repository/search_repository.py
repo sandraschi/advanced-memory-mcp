@@ -4,7 +4,7 @@ import json
 import re
 import time
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 from loguru import logger
@@ -15,6 +15,13 @@ from advanced_memory import db
 from advanced_memory.models.search import CREATE_SEARCH_INDEX
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import sanitize_filename
+
+
+def _sqlite_time_bound(dt: datetime) -> str:
+    """Normalize bound datetime for SQLite julianday()/comparisons (naive UTC wall clock)."""
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(UTC).replace(tzinfo=None)
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
 
 
 @dataclass
@@ -377,7 +384,6 @@ class SearchRepository:
         """
         conditions = []
         params = {}
-        order_by_clause = ""
 
         # Handle text search for title and content
         if search_text:
@@ -442,17 +448,22 @@ class SearchRepository:
             type_list = ", ".join(f"'{t}'" for t in types)
             conditions.append(f"json_extract(metadata, '$.entity_type') IN ({type_list})")
 
-        # Handle date filters using datetime() for proper comparison
+        # Handle date filters — "recent" means created OR updated since the floor
+        # (old code only checked created_at, so edited older notes vanished from feeds).
         if after_date:
-            params["after_date"] = after_date
-            conditions.append("datetime(created_at) > datetime(:after_date)")
-
-            # order by most recent first
-            order_by_clause = ", updated_at DESC"
+            params["after_date"] = _sqlite_time_bound(after_date)
+            conditions.append(
+                "("
+                "(nullif(trim(created_at), '') IS NOT NULL AND julianday(created_at) > julianday(:after_date)) "
+                "OR (nullif(trim(updated_at), '') IS NOT NULL AND julianday(updated_at) > julianday(:after_date))"
+                ")"
+            )
 
         if before_date:
-            params["before_date"] = before_date
-            conditions.append("datetime(created_at) < datetime(:before_date)")
+            params["before_date"] = _sqlite_time_bound(before_date)
+            conditions.append(
+                "(nullif(trim(created_at), '') IS NOT NULL AND julianday(created_at) < julianday(:before_date))"
+            )
 
         # Handle tag filter (notes must have ALL specified tags)
         if tags:
@@ -493,6 +504,25 @@ class SearchRepository:
         # Build WHERE clause
         where_clause = " AND ".join(conditions) if conditions else "1=1"
 
+        # Ordering: "recent activity" = last created/edited first when there is no FTS query.
+        has_fts_relevance = bool(
+            search_text and search_text.strip() and search_text.strip() not in ("*", "")
+        ) or bool(title)
+
+        if has_fts_relevance:
+            order_clause = (
+                "ORDER BY bm25(search_index) ASC, "
+                "COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"
+            )
+        elif after_date:
+            order_clause = (
+                "ORDER BY COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"
+            )
+        elif before_date:
+            order_clause = "ORDER BY NULLIF(trim(created_at), '') DESC"
+        else:
+            order_clause = "ORDER BY bm25(search_index) ASC"
+
         # Count total results
         count_sql = f"SELECT count(*) FROM search_index WHERE {where_clause}"
 
@@ -521,7 +551,7 @@ class SearchRepository:
                 bm25(search_index) as score
             FROM search_index
             WHERE {where_clause}
-            ORDER BY score ASC {order_by_clause}
+            {order_clause}
             LIMIT :limit
             OFFSET :offset
         """

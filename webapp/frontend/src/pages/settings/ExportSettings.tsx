@@ -1,5 +1,5 @@
 interface ExportSettingsProps {
-  onChange: () => void
+  onChange: () => void;
 }
 
 export default function ExportSettings({ onChange }: ExportSettingsProps) {
@@ -13,13 +13,16 @@ export default function ExportSettings({ onChange }: ExportSettingsProps) {
 
         <div className="space-y-4">
           {[
-            { name: 'PDF Export', description: 'Generate PDF documents with tables of contents' },
-            { name: 'HTML Export', description: 'Create interactive HTML documentation' },
-            { name: 'Docsify Export', description: 'Generate searchable documentation sites' },
-            { name: 'Claude Skills', description: 'Export knowledge as reusable AI skills' },
-            { name: 'Pandoc Export', description: 'Convert to DOCX, EPUB, and other formats' },
+            { name: "PDF Export", description: "Generate PDF documents with tables of contents" },
+            { name: "HTML Export", description: "Create interactive HTML documentation" },
+            { name: "Docsify Export", description: "Generate searchable documentation sites" },
+            { name: "Claude Skills", description: "Export knowledge as reusable AI skills" },
+            { name: "Pandoc Export", description: "Convert to DOCX, EPUB, and other formats" },
           ].map((format) => (
-            <div key={format.name} className="flex items-center justify-between p-4 border border-border rounded-md">
+            <div
+              key={format.name}
+              className="flex items-center justify-between p-4 border border-border rounded-md"
+            >
               <div>
                 <div className="font-medium">{format.name}</div>
                 <div className="text-sm text-muted-foreground">{format.description}</div>
@@ -69,5 +72,5 @@ export default function ExportSettings({ onChange }: ExportSettingsProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

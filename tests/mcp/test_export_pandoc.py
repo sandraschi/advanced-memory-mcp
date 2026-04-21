@@ -5,6 +5,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.export_pandoc import _build_pandoc_command, export_pandoc
 
 
@@ -48,7 +50,7 @@ async def test_export_pandoc_docx(tmp_path, mock_notes_data):
                 with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
                     mock_open.return_value = (True, "Opened")
 
-                    result = await export_pandoc.fn(
+                    result = await mcp_fn(export_pandoc)(
                         export_path=str(export_path),
                         format_type="docx",
                         show_after_export=False,
@@ -74,7 +76,7 @@ async def test_export_pandoc_epub(tmp_path, mock_notes_data):
                 mock_process.returncode = 0
                 mock_exec.return_value = mock_process
 
-                result = await export_pandoc.fn(
+                result = await mcp_fn(export_pandoc)(
                     export_path=str(export_path),
                     format_type="epub",
                     show_after_export=False,
@@ -100,7 +102,7 @@ async def test_export_pandoc_html(tmp_path, mock_notes_data):
                 mock_process.returncode = 0
                 mock_exec.return_value = mock_process
 
-                result = await export_pandoc.fn(
+                result = await mcp_fn(export_pandoc)(
                     export_path=str(export_path),
                     format_type="html",
                     show_after_export=False,
@@ -129,7 +131,7 @@ async def test_export_pandoc_show_after_export(tmp_path, mock_notes_data):
                 with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
                     mock_open.return_value = (True, "Opened file")
 
-                    result = await export_pandoc.fn(
+                    result = await mcp_fn(export_pandoc)(
                         export_path=str(export_path),
                         format_type="docx",
                         show_after_export=True,
@@ -159,7 +161,7 @@ async def test_export_pandoc_no_show(tmp_path, mock_notes_data):
                 mock_exec.return_value = mock_process
 
                 with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
-                    result = await export_pandoc.fn(
+                    result = await mcp_fn(export_pandoc)(
                         export_path=str(export_path),
                         format_type="docx",
                         show_after_export=False,
@@ -179,7 +181,7 @@ async def test_export_pandoc_empty_folder(tmp_path):
     with patch("advanced_memory.mcp.tools.export_pandoc._get_notes_from_folder") as mock_get_notes:
         mock_get_notes.return_value = []
 
-        result = await export_pandoc.fn(
+        result = await mcp_fn(export_pandoc)(
             export_path=str(export_path),
             format_type="pdf",
         )
@@ -206,7 +208,7 @@ async def test_export_pandoc_error_handling(tmp_path, mock_notes_data):
                 mock_process.returncode = 1
                 mock_exec.return_value = mock_process
 
-                result = await export_pandoc.fn(
+                result = await mcp_fn(export_pandoc)(
                     export_path=str(export_path),
                     format_type="pdf",
                     show_after_export=False,
@@ -221,7 +223,7 @@ class TestPdfEngineDefaults:
 
     def test_default_pdf_engine_is_weasyprint(self):
         """Test that the default pdf_engine is weasyprint (pure Python, no external deps)."""
-        sig = inspect.signature(export_pandoc.fn)
+        sig = inspect.signature(mcp_fn(export_pandoc))
         pdf_engine_param = sig.parameters.get("pdf_engine")
 
         assert pdf_engine_param is not None, "pdf_engine parameter not found"
@@ -231,7 +233,7 @@ class TestPdfEngineDefaults:
 
     def test_default_self_contained_is_true(self):
         """Test that self_contained defaults to True for embedded resources."""
-        sig = inspect.signature(export_pandoc.fn)
+        sig = inspect.signature(mcp_fn(export_pandoc))
         self_contained_param = sig.parameters.get("self_contained")
 
         assert self_contained_param is not None

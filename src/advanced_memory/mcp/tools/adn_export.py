@@ -128,7 +128,7 @@ async def adn_export(
 
     # Check if multi-project export is requested
     from advanced_memory.mcp.async_client import client
-    from advanced_memory.mcp.tools.utils import call_post
+    from advanced_memory.mcp.tools.utils import call_get, call_post
 
     projects_to_export = []
     multi_project_export = False
@@ -138,7 +138,7 @@ async def adn_export(
             # Export all projects
             from advanced_memory.schemas.project_info import ProjectList
 
-            projects_response = await call_post(client, "/projects/projects", json={})
+            projects_response = await call_get(client, "/api/v1/projects")
             project_list = ProjectList.model_validate(projects_response.json())
             projects_to_export = [p.name for p in project_list.projects]
             multi_project_export = True

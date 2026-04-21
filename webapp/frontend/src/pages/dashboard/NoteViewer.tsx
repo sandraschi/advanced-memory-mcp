@@ -1,521 +1,432 @@
-﻿import { useState, useEffect } from 'react'
-import { Search, FileText, Eye, Download, Share, MoreVertical, Filter, X, Maximize2, Minimize2, List, Network, Folder, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
-import { apiService } from '../../services/api'
+﻿import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  Folder,
+  List,
+  Maximize2,
+  Minimize2,
+  MoreVertical,
+  Network,
+  Search,
+  Share,
+  X,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { getApiBaseUrl } from "../../config/apiBase";
+import { devError } from "../../devConsole";
+import { apiService } from "../../services/api";
 
-const DEBUG = import.meta.env.DEV
+const DEBUG = import.meta.env.DEV;
 
 interface Note {
-  id: string
-  title: string
-  content: string
-  tags: string[]
-  created: string
-  modified: string
-  wordCount: number
-  connections: number
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  created: string;
+  modified: string;
+  wordCount: number;
+  connections: number;
 }
 
 interface NoteViewerProps {
-  selectedNoteId?: string | undefined
-  onNoteSelect?: (noteId: string) => void
+  selectedNoteId?: string | undefined;
+  onNoteSelect?: (noteId: string) => void;
 }
 
+type ProjectRow = { name: string; path: string; is_default?: boolean };
+
 export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerProps) {
-  const [notes, setNotes] = useState<Note[]>([])
-  const [filteredNotes, setFilteredNotes] = useState<Note[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [serverStatus, setServerStatus] = useState<'checking' | 'running' | 'stopped' | 'starting'>('checking')
-  const [serverError, setServerError] = useState<string>('')
-  const [showFilters, setShowFilters] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  /** FastAPI (from start.ps1 / uvicorn) — this page does not start it. */
+  const [backendReachable, setBackendReachable] = useState<"checking" | "online" | "offline">(
+    "checking",
+  );
+  const [listError, setListError] = useState<string>("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // View Mode State
-  const [viewMode, setViewMode] = useState<'list' | 'tree'>('list')
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
+  const [viewMode, setViewMode] = useState<"list" | "tree">("list");
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   // Pagination State
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalNotes, setTotalNotes] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalNotes, setTotalNotes] = useState(0);
 
   // Filter state
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [dateCreatedFrom, setDateCreatedFrom] = useState('')
-  const [dateCreatedTo, setDateCreatedTo] = useState('')
-  const [dateModifiedFrom, setDateModifiedFrom] = useState('')
-  const [dateModifiedTo, setDateModifiedTo] = useState('')
-  const [availableTags, setAvailableTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [dateCreatedFrom, setDateCreatedFrom] = useState("");
+  const [dateCreatedTo, setDateCreatedTo] = useState("");
+  const [dateModifiedFrom, setDateModifiedFrom] = useState("");
+  const [dateModifiedTo, setDateModifiedTo] = useState("");
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [vaultProject, setVaultProject] = useState("");
 
-  // State for notes and UI
+  /** Bumps on effect cleanup (Strict Mode remount, /notes unmount) so stale loadNotes cannot clear a good list. */
+  const listFetchGen = useRef(0);
 
-
-  const checkServerStatus = async (): Promise<boolean> => {
+  const probeBackend = async (opts?: { silent?: boolean }): Promise<boolean> => {
     try {
-      setServerStatus('checking')
-      // Try to ping the bridge server
-      const response = await fetch('http://localhost:10705/api/v1/health', {
-        method: 'GET',
-        signal: AbortSignal.timeout(2000) // 2 second timeout
-      })
-      const isRunning = response.ok
-      setServerStatus(isRunning ? 'running' : 'stopped')
-      return isRunning
+      if (!opts?.silent) {
+        setBackendReachable("checking");
+      }
+      const healthUrl = `${getApiBaseUrl()}/health`;
+      const response = await fetch(healthUrl, {
+        method: "GET",
+        signal: AbortSignal.timeout(2000),
+      });
+      const ok = response.ok;
+      setBackendReachable(ok ? "online" : "offline");
+      return ok;
     } catch (error) {
-      DEBUG && console.log('Bridge server not responding:', error)
-      setServerStatus('stopped')
-      return false
+      DEBUG && devError("Backend health check failed:", error);
+      setBackendReachable("offline");
+      return false;
     }
-  }
-
-  /*
-    const _startServer = async (): Promise<boolean> => {
-      try {
-        setServerStatus('starting')
-        setServerError('')
-
-        DEBUG && console.log('Attempting to start ADN MCP server...')
-
-        // Try to start the server by opening a terminal/command prompt
-        // This will open a new terminal window with the server start command
-
-        // For Windows PowerShell
-        const _command = 'Start-Process powershell -ArgumentList "cd D:\\Dev\\repos\\advanced-memory-mcp; python -m advanced_memory.mcp.server" -WindowStyle Normal'
-
-        // Execute the command (this opens a new PowerShell window)
-        // Note: This is a simplified approach. In production, you'd want better error handling
-        // and possibly use a service manager or background process
-
-        if (typeof window !== 'undefined') {
-          // Alternative approach: try to open a command prompt
-          // This is more reliable for starting background processes
-          const _shellCommand = `cmd.exe /c start cmd.exe /k "cd /d D:\\Dev\\repos\\advanced-memory-mcp && python -m advanced_memory.mcp.server && pause"`
-
-          // Use a hidden iframe or similar to execute system commands
-          // For now, we'll provide instructions to the user
-          setServerError('Please start the ADN MCP server manually by running: python -m advanced_memory.mcp.server')
-
-          // Wait a bit and check again
-          setTimeout(async () => {
-            const isRunning = await checkServerStatus()
-            if (isRunning) {
-              setServerError('')
-              loadNotes() // Reload notes once server is running
-            }
-          }, 5000)
-
-          return false // Indicate manual intervention needed
-        }
-
-        return false
-      } catch (error) {
-        console.error('Error starting server:', error)
-        setServerError('Failed to start server. Please start it manually.')
-        setServerStatus('stopped')
-        return false
-      }
-    }
-  */
-
-  const checkStartupService = async (): Promise<boolean> => {
-    try {
-      const response = await fetch('http://localhost:10733/health', {
-        method: 'GET',
-        signal: AbortSignal.timeout(1000)
-      })
-      return response.ok
-    } catch (error) {
-      return false
-    }
-  }
-
-  /*
-    const _startStartupService = async (): Promise<boolean> => {
-      try {
-        DEBUG && console.log('Attempting to start startup service...')
-
-        // Since we can't directly execute from browser, we'll try to use a web-based approach
-        // For now, we'll assume the startup service should be running and proceed
-        DEBUG && console.log('Startup service check/attempt completed')
-
-        // Small delay to allow for any startup
-        await new Promise(resolve => setTimeout(resolve, 500))
-
-        return await checkStartupService()
-      } catch (error) {
-        console.error('Error checking startup service:', error)
-        return false
-      }
-    }
-  */
-
-  const startAllServices = async (): Promise<boolean> => {
-    try {
-      setServerStatus('starting')
-      setServerError('Starting all ADN services...')
-
-      DEBUG && console.log('Attempting to auto-start all services...')
-
-      // Try to start everything via the auto-start service
-      const response = await fetch('http://localhost:10735/start-all', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-
-      if (response.ok) {
-        DEBUG && console.log('All services start initiated')
-
-        // Wait for services (incl. bridge via start-bridge) to start up
-        await new Promise(resolve => setTimeout(resolve, 5000))
-
-        let isRunning = await checkServerStatus()
-        if (isRunning) {
-          setServerError('')
-          DEBUG && console.log('All services started successfully')
-          return true
-        }
-
-        // Bridge may still be starting; try explicit start-bridge then retry
-        DEBUG && console.log('Bridge not up after start-all, trying start-bridge...')
-        isRunning = await startBridgeServer()
-        if (isRunning) return true
-
-        DEBUG && console.log('Services started but bridge server not responding')
-        setServerError('Services started but bridge server not responding. Using demo data.')
-        setServerStatus('stopped')
-        return false
-      } else {
-        DEBUG && console.log('Auto-start service not available, trying manual startup...')
-        return await startBridgeServer()
-      }
-    } catch (error) {
-      console.error('Error starting all services:', error)
-      setServerError('Could not start services automatically. Using demo data.')
-      setServerStatus('stopped')
-      return false
-    }
-  }
-
-  const startBridgeServer = async (): Promise<boolean> => {
-    try {
-      setServerStatus('starting')
-      setServerError('')
-      DEBUG && console.log('Attempting manual bridge server startup...')
-
-      // First ensure startup service is available
-      let startupRunning = await checkStartupService()
-      if (!startupRunning) {
-        DEBUG && console.log('Startup service not running, attempting to start it...')
-        // Try to use auto-start service for startup service
-        try {
-          await fetch('http://localhost:10735/start-all', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-          })
-          await new Promise(resolve => setTimeout(resolve, 2000))
-          startupRunning = await checkStartupService()
-        } catch (autoStartError) {
-          DEBUG && console.log('Auto-start service not available either')
-        }
-      }
-
-      if (!startupRunning) {
-        DEBUG && console.log('Could not start startup service, using mock data')
-        setServerError('Could not start required services. Using demo data.')
-        setServerStatus('stopped')
-        return false
-      }
-
-      // Try to start the bridge server via the startup service
-      const response = await fetch('http://localhost:10733/start-bridge', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-
-      if (response.ok) {
-        DEBUG && console.log('Bridge server start initiated')
-
-        // Wait for the bridge server to start up
-        await new Promise(resolve => setTimeout(resolve, 3000))
-
-        // Check if bridge server is now running
-        const isRunning = await checkServerStatus()
-        if (isRunning) {
-          setServerError('')
-          DEBUG && console.log('Bridge server started successfully')
-          return true
-        } else {
-          DEBUG && console.log('Bridge server did not respond after startup attempt')
-          setServerError('Bridge server started but not responding. Using demo data.')
-          setServerStatus('stopped')
-          return false
-        }
-      } else {
-        DEBUG && console.log('Startup service responded with error, using mock data')
-        setServerError('Could not start bridge server. Using demo data.')
-        setServerStatus('stopped')
-        return false
-      }
-    } catch (error) {
-      console.error('Error starting bridge server:', error)
-      setServerError('Could not start bridge server automatically. Using demo data.')
-      setServerStatus('stopped')
-      return false
-    }
-  }
+  };
 
   const loadNotes = async (page = 1) => {
-    setIsLoading(true)
-    try {
-      // First check if bridge server is running
-      let serverRunning = await checkServerStatus()
+    const myGen = ++listFetchGen.current;
+    const stillCurrent = () => myGen === listFetchGen.current;
 
-      if (!serverRunning) {
-        DEBUG && console.log('Bridge server not running, attempting auto-start...')
-        // Try to auto-start all services
-        serverRunning = await startAllServices()
+    setIsLoading(true);
+    setListError("");
+    try {
+      const apiUp = await probeBackend();
+      if (!stillCurrent()) {
+        return;
       }
 
-      // Try to fetch real notes if server is now running
-      if (serverRunning) {
+      if (apiUp) {
         try {
-          const response = await (searchQuery.trim() !== ''
+          const response = await (searchQuery.trim() !== ""
             ? apiService.searchNotes(searchQuery, page, 50, selectedTags)
-            : apiService.getNotes(page, 50))
+            : apiService.getNotes(page, 50));
 
-          if (response.success && response.data?.notes) {
-            const notesData = response.data.notes
-            setNotes(notesData)
-            setFilteredNotes(notesData)
-            setCurrentPage(response.data.page || page)
-            setTotalPages(response.data.pages || 1)
-            setTotalNotes(response.data.total || notesData.length)
+          if (!stillCurrent()) {
+            return;
+          }
+
+          if (response.success && Array.isArray(response.data?.notes)) {
+            const notesData = response.data.notes;
+            setNotes(notesData);
+            setFilteredNotes(notesData);
+            setCurrentPage(response.data.page || page);
+            setTotalPages(response.data.pages || 1);
+            setTotalNotes(response.data.total ?? notesData.length);
 
             // Extract available tags
-            const allTags = new Set<string>()
-            notesData.forEach(note => {
+            const allTags = new Set<string>();
+            notesData.forEach((note) => {
               if (Array.isArray(note.tags)) {
-                note.tags.forEach(tag => allTags.add(tag))
+                note.tags.forEach((tag) => allTags.add(tag));
               }
-            })
-            setAvailableTags(Array.from(allTags).sort())
-            setIsLoading(false)
-            return
+            });
+            setAvailableTags(Array.from(allTags).sort());
+            setIsLoading(false);
+            return;
           } else {
-            setServerError(response.error || 'No notes found in knowledge base.')
+            setListError(response.error || "Could not load notes from the API.");
           }
         } catch (apiError) {
-          console.error('API call failed:', apiError)
-          setServerError('Failed to fetch notes from server.')
+          devError("API call failed:", apiError);
+          setListError("Could not load notes from the API.");
         }
       }
 
-      setNotes([])
-      setFilteredNotes([])
-      setAvailableTags([])
-      setIsLoading(false)
+      if (!stillCurrent()) {
+        return;
+      }
+      setNotes([]);
+      setFilteredNotes([]);
+      setAvailableTags([]);
+      setTotalNotes(0);
+      setTotalPages(1);
+      setCurrentPage(1);
+      setIsLoading(false);
     } catch (error) {
-      console.error('Failed to load notes:', error)
-      setServerError('An unexpected error occurred while loading notes.')
-      setNotes([])
-      setFilteredNotes([])
-      setAvailableTags([])
-      setIsLoading(false)
+      devError("Failed to load notes:", error);
+      if (!stillCurrent()) {
+        return;
+      }
+      setListError("An unexpected error occurred while loading notes.");
+      setNotes([]);
+      setFilteredNotes([]);
+      setAvailableTags([]);
+      setTotalNotes(0);
+      setTotalPages(1);
+      setCurrentPage(1);
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadNotes(currentPage)
+    let cancelled = false;
+    (async () => {
+      const pr = await apiService.getProjects();
+      if (cancelled) {
+        return;
+      }
+      if (pr.success && Array.isArray(pr.data) && pr.data.length > 0) {
+        const rows = pr.data as ProjectRow[];
+        setProjects(rows);
+        const first = rows[0];
+        const def = rows.find((p) => p.is_default)?.name ?? first?.name ?? "";
+        if (def) {
+          setVaultProject(def);
+          apiService.activeProject = def;
+        }
+      } else if (!pr.success && pr.error) {
+        setListError(pr.error);
+      }
+      await loadNotes(1);
+    })();
 
-    // Check server status periodically
     const interval = setInterval(() => {
-      checkServerStatus()
-    }, 10000) // Check every 10 seconds
+      void probeBackend({ silent: true });
+    }, 10000);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => {
+      cancelled = true;
+      listFetchGen.current++;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleVaultProjectChange = async (name: string) => {
+    setVaultProject(name);
+    setSelectedNote(null);
+    onNoteSelect?.("");
+    apiService.activeProject = name;
+    const sw = await apiService.switchProject(name);
+    if (!sw.success) {
+      setListError(sw.error || "Could not switch default project");
+      return;
+    }
+    setListError("");
+    setCurrentPage(1);
+    await loadNotes(1);
+  };
 
   // Apply all filters (search, tags, dates)
   const applyFilters = (notesList: Note[]) => {
-    let filtered = notesList
+    let filtered = notesList;
 
     // Search filter
-    if (searchQuery.trim() !== '') {
-      filtered = filtered.filter(note =>
-        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
+    if (searchQuery.trim() !== "") {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter((note) => {
+        const title = String(note.title ?? "").toLowerCase();
+        const body = String(note.content ?? "").toLowerCase();
+        return (
+          title.includes(q) ||
+          body.includes(q) ||
+          note.tags.some((tag) => String(tag).toLowerCase().includes(q))
+        );
+      });
     }
 
     // Tag filter
     if (selectedTags.length > 0) {
-      filtered = filtered.filter(note =>
-        selectedTags.some(selectedTag => note.tags.includes(selectedTag))
-      )
+      filtered = filtered.filter((note) =>
+        selectedTags.some((selectedTag) => note.tags.includes(selectedTag)),
+      );
     }
 
     // Date filters
     if (dateCreatedFrom) {
-      const fromDate = new Date(dateCreatedFrom)
-      filtered = filtered.filter(note => new Date(note.created) >= fromDate)
+      const fromDate = new Date(dateCreatedFrom);
+      filtered = filtered.filter((note) => new Date(note.created) >= fromDate);
     }
     if (dateCreatedTo) {
-      const toDate = new Date(dateCreatedTo)
-      toDate.setHours(23, 59, 59, 999) // End of day
-      filtered = filtered.filter(note => new Date(note.created) <= toDate)
+      const toDate = new Date(dateCreatedTo);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter((note) => new Date(note.created) <= toDate);
     }
     if (dateModifiedFrom) {
-      const fromDate = new Date(dateModifiedFrom)
-      filtered = filtered.filter(note => new Date(note.modified) >= fromDate)
+      const fromDate = new Date(dateModifiedFrom);
+      filtered = filtered.filter((note) => new Date(note.modified) >= fromDate);
     }
     if (dateModifiedTo) {
-      const toDate = new Date(dateModifiedTo)
-      toDate.setHours(23, 59, 59, 999) // End of day
-      filtered = filtered.filter(note => new Date(note.modified) <= toDate)
+      const toDate = new Date(dateModifiedTo);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter((note) => new Date(note.modified) <= toDate);
     }
 
-    return filtered
-  }
+    return filtered;
+  };
 
   useEffect(() => {
-    const filtered = applyFilters(notes)
-    setFilteredNotes(filtered)
-  }, [searchQuery, selectedTags, dateCreatedFrom, dateCreatedTo, dateModifiedFrom, dateModifiedTo, notes])
+    const filtered = applyFilters(notes);
+    setFilteredNotes(filtered);
+  }, [
+    searchQuery,
+    selectedTags,
+    dateCreatedFrom,
+    dateCreatedTo,
+    dateModifiedFrom,
+    dateModifiedTo,
+    notes,
+  ]);
 
   useEffect(() => {
     // Select note based on selectedNoteId prop
     if (selectedNoteId) {
-      const note = notes.find(n => n.id === selectedNoteId)
+      const note = notes.find((n) => n.id === selectedNoteId);
       if (note) {
-        setSelectedNote(note)
+        setSelectedNote(note);
       }
     }
-  }, [selectedNoteId, notes])
+  }, [selectedNoteId, notes]);
 
   const handleNoteSelect = async (note: Note) => {
-    setSelectedNote(note)
-    onNoteSelect?.(note.id)
+    setSelectedNote(note);
+    onNoteSelect?.(note.id);
 
     // Try to fetch full note content from API
     try {
-      const response = await apiService.getNote(note.id)
+      const response = await apiService.getNote(note.id);
       if (response.success && response.data) {
         // Merge full content into existing note object to preserve tags, date, etc.
-        setSelectedNote(prev => prev && prev.id === note.id ? {
-          ...prev,
-          content: response.data!.content,
-          title: response.data!.title || prev.title
-        } : prev)
+        setSelectedNote((prev) =>
+          prev && prev.id === note.id
+            ? {
+                ...prev,
+                content: response.data!.content,
+                title: response.data!.title || prev.title,
+              }
+            : prev,
+        );
       }
     } catch (error) {
       // Keep the basic note data if API call fails
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   // Tree building helper
   interface TreeNode {
-    name: string
-    path: string
-    note?: Note
-    children: Record<string, TreeNode>
+    name: string;
+    path: string;
+    note?: Note;
+    children: Record<string, TreeNode>;
   }
 
   const buildTree = (notesList: Note[]): TreeNode[] => {
-    const root: Record<string, TreeNode> = {}
+    const root: Record<string, TreeNode> = {};
 
-    notesList.forEach(note => {
-      const permalink = (note as any).permalink || note.title || ''
-      const pathParts = permalink.includes('/') ? permalink.split('/') : [note.title]
+    notesList.forEach((note) => {
+      const permalink = (note as any).permalink || note.title || "";
+      const pathParts = permalink.includes("/") ? permalink.split("/") : [note.title];
 
-      let currentLevel = root
-      let currentPath = ''
+      let currentLevel = root;
+      let currentPath = "";
 
       pathParts.forEach((part: string, index: number) => {
-        currentPath = currentPath ? `${currentPath}/${part}` : part
+        currentPath = currentPath ? `${currentPath}/${part}` : part;
         if (!currentLevel[part]) {
           currentLevel[part] = {
             name: part,
             path: currentPath,
-            children: {}
-          }
+            children: {},
+          };
         }
         if (index === pathParts.length - 1) {
-          currentLevel[part].note = note
+          currentLevel[part].note = note;
         }
-        currentLevel = currentLevel[part].children
-      })
-    })
+        currentLevel = currentLevel[part].children;
+      });
+    });
 
     const recursiveSort = (nodes: TreeNode[]): TreeNode[] => {
       const sorted = [...nodes].sort((a, b) => {
-        const aIsFolder = Object.keys(a.children).length > 0 && !a.note
-        const bIsFolder = Object.keys(b.children).length > 0 && !b.note
-        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1
-        return a.name.localeCompare(b.name)
+        const aIsFolder = Object.keys(a.children).length > 0 && !a.note;
+        const bIsFolder = Object.keys(b.children).length > 0 && !b.note;
+        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
+        return a.name.localeCompare(b.name);
       });
-      sorted.forEach(node => {
-        const sortedChildren = recursiveSort(Object.values(node.children))
-        node.children = {}
-        sortedChildren.forEach(c => { node.children[c.name] = c })
+      sorted.forEach((node) => {
+        const sortedChildren = recursiveSort(Object.values(node.children));
+        node.children = {};
+        sortedChildren.forEach((c) => {
+          node.children[c.name] = c;
+        });
       });
-      return sorted
-    }
+      return sorted;
+    };
 
-    return recursiveSort(Object.values(root))
-  }
+    return recursiveSort(Object.values(root));
+  };
 
   const toggleNode = (path: string) => {
-    const newExpanded = new Set(expandedNodes)
+    const newExpanded = new Set(expandedNodes);
     if (newExpanded.has(path)) {
-      newExpanded.delete(path)
+      newExpanded.delete(path);
     } else {
-      newExpanded.add(path)
+      newExpanded.add(path);
     }
-    setExpandedNodes(newExpanded)
-  }
+    setExpandedNodes(newExpanded);
+  };
 
   const renderTreeNodes = (nodes: TreeNode[], level = 0): React.ReactNode => {
     return nodes.map((node) => {
-      const isExpanded = expandedNodes.has(node.path)
-      const hasChildren = Object.keys(node.children).length > 0
-      const isSelected = selectedNote?.id === node.note?.id
+      const isExpanded = expandedNodes.has(node.path);
+      const hasChildren = Object.keys(node.children).length > 0;
+      const isSelected = selectedNote?.id === node.note?.id;
 
       return (
         <div key={node.path} className="w-full">
           <div
-            className={`flex items-center py-1.5 px-2 cursor-pointer hover:bg-muted/50 text-sm ${isSelected ? 'bg-accent/10 border-l-2 border-accent text-accent font-medium' : 'text-foreground border-l-2 border-transparent'}`}
+            className={`flex items-center py-1.5 px-2 cursor-pointer hover:bg-muted/50 text-sm ${isSelected ? "bg-accent/10 border-l-2 border-accent text-accent font-medium" : "text-foreground border-l-2 border-transparent"}`}
             style={{ paddingLeft: `${level * 12 + 8}px` }}
             onClick={() => {
               if (node.note) {
-                handleNoteSelect(node.note)
+                handleNoteSelect(node.note);
               } else if (hasChildren) {
-                toggleNode(node.path)
+                toggleNode(node.path);
               }
             }}
           >
             {hasChildren && (
               <button
-                onClick={(e) => { e.stopPropagation(); toggleNode(node.path) }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleNode(node.path);
+                }}
                 className="w-4 h-4 mr-1 flex items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                {isExpanded ? (
+                  <ChevronDown className="w-3 h-3" />
+                ) : (
+                  <ChevronRight className="w-3 h-3" />
+                )}
               </button>
             )}
             {!hasChildren && <div className="w-5" />}
 
-            {(hasChildren && !node.note) ? (
+            {hasChildren && !node.note ? (
               <Folder className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
             ) : (
               <FileText className="w-3.5 h-3.5 mr-2 text-muted-foreground shrink-0" />
@@ -525,19 +436,51 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
           </div>
 
           {isExpanded && hasChildren && (
-            <div className="w-full">
-              {renderTreeNodes(Object.values(node.children), level + 1)}
-            </div>
+            <div className="w-full">{renderTreeNodes(Object.values(node.children), level + 1)}</div>
           )}
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
   return (
     <div className="h-full min-h-0 flex flex-col">
       {/* Search Header */}
-      <div className="p-6 border-b border-border">
+      <div className="p-6 border-b border-border space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
+            <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
+            <label htmlFor="vault-project" className="text-sm text-muted-foreground shrink-0">
+              Project
+            </label>
+            <select
+              id="vault-project"
+              className="rounded-md border border-border bg-background px-3 py-2 text-sm min-w-[10rem] max-w-[20rem]"
+              value={vaultProject}
+              disabled={projects.length === 0}
+              onChange={(e) => void handleVaultProjectChange(e.target.value)}
+            >
+              {projects.map((p) => (
+                <option key={p.name} value={p.name}>
+                  {p.name}
+                  {p.is_default ? " (default)" : ""}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs text-muted-foreground hidden md:inline">
+              Path: {projects.find((p) => p.name === vaultProject)?.path || "—"}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            <Link to="/vault/sync" className="text-accent hover:underline">
+              Sync and index
+            </Link>
+            <span className="text-muted-foreground">·</span>
+            <Link to="/vault/stats" className="text-accent hover:underline">
+              Stats
+            </Link>
+          </div>
+        </div>
         <div className="flex items-center space-x-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -546,30 +489,53 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               placeholder="Search notes... (press Enter)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && loadNotes(1)}
+              onKeyDown={(e) => e.key === "Enter" && loadNotes(1)}
               className="input pl-10 w-full"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`btn btn-outline flex items-center ${showFilters ? 'bg-accent/10' : ''}`}
+            className={`btn btn-outline flex items-center ${showFilters ? "bg-accent/10" : ""}`}
           >
             <Filter className="h-4 w-4 mr-2" />
             Filters
-            {(selectedTags.length > 0 || dateCreatedFrom || dateCreatedTo || dateModifiedFrom || dateModifiedTo) && (
+            {(selectedTags.length > 0 ||
+              dateCreatedFrom ||
+              dateCreatedTo ||
+              dateModifiedFrom ||
+              dateModifiedTo) && (
               <span className="ml-2 bg-accent text-accent-foreground rounded-full px-2 py-0.5 text-xs">
-                {selectedTags.length + (dateCreatedFrom ? 1 : 0) + (dateCreatedTo ? 1 : 0) + (dateModifiedFrom ? 1 : 0) + (dateModifiedTo ? 1 : 0)}
+                {selectedTags.length +
+                  (dateCreatedFrom ? 1 : 0) +
+                  (dateCreatedTo ? 1 : 0) +
+                  (dateModifiedFrom ? 1 : 0) +
+                  (dateModifiedTo ? 1 : 0)}
               </span>
             )}
           </button>
           <div className="flex items-center space-x-4">
             <div className="text-sm text-muted-foreground whitespace-nowrap">
-              {filteredNotes.length > 0 ? `${(currentPage - 1) * 50 + 1} - ${Math.min(currentPage * 50, totalNotes)} of ${totalNotes}` : '0'} notes
+              {filteredNotes.length > 0
+                ? `${(currentPage - 1) * 50 + 1} - ${Math.min(currentPage * 50, totalNotes)} of ${totalNotes}`
+                : "0"}{" "}
+              notes
             </div>
             <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${serverStatus === 'running' ? 'bg-green-500' : serverStatus === 'starting' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'}`}></div>
-              <span className="text-xs text-muted-foreground capitalize">
-                {serverStatus === 'checking' ? 'Checking...' : serverStatus}
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  backendReachable === "online"
+                    ? "bg-green-500"
+                    : backendReachable === "checking"
+                      ? "bg-amber-500 animate-pulse"
+                      : "bg-red-500"
+                }`}
+              />
+              <span className="text-xs text-muted-foreground">
+                {backendReachable === "checking"
+                  ? "Checking backend…"
+                  : backendReachable === "online"
+                    ? "Backend online"
+                    : "Backend offline"}
               </span>
             </div>
           </div>
@@ -583,20 +549,21 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               <div>
                 <label className="label">Tags</label>
                 <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                  {availableTags.map(tag => (
+                  {availableTags.map((tag) => (
                     <button
                       key={tag}
                       onClick={() => {
                         if (selectedTags.includes(tag)) {
-                          setSelectedTags(selectedTags.filter(t => t !== tag))
+                          setSelectedTags(selectedTags.filter((t) => t !== tag));
                         } else {
-                          setSelectedTags([...selectedTags, tag])
+                          setSelectedTags([...selectedTags, tag]);
                         }
                       }}
-                      className={`px-3 py-1 text-xs rounded-full border transition-colors ${selectedTags.includes(tag)
-                        ? 'bg-accent text-accent-foreground border-accent'
-                        : 'bg-background hover:bg-muted border-border'
-                        }`}
+                      className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+                        selectedTags.includes(tag)
+                          ? "bg-accent text-accent-foreground border-accent"
+                          : "bg-background hover:bg-muted border-border"
+                      }`}
                     >
                       {tag}
                     </button>
@@ -654,11 +621,11 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => {
-                  setSelectedTags([])
-                  setDateCreatedFrom('')
-                  setDateCreatedTo('')
-                  setDateModifiedFrom('')
-                  setDateModifiedTo('')
+                  setSelectedTags([]);
+                  setDateCreatedFrom("");
+                  setDateCreatedTo("");
+                  setDateModifiedFrom("");
+                  setDateModifiedTo("");
                 }}
                 className="btn btn-outline btn-sm flex items-center"
               >
@@ -676,18 +643,26 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         {!isFullscreen && (
           <div className="w-80 min-h-0 border-r border-border flex flex-col animate-in slide-in-from-left duration-300">
             <div className="p-4 border-b border-border flex justify-between items-center">
-              <h2 className="font-semibold flex items-center gap-2">Notes <span className="text-xs font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">{totalNotes}</span></h2>
+              <h2 className="font-semibold flex items-center gap-2 flex-wrap">
+                Notes{" "}
+                <span
+                  className="text-xs font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full tabular-nums"
+                  title="Listed in the sidebar (after any local filters) / total in the search index for this project and query."
+                >
+                  {filteredNotes.length} / {totalNotes}
+                </span>
+              </h2>
               <div className="flex bg-muted/50 p-1 rounded-md">
                 <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-1 rounded ${viewMode === 'list' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  onClick={() => setViewMode("list")}
+                  className={`p-1 rounded ${viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                   title="List View"
                 >
                   <List className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setViewMode('tree')}
-                  className={`p-1 rounded ${viewMode === 'tree' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  onClick={() => setViewMode("tree")}
+                  className={`p-1 rounded ${viewMode === "tree" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                   title="Tree View"
                 >
                   <Network className="w-4 h-4" />
@@ -699,75 +674,59 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               {isLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent"></div>
-                  <span className="ml-2 text-muted-foreground">
-                    {serverStatus === 'starting' ? 'Starting server...' :
-                      serverStatus === 'checking' ? 'Checking server status...' :
-                        'Loading notes...'}
-                  </span>
+                  <span className="ml-2 text-muted-foreground">Loading notes…</span>
                 </div>
-              ) : (serverStatus === 'stopped' || serverStatus === 'starting') ? (
+              ) : backendReachable === "offline" ? (
                 <div className="text-center py-8">
                   <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
                       <span className="text-white font-bold text-sm">!</span>
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">Advanced Memory Server Not Running</h3>
+                  <h3 className="text-lg font-semibold mb-2">Cannot reach the vault API</h3>
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                    The ADN MCP server is not running. Start it to access your knowledge base and notes.
+                    This page does not start the backend. Run{" "}
+                    <code className="text-xs bg-muted px-1 rounded">.\start.ps1</code> from the{" "}
+                    <code className="text-xs bg-muted px-1 rounded">webapp</code> folder (it starts
+                    FastAPI on port 10705 and Vite on 10704), or run uvicorn from the repo root:{" "}
+                    <code className="text-xs bg-muted px-1 rounded">
+                      uv run uvicorn advanced_memory.server:app --host 127.0.0.1 --port 10705
+                    </code>
+                    . If you opened the UI from another device, set{" "}
+                    <code className="text-xs bg-muted px-1 rounded">VITE_API_URL</code> to a
+                    reachable base ending in{" "}
+                    <code className="text-xs bg-muted px-1 rounded">/api/v1</code>.
                   </p>
-                  {serverError && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-md p-3 mb-4 max-w-md mx-auto">
-                      <p className="text-red-400 text-sm">{serverError}</p>
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    <button
-                      onClick={async () => {
-                        const ok = await startBridgeServer()
-                        if (ok) loadNotes()
-                      }}
-                      disabled={serverStatus === 'starting'}
-                      className="btn btn-primary"
-                    >
-                      {serverStatus === 'starting' ? 'Starting Bridge...' : 'Start Bridge'}
-                    </button>
-                    <button
-                      onClick={async () => {
-                        await checkServerStatus()
-                        loadNotes()
-                      }}
-                      className="btn btn-outline"
-                    >
-                      Check Status
-                    </button>
-                  </div>
-                  <div className="mt-4 p-3 bg-muted/50 rounded-md max-w-md mx-auto">
-                    <p className="text-xs text-muted-foreground">
-                      <strong>Start Bridge:</strong> Use the button above (via startup service on 10733).<br />
-                      Or run <code className="bg-background px-1 py-0.5 rounded text-xs">node bridge-server.js</code> in the repo root.
-                    </p>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await probeBackend();
+                      loadNotes();
+                    }}
+                    className="btn btn-primary"
+                  >
+                    Try again
+                  </button>
                 </div>
               ) : notes.length === 0 ? (
                 <div className="text-center py-8">
-                  {searchQuery.trim() === '' ? (
+                  {searchQuery.trim() === "" ? (
                     <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   ) : (
                     <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   )}
                   <h3 className="text-lg font-semibold mb-2">
-                    {searchQuery.trim() === '' ? 'Enter a search term' : 'No Notes Found'}
+                    {searchQuery.trim() === "" ? "No notes in this view" : "No Notes Found"}
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    {searchQuery.trim() === '' 
-                      ? 'Your server is running. Type a search term above to browse your notes.' 
-                      : 'Your server is running but no matching notes were found.'}
+                    {searchQuery.trim() === ""
+                      ? "The list is driven by the search index for the active project. If you expect thousands of notes here, confirm the webapp is using the same project as your synced vault (project switcher), then refresh."
+                      : "No notes matched your search and filters."}
                   </p>
-                  <button
-                    onClick={() => loadNotes(1)}
-                    className="btn btn-primary"
-                  >
+                  {listError ? (
+                    <p className="text-sm text-red-400 mb-4 max-w-md mx-auto">{listError}</p>
+                  ) : null}
+                  <button onClick={() => loadNotes(1)} className="btn btn-primary">
                     Refresh
                   </button>
                 </div>
@@ -780,12 +739,12 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                   </p>
                   <button
                     onClick={() => {
-                      setSearchQuery('')
-                      setSelectedTags([])
-                      setDateCreatedFrom('')
-                      setDateCreatedTo('')
-                      setDateModifiedFrom('')
-                      setDateModifiedTo('')
+                      setSearchQuery("");
+                      setSelectedTags([]);
+                      setDateCreatedFrom("");
+                      setDateCreatedTo("");
+                      setDateModifiedFrom("");
+                      setDateModifiedTo("");
                     }}
                     className="btn btn-outline"
                   >
@@ -794,17 +753,22 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col">
-                  {viewMode === 'list' ? (
+                  {viewMode === "list" ? (
                     <div className="divide-y divide-border flex-1 overflow-auto">
                       {filteredNotes.map((note) => (
                         <div
                           key={note.id}
                           onClick={() => handleNoteSelect(note)}
-                          className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors ${selectedNote?.id === note.id ? 'bg-accent/10 border-l-4 border-accent' : ''
-                            }`}
+                          className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors ${
+                            selectedNote?.id === note.id
+                              ? "bg-accent/10 border-l-4 border-accent"
+                              : ""
+                          }`}
                         >
                           <h3 className="font-medium text-sm mb-2 line-clamp-2">{note.title}</h3>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{note.content}</p>
+                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                            {note.content}
+                          </p>
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>{formatDate(note.modified)}</span>
                             <div className="flex items-center space-x-2">
@@ -815,12 +779,17 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                           {note.tags && note.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {note.tags.slice(0, 3).map((tag) => (
-                                <span key={tag} className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-md">
+                                <span
+                                  key={tag}
+                                  className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-md"
+                                >
                                   {tag}
                                 </span>
                               ))}
                               {note.tags.length > 3 && (
-                                <span className="text-xs text-muted-foreground">+{note.tags.length - 3}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  +{note.tags.length - 3}
+                                </span>
                               )}
                             </div>
                           )}
@@ -848,7 +817,8 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <span className="text-xs text-muted-foreground">
-                  Page <span className="text-foreground font-medium">{currentPage}</span> of {totalPages}
+                  Page <span className="text-foreground font-medium">{currentPage}</span> of{" "}
+                  {totalPages}
                 </span>
                 <button
                   disabled={currentPage === totalPages}
@@ -880,7 +850,10 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     {selectedNote.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {selectedNote.tags.map((tag) => (
-                          <span key={tag} className="px-3 py-1 bg-accent/20 text-accent text-sm rounded-full">
+                          <span
+                            key={tag}
+                            className="px-3 py-1 bg-accent/20 text-accent text-sm rounded-full"
+                          >
                             {tag}
                           </span>
                         ))}
@@ -893,18 +866,34 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                       className="p-2 rounded-md hover:bg-accent/10 text-accent transition-colors border border-accent/20"
                       title={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}
                     >
-                      {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                      {isFullscreen ? (
+                        <Minimize2 className="h-4 w-4" />
+                      ) : (
+                        <Maximize2 className="h-4 w-4" />
+                      )}
                     </button>
-                    <button className="p-2 rounded-md hover:bg-muted transition-colors" title="View">
+                    <button
+                      className="p-2 rounded-md hover:bg-muted transition-colors"
+                      title="View"
+                    >
                       <Eye className="h-4 w-4" />
                     </button>
-                    <button className="p-2 rounded-md hover:bg-muted transition-colors" title="Export">
+                    <button
+                      className="p-2 rounded-md hover:bg-muted transition-colors"
+                      title="Export"
+                    >
                       <Download className="h-4 w-4" />
                     </button>
-                    <button className="p-2 rounded-md hover:bg-muted transition-colors" title="Share">
+                    <button
+                      className="p-2 rounded-md hover:bg-muted transition-colors"
+                      title="Share"
+                    >
                       <Share className="h-4 w-4" />
                     </button>
-                    <button className="p-2 rounded-md hover:bg-muted transition-colors" title="More">
+                    <button
+                      className="p-2 rounded-md hover:bg-muted transition-colors"
+                      title="More"
+                    >
                       <MoreVertical className="h-4 w-4" />
                     </button>
                   </div>
@@ -914,7 +903,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               {/* Note Content - fills remaining height and scrolls */}
               <div className="flex-1 min-h-0 overflow-auto p-6">
                 <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">{selectedNote.content}</pre>
+                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                    {selectedNote.content}
+                  </pre>
                 </div>
               </div>
             </>
@@ -932,5 +923,5 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,42 +1,42 @@
-import { useState } from 'react'
-import { Save, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react'
-import LLMProviderSettings from './LLMProviderSettings'
-import ResearchSettings from './ResearchSettings'
-import ExportSettings from './ExportSettings'
+import { AlertCircle, CheckCircle, RefreshCw, Save } from "lucide-react";
+import { useState } from "react";
+import ExportSettings from "./ExportSettings";
+import LLMProviderSettings from "./LLMProviderSettings";
+import ResearchSettings from "./ResearchSettings";
 
-type SettingsTab = 'llm' | 'research' | 'export'
+type SettingsTab = "llm" | "research" | "export";
 
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('llm')
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [activeTab, setActiveTab] = useState<SettingsTab>("llm");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleSave = async () => {
-    setIsSaving(true)
-    setSaveStatus('idle')
+    setIsSaving(true);
+    setSaveStatus("idle");
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setSaveStatus('success')
-      setHasUnsavedChanges(false)
+      setSaveStatus("success");
+      setHasUnsavedChanges(false);
 
-      setTimeout(() => setSaveStatus('idle'), 3000)
+      setTimeout(() => setSaveStatus("idle"), 3000);
     } catch (error) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus('idle'), 3000)
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus("idle"), 3000);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const tabs = [
-    { id: 'llm' as const, name: 'LLM Providers', description: 'Configure AI models and providers' },
-    { id: 'research' as const, name: 'Research', description: 'Research sources and preferences' },
-    { id: 'export' as const, name: 'Export', description: 'Export formats and destinations' },
-  ]
+    { id: "llm" as const, name: "LLM Providers", description: "Configure AI models and providers" },
+    { id: "research" as const, name: "Research", description: "Research sources and preferences" },
+    { id: "export" as const, name: "Export", description: "Export formats and destinations" },
+  ];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -62,25 +62,27 @@ export default function Settings() {
               ) : (
                 <Save className="h-4 w-4 mr-2" />
               )}
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         )}
       </div>
 
       {/* Save status */}
-      {saveStatus !== 'idle' && (
-        <div className={`flex items-center p-4 rounded-md ${
-          saveStatus === 'success'
-            ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-            : 'bg-red-500/10 border border-red-500/20 text-red-400'
-        }`}>
-          {saveStatus === 'success' ? (
+      {saveStatus !== "idle" && (
+        <div
+          className={`flex items-center p-4 rounded-md ${
+            saveStatus === "success"
+              ? "bg-green-500/10 border border-green-500/20 text-green-400"
+              : "bg-red-500/10 border border-red-500/20 text-red-400"
+          }`}
+        >
+          {saveStatus === "success" ? (
             <CheckCircle className="h-5 w-5 mr-3" />
           ) : (
             <AlertCircle className="h-5 w-5 mr-3" />
           )}
-          {saveStatus === 'success' ? 'Settings saved successfully' : 'Failed to save settings'}
+          {saveStatus === "success" ? "Settings saved successfully" : "Failed to save settings"}
         </div>
       )}
 
@@ -93,8 +95,8 @@ export default function Settings() {
               onClick={() => setActiveTab(tab.id)}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === tab.id
-                  ? 'border-accent text-accent'
-                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                  ? "border-accent text-accent"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
               }`}
             >
               <div className="text-left">
@@ -108,10 +110,12 @@ export default function Settings() {
 
       {/* Tab content */}
       <div className="py-6">
-        {activeTab === 'llm' && <LLMProviderSettings onChange={() => setHasUnsavedChanges(true)} />}
-        {activeTab === 'research' && <ResearchSettings onChange={() => setHasUnsavedChanges(true)} />}
-        {activeTab === 'export' && <ExportSettings onChange={() => setHasUnsavedChanges(true)} />}
+        {activeTab === "llm" && <LLMProviderSettings onChange={() => setHasUnsavedChanges(true)} />}
+        {activeTab === "research" && (
+          <ResearchSettings onChange={() => setHasUnsavedChanges(true)} />
+        )}
+        {activeTab === "export" && <ExportSettings onChange={() => setHasUnsavedChanges(true)} />}
       </div>
     </div>
-  )
+  );
 }

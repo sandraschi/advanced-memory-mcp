@@ -4,6 +4,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.export_to_archive import export_to_archive
 
 
@@ -31,7 +33,7 @@ async def test_export_archive_basic(tmp_path):
         with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
             mock_open.return_value = (True, "Opened folder")
 
-            result = await export_to_archive.fn(
+            result = await mcp_fn(export_to_archive)(
                 archive_path=str(archive_path),
                 show_after_export=False,
             )
@@ -62,7 +64,7 @@ async def test_export_archive_show_after_export(tmp_path):
         with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
             mock_open.return_value = (True, "Opened archive location")
 
-            result = await export_to_archive.fn(
+            result = await mcp_fn(export_to_archive)(
                 archive_path=str(archive_path),
                 show_after_export=True,
             )
@@ -93,7 +95,7 @@ async def test_export_archive_no_show(tmp_path):
         (tmp_path / "project").mkdir()
 
         with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
-            result = await export_to_archive.fn(
+            result = await mcp_fn(export_to_archive)(
                 archive_path=str(archive_path),
                 show_after_export=False,
             )
@@ -127,7 +129,7 @@ async def test_export_archive_with_filtering(tmp_path):
         (tmp_path / "work").mkdir()
         (tmp_path / "personal").mkdir()
 
-        result = await export_to_archive.fn(
+        result = await mcp_fn(export_to_archive)(
             archive_path=str(archive_path),
             include_projects=["work"],
             exclude_tags=["draft"],

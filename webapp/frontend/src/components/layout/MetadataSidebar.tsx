@@ -1,39 +1,39 @@
-import { useState } from 'react'
 import {
+  BarChart3,
   ChevronLeft,
   ChevronRight,
-  FileText,
-  Tag,
-  Link,
   Download,
-  Share,
   Edit,
-  Trash2,
   Eye,
-  BarChart3,
-  Zap
-} from 'lucide-react'
+  FileText,
+  Link,
+  Share,
+  Tag,
+  Trash2,
+  Zap,
+} from "lucide-react";
+import { useState } from "react";
 
 interface NoteMetadata {
-  id: string
-  title: string
-  tags: string[]
-  created: string
-  modified: string
-  wordCount: number
-  connections: number
-  backlinks: number
-  readingTime: number
-  fileSize: string
+  id: string;
+  title: string;
+  tags: string[];
+  created: string;
+  modified: string;
+  wordCount: number;
+  connections: number;
+  backlinks: number;
+  readingTime: number;
+  fileSize: string;
 }
 
 interface MetadataSidebarProps {
-  isOpen: boolean
-  onToggle: () => void
-  note?: NoteMetadata | null
-  onExport?: ((format: string, noteId: string) => Promise<void>) | undefined
-  onEdit?: (() => void) | undefined
-  onDelete?: (() => void) | undefined
+  isOpen: boolean;
+  onToggle: () => void;
+  note?: NoteMetadata | null;
+  onExport?: ((format: string, noteId: string) => Promise<void>) | undefined;
+  onEdit?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
 }
 
 export default function MetadataSidebar({
@@ -42,54 +42,52 @@ export default function MetadataSidebar({
   note,
   onExport,
   onEdit,
-  onDelete
+  onDelete,
 }: MetadataSidebarProps) {
-  const [activeTab, setActiveTab] = useState<'metadata' | 'connections' | 'actions'>('metadata')
-  const [exportLoading, setExportLoading] = useState<string | null>(null)
-  const [exportMessage, setExportMessage] = useState<string>('')
+  const [activeTab, setActiveTab] = useState<"metadata" | "connections" | "actions">("metadata");
+  const [exportLoading, setExportLoading] = useState<string | null>(null);
+  const [exportMessage, setExportMessage] = useState<string>("");
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const exportFormats = [
-    { id: 'markdown', label: 'Markdown (.md)', icon: '📝' },
-    { id: 'html', label: 'HTML (.html)', icon: '🌐' },
-    { id: 'pdf', label: 'PDF (.pdf)', icon: '📄' },
-    { id: 'json', label: 'JSON (.json)', icon: '💾' },
-    { id: 'txt', label: 'Plain Text (.txt)', icon: '📄' }
-  ]
+    { id: "markdown", label: "Markdown (.md)", icon: "📝" },
+    { id: "html", label: "HTML (.html)", icon: "🌐" },
+    { id: "pdf", label: "PDF (.pdf)", icon: "📄" },
+    { id: "json", label: "JSON (.json)", icon: "💾" },
+    { id: "txt", label: "Plain Text (.txt)", icon: "📄" },
+  ];
 
   const mockConnections = [
-    { id: '1', title: 'Brain Surgery Techniques', type: 'outgoing' },
-    { id: '2', title: 'Chemotherapy Protocols', type: 'outgoing' },
-    { id: '3', title: 'Patient Recovery Notes', type: 'incoming' },
-    { id: '4', title: 'Clinical Trial Data', type: 'outgoing' },
-    { id: '5', title: 'Medical Research Papers', type: 'incoming' }
-  ]
+    { id: "1", title: "Brain Surgery Techniques", type: "outgoing" },
+    { id: "2", title: "Chemotherapy Protocols", type: "outgoing" },
+    { id: "3", title: "Patient Recovery Notes", type: "incoming" },
+    { id: "4", title: "Clinical Trial Data", type: "outgoing" },
+    { id: "5", title: "Medical Research Papers", type: "incoming" },
+  ];
 
   return (
-    <div className={`
+    <div
+      className={`
       bg-card border-l border-border flex flex-col transition-all duration-300 ease-in-out
-      ${isOpen ? 'w-80' : 'w-0'}
-    `}>
+      ${isOpen ? "w-80" : "w-0"}
+    `}
+    >
       {/* Toggle Button */}
       <button
         onClick={onToggle}
         className="absolute top-4 -left-10 z-10 p-2 bg-card border border-border rounded-l-md hover:bg-muted transition-colors"
-        title={isOpen ? 'Close metadata panel' : 'Open metadata panel'}
+        title={isOpen ? "Close metadata panel" : "Open metadata panel"}
       >
-        {isOpen ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
+        {isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
       </button>
 
       {isOpen && (
@@ -107,17 +105,18 @@ export default function MetadataSidebar({
           {/* Tabs */}
           <div className="flex border-b border-border">
             {[
-              { id: 'metadata', label: 'Metadata', icon: FileText },
-              { id: 'connections', label: 'Connections', icon: Link },
-              { id: 'actions', label: 'Actions', icon: Zap }
+              { id: "metadata", label: "Metadata", icon: FileText },
+              { id: "connections", label: "Connections", icon: Link },
+              { id: "actions", label: "Actions", icon: Zap },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`flex-1 flex items-center justify-center p-3 text-sm font-medium transition-colors ${activeTab === tab.id
-                  ? 'bg-accent text-accent-foreground border-b-2 border-accent'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                  }`}
+                className={`flex-1 flex items-center justify-center p-3 text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? "bg-accent text-accent-foreground border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
               >
                 <tab.icon className="h-4 w-4 mr-2" />
                 {tab.label}
@@ -127,7 +126,7 @@ export default function MetadataSidebar({
 
           {/* Content */}
           <div className="flex-1 overflow-auto">
-            {activeTab === 'metadata' && note && (
+            {activeTab === "metadata" && note && (
               <div className="p-4 space-y-6">
                 {/* Basic Info */}
                 <div>
@@ -168,7 +167,10 @@ export default function MetadataSidebar({
                   {note.tags.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {note.tags.map((tag) => (
-                        <span key={tag} className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-md">
+                        <span
+                          key={tag}
+                          className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-md"
+                        >
                           {tag}
                         </span>
                       ))}
@@ -198,7 +200,7 @@ export default function MetadataSidebar({
               </div>
             )}
 
-            {activeTab === 'connections' && note && (
+            {activeTab === "connections" && note && (
               <div className="p-4">
                 <h3 className="font-medium mb-4 flex items-center">
                   <Link className="h-4 w-4 mr-2" />
@@ -207,12 +209,20 @@ export default function MetadataSidebar({
 
                 <div className="space-y-3">
                   {mockConnections.map((connection) => (
-                    <div key={connection.id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer">
-                      <div className={`w-2 h-2 rounded-full ${connection.type === 'outgoing' ? 'bg-green-500' : 'bg-blue-500'
-                        }`} />
+                    <div
+                      key={connection.id}
+                      className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
+                    >
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          connection.type === "outgoing" ? "bg-green-500" : "bg-blue-500"
+                        }`}
+                      />
                       <div className="flex-1">
                         <p className="text-sm font-medium truncate">{connection.title}</p>
-                        <p className="text-xs text-muted-foreground capitalize">{connection.type}</p>
+                        <p className="text-xs text-muted-foreground capitalize">
+                          {connection.type}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -226,7 +236,7 @@ export default function MetadataSidebar({
               </div>
             )}
 
-            {activeTab === 'actions' && note && (
+            {activeTab === "actions" && note && (
               <div className="p-4 space-y-6">
                 {/* Quick Actions */}
                 <div>
@@ -242,15 +252,11 @@ export default function MetadataSidebar({
                       <Edit className="h-4 w-4" />
                       <span className="text-sm">Edit Note</span>
                     </button>
-                    <button
-                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
-                    >
+                    <button className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left">
                       <Eye className="h-4 w-4" />
                       <span className="text-sm">View Raw</span>
                     </button>
-                    <button
-                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
-                    >
+                    <button className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left">
                       <Share className="h-4 w-4" />
                       <span className="text-sm">Share Link</span>
                     </button>
@@ -264,10 +270,13 @@ export default function MetadataSidebar({
                     Export Note
                   </h3>
                   {exportMessage && (
-                    <div className={`mb-3 p-2 rounded-md text-sm ${exportMessage.includes('Failed') || exportMessage.includes('Error')
-                      ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                      : 'bg-green-500/10 text-green-400 border border-green-500/20'
-                      }`}>
+                    <div
+                      className={`mb-3 p-2 rounded-md text-sm ${
+                        exportMessage.includes("Failed") || exportMessage.includes("Error")
+                          ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                          : "bg-green-500/10 text-green-400 border border-green-500/20"
+                      }`}
+                    >
                       {exportMessage}
                     </div>
                   )}
@@ -276,18 +285,18 @@ export default function MetadataSidebar({
                       <button
                         key={format.id}
                         onClick={async () => {
-                          if (!note) return
-                          setExportLoading(format.id)
-                          setExportMessage('')
+                          if (!note) return;
+                          setExportLoading(format.id);
+                          setExportMessage("");
                           try {
-                            await onExport?.(format.id, note.id)
-                            setExportMessage(`Successfully exported as ${format.label}`)
-                            setTimeout(() => setExportMessage(''), 5000)
+                            await onExport?.(format.id, note.id);
+                            setExportMessage(`Successfully exported as ${format.label}`);
+                            setTimeout(() => setExportMessage(""), 5000);
                           } catch (error) {
-                            setExportMessage(`Failed to export as ${format.label}`)
-                            setTimeout(() => setExportMessage(''), 5000)
+                            setExportMessage(`Failed to export as ${format.label}`);
+                            setTimeout(() => setExportMessage(""), 5000);
                           } finally {
-                            setExportLoading(null)
+                            setExportLoading(null);
                           }
                         }}
                         disabled={exportLoading === format.id}
@@ -335,5 +344,5 @@ export default function MetadataSidebar({
         </>
       )}
     </div>
-  )
+  );
 }

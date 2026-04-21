@@ -1,51 +1,70 @@
-﻿import { useState, useEffect } from 'react'
-import { Search, Tag, Calendar, Download, Share, Plus, X, Save, Sparkles, Bot, Trash2 } from 'lucide-react'
-import { apiService } from '../../services/api'
+﻿import {
+  Bot,
+  Calendar,
+  Download,
+  Plus,
+  Save,
+  Search,
+  Share,
+  Sparkles,
+  Tag,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { apiService } from "../../services/api";
 
 interface Skill {
-  id: string
-  title: string
-  description: string
-  folder: string
-  tags: string[]
-  created: string
-  modified: string
-  content: string
-  filePath: string
-  modules?: SkillModule[]
+  id: string;
+  title: string;
+  description: string;
+  folder: string;
+  tags: string[];
+  created: string;
+  modified: string;
+  content: string;
+  filePath: string;
+  modules?: SkillModule[];
 }
 
 interface SkillModule {
-  name: string
-  content: string
+  name: string;
+  content: string;
 }
 
 interface SkillsProps {
-  selectedSkillId?: string
-  onSkillSelect?: (skillId: string) => void
+  selectedSkillId?: string;
+  onSkillSelect?: (skillId: string) => void;
 }
 
 export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) {
-  const [skills, setSkills] = useState<Skill[]>([])
-  const [filteredSkills, setFilteredSkills] = useState<Skill[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [currentFolder, setCurrentFolder] = useState('all')
-  const [availableFolders, setAvailableFolders] = useState<string[]>(['all', 'cursor-skills', 'windsurf-skills', 'adn-skills', 'antigravity-skills'])
-  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [filteredSkills, setFilteredSkills] = useState<Skill[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentFolder, setCurrentFolder] = useState("all");
+  const [availableFolders, setAvailableFolders] = useState<string[]>([
+    "all",
+    "cursor-skills",
+    "windsurf-skills",
+    "adn-skills",
+    "antigravity-skills",
+  ]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Real skills from multiple IDE collections
   const mockSkills: Record<string, Skill[]> = {
-    'cursor-skills': [
+    "cursor-skills": [
       {
-        id: '1',
-        title: 'Create Rule',
-        description: 'Create Cursor rules for persistent AI guidance. Use when the user wants to create a rule, add coding standards, set up project conventions, configure file-specific patterns, create RULE.md files, or asks about .cursor/rules/ or AGENTS.md.',
-        folder: 'cursor-skills',
-        tags: ['cursor', 'rules', 'guidance', 'standards', 'coding'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "1",
+        title: "Create Rule",
+        description:
+          "Create Cursor rules for persistent AI guidance. Use when the user wants to create a rule, add coding standards, set up project conventions, configure file-specific patterns, create RULE.md files, or asks about .cursor/rules/ or AGENTS.md.",
+        folder: "cursor-skills",
+        tags: ["cursor", "rules", "guidance", "standards", "coding"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Creating Cursor Rules
 
 Create project rules in \`.cursor/rules/\` to provide persistent context for the AI agent.
@@ -65,16 +84,17 @@ Rules are \`.mdc\` files in \`.cursor/rules/\` with YAML frontmatter.
 - \`description\`: What the rule does (shown in rule picker)
 - \`globs\`: File pattern - rule applies when matching files are open
 - \`alwaysApply\`: If true, applies to every session`,
-        filePath: 'cursor-skills/create-rule/SKILL.md'
+        filePath: "cursor-skills/create-rule/SKILL.md",
       },
       {
-        id: '2',
-        title: 'Create Skill',
-        description: 'Guides users through creating effective Agent Skills for Cursor. Use when the user wants to create, write, or author a new skill, or asks about skill structure, best practices, or SKILL.md format.',
-        folder: 'cursor-skills',
-        tags: ['cursor', 'skills', 'creation', 'guidance', 'agents'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "2",
+        title: "Create Skill",
+        description:
+          "Guides users through creating effective Agent Skills for Cursor. Use when the user wants to create, write, or author a new skill, or asks about skill structure, best practices, or SKILL.md format.",
+        folder: "cursor-skills",
+        tags: ["cursor", "skills", "creation", "guidance", "agents"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Creating Skills in Cursor
 
 This skill guides you through creating effective Agent Skills for Cursor. Skills are markdown files that teach the agent how to perform specific tasks: reviewing PRs using team standards, generating commit messages in a preferred format, querying database schemas, or any specialized workflow.
@@ -125,16 +145,17 @@ Your skill content here...
 - **One concern per skill**: Split large skills into focused pieces
 - **Actionable**: Write like clear internal docs
 - **Concrete examples**: Ideally provide concrete examples of how to fix issues`,
-        filePath: 'cursor-skills/create-skill/SKILL.md'
+        filePath: "cursor-skills/create-skill/SKILL.md",
       },
       {
-        id: '3',
-        title: 'Update Cursor Settings',
-        description: 'Modify Cursor/VSCode user settings in settings.json. Use when the user wants to change editor settings, preferences, configuration, themes, font size, tab size, format on save, auto save, keybindings, or any settings.json values.',
-        folder: 'cursor-skills',
-        tags: ['cursor', 'settings', 'configuration', 'editor'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "3",
+        title: "Update Cursor Settings",
+        description:
+          "Modify Cursor/VSCode user settings in settings.json. Use when the user wants to change editor settings, preferences, configuration, themes, font size, tab size, format on save, auto save, keybindings, or any settings.json values.",
+        folder: "cursor-skills",
+        tags: ["cursor", "settings", "configuration", "editor"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Updating Cursor Settings
 
 This skill helps modify Cursor/VSCode user settings in settings.json for various configuration needs.
@@ -181,16 +202,17 @@ This skill helps modify Cursor/VSCode user settings in settings.json for various
   "editor.insertSpaces": true
 }
 \`\`\``,
-        filePath: 'cursor-skills/update-cursor-settings/SKILL.md'
+        filePath: "cursor-skills/update-cursor-settings/SKILL.md",
       },
       {
-        id: '4',
-        title: 'Create Subagent',
-        description: 'Create custom subagents for specialized AI tasks. Use when the user wants to create a subagent, set up task-specific agents, configure code reviewers, debuggers, or domain-specific assistants with custom prompts.',
-        folder: 'cursor-skills',
-        tags: ['cursor', 'subagents', 'ai', 'tasks', 'specialized'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "4",
+        title: "Create Subagent",
+        description:
+          "Create custom subagents for specialized AI tasks. Use when the user wants to create a subagent, set up task-specific agents, configure code reviewers, debuggers, or domain-specific assistants with custom prompts.",
+        folder: "cursor-skills",
+        tags: ["cursor", "subagents", "ai", "tasks", "specialized"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Creating Subagents in Cursor
 
 This skill guides you through creating custom subagents for specialized AI tasks in Cursor.
@@ -259,18 +281,19 @@ For each issue found, provide:
 
 Focus on actionable feedback that helps improve code quality.
 \`\`\``,
-        filePath: 'cursor-skills/create-subagent/SKILL.md'
-      }
+        filePath: "cursor-skills/create-subagent/SKILL.md",
+      },
     ],
-    'windsurf-skills': [
+    "windsurf-skills": [
       {
-        id: '5',
-        title: 'MCP Server Developer',
-        description: 'Expert in developing Model Context Protocol servers with FastMCP. Covers server architecture, tool implementation, resource management, and integration patterns.',
-        folder: 'windsurf-skills',
-        tags: ['mcp', 'server', 'development', 'fastmcp', 'api'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "5",
+        title: "MCP Server Developer",
+        description:
+          "Expert in developing Model Context Protocol servers with FastMCP. Covers server architecture, tool implementation, resource management, and integration patterns.",
+        folder: "windsurf-skills",
+        tags: ["mcp", "server", "development", "fastmcp", "api"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# MCP Server Development
 
 Expert guidance for developing Model Context Protocol servers using FastMCP framework.
@@ -358,16 +381,17 @@ def advanced_search(query: str, file_pattern: Optional[str] = None) -> List[Sear
     # Implementation
     pass
 \`\`\``,
-        filePath: 'windsurf-skills/mcp-server-developer/SKILL.md'
+        filePath: "windsurf-skills/mcp-server-developer/SKILL.md",
       },
       {
-        id: '6',
-        title: 'Presentation Design Expert',
-        description: 'Specialist in creating compelling presentations with visual storytelling, slide design, and audience engagement techniques.',
-        folder: 'windsurf-skills',
-        tags: ['presentation', 'design', 'visual', 'storytelling'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "6",
+        title: "Presentation Design Expert",
+        description:
+          "Specialist in creating compelling presentations with visual storytelling, slide design, and audience engagement techniques.",
+        folder: "windsurf-skills",
+        tags: ["presentation", "design", "visual", "storytelling"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Presentation Design Expert
 
 Specialist in creating compelling presentations with visual storytelling, slide design, and audience engagement techniques.
@@ -467,18 +491,19 @@ Guide the audience's attention with:
 - **Practice Regularly**: Hone skills through frequent presentation
 - **Stay Current**: Follow presentation design trends and best practices
 - **Experiment**: Try new techniques and technologies`,
-        filePath: 'windsurf-skills/presentation-design-expert/SKILL.md'
-      }
+        filePath: "windsurf-skills/presentation-design-expert/SKILL.md",
+      },
     ],
-    'adn-skills': [
+    "adn-skills": [
       {
-        id: '7',
-        title: 'AI Debate Dominator',
-        description: 'Expert in structured debates, argumentation techniques, and persuasive communication across various topics and domains.',
-        folder: 'adn-skills',
-        tags: ['debate', 'argumentation', 'persuasion', 'communication'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "7",
+        title: "AI Debate Dominator",
+        description:
+          "Expert in structured debates, argumentation techniques, and persuasive communication across various topics and domains.",
+        folder: "adn-skills",
+        tags: ["debate", "argumentation", "persuasion", "communication"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# AI Debate Dominator
 
 Expert in structured debates, argumentation techniques, and persuasive communication across various topics and domains.
@@ -609,18 +634,19 @@ Common logical fallacies to avoid:
 - **Technique Refinement**: Regularly update and improve methods
 - **Feedback Integration**: Use constructive criticism for growth
 - **Goal Setting**: Establish clear improvement objectives`,
-        filePath: 'adn-skills/ai-debate-dominator/SKILL.md'
-      }
+        filePath: "adn-skills/ai-debate-dominator/SKILL.md",
+      },
     ],
-    'antigravity-skills': [
+    "antigravity-skills": [
       {
-        id: '8',
-        title: 'Full Stack Developer',
-        description: 'Comprehensive full-stack development expertise covering frontend, backend, databases, DevOps, and modern development practices.',
-        folder: 'antigravity-skills',
-        tags: ['fullstack', 'development', 'frontend', 'backend', 'devops'],
-        created: '2026-01-20 10:00:00',
-        modified: '2026-01-20 10:00:00',
+        id: "8",
+        title: "Full Stack Developer",
+        description:
+          "Comprehensive full-stack development expertise covering frontend, backend, databases, DevOps, and modern development practices.",
+        folder: "antigravity-skills",
+        tags: ["fullstack", "development", "frontend", "backend", "devops"],
+        created: "2026-01-20 10:00:00",
+        modified: "2026-01-20 10:00:00",
         content: `# Full Stack Developer
 
 Comprehensive full-stack development expertise covering frontend, backend, databases, DevOps, and modern development practices.
@@ -780,96 +806,97 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
 - **Code Challenges**: Algorithm and coding practice
 - **Mentorship**: Teaching and learning from others
 - **Blogging**: Sharing knowledge and experiences`,
-        filePath: 'antigravity-skills/full-stack-developer/SKILL.md'
-      }
-    ]
-  }
+        filePath: "antigravity-skills/full-stack-developer/SKILL.md",
+      },
+    ],
+  };
 
   const loadSkills = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const folderParam = currentFolder === 'all' ? undefined : currentFolder
-      const response = await apiService.getSkills(folderParam)
+      const folderParam = currentFolder === "all" ? undefined : currentFolder;
+      const response = await apiService.getSkills(folderParam);
       if (response.success && response.data?.skills) {
-        const skillsData = response.data.skills
-        setSkills(skillsData)
-        setFilteredSkills(skillsData)
+        const skillsData = response.data.skills;
+        setSkills(skillsData);
+        setFilteredSkills(skillsData);
 
         if (response.data.folders && response.data.folders.length > 0) {
           setAvailableFolders((prev) => {
-            const fromApi = response.data!.folders as string[]
-            if (prev[0] === 'all') return ['all', ...fromApi]
-            return fromApi
-          })
+            const fromApi = response.data!.folders as string[];
+            if (prev[0] === "all") return ["all", ...fromApi];
+            return fromApi;
+          });
         }
-        setIsLoading(false)
-        return
+        setIsLoading(false);
+        return;
       }
 
-      console.warn('Bridge server not available - showing mock skills for demo')
+      console.warn("Bridge server not available - showing mock skills for demo");
       setTimeout(() => {
         const folderSkills =
-          currentFolder === 'all'
+          currentFolder === "all"
             ? ([] as Skill[]).concat(...Object.values(mockSkills))
-            : mockSkills[currentFolder] || []
-        setSkills(folderSkills)
-        setFilteredSkills(folderSkills)
-        setIsLoading(false)
-      }, 500)
+            : mockSkills[currentFolder] || [];
+        setSkills(folderSkills);
+        setFilteredSkills(folderSkills);
+        setIsLoading(false);
+      }, 500);
     } catch (error) {
-      console.error('Failed to load skills from API, showing mock data:', error)
+      console.error("Failed to load skills from API, showing mock data:", error);
       setTimeout(() => {
         const folderSkills =
-          currentFolder === 'all'
+          currentFolder === "all"
             ? ([] as Skill[]).concat(...Object.values(mockSkills))
-            : mockSkills[currentFolder] || []
-        setSkills(folderSkills)
-        setFilteredSkills(folderSkills)
-        setIsLoading(false)
-      }, 500)
+            : mockSkills[currentFolder] || [];
+        setSkills(folderSkills);
+        setFilteredSkills(folderSkills);
+        setIsLoading(false);
+      }, 500);
     }
-  }
+  };
 
   useEffect(() => {
-    loadSkills()
-  }, [currentFolder])
+    loadSkills();
+  }, [currentFolder]);
 
   useEffect(() => {
     // Filter skills based on search query
-    if (searchQuery.trim() === '') {
-      setFilteredSkills(skills)
+    if (searchQuery.trim() === "") {
+      setFilteredSkills(skills);
     } else {
-      const filtered = skills.filter(skill =>
-        skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        skill.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        skill.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
-      setFilteredSkills(filtered)
+      const filtered = skills.filter(
+        (skill) =>
+          skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          skill.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          skill.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())),
+      );
+      setFilteredSkills(filtered);
     }
-  }, [searchQuery, skills])
+  }, [searchQuery, skills]);
 
   useEffect(() => {
     // Select skill if selectedSkillId is provided
     if (selectedSkillId && skills.length > 0) {
-      const skill = skills.find(s => s.id === selectedSkillId)
+      const skill = skills.find((s) => s.id === selectedSkillId);
       if (skill) {
-        setSelectedSkill(skill)
+        setSelectedSkill(skill);
       }
     }
-  }, [selectedSkillId, skills])
+  }, [selectedSkillId, skills]);
 
   const handleSkillSelect = (skill: Skill) => {
-    setSelectedSkill(skill)
-    onSkillSelect?.(skill.id)
-  }
+    setSelectedSkill(skill);
+    onSkillSelect?.(skill.id);
+  };
 
   const handleCreateSkill = () => {
-    setShowCreateModal(true)
-  }
+    setShowCreateModal(true);
+  };
 
   const handleCloseCreateModal = () => {
-    setShowCreateModal(false)
-  }
+    setShowCreateModal(false);
+  };
 
   return (
     <div className="flex h-full bg-gray-900 text-white">
@@ -898,7 +925,9 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
             >
               {availableFolders.map((folder) => (
                 <option key={folder} value={folder}>
-                  {folder === 'all' ? 'All collections' : folder.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+                  {folder === "all"
+                    ? "All collections"
+                    : folder.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                 </option>
               ))}
             </select>
@@ -927,18 +956,19 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
           ) : filteredSkills.length === 0 ? (
             <div className="p-4 text-center text-gray-400">
               <Bot className="w-12 h-12 mx-auto mb-2 text-gray-500" />
-              {searchQuery ? 'No skills match your search' : 'No skills available'}
+              {searchQuery ? "No skills match your search" : "No skills available"}
             </div>
           ) : (
             <div className="p-2">
-              {filteredSkills.map(skill => (
+              {filteredSkills.map((skill) => (
                 <div
                   key={skill.id}
                   onClick={() => handleSkillSelect(skill)}
-                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${selectedSkill?.id === skill.id
-                      ? 'bg-gold-600 border-gold-500'
-                      : 'bg-gray-700 border-gray-600 hover:bg-gray-650'
-                    }`}
+                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${
+                    selectedSkill?.id === skill.id
+                      ? "bg-gold-600 border-gold-500"
+                      : "bg-gray-700 border-gray-600 hover:bg-gray-650"
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -946,7 +976,7 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
                       <p className="text-sm text-gray-300 mt-1 line-clamp-2">{skill.description}</p>
                       {skill.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
-                          {skill.tags.slice(0, 3).map(tag => (
+                          {skill.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
                               className="px-2 py-1 text-xs bg-gray-600 text-gray-300 rounded-full"
@@ -989,11 +1019,9 @@ Comprehensive full-stack development expertise covering frontend, backend, datab
       </div>
 
       {/* Create Skill Modal */}
-      {showCreateModal && (
-        <CreateSkillModal onClose={handleCloseCreateModal} />
-      )}
+      {showCreateModal && <CreateSkillModal onClose={handleCloseCreateModal} />}
     </div>
-  )
+  );
 }
 
 // Skill Viewer Component
@@ -1037,8 +1065,11 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
           </div>
           {skill.tags.length > 0 && (
             <div className="flex items-center space-x-2">
-              {skill.tags.map(tag => (
-                <span key={tag} className="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">
+              {skill.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs"
+                >
                   {tag}
                 </span>
               ))}
@@ -1050,9 +1081,7 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="prose prose-invert max-w-none">
-          <pre className="whitespace-pre-wrap text-gray-300 leading-relaxed">
-            {skill.content}
-          </pre>
+          <pre className="whitespace-pre-wrap text-gray-300 leading-relaxed">{skill.content}</pre>
         </div>
 
         {/* Modules */}
@@ -1063,9 +1092,7 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
               {skill.modules.map((module, index) => (
                 <div key={index} className="bg-gray-800 rounded-lg p-4">
                   <h3 className="text-lg font-medium text-gold-400 mb-2">{module.name}</h3>
-                  <pre className="whitespace-pre-wrap text-gray-300 text-sm">
-                    {module.content}
-                  </pre>
+                  <pre className="whitespace-pre-wrap text-gray-300 text-sm">{module.content}</pre>
                 </div>
               ))}
             </div>
@@ -1073,76 +1100,76 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // Create Skill Modal Component
 function CreateSkillModal({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    folder: 'cursor-skills',
-    tags: '',
-    overview: '',
-    whenToUse: ''
-  })
-  const [modules, setModules] = useState<SkillModule[]>([])
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedLLM, setSelectedLLM] = useState('')
-  const [llmError, setLlmError] = useState('')
+    title: "",
+    description: "",
+    folder: "cursor-skills",
+    tags: "",
+    overview: "",
+    whenToUse: "",
+  });
+  const [modules, setModules] = useState<SkillModule[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedLLM, setSelectedLLM] = useState("");
+  const [llmError, setLlmError] = useState("");
 
   const addModule = () => {
-    setModules([...modules, { name: '', content: '' }])
-  }
+    setModules([...modules, { name: "", content: "" }]);
+  };
 
   const removeModule = (index: number) => {
-    setModules(modules.filter((_, i) => i !== index))
-  }
+    setModules(modules.filter((_, i) => i !== index));
+  };
 
   const updateModule = (index: number, field: keyof SkillModule, value: string) => {
-    const updatedModules = [...modules]
+    const updatedModules = [...modules];
     if (updatedModules[index]) {
-      updatedModules[index][field] = value
-      setModules(updatedModules)
+      updatedModules[index][field] = value;
+      setModules(updatedModules);
     }
-  }
+  };
 
   const generateSkillContent = async () => {
-    if (!formData.title || !selectedLLM) return
+    if (!formData.title || !selectedLLM) return;
 
-    setIsGenerating(true)
-    setLlmError('')
+    setIsGenerating(true);
+    setLlmError("");
 
     try {
       // This would integrate with local LLM APIs (Ollama, LM Studio)
       // For now, generate basic content
       const generatedContent = `# ${formData.title}
 
-${formData.overview || 'This skill provides specialized guidance and automation for specific development tasks.'}
+${formData.overview || "This skill provides specialized guidance and automation for specific development tasks."}
 
 ## When to Use
 
-${formData.whenToUse || 'Apply this skill when working on related development tasks.'}
+${formData.whenToUse || "Apply this skill when working on related development tasks."}
 
 ## Key Features
 
 - Specialized guidance for ${formData.title.toLowerCase()}
 - Best practices and patterns
-- Automation and tooling recommendations`
+- Automation and tooling recommendations`;
 
-      setFormData(prev => ({ ...prev, overview: generatedContent }))
+      setFormData((prev) => ({ ...prev, overview: generatedContent }));
     } catch (error) {
-      setLlmError('Failed to generate content with LLM')
+      setLlmError("Failed to generate content with LLM");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     // This would create the skill file and save it
     // For now, just close the modal
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1181,20 +1208,16 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
                 className="px-4 py-2 bg-gold-600 hover:bg-gold-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center space-x-2"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>{isGenerating ? 'Generating...' : 'Generate Content'}</span>
+                <span>{isGenerating ? "Generating..." : "Generate Content"}</span>
               </button>
             </div>
-            {llmError && (
-              <p className="text-red-400 text-sm mt-2">{llmError}</p>
-            )}
+            {llmError && <p className="text-red-400 text-sm mt-2">{llmError}</p>}
           </div>
 
           {/* Form Tabs */}
           <div className="mb-6">
             <div className="flex space-x-1">
-              <button className="px-4 py-2 bg-gold-600 text-white rounded-lg">
-                Overview
-              </button>
+              <button className="px-4 py-2 bg-gold-600 text-white rounded-lg">Overview</button>
               <button className="px-4 py-2 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-lg">
                 Modules
               </button>
@@ -1208,7 +1231,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
               <input
                 type="text"
                 value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="Skill title"
               />
@@ -1219,7 +1242,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
               <input
                 type="text"
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="Brief description"
               />
@@ -1229,7 +1252,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
               <label className="block text-sm font-medium text-gray-300 mb-2">Folder</label>
               <select
                 value={formData.folder}
-                onChange={(e) => setFormData(prev => ({ ...prev, folder: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, folder: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               >
                 <option value="cursor-skills">Cursor Skills</option>
@@ -1240,21 +1263,25 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Tags (comma-separated)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Tags (comma-separated)
+              </label>
               <input
                 type="text"
                 value={formData.tags}
-                onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="tag1, tag2, tag3"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Overview Content</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Overview Content
+              </label>
               <textarea
                 value={formData.overview}
-                onChange={(e) => setFormData(prev => ({ ...prev, overview: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, overview: e.target.value }))}
                 rows={10}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent font-mono text-sm"
                 placeholder="Skill content in markdown format"
@@ -1265,7 +1292,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
               <label className="block text-sm font-medium text-gray-300 mb-2">When to Use</label>
               <textarea
                 value={formData.whenToUse}
-                onChange={(e) => setFormData(prev => ({ ...prev, whenToUse: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, whenToUse: e.target.value }))}
                 rows={3}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 placeholder="Describe when this skill should be applied"
@@ -1282,7 +1309,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
                     <input
                       type="text"
                       value={module.name}
-                      onChange={(e) => updateModule(index, 'name', e.target.value)}
+                      onChange={(e) => updateModule(index, "name", e.target.value)}
                       placeholder="Module name"
                       className="flex-1 px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white mr-3"
                     />
@@ -1295,7 +1322,7 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
                   </div>
                   <textarea
                     value={module.content}
-                    onChange={(e) => updateModule(index, 'content', e.target.value)}
+                    onChange={(e) => updateModule(index, "content", e.target.value)}
                     rows={5}
                     placeholder="Module content"
                     className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white font-mono text-sm"
@@ -1331,5 +1358,5 @@ ${formData.whenToUse || 'Apply this skill when working on related development ta
         </div>
       </div>
     </div>
-  )
+  );
 }

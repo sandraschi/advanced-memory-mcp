@@ -568,7 +568,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
         if projects.upper() == "ALL":
             # Search all projects
             logger.info("Searching across ALL projects")
-            projects_response = await call_post(client, "/projects/projects", json={})
+            projects_response = await call_get(client, "/api/v1/projects")
             project_list = ProjectList.model_validate(projects_response.json())
             project_names_to_search = [p.name for p in project_list.projects]
             search_multiple = True
@@ -578,7 +578,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             excluded = projects[11:].split(",")  # Remove "ALL_EXCEPT:"
             excluded = [e.strip() for e in excluded]
             logger.info(f"Searching ALL projects except: {excluded}")
-            projects_response = await call_post(client, "/projects/projects", json={})
+            projects_response = await call_get(client, "/api/v1/projects")
             project_list = ProjectList.model_validate(projects_response.json())
             project_names_to_search = [
                 p.name for p in project_list.projects if p.name not in excluded

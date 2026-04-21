@@ -54,6 +54,8 @@ Open **http://localhost:10704/** in your browser.
 
 ## Configuration
 
+The Vite dev server proxies **`/api/*`** to **`http://127.0.0.1:10705`**, so the frontend can use the same origin (`/api/v1/...`) instead of hard-coding `localhost:10705` (this also works when you open the UI via another host on the LAN). Override with **`VITE_API_URL`** if the API is elsewhere (for example in Docker).
+
 Ports at the top of `start.ps1`:
 
 ```powershell

@@ -1,15 +1,15 @@
-import { Brain, FileText, Calendar } from 'lucide-react'
+import { Brain, Calendar, FileText } from "lucide-react";
 
 interface Skill {
-  id: string
-  title: string
-  description: string
-  sources: number
-  created: string
+  id: string;
+  title: string;
+  description: string;
+  sources: number;
+  created: string;
 }
 
 interface SkillCardProps {
-  skill: Skill
+  skill: Skill;
 }
 
 export default function SkillCard({ skill }: SkillCardProps) {
@@ -22,9 +22,7 @@ export default function SkillCard({ skill }: SkillCardProps) {
 
         <div className="flex-1 min-w-0">
           <h4 className="font-semibold text-sm mb-1 truncate">{skill.title}</h4>
-          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-            {skill.description}
-          </p>
+          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{skill.description}</p>
 
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center">
@@ -40,5 +38,5 @@ export default function SkillCard({ skill }: SkillCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

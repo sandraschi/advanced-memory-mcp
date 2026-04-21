@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -46,9 +46,7 @@ export default function HeroSection() {
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <button className="btn btn-outline btn-lg">
-              View Documentation
-            </button>
+            <button className="btn btn-outline btn-lg">View Documentation</button>
           </div>
 
           {/* Status indicator */}
@@ -71,5 +69,5 @@ export default function HeroSection() {
         <Sparkles className="h-12 w-12 text-accent" />
       </div>
     </div>
-  )
+  );
 }

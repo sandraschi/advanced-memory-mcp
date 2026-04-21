@@ -2,6 +2,8 @@
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.list_directory import list_directory
 from advanced_memory.mcp.tools.write_note import write_note
 
@@ -9,7 +11,7 @@ from advanced_memory.mcp.tools.write_note import write_note
 @pytest.mark.asyncio
 async def test_list_directory_empty(client):
     """Test listing directory when no entities exist."""
-    result = await list_directory.fn()
+    result = await mcp_fn(list_directory)()
 
     assert isinstance(result, str)
     assert "No files found in directory '/'" in result
@@ -26,7 +28,7 @@ async def test_list_directory_with_test_graph(client, test_graph):
     # /test/Root.md
 
     # List root directory
-    result = await list_directory.fn()
+    result = await mcp_fn(list_directory)()
 
     assert isinstance(result, str)
     assert "Contents of '/' (depth 1)" in result
@@ -40,7 +42,7 @@ async def test_list_directory_with_test_graph(client, test_graph):
 async def test_list_directory_specific_path(client, test_graph):
     """Test listing specific directory path."""
     # List the test directory
-    result = await list_directory.fn(dir_name="/test")
+    result = await mcp_fn(list_directory)(dir_name="/test")
 
     assert isinstance(result, str)
     assert "Contents of '/test' (depth 1)" in result
@@ -56,7 +58,7 @@ async def test_list_directory_specific_path(client, test_graph):
 async def test_list_directory_with_glob_filter(client, test_graph):
     """Test listing directory with glob filtering."""
     # Filter for files containing "Connected"
-    result = await list_directory.fn(dir_name="/test", file_name_glob="*Connected*")
+    result = await mcp_fn(list_directory)(dir_name="/test", file_name_glob="*Connected*")
 
     assert isinstance(result, str)
     assert "Files in '/test' matching '*Connected*' (depth 1)" in result
@@ -72,7 +74,7 @@ async def test_list_directory_with_glob_filter(client, test_graph):
 @pytest.mark.asyncio
 async def test_list_directory_with_markdown_filter(client, test_graph):
     """Test listing directory with markdown file filter."""
-    result = await list_directory.fn(dir_name="/test", file_name_glob="*.md")
+    result = await mcp_fn(list_directory)(dir_name="/test", file_name_glob="*.md")
 
     assert isinstance(result, str)
     assert "Files in '/test' matching '*.md' (depth 1):" in result
@@ -89,7 +91,7 @@ async def test_list_directory_with_markdown_filter(client, test_graph):
 async def test_list_directory_with_depth_control(client, test_graph):
     """Test listing directory with depth control."""
     # Depth 1: should return only the test directory
-    result_depth_1 = await list_directory.fn(dir_name="/", depth=1)
+    result_depth_1 = await mcp_fn(list_directory)(dir_name="/", depth=1)
 
     assert isinstance(result_depth_1, str)
     assert "Contents of '/' (depth 1)" in result_depth_1
@@ -97,7 +99,7 @@ async def test_list_directory_with_depth_control(client, test_graph):
     assert "This page: 1 items (1 directory)" in result_depth_1
 
     # Depth 2: should return directory + its files
-    result_depth_2 = await list_directory.fn(dir_name="/", depth=2)
+    result_depth_2 = await mcp_fn(list_directory)(dir_name="/", depth=2)
 
     assert isinstance(result_depth_2, str)
     assert "Contents of '/' (depth 2)" in result_depth_2
@@ -113,7 +115,7 @@ async def test_list_directory_with_depth_control(client, test_graph):
 @pytest.mark.asyncio
 async def test_list_directory_nonexistent_path(client, test_graph):
     """Test listing nonexistent directory."""
-    result = await list_directory.fn(dir_name="/nonexistent")
+    result = await mcp_fn(list_directory)(dir_name="/nonexistent")
 
     assert isinstance(result, str)
     assert "No files found in directory '/nonexistent'" in result
@@ -122,7 +124,7 @@ async def test_list_directory_nonexistent_path(client, test_graph):
 @pytest.mark.asyncio
 async def test_list_directory_glob_no_matches(client, test_graph):
     """Test listing directory with glob that matches nothing."""
-    result = await list_directory.fn(dir_name="/test", file_name_glob="*.xyz")
+    result = await mcp_fn(list_directory)(dir_name="/test", file_name_glob="*.xyz")
 
     assert isinstance(result, str)
     assert "No files found in directory '/test' matching '*.xyz'" in result
@@ -132,21 +134,21 @@ async def test_list_directory_glob_no_matches(client, test_graph):
 async def test_list_directory_with_created_notes(client):
     """Test listing directory with dynamically created notes."""
     # Create some test notes
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Project Planning",
         folder="projects",
         content="# Project Planning\nThis is about planning projects.",
         tags=["planning", "project"],
     )
 
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Meeting Notes",
         folder="projects",
         content="# Meeting Notes\nNotes from the meeting.",
         tags=["meeting", "notes"],
     )
 
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Research Document",
         folder="research",
         content="# Research\nSome research findings.",
@@ -154,7 +156,7 @@ async def test_list_directory_with_created_notes(client):
     )
 
     # List root directory
-    result_root = await list_directory.fn()
+    result_root = await mcp_fn(list_directory)()
 
     assert isinstance(result_root, str)
     assert "Contents of '/' (depth 1)" in result_root
@@ -163,7 +165,7 @@ async def test_list_directory_with_created_notes(client):
     assert "This page: 2 items (2 directories)" in result_root
 
     # List projects directory
-    result_projects = await list_directory.fn(dir_name="/projects")
+    result_projects = await mcp_fn(list_directory)(dir_name="/projects")
 
     assert isinstance(result_projects, str)
     assert "Contents of '/projects' (depth 1)" in result_projects
@@ -172,7 +174,7 @@ async def test_list_directory_with_created_notes(client):
     assert "This page: 2 items (2 files)" in result_projects
 
     # Test glob filter for "Meeting"
-    result_meeting = await list_directory.fn(dir_name="/projects", file_name_glob="*Meeting*")
+    result_meeting = await mcp_fn(list_directory)(dir_name="/projects", file_name_glob="*Meeting*")
 
     assert isinstance(result_meeting, str)
     assert "Files in '/projects' matching '*Meeting*' (depth 1)" in result_meeting
@@ -188,7 +190,7 @@ async def test_list_directory_path_normalization(client, test_graph):
     paths_to_test = ["/test", "test", "/test/", "test/"]
 
     for path in paths_to_test:
-        result = await list_directory.fn(dir_name=path)
+        result = await mcp_fn(list_directory)(dir_name=path)
         # All should return the same number of items
         assert "This page: 5 items (5 files)" in result
         assert "[DOC] Connected_Entity_1.md" in result
@@ -197,7 +199,7 @@ async def test_list_directory_path_normalization(client, test_graph):
 @pytest.mark.asyncio
 async def test_list_directory_shows_file_metadata(client, test_graph):
     """Test that file metadata is displayed correctly."""
-    result = await list_directory.fn(dir_name="/test")
+    result = await mcp_fn(list_directory)(dir_name="/test")
 
     assert isinstance(result, str)
     # Should show file names

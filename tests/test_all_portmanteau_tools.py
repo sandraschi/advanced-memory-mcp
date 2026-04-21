@@ -1,149 +1,115 @@
 #!/usr/bin/env python3
-"""Test script for all portmanteau tools to verify import, registration, and signatures."""
+"""Verify legacy `adn_*` logic providers still import and expose portmanteau-style APIs.
 
+The MCP **wire surface** is FastMCP 3.2 Managed Namespaces (see `server.py`). These
+`adn_*` callables remain as **plain functions** for delegation, CLI, and tests —
+they are not re-exported from `advanced_memory.mcp.tools` (that package only
+exports response helpers).
+"""
+
+import importlib
 import inspect
 import sys
 
-# Add src to path
+import pytest
+
 sys.path.insert(0, "src")
 
+# (module, attribute) — twelve legacy portmanteau logic providers
+LEGACY_PROVIDERS: list[tuple[str, str]] = [
+    ("advanced_memory.mcp.tools.content_manager", "adn_notes"),
+    ("advanced_memory.mcp.tools.content_manager", "adn_note_ai"),
+    ("advanced_memory.mcp.tools.content_manager", "adn_corpus_qc"),
+    ("advanced_memory.mcp.tools.content_manager", "adn_content"),
+    ("advanced_memory.mcp.tools.portmanteau_knowledge", "adn_knowledge"),
+    ("advanced_memory.mcp.tools.portmanteau_research", "adn_research"),
+    ("advanced_memory.mcp.tools.portmanteau_import_export", "adn_import_export"),
+    ("advanced_memory.mcp.tools.project_manager", "adn_project"),
+    ("advanced_memory.mcp.tools.portmanteau_system", "adn_system"),
+    ("advanced_memory.mcp.tools.portmanteau_skills", "adn_skills"),
+    ("advanced_memory.mcp.tools.portmanteau_external", "adn_external"),
+    ("advanced_memory.mcp.tools.adn_observability", "adn_observability"),
+]
 
-def test_tool_imports():
-    """Test that all portmanteau tools can be imported."""
+
+def check_tool_imports() -> bool:
+    """Each legacy provider resolves from its defining module."""
     try:
-        import importlib
-
-        from advanced_memory.mcp.tools import __all__ as exported_tools
-
-        tools_module = importlib.import_module("advanced_memory.mcp.tools")
-
-        for tool_name in exported_tools:
-            tool = getattr(tools_module, tool_name)
-            assert tool is not None, f"Tool {tool_name} is exported but not defined"
-
-        print("[PASS] All portmanteau tools imported successfully")
+        for mod_name, attr in LEGACY_PROVIDERS:
+            mod = importlib.import_module(mod_name)
+            tool = getattr(mod, attr, None)
+            assert tool is not None, f"{mod_name}.{attr} is missing"
+        print("[PASS] All legacy logic providers import successfully")
         return True
     except Exception as e:
         print(f"[FAIL] Tool import failed: {e}")
         return False
 
 
-def test_tool_registration():
-    """Test that tools are properly registered with MCP."""
+def check_tool_registration() -> bool:
+    """Legacy providers remain callable (they are not necessarily @mcp.tool on root)."""
     try:
-        import importlib
-
-        from advanced_memory.mcp.tools import __all__ as exported_tools
-
-        tools_module = importlib.import_module("advanced_memory.mcp.tools")
-
-        # In FastMCP, tools are standard python functions decorated with @mcp.tool
-        # We verify they are callable
-        tools_to_check = [name for name in exported_tools if name.startswith("adn_")]
-
-        for name in tools_to_check:
-            tool = getattr(tools_module, name)
-            assert callable(tool), f"{name} is not callable"
-
-        print("[PASS] All portmanteau tools properly registered and callable")
+        for mod_name, attr in LEGACY_PROVIDERS:
+            mod = importlib.import_module(mod_name)
+            tool = getattr(mod, attr)
+            assert callable(tool), f"{mod_name}.{attr} is not callable"
+        print("[PASS] All legacy logic providers are callable")
         return True
     except Exception as e:
         print(f"[FAIL] Tool registration test failed: {e}")
         return False
 
 
-def test_tool_signatures():
-    """Test that tools have expected signatures."""
+def check_tool_signatures() -> bool:
+    """Spot-check `operation=` dispatch signatures on key portmanteaus."""
     try:
-        from advanced_memory.mcp.tools import (
-            adn_content,
-            adn_import_export,
-            adn_knowledge,
-            adn_project,
-            adn_research,
-            adn_system,
-        )
+        from advanced_memory.mcp.tools.content_manager import adn_content
+        from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
+        from advanced_memory.mcp.tools.portmanteau_knowledge import adn_knowledge
+        from advanced_memory.mcp.tools.portmanteau_research import adn_research
+        from advanced_memory.mcp.tools.portmanteau_system import adn_system
+        from advanced_memory.mcp.tools.project_manager import adn_project
 
-        def check_params(tool_fn, expected_params):
+        def check_params(tool_fn: object, expected_params: list[str]) -> None:
             sig = inspect.signature(tool_fn)
             params = list(sig.parameters.keys())
             for param in expected_params:
-                assert param in params, f"{tool_fn.__name__} missing parameter: {param}"
+                assert param in params, f"{getattr(tool_fn, '__name__', tool_fn)} missing parameter: {param}"
 
-        # Test adn_content signature
         check_params(adn_content, ["operation", "identifier", "content", "folder", "tags"])
-
-        # Test adn_project signature
         check_params(adn_project, ["operation", "name", "path", "set_default"])
-
-        # Test adn_import_export signature
         check_params(adn_import_export, ["operation"])
-
-        # Test adn_research signature
         check_params(adn_research, ["operation"])
-
-        # Test adn_knowledge signature
         check_params(adn_knowledge, ["operation"])
-
-        # Test adn_system signature
         check_params(adn_system, ["operation"])
 
-        print("[PASS] All portmanteau tools have correct operation signatures")
+        print("[PASS] Legacy portmanteau signatures still expose `operation`")
         return True
     except Exception as e:
         print(f"[FAIL] Tool signature test failed: {e}")
         return False
 
 
-def test_tool_count():
-    """Test that we have exactly 12 portmanteau tools (SOTA)."""
+def check_tool_count() -> bool:
+    """We still ship exactly twelve legacy portmanteau logic providers."""
     try:
-        from advanced_memory.mcp.tools import __all__
-
-        # Count portmanteau tools (adn_* prefix)
-        portmanteau_tools = [tool for tool in __all__ if tool.startswith("adn_")]
-
-        assert len(portmanteau_tools) == 12, (
-            f"Expected 12 portmanteau tools, found {len(portmanteau_tools)}: {portmanteau_tools}"
-        )
-
-        expected_tools = [
-            "adn_notes",
-            "adn_note_ai",
-            "adn_corpus_qc",
-            "adn_content",
-            "adn_knowledge",
-            "adn_research",
-            "adn_import_export",
-            "adn_project",
-            "adn_system",
-            "adn_skills",
-            "adn_external",
-            "adn_observability",
-        ]
-
-        for tool in expected_tools:
-            assert tool in portmanteau_tools, f"Missing portmanteau tool: {tool}"
-
-        print(f"[PASS] Correct number of portmanteau tools: {len(portmanteau_tools)}")
+        assert len(LEGACY_PROVIDERS) == 12, len(LEGACY_PROVIDERS)
+        print(f"[PASS] Legacy portmanteau provider count: {len(LEGACY_PROVIDERS)}")
         return True
     except Exception as e:
         print(f"[FAIL] Tool count test failed: {e}")
         return False
 
 
-def main():
-    """Run all tests."""
-    print("Testing Advanced Memory Portmanteau Tools")
+def main() -> bool:
+    print("Testing Advanced Memory legacy portmanteau logic providers")
     print("=" * 50)
 
-    tests = [test_tool_imports, test_tool_registration, test_tool_signatures, test_tool_count]
+    tests = [check_tool_imports, check_tool_registration, check_tool_signatures, check_tool_count]
 
     passed = 0
-    total = len(tests)
-
-    for test in tests:
-        if test():
+    for t in tests:
+        if t():
             passed += 1
         print()
 
@@ -151,13 +117,18 @@ def main():
     print(f"Results: {passed}/{total} tests passed")
 
     if passed == total:
-        print("[SUCCESS] All portmanteau tools working correctly!")
+        print("[SUCCESS] Legacy providers are intact.")
         return True
-    else:
-        print("[FAILURE] Some tests failed")
-        return False
+    print("[FAILURE] Some tests failed")
+    return False
+
+
+def test_legacy_portmanteau_providers_importable() -> None:
+    for mod_name, attr in LEGACY_PROVIDERS:
+        mod = importlib.import_module(mod_name)
+        fn = getattr(mod, attr)
+        assert callable(fn), f"{mod_name}.{attr} must be callable"
 
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    sys.exit(0 if main() else 1)

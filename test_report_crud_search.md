@@ -1,243 +1,187 @@
 
 # Comprehensive CRUD and Search Test Report
 
-**Generated:** 2026-04-11T14:37:37.205373
-**Duration:** 80.83 seconds
-**Total Tests:** 27
-**Passed:** 0 (0.0%)
-**Failed:** 27 (100.0%)
+**Generated:** 2026-04-21T08:14:03.739592
+**Duration:** 254.60 seconds
+**Total Tests:** 35
+**Passed:** 16 (45.7%)
+**Failed:** 19 (54.3%)
 
 ## Summary
 
-**27 TEST(S) FAILED**
+**19 TEST(S) FAILED**
 
 ## Test Results by Category
 
 ### CRUD
-**Passed:** 0/14
+**Passed:** 1/14
 
 - [FAIL] CRUD - Create Basic Note
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Created note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...', 'observations_count': 0, 'permalink': 'test/crud/test-note-basic', 'relations_count': 0, ...}, 'success': True, ...} or 'Updated note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...', 'observations_count': 0, 'permalink': 'test/crud/test-note-basic', 'relations_count': 0, ...}, 'success': True, ...})
 - [FAIL] CRUD - Create Note with Metadata
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: 'dict' object has no attribute 'lower'
 - [FAIL] CRUD - Read Note by Title
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Read Test' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Read Test Note\r\ntype: note\r\npermalink: test/crud/read-t...t\r\n---\r\n\r\n# Read Test\r\n\r\nThis note will be read.'}, 'success': True, 'summary': "Read note 'Read Test Note'"}
 - [FAIL] CRUD - Read Note by Permalink
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Permalink Test' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Permalink Read Test\r\ntype: note\r\npermalink: test/crud/p...Permalink Test\r\n\r\nReading by permalink.'}, 'success': True, 'summary': "Read note 'test/crud/permalink-read-test'"}
 - [FAIL] CRUD - Update Note Append
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Updated' in {'content': '\n\n## Added Section\n\nThis was appended.', 'file_path': 'test/crud/Update_Append_Test.md', 'note': 'Update Append Test', 'observations_count': 0, ...} or 'Edit' in {'content': '\n\n## Added Section\n\nThis was appended.', 'file_path': 'test/crud/Update_Append_Test.md', 'note': 'Update Append Test', 'observations_count': 0, ...})
 - [FAIL] CRUD - Update Find Replace Simple
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Updated' in {'content': 'jason', 'file_path': 'test/crud/Find_Replace_Test.md', 'note': 'Find Replace Test', 'observations_count': 0, ...} or 'Edit' in {'content': 'jason', 'file_path': 'test/crud/Find_Replace_Test.md', 'note': 'Find Replace Test', 'observations_count': 0, ...})
 - [FAIL] CRUD - Update Find Replace Not Regex
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Version 1.2.4' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Find Replace Regex Test\r\ntype: note\r\npermalink: test/cr...r\nVersion 1.2.4 and version 2.3.4 are mentioned.'}, 'success': True, 'summary': "Read note 'Find Replace Regex Test'"}
 - [FAIL] CRUD - Update Note Prepend
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Updated' in {'content': '## Prepended Section\n\nThis was prepended.\n\n', 'file_path': 'test/crud/Update_Prepend_Test.md', 'note': 'Update Prepend Test', 'observations_count': 0, ...} or 'Edit' in {'content': '## Prepended Section\n\nThis was prepended.\n\n', 'file_path': 'test/crud/Update_Prepend_Test.md', 'note': 'Update Prepend Test', 'observations_count': 0, ...})
 - [FAIL] CRUD - Update Replace Section
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Updated' in {'content': '\n\nNew content here.', 'file_path': 'test/crud/Replace_Section_Test.md', 'note': 'Replace Section Test', 'observations_count': 0, ...} or 'Edit' in {'content': '\n\nNew content here.', 'file_path': 'test/crud/Replace_Section_Test.md', 'note': 'Replace Section Test', 'observations_count': 0, ...})
 - [FAIL] CRUD - Update Tags Add
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Tag Edit Complete' in {'note': 'Tag Add Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-add-test', 'success': True, ...} or 'Added' in {'note': 'Tag Add Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-add-test', 'success': True, ...})
 - [FAIL] CRUD - Update Tags Remove
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Tag Edit Complete' in {'note': 'Tag Remove Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-remove-test', 'success': True, ...} or 'Removed' in {'note': 'Tag Remove Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-remove-test', 'success': True, ...})
 - [FAIL] CRUD - Update Tags Replace
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Tag Edit Complete' in {'note': 'Tag Replace Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-replace-test', 'success': True, ...} or 'Replaced' in {'note': 'Tag Replace Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-replace-test', 'success': True, ...})
 - [FAIL] CRUD - Update Tags Clear
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-- [FAIL] CRUD - Delete Note
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert ('Tag Edit Complete' in {'note': 'Tag Clear Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-clear-test', 'success': True, ...} or 'Cleared' in {'note': 'Tag Clear Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-clear-test', 'success': True, ...})
+- [PASS] CRUD - Delete Note
+
+### Edge Case
+**Passed:** 3/3
+
+- [PASS] Edge Case - Read Nonexistent Note
+- [PASS] Edge Case - Empty Search Query
+- [PASS] Edge Case - Invalid Search Operation
 
 ### Search
-**Passed:** 0/6
+**Passed:** 11/11
 
-- [FAIL] Search - Basic Text Search
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-- [FAIL] Search - Tags Parameter (List Format)
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-- [FAIL] Search - Tags Parameter (String Format)
-  - Error: module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-- [FAIL] Search - Entity Types Parameter (List Format)
-  - Error: module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-- [FAIL] Search - Types Parameter (List Format)
-  - Error: module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-- [FAIL] Search - Date Range Filter
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+- [PASS] Search - Basic Text Search
+- [PASS] Search - Tags Parameter (List Format)
+- [PASS] Search - Tags Parameter (String Format)
+- [PASS] Search - Entity Types Parameter (List Format)
+- [PASS] Search - Types Parameter (List Format)
+- [PASS] Search - Date Range Filter
+- [PASS] Search - Search Type Title
+- [PASS] Search - Search Type Permalink
+- [PASS] Search - Pagination
+- [PASS] Search - Complex Parameter Combination
+- [PASS] Search - Results Per Page Alias
 
 ### Update
-**Passed:** 0/7
+**Passed:** 1/7
 
 - [FAIL] Update - Regex Pattern Matching
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Regex Test Note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...'test', 'observations_count': 0, 'permalink': 'test/regex-test-note', 'relations_count': 0, ...}, 'success': True, ...}
 - [FAIL] Update - Regex Backreferences
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Regex Backref Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...st', 'observations_count': 0, 'permalink': 'test/regex-backref-test', 'relations_count': 0, ...}, 'success': True, ...}
 - [FAIL] Update - Regex Security (Pattern Length)
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-- [FAIL] Update - Regex Invalid Pattern
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Regex Security Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...t', 'observations_count': 0, 'permalink': 'test/regex-security-test', 'relations_count': 0, ...}, 'success': True, ...}
+- [PASS] Update - Regex Invalid Pattern
 - [FAIL] Update - Insert Mermaid Diagram
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Mermaid Test Note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...est', 'observations_count': 0, 'permalink': 'test/mermaid-test-note', 'relations_count': 0, ...}, 'success': True, ...}
 - [FAIL] Update - Insert ASCII Art
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'ASCII Art Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions... 'test', 'observations_count': 0, 'permalink': 'test/ascii-art-test', 'relations_count': 0, ...}, 'success': True, ...}
 - [FAIL] Update - Insert Kilroy
-  - Error: module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+  - Error: assert 'Kilroy Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...r': 'test', 'observations_count': 0, 'permalink': 'test/kilroy-test', 'relations_count': 0, ...}, 'success': True, ...}
 
 ## Detailed Failure Report
 
 ### CRUD - Create Basic Note
-**Timestamp:** 2026-04-11T14:36:26.818745
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:05.985315
+**Error:** assert ('Created note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...', 'observations_count': 0, 'permalink': 'test/crud/test-note-basic', 'relations_count': 0, ...}, 'success': True, ...} or 'Updated note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...', 'observations_count': 0, 'permalink': 'test/crud/test-note-basic', 'relations_count': 0, ...}, 'success': True, ...})
 
 ### CRUD - Create Note with Metadata
-**Timestamp:** 2026-04-11T14:36:26.952945
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:06.990967
+**Error:** 'dict' object has no attribute 'lower'
 
 ### CRUD - Read Note by Title
-**Timestamp:** 2026-04-11T14:36:27.055660
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:07.931031
+**Error:** assert 'Read Test' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Read Test Note\r\ntype: note\r\npermalink: test/crud/read-t...t\r\n---\r\n\r\n# Read Test\r\n\r\nThis note will be read.'}, 'success': True, 'summary': "Read note 'Read Test Note'"}
 
 ### CRUD - Read Note by Permalink
-**Timestamp:** 2026-04-11T14:36:27.176549
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:09.194928
+**Error:** assert 'Permalink Test' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Permalink Read Test\r\ntype: note\r\npermalink: test/crud/p...Permalink Test\r\n\r\nReading by permalink.'}, 'success': True, 'summary': "Read note 'test/crud/permalink-read-test'"}
 
 ### CRUD - Update Note Append
-**Timestamp:** 2026-04-11T14:36:27.318151
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:10.885408
+**Error:** assert ('Updated' in {'content': '\n\n## Added Section\n\nThis was appended.', 'file_path': 'test/crud/Update_Append_Test.md', 'note': 'Update Append Test', 'observations_count': 0, ...} or 'Edit' in {'content': '\n\n## Added Section\n\nThis was appended.', 'file_path': 'test/crud/Update_Append_Test.md', 'note': 'Update Append Test', 'observations_count': 0, ...})
 
 ### CRUD - Update Find Replace Simple
-**Timestamp:** 2026-04-11T14:36:27.477514
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:12.147776
+**Error:** assert ('Updated' in {'content': 'jason', 'file_path': 'test/crud/Find_Replace_Test.md', 'note': 'Find Replace Test', 'observations_count': 0, ...} or 'Edit' in {'content': 'jason', 'file_path': 'test/crud/Find_Replace_Test.md', 'note': 'Find Replace Test', 'observations_count': 0, ...})
 
 ### Update - Regex Pattern Matching
-**Timestamp:** 2026-04-11T14:36:27.599098
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:12.881602
+**Error:** assert 'Regex Test Note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...'test', 'observations_count': 0, 'permalink': 'test/regex-test-note', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### Update - Regex Backreferences
-**Timestamp:** 2026-04-11T14:36:27.686756
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:13.503319
+**Error:** assert 'Regex Backref Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...st', 'observations_count': 0, 'permalink': 'test/regex-backref-test', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### Update - Regex Security (Pattern Length)
-**Timestamp:** 2026-04-11T14:36:27.764142
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-
-### Update - Regex Invalid Pattern
-**Timestamp:** 2026-04-11T14:36:27.854337
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:14.163678
+**Error:** assert 'Regex Security Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...t', 'observations_count': 0, 'permalink': 'test/regex-security-test', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### Update - Insert Mermaid Diagram
-**Timestamp:** 2026-04-11T14:36:27.949900
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:15.599889
+**Error:** assert 'Mermaid Test Note' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...est', 'observations_count': 0, 'permalink': 'test/mermaid-test-note', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### Update - Insert ASCII Art
-**Timestamp:** 2026-04-11T14:36:28.043135
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:16.332210
+**Error:** assert 'ASCII Art Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions... 'test', 'observations_count': 0, 'permalink': 'test/ascii-art-test', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### Update - Insert Kilroy
-**Timestamp:** 2026-04-11T14:36:28.158897
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:17.095383
+**Error:** assert 'Kilroy Test' in {'next_steps': ['Review the updated content', 'Add related notes or concepts', 'Consider enhancing with AI suggestions...r': 'test', 'observations_count': 0, 'permalink': 'test/kilroy-test', 'relations_count': 0, ...}, 'success': True, ...}
 
 ### CRUD - Update Find Replace Not Regex
-**Timestamp:** 2026-04-11T14:36:28.278505
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:18.977846
+**Error:** assert 'Version 1.2.4' in {'operation': 'read', 'result': {'content': '---\r\ntitle: Find Replace Regex Test\r\ntype: note\r\npermalink: test/cr...r\nVersion 1.2.4 and version 2.3.4 are mentioned.'}, 'success': True, 'summary': "Read note 'Find Replace Regex Test'"}
 
 ### CRUD - Update Note Prepend
-**Timestamp:** 2026-04-11T14:36:28.408172
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:20.405200
+**Error:** assert ('Updated' in {'content': '## Prepended Section\n\nThis was prepended.\n\n', 'file_path': 'test/crud/Update_Prepend_Test.md', 'note': 'Update Prepend Test', 'observations_count': 0, ...} or 'Edit' in {'content': '## Prepended Section\n\nThis was prepended.\n\n', 'file_path': 'test/crud/Update_Prepend_Test.md', 'note': 'Update Prepend Test', 'observations_count': 0, ...})
 
 ### CRUD - Update Replace Section
-**Timestamp:** 2026-04-11T14:36:28.535919
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:21.753359
+**Error:** assert ('Updated' in {'content': '\n\nNew content here.', 'file_path': 'test/crud/Replace_Section_Test.md', 'note': 'Replace Section Test', 'observations_count': 0, ...} or 'Edit' in {'content': '\n\nNew content here.', 'file_path': 'test/crud/Replace_Section_Test.md', 'note': 'Replace Section Test', 'observations_count': 0, ...})
 
 ### CRUD - Update Tags Add
-**Timestamp:** 2026-04-11T14:36:29.020605
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:23.366940
+**Error:** assert ('Tag Edit Complete' in {'note': 'Tag Add Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-add-test', 'success': True, ...} or 'Added' in {'note': 'Tag Add Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-add-test', 'success': True, ...})
 **Details:**
 ```json
 {
-  "error_type": "AttributeError"
+  "error_type": "AssertionError"
 }
 ```
 
 ### CRUD - Update Tags Remove
-**Timestamp:** 2026-04-11T14:36:29.376548
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:24.984095
+**Error:** assert ('Tag Edit Complete' in {'note': 'Tag Remove Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-remove-test', 'success': True, ...} or 'Removed' in {'note': 'Tag Remove Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-remove-test', 'success': True, ...})
 **Details:**
 ```json
 {
-  "error_type": "AttributeError"
+  "error_type": "AssertionError"
 }
 ```
 
 ### CRUD - Update Tags Replace
-**Timestamp:** 2026-04-11T14:36:29.584101
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:26.631707
+**Error:** assert ('Tag Edit Complete' in {'note': 'Tag Replace Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-replace-test', 'success': True, ...} or 'Replaced' in {'note': 'Tag Replace Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-replace-test', 'success': True, ...})
 **Details:**
 ```json
 {
-  "error_type": "AttributeError"
+  "error_type": "AssertionError"
 }
 ```
 
 ### CRUD - Update Tags Clear
-**Timestamp:** 2026-04-11T14:36:29.709026
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
+**Timestamp:** 2026-04-21T08:10:28.023569
+**Error:** assert ('Tag Edit Complete' in {'note': 'Tag Clear Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-clear-test', 'success': True, ...} or 'Cleared' in {'note': 'Tag Clear Test', 'operation': 'edit_tags', 'permalink': 'test/crud/tag-clear-test', 'success': True, ...})
 **Details:**
 ```json
 {
-  "error_type": "AttributeError"
+  "error_type": "AssertionError"
 }
 ```
-
-### CRUD - Delete Note
-**Timestamp:** 2026-04-11T14:36:29.843168
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-
-### Search - Basic Text Search
-**Timestamp:** 2026-04-11T14:36:29.956699
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-
-### Search - Tags Parameter (List Format)
-**Timestamp:** 2026-04-11T14:36:30.092327
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
-**Details:**
-```json
-{
-  "error_type": "AttributeError",
-  "tags_format": "list"
-}
-```
-
-### Search - Tags Parameter (String Format)
-**Timestamp:** 2026-04-11T14:36:30.233576
-**Error:** module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-**Details:**
-```json
-{
-  "error_type": "AttributeError",
-  "tags_format": "string"
-}
-```
-
-### Search - Entity Types Parameter (List Format)
-**Timestamp:** 2026-04-11T14:36:30.456962
-**Error:** module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-**Details:**
-```json
-{
-  "error_type": "AttributeError",
-  "entity_types_format": "list"
-}
-```
-
-### Search - Types Parameter (List Format)
-**Timestamp:** 2026-04-11T14:36:30.596623
-**Error:** module 'advanced_memory.mcp.tools.adn_search' has no attribute 'fn'
-**Details:**
-```json
-{
-  "error_type": "AttributeError",
-  "types_format": "list"
-}
-```
-
-### Search - Date Range Filter
-**Timestamp:** 2026-04-11T14:36:30.720195
-**Error:** module 'advanced_memory.mcp.tools.adn_content' has no attribute 'fn'
 

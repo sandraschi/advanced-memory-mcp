@@ -61,6 +61,14 @@ claude-output
 # Advanced Memory test artifacts
 .trash/
 
+# JavaScript dependencies (never commit)
+node_modules/
+
+# Playwright (webapp frontend)
+webapp/frontend/playwright-report/
+webapp/frontend/test-results/
+webapp/frontend/blob-report/
+
 # Temporary cloned repositories
 temp-*/
 

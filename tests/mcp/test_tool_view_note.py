@@ -6,8 +6,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 import pytest_asyncio
 
-from advanced_memory.mcp.tools import view_note, write_note
-from advanced_memory.schemas.search import SearchItemType, SearchResponse
+from tests.mcp.tool_invoker import mcp_fn
+
+from advanced_memory.mcp.tools.view_note import view_note
+from advanced_memory.mcp.tools.write_note import write_note
+from advanced_memory.schemas.search import SearchItemType, SearchResponse, SearchResult
 
 
 @pytest_asyncio.fixture
@@ -21,27 +24,24 @@ async def mock_call_get():
         yield mock
 
 
-@pytest_asyncio.fixture
-async def mock_search():
-    """Mock for search tool."""
-    with patch("advanced_memory.mcp.tools.read_note.search_notes.fn") as mock:
-        # Default to empty results
-        mock.return_value = SearchResponse(results=[], current_page=1, page_size=1)
-        yield mock
+def _mock_json_response(model: SearchResponse) -> MagicMock:
+    m = MagicMock(status_code=200)
+    m.json.return_value = model.model_dump()
+    return m
 
 
 @pytest.mark.asyncio
 async def test_view_note_basic_functionality(app):
     """Test viewing a note creates an artifact."""
     # First create a note
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Test View Note",
         folder="test",
         content="# Test View Note\n\nThis is test content for viewing.",
     )
 
     # View the note
-    result = await view_note.fn("Test View Note")
+    result = await mcp_fn(view_note)("Test View Note")
 
     # Should contain artifact XML
     assert '<artifact identifier="note-' in result
@@ -72,10 +72,10 @@ async def test_view_note_with_frontmatter_title(app):
         Content with frontmatter title.
     """).strip()
 
-    await write_note.fn(title="Frontmatter Title", folder="test", content=content)
+    await mcp_fn(write_note)(title="Frontmatter Title", folder="test", content=content)
 
     # View the note
-    result = await view_note.fn("Frontmatter Title")
+    result = await mcp_fn(view_note)("Frontmatter Title")
 
     # Should extract title from frontmatter
     assert 'title="Frontmatter Title"' in result
@@ -88,10 +88,10 @@ async def test_view_note_with_heading_title(app):
     # Create note with heading but no frontmatter title
     content = "# Heading Title\n\nContent with heading title."
 
-    await write_note.fn(title="Heading Title", folder="test", content=content)
+    await mcp_fn(write_note)(title="Heading Title", folder="test", content=content)
 
     # View the note
-    result = await view_note.fn("Heading Title")
+    result = await mcp_fn(view_note)("Heading Title")
 
     # Should extract title from heading
     assert 'title="Heading Title"' in result
@@ -103,10 +103,10 @@ async def test_view_note_unicode_content(app):
     """Test viewing a note with Unicode content."""
     content = "# Unicode Test 🚀\n\nThis note has emoji 🎉 and unicode ♠♣♥♦"
 
-    await write_note.fn(title="Unicode Test 🚀", folder="test", content=content)
+    await mcp_fn(write_note)(title="Unicode Test 🚀", folder="test", content=content)
 
     # View the note
-    result = await view_note.fn("Unicode Test 🚀")
+    result = await mcp_fn(view_note)("Unicode Test 🚀")
 
     # Should handle Unicode properly
     assert "🚀" in result
@@ -118,10 +118,10 @@ async def test_view_note_unicode_content(app):
 @pytest.mark.asyncio
 async def test_view_note_by_permalink(app):
     """Test viewing a note by its permalink."""
-    await write_note.fn(title="Permalink Test", folder="test", content="Content for permalink test.")
+    await mcp_fn(write_note)(title="Permalink Test", folder="test", content="Content for permalink test.")
 
     # View by permalink
-    result = await view_note.fn("test/permalink-test")
+    result = await mcp_fn(view_note)("test/permalink-test")
 
     # Should work with permalink
     assert '<artifact identifier="note-' in result
@@ -132,14 +132,14 @@ async def test_view_note_by_permalink(app):
 @pytest.mark.asyncio
 async def test_view_note_with_memory_url(app):
     """Test viewing a note using a memory:// URL."""
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Memory URL Test",
         folder="test",
         content="Testing memory:// URL handling in view_note",
     )
 
     # View with memory:// URL
-    result = await view_note.fn("memory://test/memory-url-test")
+    result = await mcp_fn(view_note)("memory://test/memory-url-test")
 
     # Should work with memory:// URL
     assert '<artifact identifier="note-' in result
@@ -151,7 +151,7 @@ async def test_view_note_with_memory_url(app):
 async def test_view_note_not_found(app):
     """Test viewing a non-existent note returns error without artifact."""
     # Try to view non-existent note
-    result = await view_note.fn("NonExistent Note")
+    result = await mcp_fn(view_note)("NonExistent Note")
 
     # Should return error message without artifact
     assert "# Note Not Found:" in result
@@ -164,10 +164,10 @@ async def test_view_note_not_found(app):
 @pytest.mark.asyncio
 async def test_view_note_pagination(app):
     """Test viewing a note with pagination parameters."""
-    await write_note.fn(title="Pagination Test", folder="test", content="Content for pagination test.")
+    await mcp_fn(write_note)(title="Pagination Test", folder="test", content="Content for pagination test.")
 
     # View with pagination
-    result = await view_note.fn("Pagination Test", page=1, page_size=5)
+    result = await mcp_fn(view_note)("Pagination Test", page=1, page_size=5)
 
     # Should work with pagination
     assert '<artifact identifier="note-' in result
@@ -178,10 +178,10 @@ async def test_view_note_pagination(app):
 @pytest.mark.asyncio
 async def test_view_note_project_parameter(app):
     """Test viewing a note with project parameter."""
-    await write_note.fn(title="Project Test", folder="test", content="Content for project test.")
+    await mcp_fn(write_note)(title="Project Test", folder="test", content="Content for project test.")
 
     # View with explicit project (None uses current)
-    result = await view_note.fn("Project Test", project=None)
+    result = await mcp_fn(view_note)("Project Test", project=None)
 
     # Should work with project parameter
     assert '<artifact identifier="note-' in result
@@ -193,12 +193,12 @@ async def test_view_note_project_parameter(app):
 async def test_view_note_artifact_identifier_unique(app):
     """Test that different notes get different artifact identifiers."""
     # Create two notes
-    await write_note.fn(title="Note One", folder="test", content="Content one")
-    await write_note.fn(title="Note Two", folder="test", content="Content two")
+    await mcp_fn(write_note)(title="Note One", folder="test", content="Content one")
+    await mcp_fn(write_note)(title="Note Two", folder="test", content="Content two")
 
     # View both notes
-    result1 = await view_note.fn("Note One")
-    result2 = await view_note.fn("Note Two")
+    result1 = await mcp_fn(view_note)("Note One")
+    result2 = await mcp_fn(view_note)("Note Two")
 
     # Should have different artifact identifiers
     import re
@@ -215,14 +215,14 @@ async def test_view_note_artifact_identifier_unique(app):
 async def test_view_note_fallback_identifier_as_title(app):
     """Test that view_note uses identifier as title when no title is extractable."""
     # Create a note with no clear title structure
-    await write_note.fn(
+    await mcp_fn(write_note)(
         title="Simple Note",
         folder="test",
         content="Just plain content with no headings or frontmatter title",
     )
 
     # View the note
-    result = await view_note.fn("Simple Note")
+    result = await mcp_fn(view_note)("Simple Note")
 
     # Should use identifier as fallback title
     assert 'title="Simple Note"' in result
@@ -248,7 +248,7 @@ async def test_view_note_direct_success(mock_call_get):
     mock_call_get.return_value = mock_response
 
     # Call the function
-    result = await view_note.fn("test/test-note")
+    result = await mcp_fn(view_note)("test/test-note")
 
     # Verify direct lookup was used
     mock_call_get.assert_called_once()
@@ -262,42 +262,35 @@ async def test_view_note_direct_success(mock_call_get):
 
 
 @pytest.mark.asyncio
-async def test_view_note_title_search_fallback(mock_call_get, mock_search):
+async def test_view_note_title_search_fallback(mock_call_get):
     """Test view_note falls back to title search when direct lookup fails."""
-    # Setup mock for failed direct lookup and successful search-based lookup
-    mock_call_get.side_effect = [
-        # First call fails (direct lookup)
-        MagicMock(status_code=404),
-        # Second call fails (sanitized path lookup)
-        MagicMock(status_code=404),
-        # Third call succeeds (after title search)
-        MagicMock(status_code=200, text="# Test Note\n\nThis is a test note."),
-    ]
-
-    # Setup mock for successful title search
-    mock_search.return_value = SearchResponse(
+    title_hits = SearchResponse(
         results=[
-            {
-                "id": 1,
-                "entity": "test/test-note",
-                "title": "Test Note",
-                "type": SearchItemType.ENTITY,
-                "permalink": "test/test-note",
-                "file_path": "test/test-note.md",
-                "score": 1.0,
-            }
+            SearchResult(
+                title="Test Note",
+                type=SearchItemType.ENTITY,
+                score=1.0,
+                entity="test/test-note",
+                permalink="test/test-note",
+                file_path="test/test-note.md",
+            )
         ],
         current_page=1,
         page_size=1,
+        total_results=1,
     )
+    mock_call_get.side_effect = [
+        MagicMock(status_code=404),
+        MagicMock(status_code=404),
+        _mock_json_response(title_hits),
+        MagicMock(status_code=200, text="# Test Note\n\nThis is a test note."),
+    ]
 
-    # Call the function
-    result = await view_note.fn("Test Note")
+    result = await mcp_fn(view_note)("Test Note")
 
-    # Verify title search was used
-    mock_search.assert_called_once()
+    assert mock_call_get.call_count == 4
+    assert mock_call_get.call_args_list[2][1]["params"]["search_type"] == "title"
 
-    # Verify result contains artifact with extracted title
     assert '<artifact identifier="note-' in result
     assert 'title="Test Note"' in result
     assert "This is a test note." in result

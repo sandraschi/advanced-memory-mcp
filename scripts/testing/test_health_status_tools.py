@@ -12,7 +12,8 @@ from typing import Any
 from loguru import logger
 
 from advanced_memory.mcp.project_session import session
-from advanced_memory.mcp.tools import adn_navigation, adn_project
+from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+from advanced_memory.mcp.tools.project_manager import adn_project
 
 ToolCallable = Callable[..., Awaitable[Any]]
 

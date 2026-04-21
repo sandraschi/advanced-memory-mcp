@@ -69,13 +69,10 @@ async def _get_basic_status() -> str:
         ]
     )
 
-    # Add quick tool count
-    try:
-        from advanced_memory.mcp.tools import __all__ as tools
-
-        status_lines.append(f"- **Available Tools**: {len(tools)}")
-    except Exception:
-        status_lines.append("- **Available Tools**: Unable to count")
+    status_lines.append(
+        "- **Tool surface**: FastMCP 3.2 GA managed namespaces plus root tools "
+        "(~79 tools on a typical build). Use MCP **`tools/list`** for the exact set."
+    )
 
     return "\n".join(status_lines)
 
@@ -88,31 +85,16 @@ async def _get_intermediate_status() -> str:
     sync_info = sync_status_tracker.get_summary()
     status_lines.extend([sync_info, "", "---", ""])
 
-    # Tool inventory
-    status_lines.append("## Tool Inventory")
-    try:
-        from advanced_memory.mcp.tools import __all__ as tools
-
-        # Categorize tools
-        import_tools = [t for t in tools if t.startswith(("load_", "import_"))]
-        export_tools = [t for t in tools if t.startswith(("export_", "save_"))]
-        search_tools = [t for t in tools if "search" in t or "find" in t]
-        editing_tools = [t for t in tools if "edit" in t or "typora" in t]
-        core_tools = [
-            t for t in tools if t not in import_tools + export_tools + search_tools + editing_tools
+    status_lines.extend(
+        [
+            "## Tool Inventory",
+            "- **Managed namespaces** (12): `audio`, `inbox`, `skills`, `zettel`, `nav`, "
+            "`notes`, `search`, `knowledge`, `project`, `system`, `mcp`, `typora`",
+            "- **Wire names**: `namespace_operation` (for example `nav_recent`, `notes_write`).",
+            "- **Authoritative list**: MCP **`tools/list`** (names, descriptions, JSON Schemas).",
+            "",
         ]
-
-        status_lines.extend(
-            [
-                f"- **Core Tools** ({len(core_tools)}): {', '.join(core_tools[:5])}{'...' if len(core_tools) > 5 else ''}",
-                f"- **Import Tools** ({len(import_tools)}): {', '.join(import_tools[:5])}{'...' if len(import_tools) > 5 else ''}",
-                f"- **Export Tools** ({len(export_tools)}): {', '.join(export_tools[:5])}{'...' if len(export_tools) > 5 else ''}",
-                f"- **Search Tools** ({len(search_tools)}): {', '.join(search_tools[:5])}{'...' if len(search_tools) > 5 else ''}",
-                f"- **Editing Tools** ({len(editing_tools)}): {', '.join(editing_tools[:5])}{'...' if len(editing_tools) > 5 else ''}",
-            ]
-        )
-    except Exception as e:
-        status_lines.append(f"- **Tool Inventory**: Error loading - {e}")
+    )
 
     # Configuration summary
     status_lines.extend(["", "## Configuration Summary"])
@@ -400,12 +382,12 @@ async def _get_focused_status(focus: str, level: str) -> str:
         return sync_status_tracker.get_summary()
     elif focus == "tools":
         if level == "basic":
-            try:
-                from advanced_memory.mcp.tools import __all__ as tools
-
-                return f"# Tool Status\n\n- **Total Tools**: {len(tools)}\n- **Tools**: {', '.join(tools)}"
-            except Exception as e:
-                return f"# Tool Status\n\n**Error**: {e}"
+            return (
+                "# Tool Status\n\n"
+                "- **Layout**: 12 mounted namespace apps plus additional root-level tools "
+                "(see `advanced_memory/mcp/server.py`).\n"
+                "- **Discovery**: Use MCP **`tools/list`** for the full tool catalog on this process."
+            )
         else:
             return await _get_intermediate_status()
     elif focus == "system":

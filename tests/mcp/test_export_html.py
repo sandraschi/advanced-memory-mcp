@@ -4,6 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 
 
@@ -39,7 +41,7 @@ async def test_export_html_basic(tmp_path, mock_notes_data):
         with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
             mock_open.return_value = (True, "Opened")
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 include_index=True,
                 show_after_export=False,
@@ -68,7 +70,7 @@ async def test_export_html_with_index_opens_browser(tmp_path, mock_notes_data):
     with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
         mock_open.return_value = (True, "Opened index.html")
 
-        result = await export_html_notes.fn(
+        result = await mcp_fn(export_html_notes)(
             export_path=str(export_path),
             include_index=True,
             show_after_export=True,
@@ -95,7 +97,7 @@ async def test_export_html_no_index_opens_folder(tmp_path, mock_notes_data):
     with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
         mock_open.return_value = (True, "Opened folder")
 
-        result = await export_html_notes.fn(
+        result = await mcp_fn(export_html_notes)(
             export_path=str(export_path),
             include_index=False,
             show_after_export=True,
@@ -119,7 +121,7 @@ async def test_export_html_show_false(tmp_path, mock_notes_data):
             mock_process.return_value = "# Export Complete"
 
     with patch("advanced_memory.utils.file_opener.open_file_or_folder") as mock_open:
-        result = await export_html_notes.fn(
+        result = await mcp_fn(export_html_notes)(
             export_path=str(export_path),
             show_after_export=False,
         )
@@ -138,7 +140,7 @@ async def test_export_html_empty_folder(tmp_path):
     with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get_notes:
         mock_get_notes.return_value = []
 
-        result = await export_html_notes.fn(
+        result = await mcp_fn(export_html_notes)(
             export_path=str(export_path),
         )
 
@@ -166,7 +168,7 @@ async def test_export_html_mermaid_diagrams(tmp_path):
         with patch("advanced_memory.mcp.tools.export_html_notes._process_html_export") as mock_process:
             mock_process.return_value = "# Export with Mermaid Complete"
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 show_after_export=False,
             )

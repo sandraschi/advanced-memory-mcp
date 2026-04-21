@@ -40,7 +40,7 @@ def list_projects() -> None:
     """List all configured projects."""
     # Use API to list projects
     try:
-        response = asyncio.run(call_get(client, "/projects/projects"))
+        response = asyncio.run(call_get(client, "/api/v1/projects"))
         result = ProjectList.model_validate(response.json())
 
         table = Table(title="Advanced Memory Projects")
@@ -73,7 +73,7 @@ def add_project(
     try:
         data = {"name": name, "path": resolved_path, "set_default": set_default}
 
-        response = asyncio.run(call_post(client, "/projects/projects", json=data))
+        response = asyncio.run(call_post(client, "/api/v1/projects", json=data))
         result = ProjectStatusResponse.model_validate(response.json())
 
         console.print(f"[green]{result.message}[/green]")
@@ -95,7 +95,7 @@ def remove_project(
     """Remove a project from configuration."""
     try:
         project_name = generate_permalink(name)
-        response = asyncio.run(call_delete(client, f"/projects/{project_name}"))
+        response = asyncio.run(call_delete(client, f"/api/v1/projects/{project_name}"))
         result = ProjectStatusResponse.model_validate(response.json())
 
         console.print(f"[green]{result.message}[/green]")
@@ -115,7 +115,7 @@ def set_default_project(
     try:
         project_name = generate_permalink(name)
 
-        response = asyncio.run(call_put(client, f"/projects/{project_name}/default"))
+        response = asyncio.run(call_put(client, f"/api/v1/projects/{project_name}/default"))
         result = ProjectStatusResponse.model_validate(response.json())
 
         console.print(f"[green]{result.message}[/green]")
@@ -134,7 +134,7 @@ def synchronize_projects() -> None:
     # Call the API to synchronize projects
 
     try:
-        response = asyncio.run(call_post(client, "/projects/sync"))
+        response = asyncio.run(call_post(client, "/api/v1/projects/sync"))
         result = ProjectStatusResponse.model_validate(response.json())
 
         console.print(f"[green]{result.message}[/green]")

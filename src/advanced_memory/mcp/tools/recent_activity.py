@@ -10,6 +10,7 @@ from typing import Annotated, Any
 from loguru import logger
 from pydantic import Field
 
+from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import get_active_project
@@ -26,7 +27,13 @@ async def recent_activity(
     ] = "",
     depth: Annotated[int, Field(description="Relation hops (1-3 recommended)")] = 1,
     timeframe: Annotated[
-        TimeFrame, Field(description="ISO date or shorthand (e.g. '7d', 'yesterday')")
+        TimeFrame,
+        Field(
+            description=(
+                "Floor for **created or last-edited** items: 'yesterday' (calendar), 'today', "
+                "'recent' (~7d), '7d', ISO date, etc. Results are newest-first."
+            )
+        ),
     ] = "7d",
     page: Annotated[int, Field(description="Page number for results")] = 1,
     page_size: Annotated[int, Field(description="Results per page")] = 10,
@@ -91,14 +98,41 @@ async def recent_activity(
     )
     context = GraphContext.model_validate(response.json())
 
-    return _format_activity_as_markdown(context, str(timeframe))
+    return _format_activity_as_markdown(
+        context, str(timeframe), active_project=active_project
+    )
 
 
-def _format_activity_as_markdown(context: GraphContext, timeframe: str) -> str:
+def _format_activity_as_markdown(
+    context: GraphContext,
+    timeframe: str,
+    *,
+    active_project,
+) -> str:
     """Helper to format activity as markdown for fallback."""
     md = [f"## Recent Activity ({timeframe})\n"]
     if not context.results:
-        md.append("No recent activity found.")
+        md.append("No recent activity found in the **search index** for this project.")
+        md.append("")
+        md.append(
+            "That usually means one of: (1) edits were made under a **different** Advanced Memory "
+            "project than the active one, (2) the vault was edited **only on disk** and sync/index has "
+            "not picked it up yet, or (3) `api_url` in `~/.advanced-memory/config.json` points at a "
+            "**remote** API whose database is empty or stale while you edited files locally."
+        )
+        md.append("")
+        md.append(f"- **Active project:** `{active_project.name}`")
+        md.append(f"- **Vault root:** `{active_project.home}`")
+        cfg = ConfigManager().config
+        if cfg.api_url:
+            md.append(f"- **api_url (remote backend):** `{cfg.api_url}`")
+        else:
+            md.append("- **api_url:** not set (in-process ASGI — same DB as this machine)")
+        md.append("")
+        md.append(
+            "**Try:** `project_list` / `project_switch` (or pass `project=` on this tool), "
+            "then `nav_sync` if sync is enabled, or open the correct project in config."
+        )
         return "\n".join(md)
 
     for item in context.results:

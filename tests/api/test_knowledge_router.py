@@ -1311,3 +1311,15 @@ async def test_move_entity_by_title(client: AsyncClient, project_url):
     moved_entity = response.json()
     assert moved_entity["file_path"] == "target/MovedByTitle.md"
     assert moved_entity["title"] == "UniqueTestTitle"
+
+
+@pytest.mark.asyncio
+async def test_graph_subgraph_endpoint(client: AsyncClient, project_url):
+    """Bounded link graph JSON for the webapp."""
+    response = await client.get(f"/api/v1{project_url}/knowledge/graph/subgraph?depth=2&max_nodes=80&max_edges=160")
+    assert response.status_code == 200
+    body = response.json()
+    assert "nodes" in body and "links" in body and "meta" in body
+    assert isinstance(body["nodes"], list)
+    assert isinstance(body["links"], list)
+    assert body["meta"].get("empty_project") is True or "node_count" in body["meta"]

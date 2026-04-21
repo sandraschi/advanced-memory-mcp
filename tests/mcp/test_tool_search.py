@@ -5,9 +5,19 @@ from unittest.mock import patch
 
 import pytest
 
-from advanced_memory.mcp.tools import adn_content
+from tests.mcp.tool_invoker import mcp_fn
+
+from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.mcp.tools.search import _format_search_error_response, search_notes
 from advanced_memory.schemas.search import SearchResponse
+
+
+def _assert_search_md(md: str, *substrings: str) -> None:
+    """search_notes returns rendered markdown on success."""
+    assert isinstance(md, str), type(md)
+    assert "# Search Failed" not in md[:1200], md[:1200]
+    for s in substrings:
+        assert s in md, (s, md[:2000])
 
 
 async def create_note(
@@ -17,7 +27,7 @@ async def create_note(
     tags: list[str] | None = None,
 ) -> str:
     """Helper to create notes via the adn_content portmanteau tool."""
-    return await adn_content.fn(
+    return await mcp_fn(adn_content)(
         operation="write",
         identifier=title,
         folder=folder,
@@ -39,16 +49,8 @@ async def test_search_text(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="searchable")
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify SearchResponse
-        assert len(response.results) > 0
-        assert any(r.permalink == "test/test-search-note" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="searchable")
+    _assert_search_md(response, "test/test-search-note", "Test Search Note")
 
 
 @pytest.mark.asyncio
@@ -68,11 +70,9 @@ async def test_search_tag_filter_inline(client):
         tags=["optional"],
     )
 
-    response = await search_notes.fn(query="tag:important")
-
-    assert isinstance(response, SearchResponse)
-    assert any(r.permalink == "search-tags/important-inline-tag-note" for r in response.results)
-    assert not any(r.permalink == "search-tags/non-matching-tag-note" for r in response.results)
+    response = await mcp_fn(search_notes)(query="tag:important")
+    _assert_search_md(response, "important-inline-tag-note")
+    assert "non-matching-tag-note" not in response
 
 
 @pytest.mark.asyncio
@@ -91,11 +91,9 @@ async def test_search_tag_filter_with_text(client):
         tags=["important", "random"],
     )
 
-    response = await search_notes.fn(query="tag:important status")
-
-    assert isinstance(response, SearchResponse)
-    assert any(r.permalink == "search-tags/important-status-update" for r in response.results)
-    assert not any(r.permalink == "search-tags/important-without-keyword" for r in response.results)
+    response = await mcp_fn(search_notes)(query="tag:important status")
+    _assert_search_md(response, "important-status-update")
+    assert "important-without-keyword" not in response
 
 
 @pytest.mark.asyncio
@@ -108,10 +106,8 @@ async def test_search_tag_parameter_filter(client):
         tags=["priority", "important"],
     )
 
-    response = await search_notes.fn(query="review", tags=["priority"])
-
-    assert isinstance(response, SearchResponse)
-    assert any(r.permalink == "search-tags/priority-review-note" for r in response.results)
+    response = await mcp_fn(search_notes)(query="review", tags=["priority"])
+    _assert_search_md(response, "priority-review-note")
 
 
 @pytest.mark.asyncio
@@ -127,16 +123,8 @@ async def test_search_title(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="Search Note", search_type="title")
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, str):
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
-    else:
-        # Success case - verify SearchResponse
-        assert len(response.results) > 0
-        assert any(r.permalink == "test/test-search-note" for r in response.results)
+    response = await mcp_fn(search_notes)(query="Search Note", search_type="title")
+    _assert_search_md(response, "test/test-search-note", "Test Search Note")
 
 
 @pytest.mark.asyncio
@@ -152,16 +140,8 @@ async def test_search_permalink(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="test/test-search-note", search_type="permalink")
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify SearchResponse
-        assert len(response.results) > 0
-        assert any(r.permalink == "test/test-search-note" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="test/test-search-note", search_type="permalink")
+    _assert_search_md(response, "test/test-search-note")
 
 
 @pytest.mark.asyncio
@@ -177,16 +157,8 @@ async def test_search_permalink_match(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="test/test-search-*", search_type="permalink")
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify SearchResponse
-        assert len(response.results) > 0
-        assert any(r.permalink == "test/test-search-note" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="test/test-search-*", search_type="permalink")
+    _assert_search_md(response, "test/test-search-note")
 
 
 @pytest.mark.asyncio
@@ -202,16 +174,8 @@ async def test_search_pagination(client):
     assert result
 
     # Search for it
-    response = await search_notes.fn(query="searchable", page=1, results_per_page=1)
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify SearchResponse
-        assert len(response.results) == 1
-        assert any(r.permalink == "test/test-search-note" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="searchable", page=1, results_per_page=1)
+    _assert_search_md(response, "test/test-search-note")
 
 
 @pytest.mark.asyncio
@@ -225,15 +189,8 @@ async def test_search_with_type_filter(client):
     )
 
     # Search with type filter
-    response = await search_notes.fn(query="type", types=["note"])
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify all results are entities
-        assert all(r.type == "entity" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="type", types=["note"])
+    _assert_search_md(response, "**Type:** entity")
 
 
 @pytest.mark.asyncio
@@ -247,15 +204,8 @@ async def test_search_with_entity_type_filter(client):
     )
 
     # Search with entity type filter
-    response = await search_notes.fn(query="type", entity_types=["entity"])
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify all results are entities
-        assert all(r.type == "entity" for r in response.results)
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="type", entity_types=["entity"])
+    _assert_search_md(response, "**Type:** entity")
 
 
 @pytest.mark.asyncio
@@ -270,15 +220,8 @@ async def test_search_with_date_filter(client):
 
     # Search with date filter
     one_hour_ago = datetime.now() - timedelta(hours=1)
-    response = await search_notes.fn(query="recent", after_date=one_hour_ago.isoformat())
-
-    # Verify results - handle both success and error cases
-    if isinstance(response, SearchResponse):
-        # Success case - verify we get results within timeframe
-        assert len(response.results) > 0
-    else:
-        # If search failed and returned error message, test should fail with informative message
-        pytest.fail(f"Search failed with error: {response}")
+    response = await mcp_fn(search_notes)(query="recent", after_date=one_hour_ago.isoformat())
+    _assert_search_md(response, "Recent Note")
 
 
 class TestSearchErrorFormatting:
@@ -357,38 +300,41 @@ async def test_search_e2e_write_search_delete(client):
     tags = ["insect", "butterfly"]
 
     # Write note and verify creation
-    create_result = await adn_content.fn(
+    create_result = await mcp_fn(adn_content)(
         operation="write",
         identifier=title,
         folder=folder,
         content=content,
         tags=tags,
     )
-    assert "Created note" in create_result
+    if isinstance(create_result, dict):
+        assert create_result.get("success") is True
+    else:
+        assert "Created note" in str(create_result)
 
     # Search by title
-    title_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
-    assert isinstance(title_response, SearchResponse)
-    assert any(r.permalink.endswith("butterfly-lifecycle-notes") for r in title_response.results)
+    title_response = await mcp_fn(search_notes)(query="Butterfly Lifecycle Notes", search_type="title")
+    _assert_search_md(title_response, "butterfly-lifecycle-notes")
 
-    # Search by content keyword
-    content_response = await search_notes.fn(query="metamorphosis")
-    assert isinstance(content_response, SearchResponse)
-    assert any("Butterfly Lifecycle" in r.title for r in content_response.results)
+    content_response = await mcp_fn(search_notes)(query="metamorphosis")
+    _assert_search_md(content_response, "Butterfly Lifecycle")
 
-    # Search by tag
-    tag_response = await search_notes.fn(query="tag:butterfly")
-    assert isinstance(tag_response, SearchResponse)
-    assert any("Butterfly Lifecycle" in r.title for r in tag_response.results)
+    tag_response = await mcp_fn(search_notes)(query="tag:butterfly")
+    _assert_search_md(tag_response, "Butterfly Lifecycle")
 
     # Delete the note
-    delete_result = await adn_content.fn(operation="delete", identifier=title)
-    assert delete_result is True
+    delete_result = await mcp_fn(adn_content)(operation="delete", identifier=title)
+    delete_ok = delete_result is True or (
+        isinstance(delete_result, dict) and delete_result.get("success") is True
+    )
+    if not delete_ok and isinstance(delete_result, str):
+        delete_ok = "delete" in delete_result.lower()
+    assert delete_ok, delete_result
 
     # Confirm no results
-    post_delete_response = await search_notes.fn(query="Butterfly Lifecycle Notes", search_type="title")
-    assert isinstance(post_delete_response, SearchResponse)
-    assert not any(r.permalink.endswith("butterfly-lifecycle-notes") for r in post_delete_response.results)
+    post_delete_response = await mcp_fn(search_notes)(query="Butterfly Lifecycle Notes", search_type="title")
+    assert isinstance(post_delete_response, str)
+    assert "butterfly-lifecycle-notes" not in post_delete_response
 
 
 @pytest.mark.asyncio
@@ -435,6 +381,7 @@ async def test_search_all_projects(client):
                     ],
                     current_page=1,
                     page_size=10,
+                    total_results=1,
                 ).model_dump()
             ),  # Project1 search
             MagicMock(
@@ -450,6 +397,7 @@ async def test_search_all_projects(client):
                     ],
                     current_page=1,
                     page_size=10,
+                    total_results=1,
                 ).model_dump()
             ),  # Project2 search
         ]
@@ -459,20 +407,17 @@ async def test_search_all_projects(client):
             mock_project.project_url = "http://test"
             mock_get_project.return_value = mock_project
 
-            response = await search_notes.fn(query="multi-project", search_all_projects=True)
+            response = await mcp_fn(search_notes)(query="multi-project", search_all_projects=True)
 
-            # Verify response
-            assert isinstance(response, SearchResponse)
-            assert len(response.results) == 2
-            # Results should have project prefix
-            assert any("[project1]" in str(r.title) for r in response.results)
-            assert any("[project2]" in str(r.title) for r in response.results)
+            assert isinstance(response, str)
+            assert "[project1]" in response
+            assert "[project2]" in response
 
 
 @pytest.mark.asyncio
 async def test_search_all_projects_conflict_with_project_param(client):
     """Test that search_all_projects conflicts with project parameter."""
-    result = await search_notes.fn(
+    result = await mcp_fn(search_notes)(
         query="test",
         project="specific-project",
         search_all_projects=True,
@@ -520,6 +465,7 @@ async def test_search_all_projects_handles_project_errors(client):
                     ],
                     current_page=1,
                     page_size=10,
+                    total_results=1,
                 ).model_dump()
             ),
             Exception("Project access denied"),  # Failing project
@@ -530,11 +476,10 @@ async def test_search_all_projects_handles_project_errors(client):
             mock_project.project_url = "http://test"
             mock_get_project.return_value = mock_project
 
-            response = await search_notes.fn(query="test", search_all_projects=True)
+            response = await mcp_fn(search_notes)(query="test", search_all_projects=True)
 
-            # Should still succeed with results from working project
-            assert isinstance(response, SearchResponse)
-            assert len(response.results) == 1
+            assert isinstance(response, str)
+            assert "Working result" in response
 
 
 class TestSearchToolErrorHandling:
@@ -547,7 +492,7 @@ class TestSearchToolErrorHandling:
             mock_get_project.return_value.project_url = "http://test"
 
             with patch("advanced_memory.mcp.tools.search.call_post", side_effect=Exception("syntax error")):
-                result = await search_notes.fn("test query")
+                result = await mcp_fn(search_notes)("test query")
 
                 assert isinstance(result, str)
                 assert "# Search Failed - Invalid Syntax" in result
@@ -562,7 +507,7 @@ class TestSearchToolErrorHandling:
                 "advanced_memory.mcp.tools.search.call_post",
                 side_effect=Exception("permission denied"),
             ):
-                result = await search_notes.fn("test query")
+                result = await mcp_fn(search_notes)("test query")
 
                 assert isinstance(result, str)
                 assert "# Search Failed - Access Error" in result

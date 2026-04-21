@@ -4,6 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.export_html_notes import export_html_notes
 
 # Import internal functions for direct testing
@@ -405,7 +407,7 @@ class TestSearchQuery:
         with patch("advanced_memory.mcp.tools.export_html_notes._search_notes") as mock_search:
             mock_search.return_value = mock_notes
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 search_query="docker",
                 combine_into_one=True,
@@ -450,7 +452,7 @@ class TestExportHTMLNotesIntegration:
         with patch("advanced_memory.mcp.tools.export_html_notes._search_notes") as mock_search:
             mock_search.return_value = mock_notes
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 search_query="docker",
                 combine_into_one=True,
@@ -487,7 +489,7 @@ class TestExportHTMLNotesIntegration:
         with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get:
             mock_get.return_value = mock_notes
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 source_folder="folder",
                 combine_into_one=True,
@@ -507,7 +509,7 @@ class TestExportHTMLNotesIntegration:
         with patch("advanced_memory.mcp.tools.export_html_notes._get_notes_from_folder") as mock_get:
             mock_get.return_value = multiple_notes
 
-            await export_html_notes.fn(
+            await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 combine_into_one=True,
                 make_toc=True,
@@ -667,7 +669,7 @@ class TestExportEdgeCases:
         with patch("advanced_memory.mcp.tools.export_html_notes._search_notes") as mock_search:
             mock_search.return_value = []
 
-            result = await export_html_notes.fn(
+            result = await mcp_fn(export_html_notes)(
                 export_path=str(export_path),
                 search_query="nonexistent",
                 combine_into_one=True,

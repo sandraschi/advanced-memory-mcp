@@ -7,8 +7,10 @@ complete documentation website from your knowledge base.
 import asyncio
 import http.server
 import json
+import os
 import re
 import socketserver
+from urllib.parse import quote
 import threading
 import webbrowser
 from datetime import datetime
@@ -57,7 +59,7 @@ async def export_docsify_enhanced(
     export_all: bool = True,
     project: str | None = None,
 ) -> str:
-    """[LAUNCH] Enhanced Docsify Export with Advanced Plugins
+    """Enhanced Docsify Export with Advanced Plugins
 
     Creates a professional, modern documentation site with advanced features like
     pagination, auto-generated TOC, theme switching, and enhanced UI/UX.
@@ -91,11 +93,11 @@ async def export_docsify_enhanced(
                         folders.add(path_parts[-2])  # Get parent folder name
 
                 folder_examples = ", ".join(sorted(list(folders)[:5]))
-                return f"""# [LAUNCH] Enhanced Docsify Export - No Notes Found
+                return f"""# Enhanced Docsify Export - No Notes Found
 
-[UNICODE] **No notes found** in folder: `{source_folder}`
+**No notes found** in folder: `{source_folder}`
 
-[UNICODE][UNICODE] **Suggestions**:
+**Suggestions:**
 - Try exporting from root folder: `source_folder="/"`
 - Check these available folders: {folder_examples}
 - Verify the folder name matches exactly (case-sensitive)
@@ -108,7 +110,7 @@ adn_export("docsify", source_folder="standards")
 adn_export("docsify", source_folder="zettelkasten/standards")
 ```"""
             else:
-                return "# [LAUNCH] Enhanced Docsify Export Complete\n\n[UNICODE] **No notes found** in the entire knowledge base.\n\n[UNICODE][UNICODE] Create some notes first before exporting."
+                return "# Enhanced Docsify Export Complete\n\n**No notes found** in the entire knowledge base.\n\nCreate some notes first before exporting."
 
         # Analyze notes for enhanced features
         notes_analysis = _analyze_notes_for_enhancement(notes_data)
@@ -380,7 +382,7 @@ def _create_enhanced_docsify_html(
 
                     const button = document.createElement('button');
                     button.className = 'copy-btn';
-                    button.innerHTML = '[LIST] Copy';
+                    button.innerHTML = '\U0001f4cb Copy';
                     button.style.cssText = `
                         position: absolute;
                         top: 5px;
@@ -404,7 +406,7 @@ def _create_enhanced_docsify_html(
                         try {{
                             await navigator.clipboard.writeText(block.textContent || '');
                             const original = button.innerHTML;
-                            button.innerHTML = '[UNICODE] Copied!';
+                            button.innerHTML = '\U00002705 Copied!';
                             button.style.background = 'rgba(40,167,69,0.9)';
                             button.style.color = 'white';
                             setTimeout(() => {{
@@ -413,8 +415,8 @@ def _create_enhanced_docsify_html(
                                 button.style.color = 'black';
                             }}, 2000);
                         }} catch (err) {{
-                            button.innerHTML = '[UNICODE] Failed';
-                            setTimeout(() => button.innerHTML = '[LIST] Copy', 2000);
+                            button.innerHTML = '\U0000274c Failed';
+                            setTimeout(() => button.innerHTML = '\U0001f4cb Copy', 2000);
                         }}
                     }};
 
@@ -457,7 +459,7 @@ def _create_enhanced_docsify_html(
                     border: 1px solid #e1e4e8;
                 `;
 
-                let toc = '<div style="font-weight: bold; margin-bottom: 0.5rem; color: #333;">[BOOK] On This Page</div><ul style="list-style: none; padding: 0; margin: 0;">';
+                let toc = '<div style="font-weight: bold; margin-bottom: 0.5rem; color: #333;">\U0001f4d6 On This Page</div><ul style="list-style: none; padding: 0; margin: 0;">';
 
                 headings.forEach(function(heading, index) {{
                     const level = parseInt(heading.tagName.charAt(1));
@@ -513,7 +515,7 @@ def _create_enhanced_docsify_html(
             hook.ready(function() {{
                 const themeBtn = document.createElement('button');
                 themeBtn.id = 'theme-toggle';
-                themeBtn.innerHTML = '[UNICODE][UNICODE]';
+                themeBtn.innerHTML = '\U0001f319';
                 themeBtn.title = 'Toggle theme (light/dark)';
                 themeBtn.style.cssText = `
                     position: fixed;
@@ -545,7 +547,7 @@ def _create_enhanced_docsify_html(
                     const html = document.documentElement;
                     const isDark = html.classList.toggle('dark-theme');
                     localStorage.setItem('docsify-theme', isDark ? 'dark' : 'light');
-                    themeBtn.innerHTML = isDark ? '[UNICODE][UNICODE]' : '[UNICODE][UNICODE]';
+                    themeBtn.innerHTML = isDark ? '\U00002600\U0000fe0f' : '\U0001f319';
                     themeBtn.title = isDark ? 'Switch to light theme' : 'Switch to dark theme';
 
                     // Update Docsify theme
@@ -561,47 +563,19 @@ def _create_enhanced_docsify_html(
                 const savedTheme = localStorage.getItem('docsify-theme');
                 if (savedTheme === 'dark') {{
                     document.documentElement.classList.add('dark-theme');
-                    themeBtn.innerHTML = '[UNICODE][UNICODE]';
+                    themeBtn.innerHTML = '\U00002600\U0000fe0f';
                     themeBtn.title = 'Switch to light theme';
                 }}
             });
         }},"""
 
-    # Emoji support
-    if enable_emoji:
-        plugins_js += """
-        // Emoji support
-        function(hook, vm) {{
-            const emojiMap = {{
-                ':smile:': '[UNICODE][UNICODE]',
-                ':heart:': '[UNICODE][UNICODE]',
-                ':thumbsup:': '[UNICODE][UNICODE]',
-                ':rocket:': '[LAUNCH]',
-                ':check:': '[UNICODE]',
-                ':warning:': '[UNICODE][UNICODE]',
-                ':bulb:': '[UNICODE][UNICODE]',
-                ':book:': '[BOOKS]',
-                ':star:': '[UNICODE]',
-                ':fire:': '[UNICODE][UNICODE]',
-                ':thumbsdown:': '[UNICODE][UNICODE]',
-                ':question:': '[UNICODE]',
-                ':exclamation:': '[UNICODE]',
-                ':memo:': '[NOTE]',
-                ':link:': '[LINK]',
-                ':gear:': '[UNICODE][UNICODE]'
-            }};
-
-            hook.beforeEach(function(content) {{
-                Object.keys(emojiMap).forEach(function(emoji) {{
-                    const regex = new RegExp(emoji.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'g');
-                    content = content.replace(regex, emojiMap[emoji]);
-                }});
-                return content;
-            });
-        }}"""
-
     # Remove trailing comma from plugins
     plugins_js = plugins_js.rstrip(",")
+
+    favicon_href = "data:image/svg+xml," + quote(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>\U0001f4da</text></svg>",
+        safe="",
+    )
 
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -613,7 +587,7 @@ def _create_enhanced_docsify_html(
     <meta name="theme-color" content="#667eea">
 
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>[BOOKS]</text></svg>">
+    <link rel="icon" href="{favicon_href}">
 
     <!-- Docsify themes -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
@@ -642,7 +616,7 @@ def _create_enhanced_docsify_html(
             // Enhanced search
             search: {{
                 paths: 'auto',
-                placeholder: '[SEARCH] Search documentation...',
+                placeholder: '\U0001f50d Search documentation...',
                 noData: 'No results found - try different keywords',
                 depth: 6,
                 hideOtherSidebarContent: false,
@@ -653,8 +627,8 @@ def _create_enhanced_docsify_html(
         html += """
             // Pagination (book-like navigation)
             pagination: {
-                previousText: '[UNICODE][UNICODE] Previous',
-                nextText: 'Next [UNICODE][UNICODE]',
+                previousText: '\u2190 Previous',
+                nextText: 'Next \u2192',
                 crossChapter: true,
                 crossChapterText: true
             },"""
@@ -679,7 +653,7 @@ def _create_enhanced_docsify_html(
                     link: function(href, title, text) {
                         // Enhance external links
                         if (href.startsWith('http')) {
-                            return `<a href="${href}" title="${title || text}" target="_blank" rel="noopener">${text} [LINK]</a>`;
+                            return `<a href="${href}" title="${title || text}" target="_blank" rel="noopener">${text} \u2197</a>`;
                         }
                         return this.origin.link.apply(this, arguments);
                     }
@@ -768,7 +742,7 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
     sidebar = ["<!-- Enhanced Sidebar with Icons and Badges -->\n"]
 
     # Add overview/home link
-    sidebar.append("- [[UNICODE][UNICODE] Home](README.md)")
+    sidebar.append("- [\U0001f3e0 Home](README.md)")
     sidebar.append("")
 
     # Sort folders and create hierarchical navigation
@@ -780,7 +754,7 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
             folder_name = folder.replace("_", " ").title()
             sidebar.append(f"- {folder_icon} **{folder_name}**")
         else:
-            sidebar.append("- [DOC] **Documents**")
+            sidebar.append("- \U0001f4c4 **Documents**")
 
         # Sort notes by title
         for note in sorted(notes, key=lambda x: x["title"]):
@@ -792,20 +766,20 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
             content = note.get("content", "")
 
             if "```mermaid" in content or "``` mermaid" in content:
-                badges.append("[CHART]")
+                badges.append("\U0001f4ca")
             if "```" in content:
-                badges.append("[UNICODE][UNICODE]")
+                badges.append("\U0001f4bb")
             if "|" in content and "\n|" in content:
-                badges.append("[LIST]")
+                badges.append("\U0001f4cb")
             if "[" in content and "](" in content:
-                badges.append("[LINK]")
+                badges.append("\U0001f517")
 
             # Add word count indicator for long documents
             word_count = len(content.split())
             if word_count > 1000:
-                badges.append("[DOC]")
+                badges.append("\U0001f4c4")
             elif word_count > 500:
-                badges.append("[NOTE]")
+                badges.append("\U0001f4dd")
 
             badge_str = " ".join(badges)
             if badge_str:
@@ -818,9 +792,9 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
 
     # Add utility links
     sidebar.append("---")
-    sidebar.append("- [[BOOK] About](ABOUT.md)")
-    sidebar.append("- [[FIX] Setup Guide](SETUP.md)")
-    sidebar.append("- [[CHART] Statistics](STATS.md)")
+    sidebar.append("- [\U0001f4d6 About](ABOUT.md)")
+    sidebar.append("- [\U0001f527 Setup Guide](SETUP.md)")
+    sidebar.append("- [\U0001f4ca Statistics](STATS.md)")
 
     return "\n".join(sidebar)
 
@@ -828,27 +802,27 @@ def _create_enhanced_sidebar(notes_data: list[dict[str, Any]], export_path: Path
 def _get_folder_icon(folder: str) -> str:
     """Get appropriate icon for folder type."""
     icon_map = {
-        "research": "[UNICODE][UNICODE]",
-        "projects": "[FOLDER]",
-        "meeting": "[UNICODE][UNICODE]",
-        "notes": "[NOTE]",
-        "docs": "[BOOKS]",
-        "code": "[UNICODE][UNICODE]",
-        "personal": "[UNICODE][UNICODE]",
-        "work": "[UNICODE][UNICODE]",
-        "learning": "[UNICODE][UNICODE]",
-        "ideas": "[UNICODE][UNICODE]",
-        "archive": "[UNICODE][UNICODE]",
-        "templates": "[LIST]",
-        "drafts": "[NOTE]",
-        "published": "[BOOK]",
+        "research": "\U0001f52c",
+        "projects": "\U0001f4c1",
+        "meeting": "\U0001f4c5",
+        "notes": "\U0001f4dd",
+        "docs": "\U0001f4da",
+        "code": "\U0001f4bb",
+        "personal": "\U0001f464",
+        "work": "\U0001f4bc",
+        "learning": "\U0001f4d6",
+        "ideas": "\U0001f4a1",
+        "archive": "\U0001f5c4\U0000fe0f",
+        "templates": "\U0001f4cb",
+        "drafts": "\U0000270f\U0000fe0f",
+        "published": "\U0001f4e2",
     }
 
     folder_lower = folder.lower()
     for key, icon in icon_map.items():
         if key in folder_lower:
             return icon
-    return "[FOLDER]"  # default folder icon
+    return "\U0001f4c1"  # default folder icon
 
 
 def _create_enhanced_readme(
@@ -857,61 +831,61 @@ def _create_enhanced_readme(
     """Create enhanced README with feature overview and statistics."""
 
     features = []
-    features.append("## [UNICODE] Enhanced Features\n")
+    features.append("## \U00002728 Enhanced Features\n")
     features.append(
         "This documentation site includes advanced features for better navigation and user experience:\n"
     )
-    features.append("- [SEARCH] **Enhanced Search** - Fast, full-text search across all documents")
+    features.append("- \U0001f50d **Enhanced Search** - Fast, full-text search across all documents")
     features.append(
-        "- [BOOK] **Auto TOC** - Automatically generated table of contents for each page"
+        "- \U0001f4d6 **Auto TOC** - Automatically generated table of contents for each page"
     )
-    features.append("- [UNICODE][UNICODE] **Theme Toggle** - Switch between light and dark themes")
-    features.append("- [CHART] **Reading Progress** - Visual progress bar")
-    features.append("- [LIST] **Copy Code** - One-click code block copying")
-    features.append("- [SMILE] **Emoji Support** - Rich emoji rendering")
-    features.append("- [DOC] **Pagination** - Navigate through documents like a book")
-    features.append("- [MOBILE] **Mobile Optimized** - Responsive design for all devices")
-    features.append("- [LINK] **Smart Links** - Enhanced link handling and previews")
+    features.append("- \U0001f319\U00002600\U0000fe0f **Theme Toggle** - Switch between light and dark themes")
+    features.append("- \U0001f4c8 **Reading Progress** - Visual progress bar")
+    features.append("- \U0001f4cb **Copy Code** - One-click code block copying")
+    features.append("- \U0001f60a **Emoji Support** - Rich emoji rendering (Docsify plugin + native Unicode)")
+    features.append("- \U0001f4d4 **Pagination** - Navigate through documents like a book")
+    features.append("- \U0001f4f1 **Mobile Optimized** - Responsive design for all devices")
+    features.append("- \U0001f517 **Smart Links** - Enhanced link handling and previews")
     features.append("")
 
     # Statistics section
-    features.append("## [CHART] Documentation Statistics\n")
+    features.append("## \U0001f4ca Documentation Statistics\n")
     features.append(f"- **Total Documents**: {analysis['total_notes']}")
     features.append(f"- **Folders**: {len(analysis['folders'])}")
     features.append(f"- **Average Length**: {analysis['avg_word_count']} words per document")
     features.append(f"- **Longest Document**: {analysis['max_word_count']} words")
 
     if analysis["has_mermaid"]:
-        features.append("- [CHART] **Includes Diagrams** (Mermaid support)")
+        features.append("- \U0001f4ca **Includes Diagrams** (Mermaid support)")
     if analysis["has_code_blocks"]:
-        features.append("- [UNICODE][UNICODE] **Contains Code** (syntax highlighting)")
+        features.append("- \U0001f4bb **Contains Code** (syntax highlighting)")
     if analysis["has_tables"]:
-        features.append("- [LIST] **Has Tables** (responsive formatting)")
+        features.append("- \U0001f4cb **Has Tables** (responsive formatting)")
     if analysis["has_links"]:
-        features.append("- [LINK] **Contains Links** (enhanced navigation)")
+        features.append("- \U0001f517 **Contains Links** (enhanced navigation)")
     features.append("")
 
     # Navigation guide
-    features.append("## [UNICODE][UNICODE] Navigation Guide\n")
+    features.append("## \U0001f5fa\U0000fe0f Navigation Guide\n")
     features.append("### Keyboard Shortcuts")
     features.append("- `Ctrl/Cmd + K` - Focus search box")
-    features.append("- `[UNICODE]/[UNICODE]` - Navigate search results")
+    features.append("- \u2191 / \u2193 - Navigate search results")
     features.append("- `Enter` - Open selected result")
     features.append("- `Esc` - Close search")
     features.append("")
     features.append("### Sidebar Navigation")
     features.append("- Click folder icons to expand/collapse sections")
     features.append("- Document badges indicate content types:")
-    features.append("  - [CHART] Contains diagrams")
-    features.append("  - [UNICODE][UNICODE] Has code blocks")
-    features.append("  - [LIST] Contains tables")
-    features.append("  - [LINK] Has links")
-    features.append("  - [DOC] Long document (>1000 words)")
+    features.append("  - \U0001f4ca Contains diagrams")
+    features.append("  - \U0001f4bb Has code blocks")
+    features.append("  - \U0001f4cb Contains tables")
+    features.append("  - \U0001f517 Has links")
+    features.append("  - \U0001f4c4 Long document (>1000 words)")
     features.append("")
 
     # Theme guide
     features.append("### Theme Switching")
-    features.append("- Click the **[UNICODE][UNICODE]** button (top-right) to toggle themes")
+    features.append("- Click the **\U0001f319 / \U00002600\U0000fe0f** button (top-right) to toggle themes")
     features.append("- Your preference is automatically saved")
     features.append("- Themes work across all pages")
     features.append("")
@@ -922,7 +896,7 @@ def _create_enhanced_readme(
 
 {chr(10).join(features)}
 
-## [LAUNCH] Getting Started
+## \U0001f680 Getting Started
 
 1. **Browse Documents** - Use the sidebar to explore available content
 2. **Search Content** - Type in the search box to find specific information
@@ -930,7 +904,7 @@ def _create_enhanced_readme(
 4. **Switch Themes** - Toggle between light and dark modes
 5. **Copy Code** - Hover over code blocks and click the copy button
 
-## [MOBILE] Mobile Experience
+## \U0001f4f1 Mobile Experience
 
 This documentation is fully optimized for mobile devices:
 - Responsive design that adapts to any screen size
@@ -938,7 +912,7 @@ This documentation is fully optimized for mobile devices:
 - Optimized typography for readability
 - Fast loading on mobile networks
 
-## [FIX] Technical Details
+## \U0001f527 Technical Details
 
 - **Powered by**: Docsify 4.x with enhanced plugin ecosystem
 - **Search Engine**: Full-text search with namespace support
@@ -946,7 +920,7 @@ This documentation is fully optimized for mobile devices:
 - **Themes**: Vue.js and Dark themes with custom enhancements
 - **Performance**: CDN-powered with lazy loading
 
-## [UNICODE][UNICODE] Support
+## \U0001f4ac Support
 
 If you encounter any issues or have suggestions for improvement, please check:
 - Search functionality for existing answers
@@ -955,7 +929,7 @@ If you encounter any issues or have suggestions for improvement, please check:
 
 ---
 
-*Generated with [UNICODE][UNICODE] by Advanced Memory's Enhanced Docsify Export*
+*Generated with \U00002728 by Advanced Memory's Enhanced Docsify Export*
 """
 
     return readme
@@ -1033,7 +1007,62 @@ def _create_enhanced_css() -> str:
 .dark-theme .markdown-section h4,
 .dark-theme .markdown-section h5,
 .dark-theme .markdown-section h6 {
-    color: #ecf0f1;
+    color: #f0f4f8;
+}
+
+/* Dark mode: default vue.css body color stays grey; force high-contrast copy */
+.dark-theme .markdown-section {
+    color: #e8eaed;
+}
+
+.dark-theme .markdown-section p,
+.dark-theme .markdown-section li,
+.dark-theme .markdown-section td,
+.dark-theme .markdown-section dd,
+.dark-theme .markdown-section dt {
+    color: #e1e4e8;
+}
+
+.dark-theme .markdown-section strong,
+.dark-theme .markdown-section b {
+    color: #ffffff;
+}
+
+.dark-theme .markdown-section :not(pre) > code {
+    background: rgba(110, 118, 129, 0.45);
+    color: #f0f6fc;
+    border: 1px solid rgba(240, 246, 252, 0.12);
+}
+
+.dark-theme .markdown-section pre code {
+    color: #f0f6fc;
+}
+
+.dark-theme .markdown-section blockquote {
+    color: #dce4ec;
+}
+
+.dark-theme .markdown-section hr {
+    border-color: #4a5f7a;
+}
+
+.dark-theme .markdown-section table {
+    color: #e1e4e8;
+}
+
+/* Sidebar / chrome in dark mode */
+.dark-theme .sidebar,
+.dark-theme .sidebar-nav,
+.dark-theme .search .input-wrap input {
+    color: #e8eaed;
+}
+
+.dark-theme .search .input-wrap input::placeholder {
+    color: #8b9cad;
+}
+
+.dark-theme .search .search-keyword {
+    color: #f0f4f8;
 }
 
 /* Enhanced code blocks */
@@ -1319,43 +1348,43 @@ def _generate_feature_summary(
     disabled_features = []
 
     features = [
-        ("[DOC] Pagination", enable_pagination, "Navigate documents like a book"),
-        ("[BOOK] Auto TOC", enable_toc, "Table of contents per page"),
-        ("[UNICODE][UNICODE] Theme Toggle", enable_theme_toggle, "Light/dark mode switcher"),
-        ("[CHART] Progress Bar", enable_progress_bar, "Reading progress indicator"),
-        ("[LIST] Copy Code", enable_code_copy, "One-click code copying"),
-        ("[SMILE] Emoji Support", enable_emoji, "Rich emoji rendering"),
+        ("Pagination", enable_pagination, "Navigate documents like a book"),
+        ("Auto TOC", enable_toc, "Table of contents per page"),
+        ("Theme Toggle", enable_theme_toggle, "Light/dark mode switcher"),
+        ("Progress Bar", enable_progress_bar, "Reading progress indicator"),
+        ("Copy Code", enable_code_copy, "One-click code copying"),
+        ("Emoji Support", enable_emoji, "Docsify emoji plugin and native Unicode in the site"),
     ]
 
     for name, enabled, desc in features:
         if enabled:
-            enabled_features.append(f"[UNICODE] **{name}** - {desc}")
+            enabled_features.append(f"- **{name}** - {desc}")
         else:
-            disabled_features.append(f"[UNICODE] **{name}** - {desc}")
+            disabled_features.append(f"- **{name}** - {desc}")
 
-    summary = f"""# [LAUNCH] Enhanced Docsify Site Created Successfully!
+    summary = f"""# Enhanced Docsify Site Created Successfully
 
-## [CHART] Export Summary
+## Export Summary
 
 **Documents Processed**: {total_notes}
 **Files Exported**: {exported_files}
 **Export Location**: Enhanced with professional features
 
-## [UNICODE] Enabled Features
+## Enabled Features
 
 {chr(10).join(enabled_features)}
 
-## [UNICODE][UNICODE] Additional Features (Always Enabled)
+## Additional Features (Always Enabled)
 
-[UNICODE] **Enhanced Search** - Fast full-text search with namespace support
-[UNICODE] **Mermaid Diagrams** - Automatic diagram rendering
-[UNICODE] **Responsive Design** - Mobile-optimized layout
-[UNICODE] **Image Zoom** - Click to enlarge images
-[UNICODE] **Smart Links** - Enhanced link handling with external link indicators
-[UNICODE] **Professional Styling** - Modern typography and spacing
-[UNICODE] **Performance Optimized** - CDN-powered with lazy loading
+- **Enhanced Search** - Fast full-text search with namespace support
+- **Mermaid Diagrams** - Automatic diagram rendering
+- **Responsive Design** - Mobile-optimized layout
+- **Image Zoom** - Click to enlarge images
+- **Smart Links** - Enhanced link handling with external link indicators
+- **Professional Styling** - Modern typography and spacing
+- **Performance Optimized** - CDN-powered with lazy loading
 
-## [FOLDER] Site Structure
+## Site Structure
 
 Your enhanced documentation site includes:
 - `index.html` - Main page with all plugins and features
@@ -1365,7 +1394,7 @@ Your enhanced documentation site includes:
 - `custom.css` - Enhanced styling and animations
 - `.nojekyll` - GitHub Pages compatibility
 
-## [TARGET] Next Steps
+## Next Steps
 
 ### 1. **Open Your Site**
 ```bash
@@ -1377,18 +1406,18 @@ python -m http.server 3000
 ```
 
 ### 2. **Explore Features**
-- [SEARCH] **Search**: Type in the search box (top-right)
-- [UNICODE][UNICODE] **Theme**: Click the theme toggle button
-- [BOOK] **TOC**: Auto-generated table of contents (right side)
-- [DOC] **Navigate**: Use Previous/Next buttons for sequential reading
-- [LIST] **Copy Code**: Hover over code blocks and click the copy button
+- **Search**: Type in the search box (top-right)
+- **Theme**: Click the theme toggle button
+- **TOC**: Auto-generated table of contents (right side)
+- **Navigate**: Use Previous/Next buttons for sequential reading
+- **Copy Code**: Hover over code blocks and click the copy button
 
 ### 3. **Mobile Experience**
 - Fully responsive design
 - Touch-friendly navigation
 - Optimized for all screen sizes
 
-## [FIX] Customization
+## Customization
 
 Want to modify features? Edit these parameters:
 - `enable_pagination=false` - Disable book-like navigation
@@ -1396,17 +1425,17 @@ Want to modify features? Edit these parameters:
 - `enable_theme_toggle=false` - Remove theme switcher
 - `enable_progress_bar=false` - Remove progress indicator
 
-## [GRAPH] Performance Metrics
+## Performance Metrics
 
 **Targets Achieved**:
-- [FAST] **Load Time**: < 2 seconds (CDN-powered)
-- [SEARCH] **Search Speed**: < 500ms response
-- [MOBILE] **Mobile Score**: 95%+ compatibility
-- [ART] **User Experience**: Professional-grade interface
+- **Load Time**: < 2 seconds (CDN-powered)
+- **Search Speed**: < 500ms response
+- **Mobile Score**: 95%+ compatibility
+- **User Experience**: Professional-grade interface
 
 ---
 
-**[SUCCESS] Your enhanced documentation site is ready!**
+**Your enhanced documentation site is ready.**
 
 **Open `index.html` in your browser to explore the professional documentation experience.**
 """
@@ -1414,7 +1443,7 @@ Want to modify features? Edit these parameters:
     if disabled_features:
         summary += f"""
 
-## [LIST] Disabled Features
+## Disabled Features
 
 These features can be enabled by setting parameters to `true`:
 
@@ -1842,11 +1871,11 @@ async def _start_local_server(export_path: Path, port: int) -> str:
             with socketserver.TCPServer(("", port), DocsifyHandler):
                 pass
         except OSError:
-            return f"""## 🌐 Local Server (Port Busy)
+            return f"""## Local Server (Port Busy)
 
-⚠️ Port {port} is already in use. Either:
+Port {port} is already in use. Either:
 1. Stop the other service using port {port}
-2. Access your site at: http://localhost:{port} (if it's already serving this directory)
+2. Access your site at: http://localhost:{port} (if it is already serving this directory)
 3. Re-run with a different port: `serve=True, port=3212`
 
 **Export location**: `{abs_path}`"""
@@ -1862,24 +1891,29 @@ async def _start_local_server(export_path: Path, port: int) -> str:
         # Give server time to start
         await asyncio.sleep(0.5)
 
-        # Open browser
+        # Open browser (skip under pytest/CI or when explicitly disabled — can hang or spawn many browsers)
         url = f"http://localhost:{port}"
-        try:
-            webbrowser.open(url)
-            browser_opened = True
-        except Exception as e:
-            logger.warning(f"Could not auto-open browser: {e}")
-            browser_opened = False
+        browser_opened = False
+        env_browser = os.environ.get("ADVANCED_MEMORY_DOCSIFY_BROWSER", "").lower()
+        skip_browser = bool(os.environ.get("PYTEST_CURRENT_TEST")) or (
+            os.environ.get("CI", "").lower() in ("1", "true", "yes")
+        ) or env_browser in ("0", "false", "no")
+        if not skip_browser:
+            try:
+                webbrowser.open(url)
+                browser_opened = True
+            except Exception as e:
+                logger.warning("Could not auto-open browser: {}", e)
 
         browser_msg = (
-            "✅ Browser opened automatically"
+            "Browser opened automatically"
             if browser_opened
-            else "⚠️ Please open browser manually"
+            else "Please open browser manually"
         )
 
-        return f"""## 🌐 Local Server Started
+        return f"""## Local Server Started
 
-✅ **Server running at:** {url}
+**Server running at:** {url}
 {browser_msg}
 
 **Export location**: `{abs_path}`
@@ -1900,7 +1934,7 @@ The server runs as a daemon thread and will automatically stop when:
 
     except Exception as e:
         logger.error(f"Failed to start server: {e}")
-        return f"""## ⚠️ Server Start Failed
+        return f"""## Server Start Failed
 
 Could not start local server: {e}
 

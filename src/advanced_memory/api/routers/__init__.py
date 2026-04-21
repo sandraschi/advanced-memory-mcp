@@ -7,6 +7,7 @@ from . import project_router as project
 from . import prompt_router as prompt
 from . import resource_router as resource
 from . import search_router as search
+from . import system_router as system_router
 from . import tests_router as tests_router
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     "prompt",
     "resource",
     "search",
+    "system_router",
     "tests_router",
 ]

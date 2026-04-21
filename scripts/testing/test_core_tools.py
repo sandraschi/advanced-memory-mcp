@@ -22,20 +22,18 @@ from typing import Any
 
 from loguru import logger
 
-from advanced_memory.mcp.tools import (
-    adn_audio,
-    adn_content,
-    adn_export,
-    adn_import,
-    adn_inbox,
-    adn_knowledge,
-    adn_navigation,
-    adn_project,
-    adn_search,
-    adn_skills,
-    adn_skills_creator,
-    adn_zettelmaker,
-)
+from advanced_memory.mcp.tools.adn_audio import adn_audio
+from advanced_memory.mcp.tools.adn_export import adn_export
+from advanced_memory.mcp.tools.adn_import import adn_import
+from advanced_memory.mcp.tools.adn_inbox import adn_inbox
+from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+from advanced_memory.mcp.tools.adn_search import adn_search
+from advanced_memory.mcp.tools.adn_skills_creator import adn_skills_creator
+from advanced_memory.mcp.tools.content_manager import adn_content
+from advanced_memory.mcp.tools.portmanteau_knowledge import adn_knowledge
+from advanced_memory.mcp.tools.portmanteau_skills import adn_skills
+from advanced_memory.mcp.tools.project_manager import adn_project
+from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
 
 # Type alias for the callable signature FastMCP exposes on tools (.fn attribute).
 ToolCallable = Callable[..., Awaitable[Any]]

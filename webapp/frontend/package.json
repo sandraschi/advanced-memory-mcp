@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.1",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.5"
@@ -38,7 +39,10 @@
     "format": "biome check --write src",
     "type-check": "tsc --noEmit",
     "biome:ci": "biome ci .",
-    "biome": "biome check --write ."
+    "biome": "biome check --write .",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "browserslist": {
     "production": [

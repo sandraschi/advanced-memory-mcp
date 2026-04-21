@@ -14,7 +14,7 @@ from loguru import logger
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import add_project_metadata, session
-from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.services.template_loader import get_content_templates
 

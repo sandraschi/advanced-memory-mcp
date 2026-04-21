@@ -269,7 +269,7 @@ class ProjectDetector:
             return self._project_cache
 
         try:
-            response = await call_get(client, "/projects/projects")
+            response = await call_get(client, "/api/v1/projects")
             project_list = ProjectList.model_validate(response.json())
 
             projects = []

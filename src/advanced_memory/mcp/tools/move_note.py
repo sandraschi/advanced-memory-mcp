@@ -29,7 +29,7 @@ async def _detect_cross_project_move_attempt(
     """
     try:
         # Get list of all available projects to check against
-        response = await call_get(client, "/projects/projects")
+        response = await call_get(client, "/api/v1/projects")
         project_list = ProjectList.model_validate(response.json())
         project_names = [p.name.lower() for p in project_list.projects]
 

@@ -190,7 +190,7 @@ async def _get_note_content(note) -> str | None:
     """
     try:
         # Use the read_note tool to get content
-        from advanced_memory.mcp.tools import read_note as mcp_read_note
+        from advanced_memory.mcp.tools.read_note import read_note as mcp_read_note
 
         # Get the identifier (prefer permalink, fallback to title)
         identifier = getattr(note, "permalink", None) or getattr(note, "title", "")

@@ -8,6 +8,13 @@ export default defineConfig({
     port: 10704,
     host: '0.0.0.0', // Bind to all interfaces for Tailnet access
     strictPort: true,
+    proxy: {
+      // FastAPI (advanced_memory.server:app) default port 10705 — see webapp/start.ps1
+      '/api': {
+        target: 'http://127.0.0.1:10705',
+        changeOrigin: true,
+      },
+    },
     allowedHosts: [
       '*', // Allow all hosts for Tailnet
       'goliath' // Allow goliath hostname for Tailnet access

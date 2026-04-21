@@ -9,8 +9,8 @@ from typing import Any
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools import read_note as mcp_read_note
-from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.read_note import read_note as mcp_read_note
+from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 
 
 @mcp.tool

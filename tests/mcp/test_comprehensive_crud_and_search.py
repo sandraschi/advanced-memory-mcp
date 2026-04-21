@@ -17,7 +17,10 @@ from typing import Any
 
 import pytest
 
-from advanced_memory.mcp.tools import adn_content, adn_search
+from tests.mcp.tool_invoker import mcp_fn
+
+from advanced_memory.mcp.tools.adn_search import adn_search
+from advanced_memory.mcp.tools.content_manager import adn_content
 
 
 class TestReport:
@@ -135,7 +138,7 @@ report = TestReport()
 async def test_note_create_basic(app):
     """Test basic note creation."""
     try:
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Test Note Basic",
             folder="test/crud",
@@ -167,7 +170,7 @@ This note has comprehensive metadata.
 ## Relations
 - relates_to [[Another Note]]
 """
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Test Note Metadata",
             folder="test/crud",
@@ -189,7 +192,7 @@ async def test_note_read_by_title(app):
     """Test reading a note by title."""
     try:
         # First create a note
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Read Test Note",
             folder="test/crud",
@@ -198,7 +201,7 @@ async def test_note_read_by_title(app):
         )
 
         # Read it back
-        result = await adn_content.fn(operation="read", identifier="Read Test Note")
+        result = await mcp_fn(adn_content)(operation="read", identifier="Read Test Note")
         assert result
         assert "Read Test" in result
         assert "This note will be read" in result
@@ -214,7 +217,7 @@ async def test_note_read_by_permalink(app):
     """Test reading a note by permalink."""
     try:
         # Create note
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Permalink Read Test",
             folder="test/crud",
@@ -226,7 +229,7 @@ async def test_note_read_by_permalink(app):
         permalink = "test/crud/permalink-read-test"
 
         # Read by permalink
-        result = await adn_content.fn(operation="read", identifier=permalink)
+        result = await mcp_fn(adn_content)(operation="read", identifier=permalink)
         assert result
         assert "Permalink Test" in result
         report.log_test("CRUD - Read Note by Permalink", True)
@@ -241,7 +244,7 @@ async def test_note_update_append(app):
     """Test updating a note by appending content and verify by reading back."""
     try:
         # Create initial note
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Update Append Test",
             folder="test/crud",
@@ -250,7 +253,7 @@ async def test_note_update_append(app):
         )
 
         # Append content
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Update Append Test",
             edit_operation="append",
@@ -260,7 +263,7 @@ async def test_note_update_append(app):
         assert "Updated" in result or "Edit" in result
 
         # Verify append worked by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Update Append Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Update Append Test")
         assert "Original Content" in read_result
         assert "Added Section" in read_result
         assert "This was appended" in read_result
@@ -276,7 +279,7 @@ async def test_note_update_find_replace_simple(app):
     """Test find_replace operation with simple string replacement (not regex)."""
     try:
         # Create note with text to replace
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Find Replace Test",
             folder="test/crud",
@@ -285,7 +288,7 @@ async def test_note_update_find_replace_simple(app):
         )
 
         # Replace "json" with "jason" (simple string replacement)
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Find Replace Test",
             edit_operation="find_replace",
@@ -297,7 +300,7 @@ async def test_note_update_find_replace_simple(app):
         assert "Updated" in result or "Edit" in result
 
         # Verify replacement worked by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Find Replace Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Find Replace Test")
         assert "jason" in read_result
         assert "json" not in read_result  # All occurrences should be replaced
         assert "This note contains jason and more jason text" in read_result
@@ -315,7 +318,7 @@ async def test_note_update_find_replace_regex_pattern(app):
 
     try:
         # Create note with version numbers
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Regex Test Note",
             folder="test",
@@ -324,7 +327,7 @@ async def test_note_update_find_replace_regex_pattern(app):
         assert "Regex Test Note" in create_result
 
         # Use regex to replace all version numbers matching pattern
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Regex Test Note",
             edit_operation="find_replace",
@@ -336,7 +339,7 @@ async def test_note_update_find_replace_regex_pattern(app):
         assert "Edited note (find_replace)" in edit_result
 
         # Verify all versions were replaced
-        read_result = await adn_content.fn(
+        read_result = await mcp_fn(adn_content)(
             operation="read",
             identifier="Regex Test Note",
         )
@@ -357,7 +360,7 @@ async def test_note_update_find_replace_regex_backreferences(app):
 
     try:
         # Create note with dates
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Regex Backref Test",
             folder="test",
@@ -366,7 +369,7 @@ async def test_note_update_find_replace_regex_backreferences(app):
         assert "Regex Backref Test" in create_result
 
         # Use regex with backreference to reformat dates
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Regex Backref Test",
             edit_operation="find_replace",
@@ -378,7 +381,7 @@ async def test_note_update_find_replace_regex_backreferences(app):
         assert "Edited note (find_replace)" in edit_result
 
         # Verify dates were reformatted
-        read_result = await adn_content.fn(
+        read_result = await mcp_fn(adn_content)(
             operation="read",
             identifier="Regex Backref Test",
         )
@@ -398,7 +401,7 @@ async def test_note_update_find_replace_regex_security_pattern_too_long(app):
 
     try:
         # Create note
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Regex Security Test",
             folder="test",
@@ -408,7 +411,7 @@ async def test_note_update_find_replace_regex_security_pattern_too_long(app):
 
         # Try to use pattern that's too long (ReDoS protection)
         long_pattern = "a" * 501  # Exceeds MAX_PATTERN_LENGTH (500)
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Regex Security Test",
             edit_operation="find_replace",
@@ -434,7 +437,7 @@ async def test_note_update_find_replace_regex_invalid_pattern(app):
 
     try:
         # Create note
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Regex Invalid Test",
             folder="test",
@@ -443,7 +446,7 @@ async def test_note_update_find_replace_regex_invalid_pattern(app):
         assert "Regex Invalid Test" in create_result
 
         # Try invalid regex pattern
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Regex Invalid Test",
             edit_operation="find_replace",
@@ -469,7 +472,7 @@ async def test_note_update_insert_mermaid(app):
 
     try:
         # Create note
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Mermaid Test Note",
             folder="test",
@@ -478,7 +481,7 @@ async def test_note_update_insert_mermaid(app):
         assert "Mermaid Test Note" in create_result
 
         # Insert Mermaid flowchart
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Mermaid Test Note",
             edit_operation="insert_mermaid",
@@ -488,7 +491,7 @@ async def test_note_update_insert_mermaid(app):
         assert "Edited note (insert_mermaid)" in edit_result
 
         # Verify Mermaid diagram was added
-        read_result = await adn_content.fn(
+        read_result = await mcp_fn(adn_content)(
             operation="read",
             identifier="Mermaid Test Note",
         )
@@ -506,7 +509,7 @@ async def test_note_update_insert_ascii_art(app):
 
     try:
         # Create note
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="ASCII Art Test",
             folder="test",
@@ -515,7 +518,7 @@ async def test_note_update_insert_ascii_art(app):
         assert "ASCII Art Test" in create_result
 
         # Insert cat ASCII art
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="ASCII Art Test",
             edit_operation="insert_ascii_art",
@@ -524,7 +527,7 @@ async def test_note_update_insert_ascii_art(app):
         assert "Edited note (insert_ascii_art)" in edit_result
 
         # Verify ASCII art was added
-        read_result = await adn_content.fn(
+        read_result = await mcp_fn(adn_content)(
             operation="read",
             identifier="ASCII Art Test",
         )
@@ -541,7 +544,7 @@ async def test_note_update_insert_kilroy(app):
 
     try:
         # Create note
-        create_result = await adn_content.fn(
+        create_result = await mcp_fn(adn_content)(
             operation="write",
             identifier="Kilroy Test",
             folder="test",
@@ -550,7 +553,7 @@ async def test_note_update_insert_kilroy(app):
         assert "Kilroy Test" in create_result
 
         # Insert Kilroy with custom message
-        edit_result = await adn_content.fn(
+        edit_result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Kilroy Test",
             edit_operation="insert_kilroy",
@@ -559,7 +562,7 @@ async def test_note_update_insert_kilroy(app):
         assert "Edited note (insert_kilroy)" in edit_result
 
         # Verify Kilroy was added
-        read_result = await adn_content.fn(
+        read_result = await mcp_fn(adn_content)(
             operation="read",
             identifier="Kilroy Test",
         )
@@ -575,7 +578,7 @@ async def test_note_update_find_replace_not_regex(app):
     """Test that find_replace uses simple string matching, not regex patterns."""
     try:
         # Create note with text that would match regex pattern
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Find Replace Regex Test",
             folder="test/crud",
@@ -585,7 +588,7 @@ async def test_note_update_find_replace_not_regex(app):
 
         # Try to replace with a pattern that looks like regex but should be treated as literal
         # If it were regex, this might match "version X.Y.Z", but it should only match exact string
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Find Replace Regex Test",
             edit_operation="find_replace",
@@ -596,7 +599,7 @@ async def test_note_update_find_replace_not_regex(app):
         assert result
 
         # Verify only exact match was replaced (not regex pattern matching)
-        read_result = await adn_content.fn(operation="read", identifier="Find Replace Regex Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Find Replace Regex Test")
         assert "Version 1.2.4" in read_result
         assert "version 2.3.4" in read_result  # Should still be there (not matched by regex)
         assert "Version 1.2.3" not in read_result  # Should be replaced
@@ -613,7 +616,7 @@ async def test_note_update_prepend(app):
     """Test prepending content to a note and verify by reading back."""
     try:
         # Create initial note
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Update Prepend Test",
             folder="test/crud",
@@ -622,7 +625,7 @@ async def test_note_update_prepend(app):
         )
 
         # Prepend content (should go after frontmatter, before body)
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Update Prepend Test",
             edit_operation="prepend",
@@ -632,7 +635,7 @@ async def test_note_update_prepend(app):
         assert "Updated" in result or "Edit" in result
 
         # Verify prepend worked by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Update Prepend Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Update Prepend Test")
         assert "Prepended Section" in read_result
         assert "This was prepended" in read_result
         assert "Original Content" in read_result
@@ -650,7 +653,7 @@ async def test_note_update_replace_section(app):
     """Test replace_section operation and verify by reading back."""
     try:
         # Create note with section to replace
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Replace Section Test",
             folder="test/crud",
@@ -659,7 +662,7 @@ async def test_note_update_replace_section(app):
         )
 
         # Replace the section
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit",
             identifier="Replace Section Test",
             edit_operation="replace_section",
@@ -670,7 +673,7 @@ async def test_note_update_replace_section(app):
         assert "Updated" in result or "Edit" in result
 
         # Verify section was replaced by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Replace Section Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Replace Section Test")
         assert "## Old Section" in read_result  # Header should remain
         assert "New content here" in read_result
         assert "Old content here" not in read_result
@@ -689,7 +692,7 @@ async def test_note_update_tags_add(app):
     """Test adding tags to a note."""
     try:
         # Create note with initial tags
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tag Add Test",
             folder="test/crud",
@@ -698,7 +701,7 @@ async def test_note_update_tags_add(app):
         )
 
         # Add tags
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit_tags",
             identifier="Tag Add Test",
             tag_operation="add",
@@ -708,7 +711,7 @@ async def test_note_update_tags_add(app):
         assert "Tag Edit Complete" in result or "Added" in result
 
         # Verify tags were added
-        read_result = await adn_content.fn(operation="read", identifier="Tag Add Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Tag Add Test")
         assert "added" in read_result.lower() or "test-tag" in read_result.lower()
         report.log_test("CRUD - Update Tags Add", True)
         return result
@@ -722,7 +725,7 @@ async def test_note_update_tags_remove(app):
     """Test removing tags from a note and verify by reading back."""
     try:
         # Create note with tags
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tag Remove Test",
             folder="test/crud",
@@ -731,7 +734,7 @@ async def test_note_update_tags_remove(app):
         )
 
         # Remove tag
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit_tags",
             identifier="Tag Remove Test",
             tag_operation="remove",
@@ -741,7 +744,7 @@ async def test_note_update_tags_remove(app):
         assert "Tag Edit Complete" in result or "Removed" in result
 
         # Verify tag was removed by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Tag Remove Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Tag Remove Test")
         assert "remove-me" not in read_result.lower()
         assert "keep-me" in read_result.lower()
 
@@ -757,7 +760,7 @@ async def test_note_update_tags_replace(app):
     """Test replacing all tags and verify by reading back."""
     try:
         # Create note with initial tags
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tag Replace Test",
             folder="test/crud",
@@ -766,7 +769,7 @@ async def test_note_update_tags_replace(app):
         )
 
         # Replace all tags
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit_tags",
             identifier="Tag Replace Test",
             tag_operation="replace",
@@ -776,7 +779,7 @@ async def test_note_update_tags_replace(app):
         assert "Tag Edit Complete" in result or "Replaced" in result
 
         # Verify tags were replaced by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Tag Replace Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Tag Replace Test")
         assert "old-tag1" not in read_result.lower()
         assert "old-tag2" not in read_result.lower()
         assert "new-tag1" in read_result.lower() or "new-tag2" in read_result.lower()
@@ -793,7 +796,7 @@ async def test_note_update_tags_clear(app):
     """Test clearing all tags and verify by reading back."""
     try:
         # Create note with tags
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tag Clear Test",
             folder="test/crud",
@@ -802,7 +805,7 @@ async def test_note_update_tags_clear(app):
         )
 
         # Clear all tags
-        result = await adn_content.fn(
+        result = await mcp_fn(adn_content)(
             operation="edit_tags",
             identifier="Tag Clear Test",
             tag_operation="clear",
@@ -811,7 +814,7 @@ async def test_note_update_tags_clear(app):
         assert "Tag Edit Complete" in result or "Cleared" in result
 
         # Verify tags were cleared by reading back
-        read_result = await adn_content.fn(operation="read", identifier="Tag Clear Test")
+        read_result = await mcp_fn(adn_content)(operation="read", identifier="Tag Clear Test")
         # Tags should be removed from frontmatter
         assert "tag1" not in read_result.lower()
         assert "tag2" not in read_result.lower()
@@ -829,7 +832,7 @@ async def test_note_delete(app):
     """Test deleting a note."""
     try:
         # Create note to delete
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Delete Test Note",
             folder="test/crud",
@@ -838,13 +841,13 @@ async def test_note_delete(app):
         )
 
         # Delete it
-        result = await adn_content.fn(operation="delete", identifier="Delete Test Note")
+        result = await mcp_fn(adn_content)(operation="delete", identifier="Delete Test Note")
         assert result
         assert "Deleted" in result or "deleted" in result.lower()
 
         # Verify it's gone (should return error or empty)
         try:
-            await adn_content.fn(operation="read", identifier="Delete Test Note")
+            await mcp_fn(adn_content)(operation="read", identifier="Delete Test Note")
             # If we get here, note still exists - that's a failure
             raise AssertionError("Note should have been deleted but still exists")
         except Exception:
@@ -868,7 +871,7 @@ async def test_search_basic_text(app):
     """Test basic text search."""
     try:
         # Create test notes
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Search Test Python",
             folder="test/search",
@@ -876,7 +879,7 @@ async def test_search_basic_text(app):
             tags=["python", "programming"],
         )
 
-        result = await adn_search.fn(operation="notes", query="Python")
+        result = await mcp_fn(adn_search)(operation="notes", query="Python")
         assert result
         assert "Search Results" in result or "Python" in result
         report.log_test("Search - Basic Text Search", True)
@@ -891,14 +894,14 @@ async def test_search_with_tags_list(app):
     """Test search with tags parameter as list (the bug we fixed)."""
     try:
         # Create notes with different tags
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tagged Note Python",
             folder="test/search",
             content="# Python Note\n\nPython content.",
             tags=["python", "programming"],
         )
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Tagged Note JavaScript",
             folder="test/search",
@@ -907,7 +910,7 @@ async def test_search_with_tags_list(app):
         )
 
         # Search with tags as list (this was failing before)
-        result = await adn_search.fn(operation="notes", query="programming", tags=["python", "programming"])
+        result = await mcp_fn(adn_search)(operation="notes", query="programming", tags=["python", "programming"])
         assert result
         # Should find the Python note but not JavaScript (both have programming, but Python has python tag)
         report.log_test("Search - Tags Parameter (List Format)", True, details={"result_preview": result[:200]})
@@ -926,7 +929,7 @@ async def test_search_with_tags_list(app):
 async def test_search_with_tags_string(app):
     """Test search with tags parameter as comma-separated string."""
     try:
-        result = await adn_search.fn(operation="notes", query="programming", tags="python,programming")
+        result = await mcp_fn(adn_search)(operation="notes", query="programming", tags="python,programming")
         assert result
         report.log_test("Search - Tags Parameter (String Format)", True)
         return result
@@ -944,7 +947,7 @@ async def test_search_with_tags_string(app):
 async def test_search_with_entity_types_list(app):
     """Test search with entity_types parameter as list."""
     try:
-        result = await adn_search.fn(operation="notes", query="test", entity_types=["entity", "observation"])
+        result = await mcp_fn(adn_search)(operation="notes", query="test", entity_types=["entity", "observation"])
         assert result
         report.log_test("Search - Entity Types Parameter (List Format)", True)
         return result
@@ -962,7 +965,7 @@ async def test_search_with_entity_types_list(app):
 async def test_search_with_types_list(app):
     """Test search with types parameter as list."""
     try:
-        result = await adn_search.fn(operation="notes", query="test", types=["note"])
+        result = await mcp_fn(adn_search)(operation="notes", query="test", types=["note"])
         assert result
         report.log_test("Search - Types Parameter (List Format)", True)
         return result
@@ -981,7 +984,7 @@ async def test_search_with_date_range(app):
     """Test search with date range filters."""
     try:
         # Create a recent note
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Recent Test Note",
             folder="test/search",
@@ -992,7 +995,7 @@ async def test_search_with_date_range(app):
         # Search with date range
         today = datetime.now()
         week_ago = (today - timedelta(days=7)).strftime("%Y-%m-%d")
-        result = await adn_search.fn(
+        result = await mcp_fn(adn_search)(
             operation="notes",
             query="Recent",
             after_date=week_ago,
@@ -1010,7 +1013,7 @@ async def test_search_with_date_range(app):
 async def test_search_type_title(app):
     """Test search with search_type='title'."""
     try:
-        result = await adn_search.fn(operation="notes", query="Search Test", search_type="title")
+        result = await mcp_fn(adn_search)(operation="notes", query="Search Test", search_type="title")
         assert result
         report.log_test("Search - Search Type Title", True)
         return result
@@ -1024,7 +1027,7 @@ async def test_search_type_permalink(app):
     """Test search with search_type='permalink' (the bug we fixed)."""
     try:
         # Create a note with known permalink
-        await adn_content.fn(
+        await mcp_fn(adn_content)(
             operation="write",
             identifier="Permalink Search Test",
             folder="test/search",
@@ -1033,7 +1036,7 @@ async def test_search_type_permalink(app):
         )
 
         # Search by permalink
-        result = await adn_search.fn(
+        result = await mcp_fn(adn_search)(
             operation="notes",
             query="test/search/permalink-search-test",
             search_type="permalink",
@@ -1052,7 +1055,7 @@ async def test_search_pagination(app):
     try:
         # Create multiple notes
         for i in range(5):
-            await adn_content.fn(
+            await mcp_fn(adn_content)(
                 operation="write",
                 identifier=f"Pagination Test {i}",
                 folder="test/search",
@@ -1061,7 +1064,7 @@ async def test_search_pagination(app):
             )
 
         # Search with pagination
-        result = await adn_search.fn(operation="notes", query="Pagination", page=1, page_size=2)
+        result = await mcp_fn(adn_search)(operation="notes", query="Pagination", page=1, page_size=2)
         assert result
         report.log_test("Search - Pagination", True)
         return result
@@ -1074,7 +1077,7 @@ async def test_search_pagination(app):
 async def test_search_complex_combination(app):
     """Test search with multiple parameters combined."""
     try:
-        result = await adn_search.fn(
+        result = await mcp_fn(adn_search)(
             operation="notes",
             query="test",
             tags=["test", "search"],
@@ -1101,7 +1104,7 @@ async def test_search_complex_combination(app):
 async def test_search_results_per_page_alias(app):
     """Test search with results_per_page alias parameter."""
     try:
-        result = await adn_search.fn(operation="notes", query="test", results_per_page=5)
+        result = await mcp_fn(adn_search)(operation="notes", query="test", results_per_page=5)
         assert result
         report.log_test("Search - Results Per Page Alias", True)
         return result
@@ -1119,7 +1122,7 @@ async def test_search_results_per_page_alias(app):
 async def test_note_read_nonexistent(app):
     """Test reading a non-existent note."""
     try:
-        result = await adn_content.fn(operation="read", identifier="Nonexistent Note 99999")
+        result = await mcp_fn(adn_content)(operation="read", identifier="Nonexistent Note 99999")
         # Should return error message, not crash
         assert result
         assert "Error" in result or "not found" in result.lower() or "No note" in result
@@ -1135,7 +1138,7 @@ async def test_note_read_nonexistent(app):
 async def test_search_empty_query(app):
     """Test search with empty query."""
     try:
-        result = await adn_search.fn(operation="notes", query="")
+        result = await mcp_fn(adn_search)(operation="notes", query="")
         # Should handle gracefully
         assert result
         report.log_test("Edge Case - Empty Search Query", True)
@@ -1149,7 +1152,7 @@ async def test_search_empty_query(app):
 async def test_search_invalid_operation(app):
     """Test search with invalid operation."""
     try:
-        result = await adn_search.fn(operation="invalid_operation", query="test")
+        result = await mcp_fn(adn_search)(operation="invalid_operation", query="test")
         # Should return error message
         assert result
         assert "Error" in result or "Invalid" in result

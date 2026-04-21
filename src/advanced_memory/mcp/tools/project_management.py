@@ -41,7 +41,7 @@ async def list_memory_projects(
         await ctx.info("Listing all available projects")
 
     # Get projects from API
-    response = await call_get(client, "/projects/projects")
+    response = await call_get(client, "/api/v1/projects")
     project_list = ProjectList.model_validate(response.json())
 
     current = session.get_current_project()
@@ -87,7 +87,7 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
     current_project = session.get_current_project()
     try:
         # Validate project exists by getting project list
-        response = await call_get(client, "/projects/projects")
+        response = await call_get(client, "/api/v1/projects")
         project_list = ProjectList.model_validate(response.json())
 
         # Find the project by name (case-insensitive) or permalink
@@ -116,7 +116,7 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
             current_project_permalink = generate_permalink(canonical_name)
             response = await call_get(
                 client,
-                f"/{current_project_permalink}/project/info",
+                f"/api/v1/{current_project_permalink}/project/info",
                 params={"project_name": canonical_name},
             )
             project_info = ProjectInfoResponse.model_validate(response.json())
@@ -187,7 +187,7 @@ async def get_current_project(ctx: Context | None = None, _compatibility: str | 
     current_project_permalink = generate_permalink(current_project)
     response = await call_get(
         client,
-        f"/{current_project_permalink}/project/info",
+        f"/api/v1/{current_project_permalink}/project/info",
         params={"project_name": current_project},
     )
     project_info = ProjectInfoResponse.model_validate(response.json())
@@ -223,7 +223,7 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
         await ctx.info(f"Setting default project to: {project_name}")
 
     # Call API to set default project
-    response = await call_put(client, f"/projects/{project_name}/default")
+    response = await call_put(client, f"/api/v1/projects/{project_name}/default")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     result = f"✓ {status_response.message}\n\n"
@@ -266,7 +266,7 @@ async def create_memory_project(
     )
 
     # Call API to create project
-    response = await call_post(client, "/projects/projects", json=project_request.model_dump())
+    response = await call_post(client, "/api/v1/projects", json=project_request.model_dump())
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     result = f"✓ {status_response.message}\n\n"
@@ -321,7 +321,7 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
         )
 
     # Get project info before deletion to validate it exists
-    response = await call_get(client, "/projects/projects")
+    response = await call_get(client, "/api/v1/projects")
     project_list = ProjectList.model_validate(response.json())
 
     # Check if project exists
@@ -333,7 +333,7 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
         )
 
     # Call API to delete project
-    response = await call_delete(client, f"/projects/{project_name}")
+    response = await call_delete(client, f"/api/v1/projects/{project_name}")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     result = f"✓ {status_response.message}\n\n"

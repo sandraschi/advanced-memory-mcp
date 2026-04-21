@@ -275,7 +275,9 @@ class WatchService:
         # Track processed files to avoid duplicates
         processed: set[str] = set()
 
-        # First handle potential moves
+        # First handle potential moves (avoid per-pair DEBUG spam when many deletes lack entities)
+        move_skip_no_entity = 0
+
         for added_path in adds:
             if added_path in processed:
                 continue  # pragma: no cover
@@ -296,8 +298,8 @@ class WatchService:
                 # Skip directories for deleted paths (based on entity type in db)
                 deleted_entity = await sync_service.entity_repository.get_by_file_path(deleted_path)
                 if deleted_entity is None:
-                    # If this was a directory, it wouldn't have an entity
-                    logger.debug("Skipping unknown path for move detection", path=deleted_path)
+                    # If this was a directory or never indexed, it has no entity — normal, not worth N×M log lines.
+                    move_skip_no_entity += 1
                     continue
 
                 if added_path != deleted_path:
@@ -324,6 +326,12 @@ class WatchService:
                             f"new_path={added_path}",
                             f"error={e!s}",
                         )
+
+        if move_skip_no_entity:
+            logger.debug(
+                "Move detection skipped delete paths with no DB entity (pair checks={})",
+                move_skip_no_entity,
+            )
 
         # Handle remaining changes - group them by type for concise output
         moved_count = len([p for p in processed if p in deletes or p in adds])

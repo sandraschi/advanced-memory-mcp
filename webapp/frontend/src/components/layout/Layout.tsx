@@ -1,17 +1,15 @@
-import { useState } from 'react'
-import Sidebar from './Sidebar'
-import Topbar from './Topbar'
-import MetadataSidebar from './MetadataSidebar'
-import LoggerModal from '../modals/LoggerModal'
-import HelpModal from '../modals/HelpModal'
+import { useState } from "react";
+import MetadataSidebar from "./MetadataSidebar";
+import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
 
 interface LayoutProps {
-  children: React.ReactNode
-  showMetadataSidebar?: boolean
-  selectedNoteMetadata?: any
-  onMetadataExport?: (format: string, noteId: string) => Promise<void>
-  onMetadataEdit?: () => void
-  onMetadataDelete?: () => void
+  children: React.ReactNode;
+  showMetadataSidebar?: boolean;
+  selectedNoteMetadata?: any;
+  onMetadataExport?: (format: string, noteId: string) => Promise<void>;
+  onMetadataEdit?: () => void;
+  onMetadataDelete?: () => void;
 }
 
 export default function Layout({
@@ -20,12 +18,10 @@ export default function Layout({
   selectedNoteMetadata,
   onMetadataExport,
   onMetadataEdit,
-  onMetadataDelete
+  onMetadataDelete,
 }: LayoutProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [metadataSidebarOpen, setMetadataSidebarOpen] = useState(false)
-  const [loggerOpen, setLoggerOpen] = useState(false)
-  const [helpOpen, setHelpOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [metadataSidebarOpen, setMetadataSidebarOpen] = useState(false);
 
   return (
     <div className="h-screen min-h-0 bg-[#020205] text-slate-50 font-inter selection:bg-indigo-500/30 flex overflow-hidden">
@@ -33,23 +29,19 @@ export default function Layout({
       <Sidebar
         isCollapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        onOpenLogger={() => setLoggerOpen(true)}
-        onOpenHelp={() => setHelpOpen(true)}
       />
 
       {/* Main Content Area - min-h-0 so flex child can shrink and fill viewport */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {/* Topbar */}
         <Topbar
           onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onLoggerClick={() => setLoggerOpen(true)}
-          onHelpClick={() => setHelpOpen(true)}
           sidebarCollapsed={sidebarCollapsed}
         />
 
-        {/* Page Content - fills remaining height so NoteViewer etc. can use full space */}
-        <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          <div className="flex-1 min-h-0 flex flex-col">
+        {/* Scrollable page shell — overflow was hidden here so nothing could scroll */}
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <div className="app-scroll flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
             {children}
           </div>
         </main>
@@ -66,17 +58,6 @@ export default function Layout({
           onDelete={onMetadataDelete}
         />
       )}
-
-      {/* Modals */}
-      <LoggerModal
-        isOpen={loggerOpen}
-        onClose={() => setLoggerOpen(false)}
-      />
-
-      <HelpModal
-        isOpen={helpOpen}
-        onClose={() => setHelpOpen(false)}
-      />
     </div>
-  )
+  );
 }

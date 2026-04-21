@@ -1,26 +1,14 @@
-import {
-  Menu,
-  Terminal,
-  HelpCircle,
-  Wifi,
-  WifiOff
-} from 'lucide-react'
+import { HelpCircle, Menu, Terminal, Wifi, WifiOff } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface TopbarProps {
-  onMenuClick: () => void
-  onLoggerClick: () => void
-  onHelpClick: () => void
-  sidebarCollapsed: boolean
+  onMenuClick: () => void;
+  sidebarCollapsed: boolean;
 }
 
-export default function Topbar({
-  onMenuClick,
-  onLoggerClick,
-  onHelpClick,
-  sidebarCollapsed
-}: TopbarProps) {
+export default function Topbar({ onMenuClick, sidebarCollapsed }: TopbarProps) {
   // Mock connection status - would be connected to actual service
-  const isConnected = true
+  const isConnected = true;
 
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -30,7 +18,7 @@ export default function Topbar({
           <button
             onClick={onMenuClick}
             className="p-2 rounded-md hover:bg-muted transition-colors"
-            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -43,35 +31,31 @@ export default function Topbar({
               <WifiOff className="h-4 w-4 text-red-500" />
             )}
             <span className="ml-2 text-sm text-muted-foreground">
-              {isConnected ? 'Connected' : 'Disconnected'}
+              {isConnected ? "Connected" : "Disconnected"}
             </span>
           </div>
         </div>
 
         {/* Center - Title */}
         <div className="hidden md:block">
-          <h1 className="text-lg font-semibold">Research Dashboard</h1>
+          <h1 className="text-lg font-semibold">Dashboard</h1>
         </div>
 
         {/* Right side - Action buttons */}
         <div className="flex items-center space-x-2">
-          <button
-            onClick={onLoggerClick}
+          <Link
+            to="/logs"
             className="p-2 rounded-md hover:bg-muted transition-colors"
-            title="Open Logger"
+            title="System log"
           >
             <Terminal className="h-5 w-5" />
-          </button>
+          </Link>
 
-          <button
-            onClick={onHelpClick}
-            className="p-2 rounded-md hover:bg-muted transition-colors"
-            title="Open Help"
-          >
+          <Link to="/help" className="p-2 rounded-md hover:bg-muted transition-colors" title="Help">
             <HelpCircle className="h-5 w-5" />
-          </button>
+          </Link>
         </div>
       </div>
     </header>
-  )
+  );
 }

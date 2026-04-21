@@ -222,7 +222,7 @@ async def _create_operation(
     )
 
     # Call API to create project
-    response = await call_post(client, "/projects/projects", json=project_request.model_dump())
+    response = await call_post(client, "/api/v1/projects", json=project_request.model_dump())
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     # If project was set as default, update session
@@ -278,7 +278,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> di
 
     try:
         # Validate project exists by getting project list
-        response = await call_get(client, "/projects/projects")
+        response = await call_get(client, "/api/v1/projects")
         project_list = ProjectList.model_validate(response.json())
 
         # Find the project by name (case-insensitive) or permalink
@@ -318,7 +318,7 @@ async def _switch_operation(project_name: str | None, ctx: Context | None) -> di
             current_project_permalink = generate_permalink(canonical_name)
             response = await call_get(
                 client,
-                f"/{current_project_permalink}/project/info",
+                f"/api/v1/{current_project_permalink}/project/info",
                 params={"project_name": canonical_name},
             )
             project_info = ProjectInfoResponse.model_validate(response.json())
@@ -426,7 +426,7 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> di
         )
 
     # Get project info before deletion to validate it exists
-    response = await call_get(client, "/projects/projects")
+    response = await call_get(client, "/api/v1/projects")
     project_list = ProjectList.model_validate(response.json())
 
     # Check if project exists
@@ -447,7 +447,7 @@ async def _delete_operation(project_name: str | None, ctx: Context | None) -> di
         )
 
     # Call API to delete project
-    response = await call_delete(client, f"/projects/{project_name}")
+    response = await call_delete(client, f"/api/v1/projects/{project_name}")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     deleted_project = None
@@ -494,7 +494,7 @@ async def _set_default_operation(project_name: str | None, ctx: Context | None) 
         await ctx.info(f"Setting default project to: {project_name}")
 
     # Call API to set default project
-    response = await call_put(client, f"/projects/{project_name}/default")
+    response = await call_put(client, f"/api/v1/projects/{project_name}/default")
     status_response = ProjectStatusResponse.model_validate(response.json())
 
     previous_default = None
@@ -529,7 +529,7 @@ async def _get_current_operation(ctx: Context | None) -> dict:
     current_project_permalink = generate_permalink(current_project)
     response = await call_get(
         client,
-        f"/{current_project_permalink}/project/info",
+        f"/api/v1/{current_project_permalink}/project/info",
         params={"project_name": current_project},
     )
     project_info = ProjectInfoResponse.model_validate(response.json())
@@ -564,7 +564,7 @@ async def _list_operation(ctx: Context | None) -> dict:
         await ctx.info("Listing all available projects")
 
     # Get projects from API
-    response = await call_get(client, "/projects/projects")
+    response = await call_get(client, "/api/v1/projects")
     project_list = ProjectList.model_validate(response.json())
 
     current = session.get_current_project()
@@ -619,7 +619,7 @@ async def _sync_operation(project_name: str | None, ctx: Context | None) -> dict
 
     try:
         # Call the new project-specific sync endpoint
-        response = await call_post(client, f"/projects/{project_name}/sync")
+        response = await call_post(client, f"/api/v1/projects/{project_name}/sync")
         sync_response = response.json()
 
         return build_success_response(
@@ -677,7 +677,7 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> di
         project_permalink = generate_permalink(project_name)
         response = await call_get(
             client,
-            f"/{project_permalink}/project/info",
+            f"/api/v1/{project_permalink}/project/info",
             params={"project_name": project_name},
         )
         project_info = ProjectInfoResponse.model_validate(response.json())
@@ -687,10 +687,9 @@ async def _status_operation(project_name: str | None, ctx: Context | None) -> di
             summary=f"Project '{project_name}' status retrieved",
             result={
                 "project": {
-                    "name": project_info.name,
-                    "path": project_info.path,
-                    "permalink": project_info.permalink,
-                    "is_default": project_info.is_default,
+                    "name": project_info.project_name,
+                    "path": project_info.project_path,
+                    "default_project": project_info.default_project,
                 },
                 "statistics": {
                     "total_entities": project_info.statistics.total_entities,

@@ -21,7 +21,7 @@ async def build_context(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Graph Exploration Engine
-    
+
     Traverses semantic relations from a starting node to build a comprehensive contextual map.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
@@ -36,13 +36,21 @@ async def build_context(
 
 @nav_app.tool()
 async def recent(
-    timeframe: Annotated[str, Field(description="ISO date or shorthand (e.g., '1d', '7d', 'yesterday')")] = "24h",
+    timeframe: Annotated[
+        str,
+        Field(
+            description=(
+                "How far back to look for **created or edited** notes (e.g. 'yesterday', 'today', "
+                "'recent' ≈ 7d, '7d', '2 weeks ago'). Default 7d — not 24h, so 'yesterday' is never missed."
+            )
+        ),
+    ] = "7d",
     page: Annotated[int, Field(description="Results page number", ge=1)] = 1,
     page_size: Annotated[int, Field(description="Items per page", ge=1, le=50)] = 20,
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Discovery Feed Tool
-    
+
     Returns a chronologically sorted list of recent additions and modifications across the knowledge base.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
@@ -61,7 +69,7 @@ async def ls(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Structural Discovery Tool
-    
+
     Provides a directory-style listing of files and folders within the knowledge base.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
@@ -78,7 +86,7 @@ async def backlinks(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Relational Discovery Tool
-    
+
     Identifies and lists all notes that reference or link to a specific target node.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
@@ -92,7 +100,7 @@ async def backlinks(
 @nav_app.tool()
 async def status() -> Any:
     """Graph Health Tool
-    
+
     Reports the current state of the knowledge graph, node counts, and relationship density.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
@@ -102,7 +110,7 @@ async def status() -> Any:
 @nav_app.tool()
 async def sync() -> Any:
     """Synchronization Status Tool
-    
+
     Displays the health and progress of the background file synchronization and indexing engine.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation

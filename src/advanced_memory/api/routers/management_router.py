@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from advanced_memory.config import ConfigManager
 from advanced_memory.deps import ProjectRepositoryDep, SyncServiceDep
+from advanced_memory.services.sync_status_service import sync_status_tracker
 
 router = APIRouter(prefix="/management", tags=["management"])
 
@@ -17,6 +18,32 @@ class WatchStatusResponse(BaseModel):
 
     running: bool
     """Whether the watch service is currently running."""
+
+
+@router.get("/sync/status")
+async def get_file_sync_status() -> dict:
+    """Live filesystem sync progress (updated during ``POST /projects/{name}/sync``)."""
+    projects: list[dict] = []
+    for name, ps in sync_status_tracker.get_all_projects().items():
+        pct: float | None = None
+        if ps.files_total > 0:
+            pct = round((ps.files_processed / ps.files_total) * 100, 1)
+        projects.append(
+            {
+                "project_name": name,
+                "status": ps.status.value,
+                "message": ps.message,
+                "files_processed": ps.files_processed,
+                "files_total": ps.files_total,
+                "percent": pct,
+                "error": ps.error,
+            }
+        )
+    return {
+        "global_status": sync_status_tracker.global_status.value,
+        "is_syncing": sync_status_tracker.is_syncing,
+        "projects": projects,
+    }
 
 
 @router.get("/watch/status", response_model=WatchStatusResponse)

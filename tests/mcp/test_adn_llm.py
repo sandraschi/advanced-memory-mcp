@@ -4,6 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.adn_llm import adn_llm
 
 
@@ -29,7 +31,7 @@ class TestAdnLLM:
 
             mock_client.return_value.__aenter__.return_value.get = AsyncMock(side_effect=mock_get)
 
-            result = await adn_llm.fn(operation="list_providers")
+            result = await mcp_fn(adn_llm)(operation="list_providers")
             assert "LLM Providers" in result
             assert "ollama" in result.lower()
             assert "lmstudio" in result.lower()
@@ -46,14 +48,14 @@ class TestAdnLLM:
             }
             mock_client.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_response)
 
-            result = await adn_llm.fn(operation="list_models", provider="ollama")
+            result = await mcp_fn(adn_llm)(operation="list_models", provider="ollama")
             assert "Ollama Models" in result
             assert "llama3" in result
 
     @pytest.mark.asyncio
     async def test_select_model(self, app_config, config_manager):
         """Test selecting a model."""
-        result = await adn_llm.fn(operation="select_model", provider="ollama", model="llama3")
+        result = await mcp_fn(adn_llm)(operation="select_model", provider="ollama", model="llama3")
         assert "Model Selected" in result
         assert "ollama" in result
         assert "llama3" in result
@@ -71,7 +73,7 @@ class TestAdnLLM:
         app_config.llm_model = "llama3"
         config_manager.save_config(app_config)
 
-        result = await adn_llm.fn(operation="status")
+        result = await mcp_fn(adn_llm)(operation="status")
         assert "LLM Status" in result
         assert "ollama" in result.lower()
         assert "llama3" in result.lower()
@@ -84,26 +86,26 @@ class TestAdnLLM:
             mock_response.status_code = 200
             mock_client.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_response)
 
-            result = await adn_llm.fn(operation="health")
+            result = await mcp_fn(adn_llm)(operation="health")
             assert "Health Check" in result
 
     @pytest.mark.asyncio
     async def test_invalid_operation(self):
         """Test invalid operation."""
-        result = await adn_llm.fn(operation="invalid_operation")
+        result = await mcp_fn(adn_llm)(operation="invalid_operation")
         assert "Error" in result
         assert "Unknown operation" in result
 
     @pytest.mark.asyncio
     async def test_list_models_missing_provider(self):
         """Test list_models without provider."""
-        result = await adn_llm.fn(operation="list_models")
+        result = await mcp_fn(adn_llm)(operation="list_models")
         assert "Error" in result
         assert "Provider required" in result
 
     @pytest.mark.asyncio
     async def test_select_model_missing_params(self):
         """Test select_model with missing parameters."""
-        result = await adn_llm.fn(operation="select_model")
+        result = await mcp_fn(adn_llm)(operation="select_model")
         assert "Error" in result
         assert "Provider and model required" in result

@@ -13,7 +13,7 @@ Key Concepts:
 
 import mimetypes
 import re
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from pathlib import Path
 from typing import Annotated
 
@@ -59,15 +59,25 @@ def parse_timeframe(timeframe: str) -> datetime:
         parse_timeframe('1d') -> 2025-06-04 14:50:00 (24 hours ago)
         parse_timeframe('1 week ago') -> 2025-05-29 14:50:00 (1 week ago)
     """
-    if timeframe.lower() == "today":
+    key = timeframe.strip().lower()
+    if key == "today":
         # Return start of today (00:00:00)
         return datetime.combine(datetime.now().date(), time.min)
-    else:
-        # Use dateparser for other formats
-        parsed = parse(timeframe)
+    if key == "yesterday":
+        # Calendar yesterday 00:00:00 — matches how people say "I wrote that yesterday"
+        y = datetime.now().date() - timedelta(days=1)
+        return datetime.combine(y, time.min)
+    if key in ("recent", "lately", "latest"):
+        # English "recent activity" = last ~7 days of writes/edits, not a 24h technical window
+        parsed = parse("7 days ago")
         if not parsed:
-            raise ValueError(f"Could not parse timeframe: {timeframe}")
+            return datetime.combine(datetime.now().date() - timedelta(days=7), time.min)
         return parsed
+    # Use dateparser for other formats
+    parsed = parse(timeframe)
+    if not parsed:
+        raise ValueError(f"Could not parse timeframe: {timeframe}")
+    return parsed
 
 
 def validate_timeframe(timeframe: str) -> str:
@@ -75,10 +85,11 @@ def validate_timeframe(timeframe: str) -> str:
     if not isinstance(timeframe, str):
         raise ValueError("Timeframe must be a string")
 
-    # Preserve special timeframe strings that need custom handling
-    special_timeframes = ["today"]
-    if timeframe.lower() in special_timeframes:
-        return timeframe.lower()
+    # Preserve special strings so parse_timeframe() in the API keeps calendar / colloquial semantics.
+    # (If we collapse "yesterday" to "1d" here, we lose "calendar yesterday" vs "last 24 hours".)
+    special_timeframes = ("today", "yesterday", "recent", "lately", "latest")
+    if timeframe.strip().lower() in special_timeframes:
+        return timeframe.strip().lower()
 
     # Parse relative time expression using our enhanced parser
     parsed = parse_timeframe(timeframe)

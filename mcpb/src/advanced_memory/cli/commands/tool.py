@@ -17,10 +17,10 @@ from advanced_memory.mcp.prompts.continue_conversation import (
 from advanced_memory.mcp.prompts.recent_activity import (
     recent_activity_prompt as recent_activity_prompt,
 )
-from advanced_memory.mcp.tools import build_context as mcp_build_context
-from advanced_memory.mcp.tools import read_note as mcp_read_note
-from advanced_memory.mcp.tools import recent_activity as mcp_recent_activity
-from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.build_context import build_context as mcp_build_context
+from advanced_memory.mcp.tools.read_note import read_note as mcp_read_note
+from advanced_memory.mcp.tools.recent_activity import recent_activity as mcp_recent_activity
+from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 from advanced_memory.mcp.tools.search import search_notes as mcp_search
 from advanced_memory.schemas.base import TimeFrame
 from advanced_memory.schemas.memory import MemoryUrl

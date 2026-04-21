@@ -9,6 +9,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from tests.mcp.tool_invoker import mcp_fn
+
 from advanced_memory.mcp.tools.typora_control import (
     TyporaRPCClient,
     check_typora_connection,
@@ -80,7 +82,7 @@ class TestTyporaControlOperations:
         """Test export operation."""
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
-        result = await typora_control.fn("export", format="pdf", output_path="/test/file.pdf")
+        result = await mcp_fn(typora_control)("export", format="pdf", output_path="/test/file.pdf")
 
         assert "[UNICODE] **Document Exported Successfully!**" in result
         # Check that export was called with the expected parameters
@@ -104,7 +106,7 @@ class TestTyporaControlOperations:
         """Test get_content operation."""
         mock_client.call = AsyncMock(return_value={"success": True, "result": "# Test Content\n\nSome content"})
 
-        result = await typora_control.fn("get_content")
+        result = await mcp_fn(typora_control)("get_content")
 
         assert "[DOC] **Document Content Retrieved**" in result
         assert "Test Content" in result
@@ -114,7 +116,7 @@ class TestTyporaControlOperations:
         """Test set_content operation."""
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
-        result = await typora_control.fn("set_content", content="New content")
+        result = await mcp_fn(typora_control)("set_content", content="New content")
 
         assert "[UNICODE] **Document Content Updated**" in result
         mock_client.call.assert_called_once_with("setContent", {"content": "New content"})
@@ -124,7 +126,7 @@ class TestTyporaControlOperations:
         """Test insert_text operation."""
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
-        result = await typora_control.fn("insert_text", text="New text")
+        result = await mcp_fn(typora_control)("insert_text", text="New text")
 
         assert "[UNICODE] **Text Inserted Successfully**" in result
         mock_client.call.assert_called_once_with("insertText", {"text": "New text"})
@@ -138,7 +140,7 @@ class TestTyporaControlOperations:
 
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
-        result = await typora_control.fn("open_file", file_path=str(test_file))
+        result = await mcp_fn(typora_control)("open_file", file_path=str(test_file))
 
         assert "[UNICODE] **File Opened in Typora**" in result
         mock_client.call.assert_called_once_with("openFile", {"path": str(test_file)})
@@ -157,7 +159,7 @@ class TestTyporaControlOperations:
         )
 
         files = ["/test/file1.md", "/test/file2.md"]
-        result = await typora_control.fn("batch_export", files=files, format="html", output_path="/exports")
+        result = await mcp_fn(typora_control)("batch_export", files=files, format="html", output_path="/exports")
 
         assert "[UNICODE][UNICODE] **Batch Export Completed**" in result
         assert "**Files Processed**: 2" in result
@@ -168,7 +170,7 @@ class TestTyporaControlOperations:
         """Test template_apply operation."""
         mock_client.call = AsyncMock(return_value={"success": True, "result": None})
 
-        result = await typora_control.fn("template_apply", template_name="research_note")
+        result = await mcp_fn(typora_control)("template_apply", template_name="research_note")
 
         assert "[UNICODE] **Template Applied Successfully**" in result
         assert "research_note" in result
@@ -181,7 +183,7 @@ class TestTyporaControlOperations:
     @pytest.mark.asyncio
     async def test_unknown_operation(self, mock_client):
         """Test unknown operation handling."""
-        result = await typora_control.fn("unknown_operation")
+        result = await mcp_fn(typora_control)("unknown_operation")
 
         assert "[UNICODE] **Unknown Operation**: unknown_operation" in result
         assert "**Available Operations**:" in result
@@ -197,7 +199,7 @@ class TestTyporaControlOperations:
             }
         )
 
-        result = await typora_control.fn("content_analysis")
+        result = await mcp_fn(typora_control)("content_analysis")
 
         assert "[CHART] **Document Analysis**" in result
         assert "Headings: 2" in result
@@ -272,48 +274,48 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_export_missing_format(self):
         """Test export operation with missing format."""
-        result = await typora_control.fn("export", output_path="/test/file.pdf")
+        result = await mcp_fn(typora_control)("export", output_path="/test/file.pdf")
         assert "[UNICODE] Export requires 'format' parameter" in result
 
     @pytest.mark.asyncio
     async def test_export_missing_output_path(self):
         """Test export operation with missing output path."""
-        result = await typora_control.fn("export", format="pdf")
+        result = await mcp_fn(typora_control)("export", format="pdf")
         assert "[UNICODE] Export requires 'output_path' parameter" in result
 
     @pytest.mark.asyncio
     async def test_set_content_missing_content(self):
         """Test set_content operation with missing content."""
-        result = await typora_control.fn("set_content")
+        result = await mcp_fn(typora_control)("set_content")
         assert "[UNICODE] set_content requires 'content' parameter" in result
 
     @pytest.mark.asyncio
     async def test_insert_text_missing_text(self):
         """Test insert_text operation with missing text."""
-        result = await typora_control.fn("insert_text")
+        result = await mcp_fn(typora_control)("insert_text")
         assert "[UNICODE] insert_text requires 'text' parameter" in result
 
     @pytest.mark.asyncio
     async def test_open_file_missing_path(self):
         """Test open_file operation with missing file path."""
-        result = await typora_control.fn("open_file")
+        result = await mcp_fn(typora_control)("open_file")
         assert "[UNICODE] open_file requires 'file_path' parameter" in result
 
     @pytest.mark.asyncio
     async def test_batch_export_missing_files(self):
         """Test batch_export operation with missing files."""
-        result = await typora_control.fn("batch_export", format="pdf")
+        result = await mcp_fn(typora_control)("batch_export", format="pdf")
         assert "[UNICODE] batch_export requires 'files' parameter" in result
 
     @pytest.mark.asyncio
     async def test_template_apply_missing_name(self):
         """Test template_apply operation with missing template name."""
-        result = await typora_control.fn("template_apply")
+        result = await mcp_fn(typora_control)("template_apply")
         assert "[UNICODE] template_apply requires 'template_name' parameter" in result
 
     @pytest.mark.asyncio
     async def test_template_apply_unknown_template(self):
         """Test template_apply operation with unknown template."""
-        result = await typora_control.fn("template_apply", template_name="unknown")
+        result = await mcp_fn(typora_control)("template_apply", template_name="unknown")
         assert "[UNICODE] **Unknown Template**" in result
         assert "**Available Templates**:" in result

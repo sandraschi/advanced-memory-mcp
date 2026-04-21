@@ -10,7 +10,7 @@ from pathlib import Path
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools import read_content as mcp_read_content
+from advanced_memory.mcp.tools.read_content import read_content as mcp_read_content
 from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 

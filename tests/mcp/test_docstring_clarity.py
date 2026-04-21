@@ -19,18 +19,16 @@ from typing import Annotated, get_args, get_origin
 
 import pytest
 
-from advanced_memory.mcp.tools import (
-    adn_audio,
-    adn_export,
-    adn_import,
-    adn_inbox,
-    adn_knowledge,
-    adn_navigation,
-    adn_skills,
-)
-from advanced_memory.mcp.tools.content_manager import adn_content
+from advanced_memory.mcp.tools.adn_audio import adn_audio
+from advanced_memory.mcp.tools.adn_export import adn_export
+from advanced_memory.mcp.tools.adn_import import adn_import
+from advanced_memory.mcp.tools.adn_inbox import adn_inbox
 from advanced_memory.mcp.tools.adn_llm import adn_llm
+from advanced_memory.mcp.tools.adn_navigation import adn_navigation
 from advanced_memory.mcp.tools.adn_search import adn_search
+from advanced_memory.mcp.tools.content_manager import adn_content
+from advanced_memory.mcp.tools.portmanteau_knowledge import adn_knowledge
+from advanced_memory.mcp.tools.portmanteau_skills import adn_skills
 from advanced_memory.mcp.tools.project_manager import adn_project
 
 _FORBIDDEN_SECTION = re.compile(r"(?im)^\s*(Args|Arguments)\s*:\s*$")

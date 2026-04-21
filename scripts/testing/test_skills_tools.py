@@ -25,7 +25,8 @@ from typing import Any
 
 from loguru import logger
 
-from advanced_memory.mcp.tools import adn_skills, adn_skills_creator
+from advanced_memory.mcp.tools.adn_skills_creator import adn_skills_creator
+from advanced_memory.mcp.tools.portmanteau_skills import adn_skills
 
 ToolCallable = Callable[..., Awaitable[Any]]
 

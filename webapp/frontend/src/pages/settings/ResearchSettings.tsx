@@ -1,5 +1,5 @@
 interface ResearchSettingsProps {
-  onChange: () => void
+  onChange: () => void;
 }
 
 export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
@@ -13,17 +13,18 @@ export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
 
         <div className="space-y-4">
           {[
-            { name: 'Web Search', providers: ['DuckDuckGo', 'SerpApi (Google)', 'Bing'] },
-            { name: 'Academic Research', providers: ['arXiv'] },
-            { name: 'Code Analysis', providers: ['GitHub'] },
-            { name: 'Creative Writing', providers: ['TV Tropes'] },
+            { name: "Web Search", providers: ["DuckDuckGo", "SerpApi (Google)", "Bing"] },
+            { name: "Academic Research", providers: ["arXiv"] },
+            { name: "Code Analysis", providers: ["GitHub"] },
+            { name: "Creative Writing", providers: ["TV Tropes"] },
           ].map((source) => (
-            <div key={source.name} className="flex items-center justify-between p-4 border border-border rounded-md">
+            <div
+              key={source.name}
+              className="flex items-center justify-between p-4 border border-border rounded-md"
+            >
               <div>
                 <div className="font-medium">{source.name}</div>
-                <div className="text-sm text-muted-foreground">
-                  {source.providers.join(', ')}
-                </div>
+                <div className="text-sm text-muted-foreground">{source.providers.join(", ")}</div>
               </div>
               <label className="flex items-center">
                 <input
@@ -68,5 +69,5 @@ export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
