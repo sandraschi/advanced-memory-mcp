@@ -1,7 +1,7 @@
 # Advanced Memory MCP Documentation
-**Version**: 1.1.0b2
-**Last Updated**: 2025-12-20
-**Status**: SOTA Active - Dual STT Integration
+**Version**: 1.8.0
+**Last Updated**: 2026-04-21
+**Status**: SOTA Active — FastMCP 3.2 GA Managed Namespaces
 
 ---
 
@@ -15,7 +15,7 @@ Advanced Memory MCP achieves **SOTA (State Of The Art)** compliance through:
 
 ### **The Three Pillars of SOTA Compliance**
 
-1. **Architecture**: FastMCP 2.14.3 Cooperative pattern with portmanteau tool consolidation
+1. **Architecture**: FastMCP 3.2 GA Managed Namespaces — 12 mounted sub-apps, 79 first-class tools
 2. **Behavior**: AI-optimized docstrings and conversational response patterns
 3. **Operations**: Complete lifecycle management with persistent storage
 
@@ -30,8 +30,8 @@ Complete user guides for all features and workflows:
 
 - **Getting Started**: Installation and basic usage
 - **Core Concepts**: Knowledge graphs, zettelkasten, and observations
-- **Tools Reference**: Complete guide to all 56 MCP tools
-- **Integration Guides**: Claude Desktop, external services
+- **Tools Reference**: Complete guide to all 79 MCP tools across 12 namespaces
+- **Integration Guides**: Claude Desktop, Cursor, external services
 - **Troubleshooting**: Common issues and solutions
 
 #### [examples/](examples/)
@@ -87,7 +87,7 @@ Current state of skill adoption in agentic IDEs:
 
 #### [development/](development/)
 Contributing and development guides:
-- FastMCP 2.14.3 migration guide
+- FastMCP 3.2 GA Managed Namespaces guide
 - Testing strategies and patterns
 - Code standards and linting
 - CI/CD pipeline documentation
@@ -159,7 +159,7 @@ Content export capabilities:
 All documentation follows MCP Standards v12.0:
 
 #### **1. Complete Coverage**
-- Document all 56 tools, not just "main" features
+- Document all 79 tools across all 12 namespaces, not just "main" features
 - No TODO placeholders in public documentation
 - Cover basic to advanced usage scenarios
 

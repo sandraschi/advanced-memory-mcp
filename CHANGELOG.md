@@ -5,6 +5,56 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - FastMCP 3.2 GA Managed Namespaces (2026-04-21)
+
+### Changed - Tool surface decomposed into 12 mounted sub-apps
+
+The monolithic `adn_*` / `portmanteau_*` tools have been decomposed into
+**12 FastMCP Managed Namespaces**, each mounted as its own sub-app. Every
+`operation=` branch is now a first-class tool with its own name, docstring,
+and required-parameter schema. This replaces the single multi-operation
+portmanteau pattern as the primary tool surface.
+
+**Namespaces:** `audio`, `inbox`, `skills`, `zettel`, `nav`, `notes`,
+`search`, `knowledge`, `project`, `system`, `mcp`, `typora`.
+
+**Result:** 79 tools across 12 namespaces (vs. the previous ~15 portmanteau
+entry points). Each tool has a verb-level name (e.g. `audio_dictate`,
+`notes_write`, `search_rag`) and a schema the model can introspect
+individually, which materially improves tool-selection accuracy and reduces
+argument-extraction errors in clients that rank tools by description density.
+
+#### Added
+- `src/advanced_memory/mcp/tools/{audio,inbox,skills,zettel,nav,notes,search,knowledge,project,system,mcp,typora}.py` - per-namespace sub-apps built with `FastMCP(...)` and registered via `mcp.mount(app, namespace=...)` in `server.py`.
+- `@audio_app.tool(task=True)` on long-running dictation, unlocking FastMCP 3.2 GA task-tool semantics (progress + cancellation).
+- `zettel.customize` wired to the real `_customize_operation` (category / topic / depth / project) - was a simulation stub in the pre-refactor branch.
+- `scripts/test_stdio_handshake.py` - standalone JSON-RPC handshake harness that spawns the server exactly the way Cursor / Claude Desktop do (`uv run ... --transport stdio`), performs `initialize` + `tools/list`, and prints a per-namespace tool-count breakdown. Used to verify IDE startup post-refactor (~1.2s boot, 79 tools).
+
+#### Fixed
+- `server.py` now reattaches `app_lifespan` to the mounted MCP instance (`mcp.lifespan = app_lifespan`). The refactor initially dropped this, which would have silently disabled the file watcher, project session bootstrap, and MCP resource initialization in IDE launches.
+- `mcp.ToolResult(...)` -> `from fastmcp.tools import ToolResult` in `tools/search.py`, `tools/zettelmaker.py`, `tools/adn_knowledge_rag.py`, and `beta/adn_visualize.py`. The old symbol does not exist on FastMCP 3.2.
+- `beta/adn_visualize.py`: dropped stale `types.ToolResult` return annotation (now `-> Any`) and removed the unused `mcp.types` import.
+- `zettelmaker.py`: repaired stale `from advanced_memory.mcp.tools import write_note` -> `from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note`.
+- `tools/search.py`: restored `search_notes` plus its helpers (`_extract_tags_from_query_string`, `_format_search_results_as_markdown`, `_format_search_error_response`) as non-decorated logic providers. `cli/commands/tool.py` and `mcp/tools/adn_search._notes_search` both import these at module load, so the initial refactor broke the CLI entry point and prevented Cursor from ever getting a response.
+
+#### Removed
+- `src/advanced_memory/mcp/tool_registry.py`. The portmanteau + shadow-unrolling registration pipeline is obsolete; namespaces replace it.
+- `ADVANCED_MEMORY_ARCADE_COMPLIANCE` shadow-unrolling (lived in `tool_registry.py`). Strict static scanners like toolbench.arcade.dev now see first-class namespaced tool names by default.
+- `ADVANCED_MEMORY_FULL_TOOLS_MODE` toggle. The full tool surface is always exposed via the 12 namespaces; there is no longer a "compact" vs. "full" mode to choose between.
+- `src/advanced_memory/mcp/tools/__init__.py` gutted to re-export only the shared response helpers (`build_error_response`, `build_success_response`). Tool registration now happens in `server.py` via the sub-app mounts.
+
+#### Internal
+- Legacy `adn_*` and `portmanteau_*` functions kept, but their `@mcp.tool` decorators are replaced with comments marking them as decommissioned. They remain importable as plain async functions so the new namespace wrappers can delegate to them unchanged during the transition.
+- Backward compatibility: direct imports of the legacy functions from Python code continue to work; only the registered MCP tool *names* have changed (e.g. `adn_audio(operation="dictate", ...)` is now `audio_dictate(...)` on the wire).
+
+### Migration notes for integrators
+
+- If you called tools by MCP name from a client: switch `adn_<domain>` with an `operation` argument to `<domain>_<operation>` with the operation's actual parameters. Run `scripts/test_stdio_handshake.py` against your checkout for the authoritative per-namespace tool list.
+- If you relied on `ADVANCED_MEMORY_FULL_TOOLS_MODE=true` to get the "atomic" surface, remove it: that surface is now the default.
+- If you set `ADVANCED_MEMORY_ARCADE_COMPLIANCE=true` for toolbench / Arcade scans, remove it: namespaced tool names are already first-class and scanner-visible.
+
+---
+
 ## [1.7.1] - Sync Performance Fix (2026-04-16)
 
 ### Fixed - Critical Sync Performance Regression
