@@ -93,7 +93,7 @@ class TyporaRPCClient:
 typora_client = TyporaRPCClient()
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced typora app (FastMCP 3.2 GA)
 async def typora_control(
     operation: str,
     # Common parameters

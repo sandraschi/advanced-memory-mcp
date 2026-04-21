@@ -76,8 +76,9 @@ def register_rag_bridge(mcp: FastMCP):
             formatted_context = "\n\n---\n\n".join(context_blocks)
 
             from advanced_memory.mcp.prefabs import SearchExplorer
+            from fastmcp.tools import ToolResult
 
-            return mcp.ToolResult(
+            return ToolResult(
                 content=[f"## RAG Results for: {query}\n\n{formatted_context}"],
                 app=SearchExplorer(f"RAG: {query}", explorer_results),
             )

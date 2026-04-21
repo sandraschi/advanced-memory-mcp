@@ -46,6 +46,8 @@ class AppContext:
     migration_manager: Any | None = None
 
 
+# Legacy tool decommissioned in favor of Managed Namespaces (inbox:*)
+# Keeping the function as a logic provider for the transition
 @asynccontextmanager
 async def app_lifespan(
     server: FastMCP,
@@ -137,12 +139,36 @@ async def app_lifespan(
 
 # Logging is now configured at the top of the file before any imports
 
-# Register specialized RAG bridge
-from advanced_memory.mcp import tools
+# --- Managed Namespaces (FastMCP 3.2 GA) ---
+# Each domain is mounted as a sub-app for optimal model discovery
+from advanced_memory.mcp.tools.audio import audio_app
+from advanced_memory.mcp.tools.inbox import inbox_app
+from advanced_memory.mcp.tools.skills import skills_app
+from advanced_memory.mcp.tools.zettel import zettel_app
+from advanced_memory.mcp.tools.nav import nav_app
+from advanced_memory.mcp.tools.notes import notes_app
+from advanced_memory.mcp.tools.search import search_app
+from advanced_memory.mcp.tools.knowledge import knowledge_app
+from advanced_memory.mcp.tools.project import project_app
+from advanced_memory.mcp.tools.system import system_app
+from advanced_memory.mcp.tools.mcp import mcp_app
+from advanced_memory.mcp.tools.typora import typora_app
 
-tools.register_adn_knowledge_rag(mcp)
+mcp.mount(audio_app, namespace="audio")
+mcp.mount(inbox_app, namespace="inbox")
+mcp.mount(skills_app, namespace="skills")
+mcp.mount(zettel_app, namespace="zettel")
+mcp.mount(nav_app, namespace="nav")
+mcp.mount(notes_app, namespace="notes")
+mcp.mount(search_app, namespace="search")
+mcp.mount(knowledge_app, namespace="knowledge")
+mcp.mount(project_app, namespace="project")
+mcp.mount(system_app, namespace="system")
+mcp.mount(mcp_app, namespace="mcp")
+mcp.mount(typora_app, namespace="typora")
 
-# Set the lifespan on the server instance (not during module import to avoid slow startup)
+# Attach lifespan to the mounted server so file watcher, project session, and
+# MCP resource bootstrap run at startup (reinstates pre-namespace behavior).
 mcp.lifespan = app_lifespan
 
 # Use the shared MCP instance as the server

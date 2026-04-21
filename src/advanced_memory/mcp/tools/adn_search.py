@@ -20,7 +20,7 @@ from advanced_memory.mcp.tools.utils import build_error_response, build_success_
 from advanced_memory.utils import parse_tags
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced search app (FastMCP 3.2 GA)
 async def adn_search(
     operation: Literal["notes", "obsidian", "joplin", "notion", "evernote"],
     query: str,

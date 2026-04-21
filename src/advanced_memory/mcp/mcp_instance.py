@@ -131,8 +131,10 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
 
-from fastmcp import FastMCP
+from fastmcp import FastMCP, Context
 from loguru import logger
+
+# FastMCP instance is initialized below at line 192
 
 
 @dataclass

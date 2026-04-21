@@ -14,7 +14,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_put
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced mcp app (FastMCP 3.2 GA)
 async def canvas(
     nodes: list[dict[str, Any]],
     edges: list[dict[str, Any]],

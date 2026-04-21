@@ -15,7 +15,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced mcp app (FastMCP 3.2 GA)
 async def adn_import_export(
     operation: Annotated[
         Literal["import", "export", "load", "search"],

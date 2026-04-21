@@ -14,7 +14,8 @@ from advanced_memory.mcp.tools.utils import build_error_response, build_success_
 from advanced_memory.schemas.memory import GraphContext
 
 
-@mcp.tool
+# Legacy tool decommissioned in favor of Managed Namespaces (nav:*)
+# Keeping the function as a logic provider for the transition
 async def adn_navigation(
     operation: Literal[
         "build_context",

@@ -14,7 +14,7 @@ from loguru import logger
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.project_session import add_project_metadata, session
-from advanced_memory.mcp.tools import write_note as mcp_write_note
+from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 from advanced_memory.mcp.tools.utils import call_get
 from advanced_memory.services.template_loader import get_content_templates
 
@@ -23,7 +23,8 @@ from advanced_memory.services.template_loader import get_content_templates
 CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 
 
-@mcp.tool
+# Legacy tool decommissioned in favor of Managed Namespaces (zettel:*)
+# Keeping the function as a logic provider for the transition
 async def adn_zettelmaker(
     operation: Literal[
         "generate", "customize", "expand", "suggest", "connect", "analyze", "collect"
@@ -117,10 +118,11 @@ async def adn_zettelmaker(
     )
 
     from advanced_memory.mcp.prefabs import ZettelCollector
+    from fastmcp.tools import ToolResult
 
     # Route to appropriate operation
     if operation == "collect":
-        return mcp.ToolResult(
+        return ToolResult(
             content=["Opening Zettel Collector for quick, off-the-cuff capture..."],
             app=ZettelCollector(),
         )
@@ -160,7 +162,7 @@ async def adn_zettelmaker(
             """
         ).strip()
 
-    return mcp.ToolResult(content=[result_text], app=app_to_return)
+    return ToolResult(content=[result_text], app=app_to_return)
 
 
 async def _generate_operation(

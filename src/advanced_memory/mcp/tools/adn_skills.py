@@ -25,7 +25,8 @@ from advanced_memory.utils import generate_permalink
 _active_skills: dict[str, dict] = {}
 
 
-@mcp.tool
+# Legacy tool decommissioned in favor of Managed Namespaces (skills:*)
+# Keeping the function as a logic provider for the transition
 async def adn_skills(
     operation: Literal[
         "create",

@@ -35,7 +35,8 @@ _alarm_counter = 0
 _timer_counter = 0
 
 
-@mcp.tool
+# Legacy tool decommissioned in favor of Managed Namespaces (audio:*)
+# Keeping the function as a logic provider for the transition
 async def adn_audio(
     operation: Literal[
         "dictate",

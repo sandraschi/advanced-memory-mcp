@@ -15,7 +15,8 @@ from advanced_memory.mcp.project_session import add_project_metadata, session
 from advanced_memory.services.inbox_processor import get_inbox_processor
 
 
-@mcp.tool
+# Legacy tool decommissioned in favor of Managed Namespaces (inbox:*)
+# Keeping the function as a logic provider for the transition
 async def adn_inbox(
     operation: Literal["status", "process", "info", "watch"],
     file_name: str | None = None,

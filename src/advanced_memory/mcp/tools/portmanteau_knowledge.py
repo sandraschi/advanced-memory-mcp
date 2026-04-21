@@ -242,5 +242,5 @@ async def adn_knowledge(
         )
 
 
-# Register the tool using the SOTA unrolling registry
-register_portmanteau_tool(mcp, adn_knowledge)
+# Decommissioned in favor of namespaced knowledge app (FastMCP 3.2 GA)
+# register_portmanteau_tool(mcp, adn_knowledge)

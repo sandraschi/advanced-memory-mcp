@@ -1,8 +1,7 @@
 """Dedicated visualization tools for Advanced Memory Knowledge Graphs."""
 
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
-import mcp.types as types
 from pydantic import Field
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -23,7 +22,7 @@ async def adn_visualize(
         str | None,
         Field(description="Optional query to filter the graph."),
     ] = None,
-) -> types.ToolResult:
+) -> Any:
     """Visualize the Knowledge Graph in various immersive modes.
 
     The 'point_cloud' mode focuses on semantic density and clusters, ideal for large memories.
@@ -70,8 +69,9 @@ async def adn_visualize(
             edges.append({"from": "query_hub", "to": node_id, "type": "spoke"})
 
     from advanced_memory.mcp.prefabs import KnowledgeGraph
+    from fastmcp.tools import ToolResult
 
-    return mcp.ToolResult(
+    return ToolResult(
         content=[f"# Knowledge Graph: {mode.replace('_', ' ').capitalize()}\nProject: {active_project.name}"],
         app=KnowledgeGraph(nodes=nodes, edges=edges, title=f"KG ({mode}): {active_project.name}"),
     )
