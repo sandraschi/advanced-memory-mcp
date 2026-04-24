@@ -106,7 +106,7 @@ async def test_index_item(search_repository, search_entity):
     await search_repository.index_item(search_row)
 
     # Search for the item
-    results = await search_repository.search(search_text="search test")
+    results, _ = await search_repository.search(search_text="search test")
 
     # Verify we found the item
     assert len(results) == 1
@@ -153,23 +153,23 @@ async def test_project_isolation(search_repository, second_project_repository, s
     await second_project_repository.index_item(search_row2)
 
     # Search in first project
-    results1 = await search_repository.search(search_text="unique first")
+    results1, _ = await search_repository.search(search_text="unique first")
     assert len(results1) == 1
     assert results1[0].title == search_entity.title
     assert results1[0].project_id == search_repository.project_id
 
     # Search in second project
-    results2 = await second_project_repository.search(search_text="unique second")
+    results2, _ = await second_project_repository.search(search_text="unique second")
     assert len(results2) == 1
     assert results2[0].title == second_entity.title
     assert results2[0].project_id == second_project_repository.project_id
 
     # Make sure first project can't see second project's content
-    results_cross1 = await search_repository.search(search_text="unique second")
+    results_cross1, _ = await search_repository.search(search_text="unique second")
     assert len(results_cross1) == 0
 
     # Make sure second project can't see first project's content
-    results_cross2 = await second_project_repository.search(search_text="unique first")
+    results_cross2, _ = await second_project_repository.search(search_text="unique first")
     assert len(results_cross2) == 0
 
 
@@ -195,14 +195,14 @@ async def test_delete_by_permalink(search_repository, search_entity):
     await search_repository.index_item(search_row)
 
     # Verify it exists
-    results = await search_repository.search(search_text="content to delete")
+    results, _ = await search_repository.search(search_text="content to delete")
     assert len(results) == 1
 
     # Delete by permalink
     await search_repository.delete_by_permalink(search_entity.permalink)
 
     # Verify it's gone
-    results_after = await search_repository.search(search_text="content to delete")
+    results_after, _ = await search_repository.search(search_text="content to delete")
     assert len(results_after) == 0
 
 
@@ -228,14 +228,14 @@ async def test_delete_by_entity_id(search_repository, search_entity):
     await search_repository.index_item(search_row)
 
     # Verify it exists
-    results = await search_repository.search(search_text="entity to delete")
+    results, _ = await search_repository.search(search_text="entity to delete")
     assert len(results) == 1
 
     # Delete by entity_id
     await search_repository.delete_by_entity_id(search_entity.id)
 
     # Verify it's gone
-    results_after = await search_repository.search(search_text="entity to delete")
+    results_after, _ = await search_repository.search(search_text="entity to delete")
     assert len(results_after) == 0
 
 
@@ -394,36 +394,36 @@ class TestSearchTermPreparation:
         # This test ensures the search doesn't crash with FTS5 syntax errors
 
         # These should all return empty results gracefully, not crash
-        results1 = await search_repository.search(search_text="C++")
+        results1, _ = await search_repository.search(search_text="C++")
         assert isinstance(results1, list)  # Should not crash
 
-        results2 = await search_repository.search(search_text="function()")
+        results2, _ = await search_repository.search(search_text="function()")
         assert isinstance(results2, list)  # Should not crash
 
-        results3 = await search_repository.search(search_text="+++malformed+++")
+        results3, _ = await search_repository.search(search_text="+++malformed+++")
         assert isinstance(results3, list)  # Should not crash, return empty results
 
-        results4 = await search_repository.search(search_text="email@domain.com")
+        results4, _ = await search_repository.search(search_text="email@domain.com")
         assert isinstance(results4, list)  # Should not crash
 
     @pytest.mark.asyncio
     async def test_boolean_search_still_works(self, search_repository):
         """Boolean search operations should continue to work."""
         # These should not crash and should respect boolean logic
-        results1 = await search_repository.search(search_text="hello AND world")
+        results1, _ = await search_repository.search(search_text="hello AND world")
         assert isinstance(results1, list)
 
-        results2 = await search_repository.search(search_text="cat OR dog")
+        results2, _ = await search_repository.search(search_text="cat OR dog")
         assert isinstance(results2, list)
 
-        results3 = await search_repository.search(search_text="project NOT meeting")
+        results3, _ = await search_repository.search(search_text="project NOT meeting")
         assert isinstance(results3, list)
 
     @pytest.mark.asyncio
     async def test_permalink_match_exact_with_slash(self, search_repository):
         """Test exact permalink matching with slash (line 249 coverage)."""
         # This tests the exact match path: if "/" in permalink_text:
-        results = await search_repository.search(permalink_match="test/path")
+        results, _ = await search_repository.search(permalink_match="test/path")
         assert isinstance(results, list)
         # Should use exact equality matching for paths with slashes
 
@@ -431,7 +431,7 @@ class TestSearchTermPreparation:
     async def test_permalink_match_simple_term(self, search_repository):
         """Test permalink matching with simple term (no slash)."""
         # This tests the simple term path that goes through _prepare_search_term
-        results = await search_repository.search(permalink_match="simpleterm")
+        results, _ = await search_repository.search(permalink_match="simpleterm")
         assert isinstance(results, list)
         # Should use FTS5 MATCH for simple terms
 
@@ -474,16 +474,16 @@ class TestSearchTermPreparation:
         await search_repository.index_item(search_row)
 
         # This should not cause FTS5 syntax errors and should find the entity
-        results = await search_repository.search(search_text="Advanced Memory v0.13.0b2")
+        results, _ = await search_repository.search(search_text="Advanced Memory v0.13.0b2")
         assert len(results) == 1
         assert results[0].title == "Advanced Memory v0.13.0b2 Release"
 
         # Test other version-like patterns
-        results2 = await search_repository.search(search_text="v0.13.0b2")
+        results2, _ = await search_repository.search(search_text="v0.13.0b2")
         assert len(results2) == 1  # Should still find it due to content_stems
 
         # Test with other problematic patterns
-        results3 = await search_repository.search(search_text="node.js version")
+        results3, _ = await search_repository.search(search_text="node.js version")
         assert isinstance(results3, list)  # Should not crash
 
     @pytest.mark.asyncio
@@ -508,16 +508,16 @@ class TestSearchTermPreparation:
         await search_repository.index_item(search_row)
 
         # Test wildcard-only search - should not crash and should return results
-        results = await search_repository.search(search_text="*")
+        results, _ = await search_repository.search(search_text="*")
         assert isinstance(results, list)  # Should not crash
         assert len(results) >= 1  # Should return all results, including our test entity
 
         # Test empty string search - should also not crash
-        results_empty = await search_repository.search(search_text="")
+        results_empty, _ = await search_repository.search(search_text="")
         assert isinstance(results_empty, list)  # Should not crash
 
         # Test whitespace-only search
-        results_whitespace = await search_repository.search(search_text="   ")
+        results_whitespace, _ = await search_repository.search(search_text="   ")
         assert isinstance(results_whitespace, list)  # Should not crash
 
     def test_boolean_query_empty_parts_coverage(self, search_repository):

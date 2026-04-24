@@ -134,7 +134,16 @@ class Observation(Base):
         We can construct these because observations are always defined in
         and owned by a single entity.
         """
-        return generate_permalink(f"{self.entity.permalink}/observations/{self.category}/{self.content}")
+        # Match Relation.permalink: parent permalink may be NULL in DB; f"{None}/..."
+        # becomes "none/..." after generate_permalink lowercases, breaking content URLs.
+        base = (self.entity.permalink or "").strip()
+        if not base:
+            base = (
+                generate_permalink(self.entity.file_path)
+                if self.entity.file_path
+                else generate_permalink(f"entity-{self.entity.id}")
+            )
+        return generate_permalink(f"{base}/observations/{self.category}/{self.content}")
 
     def __repr__(self) -> str:  # pragma: no cover
         return f"Observation(id={self.id}, entity_id={self.entity_id}, content='{self.content}')"

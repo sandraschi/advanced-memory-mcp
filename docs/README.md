@@ -1,6 +1,6 @@
 # Advanced Memory MCP Documentation
 **Version**: 1.8.1
-**Last Updated**: 2026-04-21
+**Last Updated**: 2026-04-22
 **Status**: SOTA Active — FastMCP 3.2 GA Managed Namespaces + RAG storage / extra roots (1.8.1)
 
 ---
@@ -10,6 +10,8 @@
 This documentation provides comprehensive guidance for Advanced Memory MCP, a local-first knowledge management system with MCP protocol integration. Documentation is organized according to SOTA MCP Standards v12.0.
 
 **1.8.1 highlights:** LanceDB files live next to the app SQLite database (see [AI-FEATURES.md](AI-FEATURES.md#where-lancedb-is-stored)); optional **`rag_extra_roots`** add more server-side folders to the vector index (webapp **Vault sync**, management API). These vectors are **not** the same files as other repos’ LanceDB stores unless you configure them that way on purpose.
+
+**Fleet capture (2026-04):** [seed-notes/README.md](seed-notes/README.md) — importable markdown memos (Gemini Deep Research announcement, Interactions + Tailscale MCP ingress, MetaMCP vs bridge scope) aligned with **mcp-central-docs** hub `integrations/gemini-deep-research-interactions-2026.md`.
 
 ## 🏗️ SOTA Compliance
 

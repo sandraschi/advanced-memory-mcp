@@ -558,13 +558,13 @@ async def test_handle_entity_deletion(
     assert await entity_repository.get_by_permalink(root_entity.permalink) is None
 
     # Verify entity is gone from search index
-    entity_results = await search_service.search(SearchQuery(text=root_entity.title))
+    entity_results, _ = await search_service.search(SearchQuery(text=root_entity.title))
     assert len(entity_results) == 0
 
-    obs_results = await search_service.search(SearchQuery(text="Root note 1"))
+    obs_results, _ = await search_service.search(SearchQuery(text="Root note 1"))
     assert len(obs_results) == 0
 
-    rel_results = await search_service.search(SearchQuery(text="connects_to"))
+    rel_results, _ = await search_service.search(SearchQuery(text="connects_to"))
     assert len(rel_results) == 0
 
 
@@ -646,7 +646,7 @@ Content for move test
     await sync_service.sync(project_config.home)
 
     # Check search index has updated path
-    results = await search_service.search(SearchQuery(text="Content for move test"))
+    results, _ = await search_service.search(SearchQuery(text="Content for move test"))
     assert len(results) == 1
     # Normalize path separators for cross-platform compatibility
     expected_path = str(new_path.relative_to(project_dir)).replace("\\", "/")

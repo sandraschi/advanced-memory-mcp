@@ -209,8 +209,11 @@ class VectorRepository:
         table_list = tables if isinstance(tables, list) else list(tables)
 
         if self.table_name not in table_list:
-            # Initial schema definition will happen on first add if not explicitly created
-            logger.info(f"Creating vector table: {self.table_name}")
+            # Table is created lazily in add_documents(); avoid INFO spam on every search.
+            logger.debug(
+                "Vector table {} not present yet (created on first index)",
+                self.table_name,
+            )
         else:
             self.table = self.db.open_table(self.table_name)
 

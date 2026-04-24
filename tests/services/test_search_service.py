@@ -12,7 +12,7 @@ from advanced_memory.schemas.search import SearchItemType, SearchQuery
 @pytest.mark.asyncio
 async def test_search_permalink(search_service, test_graph):
     """Exact permalink"""
-    results = await search_service.search(SearchQuery(permalink="test/root"))
+    results, _ = await search_service.search(SearchQuery(permalink="test/root"))
     assert len(results) == 1
 
     for r in results:
@@ -22,24 +22,24 @@ async def test_search_permalink(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_limit_offset(search_service, test_graph):
     """Exact permalink"""
-    results = await search_service.search(SearchQuery(permalink_match="test/*"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/*"))
     assert len(results) > 1
 
-    results = await search_service.search(SearchQuery(permalink_match="test/*"), limit=1)
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/*"), limit=1)
     assert len(results) == 1
 
-    results = await search_service.search(SearchQuery(permalink_match="test/*"), limit=100)
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/*"), limit=100)
     num_results = len(results)
 
     # assert offset
-    offset_results = await search_service.search(SearchQuery(permalink_match="test/*"), limit=100, offset=1)
+    offset_results, _ = await search_service.search(SearchQuery(permalink_match="test/*"), limit=100, offset=1)
     assert len(offset_results) == num_results - 1
 
 
 @pytest.mark.asyncio
 async def test_search_permalink_observations_wildcard(search_service, test_graph):
     """Pattern matching"""
-    results = await search_service.search(SearchQuery(permalink_match="test/root/observations/*"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/root/observations/*"))
     assert len(results) == 2
     permalinks = {r.permalink for r in results}
     assert "test/root/observations/note/root-note-1" in permalinks
@@ -49,7 +49,7 @@ async def test_search_permalink_observations_wildcard(search_service, test_graph
 @pytest.mark.asyncio
 async def test_search_permalink_relation_wildcard(search_service, test_graph):
     """Pattern matching"""
-    results = await search_service.search(SearchQuery(permalink_match="test/root/connects-to/*"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/root/connects-to/*"))
     assert len(results) == 1
     permalinks = {r.permalink for r in results}
     assert "test/root/connects-to/test/connected-entity-1" in permalinks
@@ -58,7 +58,7 @@ async def test_search_permalink_relation_wildcard(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_permalink_wildcard2(search_service, test_graph):
     """Pattern matching"""
-    results = await search_service.search(
+    results, _ = await search_service.search(
         SearchQuery(
             permalink_match="test/connected*",
         )
@@ -72,7 +72,7 @@ async def test_search_permalink_wildcard2(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_text(search_service, test_graph):
     """Full-text search"""
-    results = await search_service.search(SearchQuery(text="Root Entity", entity_types=[SearchItemType.ENTITY]))
+    results, _ = await search_service.search(SearchQuery(text="Root Entity", entity_types=[SearchItemType.ENTITY]))
     assert len(results) >= 1
     assert results[0].permalink == "test/root"
 
@@ -80,7 +80,7 @@ async def test_search_text(search_service, test_graph):
 @pytest.mark.asyncio
 async def test_search_title(search_service, test_graph):
     """Title only search"""
-    results = await search_service.search(SearchQuery(title="Root", entity_types=[SearchItemType.ENTITY]))
+    results, _ = await search_service.search(SearchQuery(title="Root", entity_types=[SearchItemType.ENTITY]))
     assert len(results) >= 1
     assert results[0].permalink == "test/root"
 
@@ -89,7 +89,7 @@ async def test_search_title(search_service, test_graph):
 async def test_text_search_case_insensitive(search_service, test_graph):
     """Test text search functionality."""
     # Case insensitive
-    results = await search_service.search(SearchQuery(text="ENTITY"))
+    results, _ = await search_service.search(SearchQuery(text="ENTITY"))
     assert any("test/root" in r.permalink for r in results)
 
 
@@ -98,7 +98,7 @@ async def test_text_search_content_word_match(search_service, test_graph):
     """Test text search functionality."""
 
     # content word match
-    results = await search_service.search(SearchQuery(text="Connected"))
+    results, _ = await search_service.search(SearchQuery(text="Connected"))
     assert len(results) > 0
     assert any(r.file_path == "test/Connected_Entity_2.md" for r in results)
 
@@ -108,7 +108,7 @@ async def test_text_search_multiple_terms(search_service, test_graph):
     """Test text search functionality."""
 
     # Multiple terms
-    results = await search_service.search(SearchQuery(text="root note"))
+    results, _ = await search_service.search(SearchQuery(text="root note"))
     assert any("test/root" in r.permalink for r in results)
 
 
@@ -116,17 +116,17 @@ async def test_text_search_multiple_terms(search_service, test_graph):
 async def test_pattern_matching(search_service, test_graph):
     """Test pattern matching with various wildcards."""
     # Test wildcards
-    results = await search_service.search(SearchQuery(permalink_match="test/*"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="test/*"))
     for r in results:
         assert "test/" in r.permalink
 
     # Test start wildcards
-    results = await search_service.search(SearchQuery(permalink_match="*/observations"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="*/observations"))
     for r in results:
         assert "/observations" in r.permalink
 
     # Test permalink partial match
-    results = await search_service.search(SearchQuery(permalink_match="test"))
+    results, _ = await search_service.search(SearchQuery(permalink_match="test"))
     for r in results:
         assert "test/" in r.permalink
 
@@ -135,7 +135,7 @@ async def test_pattern_matching(search_service, test_graph):
 async def test_filters(search_service, test_graph):
     """Test search filters."""
     # Combined filters
-    results = await search_service.search(
+    results, _ = await search_service.search(
         SearchQuery(text="Deep", entity_types=[SearchItemType.ENTITY], types=["deep"])
     )
     assert len(results) == 1
@@ -150,7 +150,7 @@ async def test_after_date(search_service, test_graph):
 
     # Should find with past date
     past_date = datetime(2020, 1, 1)
-    results = await search_service.search(
+    results, _ = await search_service.search(
         SearchQuery(
             text="entity",
             after_date=past_date.isoformat(),
@@ -161,7 +161,7 @@ async def test_after_date(search_service, test_graph):
 
     # Should not find with future date
     future_date = datetime(2030, 1, 1)
-    results = await search_service.search(
+    results, _ = await search_service.search(
         SearchQuery(
             text="entity",
             after_date=future_date.isoformat(),
@@ -175,7 +175,7 @@ async def test_search_type(search_service, test_graph):
     """Test search filters."""
 
     # Should find only type
-    results = await search_service.search(SearchQuery(types=["test"]))
+    results, _ = await search_service.search(SearchQuery(types=["test"]))
     assert len(results) > 0
     for r in results:
         assert r.type == SearchItemType.ENTITY
@@ -186,7 +186,7 @@ async def test_search_entity_type(search_service, test_graph):
     """Test search filters."""
 
     # Should find only type
-    results = await search_service.search(SearchQuery(entity_types=[SearchItemType.ENTITY]))
+    results, _ = await search_service.search(SearchQuery(entity_types=[SearchItemType.ENTITY]))
     assert len(results) > 0
     for r in results:
         assert r.type == SearchItemType.ENTITY
@@ -239,7 +239,7 @@ async def test_delete_entity_without_permalink(search_service, sample_entity):
 @pytest.mark.asyncio
 async def test_no_criteria(search_service, test_graph):
     """Test search with no criteria returns empty list."""
-    results = await search_service.search(SearchQuery())
+    results, _ = await search_service.search(SearchQuery())
     assert len(results) == 0
 
 
@@ -263,7 +263,7 @@ async def test_update_index(search_service, full_entity):
     await search_service.index_entity(full_entity)
 
     # Search for new title
-    results = await search_service.search(SearchQuery(text="OMG I AM UPDATED"))
+    results, _ = await search_service.search(SearchQuery(text="OMG I AM UPDATED"))
     assert len(results) > 1
 
 
@@ -274,7 +274,7 @@ async def test_boolean_and_search(search_service, test_graph):
     # This assumes the test_graph fixture already has entities with relevant terms
 
     # Test AND operator - both terms must be present
-    results = await search_service.search(SearchQuery(text="Root AND Entity"))
+    results, _ = await search_service.search(SearchQuery(text="Root AND Entity"))
     assert len(results) >= 1
 
     # Verify the result contains both terms
@@ -288,7 +288,7 @@ async def test_boolean_and_search(search_service, test_graph):
     assert found, "Boolean AND search failed to find items containing both terms"
 
     # Verify that items with only one term are not returned
-    results = await search_service.search(SearchQuery(text="NonexistentTerm AND Root"))
+    results, _ = await search_service.search(SearchQuery(text="NonexistentTerm AND Root"))
     assert len(results) == 0, "Boolean AND search returned results when it shouldn't have"
 
 
@@ -296,7 +296,7 @@ async def test_boolean_and_search(search_service, test_graph):
 async def test_boolean_or_search(search_service, test_graph):
     """Test boolean OR search."""
     # Test OR operator - either term can be present
-    results = await search_service.search(SearchQuery(text="Root OR Connected"))
+    results, _ = await search_service.search(SearchQuery(text="Root OR Connected"))
 
     # Should find both "Root Entity" and "Connected Entity"
     assert len(results) >= 2
@@ -319,7 +319,7 @@ async def test_boolean_or_search(search_service, test_graph):
 async def test_boolean_not_search(search_service, test_graph):
     """Test boolean NOT search."""
     # Test NOT operator - exclude certain terms
-    results = await search_service.search(SearchQuery(text="Entity NOT Connected"))
+    results, _ = await search_service.search(SearchQuery(text="Entity NOT Connected"))
 
     # Should find "Root Entity" but not "Connected Entity"
     for result in results:
@@ -332,7 +332,7 @@ async def test_boolean_group_search(search_service, test_graph):
     # Test simple boolean search first - filter to entities only
     from advanced_memory.schemas.search import SearchItemType
 
-    results = await search_service.search(
+    results, _ = await search_service.search(
         SearchQuery(title="Connected AND Entity", entity_types=[SearchItemType.ENTITY])
     )
 
@@ -460,7 +460,7 @@ async def test_search_by_frontmatter_tags(search_service, session_maker, test_pr
 
         # Verify each search term finds the entity
         for term in search_terms:
-            results = await search_service.search(SearchQuery(text=term))
+            results, _ = await search_service.search(SearchQuery(text=term))
             assert len(results) >= 1
 
             entity_found = any(result.title == entity_data["title"] for result in results)
@@ -517,7 +517,7 @@ async def test_search_special_characters_in_title(search_service, session_maker,
 
     # Test searching for each title - this should not cause FTS5 syntax errors
     for title in special_titles:
-        results = await search_service.search(SearchQuery(title=title))
+        results, _ = await search_service.search(SearchQuery(title=title))
 
         # Should find the entity without throwing FTS5 syntax errors
         entity_found = False
@@ -563,7 +563,7 @@ async def test_search_title_with_parentheses_specific(search_service, session_ma
 
     # Test searching for the title - this should not cause FTS5 syntax errors
     search_query = SearchQuery(title="Note (with parentheses)")
-    results = await search_service.search(search_query)
+    results, _ = await search_service.search(search_query)
 
     # Should find the entity without throwing FTS5 syntax errors
     assert len(results) >= 1
@@ -603,7 +603,7 @@ async def test_search_title_via_repository_direct(search_service, session_maker,
     await search_service.index_entity(entity)
 
     # Test searching via repository directly - this reproduces the error path
-    results = await search_service.repository.search(
+    results, _ = await search_service.repository.search(
         title="Note (with parentheses)",
         limit=10,
         offset=0,

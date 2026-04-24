@@ -356,7 +356,7 @@ async def test_put_resource_new_file(client, project_config, entity_repository, 
     assert entity.content_type == "application/json"
 
     # Verify entity was indexed for search
-    search_results = await search_repository.search(title="test.canvas")
+    search_results, _ = await search_repository.search(title="test.canvas")
     assert len(search_results) > 0
 
 

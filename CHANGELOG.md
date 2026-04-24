@@ -5,6 +5,21 @@ All notable changes to Advanced Memory MCP will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`docs/seed-notes/`** — Three **vault-ready** markdown memos (YAML frontmatter) capturing **2026-04** Google Gemini / Deep Research / Interactions / Tailscale MCP ingress news, plus **`docs/seed-notes/README.md`** explaining import via MCP (`notes:write` / `inbox`), manual copy into a vault, or **`rag_extra_roots`** for LanceDB indexing.
+
+### Fixed
+
+- **Observation permalinks** when the parent entity has no stored `permalink`: avoid synthesizing `none/observations/...` (from Python `None` stringification) by falling back to `file_path` or `entity-{id}` before appending `/observations/...`, matching relation behavior.
+- **Vector store logging:** missing LanceDB table before first index is logged at **DEBUG** with correct loguru formatting (no misleading INFO “creating table” on every search).
+
+### Tests
+
+- Unpack `(rows, total)` from `SearchService.search` / `SearchRepository.search` in service, repository, sync, and API tests (callers had been treating the return value as a bare list).
+
 ## [1.8.1] - Extra RAG folders & LanceDB storage docs (2026-04-21)
 
 ### Added
