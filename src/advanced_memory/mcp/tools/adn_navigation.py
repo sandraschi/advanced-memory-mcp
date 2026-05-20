@@ -4,138 +4,87 @@ This tool consolidates navigation operations: build_context, recent_activity, li
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
-import re
-from typing import Literal
+from typing import Any
 
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
-from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
+from advanced_memory.mcp.models.portmanteau import NavOperation
 from advanced_memory.schemas.memory import GraphContext
 
 
-# Legacy tool decommissioned in favor of Managed Namespaces (nav:*)
-# Keeping the function as a logic provider for the transition
-async def adn_navigation(
-    operation: Literal[
-        "build_context",
-        "recent_activity",
-        "list_directory",
-        "backlinks",
-        "status",
-        "sync_status",
-    ],
-    identifier: str | None = None,
-    url: str | None = None,
-    dir_name: str = "/",
-    depth: int = 1,
-    timeframe: str = "30d",
-    page: int = 1,
-    page_size: int = 10,
-    max_related: int = 10,
-    file_name_glob: str | None = None,
-    directory_limit: int = 200,
-    directory_offset: int = 0,
-    type_filter: Literal["entity", "observation", "relation", ""] | None = "",
-    level: Literal["basic", "intermediate", "advanced"] | None = "basic",
-    focus: str | None = None,
-    project: str | None = None,
-) -> dict:
-    """Comprehensive navigation management tool for Advanced Memory.
-
-    Operations: build_context, recent_activity, list_directory, backlinks, status, sync_status.
-
-    For full documentation on parameters and usage examples, call:
-    `help(topic="adn_navigation")`
+@mcp.tool(name="adn_nav")
+async def adn_nav(op: NavOperation) -> Any:
     """
-    logger.info(f"MCP tool call tool=adn_navigation operation={operation}")
+    Semantic graph traversal and relational discovery for Advanced Memory.
 
-    original_operation = operation
-    normalized_operation = re.sub(r"(?<!^)(?=[A-Z])", "_", operation)
-    normalized_operation = normalized_operation.replace("-", "_").replace(" ", "_").lower()
-    alias_map = {
-        "last_activity": "recent_activity",
-        "latest_activity": "recent_activity",
-        "lastactivity": "recent_activity",
-        "latestactivity": "recent_activity",
-        "recentactivity": "recent_activity",
-        "listdirectory": "list_directory",
-        "syncstatus": "sync_status",
-    }
-    operation = alias_map.get(normalized_operation, normalized_operation)
+    This tool enables high-fidelity navigation through the knowledge base using
+    folder-based listings, chronological activity feeds, and graph-based relation
+    traversal (backlinks and context maps).
+
+    ---------------------------------------------------------------------------
+    [RATIONALE]
+    Knowledge in Advanced Memory is not just stored; it is connected. By
+    consolidating navigation tasks, we allow the AI to 'surf' the knowledge graph,
+    following links and discovering dependencies that would be missed by simple
+    keyword search. This provides the 'structural awareness' necessary for complex
+    reasoning.
+
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - ls: Structural discovery via directory-style listing of files and folders.
+    - recent: Chronological feed of new or modified notes across the project.
+    - backlinks: Identifies all notes that reference or link to a target node.
+    - build_context: Traverses relations from a starting node to build a contextual map.
+    - status: Reports on the health and density of the knowledge graph.
+    - sync: Displays the progress of background file indexing and sync engine.
+
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The navigation task (ls, recent, backlinks, build_context, etc.).
+    - path (str, optional): Relative folder path to list (defaults to project root).
+    - identifier (str, optional): Title or permalink of the target note for backlinks.
+    - url (str, optional): Starting memory:// URI for graph traversal.
+    - depth (int, optional): Relation traversal depth (1-3 recommended).
+    - timeframe (str, optional): Lookback window for recent activity (e.g., '7d', 'today').
+    - max_related (int, optional): Limit of related notes per level in context builds.
+    - page/page_size (int, optional): Pagination for large result sets.
+    - project (str, optional): Override the current active project context.
+
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+    ```python
+    # Discover all notes that link TO a specific topic
+    adn_nav(operation="backlinks", identifier="FastMCP 3.2")
+
+    # Build a 2-hop context map starting from a project note
+    adn_nav(operation="build_context", url="memory://project/chrono-glenn", depth=2)
+    ```
+    """
+    operation = op.operation
+    logger.info(f"MCP tool call tool=adn_nav operation={operation}")
 
     # Route to appropriate operation
-    if operation == "build_context":
-        if not url:
-            return build_error_response(
-                error="Missing required parameter",
-                error_code="MISSING_URL",
-                message="build_context operation requires a url parameter with memory:// URL",
-                recovery_options=[
-                    "Provide url parameter starting with memory://",
-                    "Use memory://projects/project-name or memory://notes/note-name",
-                    "Check URL format and try again",
-                ],
-                example={
-                    "operation": "build_context",
-                    "url": "memory://projects/my-project",
-                    "depth": 2,
-                },
-                urgency="medium",
-            )
-        return await _build_context_operation(
-            url, depth, timeframe, page, page_size, max_related, project
-        )
-    elif operation == "recent_activity":
-        # Pass type_filter to recent_activity operation
-        return await _recent_activity_operation(
-            type_filter, depth, timeframe, page, page_size, max_related, project
-        )
-    elif operation == "list_directory":
+    if operation == "ls":
         return await _list_directory_operation(
-            dir_name, depth, file_name_glob, project, directory_limit, directory_offset
+            op.path or "/", 1, None, op.project
         )
-    elif operation == "backlinks":
-        if not identifier:
-            return build_error_response(
-                error="Missing required parameter",
-                error_code="MISSING_IDENTIFIER",
-                message="backlinks operation requires an identifier parameter (note title, permalink, or memory:// URL)",
-                recovery_options=[
-                    "Provide identifier parameter with note title or permalink",
-                    "Use adn_content('read') to find the correct identifier first",
-                    "Check identifier spelling and try again",
-                ],
-                example={"operation": "backlinks", "identifier": "Python Basics"},
-                urgency="medium",
-            )
-        return await _backlinks_operation(identifier, max_related, project)
+    elif operation == "recent":
+        return await _recent_activity_operation(
+            None, 1, op.timeframe, op.page, op.page_size, 10, op.project
+        )
+    elif operation == "sync":
+        return await _sync_status_operation(op.project)
     elif operation == "status":
-        return await _status_operation(level, focus)
-    elif operation == "sync_status":
-        return await _sync_status_operation(project)
+        return await _status_operation("basic", None)
+    elif operation == "backlinks":
+        return await _backlinks_operation(op.identifier, 10, op.project)
+    elif operation == "build_context":
+        return await _build_context_operation(
+            op.url, op.depth, "7d", 1, 20, op.max_related, op.project
+        )
     else:
-        return f"""# Error: Invalid operation parameter
-
-**Received:** `{original_operation}` -> normalized to `{operation}`
-
-**Valid operations are:**
-- `build_context` - Navigate knowledge graph via memory:// URLs
-- `recent_activity` - Get recently updated notes (use this for "latest notes")
-- `list_directory` - Browse directory contents
-- `backlinks` - Find notes that reference a specific note
-- `status` - System status and diagnostics
-- `sync_status` - File sync monitoring
-
-**Example for "latest notes":**
-```
-adn_navigation(
-    operation="recent_activity",
-    timeframe="1d"
-)
-```
-
-Please adjust the `operation` parameter and try again."""
+        return f"Error: Unsupported operation {operation}"
 
 
 async def _build_context_operation(
@@ -148,8 +97,6 @@ async def _build_context_operation(
     project: str | None,
 ) -> str:
     """Handle build context operation."""
-    # URL validation already done in main function
-
     from advanced_memory.mcp.tools.build_context import build_context
 
     result = await (build_context.fn if hasattr(build_context, "fn") else build_context)(
@@ -162,7 +109,6 @@ async def _build_context_operation(
     if hasattr(result, "results") and result.results:
         output.append(f"**Found {len(result.results)} matching items**\n")
         for ctx_result in result.results:
-            # Each result has a primary_result nested inside
             item = (
                 ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             )
@@ -171,7 +117,6 @@ async def _build_context_operation(
             permalink = getattr(item, "permalink", "")
             output.append(f"- **{title}** ({item_type}) - `{permalink}`")
 
-            # Show related results if any
             if hasattr(ctx_result, "related_results") and ctx_result.related_results:
                 for related in ctx_result.related_results[:3]:
                     rel_item = (
@@ -182,16 +127,11 @@ async def _build_context_operation(
     else:
         output.append("No matching items found.\n")
 
-    if hasattr(result, "metadata"):
-        metadata = result.metadata
-        if hasattr(metadata, "total_results"):
-            output.append(f"\n**Total results**: {metadata.total_results}")
-
     return "\n".join(output)
 
 
 async def _recent_activity_operation(
-    type_param: str | list[str] | None,  # Can be type_filter or type
+    type_param: str | list[str] | None,
     depth: int,
     timeframe: str,
     page: int,
@@ -211,91 +151,25 @@ async def _recent_activity_operation(
     elif isinstance(raw_result, dict):
         result = GraphContext.model_validate(raw_result)
     else:
-        # Fallback: attempt to convert from json-like (list, etc.)
         try:
-            result = GraphContext.model_validate(raw_result)  # type: ignore[arg-type]
-        except Exception:  # pragma: no cover
-            logger.error(
-                "adn_navigation_recent_activity_invalid_payload",
-                payload_type=type(raw_result),
-            )
-            return build_error_response(
-                error="Invalid response format",
-                error_code="INVALID_RESPONSE_FORMAT",
-                message="recent_activity returned data in an unexpected format",
-                recovery_options=[
-                    "Try the operation again",
-                    "Check server logs for more details",
-                    "Contact support if the issue persists",
-                ],
-                diagnostic_info={
-                    "payload_type": str(type(raw_result)),
-                    "operation": "recent_activity",
-                },
-                urgency="low",
-            )
+            result = GraphContext.model_validate(raw_result)
+        except Exception:
+            return f"Error: Invalid response format from recent_activity: {type(raw_result)}"
 
-    # Prepare structured recent activity results
-    activity_items = []
+    output = [f"# Recent Activity ({timeframe})\n"]
     if hasattr(result, "results") and result.results:
         for ctx_result in result.results:
-            # Each result has a primary_result nested inside
             item = (
                 ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             )
-            activity_items.append(
-                {
-                    "title": getattr(item, "title", getattr(item, "name", "Unknown")),
-                    "type": getattr(item, "type", "item"),
-                    "permalink": getattr(item, "permalink", ""),
-                    "timestamp": getattr(item, "timestamp", None),
-                    "content_preview": getattr(item, "content", "")[:100]
-                    if getattr(item, "content", "")
-                    else None,
-                }
-            )
+            title = getattr(item, "title", getattr(item, "name", "Unknown"))
+            permalink = getattr(item, "permalink", "")
+            timestamp = getattr(item, "timestamp", "N/A")
+            output.append(f"- **{title}** - `{permalink}` ({timestamp})")
+    else:
+        output.append("No recent activity found.")
 
-    metadata = {}
-    if hasattr(result, "metadata"):
-        result_metadata = result.metadata
-        metadata = {
-            "timeframe": getattr(result_metadata, "timeframe", "N/A"),
-            "total_results": getattr(result_metadata, "total_results", len(activity_items)),
-            "query_time": getattr(result_metadata, "query_time", None),
-        }
-
-    if not activity_items:
-        return build_success_response(
-            operation="recent_activity",
-            summary="No recent activity found",
-            result={
-                "timeframe": timeframe,
-                "total_results": 0,
-                "items": [],
-                "metadata": metadata,
-            },
-            next_steps=[
-                "Try a different timeframe",
-                "Check if there are any notes in the project",
-                "Use adn_content() to add some content first",
-            ],
-        )
-
-    return build_success_response(
-        operation="recent_activity",
-        summary=f"Found {len(activity_items)} recent items",
-        result={
-            "timeframe": timeframe,
-            "total_results": len(activity_items),
-            "items": activity_items,
-            "metadata": metadata,
-        },
-        next_steps=[
-            "Use adn_content('read', identifier='permalink') to read specific items",
-            "Use adn_navigation() with different parameters to explore more",
-            "Consider using adn_search() for content-based queries",
-        ],
-    )
+    return "\n".join(output)
 
 
 async def _list_directory_operation(
@@ -328,20 +202,16 @@ async def _status_operation(level: str, focus: str | None) -> str:
 
 
 async def _backlinks_operation(identifier: str, max_related: int, project: str | None) -> str:
-    """Handle backlinks operation - find notes that reference this note."""
+    """Handle backlinks operation."""
     from advanced_memory.mcp.async_client import client
     from advanced_memory.mcp.project_session import get_active_project
     from advanced_memory.mcp.tools.utils import call_post
 
     active_project = get_active_project(project)
     project_url = active_project.project_url
-
-    # Search for wikilink references to this note
-    # Use the identifier as search term with special handling for wikilinks
     search_query = f"[[{identifier}]]"
 
     try:
-        # Search for content containing the wikilink
         response = await call_post(
             client,
             f"{project_url}/search/",
@@ -353,70 +223,18 @@ async def _backlinks_operation(identifier: str, max_related: int, project: str |
             return f"# Backlinks: {identifier}\n\nNo backlinks found or search failed."
 
         results = response.json().get("results", [])
-
         if not results:
-            return f"""# Backlinks: {identifier}
+            return f"# Backlinks: {identifier}\n\nNo backlinks found."
 
-No backlinks found.
-
-This note is not referenced by any other notes in your knowledge base.
-
-SUGGESTIONS:
-- This might be an orphan note (isolated knowledge)
-- Consider linking it from related notes
-- Or this is a foundational note that others should reference
-"""
-
-        # Format backlinks response
-        response_lines = [
-            f"# Backlinks: {identifier}",
-            "",
-            f"Found {len(results)} note(s) that reference this note:",
-            "",
-        ]
-
+        response_lines = [f"# Backlinks: {identifier}\n", f"Found {len(results)} note(s):\n"]
         for idx, result in enumerate(results, 1):
             title = result.get("title", "Unknown")
             permalink = result.get("permalink", "")
-            content_snippet = result.get("content", "")[:200]
-
-            response_lines.append(f"## {idx}. {title}")
-            response_lines.append(f"**Permalink:** {permalink}")
-            response_lines.append(f"**Preview:** {content_snippet}...")
-            response_lines.append("")
-
-        response_lines.append(f"**Total backlinks:** {len(results)}")
-        response_lines.append(
-            f"**Status:** {'Well-connected' if len(results) > 3 else 'Some connections' if len(results) > 0 else 'Orphan (no connections)'}"
-        )
-
-        logger.info(
-            f"MCP tool response: tool=adn_navigation operation=backlinks identifier={identifier} backlinks_count={len(results)}"
-        )
+            response_lines.append(f"{idx}. **{title}** (`{permalink}`)")
 
         return "\n".join(response_lines)
-
     except Exception as e:
-        logger.error(f"Error finding backlinks: {e}")
-        return f"""# Error: Backlinks Search Failed
-
-**Operation:** backlinks
-
-**Identifier:** {identifier}
-
-**Problem:** {e!s}
-
-**Possible causes:**
-1. The note identifier doesn't exist
-2. Database connection issue
-3. Project sync needed
-
-**How to fix:**
-1. Verify the note exists: Use `adn_content("read", identifier="{identifier}")`
-2. Check project status: Use `adn_navigation("status", level="basic")`
-3. Try searching for the note first: Use `adn_search("notes", query="{identifier}")`
-
-**Try again after verifying the note exists.**"""
+        return f"Error finding backlinks: {e}"
 
 
 async def _sync_status_operation(project: str | None) -> str:

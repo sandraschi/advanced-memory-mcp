@@ -145,7 +145,7 @@ def optimize_image(img, content_length, max_output_bytes=350000):
             return buf.getvalue()
 
 
-@mcp.tool
+# @mcp.tool
 async def read_content(path: str, project: str | None = None) -> dict:
     """Read a file's raw content by path or permalink.
 

@@ -17,7 +17,7 @@ from advanced_memory.mcp.tools.search import search_notes
 from advanced_memory.mcp.tools.write_note import write_note
 
 
-@mcp.tool
+# @mcp.tool
 async def load_joplin_vault(
     export_path: str,
     destination_folder: str = "imported/joplin",

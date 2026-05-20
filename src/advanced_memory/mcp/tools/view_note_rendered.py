@@ -7,7 +7,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool
+# @mcp.tool
 async def view_note_rendered(
     identifier: str,
     theme: str = "default",

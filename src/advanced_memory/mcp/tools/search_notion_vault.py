@@ -9,7 +9,7 @@ from loguru import logger
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_search portmanteau
 async def search_notion_vault(
     vault_path: str,
     query: str,

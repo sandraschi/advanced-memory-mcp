@@ -8,9 +8,9 @@ Based on the JavaScript extractReadableText function from read-all-pages.js
 """
 
 import re
-from loguru import logger
 
 from bs4 import BeautifulSoup
+from loguru import logger
 
 
 def extract_readable_text(html: str) -> str:

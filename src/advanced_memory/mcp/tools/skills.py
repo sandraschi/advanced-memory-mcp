@@ -23,7 +23,7 @@ async def create(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Skill Scaffolding Engine
-    
+
     Initializes a new Claude Skill with standardized folder structure (scripts, references, assets).
     """
     from advanced_memory.mcp.tools.adn_skills import _create_operation
@@ -43,7 +43,7 @@ async def read(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Skill Insight Tool
-    
+
     Reads the full SKILL.md content and associated metadata for a specific skill.
     """
     from advanced_memory.mcp.tools.adn_skills import _read_operation
@@ -58,7 +58,7 @@ async def list_skills(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Skill Discovery Tool
-    
+
     Lists all available skills in the knowledge base with status and metadata summaries.
     """
     from advanced_memory.mcp.tools.adn_skills import _list_operation
@@ -73,7 +73,7 @@ async def update(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Skill Modification Engine
-    
+
     Updates the content or metadata of an existing skill.
     """
     from advanced_memory.mcp.tools.adn_skills import _update_operation
@@ -86,7 +86,7 @@ async def delete(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Skill Deletion Tool
-    
+
     Permanently removes a skill and its associated resource folders from the knowledge base.
     """
     from advanced_memory.mcp.tools.adn_skills import _delete_operation
@@ -102,7 +102,7 @@ async def activate(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """The Door: Skill Activation
-    
+
     Loads a skill's Table of Contents into the active context without flooding it with full content.
     """
     from advanced_memory.mcp.tools.adn_skills import _activate_operation
@@ -116,7 +116,7 @@ async def deactivate(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """The Door: Skill Deactivation
-    
+
     Removes specific or all skills from the active context to reclaim context space.
     """
     from advanced_memory.mcp.tools.adn_skills import _deactivate_operation
@@ -129,7 +129,7 @@ async def active(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """The Door: Active Inventory
-    
+
     Lists all currently 'open' skills and their loaded sections.
     """
     from advanced_memory.mcp.tools.adn_skills import _active_operation
@@ -143,7 +143,7 @@ async def load_section(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """The Door: Staged Section Loading
-    
+
     Injects a specific subsection of a skill into the active context on-demand.
     """
     from advanced_memory.mcp.tools.adn_skills import _load_section_operation
@@ -157,7 +157,7 @@ async def load_resource(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """The Door: Resource Access
-    
+
     Reads and injects a bundled resource file (script or reference) from the skill's folder.
     """
     from advanced_memory.mcp.tools.adn_skills import _load_resource_operation
@@ -176,7 +176,7 @@ async def research(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Knowledge Distillation Engine
-    
+
     Automated research that synthesizes SOTA information from external sources into a structured skill.
     """
     from advanced_memory.mcp.tools.adn_skills_operations_new import (
@@ -186,9 +186,9 @@ async def research(
         _distill_from_wikipedia_operation,
         _import_from_github_operation,
     )
-    
+
     actual_query = query or topic
-    
+
     if source == "wikipedia":
         return await _distill_from_wikipedia_operation(topic, depth=1, include_related=True, quality=quality, category=category, project=project)
     elif source == "arxiv":
@@ -199,5 +199,5 @@ async def research(
         return await _distill_from_textbook_operation(pdf_path=topic, chapters=None, level="intermediate", category=category, project=project)
     elif source == "expert":
         return await _distill_from_expert_operation(expert_name=topic, source_types=None, focus_area=actual_query, category=category, project=project)
-    
+
     return f"Unsupported research source: {source}"

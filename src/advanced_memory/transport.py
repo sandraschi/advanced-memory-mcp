@@ -53,10 +53,10 @@ def get_transport_config() -> dict:
         Dictionary with transport, host, port, and path settings.
     """
     return {
-        "transport": os.getenv(ENV_TRANSPORT, "stdio").lower(),
-        "host": os.getenv(ENV_HOST, "127.0.0.1"),
-        "port": int(os.getenv(ENV_PORT, "10704")),
-        "path": os.getenv(ENV_PATH, "/mcp"),
+        "transport": os.getenv(ENV_TRANSPORT, "stdio").lower().strip(),
+        "host": os.getenv(ENV_HOST, "127.0.0.1").strip(),
+        "port": int(os.getenv(ENV_PORT, "10704").strip()),
+        "path": os.getenv(ENV_PATH, "/mcp").strip(),
     }
 
 
@@ -141,7 +141,7 @@ def resolve_transport(args: argparse.Namespace) -> TransportType:
         return "stdio"
     else:
         # Fall back to environment variable
-        env_transport = os.getenv(ENV_TRANSPORT, "stdio").lower()
+        env_transport = os.getenv(ENV_TRANSPORT, "stdio").lower().strip()
         if env_transport not in ("stdio", "http", "sse"):
             logger.warning(f"Invalid {ENV_TRANSPORT}='{env_transport}', defaulting to stdio")
             return "stdio"
@@ -226,6 +226,22 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
             path = config["path"]
             endpoint = f"http://{host}:{port}{path}"
             logger.info(f"Running in HTTP Streamable mode: {endpoint}")
+
+            # Inject CORS and Health for Antigravity discovery
+            app = mcp_app.http_app()
+            from fastapi.middleware.cors import CORSMiddleware
+            app.add_middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_credentials=True,
+                allow_methods=["*"],
+                allow_headers=["*"],
+            )
+
+            @app.get("/health")
+            async def health():
+                return {"status": "ok", "server": server_name}
+
             await mcp_app.run_http_async(host=host, port=port, path=path)
 
         elif transport == "sse":
@@ -233,7 +249,7 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
             port = config["port"]
             logger.warning("SSE mode is deprecated. Migrate to HTTP Streamable (--http).")
             logger.info(f"Running in SSE mode: http://{host}:{port}")
-            await mcp_app.run_sse_async(host=host, port=port)
+            await mcp_app.run_async(transport='sse', host=host, port=port)
 
     except asyncio.CancelledError:
         logger.info(f"{server_name} task cancelled")

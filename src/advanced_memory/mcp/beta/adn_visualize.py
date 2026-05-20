@@ -2,6 +2,7 @@
 
 from typing import Annotated, Any, Literal
 
+from fastmcp import types
 from pydantic import Field
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -68,8 +69,9 @@ async def adn_visualize(
         if query:
             edges.append({"from": "query_hub", "to": node_id, "type": "spoke"})
 
-    from advanced_memory.mcp.prefabs import KnowledgeGraph
     from fastmcp.tools import ToolResult
+
+    from advanced_memory.mcp.prefabs import KnowledgeGraph
 
     return ToolResult(
         content=[f"# Knowledge Graph: {mode.replace('_', ' ').capitalize()}\nProject: {active_project.name}"],

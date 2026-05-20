@@ -141,8 +141,8 @@ class TestPortmanteauToolSignatures:
         sig = inspect.signature(adn_project_fn)
         params = list(sig.parameters.keys())
         assert "operation" in params
-        assert "name" in params
-        assert "path" in params
+        assert "project_name" in params
+        assert "project_path" in params
 
     def test_adn_export_signature(self):
         """Test adn_export function signature."""
@@ -286,7 +286,6 @@ class TestAdnProjectBasic:
 class TestAdnExportBasic:
     """Test basic adn_export portmanteau tool functionality."""
 
-    @pytest.mark.skip(reason="adn_export may return markdown error string instead of dict")
     def test_adn_export_invalid_operation(self):
         """Test adn_export with invalid operation."""
         import asyncio
@@ -318,7 +317,6 @@ class TestAdnExportBasic:
 class TestAdnImportBasic:
     """Test basic adn_import portmanteau tool functionality."""
 
-    @pytest.mark.skip(reason="adn_import may return markdown error string instead of dict")
     def test_adn_import_invalid_operation(self):
         """Test adn_import with invalid operation."""
         import asyncio
@@ -432,7 +430,6 @@ class TestAdnEditorBasic:
         pass
 
 
-@pytest.mark.skip(reason="Error payloads vary (markdown str vs dict; error vs error_code); refresh when standardized")
 class TestStructuredResponses:
     """Test FastMCP 2.14.3 structured response format compliance.
 

@@ -112,9 +112,8 @@ def mcp(
     # Use unified thread-based sync approach for both transports
     import threading
 
-    from advanced_memory.services.initialization import initialize_file_sync
-
     from advanced_memory.readonly import IS_READONLY
+    from advanced_memory.services.initialization import initialize_file_sync
 
     app_config = ConfigManager().config
 

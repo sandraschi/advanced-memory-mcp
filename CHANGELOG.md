@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to Advanced Memory MCP will be documented in this file.
 
@@ -6,10 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-### Added
-
-- **`docs/seed-notes/`** — Three **vault-ready** markdown memos (YAML frontmatter) capturing **2026-04** Google Gemini / Deep Research / Interactions / Tailscale MCP ingress news, plus **`docs/seed-notes/README.md`** explaining import via MCP (`notes:write` / `inbox`), manual copy into a vault, or **`rag_extra_roots`** for LanceDB indexing.
+9: 
+10: ## [1.9.0] - Industrial Portmanteau Standard (2026-04-27)
+11: 
+12: ### Added
+13: 
+14: - **Industrial Portmanteau Standard:** Overhauled all 12 core tool modules (`audio`, `inbox`, `skills`, `zettel`, `nav`, `notes`, `search`, `knowledge`, `project`, `system`, `mcp`, `typora`) with the **2026 Improved Portmanteau** pattern.
+15: - **Rationale-First Docstrings:** Every tool now includes a `[RATIONALE]` section explaining the architectural choice for consolidation, reducing LLM "floundering" in tool-dense environments.
+16: - **Strict Discriminated Unions:** Migrated all Pydantic models to use `Annotated[Union[...], Field(discriminator="operation")]`. This ensures that static analyzers (Toolbench/Arcade) can resolve mutually exclusive parameter sets despite being consolidated into single entry points.
+17: - **Operation Maps:** Added explicit bulleted operation maps and high-fidelity Python examples to all tool docstrings.
+18: 
+19: ### Documentation
+20: 
+21: - **MCD Standardization:** Formally codified the "Industrial Portmanteau" as the fleet-wide standard in `mcp-central-docs`.
+22: - Updated **README.md** and **docs/COMPLIANCE_AND_STANDARDS.md** to reflect the new 2026 tool architecture.
+23: 
+24: ---
+25: 
+26: ## [1.8.2] - Vector store logging & Seed notes (2026-04-27)
+27: 
+28: ### Added
+29: 
+30: - **`docs/seed-notes/`** — Three **vault-ready** markdown memos (YAML frontmatter) capturing **2026-04** Google Gemini / Deep Research / Interactions / Tailscale MCP ingress news.
 
 ### Fixed
 

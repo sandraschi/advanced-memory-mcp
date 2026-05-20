@@ -61,7 +61,7 @@ def _get_all_projects_status() -> list[str]:
     return status_lines
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_system portmanteau
 async def sync_status(project: str | None = None) -> str:
     """Get current sync status and system readiness information.
 

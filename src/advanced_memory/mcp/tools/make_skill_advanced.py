@@ -46,7 +46,7 @@ class SkillEnhancement(BaseModel):
     cross_references: list[str] = Field(description="Related skills to reference")
 
 
-@mcp.tool
+# @mcp.tool
 async def make_skill_advanced(
     operation: Literal[
         "analyze_requirements",

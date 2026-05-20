@@ -21,13 +21,14 @@ import httpx
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 # Global state for current LLM configuration (exported for use by llm_client)
 _current_provider: str | None = None
 _current_model: str | None = None
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_llm(
     operation: Literal[
         "list_models",
@@ -123,12 +124,22 @@ async def adn_llm(
 
         elif operation == "list_models":
             if not provider:
-                return "# Error\n\nProvider required for list_models operation.\n\nUse: adn_llm('list_models', provider='ollama')"
+                return build_error_response(
+                    error="Missing provider",
+                    error_code="PROVIDER_REQUIRED",
+                    message="Provider required for list_models operation.",
+                    recovery_options=["Provide 'provider' parameter (e.g., 'ollama', 'lmstudio', 'openai')"],
+                )
             return await _list_models(provider, base_url)
 
         elif operation == "select_model":
             if not provider or not model:
-                return "# Error\n\nProvider and model required for select_model operation."
+                return build_error_response(
+                    error="Missing parameters",
+                    error_code="MISSING_PARAMETERS",
+                    message="Provider and model required for select_model operation.",
+                    recovery_options=["Provide both 'provider' and 'model' parameters"],
+                )
             _current_provider = provider
             _current_model = model
 
@@ -145,22 +156,35 @@ async def adn_llm(
             except Exception as e:
                 logger.warning(f"Failed to save LLM configuration: {e}")
 
-            return f"""# Model Selected
-
-**Provider:** {provider}
-**Model:** {model}
-
-Model selection updated and saved to configuration. Use 'load_model' to load into memory (for local providers).
-"""
+            summary = f"Model selection updated: {provider}/{model}"
+            return build_success_response(
+                operation="select_model",
+                summary=summary,
+                result={
+                    "provider": provider,
+                    "model": model,
+                    "status": "selected and saved",
+                }
+            )
 
         elif operation == "load_model":
             if not provider or not model:
-                return "# Error\n\nProvider and model required for load_model operation."
+                return build_error_response(
+                    error="Missing parameters",
+                    error_code="MISSING_PARAMETERS",
+                    message="Provider and model required for load_model operation.",
+                    recovery_options=["Provide both 'provider' and 'model' parameters"],
+                )
             return await _load_model(provider, model, base_url, api_key)
 
         elif operation == "unload_model":
             if not provider:
-                return "# Error\n\nProvider required for unload_model operation."
+                return build_error_response(
+                    error="Missing provider",
+                    error_code="PROVIDER_REQUIRED",
+                    message="Provider required for unload_model operation.",
+                    recovery_options=["Provide 'provider' parameter"],
+                )
             return await _unload_model(provider, model, base_url)
 
         elif operation == "status":
@@ -170,11 +194,21 @@ Model selection updated and saved to configuration. Use 'load_model' to load int
             return await _check_health(provider, base_url)
 
         else:
-            return f"# Error\n\nUnknown operation: {operation}"
+            return build_error_response(
+                error="Invalid operation",
+                error_code="INVALID_OPERATION",
+                message=f"Unknown operation: {operation}",
+                recovery_options=["Use one of: list_models, list_providers, select_model, load_model, unload_model, status, health"],
+            )
 
     except Exception as e:
         logger.error(f"LLM operation error: {e}", exc_info=True)
-        return f"# Error\n\nFailed to execute operation: {e!s}"
+        return build_error_response(
+            error="Execution failed",
+            error_code="EXECUTION_ERROR",
+            message=str(e),
+            technical_details=str(e),
+        )
 
 
 async def _list_providers() -> dict:

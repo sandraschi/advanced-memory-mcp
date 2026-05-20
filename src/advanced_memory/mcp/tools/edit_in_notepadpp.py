@@ -27,7 +27,7 @@ from advanced_memory.mcp.tools.read_note import read_note as mcp_read_note
 from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 
 
-@mcp.tool
+# @mcp.tool
 async def edit_in_notepadpp(
     note_identifier: str, workspace_path: str | None = None, create_backup: bool = True
 ) -> str:
@@ -114,7 +114,7 @@ async def edit_in_notepadpp(
         return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
 
 
-@mcp.tool
+# @mcp.tool
 async def import_from_notepadpp(
     note_identifier: str,
     workspace_path: str | None = None,

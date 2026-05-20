@@ -22,7 +22,7 @@ async def generate(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Creation Engine
-    
+
     Synthesizes atomic zettel notes using structured templates or intelligent AI generation.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
@@ -43,7 +43,7 @@ async def suggest(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Discovery Engine
-    
+
     Identifies structural gaps in the knowledge base and proposes high-value next topics.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
@@ -62,7 +62,7 @@ async def expand(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Horizontal Growth Engine
-    
+
     Extends existing notes into broader clusters by identifying and generating related concepts.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
@@ -80,7 +80,7 @@ async def analyze(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Graph Analysis Tool
-    
+
     Evaluates the maturity and connectivity of the current zettelkasten structure.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
@@ -97,7 +97,7 @@ async def connect(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Connection Engine
-    
+
     Auto-discovers and instantiates semantic relations between existing atomic notes.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
@@ -111,7 +111,7 @@ async def connect(
 @zettel_app.tool()
 async def collect() -> Any:
     """Rapid Capture Tool
-    
+
     Launches an interactive session for low-friction, off-the-cuff atomic thought record.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker

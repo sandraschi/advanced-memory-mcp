@@ -15,7 +15,7 @@ from advanced_memory.schemas.search import SearchResponse
 from advanced_memory.utils import sanitize_filename, validate_project_path
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_notes portmanteau
 async def read_note(
     identifier: Annotated[
         str, Field(description="Title, permalink, or memory:// URL to retrieve")

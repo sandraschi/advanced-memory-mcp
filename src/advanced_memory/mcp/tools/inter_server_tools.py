@@ -252,7 +252,7 @@ def _resolve_tools(available_tools: list[str]) -> list:
 # ── Meta-tools ────────────────────────────────────────────────────────────────
 
 
-@mcp.tool
+# @mcp.tool
 async def agentic_content_workflow(
     workflow_prompt: str,
     available_tools: list[str],
@@ -394,7 +394,7 @@ async def agentic_content_workflow(
         )
 
 
-@mcp.tool
+# @mcp.tool
 async def intelligent_batch_processor(
     items: list[dict[str, Any]],
     processing_goal: str,
@@ -545,7 +545,7 @@ async def intelligent_batch_processor(
         )
 
 
-@mcp.tool
+# @mcp.tool
 async def sampling_capabilities_status(ctx: Context = None) -> dict:
     """
     Check FastMCP 2.14.1+ sampling with tools capabilities and status.

@@ -200,7 +200,7 @@ Error editing note '{identifier}': {error_message}
     )
 
 
-@mcp.tool
+# @mcp.tool
 async def edit_note(
     identifier: str,
     operation: str,

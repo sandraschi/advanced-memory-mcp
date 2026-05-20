@@ -11,7 +11,7 @@ _MAX_PAGE = 5000
 _DEFAULT_LIMIT = 200
 
 
-@mcp.tool
+# @mcp.tool
 async def list_directory(
     dir_name: str = "/",
     depth: int = 1,

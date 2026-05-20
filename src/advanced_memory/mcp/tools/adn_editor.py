@@ -13,7 +13,7 @@ from advanced_memory.mcp.tools.read_note import read_note as mcp_read_note
 from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_editor(
     operation: str,
     note_identifier: str | None = None,

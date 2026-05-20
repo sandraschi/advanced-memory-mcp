@@ -12,7 +12,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_system portmanteau
 async def status(
     level: Annotated[
         str, Field(description="Detail level: basic, intermediate, advanced, diagnostic")

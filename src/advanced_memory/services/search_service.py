@@ -61,7 +61,7 @@ def _chunk_text_by_paragraphs(content: str, max_chars: int) -> list[str]:
 
 def _external_chunk_entity_id(rel_key: str, chunk_index: int) -> int:
     """Stable negative entity_id for extra-root chunks (never collides with positive DB ids)."""
-    digest = hashlib.sha256(f"{rel_key}\0{chunk_index}".encode("utf-8")).digest()
+    digest = hashlib.sha256(f"{rel_key}\0{chunk_index}".encode()).digest()
     v = int.from_bytes(digest[:4], "big") & 0x7FFFFFFF
     return -v if v != 0 else -1
 
@@ -176,7 +176,7 @@ class SearchService:
                 vector_docs: list[dict[str, Any]] = []
                 for i, chunk in enumerate(chunks):
                     ext_eid = _external_chunk_entity_id(rel_key, i)
-                    doc_uid = hashlib.sha256(f"{rel_key}\0{i}".encode("utf-8")).hexdigest()[:40]
+                    doc_uid = hashlib.sha256(f"{rel_key}\0{i}".encode()).hexdigest()[:40]
                     vector_docs.append(
                         {
                             "id": f"xr_{doc_uid}",

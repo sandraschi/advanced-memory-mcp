@@ -128,7 +128,7 @@ else:
             raise ImportError("fpdf2 is not installed. Run: pip install fpdf2")
 
 
-@mcp.tool
+# @mcp.tool
 async def export_pdf_native(
     export_path: str,
     source_folder: str = "/",

@@ -96,7 +96,6 @@ async def app_lifespan(
     watch_task = None
     if app_config.sync_changes and not IS_READONLY:
         from advanced_memory.services.initialization import initialize_file_sync
-
         from advanced_memory.utils.task_logging import attach_task_failure_logging
 
         watch_task = asyncio.create_task(initialize_file_sync(app_config), name="mcp-file-watcher")
@@ -131,33 +130,21 @@ async def app_lifespan(
 
 # Logging is now configured at the top of the file before any imports
 
-# --- Managed Namespaces (FastMCP 3.2 GA) ---
-# Each domain is mounted as a sub-app for optimal model discovery
-from advanced_memory.mcp.tools.audio import audio_app
-from advanced_memory.mcp.tools.inbox import inbox_app
-from advanced_memory.mcp.tools.skills import skills_app
-from advanced_memory.mcp.tools.zettel import zettel_app
-from advanced_memory.mcp.tools.nav import nav_app
-from advanced_memory.mcp.tools.notes import notes_app
-from advanced_memory.mcp.tools.search import search_app
-from advanced_memory.mcp.tools.knowledge import knowledge_app
-from advanced_memory.mcp.tools.project import project_app
-from advanced_memory.mcp.tools.system import system_app
-from advanced_memory.mcp.tools.mcp import mcp_app
-from advanced_memory.mcp.tools.typora import typora_app
-
-mcp.mount(audio_app, namespace="audio")
-mcp.mount(inbox_app, namespace="inbox")
-mcp.mount(skills_app, namespace="skills")
-mcp.mount(zettel_app, namespace="zettel")
-mcp.mount(nav_app, namespace="nav")
-mcp.mount(notes_app, namespace="notes")
-mcp.mount(search_app, namespace="search")
-mcp.mount(knowledge_app, namespace="knowledge")
-mcp.mount(project_app, namespace="project")
-mcp.mount(system_app, namespace="system")
-mcp.mount(mcp_app, namespace="mcp")
-mcp.mount(typora_app, namespace="typora")
+# --- Portmanteau Tool Registry (FastMCP 3.2 SOTA) ---
+# Each domain is consolidated into exactly 1 portmanteau tool to satisfy
+# Antigravity tool limits and optimize model discovery via discriminated unions.
+import advanced_memory.mcp.tools.adn_audio
+import advanced_memory.mcp.tools.adn_automation
+import advanced_memory.mcp.tools.adn_inbox
+import advanced_memory.mcp.tools.adn_knowledge
+import advanced_memory.mcp.tools.adn_navigation
+import advanced_memory.mcp.tools.adn_notes
+import advanced_memory.mcp.tools.adn_project
+import advanced_memory.mcp.tools.adn_search
+import advanced_memory.mcp.tools.adn_skills
+import advanced_memory.mcp.tools.adn_system
+import advanced_memory.mcp.tools.adn_typora
+import advanced_memory.mcp.tools.adn_zettel
 
 # Attach lifespan to the mounted server so file watcher, project session, and
 # MCP resource bootstrap run at startup (reinstates pre-namespace behavior).
@@ -318,6 +305,19 @@ if __name__ == "__main__":
     if transport == "stdio":
         server.run(show_banner=False)
     else:
+        if transport in ("http", "sse"):
+            app = server.http_app()
+            from fastapi.middleware.cors import CORSMiddleware
+            app.add_middleware(
+                CORSMiddleware,
+                allow_origins=["*"],
+                allow_credentials=True,
+                allow_methods=["*"],
+                allow_headers=["*"],
+            )
+            @app.get("/health")
+            async def health():
+                return {"status": "ok"}
         server.run(
             transport=transport,
             host=host,

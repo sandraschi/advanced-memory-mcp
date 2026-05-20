@@ -16,7 +16,7 @@ from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.utils.onenote_text_extractor import extract_readable_text
 
 
-@mcp.tool
+# @mcp.tool
 async def load_onenote_html(
     source_path: str | None = None,
     html_content: str | None = None,

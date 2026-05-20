@@ -43,7 +43,7 @@ def _load_skill_content(skill_path: Path) -> dict[str, Any]:
     }
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_skills_reader(
     skill_path: str,
     format: Literal["structured", "raw", "metadata_only"] = "structured",

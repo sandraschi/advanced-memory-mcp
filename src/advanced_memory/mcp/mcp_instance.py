@@ -131,7 +131,8 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
 
-from fastmcp import FastMCP, Context
+from fastmcp import Context, FastMCP
+from fastmcp.server import create_proxy
 from loguru import logger
 
 # FastMCP instance is initialized below at line 192
@@ -187,6 +188,19 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:  # pragma:
 mcp = FastMCP(
     name="Advanced Memory MCP",
 )
+
+# MCP Bridge: proxy tools from remote MCP servers via MCP_BRIDGE_URLS
+_bridge_proxies = []
+bridge_urls = os.getenv("MCP_BRIDGE_URLS", "")
+if bridge_urls:
+    for url in bridge_urls.split(","):
+        url = url.strip()
+        if url:
+            try:
+                mcp.add_provider(create_proxy(url))
+                _bridge_proxies.append(url)
+            except Exception:
+                pass
 
 # Store references to prompts and resources to prevent garbage collection
 # This follows FastMCP 2.12+ best practices for prompt/resource registration

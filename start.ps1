@@ -12,4 +12,4 @@ $env:FASTMCP_LOG_LEVEL = 'WARNING'
 # schip-mcp-advanced-memory Start - Standards-Compliant SOTA
 Write-Host 'Starting schip-mcp-advanced-memory...' -ForegroundColor Cyan
 
-uv run -m schip_mcp_advanced_memory
+uv run advanced-memory mcp

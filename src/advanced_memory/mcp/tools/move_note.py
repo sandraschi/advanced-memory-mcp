@@ -345,7 +345,7 @@ delete_note("{identifier}")
 ```"""
 
 
-@mcp.tool
+# @mcp.tool
 async def move_note(
     identifier: str,
     destination_path: str,

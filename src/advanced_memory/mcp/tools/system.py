@@ -6,7 +6,7 @@ Follows FastMCP 3.2 GA Managed Namespace standards for system orchestration.
 
 from typing import Annotated, Any, Literal
 
-from fastmcp import FastMCP, Context
+from fastmcp import Context, FastMCP
 from pydantic import Field
 
 # Initialize the namespaced app
@@ -19,7 +19,7 @@ async def status(
     focus: Annotated[str | None, Field(description="Specific area of focus (e.g., 'db', 'audio', 'memory')")] = None,
 ) -> Any:
     """Environment Status Tool
-    
+
     Provides a comprehensive report on the health and configuration of the Advanced Memory environment.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
@@ -29,7 +29,7 @@ async def status(
 @system_app.tool()
 async def sync() -> Any:
     """Global Synchronization Tool
-    
+
     Reports the real-time status of the background file synchronization and indexing engine.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
@@ -42,7 +42,7 @@ async def workflow(
     ctx: Context,
 ) -> Any:
     """Agentic Execution Engine
-    
+
     Triggers an autonomous workflow where the agent orchestrates multiple tools to achieve a complex goal.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
@@ -56,7 +56,7 @@ async def external(
     args: Annotated[dict | None, Field(description="JSON parameters for the tool call")] = None,
 ) -> Any:
     """External MCP Bridge
-    
+
     Allows Advanced Memory to act as a control plane by calling tools on other registered MCP servers.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
@@ -74,7 +74,7 @@ async def help(
     level: Annotated[Literal["basic", "intermediate", "expert"], Field(description="Detail level of the documentation")] = "basic",
 ) -> Any:
     """Documentation Library
-    
+
     Retrieves high-fidelity guidance and usage examples for the Advanced Memory platform.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system

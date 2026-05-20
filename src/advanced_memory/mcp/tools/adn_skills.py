@@ -8,6 +8,7 @@ import frontmatter
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.models.portmanteau import SkillsOperation
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.adn_skills_operations_new import (
     _distill_from_arxiv_operation,
@@ -27,153 +28,109 @@ _active_skills: dict[str, dict] = {}
 
 # Legacy tool decommissioned in favor of Managed Namespaces (skills:*)
 # Keeping the function as a logic provider for the transition
-async def adn_skills(
-    operation: Literal[
-        "create",
-        "read",
-        "update",
-        "delete",
-        "list",
-        "validate",
-        "export",
-        "import",
-        "package",
-        "from_zettel",
-        "to_zettel",
-        "import_from_github",
-        "distill_from_wikipedia",
-        "distill_from_arxiv",
-        "distill_from_textbook",
-        "distill_from_text",
-        "distill_from_expert",
-        # THE DOOR - Activation operations (staged loading)
-        "activate",
-        "deactivate",
-        "active",
-        "load_section",
-        "load_resource",
-    ],
-    identifier: str | None = None,
-    skill_name: str | None = None,
-    description: str | None = None,
-    content: str | None = None,
-    source_path: str | None = None,
-    export_path: str | None = None,
-    category: str | None = None,
-    difficulty: Literal["beginner", "intermediate", "advanced", "expert"] | None = None,
-    metadata: dict | None = None,
-    filters: dict | None = None,
-    package_format: Literal["folder", "zip"] | None = "folder",
-    page: int = 1,
-    page_size: int = 20,
-    project: str | None = None,
-    # GitHub import parameters
-    repository: str | None = None,
-    branch: str = "main",
-    # Distillation parameters
-    topic: str | None = None,
-    query: str | None = None,
-    max_papers: int = 5,
-    chapters: list[int] | None = None,
-    pdf_path: str | None = None,
-    text_path: str | None = None,
-    expert_name: str | None = None,
-    focus_area: str | None = None,
-    source_types: list[str] | None = None,
-    depth: int = 0,
-    include_related: bool = False,
-    quality: Literal["basic", "comprehensive", "expert"] | None = None,
-    synthesis_level: Literal["summary", "synthesis", "comprehensive"] | None = None,
-    level: Literal["beginner", "intermediate", "advanced"] | None = None,
-    focus: Literal["principles", "examples", "methodology", "all"] | None = None,
-    context_level: Literal["basic", "comprehensive", "detailed"] | None = None,
-    # Activation parameters (THE DOOR - staged loading)
-    scope: Literal["message", "session", "persistent"] | None = "session",
-    deactivate_all: bool = False,
-    verbose: bool = False,
-    # Staged loading parameters
-    section: str | None = None,  # Section header to load (e.g., "## Decorators")
-    resource: str | None = None,  # Resource path to load (e.g., "scripts/linter.py")
-) -> dict:
+@mcp.tool()
+async def adn_skills(op: SkillsOperation) -> dict:
     """
-    Claude Skills management portmanteau for Advanced Memory.
+    Claude Skills management and staged loading for Advanced Memory.
 
-    This comprehensive tool consolidates skill management operations to provide a
-    unified interface for creating, managing, and distributing Claude Skills.
+    This tool provides a unified interface for the entire lifecycle of Claude Skills,
+    from creation and research to activation via 'The Door' (staged loading) pattern.
 
-    OPERATIONS:
-    - CRUD: create, read, update, delete, list
-    - Format: validate, export, import, package
-    - Zettelkasten: from_zettel, to_zettel
-    - Distillation: import_from_github, distill_from_wikipedia, distill_from_arxiv,
-                    distill_from_textbook, distill_from_text, distill_from_expert
-    - 🚪 THE DOOR (Activation): activate, deactivate, active, load_section, load_resource
+    ---------------------------------------------------------------------------
+    [RATIONALE]
+    Skills can be massive, potentially flooding the LLM's context if loaded fully.
+    By consolidating these operations, we implement 'The Door' pattern:
+    1. Activate: Loads only the Table of Contents (TOC) into context.
+    2. Load Section: Injects specific skill subsections on-demand.
+    3. Load Resource: Reads bundled scripts or reference assets.
 
-    For detailed documentation on parameters and usage, use:
-    `help(topic="adn_skills")`
+    ---------------------------------------------------------------------------
+    [SUPPORTED OPERATIONS]
+    - create/read/update/delete/list: Core skill lifecycle management.
+    - activate: Initial skill activation (loads TOC into active context).
+    - deactivate: Remove a skill or all skills from the active context.
+    - active: List all currently 'open' skills and their loaded sections.
+    - load_section: Injects a specific Markdown section into the conversation.
+    - load_resource: Reads and injects a script or reference file from the skill.
+    - distill_from_*: Create skills from external knowledge (ArXiv, Wikipedia, etc.).
+    - import_from_github: Scaffold a skill from a GitHub repository.
+
+    ---------------------------------------------------------------------------
+    [PARAMETERS]
+    - operation (str): The specific task (create, activate, distill_from_arxiv, etc.).
+    - identifier (str, optional): The unique name or permalink of the skill.
+    - content (str, optional): New Markdown body for 'update' operations.
+    - topic (str, optional): Search subject for distillation (Wikipedia/Expert).
+    - query (str, optional): ArXiv search query.
+    - category (str, optional): Taxonomy folder (e.g., 'developer', 'researcher').
+    - section (str, optional): Target header for 'load_section'.
+    - resource (str, optional): Relative path to an asset (e.g., 'scripts/main.py').
+    - scope (str, optional): Lifespan of activation ('message', 'session', 'persistent').
+    - project (str, optional): Override the current active project context.
+
+    ---------------------------------------------------------------------------
+    [EXAMPLES]
+    ```python
+    # Phase 1: Activate the skill (TOC only)
+    adn_skills(operation="activate", identifier="python-expert")
+
+    # Phase 2: Load a specific section for deep work
+    adn_skills(operation="load_section", identifier="python-expert", section="Decorators")
+    ```
     """
+    operation = op.operation
+    project = getattr(op, "project", None)
+
     logger.info(f"MCP tool call tool=adn_skills operation={operation}")
 
     # Route to appropriate operation
     if operation == "create":
         return await _create_operation(
-            skill_name, description, category, difficulty, metadata, project
+            op.skill_name, op.description, op.category, op.difficulty, op.metadata, project
         )
     elif operation == "read":
-        return await _read_operation(identifier or skill_name, project)
+        return await _read_operation(op.identifier, project)
     elif operation == "update":
+        # Note: mapping op.content to content
         return await _update_operation(
-            identifier, description, content, category, metadata, project
+            op.identifier, None, op.content, None, None, project
         )
     elif operation == "delete":
-        return await _delete_operation(identifier, project)
+        return await _delete_operation(op.identifier, project)
     elif operation == "list":
-        return await _list_operation(filters, page, page_size, project)
-    elif operation == "validate":
-        return await _validate_operation(identifier, project)
-    elif operation == "export":
-        return await _export_operation(export_path, package_format, filters, project)
-    elif operation == "import":
-        return await _import_operation(source_path, project)
-    elif operation == "package":
-        return await _package_operation(identifier, export_path, project)
-    elif operation == "from_zettel":
-        return await _from_zettel_operation(identifier, description, category, metadata, project)
-    elif operation == "to_zettel":
-        return await _to_zettel_operation(identifier, project)
+        return await _list_operation(op.category, op.page, op.page_size, project)
+    elif operation == "activate":
+        return await _activate_operation(op.identifier, op.scope, project)
+    elif operation == "deactivate":
+        return await _deactivate_operation(op.identifier, op.all, project)
+    elif operation == "active":
+        return await _active_operation(op.verbose, project)
+    elif operation == "load_section":
+        return await _load_section_operation(op.identifier, op.section, project)
+    elif operation == "load_resource":
+        return await _load_resource_operation(op.identifier, op.resource, project)
     elif operation == "import_from_github":
         return await _import_from_github_operation(
-            repository, source_path, branch, category, project
+            op.repository, None, op.branch, op.category, project
         )
     elif operation == "distill_from_wikipedia":
         return await _distill_from_wikipedia_operation(
-            topic, depth, include_related, quality, category, project
+            op.topic, 0, False, op.quality, op.category, project
         )
     elif operation == "distill_from_arxiv":
         return await _distill_from_arxiv_operation(
-            query, max_papers, synthesis_level, category, project
+            op.query or op.topic, op.max_papers, "synthesis", op.category, project
         )
     elif operation == "distill_from_textbook":
-        return await _distill_from_textbook_operation(pdf_path, chapters, level, category, project)
+        return await _distill_from_textbook_operation(op.pdf_path, op.chapters, "intermediate", op.category, project)
     elif operation == "distill_from_text":
         return await _distill_from_text_operation(
-            text_path, focus, context_level, category, project
+            op.text_path, "all", "comprehensive", op.category, project
         )
     elif operation == "distill_from_expert":
         return await _distill_from_expert_operation(
-            expert_name, source_types, focus_area, category, project
+            op.expert_name, None, op.focus_area, op.category, project
         )
-    # THE DOOR - Activation operations (staged loading)
-    elif operation == "activate":
-        return await _activate_operation(identifier or skill_name, scope, project)
-    elif operation == "deactivate":
-        return await _deactivate_operation(identifier or skill_name, deactivate_all, project)
-    elif operation == "active":
-        return await _active_operation(verbose, project)
-    elif operation == "load_section":
-        return await _load_section_operation(identifier or skill_name, section, project)
-    elif operation == "load_resource":
-        return await _load_resource_operation(identifier or skill_name, resource, project)
     else:
         return f"""# Error: Invalid Skills Operation
 

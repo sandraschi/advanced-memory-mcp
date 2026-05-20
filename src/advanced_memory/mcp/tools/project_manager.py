@@ -30,7 +30,7 @@ from advanced_memory.schemas.project_info import (
 from advanced_memory.utils import generate_permalink
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_project(
     operation: Literal[
         "create",

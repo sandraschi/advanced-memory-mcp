@@ -11,7 +11,7 @@ from advanced_memory.config import CONFIG_FILE_NAME, DATABASE_NAME, ConfigManage
 from advanced_memory.mcp.mcp_instance import mcp
 
 
-@mcp.tool
+# @mcp.tool
 async def import_from_archive(
     archive_path: str | Path,
     restore_mode: str = "overwrite",

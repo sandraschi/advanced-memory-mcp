@@ -11,7 +11,7 @@ from advanced_memory.mcp.tools.utils import call_get, call_post
 from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool
+# @mcp.tool
 async def export_notion_compatible(
     output_path: str,
     query: str | None = None,

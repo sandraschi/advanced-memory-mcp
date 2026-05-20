@@ -52,7 +52,7 @@ _alarm_counter = 0
 _timer_counter = 0
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_audio_dual_stt(
     operation: Literal[
         "dictate",

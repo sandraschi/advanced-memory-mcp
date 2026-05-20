@@ -15,7 +15,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool
+# @mcp.tool
 async def export_html_notes(
     export_path: str,
     source_folder: str = "/",

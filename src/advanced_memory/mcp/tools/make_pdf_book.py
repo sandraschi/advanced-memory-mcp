@@ -18,7 +18,7 @@ from advanced_memory.schemas.search import SearchQuery
 from advanced_memory.utils.pandoc_installer import get_pandoc_command
 
 
-@mcp.tool
+# @mcp.tool
 async def make_pdf_book(
     book_title: str,
     source_folder: str = "/",

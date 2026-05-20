@@ -11,7 +11,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.skill_research_chain import ResearchBundle, run_chain
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_skills_research(
     topic: str,
     sources: list[str] | None = None,

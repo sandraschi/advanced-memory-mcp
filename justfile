@@ -1,9 +1,9 @@
-﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
 
 # --- Dashboard ---
-# List all recipes (see also: just --list)
+# Open the interactive recipe dashboard in the browser
 default:
-    @just --list
+    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ../mcp-central-docs/scripts/just-dashboard.ps1 -Path .
 
 # --- Quality ---
 

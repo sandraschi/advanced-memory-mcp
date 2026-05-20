@@ -24,7 +24,7 @@ async def write(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Note Creation Engine
-    
+
     Persists a new markdown note to the knowledge base with semantic metadata.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -47,7 +47,7 @@ async def read(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Note Retrieval Tool
-    
+
     Reads the content of a specific note from the knowledge base.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -71,7 +71,7 @@ async def edit(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Note Mutation Engine
-    
+
     Applies surgical edits to existing notes using various strategies like section replacement or find-replace.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -93,7 +93,7 @@ async def delete(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Note Deletion Tool
-    
+
     Permanently removes a note from the knowledge base. Use with caution.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -112,7 +112,7 @@ async def move(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Vault Reorganization Tool
-    
+
     Relocates a note to a different folder within the project structure.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -132,7 +132,7 @@ async def quick(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Rapid Ingestion Engine
-    
+
     Low-friction capture tool that auto-generates titles and metadata for off-the-cuff insights.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
@@ -152,7 +152,7 @@ async def daily(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Chronological Logging Tool
-    
+
     Appends content to the daily periodic note, maintaining a temporal stream of consciousness.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations

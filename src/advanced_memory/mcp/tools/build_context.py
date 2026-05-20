@@ -17,7 +17,7 @@ from advanced_memory.schemas.memory import (
 )
 
 
-@mcp.tool
+# @mcp.tool
 async def build_context(
     url: Annotated[MemoryUrl, Field(description="memory:// URI to follow")],
     depth: Annotated[int | None, Field(description="Relation hops (1-3 recommended)")] = 1,

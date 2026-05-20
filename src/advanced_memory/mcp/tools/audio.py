@@ -8,8 +8,8 @@ import threading
 from typing import Annotated, Any, Literal
 
 from fastmcp import FastMCP
-from pydantic import Field
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
@@ -38,7 +38,7 @@ async def dictate(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Voice Transcription Engine
-    
+
     Converts live audio or files into structured knowledge base notes.
     """
     from advanced_memory.mcp.tools.adn_audio import _dictate_operation
@@ -58,7 +58,7 @@ async def speak(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Voice Synthesis Engine
-    
+
     Synthesizes and plays high-fidelity clones of knowledge base content.
     """
     from advanced_memory.mcp.tools.adn_audio import _speak_operation
@@ -75,7 +75,7 @@ async def listen(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Voice Command Listener
-    
+
     Listens for a command and executes it using intelligent parsing.
     """
     from advanced_memory.mcp.tools.adn_audio import _listen_command_operation
@@ -92,7 +92,7 @@ async def wake_start(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Voice Activation Start
-    
+
     Initializes the background wake word listener for hands-free control.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_start_operation
@@ -105,7 +105,7 @@ async def wake_start(
 @audio_app.tool()
 async def wake_stop() -> Any:
     """Voice Activation Stop
-    
+
     Ceases all background wake word listening and releases audio devices.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_stop_operation
@@ -115,7 +115,7 @@ async def wake_stop() -> Any:
 @audio_app.tool()
 async def wake_status() -> Any:
     """Voice Activation Status
-    
+
     Reports the current state and health of the background wake listener.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_status_operation
@@ -127,7 +127,7 @@ async def weather(
     location: Annotated[str | None, Field(description="City or region for the weather report")] = None,
 ) -> Any:
     """Environmental Conditions Tool
-    
+
     Fetches and formats current weather and forecasts for a location.
     """
     from advanced_memory.mcp.tools.adn_audio import _get_weather
@@ -139,7 +139,7 @@ async def timer(
     duration: Annotated[str, Field(description="Relative time string (e.g., '5 minutes')")],
 ) -> Any:
     """Temporal Countdown Tool
-    
+
     Sets an audible countdown timer with automatic alarm notification.
     """
     from advanced_memory.mcp.tools.adn_audio import _set_timer
@@ -151,7 +151,7 @@ async def alarm(
     time_str: Annotated[str, Field(description="Absolute time string (e.g., '7:00 AM')")],
 ) -> Any:
     """Temporal Reminder Tool
-    
+
     Configures a time-based alarm for later in the day or next.
     """
     from advanced_memory.mcp.tools.adn_audio import _set_alarm
@@ -164,7 +164,7 @@ async def music(
     query: Annotated[str | None, Field(description="Search term for playback (artist, song, album)")] = None,
 ) -> Any:
     """Media Control Tool
-    
+
     Orchestrates music playback via Plex or system media interfaces.
     """
     from advanced_memory.mcp.tools.adn_audio import _control_music

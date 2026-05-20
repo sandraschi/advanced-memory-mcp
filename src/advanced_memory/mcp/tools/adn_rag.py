@@ -7,15 +7,16 @@ and semantic retrieval to enhance skill generation with deep document understand
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from loguru import logger
+from pydantic import Field
 
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.rag.system import get_rag_system
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_rag(
     operation: Annotated[
         Literal[

@@ -139,7 +139,7 @@ if FPDF_AVAILABLE:
             self.ln(10)
 
 
-@mcp.tool
+# @mcp.tool
 async def export_pdf_combined(
     export_path: str,
     search_query: str | None = None,

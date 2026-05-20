@@ -18,7 +18,7 @@ from pydantic import Field
 
 from advanced_memory.mcp.async_client import client
 from advanced_memory.mcp.project_session import get_active_project
-from advanced_memory.mcp.tools.utils import call_post
+from advanced_memory.mcp.tools.utils import call_get, call_post
 from advanced_memory.schemas.search import SearchItemType, SearchQuery, SearchResponse
 
 # Initialize the namespaced app

@@ -22,7 +22,7 @@ from advanced_memory.schemas.project_info import (
 from advanced_memory.utils import generate_permalink
 
 
-@mcp.tool("list_memory_projects")
+# @mcp.tool("list_memory_projects")
 async def list_memory_projects(
     ctx: Context | None = None, _compatibility: str | None = None
 ) -> str:
@@ -63,7 +63,7 @@ async def list_memory_projects(
     return add_project_metadata(result, current)
 
 
-@mcp.tool
+# @mcp.tool
 async def switch_project(project_name: str, ctx: Context | None = None) -> str:
     """Switch to a different project context.
 
@@ -164,7 +164,7 @@ async def switch_project(project_name: str, ctx: Context | None = None) -> str:
             """).strip()
 
 
-@mcp.tool
+# @mcp.tool
 async def get_current_project(ctx: Context | None = None, _compatibility: str | None = None) -> str:
     """Show the currently active project and basic stats.
 
@@ -203,7 +203,7 @@ async def get_current_project(ctx: Context | None = None, _compatibility: str | 
     return add_project_metadata(result, current_project)
 
 
-@mcp.tool
+# @mcp.tool
 async def set_default_project(project_name: str, ctx: Context | None = None) -> str:
     """Set default project in config. Requires restart to take effect.
 
@@ -236,7 +236,7 @@ async def set_default_project(project_name: str, ctx: Context | None = None) -> 
     return add_project_metadata(result, session.get_current_project())
 
 
-@mcp.tool("create_memory_project")
+# @mcp.tool("create_memory_project")
 async def create_memory_project(
     project_name: str, project_path: str, set_default: bool = False, ctx: Context | None = None
 ) -> str:
@@ -288,7 +288,7 @@ async def create_memory_project(
     return add_project_metadata(result, session.get_current_project())
 
 
-@mcp.tool
+# @mcp.tool
 async def delete_project(project_name: str, ctx: Context | None = None) -> str:
     """Delete a Advanced Memory project.
 

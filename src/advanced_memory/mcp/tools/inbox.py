@@ -16,7 +16,7 @@ inbox_app = FastMCP("inbox")
 @inbox_app.tool()
 async def status() -> Any:
     """Inbox Diagnostic Tool
-    
+
     Provides a real-time overview of pending documents, supported formats, and directory health.
     """
     from advanced_memory.mcp.tools.adn_inbox import _status_operation
@@ -28,7 +28,7 @@ async def process(
     file_name: Annotated[str | None, Field(description="Optional specific file to process (relative to inbox root)")] = None,
 ) -> Any:
     """Ingestion Engine
-    
+
     Batch converts and imports pending documents (PDF, DOCX, HTML) into the active project.
     """
     from advanced_memory.mcp.tools.adn_inbox import _process_operation
@@ -38,7 +38,7 @@ async def process(
 @inbox_app.tool()
 async def info() -> Any:
     """Infrastructure Status Tool
-    
+
     Returns detailed configuration data, dependency versions (Pandoc/pypdf), and system paths.
     """
     from advanced_memory.mcp.tools.adn_inbox import _info_operation
@@ -48,7 +48,7 @@ async def info() -> Any:
 @inbox_app.tool()
 async def watch() -> Any:
     """Real-time Monitor Status
-    
+
     Check background watcher availability and active ingestion monitoring state.
     """
     from advanced_memory.mcp.tools.adn_inbox import _watch_operation

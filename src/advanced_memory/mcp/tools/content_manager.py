@@ -552,7 +552,7 @@ async def _dispatch_content_operations(
         )
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_notes(
     operation: Annotated[
         Literal[
@@ -712,7 +712,7 @@ async def adn_notes(
     )
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_note_ai(
     operation: Annotated[
         Literal["suggest_tags", "summarize", "enhance", "generate"],
@@ -829,7 +829,7 @@ async def adn_note_ai(
     )
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_corpus_qc(
     operation: Annotated[
         Literal["find_runts", "find_junk"],
@@ -907,7 +907,7 @@ async def adn_corpus_qc(
     )
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_content(
     operation: Annotated[
         Literal[

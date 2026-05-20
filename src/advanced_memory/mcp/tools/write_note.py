@@ -18,7 +18,7 @@ from advanced_memory.utils import parse_tags, validate_project_path
 TagType = list[str] | str | None
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_notes portmanteau
 async def write_note(
     title: Annotated[str, Field(description="The unique title of the note")],
     content: Annotated[

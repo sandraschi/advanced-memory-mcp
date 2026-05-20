@@ -170,7 +170,7 @@ def _filter_database(
         dest_conn.close()
 
 
-@mcp.tool
+# @mcp.tool
 async def export_to_archive(
     archive_path: str | Path,
     include_projects: list[str] | None = None,

@@ -15,7 +15,7 @@ from advanced_memory.mcp.tools.utils import call_get, call_post
 from advanced_memory.schemas.search import SearchQuery
 
 
-@mcp.tool(name="adn_knowledge_bulk")
+# @mcp.tool(name="adn_knowledge_bulk")
 async def adn_knowledge_bulk(
     operation: str,
     filters: dict[str, Any] | None = None,

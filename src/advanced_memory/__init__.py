@@ -14,11 +14,20 @@ from .logging_utils import setup_logging
 from .permalink_utils import generate_permalink
 from .types import FilePath, PathLike
 
+
+def main():
+    """Start the Advanced Memory MCP server in stdio mode."""
+    import asyncio
+    from .mcp.mcp_instance import mcp
+    asyncio.run(mcp.run_stdio_async())
+
+
 __all__ = [
     "FilePath",
     "PathLike",
     "__api_version__",
     "__version__",
     "generate_permalink",
+    "main",
     "setup_logging",
 ]

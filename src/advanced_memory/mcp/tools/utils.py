@@ -662,14 +662,18 @@ def build_error_response(error: str, error_code: str, message: str, **kwargs) ->
     # Add conversational prefix based on error type
     conversational_message = _make_conversational_error(error, message)
 
-    return {
+    response = {
         "success": False,
-        "message": conversational_message,
+        "error": error,
+        "message": message,
+        "conversational_summary": conversational_message,
         "technical_details": error,  # Keep technical error for debugging
         "error_code": error_code,
-        "original_message": message,  # Keep original message for reference
         **kwargs,
     }
+    if "recovery_options" not in response:
+        response["recovery_options"] = ["Check the documentation for valid parameters", "Verify the input format"]
+    return response
 
 
 def _make_conversational_error(error: str, message: str) -> str:

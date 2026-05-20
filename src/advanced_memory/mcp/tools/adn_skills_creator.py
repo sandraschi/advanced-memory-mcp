@@ -34,7 +34,7 @@ def _load_metadata(skill_path: Path) -> dict[str, Any]:
     return frontmatter
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_skills_creator(
     operation: Literal["scaffold", "validate", "package", "inspect", "upgrade"],
     skill_name: str | None = None,

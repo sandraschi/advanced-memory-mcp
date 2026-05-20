@@ -3,7 +3,9 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from advanced_memory.mcp.mcp_instance import mcp
 
@@ -33,7 +35,7 @@ class ResearchStep:
     parameters: dict[str, Any]
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_automation portmanteau
 async def research_orchestrator(
     operation: Annotated[
         str,

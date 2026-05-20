@@ -20,7 +20,7 @@ async def ingest(
     options: Annotated[dict | None, Field(description="Format-specific ingestion settings")] = None,
 ) -> Any:
     """External Data Ingestion
-    
+
     Imports knowledge from external silos into the native Advanced Memory ecosystem.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
@@ -39,7 +39,7 @@ async def export(
     options: Annotated[dict | None, Field(description="Format-specific export settings")] = None,
 ) -> Any:
     """Knowledge Portability Engine
-    
+
     Synthesizes and exports knowledge from Advanced Memory into professional formats like PDF, HTML, or Docsify.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
@@ -60,7 +60,7 @@ async def canvas(
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Obsidian Canvas Engine
-    
+
     Generates an Obsidian-compatible .canvas file to visualize relationships between notes.
     """
     from advanced_memory.mcp.tools.canvas import canvas as _canvas_fn
@@ -73,7 +73,7 @@ async def load(
     format: Annotated[Literal["canvas"], Field(description="Type of resource to load")] = "canvas",
 ) -> Any:
     """Resource Loading Tool
-    
+
     Loads non-markdown knowledge resources like Obsidian Canvas files into the active context.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export

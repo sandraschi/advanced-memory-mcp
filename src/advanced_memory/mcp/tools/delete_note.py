@@ -150,7 +150,7 @@ delete_note("correct-identifier-from-search")
 If the note should be deleted but the operation keeps failing, send a message to support@basicmachines.co."""
 
 
-@mcp.tool
+# @mcp.tool
 async def delete_note(identifier: str, project: str | None = None) -> bool | str:
     """Delete a note from the knowledge base.
 

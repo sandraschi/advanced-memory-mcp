@@ -20,7 +20,7 @@ from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.schemas.search import SearchItemType
 
 
-@mcp.tool
+# @mcp.tool  # Decommissioned in favor of namespaced adn_nav portmanteau
 async def recent_activity(
     type_filter: Annotated[
         str | list[str], Field(description="Filter by 'entity', 'relation', 'observation'")
@@ -98,9 +98,7 @@ async def recent_activity(
     )
     context = GraphContext.model_validate(response.json())
 
-    return _format_activity_as_markdown(
-        context, str(timeframe), active_project=active_project
-    )
+    return context
 
 
 def _format_activity_as_markdown(

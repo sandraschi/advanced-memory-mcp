@@ -11,11 +11,11 @@ For errors, check recovery_options for next steps.
 """
 
 import threading
-from typing import Literal
 
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.models.portmanteau import AudioOperation
 from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 from advanced_memory.utils import parse_tags
@@ -35,38 +35,8 @@ _alarm_counter = 0
 _timer_counter = 0
 
 
-# Legacy tool decommissioned in favor of Managed Namespaces (audio:*)
-# Keeping the function as a logic provider for the transition
-async def adn_audio(
-    operation: Literal[
-        "dictate",
-        "speak",
-        "listen",
-        "wake",
-        "wake_start",
-        "wake_stop",
-        "wake_status",
-        "weather",
-        "timer",
-        "alarm",
-        "music",
-    ],
-    identifier: str | None = None,
-    audio_path: str | None = None,
-    record_duration: int | None = None,
-    voice: str | None = None,
-    speed: float = 1.0,
-    volume: int = 5,
-    save_audio: bool = False,
-    tags: TagType | None = None,
-    wake_word: str = "memorizer",
-    location: str | None = None,
-    duration: str | None = None,
-    time_str: str | None = None,
-    command: str | None = None,
-    query: str | None = None,
-    project: str | None = None,
-) -> dict:
+@mcp.tool()
+async def adn_audio(op: AudioOperation) -> dict:
     """
     Voice and audio management for Advanced Memory.
 
@@ -148,6 +118,9 @@ async def adn_audio(
     - Start playing music on Plex:
       adn_audio(operation='music', command='play', query='Bach')
     """
+    operation = op.operation
+    project = getattr(op, "project", None)
+
     logger.info(f"MCP tool call tool=adn_audio operation={operation}")
 
     # Get the active project
@@ -157,50 +130,30 @@ async def adn_audio(
 
     # Route to appropriate operation handler
     if operation == "dictate":
-        return await _dictate_operation(active_project, audio_path, record_duration, tags)
+        return await _dictate_operation(active_project, op.audio_path, op.record_duration, op.tags)
     elif operation == "speak":
-        if not identifier:
-            return "# Tell me what to say!\n\nI'd love to help you speak some content, but I need to know which note or text you'd like me to read. Just give me the title or identifier."
         # Validate volume range
-        if volume < 1 or volume > 10:
+        if op.volume < 1 or op.volume > 10:
             return "# Volume adjustment needed!\n\nLet's keep the volume between 1 and 10 (it defaults to 5). This helps ensure great audio quality without being too loud or quiet."
-        return await _speak_operation(active_project, identifier, voice, speed, volume, save_audio)
+        return await _speak_operation(active_project, op.identifier, op.voice, op.speed, op.volume, op.save_audio)
     elif operation == "listen":
-        # Default to 5 seconds if not specified
-        if not record_duration and not audio_path:
-            record_duration = 5
-        return await _listen_command_operation(active_project, audio_path, record_duration)
-    elif operation == "wake":
-        # DEPRECATED: Use wake_start instead
-        # Default to 5 seconds for command recording after wake word
-        if not record_duration:
-            record_duration = 5
-        return await _wake_word_operation(active_project, wake_word, record_duration)
+        return await _listen_command_operation(active_project, op.audio_path, op.record_duration)
     elif operation == "wake_start":
-        # Default to 5 seconds for command recording after wake word
-        if not record_duration:
-            record_duration = 5
-        return await _wake_start_operation(active_project, wake_word, record_duration)
+        return await _wake_start_operation(active_project, op.wake_word, op.record_duration)
     elif operation == "wake_stop":
         return await _wake_stop_operation()
     elif operation == "wake_status":
         return await _wake_status_operation()
     elif operation == "weather":
-        return await _get_weather(location)
+        return await _get_weather(op.location)
     elif operation == "timer":
-        if not duration:
-            return "# Set a timer!\n\nI'd be happy to set a timer for you, but I need to know how long you'd like it to run. Try something like '5 minutes' or '1 hour'."
-        return await _set_timer(duration)
+        return await _set_timer(op.duration)
     elif operation == "alarm":
-        if not time_str:
-            return "# Error\n\nAlarm operation requires: time_str parameter"
-        return await _set_alarm(time_str)
+        return await _set_alarm(op.time_str)
     elif operation == "music":
-        if not command:
-            return "# Error\n\nMusic operation requires: command parameter"
-        return await _control_music(command, query)
+        return await _control_music(op.command, op.query)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen, wake, wake_start, wake_stop, wake_status, weather, timer, alarm, music"
+        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen, wake_start, wake_stop, wake_status, weather, timer, alarm, music"
 
 
 async def _dictate_operation(

@@ -11,7 +11,7 @@ from advanced_memory.mcp.project_session import get_active_project
 from advanced_memory.mcp.tools.utils import call_post
 
 
-@mcp.tool
+# @mcp.tool
 async def load_notion_export(
     export_path: str,
     folder: str = "notion-import",

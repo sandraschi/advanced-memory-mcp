@@ -10,12 +10,12 @@ import json
 import os
 import re
 import socketserver
-from urllib.parse import quote
 import threading
 import webbrowser
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from loguru import logger
 
@@ -41,7 +41,7 @@ def _sanitize_filename(filename: str) -> str:
     return sanitized
 
 
-@mcp.tool
+# @mcp.tool
 async def export_docsify_enhanced(
     export_path: str,
     source_folder: str = "/",
@@ -211,7 +211,7 @@ adn_export("docsify", source_folder="zettelkasten/standards")
 
 
 # Legacy wrapper for backward compatibility
-@mcp.tool
+# @mcp.tool
 async def export_docsify(
     export_path: str,
     source_folder: str = "/",

@@ -8,7 +8,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.read_note import read_note
 
 
-@mcp.tool
+# @mcp.tool
 async def view_note(
     identifier: str, page: int = 1, page_size: int = 10, project: str | None = None
 ) -> str:

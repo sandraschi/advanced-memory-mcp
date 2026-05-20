@@ -7,9 +7,10 @@ It reduces the number of MCP tools while maintaining full functionality.
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.tools.utils import build_error_response
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_import(
     operation: str,
     source_path: str,
@@ -166,7 +167,17 @@ async def adn_import(
     elif operation == "gemini":
         return await _gemini_import(source_path, destination_folder, project)
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: obsidian, joplin, notion, evernote, onenote, archive, canvas, claude_skills, anthropic_skills, claude_conversations, claude_projects, chatgpt, gemini"
+        return build_error_response(
+            error="Invalid operation",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported by adn_import.",
+            recovery_options=[
+                "Supported operations: obsidian, joplin, notion, evernote, onenote, archive, canvas, claude_skills, anthropic_skills, claude_conversations, claude_projects, chatgpt, gemini",
+                "Check operation spelling and try again",
+                "Use help(topic='adn_import') for more details",
+            ],
+            urgency="medium",
+        )
 
 
 async def _obsidian_import(

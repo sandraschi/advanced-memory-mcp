@@ -11,96 +11,63 @@ from fastmcp import Context
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
+from advanced_memory.mcp.models.portmanteau import InboxOperation
 from advanced_memory.mcp.project_session import add_project_metadata, session
 from advanced_memory.services.inbox_processor import get_inbox_processor
 
 
-# Legacy tool decommissioned in favor of Managed Namespaces (inbox:*)
-# Keeping the function as a logic provider for the transition
-async def adn_inbox(
-    operation: Literal["status", "process", "info", "watch"],
-    file_name: str | None = None,
-    ctx: Context | None = None,
-) -> dict:
-    """Inbox portmanteau for Advanced Memory.
+@mcp.tool()
+async def adn_inbox(op: InboxOperation, ctx: Context | None = None) -> dict:
+    """
+    Automated document ingestion and conversion engine for Advanced Memory.
 
-    This tool consolidates the entire file ingestion pipeline, handling
-    detection, conversion, and ingestion of external documents.
-
-    RESPONSES:
-    Success: {"success": true, "operation": "...", "summary": "...", "result": {...}}
-    Error: {"success": false, "error": "...", "error_code": "...", "message": "...", "recovery_options": [...]}
-
-    For errors, check recovery_options for next steps.
+    This tool consolidates the entire file ingestion pipeline, handling detection,
+    conversion (via Pandoc), and semantic ingestion of external documents into
+    the active knowledge base.
 
     ---------------------------------------------------------------------------
-    [PORTMANTEAU PATTERN RATIONALE]
-    Consolidates file ingestion pipeline into one tool to centralize file type detection and conversion logic.
+    [RATIONALE]
+    Knowledge often resides in non-markdown silos (PDFs, Word docs, HTML).
+    By providing a unified 'Inbox' bridge, we allow the AI to import external
+    intelligence with a single command, automatically handling formatting
+    normalization and metadata tagging.
 
     ---------------------------------------------------------------------------
     [SUPPORTED OPERATIONS]
-    - status: Check inbox state, file counts, and supported formats.
-    - process: Convert and ingest pending files (Pandoc/Text extraction).
-    - info: Detailed environment and dependency information.
-    - watch: Toggle or check background monitoring status.
+    - status: Check inbox state, pending file counts, and supported formats.
+    - process: Batch convert and ingest pending documents into the active project.
+    - info: Returns detailed dependency status (Pandoc/pypdf) and system paths.
+    - watch: Manages the real-time background ingestion monitoring state.
 
     ---------------------------------------------------------------------------
     [SUPPORTED FORMATS]
     - .md: Native markdown (direct ingestion).
-    - .docx: Word documents (via Pandoc).
-    - .html: HTML web pages (via Pandoc).
-    - .pdf: PDF documents (via pypdf/pdftotext).
+    - .docx: Word documents (via Pandoc conversion).
+    - .html: Web pages and exports (via Pandoc conversion).
+    - .pdf: Research papers and reports (via text extraction).
     - .txt: Plain text (formatting wrapper).
 
     ---------------------------------------------------------------------------
-    [OPERATIONS DETAIL]
-
-    status: Inbox overview
-    - Returns: Current file counts, directory paths, and pending items.
-    - Use when: Checking if you have files waiting to be processed.
-
-    process: Execute ingestion
-    - Parameters: file_name (optional).
-    - Function: Converts files to markdown, adds metadata, moves to project.
-    - Use when: You've dropped files and want to import them now.
-
-    info: System check
-    - Returns: Dependency status (Pandoc, pypdf) and configuring paths.
-    - Use when: Troubleshooting conversion issues or finding the inbox path.
-
-    watch: Background monitor
-    - Function: Managing the background directory watcher.
-    - Use when: Setting up automated "drop-and-forget" workflows.
-
-    ---------------------------------------------------------------------------
-    [PREREQUISITES]
-    - Pandoc (for .docx/.html conversion).
-    - pypdf (for .pdf text extraction).
-
-    ---------------------------------------------------------------------------
     [PARAMETERS]
-    - operation (str): The inbox operation to perform (Required).
-    - file_name (str): Specific file to process (Optional).
-    - ctx (Context): Internal MCP context (Auto-injected).
+    - operation (str): The ingestion task (status, process, info, watch).
+    - file_name (str, optional): Specific file to process (relative to inbox root).
 
     ---------------------------------------------------------------------------
     [EXAMPLES]
+    ```python
+    # Check if any new research papers are in the inbox
+    adn_inbox(operation="status")
 
-    - Check pending files:
-      adn_inbox(operation="status")
-
-    - Process all files:
-      adn_inbox(operation="process")
-
-    - Process a specific document:
-      adn_inbox(operation="process", file_name="Report.docx")
-
-    - System diagnostic:
-      adn_inbox(operation="info")
+    # Process a specific report into the active project
+    adn_inbox(operation="process", file_name="Quarterly_Report.docx")
+    ```
     """
-    logger.info(f"MCP tool call tool=adn_inbox operation={operation}")
+    logger.info(f"MCP tool call tool=adn_inbox operation={op.operation}")
 
     # Route to appropriate operation
+    operation = op.operation
+    file_name = getattr(op, "file_name", None)
+
     if operation == "status":
         return await _status_operation(ctx)
     elif operation == "process":
@@ -110,21 +77,7 @@ async def adn_inbox(
     elif operation == "watch":
         return await _watch_operation(ctx)
     else:
-        return dedent(
-            f"""
-            # Error
-
-            Invalid operation '{operation}'.
-
-            Supported operations:
-            - status: Show inbox status
-            - process: Process files in inbox
-            - info: Get inbox information
-            - watch: Start inbox watcher
-
-            Use: adn_inbox("status")
-            """
-        ).strip()
+        return f"Error: Unknown operation {operation}"
 
 
 async def _status_operation(ctx: Context | None) -> str:

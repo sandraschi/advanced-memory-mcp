@@ -13,7 +13,7 @@ from advanced_memory.mcp.tools.utils import build_error_response
 from advanced_memory.utils.export_paths import format_export_path
 
 
-@mcp.tool
+# @mcp.tool
 async def adn_export(
     operation: str,
     export_path: str | None = None,
@@ -309,7 +309,17 @@ async def adn_export(
             resolved_export_path, source_folder, include_subfolders, project, skills_format
         )
     else:
-        return f"# Error\n\nInvalid operation '{operation}'. Supported operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, skills"
+        return build_error_response(
+            error="Invalid operation",
+            error_code="INVALID_OPERATION",
+            message=f"Operation '{operation}' is not supported by adn_export.",
+            recovery_options=[
+                "Supported operations: pdf, pandoc, docsify, html, joplin, pdf_book, archive, evernote, notion, skills",
+                "Check operation spelling and try again",
+                "Use help(topic='adn_export') for more details",
+            ],
+            urgency="medium",
+        )
 
 
 async def _pdf_export(
