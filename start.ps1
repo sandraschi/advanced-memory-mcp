@@ -1,4 +1,4 @@
-Param([switch]$Headless)
+  EDITED  D:\Dev\repos\advanced-memory-mcp\start.ps1 Param([switch]$Headless)
 
 # --- SOTA Headless Standard ---
 if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
@@ -9,7 +9,7 @@ $WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
 # ------------------------------
 
 $env:FASTMCP_LOG_LEVEL = 'WARNING'
-# schip-mcp-advanced-memory Start - Standards-Compliant SOTA
-Write-Host 'Starting schip-mcp-advanced-memory...' -ForegroundColor Cyan
+# advanced-memory-mcp Start - Standards-Compliant SOTA
+Write-Host 'Starting advanced-memory-mcp...' -ForegroundColor Cyan
 
 uv run advanced-memory mcp
