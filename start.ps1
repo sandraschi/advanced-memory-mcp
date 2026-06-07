@@ -1,15 +1,14 @@
-Param([switch]$Headless)
-
-# --- SOTA Headless Standard ---
-if ($Headless -and ($Host.UI.RawUI.WindowTitle -notmatch 'Hidden')) {
-    Start-Process pwsh -ArgumentList '-NoProfile', '-File', $PSCommandPath, '-Headless' -WindowStyle Hidden
-    exit
+param(
+    [switch]$Headless,
+    [switch]$BackendOnly,
+    [switch]$FrontendOnly,
+    [switch]$NoBrowser
+)
+$child = Join-Path $PSScriptRoot "webapp/start.ps1"
+if (-not (Test-Path -LiteralPath $child)) {
+    Write-Error "Missing launcher: $child"
+    exit 1
 }
-$WindowStyle = if ($Headless) { 'Hidden' } else { 'Normal' }
-# ------------------------------
+& $child @PSBoundParameters
+exit $LASTEXITCODE
 
-$env:FASTMCP_LOG_LEVEL = 'WARNING'
-# schip-mcp-advanced-memory Start - Standards-Compliant SOTA
-Write-Host 'Starting schip-mcp-advanced-memory...' -ForegroundColor Cyan
-
-uv run advanced-memory mcp
