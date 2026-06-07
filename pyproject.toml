@@ -1,5 +1,5 @@
-[project]
-name = "schip-mcp-advanced-memory"
+  EDITED  D:\Dev\repos\advanced-memory-mcp\pyproject.toml [project]
+name = "advanced-memory-mcp"
 version = "1.8.1"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
 readme = "README.md"

@@ -1,4 +1,4 @@
-name: Industrial Launch (PyPI + Release)
+  EDITED  D:\Dev\repos\advanced-memory-mcp\.github\workflows\industrial-launch.yml name: Industrial Launch (PyPI + Release)
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
           uv build
           # Heritage support for legacy MCPB
           if [ -d "mcpb" ]; then
-            zip -r dist/schip-mcp-advanced-memory.mcpb mcpb/ -x "*.git*"
+            zip -r dist/advanced-memory-mcp.mcpb mcpb/ -x "*.git*"
           fi
 
       - name: Generate Changelog
@@ -66,7 +66,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "schip-mcp-advanced-memory ${{ github.ref_name }}"
+          name: "advanced-memory-mcp ${{ github.ref_name }}"
           body: |
             ## 🚀 Industrial Launch: ${{ github.ref_name }}
             
@@ -74,7 +74,7 @@ jobs:
 
             ### ⚡ Quick Start (Zero-Install)
             ```powershell
-            uvx schip-mcp-advanced-memory --serve
+            uvx advanced-memory-mcp --serve
             ```
 
             ### 📖 What's New
