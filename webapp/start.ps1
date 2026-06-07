@@ -19,6 +19,8 @@ $FleetStart = Initialize-FleetStartMode @PSBoundParameters
 Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 Stop-FleetPortSquatters -Ports @($WebPort, $BackendPort) -Label "advanced-memory-mcp"
 
+if (-not (Assert-FleetPortsAvailable -Ports @($WebPort, $BackendPort) -Label "advanced-memory-mcp")) { exit 1 }
+
 # 2. Setup (frontend has package.json)
 Set-Location $PSScriptRoot
 $frontendPath = Join-Path $PSScriptRoot "frontend"
@@ -68,6 +70,7 @@ Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Hidden", "
 Write-Host "Browser will open automatically when Vite is ready." -ForegroundColor Gray
 if (-not $FleetStart.RunFrontend) { return }
 npm run dev -- --port $WebPort --host
+
 
 
 
