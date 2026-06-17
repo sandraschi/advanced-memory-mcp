@@ -60,28 +60,24 @@ def _purge_fastembed_model_cache(model_slug: str) -> None:
         logger.info("No cache dir found at %s, nothing to purge.", cache_dir)
 
 
-def _load_text_embedding(model_name: str, max_retries: int = 2) -> Any:
-    """Load fastembed TextEmbedding with automatic cache-repair on ONNX errors.
+def _load_text_embedding(model_name: str, max_retries: int = 2) -> tuple[Any, str, int]:
+    """Load fastembed TextEmbedding with automatic cache-repair on ONNX errors."""
+    from advanced_memory.rag.fastembed_gpu import create_text_embedding, repo_root_from_here
 
-    If the ONNX model file is missing or corrupt, the cache is wiped and loading
-    is retried once so the model re-downloads cleanly.
-    """
-    from fastembed import TextEmbedding  # imported here so it stays optional
-
-    # Map model name to the HuggingFace-style slug fastembed uses for caching.
-    # This only needs to cover the models we actually use.
     MODEL_SLUG_MAP = {
         "BAAI/bge-small-en-v1.5": "models--qdrant--bge-small-en-v1.5-onnx-q",
     }
 
     for attempt in range(max_retries):
         try:
-            model = TextEmbedding(model_name=model_name, cache_dir=str(_get_fastembed_cache_dir()))
-            # Smoke-test: actually run the model to surface any ONNX errors now
-            # rather than later during a write operation.
+            model, device, batch = create_text_embedding(
+                model_name,
+                str(_get_fastembed_cache_dir()),
+                repo_root=repo_root_from_here(),
+            )
             list(model.embed(["warmup"]))
             logger.info("TextEmbedding model loaded and verified: %s", model_name)
-            return model
+            return model, device, batch
         except Exception as e:
             err_str = str(e)
             is_onnx_error = (
@@ -158,15 +154,17 @@ class VectorRepository:
         self.db = None
         self.table = None
         self._embedding_model = None
+        self._embed_batch_size = 64
         self._reranker_model = None
         self.encryptor = MetadataEncryptor(passphrase)
 
     @property
     def embedding_model(self):
         if self._embedding_model is None:
-            # Using a lightweight but effective model
-            # For 4090 we could use larger ones, but bge-small is good for speed
-            self._embedding_model = _load_text_embedding("BAAI/bge-small-en-v1.5")
+            model, device, batch = _load_text_embedding("BAAI/bge-small-en-v1.5")
+            self._embedding_model = model
+            self._embed_batch_size = batch
+            logger.info("Vector embed device: %s (batch %s)", device, batch)
         return self._embedding_model
 
     def get_reranker(
@@ -232,12 +230,16 @@ class VectorRepository:
 
         await self.connect()
 
-        # Generate embeddings
+        # Generate embeddings (batched)
         texts = [doc["text"] for doc in documents]
-        embeddings = list(self.embedding_model.embed(texts))
+        batch = self._embed_batch_size
+        all_embeddings: list[Any] = []
+        for start in range(0, len(texts), batch):
+            chunk = texts[start : start + batch]
+            all_embeddings.extend(list(self.embedding_model.embed(chunk)))
 
         data = []
-        for doc, emb in zip(documents, embeddings, strict=False):
+        for doc, emb in zip(documents, all_embeddings, strict=False):
             # Encrypt sensitive chunks
             encrypted_text = self.encryptor.encrypt(doc["text"])
 

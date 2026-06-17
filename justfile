@@ -1,4 +1,5 @@
-﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+import 'scripts/just/fleet.just'
 
 # --- Dashboard ---
 # Open the interactive recipe dashboard in the browser
@@ -36,6 +37,17 @@ stats:
 # Install project + dev dependency group (uv)
 install:
     Set-Location '{{justfile_directory()}}'; uv sync --group dev
+
+# ── RAG (LanceDB vector index) ─────────────────────────────────────────────────
+
+rag-gpu:
+    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu.ps1
+
+rag-gpu-install:
+    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu-install.ps1
+
+rag-cpu-install:
+    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-cpu-install.ps1
 
 # Sync status: files vs database (Rich output best in a real terminal)
 status:
@@ -295,4 +307,3 @@ backup-to path:
 backup-winrar:
     @echo "Creating repository backup (WinRAR)..."
     @pwsh ./scripts/backup-repo.ps1 -UseWinRAR
-
