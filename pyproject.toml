@@ -1,4 +1,4 @@
-  EDITED  D:\Dev\repos\advanced-memory-mcp\pyproject.toml [project]
+[project]
 name = "advanced-memory-mcp"
 version = "1.8.1"
 description = "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation"
@@ -31,7 +31,7 @@ dependencies = [
     "mako>=1.3.0",
     "pillow>=11.1.0",
     "pybars3>=0.9.7",
-    "fastmcp[code-mode,tasks]>=3.2.0",
+    "fastmcp[code-mode,tasks]>=3.4.2",
     "pyjwt>=2.10.1",
     "python-dotenv>=1.1.0",
     "pytest-aio>=1.9.0",
