@@ -1,0 +1,378 @@
+# Advanced Memory 2.0 — Architecture Spec
+
+**Version**: 2.0.0-draft  
+**Target**: Fable 5 (frontier reasoning)  
+**Status**: Spec phase — no code yet  
+**Source of truth**: This document survives context resets. All implementation work references it.
+
+---
+
+## Why 2.0
+
+v1.8.1 is a transitional architecture. 22 legacy `adn_*` portmanteau files are kept as "logic providers" while new namespace apps are partially registered. The search system has three layers with fragile path management. Skills reference stale tool names. The knowledge graph is a flat triple-store with no versioning, no federation, and no conflict resolution.
+
+v2.0 finishes the transition and adds the capabilities that justify a major version bump: entity versioning, cross-project federation, dynamic skills, and a unified retrieval architecture.
+
+---
+
+## Phase 1: Kill the Dual Tool Surface (P0)
+
+**Problem**: The codebase has TWO parallel tool implementations — FastMCP 3.2 namespace apps (`notes.py`, `search.py`) AND 22 legacy `adn_*.py` files. The namespace wrappers delegate to a single dispatch hub (`content_manager.py`) which routes back to legacy functions. This means:
+
+- `@notes_app.tool` decorators are commented out
+- `_dispatch_content_operations()` is a 500-line single-point bottleneck
+- Tool names in SKILL.md files are stale (`adn_notes(operation="write")` vs `notes_write`)
+- No migration path exists when tools are renamed
+
+**Plan**:
+
+1. **Audit all 22 legacy files**: For each, determine if the logic is:
+   - Pure dispatch (delete — namespace app handles it)
+   - Contains business logic (extract into a service)
+   - Contains tool-specific formatting (merge into namespace tool)
+
+2. **Extract business logic into services**: Move all non-decorator, non-dispatch logic from `adn_*.py` into the existing service layer (`services/`).
+
+3. **Activate namespace decorators**: Uncomment all `@*_app.tool()` decorators in namespace apps. Wire them directly to services — no dispatch hub.
+
+4. **Delete the dispatch hub**: Remove `content_manager.py` once all callers are direct.
+
+5. **Delete legacy files**: Archive `adn_*.py` files. Keep in git history; do NOT keep as commented-out code.
+
+6. **Rewrite SKILL.md files**: Update all skill files and session injection prompts to reference new tool names.
+
+**Success criteria**:
+- `rg "adn_" src/advanced_memory/mcp/tools/ --include "*.py"` returns 0 results (except type aliases)
+- All 79 tools registered via namespace decorators with zero commented-out decorators
+- `content_manager.py` deleted
+- All SKILL.md files use current tool names
+- Full test suite passes (90+ tests)
+
+**Risk**: Tool name changes are breaking for external clients. v2.0 is the right version for this — document in CHANGELOG.
+
+---
+
+## Phase 2: Knowledge Graph v2 (P1)
+
+**Problem**: The current triple-store (Entity → Observation → Relation) is flat. Observations are children of Entities, not independent nodes. Relations are always from-entity-owned. There's no:
+
+- Entity versioning (no edit history)
+- Bidirectional relation integrity (resolved vs unresolved)
+- Conflict resolution for concurrent edits
+- Entity templates beyond Zettelkasten roles
+- Cross-project entity references
+
+**Plan**:
+
+### 2a. Entity Versioning
+
+Add a `revisions` table with diff storage:
+
+```python
+class Revision(Base):
+    id: int (PK)
+    entity_id: int (FK → entity.id)
+    version: int  # monotonically increasing per entity
+    diff: str     # unified diff from previous version
+    created_at: datetime
+    author: str   # "user" | "agent" | "sync"
+```
+
+- Every `notes_edit` creates a revision record
+- `notes_read` accepts optional `version=` parameter
+- `notes_revert` restores to a specific version
+- Diff computed via Python `difflib.unified_diff`
+
+### 2b. Observation Independence
+
+Promote Observations to first-class nodes that can have their own relations:
+
+```python
+class Observation(Base):
+    # existing fields stay
+    outgoing_relations → list[Relation]  # NEW: observations can link
+```
+
+This enables: "This fact from paper X contradicts this fact from paper Y" as a relation between two observations, not just between their parent entities.
+
+### 2c. Cross-Project References
+
+Add a `link_type` discriminator to the permalink system:
+
+```
+memory://project-name/entity-permalink           # within same project
+memory://project-name/entity-permalink#obs-id    # to an observation
+memory://@other-project/entity-permalink         # cross-project (resolved lazily)
+```
+
+The `@` prefix signals a cross-project reference. Resolution is deferred until read time, avoiding stale references when projects are renamed.
+
+### 2d. Relation Type Taxonomy
+
+Standardize the `relation_type` field with a controlled vocabulary:
+
+```
+structural:   "contains", "is_part_of", "implements"
+semantic:     "contradicts", "supports", "extends", "refines"
+temporal:     "precedes", "follows", "deprecates"
+causal:       "causes", "prevents", "enables"
+reference:    "cites", "derives_from", "inspired_by"
+```
+
+**Success criteria**:
+- `notes_read(identifier="x", version=3)` returns a historical version
+- Cross-project wikilinks resolve at read time
+- Observations appear as nodes in the knowledge graph canvas
+- Relation type dropdown in UI shows the taxonomy
+
+---
+
+## Phase 3: Unified Retrieval Architecture (P1)
+
+**Problem**: Three search layers (FTS5, LanceDB, reranker) with separate config, separate index rebuilds, and fragile LanceDB path discovery that uses heuristic directory traversal.
+
+**Plan**:
+
+### 3a. Single Index Manager
+
+Create `services/index_manager.py` — a unified lifecycle manager:
+
+```python
+class IndexManager:
+    async def reindex_all(self, project_id: int) -> ReindexReport
+    async def reindex_entity(self, entity_id: int) -> None
+    async def delete_entity(self, entity_id: int) -> None
+    async def health_check(self) -> IndexHealth
+```
+
+All three layers (FTS5, LanceDB, reranker) are managed through this single interface. No more per-layer rebuild scripts.
+
+### 3b. Deterministic LanceDB Path
+
+Replace heuristic path discovery with an explicit config key: `lancedb_path`. Default: `~/.advanced-memory/vectors/`. No traversal up the directory tree.
+
+### 3c. Incremental Vector Reindex
+
+Instead of dropping and recreating the LanceDB table on every reindex:
+- On entity update: delete old chunks, insert new chunks by entity_id
+- On entity delete: delete chunks by entity_id
+- Full reindex only on config change (model, chunk size) or corruption recovery
+
+### 3d. Embedding Model Config
+
+Move embedding model selection to config, with an explicit registry:
+
+```python
+EMBEDDING_MODELS = {
+    "bge-small":  {"name": "BAAI/bge-small-en-v1.5", "dims": 384, "gpu_ok": True},
+    "bge-base":   {"name": "BAAI/bge-base-en-v1.5",  "dims": 768, "gpu_ok": True},
+    "all-minilm": {"name": "sentence-transformers/all-MiniLM-L6-v2", "dims": 384, "gpu_ok": False},
+}
+```
+
+No more hardcoded model strings scattered across `search_service.py`, `vector_repository.py`, and `fastembed_gpu.py`.
+
+**Success criteria**:
+- `index_manager.health_check()` returns pass/fail for all three layers
+- Updating an entity triggers incremental reindex, not full rebuild
+- LanceDB path is a single config key, not a heuristic
+- Changing embedding model via config triggers a one-time full reindex with progress feedback
+
+---
+
+## Phase 4: Dynamic Skills (P2)
+
+**Problem**: Skills are static SKILL.md files with hardcoded tool names. When tools change, skills go stale. There's no skill activation based on project context, no dynamic composition, and no feedback loop from usage.
+
+**Plan**:
+
+### 4a. Tool Reference Resolution
+
+Instead of hardcoding tool names in SKILL.md:
+
+```markdown
+## Tools
+- `notes_write` — Create new notes  ← CURRENT (stale risk)
+```
+
+Add a `## Tools` frontmatter block that auto-resolves:
+
+```yaml
+---
+name: agentic-zettelkasten
+tools:
+  - notes_write
+  - notes_read
+  - zettel_scaffold
+  - search_rag
+---
+```
+
+On server start, validate every skill's `tools:` list against registered tools. Log warnings for mismatches. The `/api/skills/{name}` endpoint renders the validated tool list, not the static text.
+
+### 4b. Project-Aware Skill Activation
+
+Add `auto_activate` rules to skills:
+
+```yaml
+---
+name: china-expert
+auto_activate:
+  project_patterns: ["china-*", "*-cn"]
+  content_keywords: ["China", "Chinese", "Beijing", "Shanghai"]
+---
+```
+
+When a project matches, the session context injection includes the skill. No manual `adn_skills(operation="activate")` needed.
+
+### 4c. Usage Telemetry
+
+Track skill usage in the DB:
+- `skill.usage_count` (already exists — actually increment it)
+- `skill.last_used_at`
+- `skill.effectiveness_rating` (user/agent feedback)
+
+Use telemetry to rank skill suggestions and prune unused skills.
+
+### 4d. Skill Composition
+
+Allow skills to declare dependencies:
+
+```yaml
+---
+name: full-stack-developer
+requires: [api-design-architect, testing-strategy-guide, git-workflow-specialist]
+---
+```
+
+Activating a composite skill activates all dependencies. Deactivating checks for shared dependencies still in use.
+
+**Success criteria**:
+- `GET /api/skills/agentic-zettelkasten` returns validated tool list, not static text
+- Server start logs warnings for skills referencing missing tools
+- Project switch auto-activates matching skills
+- `skill.usage_count` increments on every activation
+
+---
+
+## Phase 5: Project Database Isolation (P3)
+
+**Problem**: All projects share one SQLite database with `project_id` column scoping. A corrupted entity in one project can affect FTS5 indexes for all projects. No per-project backup/restore.
+
+**Plan**:
+
+Add an optional `database_per_project` mode:
+
+```python
+# config.json
+{
+  "projects": {
+    "chrono-glenn": {
+      "path": "D:/dev/chrono-glenn",
+      "database": "D:/dev/chrono-glenn/.advanced-memory/memory.db"  # NEW
+    }
+  },
+  "database_per_project": true
+}
+```
+
+When enabled:
+- Each project gets its own SQLite + LanceDB directory inside the project root
+- The global `~/.advanced-memory/memory.db` stores only the project registry (migrations + project table)
+- Switch project = close old connection, open new one
+- Backup = copy one SQLite file
+
+When disabled (default for small projects): keep the current shared-DB model.
+
+**Success criteria**:
+- Creating a project with `database_per_project=true` creates `{project_path}/.advanced-memory/memory.db`
+- Project switch swaps active database connections
+- Backup script copies a single file per project
+
+---
+
+## Phase 6: Cross-Fleet Federation (P3)
+
+**Problem**: Advanced Memory is a single-node knowledge graph. The 243-repo fleet has no shared memory surface.
+
+**Plan**:
+
+Add a `federation` mode where the server can:
+
+1. **Index external projects as read-only mirrors**: Point at another project's `.advanced-memory/memory.db` and index its entities for cross-project search.
+
+2. **Expose a federation endpoint**: `GET /api/v1/federation/search?q=...` allows other fleet servers to query this knowledge graph. This is the backend of the "cross-project reference" feature from Phase 2c.
+
+3. **Publish memory events**: On entity create/update/delete, emit events to a configurable webhook. Other servers can subscribe.
+
+```python
+# config.json
+{
+  "federation": {
+    "mirrors": ["D:/Dev/repos/arxiv-mcp/.advanced-memory/memory.db"],
+    "publish_webhook": "http://localhost:10797/api/v1/fleet/ingest",
+    "subscribe_endpoints": []
+  }
+}
+```
+
+**Success criteria**:
+- Cross-project search returns results from mirrored projects
+- Entity creation in one project triggers an event POST to the publish webhook
+
+---
+
+## Phase 7: Performance & Scale Targets (P2)
+
+**Current** (v1.8.1):
+- Cold start: ~2-3s (not measured)
+- Simple ops: not measured
+- Max entities per project: declared 50K, untested
+- Vector reindex: full rebuild only
+
+**Target** (v2.0):
+- Cold start: ≤ 1s (measured with 5K entities)
+- `notes_read` p95: ≤ 50ms
+- `search_rag` p95: ≤ 500ms (with GPU reranker)
+- 100K entities per project (benchmarked)
+- Index rebuild: ≤ 2 minutes for 10K entities (down from ~5 minutes)
+- Memory: ≤ 300MB idle (down from ~400MB)
+
+Add a `just bench` recipe that runs a standard benchmark suite:
+1. Create 1K/10K/50K entities, measure write throughput
+2. Search latency distribution (p50/p95/p99)
+3. Index rebuild time
+4. Memory after 1 hour idle
+
+---
+
+## What NOT to Do in 2.0
+
+These are out of scope for v2.0 (v3.0 candidates):
+
+- **Cloud sync / multi-device**: Explicitly out of scope per PRD. Users sync files with Syncthing/OneDrive.
+- **Multi-user / collaboration**: Single-user tool. No auth, no sharing.
+- **Real-time collaboration**: No CRDT, no OT, no WebSocket sync.
+- **Mobile/web client**: The webapp is a dashboard, not a full client.
+- **Note content versioning (full git-style)**: Phase 2a does diffs. Full branching/merging is v3.0.
+- **Plugin system**: No third-party tool extensions in the MCP server.
+- **GraphQL API**: REST remains the webapp API. No GraphQL layer.
+- **Tauri mobile**: Desktop Tauri exists (native/). Mobile is out of scope.
+
+---
+
+## Implementation Order
+
+| Phase | Est. effort | Depends on | Risk |
+|-------|------------|------------|------|
+| P1: Kill Dual Tool Surface | 2 days | None | High (breaking changes) |
+| P2: Knowledge Graph v2 | 2 days | P1 (tool names stable) | Medium (schema migration) |
+| P3: Unified Retrieval | 1 day | P1 | Low (internal refactor) |
+| P4: Dynamic Skills | 1.5 days | P1 (tool names stable) | Low |
+| P5: Project DB Isolation | 1 day | None | Low (opt-in) |
+| P6: Cross-Fleet Federation | 2 days | P2 | Medium (new surface) |
+| P7: Performance Targets | 1 day | P2-P3 | Low (measurement only) |
+
+**Recommended Fable 5 sprint**: Phases 1-3 (5 days). These are the architectural foundation. Phases 4-7 can be done with Opus/Sonnet.
+
+**If only 3 days**: Phase 1 + Phase 2. Finishing the namespace migration and adding entity versioning are the two highest-impact changes.

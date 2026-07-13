@@ -2,7 +2,8 @@
     [switch]$Headless,
     [switch]$BackendOnly,
     [switch]$FrontendOnly,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [switch]$ReuseIfRunning
 )
 
 $WebPort = 10704
@@ -17,9 +18,26 @@ if (-not (Test-Path -LiteralPath $FleetStartPath)) {
 . $FleetStartPath
 $FleetStart = Initialize-FleetStartMode @PSBoundParameters
 Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
-Stop-FleetPortSquatters -Ports @($WebPort, $BackendPort) -Label "advanced-memory-mcp"
 
-if (-not (Assert-FleetPortsAvailable -Ports @($WebPort, $BackendPort) -Label "advanced-memory-mcp")) { exit 1 }
+$portResolve = @{
+    Ports      = @($WebPort, $BackendPort)
+    Label      = "advanced-memory-mcp"
+    AllowReuse = $ReuseIfRunning
+}
+if ($ReuseIfRunning) {
+    $portResolve.HealthChecks = @{
+        $BackendPort = "http://127.0.0.1:$BackendPort/api/v1/health"
+        $WebPort     = "http://127.0.0.1:$WebPort/"
+    }
+}
+$portState = Resolve-FleetPortConflict @portResolve
+if ($portState.Action -eq 'Blocked') { exit 1 }
+if ($portState.Reuse) {
+    if (-not $FleetStart.SkipBrowser -and $FleetStart.RunFrontend) {
+        Start-Process "http://127.0.0.1:$WebPort/"
+    }
+    return
+}
 
 # 2. Setup (frontend has package.json)
 Set-Location $PSScriptRoot

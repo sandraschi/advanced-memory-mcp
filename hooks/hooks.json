@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "text",
+            "text": "## Session Context (Advanced Memory)\n\nYou have access to Advanced Memory (`advanced-memory-mcp`), a persistent knowledge graph with 79 tools across 12 domains. Your memory persists across sessions.\n\n**Before starting work, recall what you already know:**\n\n1. Check recent activity (last 7 days): `adn_nav(operation=\"recent\", timeframe=\"7d\")`\n2. Semantic search for task-relevant context: `adn_search(operation=\"rag\", prompt=\"<describe what you're about to work on>\", limit=5)`\n3. If nothing relevant exists, note the knowledge gap — this is itself useful context.\n\n**At the end of meaningful work, save insights:**\n- Use the `agentic-zettelkasten` skill for structured knowledge capture\n- Or `adn_notes(operation=\"write\", ...)` for quick capture\n- Always embed `[[wikilinks]]` in sentences explaining the relationship\n\n**Zettelkasten rules:**\n- One insight per card (atomicity)\n- Own words, not copy-paste (Feynman test)\n- Links in context: \"relates to [[X]] because...\" not just \"See also: [[X]]\"\n- Retrieve before write: always search for existing cards first"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "advanced-memory-mcp",
+  "version": "1.8.1",
+  "description": "Persistent knowledge graph and Zettelkasten memory for AI coding agents. Auto-recalls prior knowledge at session start via Claude Code hooks. 79 tools across 12 portmanteaus — search, RAG, notes, skills, audio, research.",
+  "author": "Sandra Schipal",
+  "repository": "https://github.com/sandraschi/advanced-memory-mcp",
+  "license": "MIT",
+  "hooks": "../hooks/hooks.json",
+  "keywords": ["memory", "knowledge-graph", "zettelkasten", "rag", "mcp", "notes"]
+}

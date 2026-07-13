@@ -351,3 +351,23 @@ Basic Memory uses `uv-dynamic-versioning` for automatic version management based
 
 ## Development Notes
 - make sure you sign off on commits
+
+## Session Context Injection (Multi-IDE)
+
+This repo is the **reference implementation** for the fleet's multi-IDE session-start
+tool-awareness pattern. When agents start a session, they're reminded what AMD tools
+are available before they begin work.
+
+| IDE | File | What it does |
+|-----|------|-------------|
+| Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | SessionStart text injection |
+| Cursor | `.cursorrules` | System prompt appended every session |
+
+The fleet standard is documented at:
+`mcp-central-docs/standards/rules/session_context_injection.md`
+
+**When adding new AMD tools:** update the tool names in `hooks/hooks.json` and
+`.cursorrules` if the tools mentioned in the injection prompts are renamed.
+
+The Zettelkasten workflow skill (`skills/advanced-memory/agentic-zettelkasten/SKILL.md`)
+is the companion protocol for structured knowledge capture at end-of-session.

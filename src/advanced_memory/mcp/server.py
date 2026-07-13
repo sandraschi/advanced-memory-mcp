@@ -145,6 +145,7 @@ import advanced_memory.mcp.tools.adn_skills
 import advanced_memory.mcp.tools.adn_system
 import advanced_memory.mcp.tools.adn_typora
 import advanced_memory.mcp.tools.adn_zettel
+import advanced_memory.mcp.tools.query_logs  # noqa: F401
 
 # Attach lifespan to the mounted server so file watcher, project session, and
 # MCP resource bootstrap run at startup (reinstates pre-namespace behavior).

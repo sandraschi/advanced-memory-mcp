@@ -51,6 +51,21 @@ If you don't have `just` installed:
 
 ---
 
+## 日本語 (Japanese)
+
+**Advanced Memory (Memops)** は、AIコーディングエージェントのための永続的な知識グラフ＆Zettelkastenメモリシステムです。セッションをまたいで知識を保持し、検索・RAG・ノート・スキル管理・音声操作などを提供します。
+
+- **12のポートマントーツール、79の操作** — `adn_search`（全文検索＋RAG）、`adn_notes`（ノートCRUD）、`adn_zettel`（Zettelkasten生成・分析）、`adn_skills`（スキル管理）、`adn_audio`（音声認識・合成）など
+- **デュアルトランスポート** — stdio（Claude Desktop / Cursor）＋ HTTP/SSE（Webダッシュボード）
+- **ローカルファースト** — SQLite + LanceDBベクトル検索、外部API不要
+- **Claude Codeフック対応** — セッション開始時に自動リコール（`.claude-plugin/`）
+
+📖 クイックスタート: `git clone` → `just bootstrap` → `just serve`
+
+日本語での詳細ドキュメントは [docs/ja/](docs/ja/) をご覧ください。
+
+---
+
 **Author:** Sandra Schipal · Vienna, Austria
 
 

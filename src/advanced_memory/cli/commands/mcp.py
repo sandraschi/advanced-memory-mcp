@@ -22,59 +22,32 @@ from advanced_memory.mcp.server import mcp as mcp_server  # pragma: no cover
 
 @contextlib.contextmanager
 def _stdio_single_instance_lock():
-    """Guard stdio mode with a process lock on Windows (opt-out via env)."""
+    """Guard stdio mode with a named mutex on Windows (auto-releases on process death)."""
     if os.getenv("ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE", "1") != "1":
         yield
         return
 
-    lock_path = Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home()))) / ".advanced-memory" / "mcp-stdio.lock"
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-
     if os.name == "nt":
-        import msvcrt
+        import ctypes
 
-        # Use 'r+' to read/write if exists, or 'w+' to create
-        mode = "r+b" if lock_path.exists() else "w+b"
-        lock_file = open(lock_path, mode)
-        try:
-            # Try to acquire a non-blocking lock on the first byte
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+        ERROR_ALREADY_EXISTS = 183
+        mutex_name = "Local\\AdvancedMemoryMCP-0a3f7b"
 
-            # Successfully locked! Write our PID for diagnostics
-            lock_file.seek(0)
-            lock_file.truncate()
-            lock_file.write(str(os.getpid()).encode())
-            lock_file.flush()
-        except OSError as e:
-            # Lock failed. Try to read the PID of the holder
-            holder_pid = "Unknown"
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        handle = kernel32.CreateMutexW(None, True, mutex_name)
+        error = ctypes.get_last_error()
+
+        if handle and error == 0:
             try:
-                lock_file.seek(0)
-                content = lock_file.read().decode().strip()
-                if content.isdigit():
-                    holder_pid = content
-            except Exception:
-                pass
-
-            logger.error(
-                f"advanced-memory stdio already running (PID: {holder_pid}, lock: {lock_path}). "
-                "Close the other instance or set ADVANCED_MEMORY_STDIN_SINGLE_INSTANCE=0."
-            )
-            lock_file.close()
-            raise typer.Exit(1) from e
-        try:
-            yield
-        finally:
-            try:
-                # Clean up: clear PID and unlock
-                lock_file.seek(0)
-                lock_file.truncate()
-                msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+                yield
             finally:
-                lock_file.close()
-                # Try to remove the file if we are the last ones out
-                with contextlib.suppress(OSError):
-                    lock_path.unlink()
+                kernel32.ReleaseMutex(handle)
+                kernel32.CloseHandle(handle)
+        elif error == ERROR_ALREADY_EXISTS:
+            logger.error("advanced-memory stdio already running (named mutex detected)")
+            raise typer.Exit(1)
+        else:
+            yield
     else:
         yield
 
@@ -149,13 +122,30 @@ def mcp(
         if transport != "stdio":
             logger.info("Started file sync in background")
 
+    # Probe for existing HTTP memops if ADVANCED_MEMORY_HTTP_PROXY is explicitly set
+    HTTP_PROXY_URL = os.getenv("ADVANCED_MEMORY_HTTP_PROXY")
+    if HTTP_PROXY_URL and transport == "stdio":
+        try:
+            import httpx
+            _probe = httpx.post(
+                HTTP_PROXY_URL,
+                json={"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-11-25", "capabilities": {}, "clientInfo": {"name": "probe", "version": "1"}}},
+                headers={"Accept": "application/json, text/event-stream"},
+                timeout=0.5,
+            )
+            if _probe.status_code == 200:
+                from fastmcp.server import create_proxy
+                logger.info(f"HTTP memops found at {HTTP_PROXY_URL} — proxying tool calls")
+                _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
+                _proxied.run(transport="stdio")
+                return
+        except Exception:
+            pass
+
     # Now run the MCP server (blocks)
     if transport == "stdio":
         # Restore stdout before FastMCP.run() - FastMCP needs it for JSON-RPC communication
         # The stdout was patched in mcp_instance.py/server.py during imports
-        import os
-        import sys
-
         if hasattr(sys, "_original_stdout"):
             # Flush any buffered output from the null device
             sys.stdout.flush()

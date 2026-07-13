@@ -2,7 +2,8 @@ param(
     [switch]$Headless,
     [switch]$BackendOnly,
     [switch]$FrontendOnly,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [switch]$ReuseIfRunning
 )
 $child = Join-Path $PSScriptRoot "webapp/start.ps1"
 if (-not (Test-Path -LiteralPath $child)) {

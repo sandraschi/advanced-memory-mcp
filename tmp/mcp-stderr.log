@@ -1,0 +1,43 @@
+2026-07-01 11:54:18.956 | DEBUG    | advanced_memory.api.template_loader:__init__:232 - Initialized template loader with directory: D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\templates
+2026-07-01 11:54:20.051 | DEBUG    | advanced_memory.db:_create_engine_and_session:104 - Creating engine for db_url: sqlite+aiosqlite:///C:\Users\sandr\.advanced-memory\memory.db
+2026-07-01 11:54:20.061 | INFO     | advanced_memory.db:run_migrations:256 - Running database migrations...
+2026-07-01 11:54:20.089 | INFO     | advanced_memory.db:run_migrations:273 - Migrations completed successfully
+2026-07-01 11:54:20.091 | INFO     | advanced_memory.repository.search_repository:init_search_index:123 - Initializing search index
+2026-07-01 11:54:20.102 | INFO     | advanced_memory.services.project_service:synchronize_projects:231 - Synchronizing projects between database and configuration
+2026-07-01 11:54:20.121 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'claude-depot-consolidated' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.121 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 3 with data: {'is_active': False}
+2026-07-01 11:54:20.127 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 3
+2026-07-01 11:54:20.129 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'japan-trip-2025' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.130 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 5 with data: {'is_active': False}
+2026-07-01 11:54:20.133 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 5
+2026-07-01 11:54:20.134 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'general-ai' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.134 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 7 with data: {'is_active': False}
+2026-07-01 11:54:20.138 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 7
+2026-07-01 11:54:20.139 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'mcp-investigation' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.139 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 8 with data: {'is_active': False}
+2026-07-01 11:54:20.142 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 8
+2026-07-01 11:54:20.144 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'obsidian-integrated' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.145 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 9 with data: {'is_active': False}
+2026-07-01 11:54:20.148 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 9
+2026-07-01 11:54:20.150 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'chitchat' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.150 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 10 with data: {'is_active': False}
+2026-07-01 11:54:20.153 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 10
+2026-07-01 11:54:20.155 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'advanced-memory-mcp' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.155 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 11 with data: {'is_active': False}
+2026-07-01 11:54:20.157 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 11
+2026-07-01 11:54:20.159 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'japan-2025' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.160 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 13 with data: {'is_active': False}
+2026-07-01 11:54:20.164 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 13
+2026-07-01 11:54:20.165 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'tomfoolery-and-fiddlefaddle' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.166 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 14 with data: {'is_active': False}
+2026-07-01 11:54:20.168 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 14
+2026-07-01 11:54:20.170 | INFO     | advanced_memory.services.project_service:synchronize_projects:326 - Project 'wakan' exists in database but not in config - marking inactive
+2026-07-01 11:54:20.170 | DEBUG    | advanced_memory.repository.repository:update:244 - Updating Project 15 with data: {'is_active': False}
+2026-07-01 11:54:20.174 | DEBUG    | advanced_memory.repository.repository:update:262 - Updated Project: 15
+2026-07-01 11:54:20.175 | DEBUG    | advanced_memory.repository.repository:find_all:151 - Finding all Project (skip=0, limit=None)
+2026-07-01 11:54:20.179 | DEBUG    | advanced_memory.repository.repository:find_all:164 - Found 12 Project records
+2026-07-01 11:54:20.185 | INFO     | advanced_memory.services.project_service:synchronize_projects:364 - Project synchronization complete
+2026-07-01 11:54:20.187 | INFO     | advanced_memory.mcp.project_session:initialize:34 - Initialized project session with default project: main
+2026-07-01 11:54:20.188 | INFO     | advanced_memory.mcp.project_session:refresh_from_config:101 - Refreshed project session from config, new default: main
+2026-07-01 11:54:20.189 | INFO     | advanced_memory.mcp.project_session:set_current_project:64 - Switched project context: main -> main
+2026-07-01 11:54:20.210 | INFO     | advanced_memory.sync.watch_service:run:105 - Watch service started

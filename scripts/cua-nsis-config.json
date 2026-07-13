@@ -1,0 +1,14 @@
+{
+    "product_name": "Advanced Memory MCP",
+    "install_dir": "%LOCALAPPDATA%\\Advanced Memory MCP",
+    "operator_exe": "advanced-memory-mcp-native.exe",
+    "backend_process_names": ["advanced-memory-mcp-native", "advanced-memory-mcp-backend"],
+    "backend_port": 10700,
+    "health_path": "/api/v1/health",
+    "diagnostics_path": "/api/v1/diagnostics",
+    "feature_smoke_path": "/api/v1/system/info",
+    "window_title_re": "Advanced Memory MCP",
+    "nsis_glob": "native/target/release/bundle/nsis/Advanced Memory MCP_*_x64-setup.exe",
+    "bridge_ok_text": "REST bridge reachable",
+    "uninstall_registry_filter": "*Advanced Memory MCP*"
+}

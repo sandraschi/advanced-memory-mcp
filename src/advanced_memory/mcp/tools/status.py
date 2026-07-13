@@ -1,4 +1,4 @@
-"""Enhanced status tool for Advanced Memory MCP server."""
+﻿"""Enhanced status tool for Advanced Memory MCP server."""
 
 import os
 import platform
@@ -10,6 +10,46 @@ from pydantic import Field
 from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
+
+def _get_instance_role_info() -> list[str]:
+    """Return status lines describing this instance role (writer/reader)
+    and the stdio single-instance lock holder, for multi-IDE diagnostics."""
+    from advanced_memory.readonly import IS_READONLY
+
+    lines: list[str] = []
+    own_pid = os.getpid()
+
+    if IS_READONLY:
+        lines.append("- **Role**: reader (ADVANCED_MEMORY_READONLY=1)")
+        lines.append(f"- **PID**: {own_pid}")
+        lines.append("- **DB mode**: read-only (sqlite mode=ro)")
+        lines.append(
+            "- **Note**: write_note / edit_note / delete_note / move_note "
+            "are disabled on this instance. Use the writer instance for edits."
+        )
+    else:
+        lines.append("- **Role**: writer (read-write)")
+        lines.append(f"- **PID**: {own_pid}")
+        lines.append("- **DB mode**: read-write")
+
+    lock_path = (
+        Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home())))
+        / ".advanced-memory"
+        / "mcp-stdio.lock"
+    )
+    if lock_path.exists():
+        try:
+            lock_content = lock_path.read_text(encoding="utf-8", errors="ignore").strip()
+            holder_pid = lock_content if lock_content.isdigit() else "unknown"
+        except Exception:
+            holder_pid = "unreadable"
+        lines.append(f"- **Stdio lock**: held (PID {holder_pid}) at {lock_path}")
+    elif not IS_READONLY:
+        lines.append(f"- **Stdio lock**: held by this instance (PID {own_pid})")
+    else:
+        lines.append("- **Stdio lock**: bypassed (read-only instance)")
+
+    return lines
 
 
 # @mcp.tool  # Decommissioned in favor of namespaced adn_system portmanteau
@@ -55,6 +95,10 @@ async def _get_basic_status() -> str:
     # Get sync status
     sync_info = sync_status_tracker.get_summary()
     status_lines.append(sync_info)
+
+    # Instance role / multi-IDE lock diagnostics
+    status_lines.extend(["", "## Instance Role"])
+    status_lines.extend(_get_instance_role_info())
 
     # Add quick system info
     status_lines.extend(
@@ -221,6 +265,9 @@ async def _get_diagnostic_status() -> str:
     status_lines.extend([sync_info, "", "---", ""])
 
     # Environment variables
+    status_lines.extend(["", "## Instance Role"])
+    status_lines.extend(_get_instance_role_info())
+
     status_lines.extend(["## Environment Variables"])
     relevant_vars = ["ADVANCED_MEMORY_HOME", "PYTHONPATH", "PATH"]
     for var in relevant_vars:
@@ -336,9 +383,9 @@ async def _get_diagnostic_status() -> str:
 
             # Check for stability issues
             if error_count > 5:
-                status_lines.append(f"- **⚠️ Stability Issue**: High error count ({error_count})")
+                status_lines.append(f"- **âš ï¸ Stability Issue**: High error count ({error_count})")
             if not running and pid:
-                status_lines.append("- **⚠️ Stability Issue**: Service stopped unexpectedly")
+                status_lines.append("- **âš ï¸ Stability Issue**: Service stopped unexpectedly")
 
             # Recent events
             recent_events = watch_data.get("recent_events", [])

@@ -1,0 +1,141 @@
+# Phase 1 Triage Checklist — advanced-memory-mcp v2.0
+
+**Created:** 2026-07-07 (Fable sprint, session 1)
+**Spec:** `ARCHITECTURE_2_0.md` Phase 1 (rev 2026-07-07)
+**Step 0 decision:** Option (a) — namespace surface wins. Portmanteaus retire in v2.0. Compact tool profile (`ADVANCED_MEMORY_TOOL_PROFILE=compact`, ≤20 tools) ships in the same release.
+**Rules:** This file is the resumption point after any context reset. Work top to bottom. Mark items `[x]` with a date. Never delete a file before its logic's new home is listed in the "moved to" column and tests pass. All deletions require a git checkpoint commit first (GIT_REPOSITORY_SAFETY).
+
+---
+
+## Session 1 status (2026-07-07)
+
+- [x] HEAD inventory verified (31 adn_* files, 95 active decorators, 40+ commented, runtime surface = 12 portmanteaus, zero mounts)
+- [x] Spec Phase 1 rewritten against HEAD
+- [x] Step 0 decided: option (a)
+- [ ] Git checkpoint commit before any destructive edit — **BLOCKED: needs terminal (gitops/winops unavailable in session 1)**
+- [ ] `uv run pytest` baseline count recorded: ______ tests
+- Session 1 work is additive only: new files under `services/content/`, this checklist, spec updates.
+
+---
+
+## A. content_manager.py decomposition (Step 1) — line map at HEAD 2026-07-07
+
+File: `src/advanced_memory/mcp/tools/content_manager.py` (2,408 lines). Pure moves, no behavior changes. Line ranges are inclusive and were grep-verified this session; re-verify if the file's mtime changes.
+
+| Lines | Function | Target module | Status |
+|-------|----------|--------------|--------|
+| 1–46 | Module docstring, imports, TagType, operation frozensets | Split: frozensets go to whichever module owns dispatch retirement notes; imports replicated per service module as needed | pending |
+| 48–61 | build_success_response / build_error_response | Already duplicated in `tools/utils.py` (exported by `tools/__init__.py`) — VERIFY identical, then delete this copy; all services import from `tools/utils` | pending |
+| 64–559 | `_dispatch_content_operations` | DIES in Step 2 (callers rewired to services). Contains inline find_runts/find_junk QC logic — extract to `services/content/qc.py` before deletion | pending |
+| 559–718 | `adn_notes` (commented-out tool def) | delete | pending |
+| 719–835 | `adn_note_ai` (commented-out tool def) | delete | pending |
+| 836–913 | `adn_corpus_qc` (commented-out tool def) | delete | pending |
+| 914–1105 | `adn_content` (commented-out tool def) | delete | pending |
+| 1106–1338 | `_write_operation` | `services/content/crud.py` | extracted session 1 |
+| 1339–1375 | `_read_operation` | `services/content/crud.py` | extracted session 1 |
+| 1376–1430 | `_get_latest_identifier` | `services/content/crud.py` | extracted session 1 |
+| 1431–1443 | `_read_latest_operation` | `services/content/crud.py` | extracted session 1 |
+| 1444–1452 | `_view_operation` | `services/content/crud.py` | extracted session 1 |
+| 1453–1461 | `_view_rendered_operation` | `services/content/crud.py` | extracted session 1 |
+| 1462–1486 | `_edit_operation` | `services/content/crud.py` | extracted session 1 |
+| 1487–1696 | `_edit_tags_operation` | `services/content/tagging.py` | extracted session 1 |
+| 1697–1707 | `_move_operation` | `services/content/crud.py` | extracted session 1 |
+| 1708–1893 | `_extract_content_tags` | `services/content/tagging.py` | extracted session 1 |
+| 1894–1940 | `_quick_capture_operation` | `services/content/capture.py` | extracted session 1 |
+| 1941–1987 | `_daily_note_operation` | `services/content/capture.py` | extracted session 1 |
+| 1988–2006 | `_delete_operation` | `services/content/crud.py` | extracted session 1 |
+| 2007–2103 | `_suggest_tags_operation` | `services/content/tagging.py` | extracted session 1 |
+| 2104–2169 | `_summarize_operation` | `services/content/ai_enrich.py` | extracted session 1 |
+| 2170–2339 | `_enhance_operation` | `services/content/ai_enrich.py` | extracted session 1 |
+| 2340–2408 | `_generate_operation` | `services/content/ai_enrich.py` | extracted session 1 |
+
+Naming on extraction: leading underscore drops (`_write_operation` → `write_note`), signatures otherwise unchanged in session 1. A later pass may clean signatures; not now.
+
+- [ ] QC logic (`find_runts`, `find_junk`) located inside dispatch body and extracted to `services/content/qc.py`
+- [ ] After Step 2 rewiring + green tests + checkpoint: delete `content_manager.py`
+
+## B. Registered adn_* portmanteaus (12) — runtime surface until flip day
+
+All die on flip day (Step 5) after their namespace equivalents are mounted and SKILL.md rewritten. Before each deletion, confirm its namespace app covers every operation the portmanteau exposed.
+
+| File | Namespace equivalent | Coverage gap check | Delete |
+|------|---------------------|--------------------|--------|
+| adn_notes.py | notes_app (7 tools) | none expected — same dispatch args | [ ] |
+| adn_search.py | search_app (3 tools) | verify | [ ] |
+| adn_audio.py (75 KB!) | audio_app (10 tools) | large file — likely contains logic, not just wrapping. Triage as EXTRACT first | [ ] |
+| adn_inbox.py | inbox_app (4 tools) | verify | [ ] |
+| adn_knowledge.py (20 KB) | none obvious | NO namespace app named knowledge — needs new app or merge into notes/search. DECISION NEEDED | [ ] |
+| adn_navigation.py | nav_app (6 tools) | verify | [ ] |
+| adn_project.py | project_app (6 tools) | verify | [ ] |
+| adn_skills.py (61 KB!) | skills_app (11 tools) | large file — EXTRACT logic first | [ ] |
+| adn_system.py | system_app (5 tools) | verify | [ ] |
+| adn_typora.py | typora_app (8 tools) | verify | [ ] |
+| adn_zettel.py | zettel_app (7 tools) | verify | [ ] |
+| adn_automation.py | none | NO namespace app — decide: promote or drop | [ ] |
+
+## C. Unregistered adn_* logic providers (14, tools/)
+
+| File | Size | Verdict (initial) | Done |
+|------|------|-------------------|------|
+| adn_audio_dual_stt.py | 38 KB | EXTRACT → services/audio/ (used by adn_audio/audio_app?) — verify callers | [ ] |
+| adn_content.py | 435 B | DELETE (stub) | [ ] |
+| adn_document_ingest.py | 13 KB | EXTRACT → services/ingest/ | [ ] |
+| adn_editor.py | 21 KB | EXTRACT or DELETE — verify callers | [ ] |
+| adn_export.py | 38 KB | EXTRACT → services/export/ (front for export_* stratum) | [ ] |
+| adn_import.py | 35 KB | EXTRACT → services/import/ | [ ] |
+| adn_knowledge_rag.py | 3 KB | verify vs adn_rag | [ ] |
+| adn_llm.py | 22 KB | EXTRACT → services/llm/ (ai_enrich likely calls into this) | [ ] |
+| adn_observability.py | 6 KB | decommissioned per its own comment → DELETE after verify | [ ] |
+| adn_rag.py | 10 KB | EXTRACT → services/search/ or fold into Phase 3 IndexManager | [ ] |
+| adn_skills_creator.py | 10 KB | EXTRACT → services/skills/ | [ ] |
+| adn_skills_operations_new.py | 27 KB | "_new" suffix = migration debris; diff vs adn_skills, keep one | [ ] |
+| adn_skills_reader.py | 5 KB | EXTRACT → services/skills/ | [ ] |
+| adn_skills_research.py | 5 KB | EXTRACT or DELETE | [ ] |
+
+## D. beta/ (5 files — never imported, never served)
+
+| File | Verdict | Done |
+|------|---------|------|
+| adn_arxiv_research.py (24 KB) | PROMOTE to namespace app `research_app` or DELETE — Sandra call (arxiv-mcp exists in fleet; probable DELETE as duplicate) | [ ] |
+| adn_github_research.py (22 KB) | same call (gitops fleet server exists; probable DELETE) | [ ] |
+| adn_tvtropes_research.py (18 KB) | Sandra call | [ ] |
+| adn_visualize.py (3 KB) | verify vs canvas.py | [ ] |
+| adn_web_search.py (15 KB) | probable DELETE (client-side web search exists everywhere now) | [ ] |
+
+## E. Standalone pre-portmanteau stratum (~20 files, commented decorators, live logic)
+
+All are logic providers today. EXTRACT into services if called by surviving code, DELETE if orphaned. Caller check: `rg "from advanced_memory.mcp.tools.<name> import" src/`.
+
+- [ ] delete_note.py
+- [ ] edit_note.py
+- [ ] edit_in_notepadpp.py
+- [ ] build_context.py
+- [ ] canvas.py
+- [ ] help.py (6 active @mcp.tool defs but module never imported by server.py — confirm dead at runtime, then decide: mount as help_app or delete)
+- [ ] portmanteau_skills.py (1 active @mcp.tool, same situation)
+- [ ] export_docsify.py
+- [ ] export_evernote_compatible.py
+- [ ] export_html_notes.py
+- [ ] export_joplin_notes.py
+- [ ] export_notion_compatible.py
+- [ ] export_pandoc.py
+- [ ] export_pdf_combined.py
+- [ ] export_pdf_native.py
+- [ ] export_to_archive.py
+- [ ] external_mcp_clients.py
+- [ ] inter_server_tools.py.backup — **DELETE unconditionally**
+- [ ] (sweep tools/ for any file not listed here: `Get-ChildItem src\advanced_memory\mcp\tools\*.py`)
+
+## F. Step 3 — mounting (after checkpoint + green tests)
+
+- [ ] server.py: replace 12 `import ...adn_*` lines with `mcp.mount(<app>)` × 11
+- [ ] Decide adn_knowledge / adn_automation homes (see B) before flip
+- [ ] Runtime test: `tools/list` asserts namespace names present (new test file `tests/test_tool_surface.py`)
+- [ ] Compact profile: tag curated ~15 tools, filter via `ADVANCED_MEMORY_TOOL_PROFILE=compact`
+
+## G. Step 6 — reference sweep (flip day)
+
+- [ ] All SKILL.md in this repo → new tool names
+- [ ] rg `adn_` over `D:\Dev\repos\mcp-central-docs`
+- [ ] IDE configs: Claude Desktop, Cursor, Windsurf, OpenCode, Antigravity session-injection prompts
+- [ ] CHANGELOG_LATEST.md: breaking-change notice + migration table (old portmanteau op → new tool)

@@ -128,6 +128,9 @@ async def _dispatch_content_operations(
     mcp_tool: str = "adn_content",
 ) -> dict:
     """Shared router for note/content operations (used by adn_content and split portmanteaus)."""
+    import time as _time
+    _t0 = _time.time()
+    logger.info(f"[TIMED] enter {mcp_tool}.{operation} at +0.0s")
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)
     if results_per_page is not None and page_size == 10:  # Only if default value

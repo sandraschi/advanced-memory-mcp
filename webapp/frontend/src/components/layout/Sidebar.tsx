@@ -69,7 +69,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps)
     >
       {/* Header */}
       <div className="flex h-20 shrink-0 items-center px-6">
-        <div className="flex items-center gap-3 font-bold text-slate-100">
+        <div className="flex items-center gap-3 font-bold text-slate-100 flex-1">
           <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center indigo-glow">
             <Database className="h-5 w-5 text-white" />
           </div>
@@ -79,6 +79,9 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps)
             </span>
           )}
         </div>
+        <button type="button" onClick={onToggleCollapse} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all" title={isCollapsed ? "Expand" : "Collapse"}>
+          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        </button>
       </div>
 
       {/* Navigation — min-h-0 so flex-1 can shrink and overflow-y-auto scrolls */}
@@ -134,22 +137,6 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps)
         </div>
       </nav>
 
-      {/* Footer / Toggle */}
-      <div className="shrink-0 border-t border-white/[0.06] p-4">
-        <button
-          onClick={onToggleCollapse}
-          className="flex w-full items-center justify-center rounded-xl p-2.5 text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all"
-        >
-          {isCollapsed ? (
-            <ChevronRight size={20} />
-          ) : (
-            <div className="flex items-center w-full">
-              <ChevronLeft size={20} className="mr-3" />
-              <span>Collapse</span>
-            </div>
-          )}
-        </button>
-      </div>
     </aside>
   );
 }

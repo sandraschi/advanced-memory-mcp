@@ -1,0 +1,6 @@
+2026-07-01 11:46:40.930 | DEBUG    | advanced_memory.api.template_loader:__init__:232 - Initialized template loader with directory: D:\Dev\repos\advanced-memory-mcp\src\advanced_memory\templates
+Usage: python -m advanced_memory.cli.main [OPTIONS] COMMAND [ARGS]...
+Try 'python -m advanced_memory.cli.main --help' for help.
++- Error ---------------------------------------------------------------------+
+| Missing command.                                                            |
++-----------------------------------------------------------------------------+

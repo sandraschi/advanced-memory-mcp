@@ -809,25 +809,85 @@ async def _connect_operation(count: int, ctx: Context | None) -> str:
 
 
 async def _analyze_operation(category: str | None, depth: int, ctx: Context | None) -> str:
-    """Handle analyze operation - analyze knowledge gaps and recommend templates."""
+    """Handle analyze operation — link graph analysis: orphans, hubs, conflicts, contradictions.
+
+    Builds a full `[[wikilink]]` graph from all notes, then computes:
+    - Orphan detection: cards with 0 inbound links
+    - Hub detection: cards with >=10 inbound links
+    - Conflict cards: frontmatter `status: conflict`
+    - Contradiction pairs: recently modified cards + neighbours
+    """
     if ctx:  # pragma: no cover
         await ctx.info(f"Analyzing knowledge base for gaps in {category or 'all areas'}")
 
     try:
-        # Get current entities
-        response = await call_get(client, f"/{session.get_current_project()}/entities")
+        project = session.get_current_project()
+        response = await call_get(client, f"/{project}/entities")
         entities_data = response.json()
+        entities = entities_data.get("entities", [])
+        total_notes = len(entities)
 
-        total_notes = len(entities_data.get("entities", []))
+        # ── Link graph analysis ──
+        import re
+        from collections import defaultdict
 
-        # Basic analysis
+        _link_re = re.compile(r"\[\[([^\]]+)\]\]")
+        inbound: dict[str, int] = defaultdict(int)
+        outbound: dict[str, int] = defaultdict(int)
+        title_to_slug: dict[str, str] = {}
+
+        for e in entities:
+            slug = e.get("permalink", e.get("title", ""))
+            title_to_slug[e.get("title", slug)] = slug
+            content = e.get("content", "") or ""
+            links = _link_re.findall(content)
+            outbound[slug] = len(links)
+            for link in links:
+                inbound[link] += 1
+
+        # Resolve inbound by both slug and title
+        resolved_inbound: dict[str, int] = defaultdict(int)
+        for link, count in inbound.items():
+            target = title_to_slug.get(link, link)
+            resolved_inbound[target] += count
+
+        orphans = [slug for slug in outbound if resolved_inbound.get(slug, 0) == 0 and slug.lower() != "index"]
+        hubs = [(slug, resolved_inbound[slug]) for slug in resolved_inbound if resolved_inbound[slug] >= 10]
+        conflicts = [e.get("title", "") for e in entities if e.get("status", "") == "conflict"]
+
+        # Contradiction pairs: recently modified + neighbours (top 20)
+        sorted_by_mod = sorted(
+            entities, key=lambda e: e.get("modified", ""), reverse=True
+        )
+        contradiction_pairs: list[tuple[str, str]] = []
+        seen_pairs: set[tuple[str, str]] = set()
+        for e in sorted_by_mod[:30]:
+            slug = e.get("permalink", e.get("title", ""))
+            content = e.get("content", "") or ""
+            for link in _link_re.findall(content):
+                target = title_to_slug.get(link, link)
+                pair = tuple(sorted([slug, target]))
+                if pair not in seen_pairs and slug != target:
+                    seen_pairs.add(pair)
+                    contradiction_pairs.append((slug, target))
+                if len(contradiction_pairs) >= 20:
+                    break
+            if len(contradiction_pairs) >= 20:
+                break
+
+        # ── Build output ──
+        orphan_text = "\n".join(f"- `{o}`" for o in orphans[:15]) if orphans else "- None (all cards have incoming links)"
+        hub_text = "\n".join(f"- `{h}` ({c} inbound)" for h, c in sorted(hubs, key=lambda x: -x[1])[:10]) if hubs else "- None (no card has >=10 inbound links)"
+        conflict_text = "\n".join(f"- `{c}`" for c in conflicts[:10]) if conflicts else "- None"
+        pair_text = "\n".join(f"- `{a}` ↔ `{b}`" for a, b in contradiction_pairs[:10]) if contradiction_pairs else "- No recently-modified pairs found"
+
+        # Template coverage (existing)
         coverage = {}
         for cat_name, cat_templates in CONTENT_TEMPLATES.items():
             coverage[cat_name] = {
                 "available_topics": len(cat_templates),
                 "estimated_notes": sum(len(templates) for templates in cat_templates.values()),
             }
-
         coverage_text = "\n".join(
             f"- **{cat}**: {info['available_topics']} topics, ~{info['estimated_notes']} notes available"
             for cat, info in coverage.items()
@@ -835,52 +895,52 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
 
         result = dedent(
             f"""
-            # 📊 Knowledge Base Analysis
+            # 📊 Zettelkasten Network Analysis
 
-            **Current Notes:** {total_notes}
+            **Total Cards:** {total_notes}
             **Analysis Depth:** {depth}
             **Category Focus:** {category or "All categories"}
 
-            ## Available Template Coverage
+            ## 🔗 Link Graph Health
 
+            ### Orphan Cards (0 inbound links)
+            {orphan_text}
+
+            ### Hub Cards (>=10 inbound links)
+            {hub_text}
+
+            ### Conflict Cards (status: conflict)
+            {conflict_text}
+
+            ### Recently-Modified Neighbour Pairs
+            {pair_text}
+
+            ## 📋 Template Coverage
             {coverage_text}
 
             ## Recommendations
 
-            ### 🎯 Quick Wins
-            - Start with 'developer' → 'python-core' (15 notes)
-            - Add 'git' fundamentals (12 notes)
-            - Build testing knowledge (10 notes)
+            ### 🎯 Orphans — {len(orphans)} cards with no incoming links
+            These cards need connections. Link them to related topics with `[[wikilinks]]` or archive if obsolete.
 
-            ### 📈 Growth Opportunities
-            - Expand into multiple categories
-            - Create cross-category connections
-            - Build progressive learning paths
+            ### 🏗️ Hubs — {len(hubs)} highly-referenced cards
+            These are your "index cards" — the curated entry points to your Zettelkasten. Keep them high-quality.
 
-            ### 🔮 Coming in Phase 4 (Smart Onboarding)
-            - Automatic skill level detection
-            - Personalized gap analysis
-            - Custom learning paths based on your existing notes
-            - Intelligent recommendations matching your style
+            ### ⚠️ Conflicts — {len(conflicts)} flagged cards
+            Cards with `status: conflict` in frontmatter. Review and resolve contradictory information.
 
-            ## Get Started
-
-            Generate your first template:
-            ```
-            adn_zettelmaker("generate",
-                category="developer",
-                topic="python-core")
-            ```
+            ### 🔄 Contradiction Pairs — {len(contradiction_pairs)} recently-modified neighbours
+            When two linked cards both change recently, they may now contradict. Review for consistency.
             """
         ).strip()
 
-        return add_project_metadata(result, session.get_current_project())
+        return add_project_metadata(result, project)
 
     except Exception as e:
         logger.error(f"Error analyzing knowledge base: {e}")
         return dedent(
             f"""
-            # 📊 Knowledge Base Analysis
+            # 📊 Zettelkasten Analysis
 
             **Error:** {e!s}
 

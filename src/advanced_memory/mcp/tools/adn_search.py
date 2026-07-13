@@ -13,8 +13,12 @@ from advanced_memory.mcp.models.portmanteau import SearchOperation
 from advanced_memory.mcp.tools.utils import build_error_response
 
 
+import time as _time
+
 @mcp.tool(name="adn_search")
 async def adn_search(op: SearchOperation) -> Any:
+    _st = _time.time()
+    logger.info(f"[TIMED] enter adn_search op={getattr(op, 'operation', op)} at +0.0s")
     """
     Comprehensive search and semantic discovery for Advanced Memory.
 
