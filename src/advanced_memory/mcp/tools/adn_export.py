@@ -280,9 +280,7 @@ async def adn_export(
             make_toc=make_toc,
         )
     elif operation == "joplin":
-        return await _joplin_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _joplin_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "pdf_book":
         return await _pdf_book_export(
             resolved_export_path,
@@ -297,17 +295,11 @@ async def adn_export(
     elif operation == "repo":
         return await _repo_export(resolved_export_path, source_folder, show_after_export)
     elif operation == "evernote":
-        return await _evernote_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _evernote_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "notion":
-        return await _notion_export(
-            resolved_export_path, source_folder, include_subfolders, project
-        )
+        return await _notion_export(resolved_export_path, source_folder, include_subfolders, project)
     elif operation == "skills":
-        return await _skills_export(
-            resolved_export_path, source_folder, include_subfolders, project, skills_format
-        )
+        return await _skills_export(resolved_export_path, source_folder, include_subfolders, project, skills_format)
     else:
         return build_error_response(
             error="Invalid operation",
@@ -447,15 +439,13 @@ async def _html_export(
     )  # type: ignore[operator,no-any-return]
 
 
-async def _joplin_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _joplin_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Joplin export operation."""
     from advanced_memory.mcp.tools.export_joplin_notes import export_joplin_notes
 
-    return await (
-        export_joplin_notes.fn if hasattr(export_joplin_notes, "fn") else export_joplin_notes
-    )(export_path, source_folder, include_subfolders, True, project)  # type: ignore[operator,no-any-return]
+    return await (export_joplin_notes.fn if hasattr(export_joplin_notes, "fn") else export_joplin_notes)(
+        export_path, source_folder, include_subfolders, True, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _pdf_book_export(
@@ -600,9 +590,7 @@ async def _repo_export(export_path: str, repo_path: str | None, show_after_expor
                         patterns.append(line)
                 if patterns:
                     ignore_specs[gitignore_dir] = PathSpec.from_lines(GitWildMatchPattern, patterns)
-                    logger.debug(
-                        f"Loaded {len(patterns)} patterns from nested .gitignore at {gitignore_dir}"
-                    )
+                    logger.debug(f"Loaded {len(patterns)} patterns from nested .gitignore at {gitignore_dir}")
         except Exception as e:
             logger.warning(f"Failed to read .gitignore at {gitignore_file}: {e}")
 
@@ -642,18 +630,13 @@ async def _repo_export(export_path: str, repo_path: str | None, show_after_expor
                 # Check if file is within this .gitignore's directory
                 try:
                     # Check if rel_path is within gitignore_dir
-                    if (
-                        rel_path_obj.is_relative_to(gitignore_dir)
-                        or gitignore_dir in rel_path_obj.parents
-                    ):
+                    if rel_path_obj.is_relative_to(gitignore_dir) or gitignore_dir in rel_path_obj.parents:
                         # Get path relative to the .gitignore directory
                         rel_to_gitignore = rel_path_obj.relative_to(gitignore_dir)
                         rel_to_gitignore_str = str(rel_to_gitignore).replace("\\", "/")
                         if spec.match_file(rel_to_gitignore_str):
                             should_ignore = True
-                            logger.debug(
-                                f"Ignoring (nested .gitignore in {gitignore_dir}): {rel_path_str}"
-                            )
+                            logger.debug(f"Ignoring (nested .gitignore in {gitignore_dir}): {rel_path_str}")
                             break
                 except ValueError:
                     # File is not within this directory, skip
@@ -766,16 +749,12 @@ Or use: `unzip {export_path_obj.name}` (Linux/macOS)
     return result
 
 
-async def _evernote_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Evernote export operation."""
     return f"[UNICODE] **Evernote Export**\n\nEvernote export functionality requires the full export_evernote_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_evernote_compatible tool for complete functionality."
 
 
-async def _notion_export(
-    export_path: str, source_folder: str, include_subfolders: bool, project: str | None
-) -> str:
+async def _notion_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Notion export operation."""
     return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
 

@@ -145,7 +145,7 @@ import advanced_memory.mcp.tools.adn_skills
 import advanced_memory.mcp.tools.adn_system
 import advanced_memory.mcp.tools.adn_typora
 import advanced_memory.mcp.tools.adn_zettel
-import advanced_memory.mcp.tools.query_logs  # noqa: F401
+import advanced_memory.mcp.tools.query_logs
 
 # Attach lifespan to the mounted server so file watcher, project session, and
 # MCP resource bootstrap run at startup (reinstates pre-namespace behavior).
@@ -309,6 +309,7 @@ if __name__ == "__main__":
         if transport in ("http", "sse"):
             app = server.http_app()
             from fastapi.middleware.cors import CORSMiddleware
+
             app.add_middleware(
                 CORSMiddleware,
                 allow_origins=["*"],
@@ -316,9 +317,11 @@ if __name__ == "__main__":
                 allow_methods=["*"],
                 allow_headers=["*"],
             )
+
             @app.get("/health")
             async def health():
                 return {"status": "ok"}
+
         server.run(
             transport=transport,
             host=host,

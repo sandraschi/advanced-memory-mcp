@@ -227,9 +227,7 @@ async def typora_control(
         )
 
 
-async def _handle_export(
-    format: str | None, output_path: str | None, options: dict[str, Any]
-) -> dict | str:
+async def _handle_export(format: str | None, output_path: str | None, options: dict[str, Any]) -> dict | str:
     """Handle document export operation."""
     if not format:
         return build_error_response(
@@ -529,9 +527,7 @@ async def _handle_set_metadata(options: dict[str, Any]) -> dict:
 **Use `get_metadata` to verify changes**"""
 
 
-async def _handle_search_replace(
-    find_text: str | None, replace_text: str | None, options: dict[str, Any]
-) -> dict:
+async def _handle_search_replace(find_text: str | None, replace_text: str | None, options: dict[str, Any]) -> dict:
     """Search and replace text."""
     if find_text is None:
         return "[UNICODE] search_replace requires 'find_text' parameter"
@@ -656,9 +652,7 @@ async def _handle_batch_export(
             # Open file
             open_result = await typora_client.call("openFile", {"path": file_path})
             if not open_result["success"]:
-                results.append(
-                    f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}"
-                )
+                results.append(f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}")
                 continue
 
             # Brief pause for loading - configurable via environment
@@ -683,9 +677,7 @@ async def _handle_batch_export(
                 results.append(f"[UNICODE] {export_filename}: Exported successfully")
                 successful_exports += 1
             else:
-                results.append(
-                    f"[UNICODE] {export_filename}: Export failed - {export_result['error']}"
-                )
+                results.append(f"[UNICODE] {export_filename}: Export failed - {export_result['error']}")
 
         except Exception as e:
             results.append(f"[UNICODE] {Path(file_path).name}: Error - {e!s}")
@@ -812,9 +804,7 @@ async def _handle_link_validation() -> dict:
 
         if is_valid:
             valid_links += 1
-            validation_results.append(
-                f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}"
-            )
+            validation_results.append(f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}")
         else:
             broken_links += 1
             validation_results.append(

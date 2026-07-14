@@ -288,9 +288,7 @@ class ConfigManager:
         if self.config_file.exists():
             try:
                 raw = json.loads(self.config_file.read_text(encoding="utf-8"))
-                migrated = (
-                    _migrate_projects_away_from_profile_root(raw) if isinstance(raw, dict) else raw
-                )
+                migrated = _migrate_projects_away_from_profile_root(raw) if isinstance(raw, dict) else raw
                 config = AdvancedMemoryConfig(**migrated)
                 if isinstance(raw, dict) and migrated != raw:
                     self.save_config(config)

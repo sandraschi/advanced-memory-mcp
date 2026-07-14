@@ -182,10 +182,7 @@ async def adn_skills_creator(
                 return {
                     "success": ok,
                     "data": {
-                        "issues": [
-                            {"path": issue.path, "issue": issue.issue, "fix": issue.fix}
-                            for issue in issues
-                        ],
+                        "issues": [{"path": issue.path, "issue": issue.issue, "fix": issue.fix} for issue in issues],
                         "spec_compliant": spec_compliant,
                         "warnings": spec_warnings,
                         "agentskills_checks": agentskills_checks,

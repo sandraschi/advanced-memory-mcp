@@ -94,9 +94,7 @@ async def fetch_link_subgraph(
             c = center.strip()
             if c.startswith("entity:") and c[7:].isdigit():
                 eid = int(c[7:])
-                row = await session.execute(
-                    select(Entity).where(Entity.id == eid, Entity.project_id == project_id)
-                )
+                row = await session.execute(select(Entity).where(Entity.id == eid, Entity.project_id == project_id))
                 ent = row.scalars().one_or_none()
                 if ent is None:
                     return {
@@ -144,9 +142,7 @@ async def fetch_link_subgraph(
         for current_d in range(depth):
             if not frontier or len(links_out) >= max_edges:
                 break
-            rows = await _relations_touching(
-                session, project_id, frontier, include_unresolved=include_unresolved
-            )
+            rows = await _relations_touching(session, project_id, frontier, include_unresolved=include_unresolved)
             next_frontier: set[int] = set()
 
             for rel, ef, et in rows:
@@ -208,9 +204,7 @@ async def fetch_link_subgraph(
                             }
                         )
 
-            frontier = {
-                i for i in next_frontier if i in entity_by_id and dist.get(i, -1) == current_d + 1
-            }
+            frontier = {i for i in next_frontier if i in entity_by_id and dist.get(i, -1) == current_d + 1}
 
         nodes_out: list[dict[str, Any]] = []
         for ent in entity_by_id.values():

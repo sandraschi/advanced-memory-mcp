@@ -83,5 +83,5 @@ async def adn_project(op: ProjectOperation) -> Any:
         return build_error_response(
             error="Unsupported operation",
             error_code="INVALID_OPERATION",
-            message=f"Operation {operation} is not supported."
+            message=f"Operation {operation} is not supported.",
         )

@@ -106,8 +106,7 @@ async def _dispatch_content_operations(
     section: str | None = None,
     page: int = 1,
     page_size: int = 10,
-    results_per_page: int
-    | None = None,  # Alias for page_size (compatibility with standalone search_notes)
+    results_per_page: int | None = None,  # Alias for page_size (compatibility with standalone search_notes)
     project: str | None = None,
     # Enhance operation options (batch-upgrade weak-LLM notes with SOTA LLM)
     update_content: bool = True,  # Fix typos, factual errors, biographical updates (death dates)
@@ -129,6 +128,7 @@ async def _dispatch_content_operations(
 ) -> dict:
     """Shared router for note/content operations (used by adn_content and split portmanteaus)."""
     import time as _time
+
     _t0 = _time.time()
     logger.info(f"[TIMED] enter {mcp_tool}.{operation} at +0.0s")
     # Parameter aliasing for compatibility with standalone tools
@@ -150,8 +150,7 @@ async def _dispatch_content_operations(
         if alias_value is not None and content is None:
             content = alias_value
             logger.warning(
-                f"Parameter '{alias_name}' is deprecated. Use 'content' instead. "
-                f"Automatically mapped for this call."
+                f"Parameter '{alias_name}' is deprecated. Use 'content' instead. Automatically mapped for this call."
             )
             # Log for analytics
             logger.info(
@@ -244,9 +243,7 @@ async def _dispatch_content_operations(
         assert identifier is not None
         assert content is not None
         assert folder is not None
-        return await _write_operation(
-            active_project, identifier, content, folder, tags, entity_type
-        )
+        return await _write_operation(active_project, identifier, content, folder, tags, entity_type)
 
     elif operation == "read":
         latest_aliases = {
@@ -324,9 +321,7 @@ async def _dispatch_content_operations(
                 error="Missing edit_operation",
                 error_code="MISSING_EDIT_OP",
                 message="Edit operation requires edit_operation parameter",
-                recovery_options=[
-                    "Valid operations: append, prepend, find_replace, replace_section"
-                ],
+                recovery_options=["Valid operations: append, prepend, find_replace, replace_section"],
             )
 
         # Check for find_replace specific requirements
@@ -351,9 +346,7 @@ async def _dispatch_content_operations(
                 error="Missing content",
                 error_code="MISSING_CONTENT",
                 message=f"Edit operation '{edit_operation}' requires content",
-                recovery_options=[
-                    "Provide the content to add or replace in the 'content' parameter"
-                ],
+                recovery_options=["Provide the content to add or replace in the 'content' parameter"],
             )
         return await _edit_operation(
             active_project,
@@ -504,9 +497,7 @@ async def _dispatch_content_operations(
         if folder:
             filters["folder"] = folder
         result = await _handle_find_runts(filters, 50, project)
-        return build_success_response(
-            "find_runts", result, content=result, max_content_length=max_content_length
-        )
+        return build_success_response("find_runts", result, content=result, max_content_length=max_content_length)
 
     elif operation == "find_junk":
         from advanced_memory.mcp.tools.knowledge_operations import _handle_find_junk
@@ -571,9 +562,7 @@ async def adn_notes(
             "move",
             "delete",
         ],
-        Field(
-            description="Note sub-command (write, read, edit, ...). Only pass other fields this op needs."
-        ),
+        Field(description="Note sub-command (write, read, edit, ...). Only pass other fields this op needs."),
     ],
     identifier: Annotated[
         str | None,
@@ -581,9 +570,7 @@ async def adn_notes(
     ] = None,
     content: Annotated[
         str | None,
-        Field(
-            description="Markdown body; required for write/quick; replacement text for edit find_replace."
-        ),
+        Field(description="Markdown body; required for write/quick; replacement text for edit find_replace."),
     ] = None,
     folder: Annotated[
         str | None,
@@ -845,9 +832,7 @@ async def adn_corpus_qc(
     ],
     folder: Annotated[
         str | None,
-        Field(
-            description="If set, only scan this vault folder; if omitted, scan the whole project."
-        ),
+        Field(description="If set, only scan this vault folder; if omitted, scan the whole project."),
     ] = None,
     max_content_length: Annotated[
         int,
@@ -941,9 +926,7 @@ async def adn_content(
     ],
     identifier: Annotated[
         str | None,
-        Field(
-            description="Note title or permalink; required for most reads/edits and targeted LLM ops."
-        ),
+        Field(description="Note title or permalink; required for most reads/edits and targeted LLM ops."),
     ] = None,
     content: Annotated[
         str | None,
@@ -1155,9 +1138,7 @@ async def _write_operation(
     )
 
     if detect_skill_path(folder):
-        logger.info(
-            f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed."
-        )
+        logger.info(f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed.")
 
         # Check if content already has frontmatter
         fm, body, errors = parse_skill_frontmatter(content)
@@ -1181,7 +1162,9 @@ async def _write_operation(
             skill_name = title_to_skill_name(identifier)
 
             # Create description (use first paragraph from body if available)
-            description = f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            description = (
+                f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            )
 
             # Generate frontmatter
             try:
@@ -1280,9 +1263,7 @@ The API request failed with status code {response.status_code}.
             summary.append(f"- Resolved: {resolved}")
             if unresolved:
                 summary.append(f"- Unresolved: {unresolved}")
-                summary.append(
-                    "\nNote: Unresolved relations point to entities that don't exist yet."
-                )
+                summary.append("\nNote: Unresolved relations point to entities that don't exist yet.")
                 summary.append(
                     "They will be automatically resolved when target entities are created or during sync operations."
                 )
@@ -1307,9 +1288,7 @@ The API request failed with status code {response.status_code}.
                 "tags": tag_list,
             },
             next_steps=[
-                "Read the note to verify content"
-                if action == "created"
-                else "Review the updated content",
+                "Read the note to verify content" if action == "created" else "Review the updated content",
                 "Add related notes or concepts",
                 "Consider enhancing with AI suggestions",
             ],
@@ -1379,9 +1358,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
     try:
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        raw_context = await (
-            recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity
-        )(
+        raw_context = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
             type_filter=["entity", "observation"],
             depth=1,
             timeframe="365d",
@@ -1398,11 +1375,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
 
     except Exception as exc:  # pragma: no cover
         logger.error("adn_content_latest_identifier_error", exc_info=True)
-        return None, (
-            "# Error\n\n"
-            "Unable to load recent activity to determine the latest note.\n"
-            f"Details: {exc}"
-        )
+        return None, (f"# Error\n\nUnable to load recent activity to determine the latest note.\nDetails: {exc}")
 
     context_results = getattr(result, "results", [])
     if not context_results:
@@ -1418,11 +1391,7 @@ async def _get_latest_identifier(active_project) -> tuple[str | None, str | None
 
     identifier = getattr(item, "permalink", None) or getattr(item, "file_path", None)
     if not identifier:
-        return None, (
-            "# Error\n\n"
-            "Could not determine identifier for most recent note.\n"
-            f"Item attributes: {dir(item)}"
-        )
+        return None, (f"# Error\n\nCould not determine identifier for most recent note.\nItem attributes: {dir(item)}")
 
     logger.debug(f"Extracted latest identifier: {identifier}")
     return identifier, None
@@ -1454,9 +1423,9 @@ async def _view_rendered_operation(active_project, identifier: str) -> dict:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await (
-        view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered
-    )(identifier=identifier, project=active_project.name)
+    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def _edit_operation(
@@ -1532,9 +1501,7 @@ async def _edit_tags_operation(
     current_entity = EntityResponse.model_validate(response.json())
 
     # Normalize current tags to a list[str]
-    existing_tags_raw = (
-        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
-    )
+    existing_tags_raw = current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     if isinstance(existing_tags_raw, str):
         # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
         import ast
@@ -1933,9 +1900,7 @@ async def _quick_capture_operation(active_project, content: str, tags: TagType) 
     formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n" + content
 
     # Create the note
-    return await _write_operation(
-        active_project, title, formatted_content, folder, tag_list, "note"
-    )
+    return await _write_operation(active_project, title, formatted_content, folder, tag_list, "note")
 
 
 async def _daily_note_operation(active_project, content: str, tags: TagType) -> dict:
@@ -1969,9 +1934,7 @@ async def _daily_note_operation(active_project, content: str, tags: TagType) -> 
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
         formatted_content = f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
-        return await _write_operation(
-            active_project, title, formatted_content, folder, tag_list, "note"
-        )
+        return await _write_operation(active_project, title, formatted_content, folder, tag_list, "note")
     else:
         # Append to existing daily note
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
@@ -2048,9 +2011,7 @@ Note Content:
 
 Suggest semantic tags for this note."""
 
-        suggested_tags = await llm.generate_json(
-            prompt, system_prompt, max_tokens=300, temperature=0.5
-        )
+        suggested_tags = await llm.generate_json(prompt, system_prompt, max_tokens=300, temperature=0.5)
 
         if isinstance(suggested_tags, list):
             tags_list = [str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag]
@@ -2221,13 +2182,9 @@ async def _enhance_operation(
         if update_style:
             enhancement_tasks.append("Improve structure, clarity, readability, and organization")
         if add_examples:
-            enhancement_tasks.append(
-                "Add concrete examples, illustrations, or case studies where relevant"
-            )
+            enhancement_tasks.append("Add concrete examples, illustrations, or case studies where relevant")
         if add_context:
-            enhancement_tasks.append(
-                "Add background, definitions, and explain why the topic matters"
-            )
+            enhancement_tasks.append("Add background, definitions, and explain why the topic matters")
         if expand_sections:
             enhancement_tasks.append(
                 "Expand bullet points and skeletal sections into full paragraphs; turn outlines into complete notes"
@@ -2240,13 +2197,9 @@ async def _enhance_operation(
                 "Prefer flagging uncertainty over guessing version numbers."
             )
         if add_bibliography:
-            enhancement_tasks.append(
-                "Add a References/Bibliography section with relevant sources if applicable"
-            )
+            enhancement_tasks.append("Add a References/Bibliography section with relevant sources if applicable")
         if not enhancement_tasks:
-            enhancement_tasks.append(
-                "Improve the note while preserving all original content and meaning"
-            )
+            enhancement_tasks.append("Improve the note while preserving all original content and meaning")
         if instruction:
             enhancement_tasks.append(f"Additional instruction: {instruction}")
 
@@ -2261,9 +2214,7 @@ Always preserve the original meaning and key information. For biographical updat
         custom_instruction = f"\n\nCustom instruction: {instruction}" if instruction else ""
         prompt = f"Enhance this note:\n\n{note_preview}{custom_instruction}\n\nReturn the complete enhanced note body (markdown, no YAML frontmatter)."
 
-        enhanced_content = await llm.generate(
-            prompt, system_prompt, max_tokens=4000, temperature=0.5
-        )
+        enhanced_content = await llm.generate(prompt, system_prompt, max_tokens=4000, temperature=0.5)
 
         # Strip frontmatter from LLM response if present (we preserve existing frontmatter)
         from advanced_memory.file_utils import has_frontmatter, remove_frontmatter
@@ -2337,9 +2288,7 @@ The note has been enhanced and updated with improved structure, clarity, and rea
         )
 
 
-async def _generate_operation(
-    active_project, topic: str, folder: str | None, tags: TagType, entity_type: str
-) -> str:
+async def _generate_operation(active_project, topic: str, folder: str | None, tags: TagType, entity_type: str) -> str:
     """Generate new note content using LLM."""
     try:
         from advanced_memory.services.llm_client import get_llm_client
@@ -2368,9 +2317,7 @@ Create a well-structured markdown note with:
 
 Make it informative and useful for a knowledge base."""
 
-        generated_content = await llm.generate(
-            prompt, system_prompt, max_tokens=3000, temperature=0.7
-        )
+        generated_content = await llm.generate(prompt, system_prompt, max_tokens=3000, temperature=0.7)
 
         # Extract title from first line
         first_line = generated_content.split("\n")[0].lstrip("#").strip()

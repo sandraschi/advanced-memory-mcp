@@ -217,9 +217,7 @@ async def _create_operation(
         await ctx.info(f"Creating project: {project_name} at {project_path}")
 
     # Create the project request
-    project_request = ProjectInfoRequest(
-        name=project_name, path=project_path, set_default=set_default
-    )
+    project_request = ProjectInfoRequest(name=project_name, path=project_path, set_default=set_default)
 
     # Call API to create project
     response = await call_post(client, "/api/v1/projects", json=project_request.model_dump())

@@ -1,4 +1,4 @@
-﻿"""Repository for search operations."""
+"""Repository for search operations."""
 
 import json
 import re
@@ -505,9 +505,9 @@ class SearchRepository:
         where_clause = " AND ".join(conditions) if conditions else "1=1"
 
         # Ordering: "recent activity" = last created/edited first when there is no FTS query.
-        has_fts_relevance = bool(
-            search_text and search_text.strip() and search_text.strip() not in ("*", "")
-        ) or bool(title)
+        has_fts_relevance = bool(search_text and search_text.strip() and search_text.strip() not in ("*", "")) or bool(
+            title
+        )
 
         if has_fts_relevance:
             order_clause = (
@@ -515,9 +515,7 @@ class SearchRepository:
                 "COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"
             )
         elif after_date:
-            order_clause = (
-                "ORDER BY COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"
-            )
+            order_clause = "ORDER BY COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"
         elif before_date:
             order_clause = "ORDER BY NULLIF(trim(created_at), '') DESC"
         else:
@@ -649,6 +647,7 @@ class SearchRepository:
         """
         async with self.session_maker() as session:
             from sqlalchemy import text
+
             await session.execute(
                 text(
                     "UPDATE search_index SET file_path = :new_path "
@@ -657,9 +656,7 @@ class SearchRepository:
                 {"new_path": new_file_path, "entity_id": entity_id, "project_id": self.project_id},
             )
             await session.commit()
-        logger.debug(
-            f"Search index path updated entity_id={entity_id} new_file_path={new_file_path}"
-        )
+        logger.debug(f"Search index path updated entity_id={entity_id} new_file_path={new_file_path}")
 
     async def delete_by_entity_id(self, entity_id: int) -> None:
         """Delete an item from the search index by entity_id."""

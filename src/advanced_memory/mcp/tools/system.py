@@ -23,6 +23,7 @@ async def status(
     Provides a comprehensive report on the health and configuration of the Advanced Memory environment.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
+
     return await adn_system(operation="status", level=level, focus=focus)
 
 
@@ -33,6 +34,7 @@ async def sync() -> Any:
     Reports the real-time status of the background file synchronization and indexing engine.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
+
     return await adn_system(operation="sync_status")
 
 
@@ -46,6 +48,7 @@ async def workflow(
     Triggers an autonomous workflow where the agent orchestrates multiple tools to achieve a complex goal.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
+
     return await adn_system(operation="workflow", topic=goal, ctx=ctx)
 
 
@@ -60,22 +63,21 @@ async def external(
     Allows Advanced Memory to act as a control plane by calling tools on other registered MCP servers.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
-    return await adn_system(
-        operation="external_call",
-        server_name=server,
-        tool_name=tool,
-        parameters=args or {}
-    )
+
+    return await adn_system(operation="external_call", server_name=server, tool_name=tool, parameters=args or {})
 
 
 @system_app.tool()
 async def help(
     topic: Annotated[str | None, Field(description="Specific feature or tool to get help on")] = None,
-    level: Annotated[Literal["basic", "intermediate", "expert"], Field(description="Detail level of the documentation")] = "basic",
+    level: Annotated[
+        Literal["basic", "intermediate", "expert"], Field(description="Detail level of the documentation")
+    ] = "basic",
 ) -> Any:
     """Documentation Library
 
     Retrieves high-fidelity guidance and usage examples for the Advanced Memory platform.
     """
     from advanced_memory.mcp.tools.portmanteau_system import adn_system
+
     return await adn_system(operation="help", topic=topic, level=level)

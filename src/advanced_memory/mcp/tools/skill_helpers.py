@@ -105,9 +105,7 @@ def validate_skill_name(name: str) -> tuple[bool, list[str]]:
 
     # Must be hyphen-case (lowercase alphanumeric + hyphen)
     if not re.match(r"^[a-z0-9-]+$", name):
-        errors.append(
-            f"Name must be hyphen-case (lowercase letters, digits, hyphens only). Got: {name}"
-        )
+        errors.append(f"Name must be hyphen-case (lowercase letters, digits, hyphens only). Got: {name}")
 
     # Must not start/end with hyphen
     if name.startswith("-") or name.endswith("-"):
@@ -190,9 +188,7 @@ def validate_skill_frontmatter(frontmatter: dict) -> tuple[list[str], list[str]]
         if "<" in desc or ">" in desc:
             errors.append("Description cannot contain angle brackets (< or >)")
         if len(desc.strip()) < 20:
-            warnings.append(
-                "Description is quite short (< 20 chars). Consider expanding for better discoverability."
-            )
+            warnings.append("Description is quite short (< 20 chars). Consider expanding for better discoverability.")
 
     # Check optional fields format
     if "metadata" in frontmatter and not isinstance(frontmatter["metadata"], dict):
@@ -224,9 +220,7 @@ def generate_repair_suggestions(errors: list[str], frontmatter: dict | None, con
     # No frontmatter at all
     if frontmatter is None:
         suggestions.append("## Add YAML Frontmatter\n")
-        suggestions.append(
-            "Your skill is missing YAML frontmatter. Add this at the top of the file:\n"
-        )
+        suggestions.append("Your skill is missing YAML frontmatter. Add this at the top of the file:\n")
         suggestions.append("```yaml")
         suggestions.append("---")
         suggestions.append("name: your-skill-name  # hyphen-case, lowercase")
@@ -252,13 +246,9 @@ def generate_repair_suggestions(errors: list[str], frontmatter: dict | None, con
         suggestions.append("## Add Required Field: description\n")
         suggestions.append("Add this to your frontmatter:\n")
         suggestions.append("```yaml")
-        suggestions.append(
-            "description: Expert guidance for [topic]. Use when user asks about [specific use cases]."
-        )
+        suggestions.append("description: Expert guidance for [topic]. Use when user asks about [specific use cases].")
         suggestions.append("```\n")
-        suggestions.append(
-            "**Make the description detailed** so Claude knows when to use the skill.\n"
-        )
+        suggestions.append("**Make the description detailed** so Claude knows when to use the skill.\n")
 
     # Invalid name format
     if "name" in frontmatter:

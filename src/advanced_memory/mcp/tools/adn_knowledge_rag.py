@@ -22,15 +22,11 @@ def register_rag_bridge(mcp: FastMCP):
     # @mcp.tool()
     async def adn_knowledge_rag(
         query: Annotated[str, Field(description="The semantic search query or context prompt")],
-        limit: Annotated[
-            int, Field(description="Maximum number of high-density chunks to return")
-        ] = 10,
+        limit: Annotated[int, Field(description="Maximum number of high-density chunks to return")] = 10,
         project: Annotated[
             str | None, Field(description="Optional project override (defaults to current active)")
         ] = None,
-        min_score: Annotated[
-            float, Field(description="Minimum relevance threshold (0.0 to 1.0)")
-        ] = 0.5,
+        min_score: Annotated[float, Field(description="Minimum relevance threshold (0.0 to 1.0)")] = 0.5,
         include_metadata: Annotated[
             bool, Field(description="Whether to include source metadata (file paths, timestamps)")
         ] = True,

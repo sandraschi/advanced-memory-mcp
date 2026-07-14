@@ -66,13 +66,9 @@ async def adn_nav(op: NavOperation) -> Any:
 
     # Route to appropriate operation
     if operation == "ls":
-        return await _list_directory_operation(
-            op.path or "/", 1, None, op.project
-        )
+        return await _list_directory_operation(op.path or "/", 1, None, op.project)
     elif operation == "recent":
-        return await _recent_activity_operation(
-            None, 1, op.timeframe, op.page, op.page_size, 10, op.project
-        )
+        return await _recent_activity_operation(None, 1, op.timeframe, op.page, op.page_size, 10, op.project)
     elif operation == "sync":
         return await _sync_status_operation(op.project)
     elif operation == "status":
@@ -80,9 +76,7 @@ async def adn_nav(op: NavOperation) -> Any:
     elif operation == "backlinks":
         return await _backlinks_operation(op.identifier, 10, op.project)
     elif operation == "build_context":
-        return await _build_context_operation(
-            op.url, op.depth, "7d", 1, 20, op.max_related, op.project
-        )
+        return await _build_context_operation(op.url, op.depth, "7d", 1, 20, op.max_related, op.project)
     else:
         return f"Error: Unsupported operation {operation}"
 
@@ -109,9 +103,7 @@ async def _build_context_operation(
     if hasattr(result, "results") and result.results:
         output.append(f"**Found {len(result.results)} matching items**\n")
         for ctx_result in result.results:
-            item = (
-                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
-            )
+            item = ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             title = getattr(item, "title", getattr(item, "name", "Unknown"))
             item_type = getattr(item, "type", "item")
             permalink = getattr(item, "permalink", "")
@@ -119,9 +111,7 @@ async def _build_context_operation(
 
             if hasattr(ctx_result, "related_results") and ctx_result.related_results:
                 for related in ctx_result.related_results[:3]:
-                    rel_item = (
-                        related.primary_result if hasattr(related, "primary_result") else related
-                    )
+                    rel_item = related.primary_result if hasattr(related, "primary_result") else related
                     rel_title = getattr(rel_item, "title", "Unknown")
                     output.append(f"  - Related: {rel_title}")
     else:
@@ -159,9 +149,7 @@ async def _recent_activity_operation(
     output = [f"# Recent Activity ({timeframe})\n"]
     if hasattr(result, "results") and result.results:
         for ctx_result in result.results:
-            item = (
-                ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
-            )
+            item = ctx_result.primary_result if hasattr(ctx_result, "primary_result") else ctx_result
             title = getattr(item, "title", getattr(item, "name", "Unknown"))
             permalink = getattr(item, "permalink", "")
             timestamp = getattr(item, "timestamp", "N/A")

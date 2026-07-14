@@ -55,7 +55,9 @@ async def import_from_archive(
             # Validate archive structure
             archive_root = extract_path / "basic-memory-backup"
             if not archive_root.exists():
-                return "[UNICODE] **Invalid Archive**\n\nArchive root directory not found. Expected: basic-memory-backup/"
+                return (
+                    "[UNICODE] **Invalid Archive**\n\nArchive root directory not found. Expected: basic-memory-backup/"
+                )
 
             # Read metadata
             metadata_file = archive_root / "metadata.json"
@@ -123,9 +125,7 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
     # Check database
     db_path = archive_root / "database" / DATABASE_NAME
     if db_path.exists():
-        preview_lines.append(
-            f"[CHART] Database: {_format_size(db_path.stat().st_size)} (would replace existing)"
-        )
+        preview_lines.append(f"[CHART] Database: {_format_size(db_path.stat().st_size)} (would replace existing)")
     else:
         preview_lines.append("[UNICODE] Database: Not found in archive")
 
@@ -145,9 +145,7 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
             files = list(project_dir.rglob("*"))
             file_count = len([f for f in files if f.is_file()])
             size = sum(f.stat().st_size for f in files if f.is_file())
-            preview_lines.append(
-                f"  - {project_dir.name}: {file_count} files, {_format_size(size)}"
-            )
+            preview_lines.append(f"  - {project_dir.name}: {file_count} files, {_format_size(size)}")
     else:
         preview_lines.append("[UNICODE] Projects: No projects directory found")
 
@@ -172,9 +170,7 @@ async def _create_backup(config_manager: ConfigManager) -> str:
     return str(backup_path)
 
 
-async def _restore_components(
-    archive_root: Path, config_manager: ConfigManager, restore_mode: str
-) -> list[str]:
+async def _restore_components(archive_root: Path, config_manager: ConfigManager, restore_mode: str) -> list[str]:
     """Restore database, config, and projects."""
     results = []
 

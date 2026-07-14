@@ -98,9 +98,7 @@ def _filter_database(
                 # Find entities with excluded tags
                 tag_conditions = " OR ".join(["entity_metadata LIKE ?" for _ in exclude_tags])
                 tag_params = [f'%"tags":%"{tag}"%' for tag in exclude_tags]
-                where_conditions.append(
-                    f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))"
-                )
+                where_conditions.append(f"NOT (entity_metadata LIKE '%\"tags\"%' AND ({tag_conditions}))")
                 params.extend(tag_params)
 
             if since_date and since_date > datetime.min:
@@ -212,11 +210,7 @@ async def export_to_archive(
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
         # If path is a directory or doesn't have a filename, create default name with timestamp
-        if (
-            archive_path.is_dir()
-            or not archive_path.name
-            or archive_path.name == archive_path.suffix
-        ):
+        if archive_path.is_dir() or not archive_path.name or archive_path.name == archive_path.suffix:
             # Use directory name or default name
             default_name = "advanced-memory-backup"
             if compress:
@@ -285,9 +279,7 @@ async def export_to_archive(
                     entities_kept, entities_filtered = _filter_database(
                         db_source, db_dest, exclude_tags, cutoff_date, project_ids
                     )
-                    logger.info(
-                        f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered"
-                    )
+                    logger.info(f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered")
                 else:
                     # Simple copy
                     shutil.copy2(db_source, db_dest)
@@ -320,16 +312,10 @@ async def export_to_archive(
             # Apply project filtering
             if exclude_projects:
                 # Exclude specified projects
-                projects_to_export = {
-                    name: path
-                    for name, path in all_projects.items()
-                    if name not in exclude_projects
-                }
+                projects_to_export = {name: path for name, path in all_projects.items() if name not in exclude_projects}
             elif include_projects:
                 # Include only specified projects
-                projects_to_export = {
-                    name: path for name, path in all_projects.items() if name in include_projects
-                }
+                projects_to_export = {name: path for name, path in all_projects.items() if name in include_projects}
             else:
                 # Include all projects
                 projects_to_export = all_projects
@@ -447,9 +433,7 @@ async def export_to_archive(
                 try:
                     test_zip = zipfile.ZipFile(archive_path, "r")
                     test_zip.close()
-                    logger.info(
-                        f"ZIP archive created and verified: {archive_path} (ZIP64: {needs_zip64})"
-                    )
+                    logger.info(f"ZIP archive created and verified: {archive_path} (ZIP64: {needs_zip64})")
                 except zipfile.BadZipFile as e:
                     logger.error(f"Created ZIP file is invalid: {e}")
                     raise
@@ -466,9 +450,7 @@ async def export_to_archive(
             final_size = archive_path.stat().st_size
 
             # Format results
-            projects_list = "\n".join(
-                f"  - {name}: {path}" for name, path in projects_to_export.items()
-            )
+            projects_list = "\n".join(f"  - {name}: {path}" for name, path in projects_to_export.items())
 
             filter_info = ""
             if filters_applied:

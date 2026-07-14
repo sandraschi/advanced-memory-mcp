@@ -204,9 +204,7 @@ async def adn_audio_dual_stt(
         return f"# Error\n\nInvalid operation '{operation}'. Supported operations: dictate, speak, listen_dual_stt, wake_start_dual, wake_stop_dual, wake_status_dual, character_status, weather, timer, alarm, music"
 
 
-async def _listen_dual_stt_operation(
-    active_project, audio_path: str | None, record_duration: int | None
-) -> dict:
+async def _listen_dual_stt_operation(active_project, audio_path: str | None, record_duration: int | None) -> dict:
     """
     Enhanced voice command input using ikubaysan dual STT pipeline.
 
@@ -687,16 +685,12 @@ async def _dual_stt_listener_background(
                 # Check for wake word with Sphinx
                 sphinx_text = ""
                 try:
-                    sphinx_text = recognizer.recognize_sphinx(
-                        audio, keyword_entries=[(wake_word_lower, 0.8)]
-                    ).lower()
+                    sphinx_text = recognizer.recognize_sphinx(audio, keyword_entries=[(wake_word_lower, 0.8)]).lower()
                 except (sr.UnknownValueError, sr.RequestError):
                     pass
 
                 if wake_word_lower in sphinx_text:
-                    logger.info(
-                        f"🎯 Dual STT: Sphinx detected wake word '{wake_word}' in '{sphinx_text}'"
-                    )
+                    logger.info(f"🎯 Dual STT: Sphinx detected wake word '{wake_word}' in '{sphinx_text}'")
 
                     # Update state
                     _conversation_state["wake_word_detected"] = True
@@ -710,9 +704,7 @@ async def _dual_stt_listener_background(
 
                     # Record for specified duration
                     while command_duration < record_duration and not stop_event.is_set():
-                        chunk = sd.rec(
-                            chunk_samples, samplerate=sample_rate, channels=1, dtype="float32"
-                        )
+                        chunk = sd.rec(chunk_samples, samplerate=sample_rate, channels=1, dtype="float32")
                         sd.wait()
                         command_chunks.append(chunk)
                         command_duration += chunk_duration
@@ -722,30 +714,20 @@ async def _dual_stt_listener_background(
                         command_audio = np.concatenate(command_chunks, axis=0)
 
                         # Save command audio
-                        temp_command_file = (
-                            Path.home() / ".advanced-memory" / "temp_dual_stt_command.wav"
-                        )
+                        temp_command_file = Path.home() / ".advanced-memory" / "temp_dual_stt_command.wav"
                         sf.write(temp_command_file, command_audio, sample_rate)
 
                         # PHASE 3: Google Cloud accurate transcription
-                        logger.info(
-                            "🎯 Dual STT: Transcribing command with Google Cloud (Whisper)..."
-                        )
-                        segments, info = whisper_model.transcribe(
-                            str(temp_command_file), beam_size=5
-                        )
-                        command_text = (
-                            " ".join([segment.text for segment in segments]).strip().lower()
-                        )
+                        logger.info("🎯 Dual STT: Transcribing command with Google Cloud (Whisper)...")
+                        segments, info = whisper_model.transcribe(str(temp_command_file), beam_size=5)
+                        command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                         if command_text:
                             logger.info(f"🎯 Dual STT: Transcribed command: '{command_text}'")
 
                             # Execute command
                             try:
-                                await _parse_and_execute_command_dual_stt(
-                                    active_project, command_text
-                                )
+                                await _parse_and_execute_command_dual_stt(active_project, command_text)
                             except Exception as e:
                                 logger.error(f"Dual STT command execution failed: {e}")
                         else:
@@ -812,11 +794,7 @@ async def _wake_status_dual_operation() -> dict:
     global _dual_stt_running, _dual_stt_listener_thread
 
     if _dual_stt_running:
-        thread_status = (
-            "alive"
-            if (_dual_stt_listener_thread and _dual_stt_listener_thread.is_alive())
-            else "dead"
-        )
+        thread_status = "alive" if (_dual_stt_listener_thread and _dual_stt_listener_thread.is_alive()) else "dead"
 
         # Calculate time since last activity
         last_activity = _conversation_state["last_activity"]

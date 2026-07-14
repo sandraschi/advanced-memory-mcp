@@ -80,7 +80,7 @@ async def adn_notes(op: NotesOperation) -> Any:
             folder=op.folder,
             tags=op.tags,
             project=op.project,
-            mcp_tool="adn_notes:write"
+            mcp_tool="adn_notes:write",
         )
     elif operation == "read":
         return await _dispatch_content_operations(
@@ -89,7 +89,7 @@ async def adn_notes(op: NotesOperation) -> Any:
             page=op.page,
             page_size=op.page_size,
             project=op.project,
-            mcp_tool="adn_notes:read"
+            mcp_tool="adn_notes:read",
         )
     elif operation == "edit":
         return await _dispatch_content_operations(
@@ -100,14 +100,11 @@ async def adn_notes(op: NotesOperation) -> Any:
             section=op.section,
             find_text=op.find_text,
             project=op.project,
-            mcp_tool="adn_notes:edit"
+            mcp_tool="adn_notes:edit",
         )
     elif operation == "delete":
         return await _dispatch_content_operations(
-            operation="delete",
-            identifier=op.identifier,
-            project=op.project,
-            mcp_tool="adn_notes:delete"
+            operation="delete", identifier=op.identifier, project=op.project, mcp_tool="adn_notes:delete"
         )
     elif operation == "move":
         return await _dispatch_content_operations(
@@ -115,23 +112,15 @@ async def adn_notes(op: NotesOperation) -> Any:
             identifier=op.identifier,
             destination_path=op.destination,
             project=op.project,
-            mcp_tool="adn_notes:move"
+            mcp_tool="adn_notes:move",
         )
     elif operation == "quick":
         return await _dispatch_content_operations(
-            operation="quick",
-            content=op.content,
-            tags=op.tags,
-            project=op.project,
-            mcp_tool="adn_notes:quick"
+            operation="quick", content=op.content, tags=op.tags, project=op.project, mcp_tool="adn_notes:quick"
         )
     elif operation == "daily":
         return await _dispatch_content_operations(
-            operation="daily",
-            content=op.content,
-            tags=op.tags,
-            project=op.project,
-            mcp_tool="adn_notes:daily"
+            operation="daily", content=op.content, tags=op.tags, project=op.project, mcp_tool="adn_notes:daily"
         )
     else:
         return f"Error: Unsupported operation {operation}"

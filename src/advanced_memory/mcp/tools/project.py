@@ -24,6 +24,7 @@ async def create(
     Creates a new project configuration and links it to the specified file system directory.
     """
     from advanced_memory.mcp.tools.project_manager import _create_operation
+
     return await _create_operation(name, path, set_default, ctx=None)
 
 
@@ -36,6 +37,7 @@ async def switch(
     Activates a different project context, re-scoping all search and file operations.
     """
     from advanced_memory.mcp.tools.project_manager import _switch_operation
+
     return await _switch_operation(name, ctx=None)
 
 
@@ -46,6 +48,7 @@ async def ls() -> Any:
     Lists all projects registered in the knowledge base with their health and session status.
     """
     from advanced_memory.mcp.tools.project_manager import _list_operation
+
     return await _list_operation(ctx=None)
 
 
@@ -58,6 +61,7 @@ async def rm(
     Permanently removes a project's configuration from the database. Files on disk are preserved.
     """
     from advanced_memory.mcp.tools.project_manager import _delete_operation
+
     return await _delete_operation(name, ctx=None)
 
 
@@ -83,4 +87,5 @@ async def detect() -> Any:
     Analyzes the conversation history to automatically identify and switch to the most relevant project.
     """
     from advanced_memory.mcp.tools.project_manager import _detect_operation
+
     return await _detect_operation(ctx=None)

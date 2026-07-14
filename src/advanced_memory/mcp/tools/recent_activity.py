@@ -22,9 +22,7 @@ from advanced_memory.schemas.search import SearchItemType
 
 # @mcp.tool  # Decommissioned in favor of namespaced adn_nav portmanteau
 async def recent_activity(
-    type_filter: Annotated[
-        str | list[str], Field(description="Filter by 'entity', 'relation', 'observation'")
-    ] = "",
+    type_filter: Annotated[str | list[str], Field(description="Filter by 'entity', 'relation', 'observation'")] = "",
     depth: Annotated[int, Field(description="Relation hops (1-3 recommended)")] = 1,
     timeframe: Annotated[
         TimeFrame,
@@ -73,9 +71,7 @@ async def recent_activity(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_types.append(t)
-                logger.warning(
-                    f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types."
-                )
+                logger.warning(f"Invalid type_filter value: '{t}'. Ignoring and continuing with valid types.")
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_types:

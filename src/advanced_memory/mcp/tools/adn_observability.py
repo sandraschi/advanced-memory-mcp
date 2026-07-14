@@ -28,9 +28,7 @@ async def adn_observability(
         ],
         Field(description="Observability operation to perform"),
     ],
-    checkpoint_id: Annotated[
-        str | None, Field(description="Checkpoint ID for rewind operation")
-    ] = None,
+    checkpoint_id: Annotated[str | None, Field(description="Checkpoint ID for rewind operation")] = None,
     repo_path: Annotated[str | None, Field(description="Path to the repository")] = None,
 ) -> dict:
     """Unified tool for AI agent observability and provenance.
@@ -53,9 +51,7 @@ async def adn_observability(
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "ENABLE_FAILED", result.stderr)
-            return build_success_response(
-                "enable", {"message": "Entire.io Checkpoints enabled successfully"}
-            )
+            return build_success_response("enable", {"message": "Entire.io Checkpoints enabled successfully"})
 
         elif operation == "disable":
             result = subprocess.run(
@@ -67,9 +63,7 @@ async def adn_observability(
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "DISABLE_FAILED", result.stderr)
-            return build_success_response(
-                "disable", {"message": "Entire.io Checkpoints disabled successfully"}
-            )
+            return build_success_response("disable", {"message": "Entire.io Checkpoints disabled successfully"})
 
         elif operation == "list":
             # For now, simulate listing if CLI doesn't support structured output yet
@@ -128,9 +122,7 @@ async def adn_observability(
             )
             if result.returncode != 0:
                 return build_error_response("CLI_ERROR", "REWIND_FAILED", result.stderr)
-            return build_success_response(
-                "rewind", {"message": f"Workspace rewound to {checkpoint_id}"}
-            )
+            return build_success_response("rewind", {"message": f"Workspace rewound to {checkpoint_id}"})
 
         elif operation == "clean":
             result = subprocess.run(
@@ -157,9 +149,7 @@ async def adn_observability(
             return build_success_response("status", {"enabled": is_enabled, "protocol": "v1"})
 
         else:
-            return build_error_response(
-                "VALIDATION_ERROR", "UNKNOWN_OP", f"Unknown operation: {operation}"
-            )
+            return build_error_response("VALIDATION_ERROR", "UNKNOWN_OP", f"Unknown operation: {operation}")
 
     except Exception as e:
         logger.error(f"Observability operation '{operation}' failed: {e}")

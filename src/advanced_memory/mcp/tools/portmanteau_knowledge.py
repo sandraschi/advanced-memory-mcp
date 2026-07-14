@@ -45,16 +45,10 @@ async def adn_knowledge(
         str | None,
         Field(description='Search type: "text", "title", "permalink" (for search)'),
     ] = None,
-    projects: Annotated[
-        str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")
-    ] = None,
+    projects: Annotated[str | None, Field(description="Project filter (e.g. 'work', 'personal', 'ALL')")] = None,
     timeframe: Annotated[str | None, Field(description="Time filter (for activity)")] = None,
-    depth: Annotated[
-        int | None, Field(description="Navigation depth (for context/navigation)")
-    ] = None,
-    path: Annotated[
-        str | None, Field(description="File/directory path (for list/navigation)")
-    ] = None,
+    depth: Annotated[int | None, Field(description="Navigation depth (for context/navigation)")] = None,
+    path: Annotated[str | None, Field(description="File/directory path (for list/navigation)")] = None,
     page: Annotated[int | None, Field(description="Page number for results")] = None,
     results_per_page: Annotated[int | None, Field(description="Number of results per page")] = None,
 ) -> dict:
@@ -177,9 +171,7 @@ async def adn_knowledge(
                 "limit": str(per),
                 "offset": str(list_offset),
             }
-            response = await call_get(
-                client, f"{active_project.project_url}/directory/list", params=params
-            )
+            response = await call_get(client, f"{active_project.project_url}/directory/list", params=params)
             raw_page = response.json()
 
             formatted_result = await list_directory(
@@ -225,9 +217,7 @@ async def adn_knowledge(
     elif operation == "activity":
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        return await recent_activity(
-            entity_type or "entity", depth=depth or 1, timeframe=timeframe or "1d"
-        )
+        return await recent_activity(entity_type or "entity", depth=depth or 1, timeframe=timeframe or "1d")
 
     elif operation == "status":
         from advanced_memory.mcp.tools.status import status
@@ -236,9 +226,7 @@ async def adn_knowledge(
         return build_success_response("status", result)
 
     else:
-        return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown operation: {operation}"
-        )
+        return build_error_response("VALIDATION_ERROR", "VALIDATION_ERROR", f"Unknown operation: {operation}")
 
 
 # Decommissioned in favor of namespaced knowledge app (FastMCP 3.2 GA)

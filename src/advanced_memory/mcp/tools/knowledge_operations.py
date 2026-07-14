@@ -41,9 +41,7 @@ async def adn_knowledge_bulk(
         elif operation == "bulk_update":
             return await _handle_bulk_update(filters or {}, action or {}, dry_run, limit, project)
         elif operation == "validate_content":
-            return await _handle_content_validation(
-                filters or {}, action or {}, dry_run, limit, project
-            )
+            return await _handle_content_validation(filters or {}, action or {}, dry_run, limit, project)
         elif operation == "project_stats":
             return await _handle_project_stats(action or {}, project)
         elif operation == "find_duplicates":
@@ -145,9 +143,7 @@ def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, 
     recommendations = []
 
     if distribution["single_use"] > 20:
-        recommendations.append(
-            f"[UNICODE] Consider consolidating {distribution['single_use']} single-use tags"
-        )
+        recommendations.append(f"[UNICODE] Consider consolidating {distribution['single_use']} single-use tags")
     if distribution["rare"] < 5:
         recommendations.append("[UNICODE] Good tag diversity - most tags are being reused")
     if len(tag_counter) > 100:
@@ -156,9 +152,7 @@ def _generate_tag_recommendations(tag_counter: Counter, distribution: dict[str, 
     return recommendations or ["[UNICODE] Tag usage looks healthy"]
 
 
-async def _handle_tag_consolidation(
-    action: dict[str, Any], dry_run: bool, project: str | None
-) -> str:
+async def _handle_tag_consolidation(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
     """Consolidate similar tags, including semantic similarity."""
     semantic_groups = action.get("semantic_groups", [])
     auto_detect = action.get("auto_detect", False)
@@ -180,9 +174,7 @@ async def _handle_tag_consolidation(
 
     if auto_detect:
         results.append("[UNICODE][UNICODE] **AI-Powered Tag Similarity Detection**")
-        results.append(
-            "  [UNICODE] Feature not yet implemented - would analyze tag similarity using embeddings"
-        )
+        results.append("  [UNICODE] Feature not yet implemented - would analyze tag similarity using embeddings")
 
     action_summary = "DRY RUN - No changes made" if dry_run else "CHANGES APPLIED"
 
@@ -201,9 +193,7 @@ async def _handle_tag_consolidation(
 """
 
 
-async def _handle_tag_maintenance(
-    action: dict[str, Any], dry_run: bool, project: str | None
-) -> str:
+async def _handle_tag_maintenance(action: dict[str, Any], dry_run: bool, project: str | None) -> str:
     """Clean up tags - remove duplicates, standardize case, etc."""
     actions = action.get("actions", ["remove_empty", "standardize_case", "remove_duplicates"])
 
@@ -285,9 +275,7 @@ async def _handle_bulk_update(
         operations.append(f"  [UNICODE] {note.get('title', 'Unknown')}: {', '.join(note_changes)}")
 
     status = (
-        "DRY RUN - No changes applied"
-        if dry_run
-        else f"APPLIED {total_changes} changes to {len(matching_notes)} notes"
+        "DRY RUN - No changes applied" if dry_run else f"APPLIED {total_changes} changes to {len(matching_notes)} notes"
     )
 
     return f"""[UNICODE][UNICODE] **Bulk Update Results**
@@ -415,9 +403,7 @@ async def _handle_project_stats(action: dict[str, Any], project: str | None) -> 
 """
 
 
-def _generate_project_recommendations(
-    tag_counter: Counter, folder_counter: Counter, total_notes: int
-) -> list[str]:
+def _generate_project_recommendations(tag_counter: Counter, folder_counter: Counter, total_notes: int) -> list[str]:
     """Generate project recommendations based on statistics."""
     recommendations = []
 
@@ -494,11 +480,7 @@ async def _handle_bulk_move(
         new_path = f"{destination}/{old_path.split('/')[-1]}"
         operations.append(f"  [UNICODE] {old_path} [UNICODE] {new_path}")
 
-    status = (
-        f"DRY RUN - Would move {len(notes_to_move)} notes"
-        if dry_run
-        else f"MOVED {len(notes_to_move)} notes"
-    )
+    status = f"DRY RUN - Would move {len(notes_to_move)} notes" if dry_run else f"MOVED {len(notes_to_move)} notes"
 
     return f"""[FOLDER] **Bulk Move Results**
 
@@ -516,9 +498,7 @@ async def _handle_bulk_move(
 """
 
 
-async def _handle_bulk_delete(
-    filters: dict[str, Any], dry_run: bool, limit: int, project: str | None
-) -> str:
+async def _handle_bulk_delete(filters: dict[str, Any], dry_run: bool, limit: int, project: str | None) -> str:
     """Delete multiple notes with confirmation."""
     # Get notes to delete
     notes_to_delete = await _find_notes_with_filters(filters, limit, project)
@@ -542,9 +522,7 @@ Found {len(notes_to_delete)} notes matching filters: {filters}
 """
 
     status = (
-        f"DRY RUN - Would delete {len(notes_to_delete)} notes"
-        if dry_run
-        else f"DELETED {len(notes_to_delete)} notes"
+        f"DRY RUN - Would delete {len(notes_to_delete)} notes" if dry_run else f"DELETED {len(notes_to_delete)} notes"
     )
 
     return f"""[UNICODE][UNICODE][UNICODE] **Bulk Delete Results**
@@ -594,10 +572,7 @@ async def _handle_find_runts(filters: dict[str, Any], limit: int, project: str |
             runts.append({**note, "content_length": length})
 
     runts = runts[:limit]
-    lines = [
-        f"- `{r.get('permalink', r.get('title', ''))}` ({r.get('content_length', 0)} chars)"
-        for r in runts
-    ]
+    lines = [f"- `{r.get('permalink', r.get('title', ''))}` ({r.get('content_length', 0)} chars)" for r in runts]
     return f"""**Find Runts** (content <= {max_len} chars)
 
 **Filters:** {filters}
@@ -610,9 +585,7 @@ async def _handle_find_runts(filters: dict[str, Any], limit: int, project: str |
 """
 
 
-async def _handle_find_junk(
-    filters: dict[str, Any], action: dict[str, Any], limit: int, project: str | None
-) -> str:
+async def _handle_find_junk(filters: dict[str, Any], action: dict[str, Any], limit: int, project: str | None) -> str:
     """LLM quality assessment of notes. Returns narrative or structured JSON."""
     notes = await _find_notes_with_filters(filters, min(limit, 20), project)
     if not notes:
@@ -632,9 +605,7 @@ async def _handle_find_junk(
 
         llm = get_llm_client()
     except Exception as e:
-        return (
-            f"**Find Junk**\n\nLLM unavailable: {e}. Configure adn_llm or start Ollama/LM Studio."
-        )
+        return f"**Find Junk**\n\nLLM unavailable: {e}. Configure adn_llm or start Ollama/LM Studio."
 
     for note in notes[:limit]:
         permalink = note.get("permalink") or note.get("file_path", "")
@@ -663,9 +634,7 @@ Return {"valid JSON only" if format_type == "structured" else "a brief 1-3 sente
                 raw = await llm.generate_json(prompt, system, max_tokens=300, temperature=0.2)
                 if isinstance(raw, dict):
                     raw["permalink"] = permalink
-                assessments.append(
-                    raw if isinstance(raw, dict) else {"permalink": permalink, "raw": str(raw)}
-                )
+                assessments.append(raw if isinstance(raw, dict) else {"permalink": permalink, "raw": str(raw)})
             else:
                 out = await llm.generate(prompt, system, max_tokens=200, temperature=0.2)
                 assessments.append(f"**{permalink}**: {out.strip()}")
@@ -677,9 +646,7 @@ Return {"valid JSON only" if format_type == "structured" else "a brief 1-3 sente
     return f"**Find Junk** (narrative)\n\n{chr(10).join(str(a) for a in assessments)}"
 
 
-async def _find_notes_with_filters(
-    filters: dict[str, Any], limit: int, project: str | None
-) -> list[dict[str, Any]]:
+async def _find_notes_with_filters(filters: dict[str, Any], limit: int, project: str | None) -> list[dict[str, Any]]:
     """Find notes matching the given filters."""
     try:
         active = get_active_project(project)
@@ -739,11 +706,7 @@ async def _find_notes_with_filters(
 
 def _matches_filters(result: Any, filters: dict[str, Any]) -> bool:
     """Check if a result matches the given filters."""
-    file_path = (
-        result.get("file_path", "")
-        if isinstance(result, dict)
-        else getattr(result, "file_path", "")
-    )
+    file_path = result.get("file_path", "") if isinstance(result, dict) else getattr(result, "file_path", "")
 
     # Folder filter
     if "folder" in filters:

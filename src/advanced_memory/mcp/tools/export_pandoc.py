@@ -167,7 +167,9 @@ adn_export("pdf", export_path="...", source_folder="...")
             else:
                 # Multiple files - open the folder
                 success, msg = open_file_or_folder(export_dir)
-                summary += f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
+                summary += (
+                    f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
+                )
 
         return summary
 
@@ -437,9 +439,7 @@ def _build_pandoc_command(
         cmd.extend(["--template", template_path])
 
     # CSS for HTML output (or PDF via HTML-based engines)
-    if format_type == "html" or (
-        format_type == "pdf" and pdf_engine in ("weasyprint", "wkhtmltopdf")
-    ):
+    if format_type == "html" or (format_type == "pdf" and pdf_engine in ("weasyprint", "wkhtmltopdf")):
         if css_path and Path(css_path).exists():
             cmd.extend(["--css", css_path])
         else:
@@ -487,9 +487,7 @@ def _sanitize_filename(title: str) -> str:
     return title
 
 
-def _generate_export_summary(
-    exported_files: list[str], errors: list[str], format_type: str, export_path: str
-) -> str:
+def _generate_export_summary(exported_files: list[str], errors: list[str], format_type: str, export_path: str) -> str:
     """
     Generate a summary of the export operation.
     """

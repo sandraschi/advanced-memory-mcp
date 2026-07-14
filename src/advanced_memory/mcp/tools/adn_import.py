@@ -151,13 +151,9 @@ async def adn_import(
     elif operation == "canvas":
         return await _canvas_import(source_path, destination_folder, create_missing_files, project)
     elif operation == "claude_skills":
-        return await _claude_skills_import(
-            source_path, destination_folder, preserve_structure, project
-        )
+        return await _claude_skills_import(source_path, destination_folder, preserve_structure, project)
     elif operation == "anthropic_skills":
-        return await _anthropic_skills_import(
-            source_path, destination_folder, preserve_structure, project
-        )
+        return await _anthropic_skills_import(source_path, destination_folder, preserve_structure, project)
     elif operation == "claude_conversations":
         return await _claude_conversations_import(source_path, destination_folder, project)
     elif operation == "claude_projects":
@@ -192,9 +188,7 @@ async def _obsidian_import(
     """Handle Obsidian import operation."""
     from advanced_memory.mcp.tools.load_obsidian_vault import load_obsidian_vault
 
-    return await (
-        load_obsidian_vault.fn if hasattr(load_obsidian_vault, "fn") else load_obsidian_vault
-    )(
+    return await (load_obsidian_vault.fn if hasattr(load_obsidian_vault, "fn") else load_obsidian_vault)(
         source_path,
         destination_folder,
         preserve_structure,
@@ -235,9 +229,9 @@ async def _notion_import(
     """Handle Notion import operation."""
     from advanced_memory.mcp.tools.load_notion_export import load_notion_export
 
-    return await (
-        load_notion_export.fn if hasattr(load_notion_export, "fn") else load_notion_export
-    )(source_path, destination_folder, preserve_structure, project)  # type: ignore[operator,no-any-return]
+    return await (load_notion_export.fn if hasattr(load_notion_export, "fn") else load_notion_export)(
+        source_path, destination_folder, preserve_structure, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _evernote_import(
@@ -250,9 +244,7 @@ async def _evernote_import(
     """Handle Evernote import operation."""
     from advanced_memory.mcp.tools.load_evernote_export import load_evernote_export
 
-    return await (
-        load_evernote_export.fn if hasattr(load_evernote_export, "fn") else load_evernote_export
-    )(
+    return await (load_evernote_export.fn if hasattr(load_evernote_export, "fn") else load_evernote_export)(
         source_path,
         destination_folder,
         preserve_structure,
@@ -276,15 +268,13 @@ async def _onenote_import(
     )  # type: ignore[operator,no-any-return]
 
 
-async def _archive_import(
-    source_path: str, restore_mode: str, backup_existing: bool, project: str | None
-) -> str:
+async def _archive_import(source_path: str, restore_mode: str, backup_existing: bool, project: str | None) -> str:
     """Handle archive import operation."""
     from advanced_memory.mcp.tools.import_from_archive import import_from_archive
 
-    return await (
-        import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive
-    )(source_path, restore_mode, backup_existing, False, project)  # type: ignore[operator,no-any-return]
+    return await (import_from_archive.fn if hasattr(import_from_archive, "fn") else import_from_archive)(
+        source_path, restore_mode, backup_existing, False, project
+    )  # type: ignore[operator,no-any-return]
 
 
 async def _canvas_import(
@@ -349,11 +339,7 @@ async def _claude_skills_import(
             if preserve_structure:
                 # Preserve relative path from source
                 rel_path = skill_file.parent.relative_to(source_dir)
-                folder = (
-                    f"{destination_folder}/{rel_path}"
-                    if rel_path != Path(".")
-                    else destination_folder
-                )
+                folder = f"{destination_folder}/{rel_path}" if rel_path != Path(".") else destination_folder
             else:
                 folder = destination_folder
 
@@ -419,9 +405,7 @@ async def _claude_skills_import(
     return "\n".join(summary_lines)
 
 
-async def _claude_conversations_import(
-    source_path: str, destination_folder: str, project: str | None
-) -> str:
+async def _claude_conversations_import(source_path: str, destination_folder: str, project: str | None) -> str:
     """Handle Claude conversations import operation.
 
     Args:
@@ -496,9 +480,7 @@ async def _claude_conversations_import(
         return f"# Error\n\nImport failed: {e}"
 
 
-async def _claude_projects_import(
-    source_path: str, destination_folder: str, project: str | None
-) -> str:
+async def _claude_projects_import(source_path: str, destination_folder: str, project: str | None) -> str:
     """Handle Claude projects import operation.
 
     Args:
@@ -749,9 +731,7 @@ async def _anthropic_skills_import(
     if source_path.startswith("https://github.com"):
         # Extract repo path from GitHub URL
         repo_path = (
-            source_path.replace("https://github.com/", "")
-            .replace("/tree/main/", "/")
-            .replace("/blob/main/", "/")
+            source_path.replace("https://github.com/", "").replace("/tree/main/", "/").replace("/blob/main/", "/")
         )
         if "/official/" in repo_path:
             # Extract specific skill path
@@ -768,9 +748,7 @@ async def _anthropic_skills_import(
         source_dir = Path(source_path).expanduser()
         if not source_dir.exists():
             return f"# Error\n\nSource path not found: {source_path}"
-        return await _claude_skills_import(
-            source_path, destination_folder, preserve_structure, project
-        )
+        return await _claude_skills_import(source_path, destination_folder, preserve_structure, project)
 
     try:
         async with httpx.AsyncClient() as client:
@@ -786,7 +764,9 @@ async def _anthropic_skills_import(
                 for item in items:
                     if item["type"] == "dir":
                         skill_name = item["name"]
-                        skill_url = f"https://raw.githubusercontent.com/anthropics/skills/main/official/{skill_name}/SKILL.md"
+                        skill_url = (
+                            f"https://raw.githubusercontent.com/anthropics/skills/main/official/{skill_name}/SKILL.md"
+                        )
 
                         try:
                             # Fetch individual skill
@@ -795,9 +775,7 @@ async def _anthropic_skills_import(
                             content = skill_response.text
 
                             # Parse and import
-                            skills_fm, skills_content = SkillsConverter.parse_skill_frontmatter(
-                                content
-                            )
+                            skills_fm, skills_content = SkillsConverter.parse_skill_frontmatter(content)
                             zettel_fm = SkillsConverter.skill_to_zettel(skills_fm)
 
                             # Create note
@@ -816,9 +794,7 @@ async def _anthropic_skills_import(
                                 skills_imported += 1
                                 logger.info(f"Imported Anthropic skill: {skill_name}")
                             else:
-                                errors.append(
-                                    f"Failed to import {skill_name}: {result.get('error', 'Unknown error')}"
-                                )
+                                errors.append(f"Failed to import {skill_name}: {result.get('error', 'Unknown error')}")
 
                         except Exception as e:
                             errors.append(f"Failed to fetch {skill_name}: {e}")
@@ -878,9 +854,7 @@ Use `adn_content("search", query="anthropic skills")` to find imported skills.
 Use `adn_content("read", identifier="{skills_fm.name}")` to access this skill.
 """
                 else:
-                    return (
-                        f"# Error\n\nFailed to import skill: {result.get('error', 'Unknown error')}"
-                    )
+                    return f"# Error\n\nFailed to import skill: {result.get('error', 'Unknown error')}"
 
     except httpx.HTTPStatusError as e:
         return f"# Error\n\nHTTP error fetching Anthropic skills: {e.response.status_code} - {e.response.text}"

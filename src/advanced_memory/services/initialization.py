@@ -133,9 +133,7 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> No
         await project_service.synchronize_projects()
         logger.info("Projects successfully reconciled between config and database")
     except Exception:
-        logger.exception(
-            "Project synchronization failed — continuing startup; some projects may be missing"
-        )
+        logger.exception("Project synchronization failed — continuing startup; some projects may be missing")
 
 
 async def initialize_file_sync(

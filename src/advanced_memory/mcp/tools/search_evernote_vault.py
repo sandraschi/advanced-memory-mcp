@@ -90,9 +90,7 @@ async def search_evernote_vault(
     for file_path in files_to_search:
         try:
             if file_path.suffix.lower() == ".enex":
-                matches = await _search_enex_file(
-                    file_path, query_pattern, vault_dir, notebook_filter, tag_filter
-                )
+                matches = await _search_enex_file(file_path, query_pattern, vault_dir, notebook_filter, tag_filter)
             else:  # HTML files
                 matches = await _search_html_file(file_path, query_pattern, vault_dir)
 
@@ -187,9 +185,7 @@ async def _search_enex_file(
         return []
 
 
-async def _search_html_file(
-    file_path: Path, query_pattern: re.Pattern, vault_dir: Path
-) -> list[dict[str, Any]]:
+async def _search_html_file(file_path: Path, query_pattern: re.Pattern, vault_dir: Path) -> list[dict[str, Any]]:
     """Search a single HTML file."""
 
     try:
@@ -273,17 +269,11 @@ def _extract_enex_note_data(note_elem: Element) -> dict[str, Any]:
 
     # Created date
     created_elem = note_elem.find("created")
-    created = (
-        created_elem.text.strip() if created_elem is not None and created_elem.text else "Unknown"
-    )
+    created = created_elem.text.strip() if created_elem is not None and created_elem.text else "Unknown"
 
     # Notebook
     notebook_elem = note_elem.find("notebook")
-    notebook = (
-        notebook_elem.text.strip()
-        if notebook_elem is not None and notebook_elem.text
-        else "Default"
-    )
+    notebook = notebook_elem.text.strip() if notebook_elem is not None and notebook_elem.text else "Default"
 
     # Tags
     tags = []
@@ -301,9 +291,7 @@ def _extract_enex_note_data(note_elem: Element) -> dict[str, Any]:
     }
 
 
-def _format_evernote_search_results(
-    query: str, results: list[dict[str, Any]], total_files: int
-) -> str:
+def _format_evernote_search_results(query: str, results: list[dict[str, Any]], total_files: int) -> str:
     """Format search results for display."""
 
     if not results:
@@ -327,8 +315,6 @@ def _format_evernote_search_results(
         summary += f"- **Context**: ...{result['context']}...\n\n"
 
     if len(results) >= 20:
-        summary += (
-            "*Showing first 20 results. Use more specific search terms for better results.*\n"
-        )
+        summary += "*Showing first 20 results. Use more specific search terms for better results.*\n"
 
     return summary

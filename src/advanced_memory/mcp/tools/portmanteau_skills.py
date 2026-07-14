@@ -98,36 +98,39 @@ async def adn_skills(args: SkillOperation) -> dict:
 
         if isinstance(args, SkillCreate):
             from advanced_memory.mcp.tools.adn_skills_creator import adn_skills_creator
+
             result = await adn_skills_creator(
                 name=args.skill_name,
                 description=args.description,
                 category=args.category,
                 difficulty=args.difficulty,
-                project=args.project
+                project=args.project,
             )
             return build_success_response("create", result)
 
         elif isinstance(args, SkillRead):
             from advanced_memory.mcp.tools.adn_skills_reader import adn_skills_reader
+
             result = await adn_skills_reader(args.identifier, project=args.project)
             return build_success_response("read", result)
 
         elif isinstance(args, SkillDelete):
             from advanced_memory.mcp.tools.adn_skills import adn_skills as _adn_skills
+
             result = await _adn_skills("delete", name=args.name, project=args.project)
             return build_success_response("delete", result)
 
         elif isinstance(args, SkillAdvancedCreate):
             from advanced_memory.mcp.tools.make_skill_advanced import make_skill_advanced
+
             result = await make_skill_advanced(
-                args.name or args.topic,
-                args.topic,
-                max_iterations=getattr(args, "max_iterations", 3)
+                args.name or args.topic, args.topic, max_iterations=getattr(args, "max_iterations", 3)
             )
             return build_success_response("advanced_create", result)
 
         elif isinstance(args, SkillSearch):
             from advanced_memory.mcp.tools.adn_skills_research import adn_skills_research
+
             result = await adn_skills_research(
                 topic=str(args.query),
                 sources=None,
@@ -146,6 +149,7 @@ async def adn_skills(args: SkillOperation) -> dict:
 
         elif isinstance(args, SkillList):
             from advanced_memory.mcp.tools.adn_skills_operations_new import adn_skills_operations
+
             result = await adn_skills_operations("list")
             return build_success_response("operations", result)
 
@@ -158,6 +162,4 @@ async def adn_skills(args: SkillOperation) -> dict:
 
     except Exception as e:
         logger.error(f"Skill operation failed: {e}")
-        return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
-        )
+        return build_error_response("VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}")

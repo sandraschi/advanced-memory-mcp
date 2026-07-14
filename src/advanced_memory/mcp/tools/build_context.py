@@ -21,9 +21,7 @@ from advanced_memory.schemas.memory import (
 async def build_context(
     url: Annotated[MemoryUrl, Field(description="memory:// URI to follow")],
     depth: Annotated[int | None, Field(description="Relation hops (1-3 recommended)")] = 1,
-    timeframe: Annotated[
-        TimeFrame | None, Field(description="Lookback window (e.g. 'today', '2 days ago')")
-    ] = "7d",
+    timeframe: Annotated[TimeFrame | None, Field(description="Lookback window (e.g. 'today', '2 days ago')")] = "7d",
     page: Annotated[int, Field(description="Results page number")] = 1,
     page_size: Annotated[int, Field(description="Results per page")] = 10,
     max_related: Annotated[int, Field(description="Max related results")] = 10,
@@ -39,9 +37,7 @@ async def build_context(
     # Check migration status and wait briefly if needed
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
-    migration_status = await wait_for_migration_or_return_status(
-        timeout=5.0, project_name=active_project.name
-    )
+    migration_status = await wait_for_migration_or_return_status(timeout=5.0, project_name=active_project.name)
     if migration_status:  # pragma: no cover
         # Return a proper GraphContext with status message
         from datetime import datetime

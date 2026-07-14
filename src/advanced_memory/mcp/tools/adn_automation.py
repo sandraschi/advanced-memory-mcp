@@ -71,17 +71,11 @@ async def adn_automation(op: AutomationOperation, ctx: Any = None) -> Any:
 
     if operation == "workflow":
         return await agentic_content_workflow(
-            workflow_prompt=op.goal,
-            available_tools=op.tools or ["full"],
-            max_iterations=op.iterations or 5,
-            ctx=ctx
+            workflow_prompt=op.goal, available_tools=op.tools or ["full"], max_iterations=op.iterations or 5, ctx=ctx
         )
     elif operation == "batch":
         return await intelligent_batch_processor(
-            items=op.items,
-            processing_goal=op.goal,
-            available_operations=op.tools or ["full"],
-            ctx=ctx
+            items=op.items, processing_goal=op.goal, available_operations=op.tools or ["full"], ctx=ctx
         )
     elif operation == "status":
         return await sampling_capabilities_status(ctx=ctx)

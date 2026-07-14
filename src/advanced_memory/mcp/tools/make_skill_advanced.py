@@ -20,9 +20,7 @@ class SkillRequirements(BaseModel):
         description="Target expertise level for the skill"
     )
     use_cases: list[str] = Field(description="Primary use cases for this skill")
-    target_audience: str = Field(
-        description="Who will use this skill (developers, designers, etc.)"
-    )
+    target_audience: str = Field(description="Who will use this skill (developers, designers, etc.)")
     key_concepts: list[str] = Field(description="Essential concepts to cover")
     practical_examples: bool = Field(description="Whether to include practical examples")
 
@@ -237,9 +235,7 @@ async def make_skill_advanced(
         # research_first_create: uses adn_skills_research + LLMClient, no sampling needed
         if operation == "research_first_create":
             if not topic:
-                return build_error_response(
-                    "MISSING_TOPIC", "topic required for research_first_create"
-                )
+                return build_error_response("MISSING_TOPIC", "topic required for research_first_create")
             return await _research_first_create_operation(
                 topic=topic.strip(),
                 skill_name=skill_name,
@@ -255,10 +251,7 @@ async def make_skill_advanced(
                 "MISSING_TOPIC", "topic parameter required for analysis and generation operations"
             )
 
-        if (
-            operation in ["validate_skill", "enhance_skill", "iterative_improvement"]
-            and not existing_skill_path
-        ):
+        if operation in ["validate_skill", "enhance_skill", "iterative_improvement"] and not existing_skill_path:
             return build_error_response(
                 "MISSING_SKILL_PATH",
                 "existing_skill_path required for validation and enhancement operations",
@@ -292,17 +285,13 @@ async def make_skill_advanced(
                 except Exception as e:
                     logger.warning(f"Invalid requirements JSON, proceeding without: {e}")
 
-            return await _generate_content_operation(
-                sampling_client, topic, requirements_obj, target_quality
-            )
+            return await _generate_content_operation(sampling_client, topic, requirements_obj, target_quality)
 
         elif operation == "validate_skill":
             return await _validate_skill_operation(sampling_client, existing_skill_path)
 
         elif operation == "enhance_skill":
-            return await _enhance_skill_operation(
-                sampling_client, existing_skill_path, enhancement_focus or []
-            )
+            return await _enhance_skill_operation(sampling_client, existing_skill_path, enhancement_focus or [])
 
         elif operation == "create_complete_skill":
             requirements_obj = None
@@ -339,14 +328,10 @@ async def make_skill_advanced(
 
     except Exception as e:
         logger.error(f"Advanced skill creation failed: {e}")
-        return build_error_response(
-            "OPERATION_FAILED", f"Advanced skill creation operation failed: {e!s}"
-        )
+        return build_error_response("OPERATION_FAILED", f"Advanced skill creation operation failed: {e!s}")
 
 
-async def _analyze_requirements_operation(
-    sampling_client, topic: str, quality: str
-) -> dict[str, Any]:
+async def _analyze_requirements_operation(sampling_client, topic: str, quality: str) -> dict[str, Any]:
     """Analyze topic and generate structured skill requirements using LLM sampling."""
 
     # Create analysis prompt for LLM
@@ -389,9 +374,7 @@ async def _analyze_requirements_operation(
 
     except Exception as e:
         logger.error(f"Failed to parse LLM requirements analysis: {e}")
-        return build_error_response(
-            "PARSING_FAILED", "Could not parse structured requirements from LLM response"
-        )
+        return build_error_response("PARSING_FAILED", "Could not parse structured requirements from LLM response")
 
 
 async def _generate_content_operation(
@@ -545,9 +528,7 @@ async def _validate_skill_operation(sampling_client, skill_path: str) -> dict[st
         validation = SkillValidation.model_validate_json(validation_result.content)
 
         # Calculate overall quality score
-        overall_score = (
-            validation.completeness_score + validation.accuracy_score + validation.clarity_score
-        ) / 3
+        overall_score = (validation.completeness_score + validation.accuracy_score + validation.clarity_score) / 3
 
         return {
             "success": True,
@@ -565,9 +546,7 @@ async def _validate_skill_operation(sampling_client, skill_path: str) -> dict[st
         return build_error_response("VALIDATION_FAILED", "Could not parse LLM validation results")
 
 
-async def _enhance_skill_operation(
-    sampling_client, skill_path: str, enhancement_focus: list[str]
-) -> dict[str, Any]:
+async def _enhance_skill_operation(sampling_client, skill_path: str, enhancement_focus: list[str]) -> dict[str, Any]:
     """Enhance existing skill with LLM-generated improvements."""
 
     skill_path_obj = Path(skill_path)
@@ -649,9 +628,7 @@ async def _create_complete_skill_operation(
 
     # Step 2: Generate initial content
     logger.info("Generating initial skill content")
-    content_result = await _generate_content_operation(
-        sampling_client, topic, requirements, quality
-    )
+    content_result = await _generate_content_operation(sampling_client, topic, requirements, quality)
     if not content_result["success"]:
         return content_result
 
@@ -752,9 +729,7 @@ async def _iterative_improvement_operation(
             break
 
         # Enhance skill
-        enhancement_result = await _enhance_skill_operation(
-            sampling_client, skill_path, enhancement_focus
-        )
+        enhancement_result = await _enhance_skill_operation(sampling_client, skill_path, enhancement_focus)
 
         if enhancement_result["success"]:
             # Apply improvements
@@ -924,9 +899,7 @@ async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: 
                         content = content[:500] + "..."
                     formatted_docs += f"```\n{content}\n```\n\n"
         else:
-            formatted_docs += (
-                f"**Processing Failed**: {rag_result.get('error', 'Unknown error')}\n\n"
-            )
+            formatted_docs += f"**Processing Failed**: {rag_result.get('error', 'Unknown error')}\n\n"
 
     # Add topic-specific RAG query results
     try:
@@ -960,9 +933,7 @@ async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: 
 
     except Exception as e:
         logger.warning(f"Failed to add topic-specific RAG analysis: {e}")
-        formatted_docs += (
-            "\n*Note: Topic-specific analysis unavailable due to RAG query error.*\n\n"
-        )
+        formatted_docs += "\n*Note: Topic-specific analysis unavailable due to RAG query error.*\n\n"
 
     formatted_docs += "\n*RAG-enhanced document analysis completed on: 2025-12-02*"
     formatted_docs += f"\n*Documents processed: {len(document_results)}*"
@@ -1021,9 +992,7 @@ async def _research_driven_skill_operation(
 
     # Step 3: Generate skill content with research integration
     research_context = _format_research_for_skill(research_data)
-    document_context = (
-        await _format_documents_for_skill_rag(document_data, topic) if document_data else ""
-    )
+    document_context = await _format_documents_for_skill_rag(document_data, topic) if document_data else ""
     github_context = _format_github_for_skill(github_data) if github_data else ""
     arxiv_context = _format_arxiv_for_skill(arxiv_data) if arxiv_data else ""
     tropes_context = _format_tvtropes_for_skill(tropes_data) if tropes_data else ""
@@ -1126,14 +1095,11 @@ Comprehensive, research-backed guide to {topic} incorporating the latest develop
         "content_length": len(skill_content),
         "research_sources_used": len(research_data.get("results", [])) if research_data else 0,
         "document_sources_used": len(source_documents) if source_documents else 0,
-        "github_sources_used": len(github_data.get("repositories", []))
-        + len(github_data.get("code_results", []))
+        "github_sources_used": len(github_data.get("repositories", [])) + len(github_data.get("code_results", []))
         if github_data
         else 0,
         "arxiv_sources_used": len(arxiv_data.get("papers", [])) if arxiv_data else 0,
-        "tvtropes_sources_used": len(tropes_data.get("results", []))
-        if tropes_data and "results" in tropes_data
-        else 0,
+        "tvtropes_sources_used": len(tropes_data.get("results", [])) if tropes_data and "results" in tropes_data else 0,
         "web_search_provider": web_search_provider,
         "time_filter": web_search_time_filter,
         "sources_filter": web_sources_filter,
@@ -1212,9 +1178,7 @@ async def _research_first_create_operation(
 
     scaffold_references_from_research(skill_dir, bundle, include_sources_md=True)
 
-    snippets_text = "\n\n".join(
-        s.get("content", str(s))[:800] for s in (bundle.snippets or [])[:25]
-    )
+    snippets_text = "\n\n".join(s.get("content", str(s))[:800] for s in (bundle.snippets or [])[:25])
     synthesis = bundle.synthesis or "No synthesis available."
     gaps = "\n".join(f"- {g}" for g in (bundle.gaps_remaining or [])[:10])
 
@@ -1293,9 +1257,7 @@ Output the corrected full SKILL.md only."""
             fixed = fixed.strip()
             if fixed.startswith("---"):
                 (skill_dir / "SKILL.md").write_text(fixed, encoding="utf-8")
-                spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(
-                    skill_dir
-                )
+                spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(skill_dir)
                 review_done = True
         except Exception as exc:
             logger.warning("research_first_create: review loop failed: %s", exc)
@@ -1338,9 +1300,7 @@ async def _perform_topic_research(
         for query in search_queries[:3]:  # Limit to 3 searches to avoid overwhelming
             logger.info(f"Researching: {query}")
 
-            search_result = await (
-                adn_web_search.fn if hasattr(adn_web_search, "fn") else adn_web_search
-            )(
+            search_result = await (adn_web_search.fn if hasattr(adn_web_search, "fn") else adn_web_search)(
                 query=query,
                 provider=provider,
                 max_results=8,
@@ -1403,9 +1363,7 @@ def _generate_research_queries(topic: str) -> list[str]:
     ]
 
     # Specialized queries based on topic content
-    if any(
-        word in topic_lower for word in ["medical", "health", "disease", "treatment", "clinical"]
-    ):
+    if any(word in topic_lower for word in ["medical", "health", "disease", "treatment", "clinical"]):
         queries.extend(
             [
                 f"{topic} clinical trials latest results",
@@ -1533,11 +1491,7 @@ async def _process_source_documents(source_documents: list[str]) -> dict[str, An
         for doc_path in source_documents:
             logger.info(f"Processing document: {doc_path}")
 
-            result = await (
-                adn_document_ingest.fn
-                if hasattr(adn_document_ingest, "fn")
-                else adn_document_ingest
-            )(
+            result = await (adn_document_ingest.fn if hasattr(adn_document_ingest, "fn") else adn_document_ingest)(
                 file_path=doc_path,
                 analysis_type="full",
                 extract_quotes=True,
@@ -1641,11 +1595,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         for query in queries[:2]:  # Limit to 2 repo searches
             logger.info(f"Searching GitHub repos: {query}")
 
-            repo_result = await (
-                adn_github_research.fn
-                if hasattr(adn_github_research, "fn")
-                else adn_github_research
-            )(
+            repo_result = await (adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research)(
                 operation="search_repositories",
                 query=query,
                 sort="stars",
@@ -1659,9 +1609,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
         code_query = f"{topic} implementation example"
         logger.info(f"Searching GitHub code: {code_query}")
 
-        code_result = await (
-            adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research
-        )(
+        code_result = await (adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research)(
             operation="search_code",
             query=code_query,
             max_results=8,
@@ -1716,9 +1664,7 @@ def _generate_github_queries(topic: str) -> list[str]:
     ]
 
     # Specialized queries based on topic
-    if any(
-        word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]
-    ):
+    if any(word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]):
         queries.extend(
             [
                 f"{topic} pytorch",
@@ -1774,9 +1720,7 @@ def _format_github_for_skill(github_data: dict[str, Any]) -> str:
             formatted_github += f"**{i}. {repo.get('full_name', 'Unknown Repo')}**\n"
             if repo.get("description"):
                 formatted_github += f"   {repo['description']}\n"
-            formatted_github += (
-                f"   - ⭐ {repo.get('stars', 0)} stars, 🍴 {repo.get('forks', 0)} forks\n"
-            )
+            formatted_github += f"   - ⭐ {repo.get('stars', 0)} stars, 🍴 {repo.get('forks', 0)} forks\n"
             if repo.get("language"):
                 formatted_github += f"   - Language: {repo['language']}\n"
             if repo.get("topics"):
@@ -1833,7 +1777,9 @@ def _format_github_for_skill(github_data: dict[str, Any]) -> str:
 
         if languages:
             top_languages = sorted(languages.items(), key=lambda x: x[1], reverse=True)[:3]
-            formatted_github += f"**Popular Languages**: {', '.join([f'{lang} ({count} repos)' for lang, count in top_languages])}\n\n"
+            formatted_github += (
+                f"**Popular Languages**: {', '.join([f'{lang} ({count} repos)' for lang, count in top_languages])}\n\n"
+            )
 
         if total_stars > 0:
             formatted_github += f"**Community Interest**: {total_stars} total stars across analyzed repositories\n\n"
@@ -1860,9 +1806,7 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
         for query in queries[:3]:  # Limit to 3 searches
             logger.info(f"Searching arXiv: {query}")
 
-            paper_result = await (
-                adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research
-            )(
+            paper_result = await (adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research)(
                 operation="search_papers",
                 query=query,
                 max_results=5,
@@ -1916,9 +1860,7 @@ def _generate_arxiv_queries(topic: str) -> list[str]:
     ]
 
     # Specialized queries based on topic
-    if any(
-        word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]
-    ):
+    if any(word in topic_lower for word in ["ai", "ml", "neural", "deep learning", "machine learning"]):
         queries.extend(
             [
                 f"{topic} transformer",
@@ -1986,9 +1928,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
         # Classify papers
         if any(word in title_lower for word in ["survey", "review", "overview", "comprehensive"]):
             review_papers.append(paper)
-        elif any(
-            word in abstract_lower for word in ["we propose", "we present", "we introduce", "novel"]
-        ):
+        elif any(word in abstract_lower for word in ["we propose", "we present", "we introduce", "novel"]):
             recent_papers.append(paper)
         else:
             foundational_papers.append(paper)
@@ -2006,9 +1946,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
             formatted_arxiv += f"   Abstract: {abstract}\n"
 
             if paper.get("arxiv_id"):
-                formatted_arxiv += (
-                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
-                )
+                formatted_arxiv += f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
 
             categories = paper.get("categories", [])
             if categories:
@@ -2029,9 +1967,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
             formatted_arxiv += f"   Abstract: {abstract}\n"
 
             if paper.get("arxiv_id"):
-                formatted_arxiv += (
-                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
-                )
+                formatted_arxiv += f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
 
             formatted_arxiv += "\n"
 
@@ -2048,9 +1984,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
             formatted_arxiv += f"   Abstract: {abstract}\n"
 
             if paper.get("arxiv_id"):
-                formatted_arxiv += (
-                    f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
-                )
+                formatted_arxiv += f"   arXiv: {paper['arxiv_id']} | PDF: {paper.get('pdf_url', '')}\n"
 
             formatted_arxiv += "\n"
 
@@ -2079,9 +2013,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
 
         if author_counts:
             avg_authors = sum(author_counts) / len(author_counts)
-            formatted_arxiv += (
-                f"**Collaboration Patterns**: Average {avg_authors:.1f} authors per paper\n\n"
-            )
+            formatted_arxiv += f"**Collaboration Patterns**: Average {avg_authors:.1f} authors per paper\n\n"
 
     formatted_arxiv += "*arXiv research analysis conducted on: 2025-12-02*\n"
     formatted_arxiv += f"*Academic papers analyzed: {len(papers)}*\n"
@@ -2100,27 +2032,19 @@ async def _perform_tvtropes_research(topic: str) -> dict[str, Any]:
 
         if research_type == "character_archetypes":
             result = await (
-                adn_tvtropes_research.fn
-                if hasattr(adn_tvtropes_research, "fn")
-                else adn_tvtropes_research
+                adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research
             )(operation="character_archetypes", query=topic, max_results=5)
         elif research_type == "plot_structures":
             result = await (
-                adn_tvtropes_research.fn
-                if hasattr(adn_tvtropes_research, "fn")
-                else adn_tvtropes_research
+                adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research
             )(operation="plot_structures", query=topic, max_results=5)
         elif research_type == "narrative_analysis":
             result = await (
-                adn_tvtropes_research.fn
-                if hasattr(adn_tvtropes_research, "fn")
-                else adn_tvtropes_research
+                adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research
             )(operation="narrative_analysis", query=topic, max_results=5)
         else:
             result = await (
-                adn_tvtropes_research.fn
-                if hasattr(adn_tvtropes_research, "fn")
-                else adn_tvtropes_research
+                adn_tvtropes_research.fn if hasattr(adn_tvtropes_research, "fn") else adn_tvtropes_research
             )(operation="search_tropes", query=topic, max_results=5)
 
         return {
@@ -2214,10 +2138,10 @@ def _format_tvtropes_for_skill(tvtropes_data: dict[str, Any]) -> str:
     formatted_tropes += f"**Research Focus**: {research_type.replace('_', ' ').title()}\n\n"
 
     # Add strong compliance disclaimer
+    formatted_tropes += "⚠️ **COMPLIANCE NOTICE**: TV Tropes content cannot be scraped or reproduced. "
     formatted_tropes += (
-        "⚠️ **COMPLIANCE NOTICE**: TV Tropes content cannot be scraped or reproduced. "
+        "This analysis provides research guidance only. Visit TV Tropes directly for complete information.\n\n"
     )
-    formatted_tropes += "This analysis provides research guidance only. Visit TV Tropes directly for complete information.\n\n"
 
     # Format based on research type
     if research_type == "character_archetypes":

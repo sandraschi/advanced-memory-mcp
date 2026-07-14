@@ -28,9 +28,7 @@ from advanced_memory.mcp.tools.write_note import write_note as mcp_write_note
 
 
 # @mcp.tool
-async def edit_in_notepadpp(
-    note_identifier: str, workspace_path: str | None = None, create_backup: bool = True
-) -> str:
+async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = None, create_backup: bool = True) -> str:
     """
     Export an Advanced Memory note to Notepad++ for editing.
 
@@ -52,9 +50,7 @@ async def edit_in_notepadpp(
     """
     try:
         # Get the note content
-        original_content = await (
-            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
-        )(note_identifier)
+        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 
@@ -65,9 +61,7 @@ async def edit_in_notepadpp(
         # Create safe filename
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
-        backup_file = (
-            workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        )
+        backup_file = workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
 
         # Create backup if requested
         if create_backup:
@@ -157,9 +151,7 @@ async def import_from_notepadpp(
         edited_content = md_file.read_text(encoding="utf-8")
 
         # Get original content for comparison
-        original_content = await (
-            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
-        )(note_identifier)
+        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
             return f"[UNICODE] Original note '{note_identifier}' not found."
 

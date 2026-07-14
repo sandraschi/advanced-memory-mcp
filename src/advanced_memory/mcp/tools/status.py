@@ -1,4 +1,4 @@
-﻿"""Enhanced status tool for Advanced Memory MCP server."""
+"""Enhanced status tool for Advanced Memory MCP server."""
 
 import os
 import platform
@@ -10,6 +10,7 @@ from pydantic import Field
 from advanced_memory.config import ConfigManager
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.services.sync_status_service import sync_status_tracker
+
 
 def _get_instance_role_info() -> list[str]:
     """Return status lines describing this instance role (writer/reader)
@@ -32,11 +33,7 @@ def _get_instance_role_info() -> list[str]:
         lines.append(f"- **PID**: {own_pid}")
         lines.append("- **DB mode**: read-write")
 
-    lock_path = (
-        Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home())))
-        / ".advanced-memory"
-        / "mcp-stdio.lock"
-    )
+    lock_path = Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home()))) / ".advanced-memory" / "mcp-stdio.lock"
     if lock_path.exists():
         try:
             lock_content = lock_path.read_text(encoding="utf-8", errors="ignore").strip()
@@ -54,12 +51,8 @@ def _get_instance_role_info() -> list[str]:
 
 # @mcp.tool  # Decommissioned in favor of namespaced adn_system portmanteau
 async def status(
-    level: Annotated[
-        str, Field(description="Detail level: basic, intermediate, advanced, diagnostic")
-    ] = "basic",
-    focus: Annotated[
-        str | None, Field(description="Focus area: sync, tools, system, projects")
-    ] = None,
+    level: Annotated[str, Field(description="Detail level: basic, intermediate, advanced, diagnostic")] = "basic",
+    focus: Annotated[str | None, Field(description="Focus area: sync, tools, system, projects")] = None,
 ) -> str:
     """Get system status and diagnostic information."""
 
@@ -228,12 +221,8 @@ async def _get_advanced_status() -> str:
             path_obj = Path(project_path)
             if path_obj.exists():
                 total_files = sum(1 for _ in path_obj.rglob("*") if _.is_file())
-                total_size_mb = (
-                    sum(_.stat().st_size for _ in path_obj.rglob("*") if _.is_file()) / 1024 / 1024
-                )
-                status_lines.append(
-                    f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB"
-                )
+                total_size_mb = sum(_.stat().st_size for _ in path_obj.rglob("*") if _.is_file()) / 1024 / 1024
+                status_lines.append(f"- **{project_name}**: {total_files} files, {total_size_mb:.1f} MB")
             else:
                 status_lines.append(f"- **{project_name}**: Path not found")
     except Exception as e:
@@ -449,9 +438,7 @@ async def _get_focused_status(focus: str, level: str) -> str:
             for project_name, project_path in config.projects.items():
                 path_obj = Path(project_path)
                 exists = path_obj.exists()
-                status_lines.append(
-                    f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})"
-                )
+                status_lines.append(f"- **{project_name}**: {project_path} ({'Valid' if exists else 'Invalid'})")
 
             return "\n".join(status_lines)
         except Exception as e:

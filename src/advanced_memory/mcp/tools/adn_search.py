@@ -4,6 +4,7 @@ This tool consolidates all search operations: Boolean query, Semantic RAG, and E
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import time as _time
 from typing import Any
 
 from loguru import logger
@@ -12,8 +13,6 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.models.portmanteau import SearchOperation
 from advanced_memory.mcp.tools.utils import build_error_response
 
-
-import time as _time
 
 @mcp.tool(name="adn_search")
 async def adn_search(op: SearchOperation) -> Any:
@@ -67,6 +66,7 @@ async def adn_search(op: SearchOperation) -> Any:
 
     if operation == "query":
         from advanced_memory.mcp.tools.search import search_notes
+
         return await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
             op.text,
             op.page,
@@ -77,6 +77,7 @@ async def adn_search(op: SearchOperation) -> Any:
 
     elif operation == "rag":
         from advanced_memory.rag.system import get_rag_system
+
         rag_system = get_rag_system()
         rag_result = rag_system.query(
             query=op.prompt,
@@ -93,21 +94,25 @@ async def adn_search(op: SearchOperation) -> Any:
     elif operation == "external":
         if op.source == "obsidian":
             from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
+
             return await (search_obsidian_vault.fn if hasattr(search_obsidian_vault, "fn") else search_obsidian_vault)(
                 op.path, op.query, "text", op.max_results, False
             )
         elif op.source == "joplin":
             from advanced_memory.mcp.tools.search_joplin_vault import search_joplin_vault
+
             return await (search_joplin_vault.fn if hasattr(search_joplin_vault, "fn") else search_joplin_vault)(
                 op.path, op.query, "text", op.max_results, False
             )
         elif op.source == "notion":
             from advanced_memory.mcp.tools.search_notion_vault import search_notion_vault
+
             return await (search_notion_vault.fn if hasattr(search_notion_vault, "fn") else search_notion_vault)(
                 op.path, op.query, False, None, op.max_results
             )
         elif op.source == "evernote":
             from advanced_memory.mcp.tools.search_evernote_vault import search_evernote_vault
+
             return await (search_evernote_vault.fn if hasattr(search_evernote_vault, "fn") else search_evernote_vault)(
                 op.path, op.query, False, None, None, None, op.max_results
             )
@@ -115,12 +120,12 @@ async def adn_search(op: SearchOperation) -> Any:
             return build_error_response(
                 error="Unsupported external source",
                 error_code="INVALID_SOURCE",
-                message=f"Source {op.source} is not supported."
+                message=f"Source {op.source} is not supported.",
             )
 
     else:
         return build_error_response(
             error="Unsupported operation",
             error_code="INVALID_OPERATION",
-            message=f"Operation {operation} is not supported."
+            message=f"Operation {operation} is not supported.",
         )

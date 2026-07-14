@@ -15,7 +15,10 @@ mcp_app = FastMCP("mcp")
 
 @mcp_app.tool(task=True)
 async def ingest(
-    format: Annotated[Literal["obsidian", "notion", "joplin", "evernote", "onenote", "archive"], Field(description="Source data format")],
+    format: Annotated[
+        Literal["obsidian", "notion", "joplin", "evernote", "onenote", "archive"],
+        Field(description="Source data format"),
+    ],
     path: Annotated[str, Field(description="Absolute path to the vault, export, or notebook file")],
     options: Annotated[dict | None, Field(description="Format-specific ingestion settings")] = None,
 ) -> Any:
@@ -24,17 +27,15 @@ async def ingest(
     Imports knowledge from external silos into the native Advanced Memory ecosystem.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
-    return await adn_import_export(
-        operation="import",
-        format=format,
-        path=path,
-        options=options
-    )
+
+    return await adn_import_export(operation="import", format=format, path=path, options=options)
 
 
 @mcp_app.tool(task=True)
 async def export(
-    format: Annotated[Literal["html", "pdf", "pandoc", "docsify", "archive"], Field(description="Target output format")],
+    format: Annotated[
+        Literal["html", "pdf", "pandoc", "docsify", "archive"], Field(description="Target output format")
+    ],
     destination: Annotated[str, Field(description="Absolute path to the output file or directory")],
     options: Annotated[dict | None, Field(description="Format-specific export settings")] = None,
 ) -> Any:
@@ -43,12 +44,8 @@ async def export(
     Synthesizes and exports knowledge from Advanced Memory into professional formats like PDF, HTML, or Docsify.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
-    return await adn_import_export(
-        operation="export",
-        format=format,
-        destination=destination,
-        options=options
-    )
+
+    return await adn_import_export(operation="export", format=format, destination=destination, options=options)
 
 
 @mcp_app.tool()
@@ -64,6 +61,7 @@ async def canvas(
     Generates an Obsidian-compatible .canvas file to visualize relationships between notes.
     """
     from advanced_memory.mcp.tools.canvas import canvas as _canvas_fn
+
     return await _canvas_fn(nodes=nodes, edges=edges, title=title, folder=folder, project=project)
 
 
@@ -77,8 +75,5 @@ async def load(
     Loads non-markdown knowledge resources like Obsidian Canvas files into the active context.
     """
     from advanced_memory.mcp.tools.portmanteau_import_export import adn_import_export
-    return await adn_import_export(
-        operation="load",
-        format=format,
-        path=path
-    )
+
+    return await adn_import_export(operation="load", format=format, path=path)

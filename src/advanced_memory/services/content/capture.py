@@ -6,10 +6,9 @@ behavior changes. Legacy names: _quick_capture_operation,
 _daily_note_operation.
 """
 
-from advanced_memory.utils import parse_tags
-
 from advanced_memory.services.content.crud import write_note
 from advanced_memory.services.content.tagging import extract_content_tags
+from advanced_memory.utils import parse_tags
 
 TagType = list[str] | str | None
 
@@ -56,9 +55,7 @@ async def quick_capture(active_project, content: str, tags: TagType) -> dict:
     formatted_content = f"# {title}\n\n**Captured:** {timestamp}\n\n" + content
 
     # Create the note
-    return await write_note(
-        active_project, title, formatted_content, folder, tag_list, "note"
-    )
+    return await write_note(active_project, title, formatted_content, folder, tag_list, "note")
 
 
 async def daily_note(active_project, content: str, tags: TagType) -> dict:
@@ -92,9 +89,7 @@ async def daily_note(active_project, content: str, tags: TagType) -> dict:
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content
         timestamp = today.strftime("%H:%M")
         formatted_content = f"# Daily Note: {title}\n\n## {timestamp}\n\n" + content + "\n\n---\n\n"
-        return await write_note(
-            active_project, title, formatted_content, folder, tag_list, "note"
-        )
+        return await write_note(active_project, title, formatted_content, folder, tag_list, "note")
     else:
         # Append to existing daily note
         # Use string concatenation to avoid f-string parsing of JSON curly braces in content

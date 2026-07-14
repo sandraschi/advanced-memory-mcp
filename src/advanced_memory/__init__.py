@@ -18,7 +18,9 @@ from .types import FilePath, PathLike
 def main():
     """Start the Advanced Memory MCP server in stdio mode."""
     import asyncio
+
     from .mcp.mcp_instance import mcp
+
     asyncio.run(mcp.run_stdio_async())
 
 

@@ -169,10 +169,7 @@ async def _notepadpp_edit_operation(
             Path("C:/Program Files/Notepad++/notepad++.exe"),
             Path("C:/Program Files (x86)/Notepad++/notepad++.exe"),
             Path(os.environ.get("ProgramFiles", "C:/Program Files") + "/Notepad++/notepad++.exe"),
-            Path(
-                os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)")
-                + "/Notepad++/notepad++.exe"
-            ),
+            Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)") + "/Notepad++/notepad++.exe"),
         ]
 
         for path in common_paths:
@@ -181,9 +178,7 @@ async def _notepadpp_edit_operation(
 
         # Try PATH
         try:
-            result = subprocess.run(
-                ["where", "notepad++"], capture_output=True, text=True, shell=False
-            )
+            result = subprocess.run(["where", "notepad++"], capture_output=True, text=True, shell=False)
             if result.returncode == 0 and result.stdout.strip():
                 return Path(result.stdout.strip().split("\n")[0])
         except Exception:
@@ -193,9 +188,7 @@ async def _notepadpp_edit_operation(
 
     try:
         # Get the note content
-        original_content = await (
-            mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note
-        )(note_identifier)
+        original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
             return f"[UNICODE] Note '{note_identifier}' not found or empty."
 
@@ -206,9 +199,7 @@ async def _notepadpp_edit_operation(
         # Create safe filename
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
-        backup_file = (
-            workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        )
+        backup_file = workspace_dir / f"{safe_title}_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
 
         # Create backup if requested
         if create_backup:
@@ -296,9 +287,7 @@ async def _notepadpp_import_operation(
             try:
                 shutil.rmtree(workspace_dir)
             except Exception as e:
-                return (
-                    f"[UNICODE] Note updated successfully, but failed to clean workspace: {e!s}"
-                )
+                return f"[UNICODE] Note updated successfully, but failed to clean workspace: {e!s}"
 
         return f"""[UNICODE] **Note imported back to Advanced Memory!**
 
@@ -346,9 +335,7 @@ async def _typora_control_operation(
         return f"[UNICODE] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {e!s}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
 
 
-async def _handle_typora_export(
-    format: str | None, output_path: str | None, options: dict[str, Any] | None
-) -> str:
+async def _handle_typora_export(format: str | None, output_path: str | None, options: dict[str, Any] | None) -> str:
     """Handle basic Typora export."""
     if not format:
         return "[UNICODE] Export requires 'format' parameter (pdf, html, docx, etc.)"
@@ -396,9 +383,7 @@ async def _canvas_create_operation(
         folder_path.mkdir(parents=True, exist_ok=True)
 
         # Create canvas filename
-        safe_title = "".join(
-            c for c in canvas_title if c.isalnum() or c in (" ", "-", "_")
-        ).rstrip()
+        safe_title = "".join(c for c in canvas_title if c.isalnum() or c in (" ", "-", "_")).rstrip()
         canvas_file = folder_path / f"{safe_title}.canvas"
 
         # Create canvas data structure

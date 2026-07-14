@@ -226,9 +226,7 @@ async def _process_joplin_import(
     }
 
     # Build file mapping for link conversion
-    file_mapping = await _build_file_mapping(
-        export_path, joplin_files, destination_folder, preserve_structure
-    )
+    file_mapping = await _build_file_mapping(export_path, joplin_files, destination_folder, preserve_structure)
 
     # Process Joplin files
     processed_files = []
@@ -247,9 +245,9 @@ async def _process_joplin_import(
             # Check if note already exists
             if skip_existing:
                 try:
-                    existing = await (
-                        search_notes.fn if hasattr(search_notes, "fn") else search_notes
-                    )(query=dest_path, search_type="permalink", project=project)
+                    existing = await (search_notes.fn if hasattr(search_notes, "fn") else search_notes)(
+                        query=dest_path, search_type="permalink", project=project
+                    )
                     if existing.results:
                         logger.info(f"Skipping existing note: {dest_path}")
                         stats["skipped_files"] += 1
@@ -261,9 +259,7 @@ async def _process_joplin_import(
             title = metadata.get("title", _extract_title_from_content(content))
 
             # Process content (convert links, add metadata)
-            processed_content, link_conversions = _process_content(
-                content, convert_links, file_mapping, metadata
-            )
+            processed_content, link_conversions = _process_content(content, convert_links, file_mapping, metadata)
             stats["converted_links"] += link_conversions
 
             # Create the note
@@ -291,9 +287,7 @@ async def _process_joplin_import(
         except Exception as e:
             logger.error(f"Failed to import {file_info['md']}: {e}")
             stats["failed_files"] += 1
-            processed_files.append(
-                {"original_path": str(file_info["md"].relative_to(export_path)), "error": str(e)}
-            )
+            processed_files.append({"original_path": str(file_info["md"].relative_to(export_path)), "error": str(e)})
 
     # Generate summary report
     return _generate_import_report(stats, processed_files, str(export_path), destination_folder)
@@ -344,9 +338,7 @@ async def _build_file_mapping(
                 mapping[note_id] = dest_path
 
             # Also map by title for simpler links
-            title = metadata.get(
-                "title", _extract_title_from_content(file_info["md"].read_text(encoding="utf-8"))
-            )
+            title = metadata.get("title", _extract_title_from_content(file_info["md"].read_text(encoding="utf-8")))
             mapping[title] = dest_path
 
         except Exception as e:
@@ -487,9 +479,7 @@ def _generate_import_report(
         lines.append("## Processed Notes")
         for file_info in processed_files[:20]:  # Limit to first 20
             if "error" in file_info:
-                lines.append(
-                    f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}"
-                )
+                lines.append(f"- [UNICODE] **{file_info['original_path']}** - Error: {file_info['error']}")
             else:
                 links_text = (
                     f" ({file_info['links_converted']} links converted)"

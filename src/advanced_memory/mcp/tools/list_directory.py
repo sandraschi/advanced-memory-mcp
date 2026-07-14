@@ -51,10 +51,7 @@ async def list_directory(
     project_url = active_project.project_url
 
     if depth < 1 or depth > 10:
-        return (
-            f"Invalid depth={depth}: must be between 1 and 10. "
-            "Use a lower depth or narrow dir_name/file_name_glob."
-        )
+        return f"Invalid depth={depth}: must be between 1 and 10. Use a lower depth or narrow dir_name/file_name_glob."
 
     limit = max(1, min(int(limit), _MAX_PAGE))
     offset = max(0, int(offset))
@@ -68,10 +65,7 @@ async def list_directory(
     if file_name_glob:
         params["file_name_glob"] = file_name_glob
 
-    logger.debug(
-        f"Listing directory '{dir_name}' depth={depth} glob='{file_name_glob}' "
-        f"limit={limit} offset={offset}"
-    )
+    logger.debug(f"Listing directory '{dir_name}' depth={depth} glob='{file_name_glob}' limit={limit} offset={offset}")
 
     response = await call_get(
         client,
@@ -109,10 +103,7 @@ async def list_directory(
             f"[page offset={ret_offset}, limit={ret_limit}]:"
         )
     else:
-        output_lines.append(
-            f"Contents of '{dir_name}' (depth {depth}) "
-            f"[page offset={ret_offset}, limit={ret_limit}]:"
-        )
+        output_lines.append(f"Contents of '{dir_name}' (depth {depth}) [page offset={ret_offset}, limit={ret_limit}]:")
     output_lines.append("")
 
     directories = [n for n in nodes if n.get("type") == "directory"]
@@ -164,12 +155,9 @@ async def list_directory(
     if file_count:
         summary_parts.append(f"{file_count} file{'s' if file_count != 1 else ''}")
 
+    output_lines.append(f"This page: {page_count} items ({', '.join(summary_parts) if summary_parts else 'none'})")
     output_lines.append(
-        f"This page: {page_count} items ({', '.join(summary_parts) if summary_parts else 'none'})"
-    )
-    output_lines.append(
-        f"Pagination: total_matching={total}, offset={ret_offset}, limit={ret_limit}, "
-        f"has_more={str(has_more).lower()}"
+        f"Pagination: total_matching={total}, offset={ret_offset}, limit={ret_limit}, has_more={str(has_more).lower()}"
     )
     if has_more:
         next_off = ret_offset + ret_limit

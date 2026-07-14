@@ -117,9 +117,7 @@ async def export_evernote_compatible(
         return "No entities found to export"
 
     # Generate ENEX file
-    enex_content = _generate_enex_xml(
-        entities, notebook_name, include_observations, include_relations
-    )
+    enex_content = _generate_enex_xml(entities, notebook_name, include_observations, include_relations)
 
     # Save file
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -146,9 +144,7 @@ async def export_evernote_compatible(
 
     summary += "\n### Import Instructions:\n"
     summary += "1. Open Evernote desktop or web application\n"
-    summary += (
-        "2. Go to **File** [UNICODE] **Import** [UNICODE] **Evernote Export Files (.enex)**\n"
-    )
+    summary += "2. Go to **File** [UNICODE] **Import** [UNICODE] **Evernote Export Files (.enex)**\n"
     summary += f"3. Select the exported `{filename}` file\n"
     summary += f"4. Choose to import into notebook: **{notebook_name}**\n"
     summary += "5. Evernote will create notes with preserved formatting and metadata\n"
@@ -171,9 +167,7 @@ def _generate_enex_xml(
     en_export.set("version", "0.1")
 
     for entity in entities:
-        note_elem = _create_enex_note_element(
-            entity, notebook_name, include_observations, include_relations
-        )
+        note_elem = _create_enex_note_element(entity, notebook_name, include_observations, include_relations)
         en_export.append(note_elem)
 
     # Convert to formatted XML
@@ -221,9 +215,7 @@ def _create_enex_note_element(
     return note
 
 
-def _generate_note_html_content(
-    entity: dict[str, Any], include_observations: bool, include_relations: bool
-) -> str:
+def _generate_note_html_content(entity: dict[str, Any], include_observations: bool, include_relations: bool) -> str:
     """Generate HTML content for an ENEX note."""
 
     title = entity.get("title", "Untitled")

@@ -97,9 +97,7 @@ async def load_notion_export(
     # Process HTML files first (more complex)
     for html_file in html_files:
         try:
-            result = await _process_notion_html_file(
-                html_file, source_dir, project_url, folder, preserve_hierarchy
-            )
+            result = await _process_notion_html_file(html_file, source_dir, project_url, folder, preserve_hierarchy)
             if result["success"]:
                 created_entities.extend(result["entities"])
                 processed += 1
@@ -111,9 +109,7 @@ async def load_notion_export(
     # Process Markdown files
     for md_file in markdown_files:
         try:
-            result = await _process_notion_markdown_file(
-                md_file, source_dir, project_url, folder, preserve_hierarchy
-            )
+            result = await _process_notion_markdown_file(md_file, source_dir, project_url, folder, preserve_hierarchy)
             if result["success"]:
                 created_entities.extend(result["entities"])
                 processed += 1
@@ -182,11 +178,7 @@ async def _process_notion_html_file(
     # Determine folder structure
     if preserve_hierarchy:
         relative_path = html_file.relative_to(source_dir)
-        folder_path = (
-            f"{base_folder}/{relative_path.parent}"
-            if relative_path.parent != Path(".")
-            else base_folder
-        )
+        folder_path = f"{base_folder}/{relative_path.parent}" if relative_path.parent != Path(".") else base_folder
     else:
         folder_path = base_folder
 
@@ -253,11 +245,7 @@ async def _process_notion_markdown_file(
     # Determine folder structure
     if preserve_hierarchy:
         relative_path = md_file.relative_to(source_dir)
-        folder_path = (
-            f"{base_folder}/{relative_path.parent}"
-            if relative_path.parent != Path(".")
-            else base_folder
-        )
+        folder_path = f"{base_folder}/{relative_path.parent}" if relative_path.parent != Path(".") else base_folder
     else:
         folder_path = base_folder
 
@@ -316,9 +304,7 @@ def _extract_notion_content(html_content: str) -> str:
             content_html = content_match.group(1)
         else:
             # Last resort: extract body content
-            body_match = re.search(
-                r"<body[^>]*>(.*?)</body>", html_content, re.DOTALL | re.IGNORECASE
-            )
+            body_match = re.search(r"<body[^>]*>(.*?)</body>", html_content, re.DOTALL | re.IGNORECASE)
             content_html = body_match.group(1) if body_match else html_content
 
     # Basic HTML to Markdown conversion
@@ -338,17 +324,11 @@ def _html_to_markdown(html: str) -> str:
     markdown = re.sub(r"<h2[^>]*>(.*?)</h2>", r"## \1", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<h3[^>]*>(.*?)</h3>", r"### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<h4[^>]*>(.*?)</h4>", r"#### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
-    markdown = re.sub(
-        r"<h5[^>]*>(.*?)</h5>", r"##### \1", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
-    markdown = re.sub(
-        r"<h6[^>]*>(.*?)</h6>", r"###### \1", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<h5[^>]*>(.*?)</h5>", r"##### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<h6[^>]*>(.*?)</h6>", r"###### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Lists
-    markdown = re.sub(
-        r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(
         r"<ol[^>]*>(.*?)</ol>",
         _convert_ordered_list_items,
@@ -365,20 +345,14 @@ def _html_to_markdown(html: str) -> str:
     )
 
     # Bold/Italic
-    markdown = re.sub(
-        r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<b[^>]*>(.*?)</b>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<em[^>]*>(.*?)</em>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<i[^>]*>(.*?)</i>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Code
-    markdown = re.sub(
-        r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
-    markdown = re.sub(
-        r"<pre[^>]*>(.*?)</pre>", r"```\n\1\n```", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL)
+    markdown = re.sub(r"<pre[^>]*>(.*?)</pre>", r"```\n\1\n```", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Remove remaining HTML tags
     markdown = re.sub(r"<[^>]+>", "", markdown)

@@ -164,7 +164,7 @@ async def adn_llm(
                     "provider": provider,
                     "model": model,
                     "status": "selected and saved",
-                }
+                },
             )
 
         elif operation == "load_model":
@@ -198,7 +198,9 @@ async def adn_llm(
                 error="Invalid operation",
                 error_code="INVALID_OPERATION",
                 message=f"Unknown operation: {operation}",
-                recovery_options=["Use one of: list_models, list_providers, select_model, load_model, unload_model, status, health"],
+                recovery_options=[
+                    "Use one of: list_models, list_providers, select_model, load_model, unload_model, status, health"
+                ],
             )
 
     except Exception as e:
@@ -343,9 +345,7 @@ async def _list_lmstudio_models(base_url: str | None = None) -> dict:
                 models = data.get("data", [])
 
                 if not models:
-                    return (
-                        "# LM Studio Models\n\nNo models loaded. Load a model in LM Studio first."
-                    )
+                    return "# LM Studio Models\n\nNo models loaded. Load a model in LM Studio first."
 
                 result = "# LM Studio Models\n\n"
                 for model in models:
@@ -398,9 +398,7 @@ async def _list_openai_models() -> dict:
         return f"# Error\n\nFailed to list OpenAI models: {e!s}"
 
 
-async def _load_model(
-    provider: str, model: str, base_url: str | None = None, api_key: str | None = None
-) -> dict:
+async def _load_model(provider: str, model: str, base_url: str | None = None, api_key: str | None = None) -> dict:
     """Load a model into memory (for local providers)."""
     if provider == "ollama":
         return await _load_ollama_model(model, base_url)
@@ -434,9 +432,7 @@ Model is now loaded and ready to use.
 """
             else:
                 error_text = response.text
-                return (
-                    f"# Error\n\nFailed to load model: HTTP {response.status_code}\n\n{error_text}"
-                )
+                return f"# Error\n\nFailed to load model: HTTP {response.status_code}\n\n{error_text}"
 
     except httpx.RequestError as e:
         return f"# Error\n\nFailed to connect to Ollama: {e!s}\n\nMake sure Ollama is running."
@@ -485,9 +481,7 @@ Model is loaded and ready to use in LM Studio.
         return f"# Error\n\nFailed to connect to LM Studio: {e!s}\n\nMake sure LM Studio server is running."
 
 
-async def _unload_model(
-    provider: str, model: str | None = None, base_url: str | None = None
-) -> dict:
+async def _unload_model(provider: str, model: str | None = None, base_url: str | None = None) -> dict:
     """Unload a model from memory (for local providers)."""
     if provider == "ollama":
         # Ollama doesn't have an explicit unload, but we can note it

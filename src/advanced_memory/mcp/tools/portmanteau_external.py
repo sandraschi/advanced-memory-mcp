@@ -182,6 +182,4 @@ async def adn_external(
 
     except Exception as e:
         logger.error(f"External operation '{operation}' failed: {e}")
-        return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
-        )
+        return build_error_response("VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}")

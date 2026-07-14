@@ -23,11 +23,9 @@ async def summarize(
     Generates a concise executive summary of a note's content using a high-fidelity LLM.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="summarize",
-        identifier=identifier,
-        project=project,
-        mcp_tool="knowledge:summarize"
+        operation="summarize", identifier=identifier, project=project, mcp_tool="knowledge:summarize"
     )
 
 
@@ -44,6 +42,7 @@ async def enhance(
     Upgrades the quality of a note by fixing errors, improving style, and expanding context.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
         operation="enhance",
         identifier=identifier,
@@ -51,7 +50,7 @@ async def enhance(
         add_context=add_context,
         expand_sections=expand,
         project=project,
-        mcp_tool="knowledge:enhance"
+        mcp_tool="knowledge:enhance",
     )
 
 
@@ -65,17 +64,18 @@ async def suggest_tags(
     Analyzes note content to propose semantically relevant tags for better organization.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="suggest_tags",
-        identifier=identifier,
-        project=project,
-        mcp_tool="knowledge:suggest_tags"
+        operation="suggest_tags", identifier=identifier, project=project, mcp_tool="knowledge:suggest_tags"
     )
 
 
 # @knowledge_app.tool()
 async def qc(
-    mode: Annotated[Literal["find_runts", "find_junk"], Field(description="QC strategy: 'find_runts' (too short) or 'find_junk' (low value)")],
+    mode: Annotated[
+        Literal["find_runts", "find_junk"],
+        Field(description="QC strategy: 'find_runts' (too short) or 'find_junk' (low value)"),
+    ],
     folder: Annotated[str | None, Field(description="Optional folder to scan")] = None,
     max_length: Annotated[int, Field(description="Character limit for runt detection")] = 500,
     project: Annotated[str | None, Field(description="Project context override")] = None,
@@ -85,10 +85,7 @@ async def qc(
     Identifies thin or low-value notes that require consolidation or refinement.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation=mode,
-        folder=folder,
-        max_content_length=max_length,
-        project=project,
-        mcp_tool="knowledge:qc"
+        operation=mode, folder=folder, max_content_length=max_length, project=project, mcp_tool="knowledge:qc"
     )

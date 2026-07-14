@@ -127,14 +127,25 @@ def mcp(
     if HTTP_PROXY_URL and transport == "stdio":
         try:
             import httpx
+
             _probe = httpx.post(
                 HTTP_PROXY_URL,
-                json={"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-11-25", "capabilities": {}, "clientInfo": {"name": "probe", "version": "1"}}},
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "initialize",
+                    "params": {
+                        "protocolVersion": "2025-11-25",
+                        "capabilities": {},
+                        "clientInfo": {"name": "probe", "version": "1"},
+                    },
+                },
                 headers={"Accept": "application/json, text/event-stream"},
                 timeout=0.5,
             )
             if _probe.status_code == 200:
                 from fastmcp.server import create_proxy
+
                 logger.info(f"HTTP memops found at {HTTP_PROXY_URL} — proxying tool calls")
                 _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
                 _proxied.run(transport="stdio")

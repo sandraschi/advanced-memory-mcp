@@ -25,12 +25,9 @@ async def build_context(
     Traverses semantic relations from a starting node to build a comprehensive contextual map.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+
     return await adn_navigation(
-        operation="build_context",
-        url=url,
-        depth=depth,
-        max_related=max_related,
-        project=project
+        operation="build_context", url=url, depth=depth, max_related=max_related, project=project
     )
 
 
@@ -54,12 +51,9 @@ async def recent(
     Returns a chronologically sorted list of recent additions and modifications across the knowledge base.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+
     return await adn_navigation(
-        operation="recent_activity",
-        timeframe=timeframe,
-        page=page,
-        page_size=page_size,
-        project=project
+        operation="recent_activity", timeframe=timeframe, page=page, page_size=page_size, project=project
     )
 
 
@@ -73,11 +67,8 @@ async def ls(
     Provides a directory-style listing of files and folders within the knowledge base.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
-    return await adn_navigation(
-        operation="list_directory",
-        dir_name=path,
-        project=project
-    )
+
+    return await adn_navigation(operation="list_directory", dir_name=path, project=project)
 
 
 @nav_app.tool(task=True)
@@ -90,11 +81,8 @@ async def backlinks(
     Identifies and lists all notes that reference or link to a specific target node.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
-    return await adn_navigation(
-        operation="backlinks",
-        identifier=identifier,
-        project=project
-    )
+
+    return await adn_navigation(operation="backlinks", identifier=identifier, project=project)
 
 
 @nav_app.tool()
@@ -104,6 +92,7 @@ async def status() -> Any:
     Reports the current state of the knowledge graph, node counts, and relationship density.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+
     return await adn_navigation(operation="status")
 
 
@@ -114,4 +103,5 @@ async def sync() -> Any:
     Displays the health and progress of the background file synchronization and indexing engine.
     """
     from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+
     return await adn_navigation(operation="sync_status")

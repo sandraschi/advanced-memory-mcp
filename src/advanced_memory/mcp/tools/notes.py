@@ -28,6 +28,7 @@ async def write(
     Persists a new markdown note to the knowledge base with semantic metadata.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
         operation="write",
         identifier=title,
@@ -35,7 +36,7 @@ async def write(
         folder=folder,
         tags=tags,
         project=project,
-        mcp_tool="notes:write"
+        mcp_tool="notes:write",
     )
 
 
@@ -51,20 +52,18 @@ async def read(
     Reads the content of a specific note from the knowledge base.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="read",
-        identifier=identifier,
-        page=page,
-        page_size=page_size,
-        project=project,
-        mcp_tool="notes:read"
+        operation="read", identifier=identifier, page=page, page_size=page_size, project=project, mcp_tool="notes:read"
     )
 
 
 @notes_app.tool(task=True)
 async def edit(
     identifier: Annotated[str, Field(description="Title or permalink of the note to modify")],
-    mode: Annotated[Literal["append", "prepend", "replace_section", "find_replace"], Field(description="Mutation strategy")],
+    mode: Annotated[
+        Literal["append", "prepend", "replace_section", "find_replace"], Field(description="Mutation strategy")
+    ],
     content: Annotated[str, Field(description="New content or replacement text")],
     section: Annotated[str | None, Field(description="Target section header for replace_section")] = None,
     find_text: Annotated[str | None, Field(description="Text to search for in find_replace mode")] = None,
@@ -75,6 +74,7 @@ async def edit(
     Applies surgical edits to existing notes using various strategies like section replacement or find-replace.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
         operation="edit",
         identifier=identifier,
@@ -83,7 +83,7 @@ async def edit(
         section=section,
         find_text=find_text,
         project=project,
-        mcp_tool="notes:edit"
+        mcp_tool="notes:edit",
     )
 
 
@@ -97,11 +97,9 @@ async def delete(
     Permanently removes a note from the knowledge base. Use with caution.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="delete",
-        identifier=identifier,
-        project=project,
-        mcp_tool="notes:delete"
+        operation="delete", identifier=identifier, project=project, mcp_tool="notes:delete"
     )
 
 
@@ -116,12 +114,9 @@ async def move(
     Relocates a note to a different folder within the project structure.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="move",
-        identifier=identifier,
-        destination_path=destination,
-        project=project,
-        mcp_tool="notes:move"
+        operation="move", identifier=identifier, destination_path=destination, project=project, mcp_tool="notes:move"
     )
 
 
@@ -136,12 +131,9 @@ async def quick(
     Low-friction capture tool that auto-generates titles and metadata for off-the-cuff insights.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="quick",
-        content=content,
-        tags=tags,
-        project=project,
-        mcp_tool="notes:quick"
+        operation="quick", content=content, tags=tags, project=project, mcp_tool="notes:quick"
     )
 
 
@@ -156,10 +148,7 @@ async def daily(
     Appends content to the daily periodic note, maintaining a temporal stream of consciousness.
     """
     from advanced_memory.mcp.tools.content_manager import _dispatch_content_operations
+
     return await _dispatch_content_operations(
-        operation="daily",
-        content=content,
-        tags=tags,
-        project=project,
-        mcp_tool="notes:daily"
+        operation="daily", content=content, tags=tags, project=project, mcp_tool="notes:daily"
     )

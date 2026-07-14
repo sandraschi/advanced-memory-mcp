@@ -70,43 +70,23 @@ async def adn_zettel(op: ZettelOperation) -> Any:
             topic=op.topic,
             ai_generate=op.ai_generate,
             quality=op.quality,
-            project=op.project
+            project=op.project,
         )
     elif operation == "suggest":
-        return await adn_zettelmaker(
-            operation="suggest",
-            category=op.category,
-            count=op.count,
-            project=op.project
-        )
+        return await adn_zettelmaker(operation="suggest", category=op.category, count=op.count, project=op.project)
     elif operation == "expand":
         return await adn_zettelmaker(
-            operation="expand",
-            note_identifier=op.note_identifier,
-            depth=op.depth,
-            project=op.project
+            operation="expand", note_identifier=op.note_identifier, depth=op.depth, project=op.project
         )
     elif operation == "analyze":
-        return await adn_zettelmaker(
-            operation="analyze",
-            category=op.category,
-            project=op.project
-        )
+        return await adn_zettelmaker(operation="analyze", category=op.category, project=op.project)
     elif operation == "connect":
-        return await adn_zettelmaker(
-            operation="connect",
-            note_identifier=op.note_identifier,
-            project=op.project
-        )
+        return await adn_zettelmaker(operation="connect", note_identifier=op.note_identifier, project=op.project)
     elif operation == "collect":
         return await adn_zettelmaker(operation="collect")
     elif operation == "customize":
         return await adn_zettelmaker(
-            operation="customize",
-            category=op.category,
-            topic=op.topic,
-            depth=op.depth,
-            project=op.project
+            operation="customize", category=op.category, topic=op.topic, depth=op.depth, project=op.project
         )
     else:
         return f"Error: Unsupported operation {operation}"

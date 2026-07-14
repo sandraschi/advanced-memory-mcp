@@ -22,6 +22,7 @@ async def open(
     Opens a specific markdown file in Typora for rich manual editing.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="open_file", file_path=file_path)
 
 
@@ -32,6 +33,7 @@ async def save() -> Any:
     Triggers the save operation in the active Typora instance to persist current changes.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="save_file")
 
 
@@ -46,12 +48,8 @@ async def export(
     Leverages Typora's rendering engine to export the current document into professional formats.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
-    return await typora_control(
-        operation="export",
-        format=format,
-        output_path=path,
-        options=options
-    )
+
+    return await typora_control(operation="export", format=format, output_path=path, options=options)
 
 
 @typora_app.tool()
@@ -61,6 +59,7 @@ async def get_content() -> Any:
     Reads the full markdown content of the document currently active in Typora.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="get_content")
 
 
@@ -73,6 +72,7 @@ async def set_content(
     Replaces the entire content of the active Typora document with the provided markdown string.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="set_content", content=content)
 
 
@@ -86,6 +86,7 @@ async def insert(
     Injects text at the current cursor position or a specified anchor within the active Typora document.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="insert_text", text=text, position=position)
 
 
@@ -96,6 +97,7 @@ async def cursor() -> Any:
     Retrieves the current cursor position, selection range, and line/column metrics from Typora.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="get_cursor")
 
 
@@ -106,4 +108,5 @@ async def analyze() -> Any:
     Performs structural and metric analysis on the active document, reporting headings, links, and health.
     """
     from advanced_memory.mcp.tools.typora_control import typora_control
+
     return await typora_control(operation="content_analysis")

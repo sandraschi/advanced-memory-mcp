@@ -85,16 +85,12 @@ async def adn_skills(op: SkillsOperation) -> dict:
 
     # Route to appropriate operation
     if operation == "create":
-        return await _create_operation(
-            op.skill_name, op.description, op.category, op.difficulty, op.metadata, project
-        )
+        return await _create_operation(op.skill_name, op.description, op.category, op.difficulty, op.metadata, project)
     elif operation == "read":
         return await _read_operation(op.identifier, project)
     elif operation == "update":
         # Note: mapping op.content to content
-        return await _update_operation(
-            op.identifier, None, op.content, None, None, project
-        )
+        return await _update_operation(op.identifier, None, op.content, None, None, project)
     elif operation == "delete":
         return await _delete_operation(op.identifier, project)
     elif operation == "list":
@@ -110,13 +106,9 @@ async def adn_skills(op: SkillsOperation) -> dict:
     elif operation == "load_resource":
         return await _load_resource_operation(op.identifier, op.resource, project)
     elif operation == "import_from_github":
-        return await _import_from_github_operation(
-            op.repository, None, op.branch, op.category, project
-        )
+        return await _import_from_github_operation(op.repository, None, op.branch, op.category, project)
     elif operation == "distill_from_wikipedia":
-        return await _distill_from_wikipedia_operation(
-            op.topic, 0, False, op.quality, op.category, project
-        )
+        return await _distill_from_wikipedia_operation(op.topic, 0, False, op.quality, op.category, project)
     elif operation == "distill_from_arxiv":
         return await _distill_from_arxiv_operation(
             op.query or op.topic, op.max_papers, "synthesis", op.category, project
@@ -124,13 +116,9 @@ async def adn_skills(op: SkillsOperation) -> dict:
     elif operation == "distill_from_textbook":
         return await _distill_from_textbook_operation(op.pdf_path, op.chapters, "intermediate", op.category, project)
     elif operation == "distill_from_text":
-        return await _distill_from_text_operation(
-            op.text_path, "all", "comprehensive", op.category, project
-        )
+        return await _distill_from_text_operation(op.text_path, "all", "comprehensive", op.category, project)
     elif operation == "distill_from_expert":
-        return await _distill_from_expert_operation(
-            op.expert_name, None, op.focus_area, op.category, project
-        )
+        return await _distill_from_expert_operation(op.expert_name, None, op.focus_area, op.category, project)
     else:
         return f"""# Error: Invalid Skills Operation
 
@@ -459,9 +447,7 @@ adn_skills(
 
     _en = edit_note.fn if hasattr(edit_note, "fn") else edit_note
     if content:
-        return await _en(
-            identifier=identifier, operation="replace", content=content, project=project
-        )
+        return await _en(identifier=identifier, operation="replace", content=content, project=project)
     else:
         return f"""# Error: Missing Required Parameter
 
@@ -511,9 +497,7 @@ adn_skills(
     return f"# Skill Deleted\n\n{result}\n\n✅ Skill removed from knowledge base"
 
 
-async def _list_operation(
-    filters: dict | None, page: int, page_size: int, project: str | None
-) -> dict:
+async def _list_operation(filters: dict | None, page: int, page_size: int, project: str | None) -> dict:
     """List all skills with optional filtering."""
 
     skills_root = Path("skills")
@@ -991,9 +975,7 @@ description: When to use this skill
 ✅ Skill successfully imported from Claude Skills format!"""
 
 
-async def _package_operation(
-    identifier: str | None, export_path: str | None, project: str | None
-) -> dict:
+async def _package_operation(identifier: str | None, export_path: str | None, project: str | None) -> dict:
     """Package skill as distributable .zip."""
     if not identifier:
         return """# Error: Missing Required Parameter
@@ -1109,9 +1091,7 @@ adn_skills(
     from advanced_memory.mcp.tools.edit_note import edit_note
 
     _en = edit_note.fn if hasattr(edit_note, "fn") else edit_note
-    result = await _en(
-        identifier=identifier, operation="replace", content=new_content, project=project
-    )
+    result = await _en(identifier=identifier, operation="replace", content=new_content, project=project)
 
     return f"""# Zettel → Skill Conversion
 
@@ -1218,9 +1198,7 @@ description: When to use
     from advanced_memory.mcp.tools.edit_note import edit_note
 
     _en = edit_note.fn if hasattr(edit_note, "fn") else edit_note
-    result = await _en(
-        identifier=identifier, operation="replace", content=new_content, project=project
-    )
+    result = await _en(identifier=identifier, operation="replace", content=new_content, project=project)
 
     return f"""# Skill → Zettel Conversion
 

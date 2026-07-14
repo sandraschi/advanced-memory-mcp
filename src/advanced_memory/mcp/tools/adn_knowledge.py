@@ -70,14 +70,11 @@ async def adn_knowledge(op: KnowledgeOperation) -> Any:
             operation="suggest_tags",
             identifier=op.identifier,
             project=op.project,
-            mcp_tool="adn_knowledge:suggest_tags"
+            mcp_tool="adn_knowledge:suggest_tags",
         )
     elif operation == "summarize":
         return await _dispatch_content_operations(
-            operation="summarize",
-            identifier=op.identifier,
-            project=op.project,
-            mcp_tool="adn_knowledge:summarize"
+            operation="summarize", identifier=op.identifier, project=op.project, mcp_tool="adn_knowledge:summarize"
         )
     elif operation == "enhance":
         return await _dispatch_content_operations(
@@ -87,7 +84,7 @@ async def adn_knowledge(op: KnowledgeOperation) -> Any:
             add_context=op.add_context,
             expand_sections=op.expand,
             project=op.project,
-            mcp_tool="adn_knowledge:enhance"
+            mcp_tool="adn_knowledge:enhance",
         )
     elif operation == "qc":
         return await _dispatch_content_operations(
@@ -95,34 +92,28 @@ async def adn_knowledge(op: KnowledgeOperation) -> Any:
             folder=op.folder,
             max_content_length=op.max_length,
             project=op.project,
-            mcp_tool="adn_knowledge:qc"
+            mcp_tool="adn_knowledge:qc",
         )
     elif operation == "canvas":
         from advanced_memory.mcp.tools.canvas import canvas
+
         return await (canvas.fn if hasattr(canvas, "fn") else canvas)(
-            nodes=op.nodes,
-            edges=op.edges,
-            title=op.title,
-            folder=op.folder,
-            project=op.project
+            nodes=op.nodes, edges=op.edges, title=op.title, folder=op.folder, project=op.project
         )
     elif operation == "bulk":
         from advanced_memory.mcp.tools.knowledge_operations import adn_knowledge_bulk
+
         return await (adn_knowledge_bulk.fn if hasattr(adn_knowledge_bulk, "fn") else adn_knowledge_bulk)(
             operation=op.bulk_operation,
             filters=op.filters,
             action=op.action,
             dry_run=op.dry_run,
             limit=op.limit,
-            project=op.project
+            project=op.project,
         )
     elif operation == "analyze":
         return await _adn_knowledge_analyze(
-            operation=op.analysis_type,
-            filters=op.filters,
-            action=op.action,
-            limit=op.limit,
-            project=op.project
+            operation=op.analysis_type, filters=op.filters, action=op.action, limit=op.limit, project=op.project
         )
     else:
         return f"Error: Unsupported operation {operation}"
@@ -220,9 +211,7 @@ Respond with JSON array:
 Provide quality assessments for each note."""
 
     try:
-        assessments = await llm.generate_json(
-            prompt, system_prompt, max_tokens=2000, temperature=0.3
-        )
+        assessments = await llm.generate_json(prompt, system_prompt, max_tokens=2000, temperature=0.3)
 
         if not isinstance(assessments, list):
             assessments = [assessments] if isinstance(assessments, dict) else []
@@ -303,9 +292,7 @@ Respond with JSON array:
 Suggest relationships between the main note and related notes."""
 
     try:
-        relationships = await llm.generate_json(
-            prompt, system_prompt, max_tokens=1500, temperature=0.5
-        )
+        relationships = await llm.generate_json(prompt, system_prompt, max_tokens=1500, temperature=0.5)
 
         if not isinstance(relationships, list):
             relationships = [relationships] if isinstance(relationships, dict) else []
@@ -370,17 +357,13 @@ Respond with JSON:
 Identify knowledge gaps - what's missing or incomplete?"""
 
     try:
-        gap_analysis = await llm.generate_json(
-            prompt, system_prompt, max_tokens=1500, temperature=0.5
-        )
+        gap_analysis = await llm.generate_json(prompt, system_prompt, max_tokens=1500, temperature=0.5)
 
         gaps = gap_analysis.get("gaps", []) if isinstance(gap_analysis, dict) else []
 
         result = f"# Knowledge Gap Analysis\n\n**Topics Analyzed:** {', '.join(topics)}\n\n"
         for gap in gaps[:limit]:
-            priority_emoji = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(
-                gap.get("priority", "medium"), "🟡"
-            )
+            priority_emoji = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(gap.get("priority", "medium"), "🟡")
             result += f"{priority_emoji} **{gap.get('topic', 'Unknown')}**\n"
             result += f"  Type: {gap.get('gap_type', 'N/A')}\n"
             result += f"  Description: {gap.get('description', 'N/A')}\n"
@@ -440,9 +423,7 @@ Respond with JSON:
 Group related notes together."""
 
     try:
-        clusters_data = await llm.generate_json(
-            prompt, system_prompt, max_tokens=2000, temperature=0.4
-        )
+        clusters_data = await llm.generate_json(prompt, system_prompt, max_tokens=2000, temperature=0.4)
 
         clusters = clusters_data.get("clusters", []) if isinstance(clusters_data, dict) else []
 
@@ -510,9 +491,7 @@ Respond with JSON:
 Identify the most important insights, patterns, and connections."""
 
     try:
-        insights_data = await llm.generate_json(
-            prompt, system_prompt, max_tokens=2000, temperature=0.5
-        )
+        insights_data = await llm.generate_json(prompt, system_prompt, max_tokens=2000, temperature=0.5)
 
         insights = insights_data.get("insights", []) if isinstance(insights_data, dict) else []
 
@@ -530,4 +509,3 @@ Identify the most important insights, patterns, and connections."""
 
     except Exception as e:
         return f"# Error\n\nFailed to extract insights: {e!s}"
-

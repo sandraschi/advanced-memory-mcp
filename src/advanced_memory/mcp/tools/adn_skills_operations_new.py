@@ -41,9 +41,7 @@ async def adn_skills_operations(operation: str, **parameters) -> str:
                 "distill_from_text",
                 "distill_from_expert",
             ]
-            return "# Advanced Skill Operations\n\nAvailable operations:\n\n" + "\n".join(
-                f"- {op}" for op in ops
-            )
+            return "# Advanced Skill Operations\n\nAvailable operations:\n\n" + "\n".join(f"- {op}" for op in ops)
 
         elif operation == "import_from_github":
             return await _import_from_github_operation(
@@ -158,9 +156,7 @@ adn_skills(
         importer = GitHubSkillsImporter(github_token=github_token)
 
         # Import skill
-        skill_data = importer.import_skill_from_repo(
-            repository=repository, skill_path=skill_path, branch=branch
-        )
+        skill_data = importer.import_skill_from_repo(repository=repository, skill_path=skill_path, branch=branch)
 
         # Parse SKILL.md content
         content = skill_data["content"]
@@ -442,9 +438,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_arxiv(
-            query=query, max_papers=max_papers, synthesis_level=synthesis
-        )
+        skill_data = distiller.distill_from_arxiv(query=query, max_papers=max_papers, synthesis_level=synthesis)
 
         # Create skill in Advanced Memory
         skill_category = category or "research"
@@ -568,9 +562,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_textbook(
-            pdf_path=pdf_path, chapters=chapters, level=skill_level
-        )
+        skill_data = distiller.distill_from_textbook(pdf_path=pdf_path, chapters=chapters, level=skill_level)
 
         # Create skill in Advanced Memory
         skill_category = category or "education"
@@ -697,9 +689,7 @@ adn_skills(
         distiller = SkillDistiller()
 
         # Distill skill
-        skill_data = distiller.distill_from_text(
-            text_path=text_path, focus=focus_type, context_level=context
-        )
+        skill_data = distiller.distill_from_text(text_path=text_path, focus=focus_type, context_level=context)
 
         # Create skill in Advanced Memory
         skill_category = category or "philosophy"

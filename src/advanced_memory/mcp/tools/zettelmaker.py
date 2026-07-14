@@ -26,9 +26,7 @@ CONTENT_TEMPLATES: dict[str, dict[str, Any]] = get_content_templates()
 # Legacy tool decommissioned in favor of Managed Namespaces (zettel:*)
 # Keeping the function as a logic provider for the transition
 async def adn_zettelmaker(
-    operation: Literal[
-        "generate", "customize", "expand", "suggest", "connect", "analyze", "collect"
-    ],
+    operation: Literal["generate", "customize", "expand", "suggest", "connect", "analyze", "collect"],
     category: str | None = None,
     topic: str | None = None,
     note_identifier: str | None = None,
@@ -113,9 +111,7 @@ async def adn_zettelmaker(
     - Get next steps:
       adn_zettelmaker(operation="suggest", count=3)
     """
-    logger.info(
-        f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}"
-    )
+    logger.info(f"MCP tool call tool=adn_zettelmaker operation={operation} category={category} topic={topic}")
 
     from fastmcp.tools import ToolResult
 
@@ -337,9 +333,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
             notes_created = []
             for template in cached_templates:
                 try:
-                    result = await (
-                        mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
-                    )(
+                    result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
                         title=template["title"],
                         content=template["content"],
                         folder=template["folder"],
@@ -399,9 +393,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
                 if ctx:  # pragma: no cover
                     await ctx.info(f"Creating AI-generated note: {template['title']}")
 
-                result = await (
-                    mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note
-                )(
+                result = await (mcp_write_note.fn if hasattr(mcp_write_note, "fn") else mcp_write_note)(
                     title=template["title"],
                     content=template["content"],
                     folder=template["folder"],
@@ -518,9 +510,7 @@ async def _generate_with_ai(category: str, topic: str, quality: str, ctx: Contex
         ).strip()
 
 
-async def _customize_operation(
-    category: str | None, topic: str | None, depth: int, ctx: Context | None
-) -> str:
+async def _customize_operation(category: str | None, topic: str | None, depth: int, ctx: Context | None) -> str:
     """Handle customize operation - customize template generation parameters."""
     if not category or not topic:
         return dedent(
@@ -633,9 +623,7 @@ async def _expand_operation(note_identifier: str | None, depth: int, ctx: Contex
 async def _suggest_operation(category: str | None, count: int, ctx: Context | None) -> str:
     """Handle suggest operation - get AI-suggested topics based on existing knowledge."""
     if ctx:  # pragma: no cover
-        await ctx.info(
-            f"Analyzing knowledge base for smart suggestions in {category or 'all categories'}"
-        )
+        await ctx.info(f"Analyzing knowledge base for smart suggestions in {category or 'all categories'}")
 
     # Use knowledge analyzer for smart suggestions
     try:
@@ -694,15 +682,11 @@ async def _suggest_operation(category: str | None, count: int, ctx: Context | No
         )
 
         # Format detected topics
-        topics_summary = (
-            ", ".join(t["topic"] for t in detected_topics[:5]) if detected_topics else "None yet"
-        )
+        topics_summary = ", ".join(t["topic"] for t in detected_topics[:5]) if detected_topics else "None yet"
 
         # Format knowledge gaps
         gaps_summary = (
-            "\n".join(f"- {gap['gap']}: {gap['reason']}" for gap in gaps[:3])
-            if gaps
-            else "- No gaps detected"
+            "\n".join(f"- {gap['gap']}: {gap['reason']}" for gap in gaps[:3]) if gaps else "- No gaps detected"
         )
 
         result = dedent(
@@ -856,9 +840,7 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
         conflicts = [e.get("title", "") for e in entities if e.get("status", "") == "conflict"]
 
         # Contradiction pairs: recently modified + neighbours (top 20)
-        sorted_by_mod = sorted(
-            entities, key=lambda e: e.get("modified", ""), reverse=True
-        )
+        sorted_by_mod = sorted(entities, key=lambda e: e.get("modified", ""), reverse=True)
         contradiction_pairs: list[tuple[str, str]] = []
         seen_pairs: set[tuple[str, str]] = set()
         for e in sorted_by_mod[:30]:
@@ -876,10 +858,20 @@ async def _analyze_operation(category: str | None, depth: int, ctx: Context | No
                 break
 
         # ── Build output ──
-        orphan_text = "\n".join(f"- `{o}`" for o in orphans[:15]) if orphans else "- None (all cards have incoming links)"
-        hub_text = "\n".join(f"- `{h}` ({c} inbound)" for h, c in sorted(hubs, key=lambda x: -x[1])[:10]) if hubs else "- None (no card has >=10 inbound links)"
+        orphan_text = (
+            "\n".join(f"- `{o}`" for o in orphans[:15]) if orphans else "- None (all cards have incoming links)"
+        )
+        hub_text = (
+            "\n".join(f"- `{h}` ({c} inbound)" for h, c in sorted(hubs, key=lambda x: -x[1])[:10])
+            if hubs
+            else "- None (no card has >=10 inbound links)"
+        )
         conflict_text = "\n".join(f"- `{c}`" for c in conflicts[:10]) if conflicts else "- None"
-        pair_text = "\n".join(f"- `{a}` ↔ `{b}`" for a, b in contradiction_pairs[:10]) if contradiction_pairs else "- No recently-modified pairs found"
+        pair_text = (
+            "\n".join(f"- `{a}` ↔ `{b}`" for a, b in contradiction_pairs[:10])
+            if contradiction_pairs
+            else "- No recently-modified pairs found"
+        )
 
         # Template coverage (existing)
         coverage = {}

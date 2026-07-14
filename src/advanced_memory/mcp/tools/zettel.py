@@ -18,7 +18,10 @@ async def generate(
     topic: Annotated[str, Field(description="Specific topic or keyword for the new note")],
     category: Annotated[str, Field(description="Taxonomy category (e.g., developer, business, math, science)")],
     ai_generate: Annotated[bool, Field(description="If true, uses LLM to bridge gaps in local templates")] = False,
-    quality: Annotated[Literal["quick", "standard", "comprehensive", "expert"], Field(description="Level of detail and rigor for the content")] = "standard",
+    quality: Annotated[
+        Literal["quick", "standard", "comprehensive", "expert"],
+        Field(description="Level of detail and rigor for the content"),
+    ] = "standard",
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
     """Creation Engine
@@ -26,13 +29,9 @@ async def generate(
     Synthesizes atomic zettel notes using structured templates or intelligent AI generation.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
+
     return await adn_zettelmaker(
-        operation="generate",
-        category=category,
-        topic=topic,
-        ai_generate=ai_generate,
-        quality=quality,
-        project=project
+        operation="generate", category=category, topic=topic, ai_generate=ai_generate, quality=quality, project=project
     )
 
 
@@ -47,12 +46,8 @@ async def suggest(
     Identifies structural gaps in the knowledge base and proposes high-value next topics.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
-    return await adn_zettelmaker(
-        operation="suggest",
-        category=category,
-        count=count,
-        project=project
-    )
+
+    return await adn_zettelmaker(operation="suggest", category=category, count=count, project=project)
 
 
 @zettel_app.tool(task=True)
@@ -66,12 +61,8 @@ async def expand(
     Extends existing notes into broader clusters by identifying and generating related concepts.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
-    return await adn_zettelmaker(
-        operation="expand",
-        note_identifier=note_identifier,
-        depth=depth,
-        project=project
-    )
+
+    return await adn_zettelmaker(operation="expand", note_identifier=note_identifier, depth=depth, project=project)
 
 
 @zettel_app.tool(task=True)
@@ -84,11 +75,8 @@ async def analyze(
     Evaluates the maturity and connectivity of the current zettelkasten structure.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
-    return await adn_zettelmaker(
-        operation="analyze",
-        category=category,
-        project=project
-    )
+
+    return await adn_zettelmaker(operation="analyze", category=category, project=project)
 
 
 @zettel_app.tool(task=True)
@@ -101,11 +89,8 @@ async def connect(
     Auto-discovers and instantiates semantic relations between existing atomic notes.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
-    return await adn_zettelmaker(
-        operation="connect",
-        note_identifier=note_identifier,
-        project=project
-    )
+
+    return await adn_zettelmaker(operation="connect", note_identifier=note_identifier, project=project)
 
 
 @zettel_app.tool()
@@ -115,6 +100,7 @@ async def collect() -> Any:
     Launches an interactive session for low-friction, off-the-cuff atomic thought record.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
+
     return await adn_zettelmaker(operation="collect")
 
 
@@ -131,6 +117,7 @@ async def customize(
     for a given category/topic pair.
     """
     from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
+
     return await adn_zettelmaker(
         operation="customize",
         category=category,

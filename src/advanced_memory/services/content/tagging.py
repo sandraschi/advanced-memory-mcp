@@ -74,9 +74,7 @@ async def edit_tags(
     current_entity = EntityResponse.model_validate(response.json())
 
     # Normalize current tags to a list[str]
-    existing_tags_raw = (
-        current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
-    )
+    existing_tags_raw = current_entity.entity_metadata.get("tags", []) if current_entity.entity_metadata else []
     if isinstance(existing_tags_raw, str):
         # Try to parse string representation of list (e.g., "['tag1', 'tag2']")
         import ast
@@ -466,9 +464,7 @@ Note Content:
 
 Suggest semantic tags for this note."""
 
-        suggested_tags = await llm.generate_json(
-            prompt, system_prompt, max_tokens=300, temperature=0.5
-        )
+        suggested_tags = await llm.generate_json(prompt, system_prompt, max_tokens=300, temperature=0.5)
 
         if isinstance(suggested_tags, list):
             tags_list = [str(tag).lower().replace(" ", "-") for tag in suggested_tags if tag]

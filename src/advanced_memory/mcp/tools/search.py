@@ -28,7 +28,9 @@ search_app = FastMCP("search")
 @search_app.tool(task=True)
 async def query(
     text: Annotated[str, Field(description="Search term or boolean logic query")],
-    search_type: Annotated[Literal["text", "title", "permalink", "tag"], Field(description="Scope of the search focus")] = "text",
+    search_type: Annotated[
+        Literal["text", "title", "permalink", "tag"], Field(description="Scope of the search focus")
+    ] = "text",
     page: Annotated[int, Field(description="Results page number", ge=1)] = 1,
     page_size: Annotated[int, Field(description="Items per page", ge=1, le=50)] = 20,
     project: Annotated[str | None, Field(description="Project context override")] = None,
@@ -38,13 +40,9 @@ async def query(
     Performs high-speed full-text search across all notes in the knowledge base using Boolean logic.
     """
     from advanced_memory.mcp.tools.adn_search import adn_search
+
     return await adn_search(
-        operation="notes",
-        query=text,
-        search_type=search_type,
-        page=page,
-        page_size=page_size,
-        project=project
+        operation="notes", query=text, search_type=search_type, page=page, page_size=page_size, project=project
     )
 
 
@@ -65,9 +63,7 @@ async def rag(
     target_project = _resolve_project(project)
     search_service = await get_search_service()
 
-    results = await search_service.knowledge_rag(
-        query=prompt, limit=limit, project=target_project, min_score=min_score
-    )
+    results = await search_service.knowledge_rag(query=prompt, limit=limit, project=target_project, min_score=min_score)
 
     # Format for model consumption
     context_blocks = []
@@ -80,13 +76,15 @@ async def rag(
 
         block = f"[Source {i + 1}: {source}] (Relevance: {score:.2f})\n{text}"
         context_blocks.append(block)
-        explorer_results.append({
-            "title": f"Source {i + 1}: {source}",
-            "permalink": source,
-            "content": text,
-            "score": score,
-            "type": "chunk"
-        })
+        explorer_results.append(
+            {
+                "title": f"Source {i + 1}: {source}",
+                "permalink": source,
+                "content": text,
+                "score": score,
+                "type": "chunk",
+            }
+        )
 
     formatted_context = "\n\n---\n\n".join(context_blocks)
 
@@ -102,7 +100,9 @@ async def rag(
 
 @search_app.tool(task=True)
 async def external(
-    source: Annotated[Literal["obsidian", "joplin", "notion", "evernote"], Field(description="External storage platform")],
+    source: Annotated[
+        Literal["obsidian", "joplin", "notion", "evernote"], Field(description="External storage platform")
+    ],
     path: Annotated[str, Field(description="Absolute path to the vault or export directory")],
     query: Annotated[str, Field(description="Search term")],
     max_results: Annotated[int, Field(description="Limit on returned items")] = 10,
@@ -112,12 +112,8 @@ async def external(
     Searches across non-native knowledge silos like Obsidian vaults or Evernote exports.
     """
     from advanced_memory.mcp.tools.adn_search import adn_search
-    return await adn_search(
-        operation=source,
-        query=query,
-        source_path=path,
-        max_results=max_results
-    )
+
+    return await adn_search(operation=source, query=query, source_path=path, max_results=max_results)
 
 
 # ---------------------------------------------------------------------------
@@ -159,9 +155,7 @@ def _extract_tags_from_query_string(query: str) -> tuple[str, list[str]]:
     return cleaned_query, extracted_tags
 
 
-def _format_search_results_as_markdown(
-    search_response: SearchResponse, query: str, projects: list[str]
-) -> str:
+def _format_search_results_as_markdown(search_response: SearchResponse, query: str, projects: list[str]) -> str:
     """Convert SearchResponse to formatted markdown string for MCP compliance."""
     output = [f'# Search Results for: "{query}"\n']
 
@@ -174,9 +168,7 @@ def _format_search_results_as_markdown(
         output.append("- Try recent_activity() to see latest notes")
         return "\n".join(output)
 
-    output.append(
-        f"Found {search_response.total_results} result(s) from project(s): {', '.join(projects)}\n"
-    )
+    output.append(f"Found {search_response.total_results} result(s) from project(s): {', '.join(projects)}\n")
 
     for idx, item in enumerate(search_response.results, 1):
         title = item.title or "Untitled"
@@ -210,13 +202,7 @@ def _format_search_error_response(error_message: str, query: str, search_type: s
 
     # FTS5 syntax errors
     if "syntax error" in error_message.lower() or "fts5" in error_message.lower():
-        clean_query = (
-            query.replace('"', "")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("+", "")
-            .replace("*", "")
-        )
+        clean_query = query.replace('"', "").replace("(", "").replace(")", "").replace("+", "").replace("*", "")
         return dedent(f"""
             # Search Failed - Invalid Syntax
 
@@ -272,11 +258,7 @@ def _format_search_error_response(error_message: str, query: str, search_type: s
     # No results found
     if "no results" in error_message.lower() or "not found" in error_message.lower():
         simplified_query = (
-            " ".join(query.split()[:2])
-            if len(query.split()) > 2
-            else query.split()[0]
-            if query.split()
-            else "notes"
+            " ".join(query.split()[:2]) if len(query.split()) > 2 else query.split()[0] if query.split() else "notes"
         )
         return dedent(f"""
             # Search Complete - No Results Found
@@ -395,21 +377,15 @@ Error searching for '{query}': {error_message}
 async def search_notes(
     query: Annotated[
         str,
-        Field(
-            description="Search term/logic (e.g. 'planning AND project', 'tag:work', '\"exact phrase\"')"
-        ),
+        Field(description="Search term/logic (e.g. 'planning AND project', 'tag:work', '\"exact phrase\"')"),
     ],
     page: Annotated[int, Field(description="Results page number for large result sets")] = 1,
-    results_per_page: Annotated[
-        int, Field(description="Number of results to return (max: 50)")
-    ] = 10,
+    results_per_page: Annotated[int, Field(description="Number of results to return (max: 50)")] = 10,
     search_type: Annotated[
         str | None,
         Field(description="Scope: 'text' (full-text), 'title' (titles only), 'permalink' (paths)"),
     ] = "text",
-    types: Annotated[
-        list[str] | None, Field(description="Filter by primary category (e.g. ['note'])")
-    ] = None,
+    types: Annotated[list[str] | None, Field(description="Filter by primary category (e.g. ['note'])")] = None,
     entity_types: Annotated[
         list[str] | None,
         Field(description="Structural filter: 'entity', 'observation', 'relation'"),
@@ -417,15 +393,9 @@ async def search_notes(
     after_date: Annotated[
         str | None, Field(description="Results FROM this date (e.g. '1 week ago', '2026-01-01')")
     ] = None,
-    before_date: Annotated[
-        str | None, Field(description="Results UNTIL this date (e.g. 'yesterday')")
-    ] = None,
-    tags: Annotated[
-        list[str] | None, Field(description="Match all tags in this list")
-    ] = None,
-    projects: Annotated[
-        str | None, Field(description="Match specific projects: 'p1,p2' or 'ALL'")
-    ] = None,
+    before_date: Annotated[str | None, Field(description="Results UNTIL this date (e.g. 'yesterday')")] = None,
+    tags: Annotated[list[str] | None, Field(description="Match all tags in this list")] = None,
+    projects: Annotated[str | None, Field(description="Match specific projects: 'p1,p2' or 'ALL'")] = None,
     project: Annotated[str | None, Field(description="Alias for projects parameter")] = None,
     search_all_projects: Annotated[
         bool, Field(description="Shortcut to search across all accessible projects")
@@ -517,9 +487,7 @@ async def search_notes(
             except ValueError:
                 # Track invalid types but don't fail
                 invalid_entity_types.append(t)
-                logger.warning(
-                    f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types."
-                )
+                logger.warning(f"Invalid entity_type value: '{t}'. Ignoring and continuing with valid types.")
 
         # If we have valid types, use them. If all were invalid, fall back to all types
         if validated_entity_types:
@@ -580,9 +548,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
             logger.info(f"Searching ALL projects except: {excluded}")
             projects_response = await call_get(client, "/api/v1/projects")
             project_list = ProjectList.model_validate(projects_response.json())
-            project_names_to_search = [
-                p.name for p in project_list.projects if p.name not in excluded
-            ]
+            project_names_to_search = [p.name for p in project_list.projects if p.name not in excluded]
             search_multiple = True
 
         elif "," in projects:
@@ -626,9 +592,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
                 continue
 
         # Return merged results with project context
-        logger.info(
-            f"Searched {len(searched_projects)} projects, found {len(all_results)} total results"
-        )
+        logger.info(f"Searched {len(searched_projects)} projects, found {len(all_results)} total results")
 
         # Format as markdown string for MCP compliance
         search_response = SearchResponse(
@@ -649,9 +613,7 @@ Cannot use both `projects` and `search_all_projects=True` in the same request.
         return _format_search_results_as_markdown(search_response, query, searched_projects)
 
     # Single project search (default behavior)
-    active_project = get_active_project(
-        projects
-    )  # Will use projects as single project name, or current if None
+    active_project = get_active_project(projects)  # Will use projects as single project name, or current if None
     project_url = active_project.project_url
 
     logger.info(f"Searching for {search_query}")

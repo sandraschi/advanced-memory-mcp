@@ -71,9 +71,7 @@ async def adn_research(
                 )
             from advanced_memory.mcp.beta.adn_arxiv_research import adn_arxiv_research
 
-            result = await adn_arxiv_research(
-                operation="search_papers", query=query, max_results=limit or 10
-            )
+            result = await adn_arxiv_research(operation="search_papers", query=query, max_results=limit or 10)
             return build_success_response("arxiv", result)
 
         elif operation == "github":
@@ -182,9 +180,7 @@ async def adn_research(
 
     except Exception as e:
         logger.error(f"Research operation '{operation}' failed: {e}")
-        return build_error_response(
-            "VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}"
-        )
+        return build_error_response("VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}")
 
 
 # Decommissioned in favor of namespaced research/search apps (FastMCP 3.2 GA)

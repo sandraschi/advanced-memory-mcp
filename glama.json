@@ -7,7 +7,7 @@
     "description":  "Local-first knowledge graph and notes: FastMCP 3.2 GA, 12 Managed Namespaces (79 tools), SQLite FTS5 + LanceDB RAG, optional extra document roots, webapp.",
     "type":  "mcp_server",
     "status":  "beta",
-    "framework":  "FastMCP 3.2",
+    "framework":  "FastMCP >=3.4.2",
     "tools":  79,
     "transport":  [
                       "stdio"

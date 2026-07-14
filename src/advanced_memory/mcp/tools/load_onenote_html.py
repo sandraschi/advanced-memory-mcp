@@ -94,9 +94,7 @@ async def load_onenote_html(
                     # Single page object
                     pages_to_import = [json_data]
                 else:
-                    return (
-                        "# Error\n\nInvalid JSON format. Expected array or object with page data."
-                    )
+                    return "# Error\n\nInvalid JSON format. Expected array or object with page data."
             except json.JSONDecodeError as e:
                 return f"# Error\n\nFailed to parse JSON: {e}"
 
@@ -112,9 +110,7 @@ async def load_onenote_html(
 
         # Case 2c: Directory of HTML files
         elif source_path_obj.is_dir():
-            html_files = list(source_path_obj.rglob("*.html")) + list(
-                source_path_obj.rglob("*.htm")
-            )
+            html_files = list(source_path_obj.rglob("*.html")) + list(source_path_obj.rglob("*.htm"))
             if not html_files:
                 return f"# Error\n\nNo HTML files found in directory: {source_path}"
 

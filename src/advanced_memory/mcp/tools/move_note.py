@@ -41,9 +41,7 @@ async def _detect_cross_project_move_attempt(
         for part in path_parts:
             if part in project_names and part != current_project.lower():
                 # Found a different project name in the path
-                matching_project = next(
-                    p.name for p in project_list.projects if p.name.lower() == part
-                )
+                matching_project = next(p.name for p in project_list.projects if p.name.lower() == part)
                 return _format_cross_project_error_response(
                     identifier, destination_path, current_project, matching_project
                 )
@@ -154,9 +152,7 @@ def _format_move_error_response(error_message: str, identifier: str, destination
     # Note not found errors
     if "entity not found" in error_message.lower() or "not found" in error_message.lower():
         search_term = identifier.split("/")[-1] if "/" in identifier else identifier
-        title_format = (
-            identifier.split("/")[-1].replace("-", " ").title() if "/" in identifier else identifier
-        )
+        title_format = identifier.split("/")[-1].replace("-", " ").title() if "/" in identifier else identifier
         permalink_format = identifier.lower().replace(" ", "-")
 
         return dedent(f"""
@@ -417,9 +413,7 @@ move_note("{identifier}", "notes/{destination_path.split("/")[-1] if "/" in dest
 ```"""
 
     # Check for potential cross-project move attempts
-    cross_project_error = await _detect_cross_project_move_attempt(
-        identifier, destination_path, active_project.name
-    )
+    cross_project_error = await _detect_cross_project_move_attempt(identifier, destination_path, active_project.name)
     if cross_project_error:
         logger.info(f"Detected cross-project move attempt: {identifier} -> {destination_path}")
         return cross_project_error

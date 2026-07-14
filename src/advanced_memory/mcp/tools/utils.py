@@ -60,9 +60,7 @@ def get_error_message(status_code: int, url: URL | str, method: str, msg: str | 
     elif status_code == 500:
         return f"Internal server error: Something went wrong processing '{path}'"
     elif status_code == 503:  # pragma: no cover
-        return (
-            f"Service unavailable: The server is currently unable to handle requests for '{path}'"
-        )
+        return f"Service unavailable: The server is currently unable to handle requests for '{path}'"
     elif 500 <= status_code < 600:  # pragma: no cover
         return f"Server error ({status_code}): The server encountered an error handling '{path}'"
 
@@ -382,9 +380,7 @@ async def call_post(
     logger.debug(f"Calling POST '{url}'")
     error_message = None
     try:
-        follow_redirects_value = (
-            True if isinstance(follow_redirects, UseClientDefault) else follow_redirects
-        )
+        follow_redirects_value = True if isinstance(follow_redirects, UseClientDefault) else follow_redirects
         response = await client.post(
             url=url,
             content=content,
@@ -548,9 +544,7 @@ def check_migration_status() -> str | None:
         return None
 
 
-async def wait_for_migration_or_return_status(
-    timeout: float = 5.0, project_name: str | None = None
-) -> str | None:
+async def wait_for_migration_or_return_status(timeout: float = 5.0, project_name: str | None = None) -> str | None:
     """Wait briefly for sync/migration to complete, or return status message.
 
     Args:
@@ -596,9 +590,7 @@ async def wait_for_migration_or_return_status(
                 error_msg = project_status.error or "Unknown sync error"
                 return f"[ERROR] Sync failed for project '{project_name}': {error_msg}"
             elif project_status:
-                return (
-                    f"[STATUS] Project '{project_name}' is still syncing: {project_status.message}"
-                )
+                return f"[STATUS] Project '{project_name}' is still syncing: {project_status.message}"
             else:
                 return f"[WARNING] Project '{project_name}' status unknown"
         else:
@@ -639,9 +631,7 @@ def sanitize_unicode_content(content: str) -> str:
     try:
         sanitized.encode("utf-8").decode("utf-8")
     except UnicodeError:
-        sanitized = "".join(
-            char if ord(char) < 128 or char.isspace() else "?" for char in sanitized
-        )
+        sanitized = "".join(char if ord(char) < 128 or char.isspace() else "?" for char in sanitized)
     return sanitized
 
 

@@ -333,9 +333,7 @@ async def _speak_operation(
             continue
         if not in_frontmatter:
             # Skip metadata lines like "title:", "permalink:", etc.
-            if not line.startswith(
-                ("title:", "permalink:", "created:", "updated:", "**", "file_path:")
-            ):
+            if not line.startswith(("title:", "permalink:", "created:", "updated:", "**", "file_path:")):
                 clean_lines.append(line)
 
     text_to_speak = "\n".join(clean_lines).strip()
@@ -479,9 +477,7 @@ async def _speak_operation(
             )
 
 
-async def _listen_command_operation(
-    active_project, audio_path: str | None, record_duration: int | None
-) -> dict:
+async def _listen_command_operation(active_project, audio_path: str | None, record_duration: int | None) -> dict:
     """Handle listen operation - voice command input with intelligent parsing.
 
     Records voice, transcribes it, parses the command intent, and executes it.
@@ -980,9 +976,7 @@ async def _get_weather(location: str | None = None) -> dict:
         return f"# Weather Error\n\nFailed to connect to weather service: {e!s}\n\nPlease check your internet connection and try again."
     except Exception as e:
         logger.error(f"Weather error: {e}", exc_info=True)
-        return (
-            f"# Weather Error\n\nUnexpected error fetching weather: {e!s}\n\nPlease try again."
-        )
+        return f"# Weather Error\n\nUnexpected error fetching weather: {e!s}\n\nPlease try again."
 
 
 async def _set_alarm(time_str: str) -> dict:
@@ -1383,7 +1377,9 @@ async def _control_music(command: str, query: str | None = None) -> dict:
 
     except Exception as e:
         logger.error(f"Music control error: {e}", exc_info=True)
-        return f"# Music Control Error\n\nFailed to control music: {e!s}\n\nPlease check your music player configuration."
+        return (
+            f"# Music Control Error\n\nFailed to control music: {e!s}\n\nPlease check your music player configuration."
+        )
 
 
 async def _control_music_plex(command: str, query: str | None) -> dict:
@@ -1431,9 +1427,7 @@ async def _control_music_plex(command: str, query: str | None) -> dict:
 
             # Find music clients (Plexamp, Plex clients, etc.)
             clients = server.clients()
-            music_clients = [
-                c for c in clients if c.product in ["Plexamp", "Plex Web", "Plex Media Player"]
-            ]
+            music_clients = [c for c in clients if c.product in ["Plexamp", "Plex Web", "Plex Media Player"]]
 
             if not music_clients:
                 return """# No Plex Clients Found
@@ -1553,7 +1547,9 @@ Went to previous track.
         raise  # Re-raise to be caught by caller
     except Exception as e:
         logger.error(f"Plex control error: {e}", exc_info=True)
-        return f"# Music Error\n\nFailed to control Plex: {e!s}\n\nMake sure Plex Media Server is running and accessible."
+        return (
+            f"# Music Error\n\nFailed to control Plex: {e!s}\n\nMake sure Plex Media Server is running and accessible."
+        )
 
 
 async def _control_music_windows(command: str, query: str | None) -> dict:
@@ -1854,9 +1850,7 @@ async def _wake_status_operation() -> dict:
     global _wake_listener_running, _wake_listener_thread
 
     if _wake_listener_running:
-        thread_status = (
-            "alive" if (_wake_listener_thread and _wake_listener_thread.is_alive()) else "dead"
-        )
+        thread_status = "alive" if (_wake_listener_thread and _wake_listener_thread.is_alive()) else "dead"
         return f"""# Wake Word Listener Status
 
 **Status:** Running

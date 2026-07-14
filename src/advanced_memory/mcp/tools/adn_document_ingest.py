@@ -255,11 +255,7 @@ async def _extract_epub_text(file_path: Path) -> str:
                         text = re.sub(r"\s+", " ", text).strip()
 
                         if text:
-                            chapter_name = (
-                                file_info.filename.split("/")[-1]
-                                .replace(".html", "")
-                                .replace(".xhtml", "")
-                            )
+                            chapter_name = file_info.filename.split("/")[-1].replace(".html", "").replace(".xhtml", "")
                             text_content.append(f"--- Chapter: {chapter_name} ---\n{text}")
 
                     except Exception as e:

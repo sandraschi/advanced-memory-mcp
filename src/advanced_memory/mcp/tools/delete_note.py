@@ -16,9 +16,7 @@ def _format_delete_error_response(error_message: str, identifier: str) -> str:
     # Note not found errors
     if "entity not found" in error_message.lower() or "not found" in error_message.lower():
         search_term = identifier.split("/")[-1] if "/" in identifier else identifier
-        title_format = (
-            identifier.split("/")[-1].replace("-", " ").title() if "/" in identifier else identifier
-        )
+        title_format = identifier.split("/")[-1].replace("-", " ").title() if "/" in identifier else identifier
         permalink_format = identifier.lower().replace(" ", "-")
 
         return dedent(f"""

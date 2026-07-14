@@ -168,9 +168,7 @@ async def _process_enex_file(
 
                 if entity_data:
                     # Create the note in Advanced Memory
-                    response = await call_post(
-                        client, project_url + "/api/memory", json=entity_data
-                    )
+                    response = await call_post(client, project_url + "/api/memory", json=entity_data)
 
                     if response.status_code == 200:
                         result_data = response.json()
@@ -178,17 +176,13 @@ async def _process_enex_file(
                             {
                                 "title": entity_data["title"],
                                 "permalink": result_data.get("permalink", ""),
-                                "notebook": entity_data.get("folder", "").replace(
-                                    base_folder + "/", ""
-                                ),
+                                "notebook": entity_data.get("folder", "").replace(base_folder + "/", ""),
                                 "tags": entity_data.get("tags", []),
                             }
                         )
                         processed_notes += 1
                     else:
-                        logger.warning(
-                            f"Failed to create note '{entity_data['title']}': {response.text}"
-                        )
+                        logger.warning(f"Failed to create note '{entity_data['title']}': {response.text}")
 
             except Exception as e:
                 logger.warning(f"Error processing note in {enex_file}: {e}")
@@ -309,9 +303,7 @@ def _evernote_html_to_markdown(html_content: str) -> str:
     markdown = re.sub(r"<h3[^>]*>(.*?)</h3>", r"### \1", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Lists
-    markdown = re.sub(
-        r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<ul[^>]*>(.*?)</ul>", _convert_list_items, markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(
         r"<ol[^>]*>(.*?)</ol>",
         _convert_ordered_list_items,
@@ -328,17 +320,13 @@ def _evernote_html_to_markdown(html_content: str) -> str:
     )
 
     # Formatting
-    markdown = re.sub(
-        r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<strong[^>]*>(.*?)</strong>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<b[^>]*>(.*?)</b>", r"**\1**", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<em[^>]*>(.*?)</em>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
     markdown = re.sub(r"<i[^>]*>(.*?)</i>", r"*\1*", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Code
-    markdown = re.sub(
-        r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL
-    )
+    markdown = re.sub(r"<code[^>]*>(.*?)</code>", r"`\1`", markdown, flags=re.IGNORECASE | re.DOTALL)
 
     # Remove remaining HTML tags
     markdown = re.sub(r"<[^>]+>", "", markdown)

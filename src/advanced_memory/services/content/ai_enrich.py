@@ -140,13 +140,9 @@ async def enhance_note(
         if update_style:
             enhancement_tasks.append("Improve structure, clarity, readability, and organization")
         if add_examples:
-            enhancement_tasks.append(
-                "Add concrete examples, illustrations, or case studies where relevant"
-            )
+            enhancement_tasks.append("Add concrete examples, illustrations, or case studies where relevant")
         if add_context:
-            enhancement_tasks.append(
-                "Add background, definitions, and explain why the topic matters"
-            )
+            enhancement_tasks.append("Add background, definitions, and explain why the topic matters")
         if expand_sections:
             enhancement_tasks.append(
                 "Expand bullet points and skeletal sections into full paragraphs; turn outlines into complete notes"
@@ -159,13 +155,9 @@ async def enhance_note(
                 "Prefer flagging uncertainty over guessing version numbers."
             )
         if add_bibliography:
-            enhancement_tasks.append(
-                "Add a References/Bibliography section with relevant sources if applicable"
-            )
+            enhancement_tasks.append("Add a References/Bibliography section with relevant sources if applicable")
         if not enhancement_tasks:
-            enhancement_tasks.append(
-                "Improve the note while preserving all original content and meaning"
-            )
+            enhancement_tasks.append("Improve the note while preserving all original content and meaning")
         if instruction:
             enhancement_tasks.append(f"Additional instruction: {instruction}")
 
@@ -180,9 +172,7 @@ Always preserve the original meaning and key information. For biographical updat
         custom_instruction = f"\n\nCustom instruction: {instruction}" if instruction else ""
         prompt = f"Enhance this note:\n\n{note_preview}{custom_instruction}\n\nReturn the complete enhanced note body (markdown, no YAML frontmatter)."
 
-        enhanced_content = await llm.generate(
-            prompt, system_prompt, max_tokens=4000, temperature=0.5
-        )
+        enhanced_content = await llm.generate(prompt, system_prompt, max_tokens=4000, temperature=0.5)
 
         # Strip frontmatter from LLM response if present (we preserve existing frontmatter)
         from advanced_memory.file_utils import has_frontmatter, remove_frontmatter
@@ -256,9 +246,7 @@ The note has been enhanced and updated with improved structure, clarity, and rea
         )
 
 
-async def generate_note(
-    active_project, topic: str, folder: str | None, tags: TagType, entity_type: str
-) -> str:
+async def generate_note(active_project, topic: str, folder: str | None, tags: TagType, entity_type: str) -> str:
     """Generate new note content using LLM."""
     try:
         from advanced_memory.services.llm_client import get_llm_client
@@ -287,9 +275,7 @@ Create a well-structured markdown note with:
 
 Make it informative and useful for a knowledge base."""
 
-        generated_content = await llm.generate(
-            prompt, system_prompt, max_tokens=3000, temperature=0.7
-        )
+        generated_content = await llm.generate(prompt, system_prompt, max_tokens=3000, temperature=0.7)
 
         # Extract title from first line
         first_line = generated_content.split("\n")[0].lstrip("#").strip()

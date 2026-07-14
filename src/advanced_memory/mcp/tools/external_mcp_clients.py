@@ -172,9 +172,7 @@ def _validate_skeleton_key_request(
     server_path_lower = server_path.lower()
     for blocked_type in BLOCKED_SERVERS:
         if blocked_type in server_path_lower:
-            errors.append(
-                f"SECURITY BLOCK: Server type '{blocked_type}' is explicitly blocked. Path: {server_path}"
-            )
+            errors.append(f"SECURITY BLOCK: Server type '{blocked_type}' is explicitly blocked. Path: {server_path}")
             break
 
     # 2b. Validate server path against allowed list
@@ -217,9 +215,7 @@ def _validate_skeleton_key_request(
             # Check for dangerous parameter values (basic string check)
             if isinstance(param_value, str):
                 if any(blocked in param_value.lower() for blocked in BLOCKED_PARAMS):
-                    errors.append(
-                        f"Potentially dangerous parameter value in '{param_name}': {param_value[:50]}..."
-                    )
+                    errors.append(f"Potentially dangerous parameter value in '{param_name}': {param_value[:50]}...")
 
     if errors:
         return {
@@ -307,9 +303,7 @@ async def skeleton_key(
     """
     try:
         # 🔒 SECURITY VALIDATION FIRST
-        security_check = _validate_skeleton_key_request(
-            server_path, tool_name, tool_params, security_context
-        )
+        security_check = _validate_skeleton_key_request(server_path, tool_name, tool_params, security_context)
 
         if not security_check["valid"]:
             return build_error_response(
@@ -327,9 +321,7 @@ async def skeleton_key(
         try:
             sanitized_path = _sanitize_path(server_path)
         except ValueError as e:
-            return build_error_response(
-                "PATH_SANITIZATION_FAILED", f"Path sanitization failed: {e!s}"
-            )
+            return build_error_response("PATH_SANITIZATION_FAILED", f"Path sanitization failed: {e!s}")
 
         # Create client for the target server
         client = ExternalMCPClient(sanitized_path)
@@ -400,9 +392,7 @@ async def discover_mcp_server_tools(server_path: str) -> dict[str, Any]:
 
     except Exception as e:
         logger.error(f"Tool discovery failed: {e!s}")
-        return build_error_response(
-            "DISCOVERY_FAILED", f"Failed to discover tools on server '{server_path}': {e!s}"
-        )
+        return build_error_response("DISCOVERY_FAILED", f"Failed to discover tools on server '{server_path}': {e!s}")
 
 
 class ExternalMCPClient:
@@ -432,15 +422,11 @@ class ExternalMCPClient:
         try:
             # Verify server path exists
             if not self.server_path.exists():
-                logger.warning(
-                    f"{self.server_name}: Server path does not exist: {self.server_path}"
-                )
+                logger.warning(f"{self.server_name}: Server path does not exist: {self.server_path}")
                 return False
 
             # Create stdio transport
-            self.transport = StdioTransport(
-                command="python", args=[str(self.server_path)], env=os.environ.copy()
-            )
+            self.transport = StdioTransport(command="python", args=[str(self.server_path)], env=os.environ.copy())
 
             # Create FastMCP client
             self.client = Client(self.transport)
@@ -449,9 +435,7 @@ class ExternalMCPClient:
             async with self.client:
                 await self.client.initialize()
                 tools = await self.client.list_tools()
-                logger.info(
-                    f"{self.server_name}: Connected via stdio ({len(tools)} tools available)"
-                )
+                logger.info(f"{self.server_name}: Connected via stdio ({len(tools)} tools available)")
 
             self._is_connected = True
             return True
@@ -474,15 +458,11 @@ class ExternalMCPClient:
         """
         if not self._is_connected or not self.client:
             if not await self.connect():
-                return build_error_response(
-                    "CONNECTION_FAILED", f"{self.server_name} not connected"
-                )
+                return build_error_response("CONNECTION_FAILED", f"{self.server_name} not connected")
 
         try:
             async with self.client:
-                result = await asyncio.wait_for(
-                    self.client.call_tool(tool_name, **kwargs), timeout=self.timeout
-                )
+                result = await asyncio.wait_for(self.client.call_tool(tool_name, **kwargs), timeout=self.timeout)
                 return {
                     "success": True,
                     "result": result,
@@ -490,9 +470,7 @@ class ExternalMCPClient:
                     "timestamp": datetime.now().isoformat(),
                 }
         except TimeoutError:
-            return build_error_response(
-                "TIMEOUT", f"Tool {tool_name} timed out after {self.timeout}s"
-            )
+            return build_error_response("TIMEOUT", f"Tool {tool_name} timed out after {self.timeout}s")
         except Exception as e:
             logger.error(f"{self.server_name}: Error calling {tool_name}: {e}")
             return build_error_response("TOOL_ERROR", f"Error calling {tool_name}: {e!s}")
@@ -554,9 +532,7 @@ class MCPClientManager:
                 return None
 
             config = self._server_configs[server_name]
-            self.clients[server_name] = ExternalMCPClient(
-                server_path=config["path"], server_name=config["name"]
-            )
+            self.clients[server_name] = ExternalMCPClient(server_path=config["path"], server_name=config["name"])
 
         return self.clients[server_name]
 
@@ -596,9 +572,7 @@ async def get_weather_report(location: str, source: str = "brightdata") -> dict[
             # Use BrightData MCP for web search
             brightdata_client = await mcp_client_manager.get_client("brightdata")
             if not brightdata_client:
-                return build_error_response(
-                    "CLIENT_UNAVAILABLE", "BrightData MCP client not available"
-                )
+                return build_error_response("CLIENT_UNAVAILABLE", "BrightData MCP client not available")
 
             # Search for weather information
             search_result = await brightdata_client.call_tool(
@@ -622,9 +596,7 @@ async def get_weather_report(location: str, source: str = "brightdata") -> dict[
 
     except Exception as e:
         logger.error(f"Weather report failed for {location}: {e}")
-        return build_error_response(
-            "WEATHER_ERROR", f"Failed to get weather for {location}: {e!s}"
-        )
+        return build_error_response("WEATHER_ERROR", f"Failed to get weather for {location}: {e!s}")
 
 
 async def _parse_weather_from_search(search_result: dict[str, Any]) -> dict[str, Any]:
@@ -635,9 +607,7 @@ async def _parse_weather_from_search(search_result: dict[str, Any]) -> dict[str,
         results = search_result.get("results", [])
 
         if not results:
-            return build_error_response(
-                "NO_RESULTS", "No weather information found in search results"
-            )
+            return build_error_response("NO_RESULTS", "No weather information found in search results")
 
         # Mock parsing - in real implementation, parse actual weather data
         return {
@@ -664,9 +634,7 @@ async def _get_weather_direct(location: str) -> dict[str, Any]:
             response = await client.get(f"https://wttr.in/{location}?format=j1")
 
             if response.status_code != 200:
-                return build_error_response(
-                    "API_ERROR", f"Weather API returned status {response.status_code}"
-                )
+                return build_error_response("API_ERROR", f"Weather API returned status {response.status_code}")
 
             weather_data = response.json()
 
@@ -757,14 +725,8 @@ async def check_vrchat_api_direct() -> dict[str, Any]:
 
                 # Try to get some basic instance data (may require auth)
                 try:
-                    instances_response = await client.get(
-                        "https://api.vrchat.cloud/api/1/instances"
-                    )
-                    instance_count = (
-                        len(instances_response.json())
-                        if instances_response.status_code == 200
-                        else 0
-                    )
+                    instances_response = await client.get("https://api.vrchat.cloud/api/1/instances")
+                    instance_count = len(instances_response.json()) if instances_response.status_code == 200 else 0
                 except Exception as e:
                     logger.warning(f"Failed to get instance count: {e}")
                     instance_count = "unknown"
@@ -816,9 +778,7 @@ async def call_external_mcp_tool(
     try:
         client = await mcp_client_manager.get_client(server_name)
         if not client:
-            return build_error_response(
-                "UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}"
-            )
+            return build_error_response("UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}")
 
         # Call the tool with provided parameters
         params = tool_params or {}
@@ -837,9 +797,7 @@ async def call_external_mcp_tool(
 
     except Exception as e:
         logger.error(f"External MCP tool call failed: {server_name}.{tool_name}: {e}")
-        return build_error_response(
-            "EXTERNAL_CALL_ERROR", f"Failed to call {tool_name} on {server_name}: {e!s}"
-        )
+        return build_error_response("EXTERNAL_CALL_ERROR", f"Failed to call {tool_name} on {server_name}: {e!s}")
 
 
 # @mcp.tool
@@ -856,9 +814,7 @@ async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
     try:
         client = await mcp_client_manager.get_client(server_name)
         if not client:
-            return build_error_response(
-                "UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}"
-            )
+            return build_error_response("UNKNOWN_SERVER", f"Unknown or unavailable server: {server_name}")
 
         tools = await client.list_tools()
 
@@ -871,6 +827,4 @@ async def list_external_mcp_tools(server_name: str) -> dict[str, Any]:
         }
 
     except Exception as e:
-        return build_error_response(
-            "LIST_TOOLS_ERROR", f"Failed to list tools from {server_name}: {e!s}"
-        )
+        return build_error_response("LIST_TOOLS_ERROR", f"Failed to list tools from {server_name}: {e!s}")

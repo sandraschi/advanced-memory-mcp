@@ -1,0 +1,70 @@
+# Advanced Memory MCP — Full Reference
+
+FastMCP server for local-first knowledge graph and notes. SQLite FTS5 + LanceDB RAG,
+12 managed namespaces, Claude Skills integration, Zettelkasten, and webapp dashboard.
+
+## Architecture
+
+```
+Claude / Cursor ← MCP stdio → Advanced Memory Server
+                                     ↓
+                    ┌──────────────────────────────────────┐
+                    │  SQLite (relational + FTS5)          │
+                    │  LanceDB (vector embeddings)          │
+                    │  Markdown files (human-readable)      │
+                    └──────────────────────────────────────┘
+                                     ↓
+                              Webapp (port 10704/10705)
+```
+
+## Ports
+
+| Service | Port |
+|---------|------|
+| Frontend (Vite React) | 10704 |
+| Backend (FastAPI + MCP HTTP) | 10705 |
+| MCP SSE transport | 10732 |
+
+## MCP Tools
+
+79 tools across 12 managed namespaces. Primary portmanteaus:
+
+- `research_nexus` — Cross-platform retrieval (Search, GitHub, arXiv, TVTropes)
+- `adn_content` — CRUD for the Advanced Data Network (knowledge graph)
+- `manage_projects` — Context-aware project isolation and workspace indexing
+- `rag_search` — Semantic retrieval with cross-reference surfacing
+- `memory_diagnostics` — Integrity auditing and graph health verification
+- `adn_search` — Text, RAG, and external vault search
+- `adn_nav` — Graph traversal and backlink discovery
+- `adn_notes` — Note CRUD (write, read, edit, delete, move, quick, daily)
+- `adn_skills` — Claude Skills lifecycle management
+- `adn_zettel` — Zettelkasten slip-box management
+- `adn_audio` — Voice and audio operations
+- `adn_automation` — Autonomous batch processing and workflows
+- `adn_inbox` — Document ingestion and conversion
+- `adn_knowledge` — Intelligence analysis and enhancement
+- `adn_system` — Central control plane and orchestration
+- `adn_project` — Project lifecycle management
+- `adn_typora` — Typora editor integration
+
+## Configuration
+
+Set via `.env`:
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `ADVANCED_MEMORY_HTTP_PROXY` | HTTP daemon proxy URL | `http://127.0.0.1:10732/mcp` |
+| `SYNC_WATCH_DIRS` | Extra directories to watch | — |
+| `MCP_TRANSPORT` | Transport mode | `stdio` |
+| `MCP_PORT` | HTTP port override | 10732 |
+
+## HTTP Daemon + Stdio Proxy
+
+Persistence (SQLite + LanceDB) is owned by a long-running HTTP daemon. Stdio clients
+probe the daemon and become lightweight proxies if it's alive, avoiding DB contention.
+
+## Testing
+
+```powershell
+uv run pytest tests/ -q
+```

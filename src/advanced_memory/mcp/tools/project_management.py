@@ -23,9 +23,7 @@ from advanced_memory.utils import generate_permalink
 
 
 # @mcp.tool("list_memory_projects")
-async def list_memory_projects(
-    ctx: Context | None = None, _compatibility: str | None = None
-) -> str:
+async def list_memory_projects(ctx: Context | None = None, _compatibility: str | None = None) -> str:
     """List all available projects with their status.
 
     Shows all Advanced Memory projects that are available, indicating which one
@@ -261,9 +259,7 @@ async def create_memory_project(
         await ctx.info(f"Creating project: {project_name} at {project_path}")
 
     # Create the project request
-    project_request = ProjectInfoRequest(
-        name=project_name, path=project_path, set_default=set_default
-    )
+    project_request = ProjectInfoRequest(name=project_name, path=project_path, set_default=set_default)
 
     # Call API to create project
     response = await call_post(client, "/api/v1/projects", json=project_request.model_dump())
@@ -328,9 +324,7 @@ async def delete_project(project_name: str, ctx: Context | None = None) -> str:
     project_exists = any(p.name == project_name for p in project_list.projects)
     if not project_exists:
         available_projects = [p.name for p in project_list.projects]
-        raise ValueError(
-            f"Project '{project_name}' not found. Available projects: {', '.join(available_projects)}"
-        )
+        raise ValueError(f"Project '{project_name}' not found. Available projects: {', '.join(available_projects)}")
 
     # Call API to delete project
     response = await call_delete(client, f"/api/v1/projects/{project_name}")

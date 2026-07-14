@@ -67,29 +67,18 @@ async def adn_system(op: SystemOperation) -> Any:
     from advanced_memory.mcp.tools.portmanteau_system import adn_system as _adn_system_impl
 
     if operation == "status":
-        return await _adn_system_impl(
-            operation="status",
-            level=op.level,
-            focus=op.focus
-        )
+        return await _adn_system_impl(operation="status", level=op.level, focus=op.focus)
     elif operation == "help":
-        return await _adn_system_impl(
-            operation="help",
-            topic=op.topic,
-            level=op.level
-        )
+        return await _adn_system_impl(operation="help", topic=op.topic, level=op.level)
     elif operation == "workflow":
         return await _adn_system_impl(
             operation="workflow",
             topic=op.goal,
-            ctx=None # Context injection happens at implementation level if needed
+            ctx=None,  # Context injection happens at implementation level if needed
         )
     elif operation == "external_bridge":
         return await _adn_system_impl(
-            operation="external_call",
-            server_name=op.server,
-            tool_name=op.tool,
-            parameters=op.args
+            operation="external_call", server_name=op.server, tool_name=op.tool, parameters=op.args
         )
     elif operation == "sync":
         return await _adn_system_impl(operation="sync_status")

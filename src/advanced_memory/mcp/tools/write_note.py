@@ -23,15 +23,11 @@ async def write_note(
     title: Annotated[str, Field(description="The unique title of the note")],
     content: Annotated[
         str,
-        Field(
-            description="Markdown content. Support observations '- [key] val' and relations '- type [[Target]]'"
-        ),
+        Field(description="Markdown content. Support observations '- [key] val' and relations '- type [[Target]]'"),
     ],
     folder: Annotated[
         str,
-        Field(
-            description="Folder path relative to project root (e.g. 'notes'). Must exist or will be created."
-        ),
+        Field(description="Folder path relative to project root (e.g. 'notes'). Must exist or will be created."),
     ],
     tags: Annotated[
         str | list[str] | None,
@@ -66,9 +62,7 @@ async def write_note(
     # Validate folder path to prevent path traversal attacks
     project_path = active_project.home
     if folder and not validate_project_path(folder, project_path):
-        logger.warning(
-            "Attempted path traversal attack blocked", folder=folder, project=active_project.name
-        )
+        logger.warning("Attempted path traversal attack blocked", folder=folder, project=active_project.name)
         return f"# Error\n\nFolder path '{folder}' is not allowed - paths must stay within project boundaries"
 
     # Process tags using the helper function

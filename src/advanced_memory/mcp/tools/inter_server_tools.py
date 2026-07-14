@@ -159,9 +159,7 @@ async def read_knowledge_note(identifier: str) -> str:
         return f"ERROR: {e}"
 
 
-async def write_knowledge_note(
-    title: str, content: str, folder: str = "inbox", tags: str = ""
-) -> str:
+async def write_knowledge_note(title: str, content: str, folder: str = "inbox", tags: str = "") -> str:
     """
     Write a new note to the knowledge base.
     title: Note title (becomes the filename).

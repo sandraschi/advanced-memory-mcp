@@ -29,22 +29,14 @@ async def adn_rag(
         ],
         Field(description="RAG action: ingest, query, list, info, delete, or similarity search"),
     ],
-    document_path: Annotated[
-        str | None, Field(description="Local path to file (PDF, TXT, MD, Code)")
-    ] = None,
-    query: Annotated[
-        str | None, Field(description="Semantic query or example text for vector search")
-    ] = None,
-    document_id: Annotated[
-        str | None, Field(description="Canonical ID of the document (slugified path)")
-    ] = None,
+    document_path: Annotated[str | None, Field(description="Local path to file (PDF, TXT, MD, Code)")] = None,
+    query: Annotated[str | None, Field(description="Semantic query or example text for vector search")] = None,
+    document_id: Annotated[str | None, Field(description="Canonical ID of the document (slugified path)")] = None,
     chunk_method: Annotated[
         Literal["fixed", "semantic", "sentence"],
         Field(description="Strategy for breaking text into vector snippets"),
     ] = "fixed",
-    max_results: Annotated[
-        int, Field(description="Total chunks to retrieve for context injection")
-    ] = 5,
+    max_results: Annotated[int, Field(description="Total chunks to retrieve for context injection")] = 5,
     document_filter: Annotated[
         list[str] | None, Field(description="Limit search to these specific document IDs")
     ] = None,
@@ -137,9 +129,7 @@ async def adn_rag(
                 content=full_content,
                 metadata={
                     "source_path": str(document_path),
-                    "file_size": Path(document_path).stat().st_size
-                    if Path(document_path).exists()
-                    else 0,
+                    "file_size": Path(document_path).stat().st_size if Path(document_path).exists() else 0,
                     "ingested_at": "2025-12-02",
                     "chunk_method": chunk_method,
                 },

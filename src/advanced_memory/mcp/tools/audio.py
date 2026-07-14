@@ -33,7 +33,9 @@ _timer_counter = 0
 @audio_app.tool(task=True)
 async def dictate(
     audio_path: Annotated[str | None, Field(description="Path to existing audio file for transcription")] = None,
-    record_duration: Annotated[int | None, Field(description="Seconds to record from default microphone if audio_path is not provided")] = None,
+    record_duration: Annotated[
+        int | None, Field(description="Seconds to record from default microphone if audio_path is not provided")
+    ] = None,
     tags: Annotated[str | list[str] | None, Field(description="Metadata tags to classify the resulting note")] = None,
     project: Annotated[str | None, Field(description="Project context override")] = None,
 ) -> Any:
@@ -42,6 +44,7 @@ async def dictate(
     Converts live audio or files into structured knowledge base notes.
     """
     from advanced_memory.mcp.tools.adn_audio import _dictate_operation
+
     active_project = get_active_project(project)
     if not active_project:
         return "Active project required for dictation."
@@ -62,6 +65,7 @@ async def speak(
     Synthesizes and plays high-fidelity clones of knowledge base content.
     """
     from advanced_memory.mcp.tools.adn_audio import _speak_operation
+
     active_project = get_active_project(project)
     if not active_project:
         return "Active project required for speaking."
@@ -79,6 +83,7 @@ async def listen(
     Listens for a command and executes it using intelligent parsing.
     """
     from advanced_memory.mcp.tools.adn_audio import _listen_command_operation
+
     active_project = get_active_project(project)
     if not active_project:
         return "Active project required for listening."
@@ -96,6 +101,7 @@ async def wake_start(
     Initializes the background wake word listener for hands-free control.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_start_operation
+
     active_project = get_active_project(project)
     if not active_project:
         return "Active project required for wake word listener."
@@ -109,6 +115,7 @@ async def wake_stop() -> Any:
     Ceases all background wake word listening and releases audio devices.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_stop_operation
+
     return await _wake_stop_operation()
 
 
@@ -119,6 +126,7 @@ async def wake_status() -> Any:
     Reports the current state and health of the background wake listener.
     """
     from advanced_memory.mcp.tools.adn_audio import _wake_status_operation
+
     return await _wake_status_operation()
 
 
@@ -131,6 +139,7 @@ async def weather(
     Fetches and formats current weather and forecasts for a location.
     """
     from advanced_memory.mcp.tools.adn_audio import _get_weather
+
     return await _get_weather(location)
 
 
@@ -143,6 +152,7 @@ async def timer(
     Sets an audible countdown timer with automatic alarm notification.
     """
     from advanced_memory.mcp.tools.adn_audio import _set_timer
+
     return await _set_timer(duration)
 
 
@@ -155,6 +165,7 @@ async def alarm(
     Configures a time-based alarm for later in the day or next.
     """
     from advanced_memory.mcp.tools.adn_audio import _set_alarm
+
     return await _set_alarm(time_str)
 
 
@@ -168,4 +179,5 @@ async def music(
     Orchestrates music playback via Plex or system media interfaces.
     """
     from advanced_memory.mcp.tools.adn_audio import _control_music
+
     return await _control_music(command, query)

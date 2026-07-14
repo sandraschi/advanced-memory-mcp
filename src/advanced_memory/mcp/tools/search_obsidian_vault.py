@@ -71,9 +71,7 @@ async def search_obsidian_vault(
         if not vault_path_obj.is_dir():
             return f"# Vault Search Failed\n\nPath is not a directory: {vault_path}"
 
-        logger.info(
-            f"Searching Obsidian vault: {vault_path} for query: '{query}' (type: {search_type})"
-        )
+        logger.info(f"Searching Obsidian vault: {vault_path} for query: '{query}' (type: {search_type})")
 
         # Find all markdown files in the vault
         markdown_files = await _find_markdown_files(vault_path_obj)

@@ -405,9 +405,7 @@ class SearchService:
             attn_implementation=self.app_config.rag_attn_implementation,
         )
         final = reranked_docs[:limit]
-        entity_ids = list(
-            {doc["metadata"]["entity_id"] for doc in final if doc["metadata"].get("entity_id", 0) > 0}
-        )
+        entity_ids = list({doc["metadata"]["entity_id"] for doc in final if doc["metadata"].get("entity_id", 0) > 0})
         entities = await self.entity_repository.find_by_ids(entity_ids) if entity_ids else []
         permalink_by_id = {e.id: e.permalink for e in entities if e.id is not None}
         out = []

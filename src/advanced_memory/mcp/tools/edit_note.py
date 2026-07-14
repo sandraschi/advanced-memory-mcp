@@ -591,6 +591,4 @@ async def edit_note(
 
     except Exception as e:
         logger.error(f"Error editing note: {e}")
-        return _format_error_response(
-            str(e), operation, identifier, find_text, expected_replacements
-        )
+        return _format_error_response(str(e), operation, identifier, find_text, expected_replacements)

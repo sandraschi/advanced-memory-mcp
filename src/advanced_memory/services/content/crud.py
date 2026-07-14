@@ -13,16 +13,15 @@ triaged separately (PHASE1_TRIAGE.md section E).
 from loguru import logger
 
 from advanced_memory.mcp.async_client import client
-from advanced_memory.mcp.tools.utils import call_put
+from advanced_memory.mcp.tools.utils import (  # response builders (shared)
+    build_error_response,
+    build_success_response,
+    call_put,
+)
 from advanced_memory.schemas import EntityResponse
 from advanced_memory.schemas.base import Entity
 from advanced_memory.schemas.memory import GraphContext
 from advanced_memory.utils import parse_tags, validate_project_path
-
-from advanced_memory.mcp.tools.utils import (  # response builders (shared)
-    build_error_response,
-    build_success_response,
-)
 
 TagType = list[str] | str | None
 
@@ -79,9 +78,7 @@ async def write_note(
     )
 
     if detect_skill_path(folder):
-        logger.info(
-            f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed."
-        )
+        logger.info(f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed.")
 
         # Check if content already has frontmatter
         fm, body, errors = parse_skill_frontmatter(content)
@@ -105,7 +102,9 @@ async def write_note(
             skill_name = title_to_skill_name(identifier)
 
             # Create description (use first paragraph from body if available)
-            description = f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            description = (
+                f"Expert guidance for {identifier}. Use when working with {identifier.lower()} or related topics."
+            )
 
             # Generate frontmatter
             try:
@@ -204,9 +203,7 @@ The API request failed with status code {response.status_code}.
             summary.append(f"- Resolved: {resolved}")
             if unresolved:
                 summary.append(f"- Unresolved: {unresolved}")
-                summary.append(
-                    "\nNote: Unresolved relations point to entities that don't exist yet."
-                )
+                summary.append("\nNote: Unresolved relations point to entities that don't exist yet.")
                 summary.append(
                     "They will be automatically resolved when target entities are created or during sync operations."
                 )
@@ -231,9 +228,7 @@ The API request failed with status code {response.status_code}.
                 "tags": tag_list,
             },
             next_steps=[
-                "Read the note to verify content"
-                if action == "created"
-                else "Review the updated content",
+                "Read the note to verify content" if action == "created" else "Review the updated content",
                 "Add related notes or concepts",
                 "Consider enhancing with AI suggestions",
             ],
@@ -303,9 +298,7 @@ async def get_latest_identifier(active_project) -> tuple[str | None, str | None]
     try:
         from advanced_memory.mcp.tools.recent_activity import recent_activity
 
-        raw_context = await (
-            recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity
-        )(
+        raw_context = await (recent_activity.fn if hasattr(recent_activity, "fn") else recent_activity)(
             type_filter=["entity", "observation"],
             depth=1,
             timeframe="365d",
@@ -322,11 +315,7 @@ async def get_latest_identifier(active_project) -> tuple[str | None, str | None]
 
     except Exception as exc:  # pragma: no cover
         logger.error("adn_content_latest_identifier_error", exc_info=True)
-        return None, (
-            "# Error\n\n"
-            "Unable to load recent activity to determine the latest note.\n"
-            f"Details: {exc}"
-        )
+        return None, (f"# Error\n\nUnable to load recent activity to determine the latest note.\nDetails: {exc}")
 
     context_results = getattr(result, "results", [])
     if not context_results:
@@ -342,11 +331,7 @@ async def get_latest_identifier(active_project) -> tuple[str | None, str | None]
 
     identifier = getattr(item, "permalink", None) or getattr(item, "file_path", None)
     if not identifier:
-        return None, (
-            "# Error\n\n"
-            "Could not determine identifier for most recent note.\n"
-            f"Item attributes: {dir(item)}"
-        )
+        return None, (f"# Error\n\nCould not determine identifier for most recent note.\nItem attributes: {dir(item)}")
 
     logger.debug(f"Extracted latest identifier: {identifier}")
     return identifier, None
@@ -378,9 +363,9 @@ async def view_note_rendered(active_project, identifier: str) -> dict:
     """Handle view_rendered operation."""
     from advanced_memory.mcp.tools.view_note_rendered import view_note_rendered
 
-    return await (
-        view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered
-    )(identifier=identifier, project=active_project.name)
+    return await (view_note_rendered.fn if hasattr(view_note_rendered, "fn") else view_note_rendered)(
+        identifier=identifier, project=active_project.name
+    )
 
 
 async def edit_note(

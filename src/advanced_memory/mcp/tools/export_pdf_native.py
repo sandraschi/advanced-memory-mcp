@@ -194,9 +194,7 @@ After installing, restart the MCP server.
 
         # Combine into one PDF with TOC if requested
         if combine_into_one:
-            return await _export_combined_pdf(
-                notes_data, export_path, pdf_title or "Combined Notes", make_toc
-            )
+            return await _export_combined_pdf(notes_data, export_path, pdf_title or "Combined Notes", make_toc)
 
         # Otherwise, export each note as separate PDF
         export_dir = Path(export_path)

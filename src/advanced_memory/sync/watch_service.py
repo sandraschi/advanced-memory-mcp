@@ -139,11 +139,7 @@ class WatchService:
                     results = await asyncio.gather(*change_handlers, return_exceptions=True)
                     for idx, result in enumerate(results):
                         if isinstance(result, BaseException):
-                            tb = "".join(
-                                traceback.format_exception(
-                                    type(result), result, result.__traceback__
-                                )
-                            )
+                            tb = "".join(traceback.format_exception(type(result), result, result.__traceback__))
                             logger.error(
                                 "handle_changes failed (batch index={}): {}\n{}",
                                 idx,

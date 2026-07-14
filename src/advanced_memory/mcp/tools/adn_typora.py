@@ -80,11 +80,6 @@ async def adn_typora(op: TyporaOperation) -> Any:
     elif operation == "analyze":
         return await typora_control(operation="content_analysis")
     elif operation == "export":
-        return await typora_control(
-            operation="export",
-            format=op.format,
-            output_path=op.path,
-            options=op.options
-        )
+        return await typora_control(operation="export", format=op.format, output_path=op.path, options=op.options)
     else:
         return f"Error: Unsupported operation {operation}"

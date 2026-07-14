@@ -17,9 +17,7 @@ from advanced_memory.utils import sanitize_filename, validate_project_path
 
 # @mcp.tool  # Decommissioned in favor of namespaced adn_notes portmanteau
 async def read_note(
-    identifier: Annotated[
-        str, Field(description="Title, permalink, or memory:// URL to retrieve")
-    ],
+    identifier: Annotated[str, Field(description="Title, permalink, or memory:// URL to retrieve")],
     page: Annotated[int, Field(description="Page number for paginated large notes")] = 1,
     page_size: Annotated[int, Field(description="Number of results per page")] = 10,
     project: Annotated[str | None, Field(description="Optional project override")] = None,
@@ -40,9 +38,7 @@ async def read_note(
 
     from advanced_memory.mcp.tools.utils import wait_for_migration_or_return_status
 
-    migration_status = await wait_for_migration_or_return_status(
-        timeout=5.0, project_name=active_project.name
-    )
+    migration_status = await wait_for_migration_or_return_status(timeout=5.0, project_name=active_project.name)
     if migration_status:  # pragma: no cover
         return f"# System Status\n\n{migration_status}\n\nPlease wait for migration to complete before reading notes."
     project_url = active_project.project_url
@@ -71,19 +67,13 @@ async def read_note(
         logger.info(f"Direct lookup failed for '{path}': {e}")
 
     # Try sanitized filename variant for bare titles
-    if (
-        not identifier.startswith("memory://")
-        and "/" not in identifier
-        and not identifier.endswith(".md")
-    ):
+    if not identifier.startswith("memory://") and "/" not in identifier and not identifier.endswith(".md"):
         sanitized_path = sanitize_filename(identifier)
         if sanitized_path != identifier:
             sanitized_full_path = f"{project_url}/resource/{sanitized_path}.md"
             logger.info(f"Trying sanitized path: {sanitized_full_path}")
             try:
-                response = await call_get(
-                    client, sanitized_full_path, params={"page": page, "page_size": page_size}
-                )
+                response = await call_get(client, sanitized_full_path, params={"page": page, "page_size": page_size})
                 if response.status_code == 200:
                     logger.info(f"Found note using sanitized path: {sanitized_full_path}")
                     return response.text
@@ -104,9 +94,7 @@ async def read_note(
                 result = search_result.results[0]
                 if result.permalink:
                     fetch_path = f"{project_url}/resource/{result.permalink}"
-                    fetch_response = await call_get(
-                        client, fetch_path, params={"page": page, "page_size": page_size}
-                    )
+                    fetch_response = await call_get(client, fetch_path, params={"page": page, "page_size": page_size})
                     if fetch_response.status_code == 200:
                         logger.info(f"Found note by title search: {result.permalink}")
                         return fetch_response.text
