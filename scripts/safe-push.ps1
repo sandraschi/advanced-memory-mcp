@@ -11,9 +11,9 @@ param(
     [switch]$NoMonitor  # Skip post-push monitoring
 )
 
-Write-Host "`n╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  🚀 SAFE PUSH - BULLETPROOF CI/CD WORKFLOW 🚀               ║" -ForegroundColor Cyan
-Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
+Write-Host "`nâ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Cyan
+Write-Host "â•‘  ðŸš€ SAFE PUSH - BULLETPROOF CI/CD WORKFLOW ðŸš€               â•‘" -ForegroundColor Cyan
+Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Cyan
 
 # Step 1: Pre-Push Validation
 Write-Host "STEP 1: Pre-Push Validation`n" -ForegroundColor Yellow
@@ -28,7 +28,7 @@ if ($Quick) {
 $validationResult = $LASTEXITCODE
 
 if ($validationResult -ne 0 -and -not $Force) {
-    Write-Host "`n❌ Pre-push checks failed! Not pushing.`n" -ForegroundColor Red
+    Write-Host "`nâŒ Pre-push checks failed! Not pushing.`n" -ForegroundColor Red
     Write-Host "Fix the issues or use -Force to push anyway (not recommended)`n" -ForegroundColor Yellow
     Write-Host "To see details:" -ForegroundColor Cyan
     Write-Host "  .\scripts\pre-push-check.ps1 -Verbose`n" -ForegroundColor White
@@ -36,7 +36,7 @@ if ($validationResult -ne 0 -and -not $Force) {
 }
 
 if ($Force) {
-    Write-Host "`n⚠️  FORCING PUSH despite validation failures!`n" -ForegroundColor Yellow
+    Write-Host "`nâš ï¸  FORCING PUSH despite validation failures!`n" -ForegroundColor Yellow
 }
 
 # Step 2: Commit Changes (if message provided)
@@ -47,11 +47,11 @@ if ($Message) {
     $commitOutput = git commit -m "$Message" 2>&1
 
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "✅ Changes committed`n" -ForegroundColor Green
+        Write-Host "âœ… Changes committed`n" -ForegroundColor Green
     } elseif ($commitOutput -match "nothing to commit") {
-        Write-Host "ℹ️  No changes to commit`n" -ForegroundColor Cyan
+        Write-Host "â„¹ï¸  No changes to commit`n" -ForegroundColor Cyan
     } else {
-        Write-Host "❌ Commit failed`n" -ForegroundColor Red
+        Write-Host "âŒ Commit failed`n" -ForegroundColor Red
         $commitOutput
         exit 1
     }
@@ -64,11 +64,11 @@ Write-Host "Pushing to: origin/$Branch`n" -ForegroundColor White
 git push origin $Branch
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "`n❌ Push failed`n" -ForegroundColor Red
+    Write-Host "`nâŒ Push failed`n" -ForegroundColor Red
     exit 1
 }
 
-Write-Host "✅ Pushed to $Branch`n" -ForegroundColor Green
+Write-Host "âœ… Pushed to $Branch`n" -ForegroundColor Green
 
 # Step 4: Monitor CI (unless skipped)
 if (-not $NoMonitor) {

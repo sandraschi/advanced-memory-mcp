@@ -14,25 +14,25 @@ $FailureCount = 0
 
 function Write-StepHeader {
     param($Message)
-    Write-Host "`n╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "`nâ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Cyan
     $padding = " " * ([math]::Max(0, 61 - $Message.Length))
-    Write-Host "║  $Message$padding║" -ForegroundColor Cyan
-    Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
+    Write-Host "â•‘  $Message$paddingâ•‘" -ForegroundColor Cyan
+    Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Cyan
 }
 
 function Write-Pass {
     param($Message)
-    Write-Host "✅ $Message" -ForegroundColor Green
+    Write-Host "âœ… $Message" -ForegroundColor Green
 }
 
 function Write-Fail {
     param($Message)
-    Write-Host "❌ $Message" -ForegroundColor Red
+    Write-Host "âŒ $Message" -ForegroundColor Red
     $script:FailureCount++
 }
 
 # Header
-Write-Host "`n🎯 PRE-PUSH VALIDATION - PREVENTING CI FAILURES`n" -ForegroundColor Yellow
+Write-Host "`nðŸŽ¯ PRE-PUSH VALIDATION - PREVENTING CI FAILURES`n" -ForegroundColor Yellow
 Write-Host "Running all checks that GitHub Actions will run...`n" -ForegroundColor White
 
 # Check 1: Git Status
@@ -72,7 +72,7 @@ if ($formatOutput -match "already formatted" -or $formatExitCode -eq 0) {
 } else {
     Write-Fail "Format check failed - running auto-fix"
     ruff format . | Out-Null
-    Write-Host "  → Auto-formatted files" -ForegroundColor Yellow
+    Write-Host "  â†’ Auto-formatted files" -ForegroundColor Yellow
 }
 
 # Check 4: Python Syntax
@@ -119,7 +119,7 @@ if (-not $Quick) {
     if ($LASTEXITCODE -eq 0) {
         Write-Pass "Type checking passed"
     } else {
-        Write-Host "⚠️  Type checking completed with warnings (non-blocking)" -ForegroundColor Yellow
+        Write-Host "âš ï¸  Type checking completed with warnings (non-blocking)" -ForegroundColor Yellow
     }
 }
 
@@ -135,9 +135,9 @@ if ($Quick) {
 } else {
     Write-Host "Running: FULL test suite with coverage (CI simulation)`n" -ForegroundColor Gray
     Write-Host "Expected time: ~4 minutes" -ForegroundColor Yellow
-    Write-Host "⏰ PLEASE BE PATIENT - Tests will run to completion!`n" -ForegroundColor Red
-    Write-Host "💡 This matches EXACTLY what CI will run" -ForegroundColor Cyan
-    Write-Host "💡 Parallelized for speed (using -n auto)`n" -ForegroundColor Cyan
+    Write-Host "â° PLEASE BE PATIENT - Tests will run to completion!`n" -ForegroundColor Red
+    Write-Host "ðŸ’¡ This matches EXACTLY what CI will run" -ForegroundColor Cyan
+    Write-Host "ðŸ’¡ Parallelized for speed (using -n auto)`n" -ForegroundColor Cyan
     $testCmd = "uv run pytest -n auto --cov=src/advanced_memory --cov-report=term-missing --tb=short --cov-fail-under=50"
 }
 
@@ -148,14 +148,14 @@ if ($testExitCode -eq 0) {
     Write-Pass "Test suite passed"
     if (-not $NoCoverage) {
         $testOutput | Select-String -Pattern "TOTAL.*\d+%" | ForEach-Object {
-            Write-Host "  → $_" -ForegroundColor Cyan
+            Write-Host "  â†’ $_" -ForegroundColor Cyan
         }
     }
 } else {
     Write-Fail "Test suite failed"
     if ($Verbose) {
         $testOutput | Select-String -Pattern "FAILED|ERROR" | Select-Object -First 10 | ForEach-Object {
-            Write-Host "  → $_" -ForegroundColor Red
+            Write-Host "  â†’ $_" -ForegroundColor Red
         }
     } else {
         Write-Host "  Run with -Verbose to see details" -ForegroundColor Gray
@@ -173,7 +173,7 @@ if ($buildExitCode -eq 0) {
     Write-Pass "Package build successful"
     if ($Verbose) {
         Get-ChildItem dist -ErrorAction SilentlyContinue | ForEach-Object {
-            Write-Host "  → $($_.Name)" -ForegroundColor Gray
+            Write-Host "  â†’ $($_.Name)" -ForegroundColor Gray
         }
     }
 } else {
@@ -193,21 +193,21 @@ if ($buildExitCode -eq 0) {
 }
 
 # Final Summary
-Write-Host "`n═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
-Write-Host "📊 VALIDATION SUMMARY`n" -ForegroundColor Yellow
+Write-Host "`nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
+Write-Host "ðŸ“Š VALIDATION SUMMARY`n" -ForegroundColor Yellow
 
 if ($FailureCount -eq 0) {
-    Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║  🎉 ALL CHECKS PASSED! SAFE TO PUSH! 🎉                     ║" -ForegroundColor Green
-    Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
-    Write-Host "Your code will pass GitHub Actions! ✅" -ForegroundColor Green
+    Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+    Write-Host "â•‘  ðŸŽ‰ ALL CHECKS PASSED! SAFE TO PUSH! ðŸŽ‰                     â•‘" -ForegroundColor Green
+    Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Green
+    Write-Host "Your code will pass GitHub Actions! âœ…" -ForegroundColor Green
     Write-Host "`nReady to push:" -ForegroundColor Cyan
     Write-Host "  git push origin master`n" -ForegroundColor White
     exit 0
 } else {
-    Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Red
-    Write-Host "║  ❌ $FailureCount CHECK(S) FAILED - DO NOT PUSH YET! ❌              ║" -ForegroundColor Red
-    Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Red
+    Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Red
+    Write-Host "â•‘  âŒ $FailureCount CHECK(S) FAILED - DO NOT PUSH YET! âŒ              â•‘" -ForegroundColor Red
+    Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Red
     Write-Host "Fix the issues above before pushing!" -ForegroundColor Yellow
     Write-Host "`nTo auto-fix format issues:" -ForegroundColor Cyan
     Write-Host "  ruff format .`n" -ForegroundColor White

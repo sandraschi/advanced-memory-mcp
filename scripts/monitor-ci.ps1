@@ -23,7 +23,7 @@ function Get-LatestWorkflowRun {
         }
         return $response.workflow_runs[0]
     } catch {
-        Write-Host "❌ Failed to fetch workflow status: $_" -ForegroundColor Red
+        Write-Host "âŒ Failed to fetch workflow status: $_" -ForegroundColor Red
         return $null
     }
 }
@@ -40,7 +40,7 @@ function Get-WorkflowDetails {
         }
         return $response.jobs
     } catch {
-        Write-Host "❌ Failed to fetch job details: $_" -ForegroundColor Red
+        Write-Host "âŒ Failed to fetch job details: $_" -ForegroundColor Red
         return $null
     }
 }
@@ -85,7 +85,7 @@ function Auto-Fix-Issues {
     $commitMessage = "fix: auto-fix CI failures"
     $changes = @()
 
-    Write-Host "`n🔧 AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
+    Write-Host "`nðŸ”§ AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
 
     # Fix format issues
     if ($Failures.format) {
@@ -105,7 +105,7 @@ function Auto-Fix-Issues {
 
     # Tests can't be auto-fixed
     if ($Failures.tests) {
-        Write-Host "`n⚠️  Test failures detected - cannot auto-fix" -ForegroundColor Yellow
+        Write-Host "`nâš ï¸  Test failures detected - cannot auto-fix" -ForegroundColor Yellow
         Write-Host "Running tests locally to see failure...`n" -ForegroundColor Cyan
         uv run pytest --maxfail=1 -x --tb=short 2>&1 | Select-Object -Last 30
         return $false
@@ -113,37 +113,37 @@ function Auto-Fix-Issues {
 
     # Build issues need manual intervention
     if ($Failures.build -and -not $Failures.format -and -not $Failures.lint) {
-        Write-Host "`n⚠️  Build failures detected - cannot auto-fix" -ForegroundColor Yellow
+        Write-Host "`nâš ï¸  Build failures detected - cannot auto-fix" -ForegroundColor Yellow
         Write-Host "This requires manual intervention`n" -ForegroundColor Cyan
         return $false
     }
 
     if ($fixed) {
         $commitMessage += " (" + ($changes -join ", ") + ")"
-        Write-Host "`n✅ Applied fixes: $($changes -join ', ')" -ForegroundColor Green
+        Write-Host "`nâœ… Applied fixes: $($changes -join ', ')" -ForegroundColor Green
     }
 
     return $fixed
 }
 
 # Main monitoring loop
-Write-Host "`n🔍 GITHUB ACTIONS MONITOR`n" -ForegroundColor Yellow
+Write-Host "`nðŸ” GITHUB ACTIONS MONITOR`n" -ForegroundColor Yellow
 Write-Host "Repository: sandraschi/advanced-memory-mcp" -ForegroundColor White
 Write-Host "Branch: $Branch" -ForegroundColor White
-Write-Host "Auto-fix: $(if ($AutoFix) { 'ENABLED ✅' } else { 'DISABLED ❌' })" -ForegroundColor White
-Write-Host "Continuous: $(if ($Continuous) { 'ENABLED ✅' } else { 'DISABLED ❌' })" -ForegroundColor White
+Write-Host "Auto-fix: $(if ($AutoFix) { 'ENABLED âœ…' } else { 'DISABLED âŒ' })" -ForegroundColor White
+Write-Host "Continuous: $(if ($Continuous) { 'ENABLED âœ…' } else { 'DISABLED âŒ' })" -ForegroundColor White
 Write-Host "Max attempts: $MaxAttempts" -ForegroundColor White
 Write-Host "Wait time: $WaitSeconds seconds`n" -ForegroundColor White
 
 # SAFETY WARNING
 if ($AutoFix) {
-    Write-Host "⚠️  SAFETY LIMITS ENABLED (preventing GitHub rate limiting):" -ForegroundColor Yellow
-    Write-Host "   • Maximum $MaxAttempts auto-fix attempts" -ForegroundColor Gray
-    Write-Host "   • Minimum $MinWaitBetweenPushes seconds between pushes" -ForegroundColor Gray
-    Write-Host "   • This prevents spamming GitHub (no goon squad! 😄)`n" -ForegroundColor Gray
+    Write-Host "âš ï¸  SAFETY LIMITS ENABLED (preventing GitHub rate limiting):" -ForegroundColor Yellow
+    Write-Host "   â€¢ Maximum $MaxAttempts auto-fix attempts" -ForegroundColor Gray
+    Write-Host "   â€¢ Minimum $MinWaitBetweenPushes seconds between pushes" -ForegroundColor Gray
+    Write-Host "   â€¢ This prevents spamming GitHub (no goon squad! ðŸ˜„)`n" -ForegroundColor Gray
 }
 
-Write-Host "⏳ Waiting $WaitSeconds seconds for workflows to start...`n" -ForegroundColor Cyan
+Write-Host "â³ Waiting $WaitSeconds seconds for workflows to start...`n" -ForegroundColor Cyan
 Start-Sleep -Seconds $WaitSeconds
 
 $attempt = 0
@@ -153,7 +153,7 @@ $lastPushTime = $null
 
 # SAFETY CHECK: Prevent runaway loops
 if ($MaxAttempts -gt 5) {
-    Write-Host "⚠️  WARNING: MaxAttempts=$MaxAttempts is too high!" -ForegroundColor Yellow
+    Write-Host "âš ï¸  WARNING: MaxAttempts=$MaxAttempts is too high!" -ForegroundColor Yellow
     Write-Host "   Setting to maximum safe value: 5" -ForegroundColor Yellow
     Write-Host "   (Prevents GitHub rate limiting abuse)`n" -ForegroundColor Gray
     $MaxAttempts = 5
@@ -164,14 +164,14 @@ do {
 
     # SAFETY: Hard limit on iterations (failsafe)
     if ($attempt -gt 10) {
-        Write-Host "`n🚨 SAFETY LIMIT REACHED: 10 attempts!" -ForegroundColor Red
+        Write-Host "`nðŸš¨ SAFETY LIMIT REACHED: 10 attempts!" -ForegroundColor Red
         Write-Host "   Stopping to prevent GitHub rate limiting" -ForegroundColor Yellow
-        Write-Host "   This is to protect you from the GitHub goon squad! 😄`n" -ForegroundColor Yellow
+        Write-Host "   This is to protect you from the GitHub goon squad! ðŸ˜„`n" -ForegroundColor Yellow
         break
     }
 
-    Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
-    Write-Host "🔄 Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
+    Write-Host "â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
+    Write-Host "ðŸ”„ Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
 
     # Get latest workflow run
     Write-Host "Fetching latest workflow status..." -ForegroundColor Cyan
@@ -179,7 +179,7 @@ do {
     $apiCallCount++
 
     if (-not $workflow) {
-        Write-Host "❌ Could not fetch workflow status`n" -ForegroundColor Red
+        Write-Host "âŒ Could not fetch workflow status`n" -ForegroundColor Red
         exit 1
     }
 
@@ -197,22 +197,22 @@ do {
 
     # Wait if still running
     if ($status -eq "in_progress" -or $status -eq "queued") {
-        Write-Host "⏳ Workflow still running... waiting 30 seconds`n" -ForegroundColor Yellow
+        Write-Host "â³ Workflow still running... waiting 30 seconds`n" -ForegroundColor Yellow
         Start-Sleep -Seconds 30
         continue
     }
 
     # Check conclusion
     if ($conclusion -eq "success") {
-        Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-        Write-Host "║  🎉 WORKFLOW SUCCEEDED! 🎉                                   ║" -ForegroundColor Green
-        Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
+        Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+        Write-Host "â•‘  ðŸŽ‰ WORKFLOW SUCCEEDED! ðŸŽ‰                                   â•‘" -ForegroundColor Green
+        Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Green
         $success = $true
         break
     }
 
     if ($conclusion -eq "failure") {
-        Write-Host "❌ WORKFLOW FAILED`n" -ForegroundColor Red
+        Write-Host "âŒ WORKFLOW FAILED`n" -ForegroundColor Red
 
         # Get job details
         Write-Host "Fetching failure details..." -ForegroundColor Cyan
@@ -223,7 +223,7 @@ do {
             Write-Host "`nFailed jobs:" -ForegroundColor Yellow
             foreach ($job in $jobs) {
                 if ($job.conclusion -eq "failure") {
-                    Write-Host "  ❌ $($job.name)" -ForegroundColor Red
+                    Write-Host "  âŒ $($job.name)" -ForegroundColor Red
                     Write-Host "     URL: $($job.html_url)" -ForegroundColor Gray
                 }
             }
@@ -236,11 +236,11 @@ do {
                 $fixed = Auto-Fix-Issues -Failures $failures
 
                 if ($fixed) {
-                    Write-Host "`n✅ Auto-fixes applied!`n" -ForegroundColor Green
+                    Write-Host "`nâœ… Auto-fixes applied!`n" -ForegroundColor Green
 
                     # RATE LIMITING: Warn if approaching max attempts
                     if ($attempt -ge $MaxAttempts - 1) {
-                        Write-Host "⚠️  WARNING: This is attempt $($attempt + 1) of $MaxAttempts!" -ForegroundColor Yellow
+                        Write-Host "âš ï¸  WARNING: This is attempt $($attempt + 1) of $MaxAttempts!" -ForegroundColor Yellow
                         Write-Host "   After this, manual intervention required to avoid rate limiting.`n" -ForegroundColor Yellow
                     }
 
@@ -257,18 +257,18 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
                     git push origin $Branch
 
                     # RATE LIMITING: Enforce minimum wait between pushes
-                    Write-Host "`n⏳ RATE LIMIT PROTECTION: Waiting $MinWaitBetweenPushes seconds before next check..." -ForegroundColor Yellow
+                    Write-Host "`nâ³ RATE LIMIT PROTECTION: Waiting $MinWaitBetweenPushes seconds before next check..." -ForegroundColor Yellow
                     Write-Host "   (This prevents GitHub API rate limiting)`n" -ForegroundColor Gray
                     Start-Sleep -Seconds $MinWaitBetweenPushes
                 } else {
-                    Write-Host "`n❌ Could not auto-fix failures`n" -ForegroundColor Red
+                    Write-Host "`nâŒ Could not auto-fix failures`n" -ForegroundColor Red
                     Write-Host "Manual intervention required!" -ForegroundColor Yellow
                     Write-Host "Check: $runUrl`n" -ForegroundColor Cyan
                     break
                 }
             } else {
                 if (-not $AutoFix) {
-                    Write-Host "`n💡 To auto-fix format/lint issues, run with -AutoFix flag`n" -ForegroundColor Yellow
+                    Write-Host "`nðŸ’¡ To auto-fix format/lint issues, run with -AutoFix flag`n" -ForegroundColor Yellow
                 }
                 Write-Host "Check details at: $runUrl`n" -ForegroundColor Cyan
                 break
@@ -277,27 +277,27 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
     }
 
     if ($conclusion -eq "cancelled") {
-        Write-Host "⚠️  Workflow was cancelled`n" -ForegroundColor Yellow
+        Write-Host "âš ï¸  Workflow was cancelled`n" -ForegroundColor Yellow
         break
     }
 
 } while ($Continuous -and $attempt -lt $MaxAttempts -and -not $success)
 
 # Final status
-Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Magenta
+Write-Host "â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
 
 if ($success) {
-    Write-Host "╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║  🎊 ALL WORKFLOWS SUCCEEDED! 🎊                              ║" -ForegroundColor Green
-    Write-Host "╚═══════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
+    Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+    Write-Host "â•‘  ðŸŽŠ ALL WORKFLOWS SUCCEEDED! ðŸŽŠ                              â•‘" -ForegroundColor Green
+    Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Green
     exit 0
 } elseif ($attempt -ge $MaxAttempts) {
-    Write-Host "⚠️  Max attempts reached ($MaxAttempts)`n" -ForegroundColor Yellow
+    Write-Host "âš ï¸  Max attempts reached ($MaxAttempts)`n" -ForegroundColor Yellow
     Write-Host "Manual intervention required`n" -ForegroundColor Red
     Write-Host "Check: https://github.com/sandraschi/advanced-memory-mcp/actions`n" -ForegroundColor Cyan
     exit 1
 } else {
-    Write-Host "⏹️  Monitoring stopped`n" -ForegroundColor Yellow
+    Write-Host "â¹ï¸  Monitoring stopped`n" -ForegroundColor Yellow
     Write-Host "Check status: https://github.com/sandraschi/advanced-memory-mcp/actions`n" -ForegroundColor Cyan
     exit 1
 }

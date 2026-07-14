@@ -141,17 +141,25 @@ def mcp(
                     },
                 },
                 headers={"Accept": "application/json, text/event-stream"},
-                timeout=0.5,
+                timeout=5.0,
             )
             if _probe.status_code == 200:
                 from fastmcp.server import create_proxy
 
-                logger.info(f"HTTP memops found at {HTTP_PROXY_URL} — proxying tool calls")
+                logger.info(f"HTTP memops found at {HTTP_PROXY_URL} - proxying tool calls")
                 _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
                 _proxied.run(transport="stdio")
                 return
-        except Exception:
-            pass
+            else:
+                logger.error(
+                    f"HTTP proxy probe to {HTTP_PROXY_URL} returned status "
+                    f"{_probe.status_code}, falling back to local instance"
+                )
+        except Exception as _probe_err:
+            logger.error(
+                f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r}), "
+                f"falling back to local instance"
+            )
 
     # Now run the MCP server (blocks)
     if transport == "stdio":

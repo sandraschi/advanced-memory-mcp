@@ -14,14 +14,14 @@ function Download-Paper {
         $webClient = New-Object System.Net.WebClient
         $webClient.DownloadFile($url, $outputPath)
         if (Test-Path $outputPath) {
-            Write-Host "✓ Successfully downloaded $paperName" -ForegroundColor Green
+            Write-Host "âœ“ Successfully downloaded $paperName" -ForegroundColor Green
             return $true
         } else {
-            Write-Host "✗ Failed to download $paperName" -ForegroundColor Red
+            Write-Host "âœ- Failed to download $paperName" -ForegroundColor Red
             return $false
         }
     } catch {
-        Write-Host "✗ Error downloading $paperName : $_" -ForegroundColor Red
+        Write-Host "âœ- Error downloading $paperName : $_" -ForegroundColor Red
         return $false
     }
 }

@@ -305,5 +305,17 @@ backup-to path:
 
 # Create backup with WinRAR instead of 7-Zip
 backup-winrar:
-    @echo "Creating repository backup (WinRAR)..."
-    @pwsh ./scripts/backup-repo.ps1 -UseWinRAR
+	@echo "Creating repository backup (WinRAR)..."
+	@pwsh ./scripts/backup-repo.ps1 -UseWinRAR
+
+# ── Native (Tauri) ──────────────────────────────────────────────────────────
+
+# Build the Tauri NSIS desktop installer (full pipeline: frontend -> Rust -> NSIS)
+build-native:
+	$env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
+	Set-Location '{{justfile_directory()}}\native'
+	npx @tauri-apps/cli build --bundles nsis
+
+# Run the CUA smoke test against the installed NSIS app
+cua-nsis-test:
+	C:\Windows\py.exe scripts/cua-smoke.py

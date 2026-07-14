@@ -31,7 +31,7 @@ foreach ($target in $targets) {
                 $age = ((Get-Date) - $latest.LastWriteTime).TotalMinutes
                 $totalBackups += $zips.Count
 
-                Write-Host "  ✓ BACKUP FOUND!" -ForegroundColor Green
+                Write-Host "  âœ“ BACKUP FOUND!" -ForegroundColor Green
                 Write-Host "    File: $($latest.Name)" -ForegroundColor Cyan
                 Write-Host "    Size: $([math]::Round($latest.Length/1MB, 2)) MB" -ForegroundColor White
                 Write-Host "    Created: $($latest.LastWriteTime)" -ForegroundColor White
@@ -56,13 +56,13 @@ foreach ($target in $targets) {
                     }
                 }
             } else {
-                Write-Host "  ✗ No ZIP files found" -ForegroundColor Red
+                Write-Host "  âœ- No ZIP files found" -ForegroundColor Red
             }
         } else {
-            Write-Host "  ✗ Directory does not exist" -ForegroundColor Yellow
+            Write-Host "  âœ- Directory does not exist" -ForegroundColor Yellow
         }
     } else {
-        Write-Host "  ✗ Target not accessible" -ForegroundColor Yellow
+        Write-Host "  âœ- Target not accessible" -ForegroundColor Yellow
     }
     Write-Host ""
 }
@@ -75,14 +75,14 @@ if ($foundBackups.Count -gt 0) {
     $recentBackups = $foundBackups | Where-Object { $_.Recent -eq $true }
 
     if ($recentBackups.Count -gt 0) {
-        Write-Host "✓ SUCCESS: Recent backups created!" -ForegroundColor Green
+        Write-Host "âœ“ SUCCESS: Recent backups created!" -ForegroundColor Green
         Write-Host ""
         Write-Host "Recent backups ($($recentBackups.Count) location(s)):" -ForegroundColor Green
         foreach ($backup in $recentBackups) {
             Write-Host "  - $($backup.Location): $($backup.File) ($($backup.SizeMB) MB, $($backup.AgeMinutes) min ago)" -ForegroundColor Yellow
         }
     } else {
-        Write-Host "⚠ Backups found but may be old:" -ForegroundColor Yellow
+        Write-Host "âš  Backups found but may be old:" -ForegroundColor Yellow
         foreach ($backup in $foundBackups) {
             Write-Host "  - $($backup.Location): $($backup.File) ($($backup.AgeMinutes) min ago)" -ForegroundColor Yellow
         }
@@ -91,7 +91,7 @@ if ($foundBackups.Count -gt 0) {
     Write-Host ""
     Write-Host "Total backup files found: $totalBackups" -ForegroundColor Cyan
 } else {
-    Write-Host "✗ FAILED: No backup files found" -ForegroundColor Red
+    Write-Host "âœ- FAILED: No backup files found" -ForegroundColor Red
     Write-Host ""
     Write-Host "Check log files for errors:" -ForegroundColor Yellow
     Write-Host "  1. %APPDATA%\backup-logs\backup-*.log" -ForegroundColor Gray

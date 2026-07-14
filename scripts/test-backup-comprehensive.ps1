@@ -30,8 +30,8 @@ function Write-TestLog {
     }
 
     $prefix = switch ($Level) {
-        "PASS" { "[✓]" }
-        "FAIL" { "[✗]" }
+        "PASS" { "[âœ“]" }
+        "FAIL" { "[âœ-]" }
         "WARN" { "[!]" }
         default { "[i]" }
     }
