@@ -125,6 +125,7 @@ def mcp(
     # Probe for existing HTTP memops if ADVANCED_MEMORY_HTTP_PROXY is explicitly set
     HTTP_PROXY_URL = os.getenv("ADVANCED_MEMORY_HTTP_PROXY")
     if HTTP_PROXY_URL and transport == "stdio":
+        _probe_ok = False
         try:
             import httpx
 
@@ -143,14 +144,8 @@ def mcp(
                 headers={"Accept": "application/json, text/event-stream"},
                 timeout=5.0,
             )
-            if _probe.status_code == 200:
-                from fastmcp.server import create_proxy
-
-                logger.info(f"HTTP memops found at {HTTP_PROXY_URL} - proxying tool calls")
-                _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
-                _proxied.run(transport="stdio")
-                return
-            else:
+            _probe_ok = _probe.status_code == 200
+            if not _probe_ok:
                 logger.error(
                     f"HTTP proxy probe to {HTTP_PROXY_URL} returned status "
                     f"{_probe.status_code}, falling back to local instance"
@@ -160,6 +155,29 @@ def mcp(
                 f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r}), "
                 f"falling back to local instance"
             )
+
+        if _probe_ok:
+            # CRITICAL: restore real stdout BEFORE starting the stdio proxy.
+            # During imports sys.stdout is replaced with DevNullStdout (which has
+            # no .buffer); FastMCP's stdio transport requires sys.stdout.buffer
+            # for JSON-RPC. This block used to live inside the probe try-block:
+            # the proxy run crashed with AttributeError("'DevNullStdout' object
+            # has no attribute 'buffer'"), the broad except mislabeled it as a
+            # probe failure, and the fallback local instance then hung on the
+            # vault DB already held by the HTTP instance. Probe and proxy are
+            # now separate: a genuine proxy failure surfaces instead of
+            # silently double-opening the vault.
+            from advanced_memory.utils.stdio import restore_stdout
+
+            restore_stdout()
+            sys.stdout.flush()
+
+            from fastmcp.server import create_proxy
+
+            logger.info(f"HTTP memops found at {HTTP_PROXY_URL} - proxying tool calls")
+            _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
+            _proxied.run(transport="stdio")
+            return
 
     # Now run the MCP server (blocks)
     if transport == "stdio":
