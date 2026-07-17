@@ -647,8 +647,18 @@ def build_success_response(operation: str, summary: str, **kwargs) -> dict:
     }
 
 
-def build_error_response(error: str, error_code: str, message: str, **kwargs) -> dict:
-    """Build conversational error response with friendly guidance for MCP clients."""
+def build_error_response(error: str, error_code: str | None = None, message: str | None = None, **kwargs) -> dict:
+    """Build conversational error response with friendly guidance for MCP clients.
+
+    Tolerant signature (2026-07-17): many call sites pass only (code, detail).
+    In that case detail lands in error_code and is promoted to message, so a
+    failing error path never raises TypeError and masks the real exception
+    (which is exactly what happened in make_skill_advanced pre-fix).
+    """
+    if message is None:
+        message = error_code or error
+    if error_code is None:
+        error_code = "ERROR"
     # Add conversational prefix based on error type
     conversational_message = _make_conversational_error(error, message)
 

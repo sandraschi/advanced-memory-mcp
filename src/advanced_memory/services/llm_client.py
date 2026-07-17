@@ -84,13 +84,40 @@ class LLMClient:
         return "ollama"
 
     def _get_default_model(self) -> str:
-        """Get default model for provider."""
+        """Get default model for provider.
+
+        Env override: ADVANCED_MEMORY_LLM_MODEL. For Ollama the previous
+        hardcoded default 'llama3' 404s on any host without that exact tag
+        (found live 2026-07-17); now we pick from installed models, preferring
+        small fast instruct models, falling back to the first installed tag.
+        """
+        env_model = os.getenv("ADVANCED_MEMORY_LLM_MODEL")
+        if env_model:
+            return env_model
+
+        if self.provider == "ollama":
+            preferred = ["llama3.2:3b", "llama3.1:8b", "gemma4:12b", "qwen2.5:32b"]
+            try:
+                with httpx.Client(timeout=3.0) as client:
+                    r = client.get("http://localhost:11434/api/tags")
+                    if r.status_code == 200:
+                        installed = [m.get("name", "") for m in r.json().get("models", [])]
+                        for p in preferred:
+                            if p in installed:
+                                return p
+                        # Skip embedding-only and cloud models when falling back
+                        for name in installed:
+                            if "embed" not in name and ":cloud" not in name:
+                                return name
+            except Exception:
+                pass
+            return "llama3.2:3b"
+
         defaults = {
-            "ollama": "llama3",
             "lmstudio": "local-model",
             "openai": "gpt-3.5-turbo",
         }
-        return defaults.get(self.provider, "llama3")
+        return defaults.get(self.provider, "llama3.2:3b")
 
     async def generate(
         self,

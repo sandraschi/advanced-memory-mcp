@@ -44,7 +44,7 @@ class SkillEnhancement(BaseModel):
     cross_references: list[str] = Field(description="Related skills to reference")
 
 
-# @mcp.tool
+@mcp.tool()
 async def make_skill_advanced(
     operation: Literal[
         "analyze_requirements",
@@ -1108,6 +1108,49 @@ Comprehensive, research-backed guide to {topic} incorporating the latest develop
     }
 
 
+def _ensure_valid_frontmatter(content: str, slug: str, topic: str) -> str:
+    """Deterministically repair YAML frontmatter (2026-07-17).
+
+    Small local models routinely emit frontmatter without the closing '---',
+    which fails agentskills validation on every check. An LLM review loop is
+    the wrong tool for a mechanical fix, so: extract whatever name/description
+    survive, force name to the directory slug (name_matches_directory check),
+    and rebuild a canonical frontmatter block around the remaining body.
+    """
+    import re as _re
+
+    text = content.strip()
+    if text.startswith("---"):
+        rest = text[3:]
+        close = _re.search(r"\n---\s*(?:\n|$)", rest)
+        if close:
+            fm_block = rest[: close.start()]
+            body = rest[close.end():]
+        else:
+            lines = rest.lstrip("\n").split("\n")
+            fm_lines: list[str] = []
+            body_lines: list[str] = []
+            for i, ln in enumerate(lines):
+                if _re.match(r"^[A-Za-z_][\w-]*:\s?", ln):
+                    fm_lines.append(ln)
+                else:
+                    body_lines = lines[i:]
+                    break
+            fm_block = "\n".join(fm_lines)
+            body = "\n".join(body_lines)
+    else:
+        fm_block = ""
+        body = text
+
+    desc_m = _re.search(r"^description:\s*(.+)$", fm_block, _re.M)
+    description = (
+        desc_m.group(1).strip().strip('"').strip("'")
+        if desc_m
+        else f"Expert knowledge on {topic} based on chained research"
+    )[:1000]
+    return f"---\nname: {slug}\ndescription: {description}\n---\n\n{body.strip()}\n"
+
+
 async def _research_first_create_operation(
     topic: str,
     skill_name: str | None,
@@ -1221,17 +1264,7 @@ Output the complete SKILL.md only, no preamble."""
             recovery_options=["Check Ollama/LM Studio/OpenAI is running", "Configure LLM provider"],
         )
 
-    skill_content = skill_content.strip()
-    if not skill_content.startswith("---"):
-        skill_content = f"""---
-name: {slug}
-description: Expert knowledge on {topic} based on chained research
----
-
-# {topic}
-
-{skill_content}
-"""
+    skill_content = _ensure_valid_frontmatter(skill_content, slug, topic)
 
     (skill_dir / "SKILL.md").write_text(skill_content, encoding="utf-8")
 
@@ -1254,7 +1287,7 @@ Output the corrected full SKILL.md only."""
                 max_tokens=4000,
                 temperature=0.3,
             )
-            fixed = fixed.strip()
+            fixed = _ensure_valid_frontmatter(fixed.strip(), slug, topic)
             if fixed.startswith("---"):
                 (skill_dir / "SKILL.md").write_text(fixed, encoding="utf-8")
                 spec_compliant, spec_warnings, agentskills_checks = validate_skill_agentskills(skill_dir)

@@ -83,6 +83,19 @@ async def adn_skills(op: SkillsOperation) -> dict:
 
     logger.info(f"MCP tool call tool=adn_skills operation={operation}")
 
+    # Many operations return rendered Markdown strings; the tool's output schema
+    # is dict, so normalize here (fixes FastMCP 'structured_content must be a
+    # dict or None' error on list/read/validate/etc., found live 2026-07-17).
+    result = await _dispatch_skills_operation(op, operation, project)
+    if isinstance(result, dict):
+        return result
+    text = str(result)
+    ok = not text.lstrip().startswith("# Error")
+    return {"success": ok, "content": text}
+
+
+async def _dispatch_skills_operation(op: SkillsOperation, operation: str, project: str | None):
+    """Route an adn_skills operation to its implementation (may return dict or Markdown str)."""
     # Route to appropriate operation
     if operation == "create":
         return await _create_operation(op.skill_name, op.description, op.category, op.difficulty, op.metadata, project)

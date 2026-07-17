@@ -28,7 +28,7 @@ _current_provider: str | None = None
 _current_model: str | None = None
 
 
-# @mcp.tool
+@mcp.tool()
 async def adn_llm(
     operation: Literal[
         "list_models",

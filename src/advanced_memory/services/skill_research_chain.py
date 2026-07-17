@@ -126,31 +126,23 @@ async def _run_source(source: str, topic: str, limit: int) -> tuple[list[dict], 
     citations: list[str] = []
 
     try:
+        # 2026-07-17: arxiv/github/web previously imported phantom tool modules
+        # (adn_arxiv_research, adn_github_research, adn_web_search) that never
+        # existed -> ImportError swallowed below -> zero snippets, coverage 0.0.
+        # Now backed by real direct implementations in services.research_sources.
         if source == "arxiv":
-            from advanced_memory.mcp.tools.adn_arxiv_research import adn_arxiv_research
+            from advanced_memory.services.research_sources import arxiv_search
 
-            _fn = adn_arxiv_research.fn if hasattr(adn_arxiv_research, "fn") else adn_arxiv_research
-            out = await _fn(
-                operation="search_papers",
-                query=topic,
-                max_results=limit,
-            )
+            out = await arxiv_search(topic, max_results=limit)
             snippets = _extract_snippets(out, "arxiv")
             for s in snippets:
                 if s.get("url"):
                     citations.append(s["url"])
 
         elif source == "github":
-            from advanced_memory.mcp.tools.adn_github_research import (
-                adn_github_research,
-            )
+            from advanced_memory.services.research_sources import github_search
 
-            _fn = adn_github_research.fn if hasattr(adn_github_research, "fn") else adn_github_research
-            out = await _fn(
-                operation="search_repositories",
-                query=topic,
-                max_results=limit,
-            )
+            out = await github_search(topic, max_results=limit)
             snippets = _extract_snippets(out, "github")
             for s in snippets:
                 if s.get("url"):
@@ -168,10 +160,9 @@ async def _run_source(source: str, topic: str, limit: int) -> tuple[list[dict], 
             snippets = _extract_snippets(out, "rag")
 
         elif source == "web":
-            from advanced_memory.mcp.tools.adn_web_search import adn_web_search
+            from advanced_memory.services.research_sources import web_search
 
-            _fn = adn_web_search.fn if hasattr(adn_web_search, "fn") else adn_web_search
-            out = await _fn(query=topic, max_results=limit)
+            out = await web_search(topic, max_results=limit)
             snippets = _extract_snippets(out, "web")
             for s in snippets:
                 if s.get("url"):
