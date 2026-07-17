@@ -239,9 +239,59 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
                 allow_headers=["*"],
             )
 
+            # Version-visible health per mcd standards/HEALTH_ENDPOINT_STANDARD.md (2026-07-17)
+            import datetime as _dt
+            import subprocess as _sp
+            from pathlib import Path as _P
+
+            _started = _dt.datetime.now(_dt.timezone.utc)
+
+            def _git_sha() -> str:
+                try:
+                    repo = _P(__file__).resolve().parents[2]
+                    return (
+                        _sp.run(
+                            ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
+                            capture_output=True,
+                            text=True,
+                            timeout=2,
+                        ).stdout.strip()
+                        or "unknown"
+                    )
+                except Exception:
+                    return "unknown"
+
+            def _pkg_version() -> str:
+                try:
+                    from advanced_memory._version import __version__ as _v
+
+                    return _v
+                except Exception:
+                    try:
+                        from importlib.metadata import version as _pkg_v
+
+                        return _pkg_v("advanced-memory-mcp")
+                    except Exception:
+                        return "unknown"
+
+            _sha = _git_sha()
+            _ver = _pkg_version()
+
             @app.get("/health")
+            @app.get("/api/health")
             async def health():
-                return {"status": "ok", "server": server_name}
+                now = _dt.datetime.now(_dt.timezone.utc)
+                return {
+                    "status": "ok",
+                    "server": server_name,
+                    "version": _ver,
+                    "git_sha": _sha,
+                    "started_at": _started.isoformat(),
+                    "uptime_seconds": int((now - _started).total_seconds()),
+                    "shutting_down": False,
+                    "transport": "streamable-http",
+                    "port": port,
+                }
 
             await mcp_app.run_http_async(host=host, port=port, path=path)
 

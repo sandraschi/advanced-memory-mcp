@@ -149,6 +149,72 @@ import advanced_memory.mcp.tools.adn_zettel
 import advanced_memory.mcp.tools.make_skill_advanced  # super skillmaker: research-first skill creation (re-enabled 2026-07-17)
 import advanced_memory.mcp.tools.query_logs
 
+# --- Version-visible /health (mcd standards/HEALTH_ENDPOINT_STANDARD.md, 2026-07-17) ---
+# The NSSM service runs the CLI path (cli.main mcp --transport streamable-http),
+# which serves plain FastMCP with NO health route at all until this. Incident
+# 2026-07-17: a stale SYSTEM instance served pre-fix code invisibly.
+import datetime as _dt
+import subprocess as _sp
+
+from starlette.requests import Request as _Request
+from starlette.responses import JSONResponse as _JSONResponse
+
+_HEALTH_STARTED = _dt.datetime.now(_dt.timezone.utc)
+
+
+def _health_git_sha() -> str:
+    try:
+        from pathlib import Path as _P
+
+        repo = _P(__file__).resolve().parents[3]
+        return (
+            _sp.run(
+                ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
+                capture_output=True,
+                text=True,
+                timeout=2,
+            ).stdout.strip()
+            or "unknown"
+        )
+    except Exception:
+        return "unknown"
+
+
+def _health_version() -> str:
+    try:
+        from advanced_memory._version import __version__ as _v
+
+        return _v
+    except Exception:
+        try:
+            from importlib.metadata import version as _pkg_v
+
+            return _pkg_v("advanced-memory-mcp")
+        except Exception:
+            return "unknown"
+
+
+_HEALTH_GIT_SHA = _health_git_sha()  # resolved once at import, per standard
+_HEALTH_VERSION = _health_version()
+
+
+@mcp.custom_route("/health", methods=["GET"])
+@mcp.custom_route("/api/health", methods=["GET"])
+async def _health_route(request: _Request) -> _JSONResponse:
+    now = _dt.datetime.now(_dt.timezone.utc)
+    return _JSONResponse(
+        {
+            "status": "ok",
+            "server": "advanced-memory-mcp",
+            "version": _HEALTH_VERSION,
+            "git_sha": _HEALTH_GIT_SHA,
+            "started_at": _HEALTH_STARTED.isoformat(),
+            "uptime_seconds": int((now - _HEALTH_STARTED).total_seconds()),
+            "shutting_down": False,
+            "transport": "streamable-http",
+        }
+    )
+
 # Attach lifespan to the mounted server so file watcher, project session, and
 # MCP resource bootstrap run at startup (reinstates pre-namespace behavior).
 mcp.lifespan = app_lifespan
