@@ -244,7 +244,7 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
             import subprocess as _sp
             from pathlib import Path as _P
 
-            _started = _dt.datetime.now(_dt.timezone.utc)
+            _started = _dt.datetime.now(_dt.UTC)
 
             def _git_sha() -> str:
                 try:
@@ -280,7 +280,7 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
             @app.get("/health")
             @app.get("/api/health")
             async def health():
-                now = _dt.datetime.now(_dt.timezone.utc)
+                now = _dt.datetime.now(_dt.UTC)
                 return {
                     "status": "ok",
                     "server": server_name,

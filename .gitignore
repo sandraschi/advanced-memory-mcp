@@ -107,3 +107,7 @@ notes/
 target/
 
 _dashboard/
+
+# NSSM service log litter (2026-07-17)
+data/nssm-*.log
+data/*.log

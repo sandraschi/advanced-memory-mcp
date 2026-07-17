@@ -133,22 +133,6 @@ async def app_lifespan(
 # --- Portmanteau Tool Registry (FastMCP 3.2 SOTA) ---
 # Each domain is consolidated into exactly 1 portmanteau tool to satisfy
 # Antigravity tool limits and optimize model discovery via discriminated unions.
-import advanced_memory.mcp.tools.adn_audio
-import advanced_memory.mcp.tools.adn_automation
-import advanced_memory.mcp.tools.adn_inbox
-import advanced_memory.mcp.tools.adn_knowledge
-import advanced_memory.mcp.tools.adn_navigation
-import advanced_memory.mcp.tools.adn_notes
-import advanced_memory.mcp.tools.adn_project
-import advanced_memory.mcp.tools.adn_search
-import advanced_memory.mcp.tools.adn_skills
-import advanced_memory.mcp.tools.adn_system
-import advanced_memory.mcp.tools.adn_typora
-import advanced_memory.mcp.tools.adn_llm  # LLM provider/model selection - persists to config.json (re-enabled 2026-07-17)
-import advanced_memory.mcp.tools.adn_zettel
-import advanced_memory.mcp.tools.make_skill_advanced  # super skillmaker: research-first skill creation (re-enabled 2026-07-17)
-import advanced_memory.mcp.tools.query_logs
-
 # --- Version-visible /health (mcd standards/HEALTH_ENDPOINT_STANDARD.md, 2026-07-17) ---
 # The NSSM service runs the CLI path (cli.main mcp --transport streamable-http),
 # which serves plain FastMCP with NO health route at all until this. Incident
@@ -159,7 +143,23 @@ import subprocess as _sp
 from starlette.requests import Request as _Request
 from starlette.responses import JSONResponse as _JSONResponse
 
-_HEALTH_STARTED = _dt.datetime.now(_dt.timezone.utc)
+import advanced_memory.mcp.tools.adn_audio
+import advanced_memory.mcp.tools.adn_automation
+import advanced_memory.mcp.tools.adn_inbox
+import advanced_memory.mcp.tools.adn_knowledge
+import advanced_memory.mcp.tools.adn_llm  # LLM provider/model selection - persists to config.json (re-enabled 2026-07-17)
+import advanced_memory.mcp.tools.adn_navigation
+import advanced_memory.mcp.tools.adn_notes
+import advanced_memory.mcp.tools.adn_project
+import advanced_memory.mcp.tools.adn_search
+import advanced_memory.mcp.tools.adn_skills
+import advanced_memory.mcp.tools.adn_system
+import advanced_memory.mcp.tools.adn_typora
+import advanced_memory.mcp.tools.adn_zettel
+import advanced_memory.mcp.tools.make_skill_advanced  # super skillmaker: research-first skill creation (re-enabled 2026-07-17)
+import advanced_memory.mcp.tools.query_logs
+
+_HEALTH_STARTED = _dt.datetime.now(_dt.UTC)
 
 
 def _health_git_sha() -> str:
@@ -201,7 +201,7 @@ _HEALTH_VERSION = _health_version()
 @mcp.custom_route("/health", methods=["GET"])
 @mcp.custom_route("/api/health", methods=["GET"])
 async def _health_route(request: _Request) -> _JSONResponse:
-    now = _dt.datetime.now(_dt.timezone.utc)
+    now = _dt.datetime.now(_dt.UTC)
     return _JSONResponse(
         {
             "status": "ok",

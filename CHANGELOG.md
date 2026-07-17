@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - Super skillmaker + capture stack (2026-07-17)
+
+### Added
+- **make_skill_advanced + adn_llm registered** (15 tools; both had `@mcp.tool`
+  commented out since creation). E2E verified: research_first_create produced a
+  spec-compliant, web-grounded SKILL.md on llama3.2:3b in 14.4s.
+- **Session scribe** (`scripts/session_scribe.py`, hourly task): auto-captures
+  Claude session transcripts into vault `inbox/` with per-session local-LLM
+  summaries, repo auto-tags, dedupe via per-session seen counts; copies digests
+  to aiwatcher `data/inbox/`.
+- **Continue Work prompt**: latest START NOTE + recent notes + newest scribe
+  digest - session context injection.
+- **Version-visible /health** on both HTTP entry points (version, git_sha,
+  started_at, uptime, shutting_down) per mcd HEALTH_ENDPOINT_STANDARD; the
+  NSSM CLI path previously had no health route at all.
+- **Webapp LLM persistence**: GET/PUT `/management/llm-config` backing the
+  provider/model dropdowns; real Ollama keep_alive load/unload (were fakes).
+- `services/research_sources.py`: direct DuckDuckGo/arXiv/GitHub research.
+- `_version.py` (version-source drift: pyproject said 1.8.1, CHANGELOG 1.9.0).
+
+### Fixed
+- stdio proxy: restore stdout before proxy run; probe/proxy try-blocks split
+  (AttributeError was mislabeled as probe failure -> hung local fallback).
+- `build_error_response` tolerant signature (2-arg calls raised TypeError,
+  masking every real error in make_skill_advanced).
+- adn_skills markdown-string returns normalized to dict (output schema errors).
+- Ollama default model: installed-model detection replaces hardcoded `llama3`.
+- Deterministic SKILL.md frontmatter repair (small models omit closing `---`).
+- research_driven_skill imports: modules live in `mcp/beta/`, not `mcp/tools/`.
+- Read-only instances no longer run project-sync DB UPDATEs at startup.
+- NSSM log litter gitignored (`data/nssm-*.log`).
+
+### Earlier unreleased
 - llms-full.txt created (was missing)
 - .env.example created (was missing)
 - glama.json framework updated to >=3.4.2

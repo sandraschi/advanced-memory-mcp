@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 HOME = Path.home()
@@ -44,20 +44,30 @@ DEFAULT_LOOKBACK_HOURS = 24  # first run / missing state
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
-def _load_last_run() -> datetime:
+def _load_state() -> dict:
+    """State: last_run ISO + per-session seen user-message counts (dedupe, v2)."""
     try:
         data = json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        return datetime.fromisoformat(data["last_run"])
+        if "last_run" in data:
+            data.setdefault("sessions", {})
+            return data
     except Exception:
-        return _now() - timedelta(hours=DEFAULT_LOOKBACK_HOURS)
+        pass
+    return {
+        "last_run": (_now() - timedelta(hours=DEFAULT_LOOKBACK_HOURS)).isoformat(),
+        "sessions": {},
+    }
 
 
-def _save_last_run(ts: datetime) -> None:
+def _save_state(ts: datetime, sessions: dict[str, int]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps({"last_run": ts.isoformat()}), encoding="utf-8")
+    trimmed = dict(sorted(sessions.items())[-200:])  # bound the map
+    STATE_FILE.write_text(
+        json.dumps({"last_run": ts.isoformat(), "sessions": trimmed}), encoding="utf-8"
+    )
 
 
 def _find_transcripts(since: datetime) -> list[Path]:
@@ -92,7 +102,8 @@ def _extract_text_items(content) -> list[str]:
     return texts
 
 
-def _digest_session(path: Path) -> dict | None:
+def _digest_session(path: Path, seen: int = 0) -> dict | None:
+    """Digest a transcript; only user messages beyond `seen` are included (dedupe)."""
     user_lines: list[str] = []
     n_user = n_assistant = n_tools = 0
     first_ts = last_ts = None
@@ -127,7 +138,7 @@ def _digest_session(path: Path) -> dict | None:
                     ]
                     if real:
                         n_user += 1
-                        if len(user_lines) < MAX_INTENT_LINES:
+                        if n_user > seen and len(user_lines) < MAX_INTENT_LINES:
                             user_lines.append(real[0][:MAX_INTENT_CHARS].replace("\n", " "))
                 elif etype == "assistant":
                     n_assistant += 1
@@ -140,15 +151,16 @@ def _digest_session(path: Path) -> dict | None:
     except OSError:
         return None
 
-    if n_user == 0:
-        return None
+    if n_user == 0 or n_user <= seen:
+        return None  # nothing new since last digest (dedupe)
     return {
         "path": str(path),
         "session": path.stem[:12],
         "kind": "cowork" if "local-agent-mode-sessions" in str(path) else "claude-code",
         "first_ts": first_ts,
         "last_ts": last_ts,
-        "n_user": n_user,
+        "n_user": n_user - seen,
+        "n_user_total": n_user,
         "n_assistant": n_assistant,
         "n_tools": n_tools,
         "user_lines": user_lines,
@@ -223,17 +235,21 @@ def _llm_bullets(digests: list[dict]) -> dict[str, str]:
 
 def main() -> int:
     started = _now()
-    last_run = _load_last_run()
+    state = _load_state()
+    last_run = datetime.fromisoformat(state["last_run"])
+    seen_map: dict[str, int] = state.get("sessions", {})
     transcripts = _find_transcripts(last_run)
 
     digests = []
+    new_seen = dict(seen_map)
     for t in transcripts:
-        d = _digest_session(t)
+        d = _digest_session(t, seen=seen_map.get(str(t), 0))
         if d:
             digests.append(d)
+            new_seen[d["path"]] = d["n_user_total"]
 
     if not digests:
-        _save_last_run(started)
+        _save_state(started, new_seen)
         print("scribe: no new session activity since", last_run.isoformat(), file=sys.stderr)
         return 0
 
@@ -266,8 +282,9 @@ def main() -> int:
     ]
     for d in digests:
         lines += [
-            f"### {d['session']} ({d['kind']}) - {d['n_user']} user msgs, "
-            f"{d['n_assistant']} assistant turns, {d['n_tools']} tool calls",
+            f"### {d['session']} ({d['kind']}) - {d['n_user']} new user msgs "
+            f"(of {d['n_user_total']}), {d['n_assistant']} assistant turns, "
+            f"{d['n_tools']} tool calls",
             "",
         ]
         bullets = summaries.get(d["session"])
@@ -289,7 +306,7 @@ def main() -> int:
     except OSError as exc:
         print(f"scribe: aiwatcher inbox copy failed: {exc}", file=sys.stderr)
 
-    _save_last_run(started)
+    _save_state(started, new_seen)
     print(f"scribe: wrote {vault_file} ({len(digests)} sessions, llm={'yes' if summary else 'no'})", file=sys.stderr)
     return 0
 

@@ -14,8 +14,8 @@
   errors, aiwatcher copy check, vault note on non-green. Shipped 2026-07-17;
   live after fleet-agent service restart.
 - [x] **Scribe v2: LLM polish** — per-session bullet summaries via local LLM +
-  repo auto-tagging in frontmatter. Shipped 2026-07-17. Still open: dedupe
-  against existing notes.
+  repo auto-tagging in frontmatter + dedupe via per-session seen-message counts
+  (verified: immediate rerun reports no new activity). Shipped 2026-07-17.
 - [x] **continue-work MCP prompt** — 'Continue Work' prompt returns latest
   START NOTE + recent note titles + newest scribe digest. Shipped 2026-07-17;
   live after service restart.
@@ -26,10 +26,16 @@
 - [ ] **Version-visible /health** — add version, git_sha, started_at,
   shutting_down to /health per new mcd `standards/HEALTH_ENDPOINT_STANDARD.md`.
   Would have caught today's stale-SYSTEM-instance incident in one curl.
-- [ ] CI: ruff + pytest + mcpb artifact (.github currently absent).
-- [ ] Fix: readonly instance runs project-sync DB UPDATEs at startup (mode=ro URL).
-- [ ] NSSM log rotation out of data/ + gitignore nssm-*.log litter.
-- [ ] Register HTTP port 10732 in mcd WEBAPP_PORTS.md if missing.
+- [x] CI: resolved per mcd GITHUB_ACTIONS_NO_PRIVATE_CI.md — NO GitHub Actions
+  on private repos; local gates exist and pass (`just check` = lint + format +
+  type-check + test; ruff clean on 2026-07-17 changes).
+- [x] Fix: readonly instances skip project-sync reconciliation (was running
+  DB UPDATEs against a mode=ro URL at every startup). 2026-07-17.
+- [x] NSSM log litter: data/nssm-*.log gitignored + untracked. Rotation itself
+  is NSSM AppRotateFiles=1 (already set).
+- [x] Port 10732 already registered in WEBAPP_PORTS.md (line 73).
+- [x] _version.py created; pyproject + CHANGELOG aligned at 1.10.0 (was 1.8.1
+  vs CHANGELOG 1.9.0 drift). 2026-07-17.
 
 ## P3 — Skill factory as product
 

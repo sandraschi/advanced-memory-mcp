@@ -114,6 +114,16 @@ async def reconcile_projects_with_config(app_config: AdvancedMemoryConfig) -> No
     Args:
         app_config: The Advanced Memory application configuration
     """
+    from advanced_memory.readonly import IS_READONLY
+
+    if IS_READONLY:
+        # 2026-07-17: read-only instances (stdio proxies / IDE clients) must not
+        # mutate the projects table - the primary HTTP instance owns
+        # reconciliation. Previously this ran UPDATEs against a mode=ro DB URL
+        # on every startup (observed live: 'marking inactive' writes in RO mode).
+        logger.info("Read-only mode: skipping project reconciliation (owned by primary instance)")
+        return
+
     logger.info("Reconciling projects from config with database...")
 
     # Get database session - migrations handled centrally
