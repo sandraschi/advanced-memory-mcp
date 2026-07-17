@@ -14,6 +14,8 @@ import {
   Wand2,
 } from "lucide-react";
 import { useState } from "react";
+
+import { getApiBaseUrl } from "../../config/apiBase";
 import { apiService } from "../../services/api";
 
 type CreatorMode = "guided" | "advanced";
@@ -63,39 +65,55 @@ export default function SkillCreator() {
     }
 
     setStatus("generating");
-    setStatusMessage("AI is crafting your skill...");
+    setStatusMessage("Researching (web) + generating with local LLM - typically 15-40s...");
     setGeneratedSkill(null);
     setSavedSuccessfully(false);
 
+    // 2026-07-17: was calling adn_skills operation "creator", which never
+    // existed. Now hits the real engine (make_skill_advanced
+    // research_first_create) via the management API; the skill is written to
+    // ~/.claude/skills/<slug> and is immediately Claude-discoverable.
     try {
-      const response = await apiService.callMCPTool("adn_skills", {
-        operation: "creator",
-        content: description.trim(),
-        tags: targetTags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
-        skill_type: skillType,
+      const r = await fetch(`${getApiBaseUrl()}/management/skills-generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: description.trim(),
+          tags: targetTags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          skill_type: skillType,
+        }),
       });
+      const data = await r.json();
 
-      if (response.success && response.data) {
-        const data = response.data.result || response.data;
+      if (r.ok && data.success) {
         setGeneratedSkill({
-          name: data.name || data.title || "Generated Skill",
-          content: data.content || data.skill_content || JSON.stringify(data, null, 2),
-          tags: data.tags || [],
-          type: data.type || skillType,
-          metadata: data.metadata,
+          name: data.skill_name || "generated-skill",
+          content: data.skill_content || "(SKILL.md written but could not be read back)",
+          tags: [],
+          type: skillType,
+          metadata: {
+            path: data.skill_path,
+            coverage_score: data.coverage_score,
+            spec_compliant: data.spec_compliant,
+            sources_used: data.sources_used,
+          },
         });
         setStatus("success");
-        setStatusMessage("Skill generated successfully!");
+        setSavedSuccessfully(true);
+        setStatusMessage(
+          `Generated and saved to ${data.skill_path} - coverage ${data.coverage_score}, ` +
+            `spec-compliant: ${data.spec_compliant}`,
+        );
       } else {
         setStatus("error");
-        setStatusMessage(response.error || "Generation failed");
+        setStatusMessage(data.message || data.error || "Generation failed");
       }
     } catch (error: any) {
       setStatus("error");
-      setStatusMessage(error.message || "Failed to generate skill");
+      setStatusMessage(error.message || "Failed to generate skill (backend offline?)");
     }
   };
 

@@ -141,9 +141,80 @@ async def put_llm_config(request: Request):
 
         _adn_llm_mod._current_provider = config.llm_provider
         _adn_llm_mod._current_model = config.llm_model
-    except Exception:  # noqa: BLE001 - purely best-effort session sync
+    except Exception:
         pass
     return {"success": True, "provider": config.llm_provider, "model": config.llm_model}
+
+
+@router.get("/skills-inventory")
+async def get_skills_inventory():
+    """Skill catalog scan (2026-07-17, backs webapp skill pages).
+
+    Top-level dirs in ~/.claude/skills are Claude-discoverable; category dirs
+    hold nested sub-skills reachable via doorified hub SKILL.md files.
+    """
+    from pathlib import Path
+
+    root = Path.home() / ".claude" / "skills"
+    skills = []
+    if root.is_dir():
+        for d in sorted(root.iterdir()):
+            if not d.is_dir() or d.name == "_archive":
+                continue
+            md = d / "SKILL.md"
+            nested = sorted(
+                c.name for c in d.iterdir() if c.is_dir() and (c / "SKILL.md").exists()
+            )
+            if md.exists():
+                skills.append(
+                    {
+                        "name": d.name,
+                        "kind": "category-hub" if nested else "skill",
+                        "size": md.stat().st_size,
+                        "sub_skills": nested,
+                    }
+                )
+    return {"root": str(root), "count": len(skills), "skills": skills}
+
+
+@router.post("/skills-generate")
+async def post_skills_generate(request: Request):
+    """Research-first skill generation via make_skill_advanced (2026-07-17).
+
+    Writes the finished skill to ~/.claude/skills/<slug> (top level, so Claude
+    Code discovers it immediately). Takes ~15-40s with a local model.
+    """
+    import re
+    from pathlib import Path
+
+    body = await request.json()
+    topic = (body.get("topic") or "").strip()
+    if not topic:
+        return {"success": False, "error": "topic required"}
+
+    slug = (body.get("skill_name") or "").strip()
+    if not slug:
+        slug = re.sub(r"[^a-z0-9]+", "-", topic.lower())[:64].strip("-")
+        slug = re.sub(r"-+", "-", slug)
+
+    from advanced_memory.mcp.tools.make_skill_advanced import make_skill_advanced
+
+    fn = getattr(make_skill_advanced, "fn", make_skill_advanced)
+    root = Path.home() / ".claude" / "skills"
+    result = await fn(
+        operation="research_first_create",
+        topic=topic,
+        skill_name=slug,
+        output_path=str(root),
+        research_sources=body.get("sources") or ["web"],
+        max_research_iterations=int(body.get("max_iterations") or 1),
+        enable_review_loop=True,
+    )
+    if isinstance(result, dict) and result.get("success"):
+        md = Path(result.get("skill_path", "")) / "SKILL.md"
+        if md.exists():
+            result["skill_content"] = md.read_text(encoding="utf-8", errors="replace")
+    return result
 
 
 @router.get("/rag-extra-roots")

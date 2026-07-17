@@ -39,14 +39,26 @@
 
 ## P3 — Skill factory as product
 
-- [ ] **Batch-run the 112 draft scaffolds** — nightly queue over
-  make_skill_advanced research_first_create, spec-validated, confidence-tagged;
-  archive the culinary noise.
-- [ ] **Wire webapp skill pages** — SkillCreator/Studio/Research/Marketplace
-  currently make zero API calls; back them with REST wrappers over
-  make_skill_advanced ops (management_router pattern).
-- [ ] **Export to Claude skills dir** — finished skills land where Claude
-  Desktop/Cowork actually load them. Closes the loop.
+- [x] **Catalog triage (reality-checked 2026-07-17)** — the "112 draft
+  scaffolds" claim was wrong: 105 category-nested skills all have substantive
+  content; "Draft scaffold" status was just the default for missing metadata.
+  `scripts/skill_factory.py` shipped (inventory / metadata / doorify /
+  fix-names / enrich / promote / archive). Ran: metadata patched (105),
+  names fixed (39 -> 0 noncompliant), hubs doorified (8 categories now list
+  explicit `./<sub-skill>/SKILL.md` paths so Claude can stage-load them).
+  Culinary NOT archived - with hub gating it is inert unless triggered.
+- [x] **SkillCreator wired to the real engine** — guided mode called
+  adn_skills operation "creator" which never existed; now POSTs
+  `/management/skills-generate` (make_skill_advanced research_first_create),
+  output lands top-level in ~/.claude/skills = instantly discoverable.
+  Also: GET `/management/skills-inventory`. 2026-07-17.
+- [x] **Export to Claude skills dir** — resolved structurally: the catalog IS
+  ~/.claude/skills; new generations write top-level; nested skills reachable
+  via doorified hubs; `promote` subcommand available for manual elevation.
+- [ ] Wire SkillStudio / SkillResearch / SkillMarketplace pages (still
+  decorative) or prune them.
+- [ ] `enrich` pass judgment call: 0 skills are thin by size; only regenerate
+  if a specific skill is factually weak (backup kept as SKILL.md.pre-factory).
 
 ## P4 — Knowledge
 
