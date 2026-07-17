@@ -8,6 +8,7 @@ and transforming their results into user-friendly text.
 __all__ = [
     "ai_assistant_guide",
     "continue_conversation",
+    "continue_work",
     "recent_activity",
     "search",
 ]

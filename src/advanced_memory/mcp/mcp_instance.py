@@ -224,6 +224,7 @@ def _initialize_prompts_and_resources() -> None:
     # Note: ai_assistant_guide is in prompts/ but is actually a resource
     import advanced_memory.mcp.prompts.ai_assistant_guide as ai_assistant_guide
     import advanced_memory.mcp.prompts.continue_conversation as continue_conversation
+    import advanced_memory.mcp.prompts.continue_work as continue_work  # 2026-07-17
     import advanced_memory.mcp.prompts.recent_activity as recent_activity
     import advanced_memory.mcp.prompts.search as search
     import advanced_memory.mcp.resources.project_info as project_info
@@ -241,6 +242,7 @@ def _initialize_prompts_and_resources() -> None:
         recent_activity.recent_activity_prompt,
         search.search_prompt,
         continue_conversation.continue_conversation,
+        continue_work.continue_work,
     ]
     _resource_refs = [
         ai_assistant_guide.ai_assistant_guide,  # Resource, despite being in prompts/
@@ -258,6 +260,7 @@ if _is_stdio_mode:
     # Import individual prompt modules to register them via decorators
     try:
         import advanced_memory.mcp.prompts.continue_conversation
+        import advanced_memory.mcp.prompts.continue_work  # noqa: F401 (2026-07-17)
         import advanced_memory.mcp.prompts.recent_activity
         import advanced_memory.mcp.prompts.search
     except ImportError:

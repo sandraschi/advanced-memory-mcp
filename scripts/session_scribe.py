@@ -155,33 +155,70 @@ def _digest_session(path: Path) -> dict | None:
     }
 
 
-def _llm_summary(digests: list[dict]) -> str | None:
-    """Best-effort local-LLM bullet summary. Returns None on any failure."""
+MAX_LLM_SESSIONS = 6  # cap per-run LLM calls (v2, 2026-07-17)
+
+
+def _detect_repos(digests: list[dict]) -> list[str]:
+    """Auto-tag: repo names actually mentioned in the sessions (v2)."""
+    import re
+
+    text = " ".join(" ".join(d["user_lines"]) for d in digests).lower()
+    names = set(re.findall(r"[a-z0-9][a-z0-9_]*(?:-[a-z0-9_]+)*-mcp\b", text))
+    repos_root = Path(r"D:\Dev\repos")
+    if repos_root.is_dir():
+        try:
+            for p in repos_root.iterdir():
+                if p.is_dir() and len(p.name) > 3 and p.name.lower() in text:
+                    names.add(p.name.lower())
+        except OSError:
+            pass
+    return sorted(names)[:10]
+
+
+def _llm_bullets(digests: list[dict]) -> dict[str, str]:
+    """Best-effort per-session bullet summaries via local LLM (v2).
+
+    Returns {session_id: bullets} for up to MAX_LLM_SESSIONS newest sessions;
+    empty dict if no LLM is reachable. Never raises.
+    """
+    summaries: dict[str, str] = {}
     try:
         import asyncio
 
         sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
         from advanced_memory.services.llm_client import get_llm_client
 
-        material = "\n\n".join(
-            f"Session {d['session']} ({d['kind']}, {d['n_user']} user msgs, "
-            f"{d['n_tools']} tool calls):\n"
-            + "\n".join(f"- {line}" for line in d["user_lines"])
-            for d in digests
-        )
-        prompt = (
-            "These are user requests from today's dev sessions. Summarize the WORK "
-            "DONE/REQUESTED in 3-8 terse bullet points, grouped by topic, naming any "
-            "repos or tools mentioned. No preamble, bullets only.\n\n" + material[:8000]
-        )
         llm = get_llm_client()
-        out = asyncio.run(
-            llm.generate(prompt=prompt, system_prompt="Terse dev-log summarizer.", max_tokens=500, temperature=0.2)
-        )
-        out = (out or "").strip()
-        return out or None
+
+        async def _one(d: dict) -> None:
+            material = "\n".join(f"- {line}" for line in d["user_lines"])
+            prompt = (
+                f"User requests from one dev session ({d['n_user']} messages, "
+                f"{d['n_tools']} tool calls). Summarize the work in 3-5 terse "
+                "bullet points naming repos/tools mentioned. Bullets only, no preamble.\n\n"
+                + material[:4000]
+            )
+            out = await llm.generate(
+                prompt=prompt,
+                system_prompt="Terse dev-log summarizer.",
+                max_tokens=300,
+                temperature=0.2,
+            )
+            out = (out or "").strip()
+            if out:
+                summaries[d["session"]] = out
+
+        async def _all() -> None:
+            for d in digests[:MAX_LLM_SESSIONS]:
+                try:
+                    await _one(d)
+                except Exception:
+                    continue
+
+        asyncio.run(_all())
     except Exception:
-        return None
+        pass
+    return summaries
 
 
 def main() -> int:
@@ -205,7 +242,8 @@ def main() -> int:
     fname_stamp = local_now.strftime("%Y-%m-%d_%H-%M")
     title = f"{stamp} session scribe digest"
 
-    summary = _llm_summary(digests)
+    repo_tags = _detect_repos(digests)
+    summaries = _llm_bullets(digests)
 
     lines = [
         "---",
@@ -215,6 +253,7 @@ def main() -> int:
         "- session-scribe",
         "- auto-capture",
         "- review",
+        *[f"- {r}" for r in repo_tags],
         "---",
         "",
         f"# {title}",
@@ -222,18 +261,21 @@ def main() -> int:
         f"Auto-captured by session_scribe.py. Window: {last_run.isoformat()} -> {started.isoformat()}.",
         f"{len(digests)} active session(s). REVIEW: promote real work to proper project notes, then delete this.",
         "",
+        "## Sessions",
+        "",
     ]
-    if summary:
-        lines += ["## LLM summary (local model)", "", summary, ""]
-    lines += ["## Sessions", ""]
     for d in digests:
         lines += [
             f"### {d['session']} ({d['kind']}) - {d['n_user']} user msgs, "
             f"{d['n_assistant']} assistant turns, {d['n_tools']} tool calls",
             "",
         ]
+        bullets = summaries.get(d["session"])
+        if bullets:
+            lines += ["**LLM summary (local model):**", "", bullets, "", "**Raw intents:**", ""]
         lines += [f"- {line}" for line in d["user_lines"]]
         lines.append("")
+    summary = bool(summaries)
 
     note_text = "\n".join(lines)
 

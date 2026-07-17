@@ -9,14 +9,17 @@
   (Cowork + Claude Code jsonl), auto-drafts timestamped/tagged digest notes into
   vault `inbox/` + copy to aiwatcher `data/inbox/`. Shipped 2026-07-17,
   `scripts/session_scribe.py`, hourly scheduled task.
-- [ ] **Scribe v2: Fritz integration** — fleet-agent-mcp coworker flow wraps the
-  scribe: run on schedule, escalate anomalies (sessions with errors/timeouts),
-  weekly digest-of-digests. aiwatcher bundle so scribe output shows in briefings.
-- [ ] **Scribe v2: LLM polish** — per-session 5-bullet summaries via local LLM
-  (LLMClient), dedupe against existing notes, auto-tag by repo mentioned.
-- [ ] **continue-work MCP prompt** — returns latest START NOTE + open items so
-  every session gets context injection automatically (replaces the manual
-  "read last note at chat start" convention).
+- [x] **Scribe v2: Fritz integration** — fleet-agent-mcp `scribe_watch` coworker
+  flow (2h default): state freshness (RED + email if capture stopped >3h), log
+  errors, aiwatcher copy check, vault note on non-green. Shipped 2026-07-17;
+  live after fleet-agent service restart.
+- [x] **Scribe v2: LLM polish** — per-session bullet summaries via local LLM +
+  repo auto-tagging in frontmatter. Shipped 2026-07-17. Still open: dedupe
+  against existing notes.
+- [x] **continue-work MCP prompt** — 'Continue Work' prompt returns latest
+  START NOTE + recent note titles + newest scribe digest. Shipped 2026-07-17;
+  live after service restart.
+- [ ] aiwatcher bundle so scribe digests appear in opencode_briefing output.
 
 ## P2 — Health & ops
 
