@@ -163,19 +163,31 @@ _HEALTH_STARTED = _dt.datetime.now(_dt.UTC)
 
 
 def _health_git_sha() -> str:
-    try:
-        from pathlib import Path as _P
+    from pathlib import Path as _P
 
-        repo = _P(__file__).resolve().parents[3]
-        return (
-            _sp.run(
-                ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
-                capture_output=True,
-                text=True,
-                timeout=2,
-            ).stdout.strip()
-            or "unknown"
-        )
+    repo = _P(__file__).resolve().parents[3]
+    try:
+        sha = _sp.run(
+            ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=2,
+        ).stdout.strip()
+        if sha:
+            return sha
+    except Exception:
+        pass
+    # Fallback: read .git/HEAD directly - needed when running as SYSTEM
+    # (git's dubious-ownership check rejects repos owned by another user)
+    # or when git is not on the service account's PATH. Found live 2026-07-17.
+    try:
+        head = (repo / ".git" / "HEAD").read_text(encoding="utf-8").strip()
+        if head.startswith("ref:"):
+            ref = head.split(" ", 1)[1].strip()
+            sha = (repo / ".git" / ref).read_text(encoding="utf-8").strip()
+        else:
+            sha = head
+        return sha[:8] if sha else "unknown"
     except Exception:
         return "unknown"
 

@@ -247,17 +247,28 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
             _started = _dt.datetime.now(_dt.UTC)
 
             def _git_sha() -> str:
+                repo = _P(__file__).resolve().parents[2]
                 try:
-                    repo = _P(__file__).resolve().parents[2]
-                    return (
-                        _sp.run(
-                            ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
-                            capture_output=True,
-                            text=True,
-                            timeout=2,
-                        ).stdout.strip()
-                        or "unknown"
-                    )
+                    sha = _sp.run(
+                        ["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
+                        capture_output=True,
+                        text=True,
+                        timeout=2,
+                    ).stdout.strip()
+                    if sha:
+                        return sha
+                except Exception:
+                    pass
+                # SYSTEM-context fallback: read .git/HEAD directly (git's
+                # dubious-ownership check rejects other-user repos).
+                try:
+                    head = (repo / ".git" / "HEAD").read_text(encoding="utf-8").strip()
+                    if head.startswith("ref:"):
+                        ref = head.split(" ", 1)[1].strip()
+                        sha = (repo / ".git" / ref).read_text(encoding="utf-8").strip()
+                    else:
+                        sha = head
+                    return sha[:8] if sha else "unknown"
                 except Exception:
                     return "unknown"
 
