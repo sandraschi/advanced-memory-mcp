@@ -1322,7 +1322,7 @@ async def _perform_topic_research(
 
     try:
         # Import the web search tool
-        from .adn_web_search import adn_web_search
+        from advanced_memory.mcp.beta.adn_web_search import adn_web_search  # was broken relative import (2026-07-17)
 
         # Craft research-focused search queries
         search_queries = _generate_research_queries(topic)
@@ -1616,7 +1616,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
     """Perform GitHub research for the given topic."""
 
     try:
-        from .adn_github_research import adn_github_research
+        from advanced_memory.mcp.beta.adn_github_research import adn_github_research  # was broken relative import (2026-07-17)
 
         # Generate research queries based on topic
         queries = _generate_github_queries(topic)
@@ -1828,7 +1828,7 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
     """Perform arXiv research for the given topic."""
 
     try:
-        from .adn_arxiv_research import adn_arxiv_research
+        from advanced_memory.mcp.beta.adn_arxiv_research import adn_arxiv_research  # was broken relative import (2026-07-17)
 
         # Generate research queries based on topic
         queries = _generate_arxiv_queries(topic)
