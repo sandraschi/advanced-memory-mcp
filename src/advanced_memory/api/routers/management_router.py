@@ -115,6 +115,37 @@ async def stop_watch_service(request: Request) -> WatchStatusResponse:  # pragma
     return WatchStatusResponse(running=False)
 
 
+@router.get("/llm-config")
+async def get_llm_config():
+    """Current persisted LLM provider/model selection (2026-07-17, backs LLMProviderSettings page)."""
+    from advanced_memory.config import ConfigManager
+
+    config = ConfigManager().load_config()
+    return {"provider": config.llm_provider, "model": config.llm_model}
+
+
+@router.put("/llm-config")
+async def put_llm_config(request: Request):
+    """Persist LLM provider/model selection to config.json and live session state."""
+    body = await request.json()
+    from advanced_memory.config import ConfigManager
+
+    cm = ConfigManager()
+    config = cm.load_config()
+    config.llm_provider = (body.get("provider") or "").strip() or None
+    config.llm_model = (body.get("model") or "").strip() or None
+    cm.save_config(config)
+    # Update in-session globals so an already-imported adn_llm sees the change immediately
+    try:
+        from advanced_memory.mcp.tools import adn_llm as _adn_llm_mod
+
+        _adn_llm_mod._current_provider = config.llm_provider
+        _adn_llm_mod._current_model = config.llm_model
+    except Exception:  # noqa: BLE001 - purely best-effort session sync
+        pass
+    return {"success": True, "provider": config.llm_provider, "model": config.llm_model}
+
+
 @router.get("/rag-extra-roots")
 async def get_rag_extra_roots() -> dict:
     """Configured LanceDB extra document roots (server paths)."""

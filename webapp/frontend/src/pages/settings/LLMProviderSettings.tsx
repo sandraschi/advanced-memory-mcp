@@ -1,6 +1,8 @@
 import { AlertTriangle, CheckCircle, Play, RefreshCw, Square, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { getApiBaseUrl } from "../../config/apiBase";
+
 interface Provider {
   name: string;
   type: "local" | "hosted";
@@ -43,16 +45,49 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
   ]);
 
   const [selectedProvider, setSelectedProvider] = useState<string>("ollama");
-  const [selectedModel, setSelectedModel] = useState<string>("llama3:8b");
+  const [selectedModel, setSelectedModel] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [lastAction, setLastAction] = useState<string>("");
 
   const currentProvider = providers.find((p) => p.name === selectedProvider);
 
-  // Auto-refresh providers on component mount
+  // Auto-refresh providers on component mount + load persisted selection from backend
   useEffect(() => {
     handleRefreshProviders();
+    (async () => {
+      try {
+        const r = await fetch(`${getApiBaseUrl()}/management/llm-config`);
+        if (r.ok) {
+          const cfg = await r.json();
+          if (cfg.provider) setSelectedProvider(cfg.provider);
+          if (cfg.model) setSelectedModel(cfg.model);
+        }
+      } catch {
+        // backend offline - keep local defaults, selection just won't persist
+      }
+    })();
   }, []);
+
+  // Persist provider/model selection to backend config.json (used by adn_llm + LLMClient)
+  const persistSelection = async (provider: string, model: string) => {
+    try {
+      const r = await fetch(`${getApiBaseUrl()}/management/llm-config`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider, model }),
+      });
+      if (r.ok) {
+        setLastAction(`Saved default: ${provider} / ${model || "(none)"}`);
+        setTimeout(() => setLastAction(""), 3000);
+      } else {
+        setLastAction("Backend rejected selection - not persisted");
+        setTimeout(() => setLastAction(""), 3000);
+      }
+    } catch {
+      setLastAction("Backend offline - selection not persisted");
+      setTimeout(() => setLastAction(""), 3000);
+    }
+  };
 
   // Query Ollama API for available models
   const queryOllamaModels = async (url: string): Promise<string[]> => {
@@ -150,17 +185,28 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
     }
   };
 
+  // Real load/unload via Ollama keep_alive (was a fake setTimeout stub until 2026-07-17).
+  // Only Ollama exposes load/unload semantics; other providers report unsupported.
   const handleLoadModel = async () => {
     setIsLoading(true);
     setLastAction(`Loading ${selectedModel}...`);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      setLastAction(`Successfully loaded ${selectedModel}`);
+      if (selectedProvider !== "ollama") {
+        throw new Error(`load/unload not supported for ${selectedProvider}`);
+      }
+      const url = providers.find((p) => p.name === "ollama")?.url ?? "http://localhost:11434";
+      const r = await fetch(`${url}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: selectedModel, prompt: "", keep_alive: "30m" }),
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setLastAction(`Loaded ${selectedModel} (keep_alive 30m)`);
       setTimeout(() => setLastAction(""), 3000);
       onChange();
     } catch (error) {
-      setLastAction(`Failed to load ${selectedModel}`);
+      setLastAction(`Failed to load ${selectedModel}: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -171,12 +217,21 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
     setLastAction(`Unloading ${selectedModel}...`);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setLastAction(`Successfully unloaded ${selectedModel}`);
+      if (selectedProvider !== "ollama") {
+        throw new Error(`load/unload not supported for ${selectedProvider}`);
+      }
+      const url = providers.find((p) => p.name === "ollama")?.url ?? "http://localhost:11434";
+      const r = await fetch(`${url}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: selectedModel, prompt: "", keep_alive: 0 }),
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setLastAction(`Unloaded ${selectedModel}`);
       setTimeout(() => setLastAction(""), 3000);
       onChange();
     } catch (error) {
-      setLastAction(`Failed to unload ${selectedModel}`);
+      setLastAction(`Failed to unload ${selectedModel}: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -242,6 +297,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
               value={selectedModel}
               onChange={(e) => {
                 setSelectedModel(e.target.value);
+                persistSelection(selectedProvider, e.target.value);
                 onChange();
               }}
               className="input w-full"
@@ -339,7 +395,10 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
               <label className="label">Model to Manage</label>
               <select
                 value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
+                onChange={(e) => {
+                  setSelectedModel(e.target.value);
+                  persistSelection(selectedProvider, e.target.value);
+                }}
                 className="input w-full"
                 disabled={!currentProvider?.models?.length}
               >
