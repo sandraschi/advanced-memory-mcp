@@ -18,7 +18,7 @@ wheels = [
 
 [[package]]
 name = "advanced-memory-mcp"
-version = "1.8.1"
+version = "1.10.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },

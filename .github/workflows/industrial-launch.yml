@@ -1,4 +1,4 @@
-  EDITED  D:\Dev\repos\advanced-memory-mcp\.github\workflows\industrial-launch.yml name: Industrial Launch (PyPI + Release)
+name: Industrial Launch (PyPI + Release)
 
 on:
   push:

@@ -1,113 +1,15 @@
-*.py[cod]
 __pycache__/
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-dist
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Installer artifacts
-installer/build/
-installer/dist/
-rw.*.dmg  # Temporary disk images
-
-# Test-run artifact when ADVANCED_MEMORY_HOME is set to a relative path (see tests/test_config.py)
-/relative/
-
-# Virtual environments
+*.pyc
 .env
-.venv
-env/
-venv/
-ENV/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# macOS
-.DS_Store
-.coverage.*
-
-# obsidian docs:
-/docs/.obsidian/
-/examples/.obsidian/
-
-# Rust build artifacts (for Zed extensions)
-/target/
-/Cargo.lock
-/examples/.basic-memory/
-
-
-# claude action
-claude-output
-**/.claude/settings.local.json
-# Advanced Memory test artifacts
-.trash/
-
-# JavaScript dependencies (never commit)
+.venv/
 node_modules/
-
-# Repo-root scratch (local MCP / pytest / junit); never commit
-/_out.txt
-/adn-proj.txt
-/proj-one.txt
-/pytest*.txt
-/mcp_junit.xml
-/pc.xml
-/pc2.xml
-/full-mcp.xml
-/full2.xml
-/edit_junit.xml
-
-# Playwright (webapp frontend)
-webapp/frontend/playwright-report/
-webapp/frontend/test-results/
-webapp/frontend/blob-report/
-
-# Temporary cloned repositories
-temp-*/
-
-# Zettelkasten inbox and converted (temporary files)
-zettelkasten/inbox/*
-!zettelkasten/inbox/README.md
-!zettelkasten/inbox/.gitkeep
-zettelkasten/converted/*
-!zettelkasten/converted/README.md
-!zettelkasten/converted/.gitkeep
-
-# Private documentation (internal dev notes, not for public)
-docs-private/
-
-# Deprecated files and directories
-deprecated/
-
-# Notes folder (irrelevant content)
-notes/
-# Rust / Zed IDE — rust-analyzer may create target/ at repo root
 target/
-
-_dashboard/
-
-# NSSM service log litter (2026-07-17)
-data/nssm-*.log
-data/*.log
+build/
+dist/
+*.bak
+*.egg-info/
+.coverage
+coverage.xml
+.ruff_cache/
+.mypy_cache/
+.pyright/

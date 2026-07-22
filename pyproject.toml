@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [
-    { name = "Sandra Schipal", email = "sandra@schipal.at" }
+    { name = "Sandra Schipal", email = "sandraschipal@gmail.com" }
 ]
 dependencies = [
     "sqlalchemy>=2.0.0",
