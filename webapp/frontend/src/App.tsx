@@ -7,6 +7,7 @@ import AudioHub from "./pages/audio/AudioHub";
 import Chat from "./pages/chat/Chat";
 import Checkpoints from "./pages/checkpoints/Checkpoints";
 import ControlRoom from "./pages/dashboard/ControlRoom";
+import WikiPage from "./pages/wiki/WikiPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import GraphCanvas from "./pages/dashboard/GraphCanvas";
 import KnowledgeGraph from "./pages/dashboard/KnowledgeGraph";
@@ -341,6 +342,15 @@ function App() {
         element={
           <Layout>
             <Checkpoints />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/wiki"
+        element={
+          <Layout>
+            <WikiPage />
           </Layout>
         }
       />

@@ -27,6 +27,7 @@ export default function AppsHub() {
   const [apps, setApps] = useState<AppCard[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All");
 
   const scanFleet = async () => {
     setIsScanning(true);
@@ -48,9 +49,9 @@ export default function AppsHub() {
 
   const filteredApps = apps.filter(
     (app) =>
-      app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.port.toString().includes(searchTerm),
+      (typeFilter === "All" || app.type === typeFilter) &&
+      (app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.description.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   return (
@@ -99,7 +100,12 @@ export default function AppsHub() {
               {["All", "MCP Servers", "Web Apps", "APIs"].map((f) => (
                 <button
                   key={f}
-                  className="px-5 py-2.5 bg-white/5 border border-white/5 rounded-xl text-[10px] uppercase font-bold tracking-widest hover:border-white/20 transition-all"
+                  onClick={() => setTypeFilter(f)}
+                  className={`px-5 py-2.5 rounded-xl text-[10px] uppercase font-bold tracking-widest transition-all ${
+                    typeFilter === f
+                      ? "bg-amber-500/20 border border-amber-500/30 text-amber-400"
+                      : "bg-white/5 border border-white/5 hover:border-white/20"
+                  }`}
                 >
                   {f}
                 </button>

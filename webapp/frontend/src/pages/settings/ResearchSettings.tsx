@@ -1,8 +1,8 @@
 interface ResearchSettingsProps {
-  onChange: () => void;
+  onChange?: () => void;
 }
 
-export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
+export default function ResearchSettings({ onChange = () => {} }: ResearchSettingsProps) {
   return (
     <div className="space-y-6">
       <div className="card p-6">
@@ -50,7 +50,7 @@ export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
               defaultValue="50"
               min="1"
               max="200"
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               onChange={onChange}
             />
           </div>
@@ -62,7 +62,7 @@ export default function ResearchSettings({ onChange }: ResearchSettingsProps) {
               defaultValue="30"
               min="5"
               max="120"
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               onChange={onChange}
             />
           </div>

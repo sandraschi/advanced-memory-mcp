@@ -1,4 +1,4 @@
-import { Calendar, ChevronRight, Clock, FileText, Loader2, Search, Tag } from "lucide-react";
+import { ChevronRight, Clock, FileText, Loader2, Search, Tag } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { devError } from "../../devConsole";
@@ -13,20 +13,11 @@ interface RecentNote {
   tags?: string[];
 }
 
-/** Map UI timeframe to strings the API timeframe validator accepts reliably. */
 function toApiTimeframe(ui: string): string {
-  if (ui === "24h") {
-    return "1d";
-  }
-  if (ui === "7d") {
-    return "7d";
-  }
-  if (ui === "30d") {
-    return "30 days ago";
-  }
-  if (ui === "90d") {
-    return "90 days ago";
-  }
+  if (ui === "24h") return "1d";
+  if (ui === "7d") return "7d";
+  if (ui === "30d") return "30 days ago";
+  if (ui === "90d") return "90 days ago";
   return "7d";
 }
 
@@ -45,9 +36,7 @@ export default function Recents() {
       if (pr.success && Array.isArray(pr.data) && pr.data.length > 0) {
         const def = (pr.data as { name: string; is_default?: boolean }[]).find((p) => p.is_default)?.name;
         const pick = def || pr.data[0]?.name;
-        if (pick) {
-          apiService.activeProject = pick;
-        }
+        if (pick) apiService.activeProject = pick;
       }
 
       const response = await apiService.getMemoryRecent({
@@ -73,9 +62,7 @@ export default function Recents() {
       const primaries = rows
         .map((item) => item.primary_result)
         .filter((primary): primary is Record<string, unknown> => {
-          if (!primary || typeof primary !== "object") {
-            return false;
-          }
+          if (!primary || typeof primary !== "object") return false;
           const t = primary.type;
           return t === "entity" || t === "observation";
         });
@@ -92,9 +79,7 @@ export default function Recents() {
           type: String(primary.type ?? "entity"),
           tags,
         };
-        if (snippet) {
-          base.summary = snippet;
-        }
+        if (snippet) base.summary = snippet;
         return base;
       });
       setRecents(notes);
@@ -118,115 +103,104 @@ export default function Recents() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-accent/20 rounded-lg">
-            <Clock className="h-8 w-8 text-accent" />
+    <div className="max-w-5xl mx-auto space-y-3 animate-in fade-in duration-700 px-4 py-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center space-x-2">
+          <div className="p-1.5 bg-accent/20 rounded-lg">
+            <Clock className="h-5 w-5 text-accent" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Recent Activity</h1>
-            <p className="text-muted-foreground text-sm">
-              Review your most recent thoughts and updates
-            </p>
-          </div>
+          <h1 className="text-lg font-bold tracking-tight">Recent Activity</h1>
         </div>
 
         <div className="flex items-center space-x-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Filter recents..."
+              placeholder="Filter..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-muted/50 border border-border rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-accent/50 outline-none w-64"
+              className="bg-muted/50 border border-border rounded-full pl-7 pr-3 py-1.5 text-xs focus:ring-2 focus:ring-accent/50 outline-none w-48"
             />
           </div>
-
           <select
             value={timeframe}
             onChange={(e) => setTimeframe(e.target.value)}
-            className="bg-muted/50 border border-border rounded-md px-3 py-2 text-sm outline-none cursor-pointer"
+            className="bg-muted/50 border border-border rounded-md px-2 py-1.5 text-xs outline-none cursor-pointer"
           >
-            <option value="24h">Last 24 Hours</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-            <option value="90d">Last 3 Months</option>
+            <option value="24h">24h</option>
+            <option value="7d">7 days</option>
+            <option value="30d">30 days</option>
+            <option value="90d">3 months</option>
           </select>
         </div>
       </div>
 
       {fetchError && (
-        <div className="rounded-lg border border-red-500/40 bg-red-950/30 px-4 py-3 text-sm text-red-200">
+        <div className="rounded-lg border border-red-500/40 bg-red-950/30 px-3 py-2 text-xs text-red-200">
           {fetchError}
         </div>
       )}
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <Loader2 className="h-12 w-12 text-accent animate-spin mb-4" />
-          <p className="text-muted-foreground">Retrieving history...</p>
+        <div className="flex flex-col items-center justify-center py-10">
+          <Loader2 className="h-8 w-8 text-accent animate-spin mb-2" />
+          <p className="text-xs text-muted-foreground">Loading...</p>
         </div>
       ) : filteredRecents.length === 0 ? (
-        <div className="card p-12 text-center border-dashed">
-          <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-          <h3 className="text-xl font-semibold opacity-50">No recent activity found</h3>
-          <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
-            Try expanding your timeframe or start creating new notes to see them here.
+        <div className="card p-8 text-center border-dashed">
+          <FileText className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-20" />
+          <p className="text-sm text-muted-foreground">
+            {searchQuery ? "No matches" : "No recent activity found. Try a wider timeframe."}
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-1">
           {filteredRecents.map((note, index) => (
             <Link
               to={`/notes?id=${encodeURIComponent(note.identifier)}`}
               key={`${note.identifier}-${index}`}
-              className="card group hover:border-accent/50 hover:bg-accent/5 transition-all duration-300 block overflow-hidden"
+              className="block group hover:bg-accent/5 transition-colors rounded-lg -mx-2 px-2 py-2"
             >
-              <div className="p-5 flex items-start gap-4">
-                <div className="p-3 bg-muted rounded-xl group-hover:bg-accent/10 transition-colors">
-                  <FileText className="h-6 w-6 text-muted-foreground group-hover:text-accent" />
+              <div className="flex items-start gap-2.5">
+                <div className="p-1.5 bg-muted rounded-lg mt-0.5 shrink-0">
+                  <FileText className="h-3.5 w-3.5 text-muted-foreground" />
                 </div>
-
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-lg group-hover:text-accent transition-colors truncate">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-sm font-medium truncate group-hover:text-accent transition-colors">
                       {note.title}
                     </h3>
-                    <div className="flex items-center text-xs text-muted-foreground bg-background px-2 py-1 rounded-full whitespace-nowrap">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {new Date(note.timestamp).toLocaleDateString()}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                        {new Date(note.timestamp).toLocaleDateString()}
+                      </span>
+                      <ChevronRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   </div>
-
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                    {note.summary || "No summary available for this note."}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-2">
-                      {note.tags?.slice(0, 3).map((tag) => (
+                  {note.summary && (
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                      {note.summary}
+                    </p>
+                  )}
+                  {note.tags && note.tags.length > 0 && (
+                    <div className="flex gap-1 mt-1">
+                      {note.tags.slice(0, 3).map((tag) => (
                         <span
                           key={tag}
-                          className="flex items-center text-[10px] px-2 py-0.5 bg-muted rounded text-muted-foreground uppercase tracking-wider font-semibold"
+                          className="inline-flex items-center text-[9px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground uppercase tracking-wider"
                         >
-                          <Tag className="h-2 w-2 mr-1" />
+                          <Tag className="h-2 w-2 mr-0.5" />
                           {tag}
                         </span>
                       ))}
-                      {note.tags && note.tags.length > 3 && (
-                        <span className="text-[10px] text-muted-foreground pt-0.5 font-medium">
-                          +{note.tags.length - 3} more
+                      {note.tags.length > 3 && (
+                        <span className="text-[9px] text-muted-foreground">
+                          +{note.tags.length - 3}
                         </span>
                       )}
                     </div>
-
-                    <div className="flex items-center text-xs font-bold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span>View details</span>
-                      <ChevronRight className="h-3 w-3 ml-1" />
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </Link>

@@ -145,6 +145,7 @@ from starlette.responses import JSONResponse as _JSONResponse
 
 import advanced_memory.mcp.tools.adn_audio
 import advanced_memory.mcp.tools.adn_automation
+import advanced_memory.mcp.tools.adn_checkpoint  # snapshot/rollback — native alternative to decommissioned Entire.io
 import advanced_memory.mcp.tools.adn_inbox
 import advanced_memory.mcp.tools.adn_knowledge
 import advanced_memory.mcp.tools.adn_llm  # LLM provider/model selection - persists to config.json (re-enabled 2026-07-17)
@@ -155,6 +156,7 @@ import advanced_memory.mcp.tools.adn_search
 import advanced_memory.mcp.tools.adn_skills
 import advanced_memory.mcp.tools.adn_system
 import advanced_memory.mcp.tools.adn_typora
+import advanced_memory.mcp.tools.adn_wiki  # wiki compile pipeline — inspired by p-layer pattern
 import advanced_memory.mcp.tools.adn_zettel
 import advanced_memory.mcp.tools.make_skill_advanced  # super skillmaker: research-first skill creation (re-enabled 2026-07-17)
 import advanced_memory.mcp.tools.query_logs

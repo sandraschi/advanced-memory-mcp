@@ -2,18 +2,19 @@ import {
   AlertCircle,
   BookOpen,
   Database,
-  Dna,
   FileText,
   FlaskConical,
-  Github,
   Globe,
+  Github,
   Info,
   Layers,
   Loader2,
+  Search,
   Settings2,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { apiService } from "../../services/api";
 
 interface ResearchSnippet {
@@ -29,9 +30,8 @@ export default function ResearchLab() {
   const [isResearching, setIsResearching] = useState(false);
   const [results, setResults] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [gapAnalysis, setGapAnalysis] = useState<
-    { topic: string; score: number; issues: string[] }[]
-  >([]);
+  const [relatedNotes, setRelatedNotes] = useState<Array<{ title: string; id: string; snippet: string }>>([]);
+  const [searchingRelated, setSearchingRelated] = useState(false);
 
   const sourceOptions = [
     { id: "web", label: "Web Search", icon: Globe, color: "text-blue-400" },
@@ -46,6 +46,25 @@ export default function ResearchLab() {
     else next.add(id);
     setSources(next);
   };
+
+  useEffect(() => {
+    if (!topic.trim()) { setRelatedNotes([]); return; }
+    const t = setTimeout(async () => {
+      setSearchingRelated(true);
+      try {
+        const r = await apiService.searchNotes(topic, 1, 10);
+        if (r.success && r.data?.notes) {
+          setRelatedNotes(r.data.notes.map((n) => ({
+            title: n.title,
+            id: n.id,
+            snippet: (n.content || "").slice(0, 120),
+          })));
+        }
+      } catch { /* ignore */ }
+      setSearchingRelated(false);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [topic]);
 
   const runResearch = async () => {
     if (!topic.trim() || sources.size === 0) return;
@@ -66,19 +85,6 @@ export default function ResearchLab() {
       const json = await res.json();
       if (json.success) {
         setResults(json.data);
-        setGapAnalysis([
-          {
-            topic: "Architectural Depth",
-            score: 85,
-            issues: ["Missing detail on service-to-service auth"],
-          },
-          {
-            topic: "Edge Case Coverage",
-            score: 62,
-            issues: ["Network partition handling not explained", "Retry backoff logic missing"],
-          },
-          { topic: "FOSS Alternatives", score: 95, issues: [] },
-        ]);
       } else {
         setError(json.error || "Research failed");
       }
@@ -303,69 +309,45 @@ export default function ResearchLab() {
           </div>
         </div>
 
-        {/* Pane 3: Gap Analysis / Intelligence Insights */}
+        {/* Pane 3: Related Notes */}
         <div className="w-80 shrink-0 space-y-4 flex flex-col">
           <div className="card h-full flex flex-col overflow-hidden">
             <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0">
               <div className="flex items-center space-x-2">
-                <Dna className="h-4 w-4 text-pink-400" />
-                <h3 className="text-xs font-bold uppercase tracking-widest">Gap Analysis</h3>
+                <Layers className="h-4 w-4 text-pink-400" />
+                <h3 className="text-xs font-bold uppercase tracking-widest">Related Notes</h3>
               </div>
-              {gapAnalysis.length > 0 && (
-                <span className="text-[10px] font-mono text-muted-foreground">SOTA: 74%</span>
-              )}
+              {searchingRelated && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
-              {gapAnalysis.length === 0 ? (
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {!topic.trim() ? (
+                <div className="h-full flex flex-col items-center justify-center text-center opacity-30 px-4">
+                  <Search className="h-8 w-8 mb-3" />
+                  <p className="text-[10px] uppercase font-bold">Enter a topic</p>
+                  <p className="text-[9px] mt-2">Related notes appear as you type.</p>
+                </div>
+              ) : relatedNotes.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center opacity-30 px-4">
                   <Layers className="h-8 w-8 mb-3" />
-                  <p className="text-[10px] uppercase font-bold">Analysis Offline</p>
-                  <p className="text-[9px] mt-2">Data required to generate semantic gaps.</p>
+                  <p className="text-[10px] uppercase font-bold">No matches</p>
+                  <p className="text-[9px] mt-2">No notes found for this topic.</p>
                 </div>
               ) : (
-                gapAnalysis.map((gap: any, i: number) => (
-                  <div key={i} className="space-y-3">
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-medium">{gap.topic}</span>
-                      <span
-                        className={`font-mono text-[10px] ${gap.score > 80 ? "text-emerald-400" : gap.score > 60 ? "text-yellow-400" : "text-red-400"}`}
-                      >
-                        {gap.score}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-white/5 rounded-full h-1 relative">
-                      <div
-                        className={`h-full rounded-full transition-all duration-1000 ${gap.score > 80 ? "bg-emerald-500" : gap.score > 60 ? "bg-yellow-500" : "bg-red-500"}`}
-                        style={{ width: `${gap.score}%` }}
-                      />
-                    </div>
-                    {gap.issues.length > 0 && (
-                      <div className="space-y-1.5">
-                        {gap.issues.map((issue: string, j: number) => (
-                          <div
-                            key={j}
-                            className="flex items-start space-x-2 p-2 bg-red-500/5 border border-red-500/10 rounded-md"
-                          >
-                            <AlertCircle className="h-3 w-3 text-red-400 mt-0.5 shrink-0" />
-                            <p className="text-[10px] text-red-200/70 leading-tight">{issue}</p>
-                          </div>
-                        ))}
-                      </div>
+                relatedNotes.map((note) => (
+                  <Link
+                    key={note.id}
+                    to={`/notes?id=${encodeURIComponent(note.id)}`}
+                    className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+                  >
+                    <p className="text-xs font-medium truncate">{note.title}</p>
+                    {note.snippet && (
+                      <p className="text-[10px] text-muted-foreground line-clamp-2 mt-1">{note.snippet}</p>
                     )}
-                  </div>
+                  </Link>
                 ))
               )}
             </div>
-
-            {gapAnalysis.length > 0 && (
-              <div className="p-4 border-t border-white/5 shrink-0">
-                <button className="w-full btn btn-sm btn-outline text-[10px] tracking-widest uppercase flex items-center justify-center space-x-2 py-2">
-                  <Settings2 className="h-3 w-3 text-pink-400" />
-                  <span>Expand Insight</span>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

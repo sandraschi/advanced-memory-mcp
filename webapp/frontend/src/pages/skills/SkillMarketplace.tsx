@@ -42,7 +42,7 @@ export default function SkillMarketplace() {
   const [activeTab, setActiveTab] = useState<"clawhub" | "local" | "news">("clawhub");
   const [openclawOnline, setOpenclawOnline] = useState(true);
   const [viewMode, setViewMode] = useState<"list" | "detail">("list");
-  const [scrubbingLog, setScrubbingLog] = useState<
+  const [scrubbingLog] = useState<
     { id: string; status: string; details: string }[]
   >([]);
 
@@ -96,11 +96,6 @@ export default function SkillMarketplace() {
     setSelectedSkill(name);
     setSkillContent(null);
     setViewMode("detail");
-    setScrubbingLog([
-      { id: "1", status: "Passed", details: "No malicious payloads detected." },
-      { id: "2", status: "Verified", details: "Content matches official OpenClaw manifest." },
-      { id: "3", status: "Audited", details: "Environment variables scrubbed for sensitive data." },
-    ]);
     try {
       const res = await fetch(
         `${apiService.getBaseUrl()}/marketplace/openclaw/${encodeURIComponent(name)}`,
@@ -227,14 +222,7 @@ export default function SkillMarketplace() {
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 <span>Security Status</span>
               </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Scrubbing Protocol</span>
-                  <span className="text-xs font-bold text-emerald-400">ACTIVE</span>
-                </div>
-                <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-emerald-500 h-full w-full"></div>
-                </div>
+              {scrubbingLog.length > 0 && (
                 <div className="space-y-2">
                   {scrubbingLog.map((log) => (
                     <div
@@ -249,7 +237,7 @@ export default function SkillMarketplace() {
                     </div>
                   ))}
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Tech Specs */}

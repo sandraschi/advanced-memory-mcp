@@ -1,8 +1,8 @@
 interface ExportSettingsProps {
-  onChange: () => void;
+  onChange?: () => void;
 }
 
-export default function ExportSettings({ onChange }: ExportSettingsProps) {
+export default function ExportSettings({ onChange = () => {} }: ExportSettingsProps) {
   return (
     <div className="space-y-6">
       <div className="card p-6">
@@ -49,7 +49,7 @@ export default function ExportSettings({ onChange }: ExportSettingsProps) {
             <input
               type="text"
               defaultValue="~/Desktop/advanced-memory-exports"
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               onChange={onChange}
             />
             <p className="text-xs text-muted-foreground mt-1">
@@ -62,7 +62,7 @@ export default function ExportSettings({ onChange }: ExportSettingsProps) {
             <input
               type="text"
               defaultValue="{project}-{timestamp}"
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               onChange={onChange}
             />
             <p className="text-xs text-muted-foreground mt-1">

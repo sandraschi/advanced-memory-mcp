@@ -272,6 +272,7 @@ async def knowledge_graph_subgraph(
     max_nodes: Annotated[int, Query(ge=10, le=5000)] = 400,
     max_edges: Annotated[int, Query(ge=10, le=20000)] = 800,
     include_unresolved: Annotated[bool, Query()] = True,
+    seed_size: Annotated[int, Query(ge=10, le=2000, description="Number of recent notes to seed BFS when no center is given")] = 200,
 ) -> dict:
     """Bounded link graph for the vault (BFS from ``center`` or recent notes).
 
@@ -286,6 +287,7 @@ async def knowledge_graph_subgraph(
         max_nodes=max_nodes,
         max_edges=max_edges,
         include_unresolved=include_unresolved,
+        seed_size=seed_size,
     )
 
 

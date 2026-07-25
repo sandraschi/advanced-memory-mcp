@@ -200,11 +200,7 @@ class ApiService {
   }
 
   async getRecentResearch(): Promise<ApiResponse<ResearchResult[]>> {
-    try {
-      return { success: true, data: [] };
-    } catch (error) {
-      return { success: false, error: "Failed to fetch recent research" };
-    }
+    return { success: true, data: [] };
   }
 
   // Skill Operations
@@ -795,6 +791,7 @@ class ApiService {
     max_nodes?: number;
     max_edges?: number;
     include_unresolved?: boolean;
+    seed_size?: number;
   }): Promise<
     ApiResponse<{
       nodes: any[];
@@ -813,6 +810,7 @@ class ApiService {
       if (options?.max_nodes !== undefined) params.set("max_nodes", String(options.max_nodes));
       if (options?.max_edges !== undefined) params.set("max_edges", String(options.max_edges));
       if (options?.include_unresolved === false) params.set("include_unresolved", "false");
+      if (options?.seed_size !== undefined) params.set("seed_size", String(options.seed_size));
       const qs = params.toString();
       const path = `/${project}/knowledge/graph/subgraph${qs ? `?${qs}` : ""}`;
       const response = await this.client.get(path);

@@ -5,7 +5,6 @@ import {
   Globe,
   RefreshCw,
   Search,
-  ShieldCheck,
   Terminal,
   TrendingUp,
   Zap,
@@ -77,7 +76,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 page-enter overflow-y-auto h-full pr-2 scrollbar-thin scrollbar-thumb-white/10">
-      {/* Hero Section */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/40 via-black to-black border border-white/10 p-8 mb-8 indigo-glow">
         <div className="relative z-10 max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight text-white mb-4">
@@ -86,16 +84,18 @@ export default function Dashboard() {
           <p className="text-lg text-indigo-200/70 mb-6 max-w-2xl">
             Work in Markdown on your machine, find material quickly with full-text and meaning-based
             search, and link notes when connections help you move between topics. Turn stable
-            checklists and write-ups into skills your assistant can load—grounded in what you
-            already wrote instead of generic prompt packs.
+            checklists and write-ups into skills your assistant can load.
           </p>
-          <div className="flex gap-4">
-            <button className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
-              New Research
-            </button>
-            <button className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">
-              Browse Skills
-            </button>
+          <div className="flex gap-4 flex-wrap">
+            <Link to="/notes" className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+              Browse Notes
+            </Link>
+            <Link to="/skills" className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">
+              View Skills
+            </Link>
+            <Link to="/recents" className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">
+              Recent Activity
+            </Link>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 blur-[120px] rounded-full -mr-20 -mt-20"></div>
@@ -103,29 +103,35 @@ export default function Dashboard() {
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="glass-card p-6 text-center cursor-pointer group">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-            <Search className="h-6 w-6 text-indigo-400" />
+        <Link to="/notes" className="block">
+          <div className="glass-card p-6 text-center cursor-pointer group h-full">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Search className="h-6 w-6 text-indigo-400" />
+            </div>
+            <h3 className="font-bold text-white mb-1">Notes</h3>
+            <p className="text-xs text-slate-500">Browse and search all notes</p>
           </div>
-          <h3 className="font-bold text-white mb-1">New Research</h3>
-          <p className="text-xs text-slate-500">Multi-source knowledge search</p>
-        </div>
+        </Link>
 
-        <div className="glass-card p-6 text-center cursor-pointer group">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-            <Zap className="h-6 w-6 text-indigo-400" />
+        <Link to="/skills" className="block">
+          <div className="glass-card p-6 text-center cursor-pointer group h-full">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Zap className="h-6 w-6 text-indigo-400" />
+            </div>
+            <h3 className="font-bold text-white mb-1">Skills</h3>
+            <p className="text-xs text-slate-500">Expert skill library</p>
           </div>
-          <h3 className="font-bold text-white mb-1">Skill Library</h3>
-          <p className="text-xs text-slate-500">Expert skill generation</p>
-        </div>
+        </Link>
 
-        <div className="glass-card p-6 text-center cursor-pointer group">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-            <Book className="h-6 w-6 text-indigo-400" />
+        <Link to="/recents" className="block">
+          <div className="glass-card p-6 text-center cursor-pointer group h-full">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <Book className="h-6 w-6 text-indigo-400" />
+            </div>
+            <h3 className="font-bold text-white mb-1">Recents</h3>
+            <p className="text-xs text-slate-500">Recent activity feed</p>
           </div>
-          <h3 className="font-bold text-white mb-1">Doc Ingest</h3>
-          <p className="text-xs text-slate-500">PDF & Technical paper ingestion</p>
-        </div>
+        </Link>
 
         <Link to="/dashboard/canvas" className="block">
           <div className="glass-card p-6 text-center cursor-pointer group h-full">
@@ -133,14 +139,13 @@ export default function Dashboard() {
               <Brain className="h-6 w-6 text-indigo-400" />
             </div>
             <h3 className="font-bold text-white mb-1">Knowledge Map</h3>
-            <p className="text-xs text-slate-500">Graph-based semantic visualization</p>
+            <p className="text-xs text-slate-500">Graph-based visualization</p>
           </div>
         </Link>
       </div>
 
       {/* Recent Activity */}
       <div className="grid gap-8 lg:grid-cols-7">
-        {/* Recent Research */}
         <div className="col-span-4 glass-card p-6">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-3">
@@ -151,7 +156,7 @@ export default function Dashboard() {
               <button
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                aria-label="Refresh Research Stream"
+                aria-label="Refresh"
                 className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-white transition-all disabled:opacity-30"
               >
                 <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
@@ -162,15 +167,13 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 animate-pulse">
               <RefreshCw className="h-8 w-8 animate-spin text-indigo-500 mb-4" />
-              <span className="text-sm font-medium text-slate-500">
-                Synchronizing semantic weights...
-              </span>
+              <span className="text-sm font-medium text-slate-500">Loading...</span>
             </div>
           ) : (
             <div className="space-y-4">
               {recentResearch.length === 0 ? (
                 <div className="text-center py-12 bg-white/[0.02] border border-dashed border-white/10 rounded-2xl">
-                  <p className="text-sm text-slate-500">No active research cycles detected.</p>
+                  <p className="text-sm text-slate-500">No research entries yet.</p>
                 </div>
               ) : (
                 recentResearch.map((research) => (
@@ -181,7 +184,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Generated Skills */}
         <div className="col-span-3 glass-card p-6">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-3">
@@ -195,13 +197,13 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 animate-pulse">
               <RefreshCw className="h-8 w-8 animate-spin text-indigo-500 mb-4" />
-              <span className="text-sm font-medium text-slate-500">Loading skill manifests...</span>
+              <span className="text-sm font-medium text-slate-500">Loading...</span>
             </div>
           ) : (
             <div className="space-y-4">
               {recentSkills.length === 0 ? (
                 <div className="text-center py-12 bg-white/[0.02] border border-dashed border-white/10 rounded-2xl">
-                  <p className="text-sm text-slate-500">Forge your first skill to begin.</p>
+                  <p className="text-sm text-slate-500">No skills yet.</p>
                 </div>
               ) : (
                 recentSkills.map((skill) => <SkillCard key={skill.id} skill={skill} />)
@@ -232,7 +234,7 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-bold text-slate-100">LLM Engine</p>
                   <p className="text-xs text-slate-500 mt-1 font-mono uppercase tracking-wider">
-                    {systemStatus?.llm_model || "GPT-4o"}
+                    {systemStatus?.llm_model || "—"}
                   </p>
                 </div>
               </div>
@@ -245,7 +247,7 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-bold text-slate-100">Knowledge Base</p>
                   <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
-                    {systemStatus?.knowledge_base_size || 1247} Notes Integrated
+                    {systemStatus?.knowledge_base_size ? `${systemStatus.knowledge_base_size} Notes Integrated` : "—"}
                   </p>
                 </div>
               </div>
@@ -254,11 +256,11 @@ export default function Dashboard() {
 
             <div className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.05] transition-all">
               <div className="flex items-center">
-                <ShieldCheck className="h-5 w-5 text-indigo-400 mr-4" />
+                <Activity className="h-5 w-5 text-indigo-400 mr-4" />
                 <div>
-                  <p className="text-sm font-bold text-slate-100">Security Access</p>
+                  <p className="text-sm font-bold text-slate-100">Backend</p>
                   <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
-                    L6 Federated Auth
+                    {systemStatus?.status || "—"}
                   </p>
                 </div>
               </div>

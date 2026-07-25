@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Archive,
   BarChart2,
+  BookOpen,
   Briefcase,
   ChevronLeft,
   ChevronRight,
@@ -55,6 +56,7 @@ const navGroups: NavGroup[] = [
       { name: "Skill Lab", href: "/skills", icon: Code },
       { name: "Audio Memory", href: "/audio", icon: Volume2 },
       { name: "ZettelFlow", href: "/zettelflow", icon: Archive },
+      { name: "Compiled Wiki", href: "/wiki", icon: BookOpen },
       { name: "Apps Hub", href: "/apps-hub", icon: Globe },
       { name: "Tests", href: "/tests", icon: FlaskConical },
       { name: "Settings", href: "/settings", icon: Settings },

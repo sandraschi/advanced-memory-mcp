@@ -22,6 +22,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { getApiBaseUrl } from "../../config/apiBase";
 import { devError } from "../../devConsole";
 import { useBackendAutoReconnect } from "../../hooks/useBackendAutoReconnect";
+import Markdown from "../../components/Markdown";
 import { apiService } from "../../services/api";
 import {
   copyRecoveryCommand,
@@ -85,6 +86,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
   // View Mode State
   const [viewMode, setViewMode] = useState<"list" | "tree">("list");
+  const [sortBy, setSortBy] = useState<"modified_desc" | "modified_asc" | "title_asc" | "title_desc">("modified_desc");
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   // Pagination State
@@ -144,6 +146,57 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     }
   };
 
+  const mapRecentToNote = (primary: Record<string, unknown>): Note | null => {
+    const title = String(primary.title ?? primary.permalink ?? "Untitled");
+    const permalink = String(primary.permalink ?? "");
+    if (!permalink) return null;
+    const content = typeof primary.content === "string" ? primary.content : "";
+    const tags = Array.isArray(primary.tags) ? (primary.tags as string[]) : [];
+    const created = typeof primary.created_at === "string" ? primary.created_at : new Date().toISOString();
+    const modified = typeof primary.updated_at === "string" ? primary.updated_at : created;
+    return {
+      id: permalink,
+      title,
+      content,
+      tags,
+      created,
+      modified,
+      wordCount: Math.max(0, Math.round(content.length / 5)),
+      connections: 0,
+    };
+  };
+
+  const loadRecentNotes = async (page = 1) => {
+    const response = await apiService.getMemoryRecent({
+      timeframe: "90d",
+      depth: 2,
+      page,
+      pageSize: 100,
+    });
+    if (!response.success || !response.data) {
+      return { error: response.error || "Could not load recent notes" };
+    }
+    const rows = response.data.results;
+    if (!Array.isArray(rows)) {
+      return { error: "Unexpected response from memory/recent" };
+    }
+    const notesData: Note[] = [];
+    const allTags = new Set<string>();
+    for (const item of rows) {
+      const primary = item.primary_result;
+      if (!primary || typeof primary !== "object") continue;
+      const t = primary.type;
+      if (t !== "entity" && t !== "observation") continue;
+      const note = mapRecentToNote(primary as Record<string, unknown>);
+      if (note) {
+        notesData.push(note);
+        note.tags.forEach((tag) => allTags.add(tag));
+      }
+    }
+    const total = typeof response.data.metadata?.total === "number" ? response.data.metadata.total : notesData.length;
+    return { notesData, allTags, total };
+  };
+
   const loadNotes = async (page = 1, opts?: { skipHealthProbe?: boolean }) => {
     const myGen = ++listFetchGen.current;
     const stillCurrent = () => myGen === listFetchGen.current;
@@ -180,36 +233,55 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         }
       }
 
+      const pageSize = 100;
+      const hasSearch = searchQuery.trim() !== "";
+
       try {
-        const response = await (searchQuery.trim() !== ""
-          ? apiService.searchNotes(searchQuery, page, 50, selectedTags)
-          : apiService.getNotes(page, 50));
+        if (!hasSearch) {
+          // Use recents API for default view (newest first)
+          const recent = await loadRecentNotes(page);
+          if (!stillCurrent()) return;
 
-        if (!stillCurrent()) {
-          return;
-        }
-
-        if (response.success && Array.isArray(response.data?.notes)) {
-          const notesData = response.data.notes;
-          setNotes(notesData);
-          setFilteredNotes(notesData);
-          setCurrentPage(response.data.page || page);
-          setTotalPages(response.data.pages || 1);
-          setTotalNotes(response.data.total ?? notesData.length);
-          setBackendReachable("online");
-
-          // Extract available tags
-          const allTags = new Set<string>();
-          notesData.forEach((note) => {
-            if (Array.isArray(note.tags)) {
-              note.tags.forEach((tag) => allTags.add(tag));
-            }
-          });
-          setAvailableTags(Array.from(allTags).sort());
-          setIsLoading(false);
-          return;
+          if (recent.error) {
+            setListError(recent.error);
+          } else if (recent.notesData) {
+            setNotes(recent.notesData);
+            setFilteredNotes(recent.notesData);
+            setCurrentPage(page);
+            setTotalPages(Math.ceil(recent.total / pageSize) || 1);
+            setTotalNotes(recent.total);
+            setBackendReachable("online");
+            setAvailableTags(Array.from(recent.allTags).sort());
+            setIsLoading(false);
+            return;
+          }
         } else {
-          setListError(response.error || "Could not load notes from the API.");
+          // Use search API when query is active
+          const response = await apiService.searchNotes(searchQuery, page, pageSize, selectedTags);
+
+          if (!stillCurrent()) return;
+
+          if (response.success && Array.isArray(response.data?.notes)) {
+            const notesData = response.data.notes;
+            setNotes(notesData);
+            setFilteredNotes(notesData);
+            setCurrentPage(response.data.page || page);
+            setTotalPages(response.data.pages || 1);
+            setTotalNotes(response.data.total ?? notesData.length);
+            setBackendReachable("online");
+
+            const allTags = new Set<string>();
+            notesData.forEach((note) => {
+              if (Array.isArray(note.tags)) {
+                note.tags.forEach((tag) => allTags.add(tag));
+              }
+            });
+            setAvailableTags(Array.from(allTags).sort());
+            setIsLoading(false);
+            return;
+          } else {
+            setListError(response.error || "Could not load notes from the API.");
+          }
         }
       } catch (apiError) {
         devError("API call failed:", apiError);
@@ -368,7 +440,21 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
   useEffect(() => {
     const filtered = applyFilters(notes);
-    setFilteredNotes(filtered);
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "modified_desc":
+          return new Date(b.modified).getTime() - new Date(a.modified).getTime();
+        case "modified_asc":
+          return new Date(a.modified).getTime() - new Date(b.modified).getTime();
+        case "title_asc":
+          return (a.title || "").localeCompare(b.title || "");
+        case "title_desc":
+          return (b.title || "").localeCompare(a.title || "");
+        default:
+          return 0;
+      }
+    });
+    setFilteredNotes(sorted);
   }, [
     searchQuery,
     selectedTags,
@@ -377,6 +463,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     dateModifiedFrom,
     dateModifiedTo,
     notes,
+    sortBy,
   ]);
 
   useEffect(() => {
@@ -646,7 +733,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && loadNotes(1)}
-              className="input pl-10 w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-10 pr-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
             />
           </div>
           <button
@@ -738,14 +825,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     type="date"
                     value={dateCreatedFrom}
                     onChange={(e) => setDateCreatedFrom(e.target.value)}
-                    className="input w-full text-sm"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                     placeholder="From"
                   />
                   <input
                     type="date"
                     value={dateCreatedTo}
                     onChange={(e) => setDateCreatedTo(e.target.value)}
-                    className="input w-full text-sm"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                     placeholder="To"
                   />
                 </div>
@@ -759,14 +846,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     type="date"
                     value={dateModifiedFrom}
                     onChange={(e) => setDateModifiedFrom(e.target.value)}
-                    className="input w-full text-sm"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                     placeholder="From"
                   />
                   <input
                     type="date"
                     value={dateModifiedTo}
                     onChange={(e) => setDateModifiedTo(e.target.value)}
-                    className="input w-full text-sm"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                     placeholder="To"
                   />
                 </div>
@@ -798,8 +885,8 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         {/* Notes List */}
         {!isFullscreen && (
           <div className="w-80 min-h-0 border-r border-border flex flex-col animate-in slide-in-from-left duration-300">
-            <div className="p-4 border-b border-border flex justify-between items-center">
-              <h2 className="font-semibold flex items-center gap-2 flex-wrap">
+            <div className="p-4 border-b border-border flex justify-between items-center gap-2">
+              <h2 className="font-semibold flex items-center gap-2 flex-wrap shrink-0">
                 Notes{" "}
                 <span
                   className="text-xs font-normal text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full tabular-nums"
@@ -808,21 +895,34 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                   {filteredNotes.length} / {totalNotes}
                 </span>
               </h2>
-              <div className="flex bg-muted/50 p-1 rounded-md">
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-1 rounded ${viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                  title="List View"
+              <div className="flex items-center gap-1.5">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                  className="bg-muted/50 border border-border rounded px-1.5 py-1 text-[10px] uppercase tracking-wider outline-none cursor-pointer"
+                  title="Sort notes"
                 >
-                  <List className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("tree")}
-                  className={`p-1 rounded ${viewMode === "tree" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                  title="Tree View"
-                >
-                  <Network className="w-4 h-4" />
-                </button>
+                  <option value="modified_desc">Newest</option>
+                  <option value="modified_asc">Oldest</option>
+                  <option value="title_asc">A-Z</option>
+                  <option value="title_desc">Z-A</option>
+                </select>
+                <div className="flex bg-muted/50 p-1 rounded-md">
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-1 rounded ${viewMode === "list" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                    title="List View"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("tree")}
+                    className={`p-1 rounded ${viewMode === "tree" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                    title="Tree View"
+                  >
+                    <Network className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1115,11 +1215,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
               {/* Note Content - fills remaining height and scrolls */}
               <div className="flex-1 min-h-0 overflow-auto p-6">
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                    {selectedNote.content}
-                  </pre>
-                </div>
+                <Markdown content={selectedNote.content} />
               </div>
             </>
           ) : (

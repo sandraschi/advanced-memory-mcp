@@ -22,25 +22,7 @@ interface Zettel {
 }
 
 export default function ZettelMaster() {
-  const [zettels, setZettels] = useState<Zettel[]>([
-    {
-      id: "1",
-      title: "The Materialist Approach to Memory",
-      content:
-        "Memory is not a ghostly storage but a physical reconfiguration of neural substrates.",
-      tags: ["philosophy", "neuroscience"],
-      links: ["2"],
-      timestamp: "2026-02-17",
-    },
-    {
-      id: "2",
-      title: "MCP Implementation in Rust",
-      content: "FastMCP provides the necessary abstractions for high-performance agentic tools.",
-      tags: ["dev", "mcp", "rust"],
-      links: ["1"],
-      timestamp: "2026-02-16",
-    },
-  ]);
+  const [zettels, setZettels] = useState<Zettel[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");

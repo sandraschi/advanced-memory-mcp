@@ -89,7 +89,7 @@ export default function SearchDeep() {
             <div className="flex items-center space-x-2 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full">
               <Brain className="h-4 w-4 text-amber-500" />
               <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500">
-                RAG Engine v3.0
+                RAG Search
               </span>
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function SearchDeep() {
           </div>
           <div className="flex items-center space-x-2 text-amber-500/60">
             <Sparkles className="h-3 w-3" />
-            <span>Vector Index: 98.4% Integrated</span>
+            <span>Vector Search</span>
           </div>
         </div>
       </div>

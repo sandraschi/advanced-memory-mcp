@@ -90,10 +90,8 @@ export default function Tools() {
             <Activity className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           </button>
           <div className="h-8 w-px bg-white/10" />
-          <div className="p-1 bg-white/5 border border-white/10 rounded-xl flex items-center text-xs font-medium">
-            <span className="px-3 py-1.5 text-white/40 uppercase tracking-widest">
-              SOTA Core 1.0
-            </span>
+          <div className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl flex items-center text-xs font-medium text-white/40 uppercase tracking-widest">
+            {tools.length} tools
           </div>
         </div>
       </div>

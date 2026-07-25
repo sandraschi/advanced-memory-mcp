@@ -24,7 +24,7 @@ interface Message {
 }
 
 const personalities = [
-  { id: "sandra", name: "Sandra (V12.1)", icon: Bot, description: "Materialist/Reductionist" },
+  { id: "sandra", name: "Sandra", icon: Bot, description: "Materialist/Reductionist" },
   { id: "industrial", name: "Industrial", icon: Zap, description: "Direct/Efficient" },
   { id: "scientific", name: "Scientific", icon: Sliders, description: "Analytical/Rigorous" },
   { id: "creative", name: "Creative", icon: Sparkles, description: "Analogical/Aesthetic" },

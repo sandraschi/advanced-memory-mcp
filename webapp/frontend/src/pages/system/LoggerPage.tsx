@@ -12,27 +12,6 @@ const logLevelColors: Record<string, string> = {
   DEBUG: "text-gray-400",
 };
 
-const demoLogs = [
-  {
-    timestamp: "2026-01-20 14:30:15",
-    level: "INFO",
-    message: "Application started successfully",
-    source: "system",
-  },
-  {
-    timestamp: "2026-01-20 14:30:16",
-    level: "INFO",
-    message: "Connected to Advanced Memory MCP server",
-    source: "system",
-  },
-  {
-    timestamp: "2026-01-20 14:30:17",
-    level: "INFO",
-    message: "LLM provider detected: Ollama (llama3:8b)",
-    source: "system",
-  },
-];
-
 function logsApiUrl(): string {
   const base = getApiBaseUrl();
   return `${base}/system/logs?limit=500`;
@@ -62,7 +41,6 @@ export default function LoggerPage() {
         setLoadError(
           `Could not load logs (HTTP ${response.status}). Start the FastAPI backend on port 10705 (run webapp/start.ps1 from the repo) or set VITE_API_URL. Request URL: ${logsApiUrl()}`,
         );
-        setLogs((prev) => (prev.length === 0 ? demoLogs : prev));
         return;
       }
       const result = await response.json();
@@ -75,7 +53,6 @@ export default function LoggerPage() {
       setLoadError(
         `Could not reach the Advanced Memory HTTP API. From the webapp folder run .\\start.ps1 (starts uvicorn on 127.0.0.1:10705 and Vite on 10704). Tried: ${logsApiUrl()}`,
       );
-      setLogs((prev) => (prev.length === 0 ? demoLogs : prev));
     }
   };
 

@@ -13,10 +13,10 @@ interface Provider {
 }
 
 interface LLMProviderSettingsProps {
-  onChange: () => void;
+  onChange?: () => void;
 }
 
-export default function LLMProviderSettings({ onChange }: LLMProviderSettingsProps) {
+export default function LLMProviderSettings({ onChange = () => {} }: LLMProviderSettingsProps) {
   const [providers, setProviders] = useState<Provider[]>([
     {
       name: "ollama",
@@ -281,7 +281,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
                 setSelectedModel("");
                 onChange();
               }}
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
             >
               {providers.map((provider) => (
                 <option key={provider.name} value={provider.name}>
@@ -300,7 +300,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
                 persistSelection(selectedProvider, e.target.value);
                 onChange();
               }}
-              className="input w-full"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               disabled={!currentProvider?.models?.length}
             >
               <option value="">Select a model...</option>
@@ -399,7 +399,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
                   setSelectedModel(e.target.value);
                   persistSelection(selectedProvider, e.target.value);
                 }}
-                className="input w-full"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                 disabled={!currentProvider?.models?.length}
               >
                 <option value="">Select a model...</option>
@@ -445,7 +445,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
               <input
                 type="password"
                 placeholder={`Enter ${currentProvider.name.toUpperCase()} API key`}
-                className="input w-full"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                 onChange={onChange}
               />
               <p className="text-xs text-muted-foreground mt-1">
@@ -468,7 +468,7 @@ export default function LLMProviderSettings({ onChange }: LLMProviderSettingsPro
               <input
                 type="url"
                 placeholder="https://api.openai.com/v1"
-                className="input w-full"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
                 onChange={onChange}
               />
             </div>

@@ -9,6 +9,7 @@ from . import resource_router as resource
 from . import search_router as search
 from . import system_router as system_router
 from . import tests_router as tests_router
+from . import wiki_router
 
 __all__ = [
     "knowledge",
@@ -20,4 +21,5 @@ __all__ = [
     "search",
     "system_router",
     "tests_router",
+    "wiki_router",
 ]

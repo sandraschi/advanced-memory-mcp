@@ -26,6 +26,7 @@ from advanced_memory.api.routers import (
     search,
     system_router,
     tests_router,
+    wiki_router,
 )
 from advanced_memory.config import ConfigManager
 from advanced_memory.services.initialization import initialize_app, initialize_file_sync
@@ -138,6 +139,7 @@ app.include_router(project.project_resource_router, prefix="/api/v1")
 app.include_router(management.router, prefix="/api/v1")
 app.include_router(system_router.router, prefix="/api/v1")
 app.include_router(tests_router.router, prefix="/api/v1")
+app.include_router(wiki_router.router)
 
 # Auth routes are handled by FastMCP automatically when auth is enabled
 
