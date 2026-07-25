@@ -1,9 +1,11 @@
 """Router for knowledge graph operations."""
 
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response
 from loguru import logger
+from sqlalchemy import select
 
 from advanced_memory.deps import (
     AppConfigDep,
@@ -28,6 +30,7 @@ from advanced_memory.schemas import (
 )
 from advanced_memory.schemas.base import Entity, Permalink
 from advanced_memory.schemas.request import EditEntityRequest, MoveEntityRequest
+from advanced_memory.models.knowledge import Entity as EntityModel
 from advanced_memory.services.graph_subgraph import fetch_link_subgraph
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
@@ -260,6 +263,41 @@ async def get_entities(
     entities = await entity_service.get_entities_by_permalinks(permalink) if permalink else []
     result = EntityListResponse(entities=[EntityResponse.model_validate(entity) for entity in entities])
     return result
+
+
+@router.get("/skills")
+async def list_skills(
+    session_maker: SessionMakerDep,
+    project_id: ProjectIdDep,
+) -> dict:
+    """List all skills (entities with entity_type='skill') for the project."""
+    async with session_maker() as session:
+        stmt = (
+            select(EntityModel)
+            .where(EntityModel.project_id == project_id, EntityModel.entity_type == "skill")
+            .order_by(EntityModel.updated_at.desc())
+        )
+        result = await session.execute(stmt)
+        entities = result.scalars().all()
+    folders: set[str] = set()
+    skills_list = []
+    for e in entities:
+        folder = str(Path(e.file_path).parent) if e.file_path else ""
+        if folder:
+            folders.add(folder)
+        skills_list.append({
+            "id": e.permalink or str(e.id),
+            "title": e.title,
+            "description": (e.entity_metadata or {}).get("description", ""),
+            "folder": folder,
+            "tags": (e.entity_metadata or {}).get("tags", []),
+            "created": str(e.created_at),
+            "modified": str(e.updated_at),
+            "content": "",
+            "filePath": e.file_path or "",
+            "sources": 0,
+        })
+    return {"success": True, "data": {"skills": skills_list, "folders": sorted(folders)}}
 
 
 @router.get("/graph/subgraph")

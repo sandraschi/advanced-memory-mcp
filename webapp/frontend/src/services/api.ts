@@ -345,7 +345,7 @@ class ApiService {
     try {
       const params = folder ? `?folder=${folder}` : "";
       const response = await this.client.get(
-        `/${encodeURIComponent(this.activeProject)}/skills${params}`,
+        `/${encodeURIComponent(this.activeProject)}/knowledge/skills${params}`,
       );
       const skills = response.data.skills || response.data || [];
       return { success: true, data: { skills, folders: [] } };
