@@ -108,6 +108,7 @@ def main() -> bool:
     tests = [check_tool_imports, check_tool_registration, check_tool_signatures, check_tool_count]
 
     passed = 0
+    total = len(tests)
     for t in tests:
         if t():
             passed += 1
