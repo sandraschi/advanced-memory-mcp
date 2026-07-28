@@ -9,14 +9,13 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.typora_control import (
     TyporaRPCClient,
     check_typora_connection,
     get_typora_status,
     typora_control,
 )
+from tests.mcp.tool_invoker import mcp_fn
 
 
 class TestTyporaRPCClient:

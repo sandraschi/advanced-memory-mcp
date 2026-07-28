@@ -38,25 +38,25 @@ from advanced_memory.services.content.tagging import (
 )
 
 __all__ = [
-    # crud
-    "write_note",
-    "read_note",
-    "read_latest_note",
-    "get_latest_identifier",
-    "view_note",
-    "view_note_rendered",
-    "edit_note",
-    "move_note",
-    "delete_note",
-    # capture
-    "quick_capture",
     "daily_note",
+    "delete_note",
+    "edit_note",
     # tagging
     "edit_tags",
+    "enhance_note",
     "extract_content_tags",
+    "generate_note",
+    "get_latest_identifier",
+    "move_note",
+    # capture
+    "quick_capture",
+    "read_latest_note",
+    "read_note",
     "suggest_tags",
     # ai_enrich
     "summarize_note",
-    "enhance_note",
-    "generate_note",
+    "view_note",
+    "view_note_rendered",
+    # crud
+    "write_note",
 ]

@@ -4,11 +4,10 @@ from datetime import UTC, datetime
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.prompts.continue_conversation import continue_conversation
 from advanced_memory.mcp.prompts.recent_activity import recent_activity_prompt
 from advanced_memory.mcp.prompts.search import search_prompt
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

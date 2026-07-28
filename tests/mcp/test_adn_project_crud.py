@@ -129,4 +129,8 @@ class TestAdnProjectCRUD:
 
         assert result["success"] is True, f"Operation failed: {result.get('message')}"
         assert result["operation"] == "sync"
-        assert "Sync" in result["technical_summary"] or "Indexing" in result["technical_summary"] or "sync" in result["technical_summary"].lower()
+        assert (
+            "Sync" in result["technical_summary"]
+            or "Indexing" in result["technical_summary"]
+            or "sync" in result["technical_summary"].lower()
+        )

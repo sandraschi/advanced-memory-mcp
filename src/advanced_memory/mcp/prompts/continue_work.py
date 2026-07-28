@@ -44,9 +44,7 @@ def _title_of(path: Path) -> str:
     ),
 )
 def continue_work(
-    project_folder: Annotated[
-        str, Field(description="Vault folder to read start notes from")
-    ] = "projects",
+    project_folder: Annotated[str, Field(description="Vault folder to read start notes from")] = "projects",
 ) -> str:
     """Return the latest start-note context so a session can continue instantly."""
     logger.info("continue_work prompt invoked (folder=%s)", project_folder)
@@ -93,7 +91,10 @@ def continue_work(
         "# Continue Work — vault context\n\n"
         f"## Latest start note: {_title_of(start_note)}\n\n"
         f"{start_content}\n\n"
-        "## Most recent notes\n\n" + "\n".join(recent_titles) + "\n" + digest_block +
-        "\nFollow the conventions: timestamp new notes, tag with "
+        "## Most recent notes\n\n"
+        + "\n".join(recent_titles)
+        + "\n"
+        + digest_block
+        + "\nFollow the conventions: timestamp new notes, tag with "
         "[project, technology, status, priority], mark superseded notes OBSOLETE."
     )

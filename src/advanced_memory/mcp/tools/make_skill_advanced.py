@@ -1125,7 +1125,7 @@ def _ensure_valid_frontmatter(content: str, slug: str, topic: str) -> str:
         close = _re.search(r"\n---\s*(?:\n|$)", rest)
         if close:
             fm_block = rest[: close.start()]
-            body = rest[close.end():]
+            body = rest[close.end() :]
         else:
             lines = rest.lstrip("\n").split("\n")
             fm_lines: list[str] = []
@@ -1616,7 +1616,9 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
     """Perform GitHub research for the given topic."""
 
     try:
-        from advanced_memory.mcp.beta.adn_github_research import adn_github_research  # was broken relative import (2026-07-17)
+        from advanced_memory.mcp.beta.adn_github_research import (
+            adn_github_research,  # was broken relative import (2026-07-17)
+        )
 
         # Generate research queries based on topic
         queries = _generate_github_queries(topic)
@@ -1828,7 +1830,9 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
     """Perform arXiv research for the given topic."""
 
     try:
-        from advanced_memory.mcp.beta.adn_arxiv_research import adn_arxiv_research  # was broken relative import (2026-07-17)
+        from advanced_memory.mcp.beta.adn_arxiv_research import (
+            adn_arxiv_research,  # was broken relative import (2026-07-17)
+        )
 
         # Generate research queries based on topic
         queries = _generate_arxiv_queries(topic)

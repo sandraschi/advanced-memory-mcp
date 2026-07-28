@@ -152,8 +152,7 @@ def mcp(
                 )
         except Exception as _probe_err:
             logger.error(
-                f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r}), "
-                f"falling back to local instance"
+                f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r}), falling back to local instance"
             )
 
         if _probe_ok:

@@ -2,10 +2,9 @@
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.edit_note import edit_note
 from advanced_memory.mcp.tools.write_note import write_note
+from tests.mcp.tool_invoker import mcp_fn
 
 
 def _edit_out(r: object) -> str:
@@ -233,7 +232,9 @@ async def test_edit_note_identifier_variations(client):
     ]
 
     for identifier in identifiers_to_test:
-        result = await mcp_fn(edit_note)(identifier=identifier, operation="append", content=f"\n## Update via {identifier}")
+        result = await mcp_fn(edit_note)(
+            identifier=identifier, operation="append", content=f"\n## Update via {identifier}"
+        )
 
         # The test note was created with title "Test Document" and permalink "docs/test-document"
         # All identifier formats should work as the API supports various identifier types

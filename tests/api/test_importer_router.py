@@ -6,12 +6,12 @@ from pathlib import Path
 import pytest
 from httpx import AsyncClient
 
-from tests.api.route_prefixes import IMPORT_API_ROOT
 from advanced_memory.schemas.importer import (
     ChatImportResult,
     EntityImportResult,
     ProjectImportResult,
 )
+from tests.api.route_prefixes import IMPORT_API_ROOT
 
 
 @pytest.fixture
@@ -144,9 +144,7 @@ async def create_test_upload_file(tmp_path, content):
 
 
 @pytest.mark.asyncio
-async def test_import_chatgpt(
-    project_config, client: AsyncClient, tmp_path, chatgpt_json_content, file_service
-):
+async def test_import_chatgpt(project_config, client: AsyncClient, tmp_path, chatgpt_json_content, file_service):
     """Test importing ChatGPT conversations."""
     # Create a test file
     file_path = await create_test_upload_file(tmp_path, chatgpt_json_content)
@@ -252,9 +250,7 @@ async def test_import_claude_conversations_invalid_file(client: AsyncClient, tmp
 
 
 @pytest.mark.asyncio
-async def test_import_claude_projects(
-    client: AsyncClient, tmp_path, claude_projects_json_content, file_service
-):
+async def test_import_claude_projects(client: AsyncClient, tmp_path, claude_projects_json_content, file_service):
     """Test importing Claude projects."""
     # Create a test file
     file_path = await create_test_upload_file(tmp_path, claude_projects_json_content)
@@ -346,9 +342,7 @@ async def test_import_memory_json(client: AsyncClient, tmp_path, memory_json_con
 
 
 @pytest.mark.asyncio
-async def test_import_memory_json_without_folder(
-    client: AsyncClient, tmp_path, memory_json_content, file_service
-):
+async def test_import_memory_json_without_folder(client: AsyncClient, tmp_path, memory_json_content, file_service):
     """Test importing memory.json file without specifying a destination folder."""
     # Create a test file
     json_file = tmp_path / "memory.json"

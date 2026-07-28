@@ -4,14 +4,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.sync_status import sync_status
 from advanced_memory.services.sync_status_service import (
     ProjectSyncStatus,
     SyncStatus,
     SyncStatusTracker,
 )
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

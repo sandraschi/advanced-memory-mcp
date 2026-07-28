@@ -1,3 +1,4 @@
+# Windows-only lightweight CI (fleet standard)
 name: CI
 
 on:
@@ -13,18 +14,26 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          version: "latest"
+          version: latest
           enable-cache: true
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install Python dependencies
         run: uv sync --group dev
+
       - name: Ruff check
         run: uv run ruff check src tests
+
       - name: Ruff format check
         run: uv run ruff format --check src tests
+
       - name: Pytest
-        run: uv run pytest -q --tb=short
+        run: uv run pytest -q --tb=short tests/test_all_portmanteau_tools.py tests/test_config.py

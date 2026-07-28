@@ -4,9 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.export_html_notes import export_html_notes
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.fixture

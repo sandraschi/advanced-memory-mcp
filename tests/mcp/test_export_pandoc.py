@@ -5,9 +5,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.export_pandoc import _build_pandoc_command, export_pandoc
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.fixture

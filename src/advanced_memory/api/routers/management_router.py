@@ -162,9 +162,7 @@ async def get_skills_inventory():
             if not d.is_dir() or d.name == "_archive":
                 continue
             md = d / "SKILL.md"
-            nested = sorted(
-                c.name for c in d.iterdir() if c.is_dir() and (c / "SKILL.md").exists()
-            )
+            nested = sorted(c.name for c in d.iterdir() if c.is_dir() and (c / "SKILL.md").exists())
             if md.exists():
                 skills.append(
                     {

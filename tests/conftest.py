@@ -11,9 +11,11 @@ try:
         from datetime import UTC
     except ImportError:
         from datetime import timezone
-        UTC = timezone.utc
+
+        UTC = UTC
 except (ImportError, AttributeError):
     from datetime import timedelta, timezone
+
     UTC = timezone(timedelta(0))
 
 import pytest
@@ -236,7 +238,7 @@ async def test_project(config_home, engine_factory) -> Project:
         "is_active": True,
         "is_default": True,  # Explicitly set as the default project
     }
-    engine, session_maker = engine_factory
+    _engine, session_maker = engine_factory
     project_repository = ProjectRepository(session_maker)
     project = await project_repository.create(project_data)
     return project
@@ -388,7 +390,7 @@ async def full_entity(sample_entity, entity_repository, file_service, entity_ser
     """Create a search test entity."""
 
     # Create test entity
-    entity, created = await entity_service.create_or_update_entity(
+    entity, _created = await entity_service.create_or_update_entity(
         EntitySchema(
             title="Search_Entity",
             folder="test",
@@ -419,7 +421,7 @@ async def test_graph(
     """Create a test knowledge graph with entities, relations and observations."""
 
     # Create some test entities in reverse order so they will be linked
-    deeper, _ = await entity_service.create_or_update_entity(
+    _deeper, _ = await entity_service.create_or_update_entity(
         EntitySchema(
             title="Deeper Entity",
             entity_type="deeper",

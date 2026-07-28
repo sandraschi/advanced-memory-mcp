@@ -1,8 +1,6 @@
 """Tests for discussion context MCP tool."""
 
 import pytest
-
-from tests.mcp.tool_invoker import mcp_fn
 from mcp.server.fastmcp.exceptions import ToolError
 
 from advanced_memory.mcp.tools.recent_activity import recent_activity
@@ -12,6 +10,7 @@ from advanced_memory.schemas.memory import (
     RelationSummary,
 )
 from advanced_memory.schemas.search import SearchItemType
+from tests.mcp.tool_invoker import mcp_fn
 
 # Test data for different timeframe formats
 valid_timeframes = [

@@ -33,9 +33,7 @@ from advanced_memory.mcp.tools.project_manager import adn_project
 
 _FORBIDDEN_SECTION = re.compile(r"(?im)^\s*(Args|Arguments)\s*:\s*$")
 
-_CONTENT_TOOLS = (
-    ("adn_content", adn_content),
-)
+_CONTENT_TOOLS = (("adn_content", adn_content),)
 
 
 def _tool_fn(tool: object):

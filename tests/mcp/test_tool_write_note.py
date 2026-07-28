@@ -4,11 +4,10 @@ from textwrap import dedent
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.delete_note import delete_note
 from advanced_memory.mcp.tools.read_note import read_note
 from advanced_memory.mcp.tools.write_note import write_note
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

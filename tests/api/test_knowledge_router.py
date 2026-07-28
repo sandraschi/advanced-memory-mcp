@@ -1316,9 +1316,7 @@ async def test_move_entity_by_title(client: AsyncClient, project_url):
 @pytest.mark.asyncio
 async def test_graph_subgraph_endpoint(client: AsyncClient, project_url):
     """Bounded link graph JSON for the webapp."""
-    response = await client.get(
-        f"{project_url}/knowledge/graph/subgraph?depth=2&max_nodes=80&max_edges=160"
-    )
+    response = await client.get(f"{project_url}/knowledge/graph/subgraph?depth=2&max_nodes=80&max_edges=160")
     assert response.status_code == 200
     body = response.json()
     assert "nodes" in body and "links" in body and "meta" in body

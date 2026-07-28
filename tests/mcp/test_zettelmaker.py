@@ -2,9 +2,8 @@
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.zettelmaker import adn_zettelmaker
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

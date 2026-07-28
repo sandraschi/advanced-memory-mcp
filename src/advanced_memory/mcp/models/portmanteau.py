@@ -625,11 +625,11 @@ class NavRecentOp(BaseOp):
     page_size: Annotated[int, Field(description="Items per page")] = 20
 
 
-class NavSyncOp(BaseModel):
+class NavSyncOp(BaseOp):
     operation: Literal["sync"]
 
 
-class NavStatusOp(BaseModel):
+class NavStatusOp(BaseOp):
     operation: Literal["status"]
 
 

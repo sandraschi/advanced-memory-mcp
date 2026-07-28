@@ -5,9 +5,9 @@ from pathlib import Path
 
 from advanced_memory.config import (
     APP_DATABASE_NAME,
-    AdvancedMemoryConfig,
     DATA_DIR_NAME,
     VAULT_DIR_NAME,
+    AdvancedMemoryConfig,
     ConfigManager,
 )
 

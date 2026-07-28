@@ -3,14 +3,13 @@
 from datetime import datetime
 
 import pytest
-
-from tests.mcp.tool_invoker import mcp_fn
 from mcp.server.fastmcp.exceptions import ToolError
 
 from advanced_memory.mcp.tools.build_context import build_context
 from advanced_memory.schemas.memory import (
     GraphContext,
 )
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio
@@ -101,7 +100,9 @@ async def test_build_context_timeframe_formats(client, test_graph):
     # Test each valid timeframe
     for timeframe in valid_timeframes:
         try:
-            result = await mcp_fn(build_context)(url=test_url, timeframe=timeframe, page=1, page_size=10, max_related=10)
+            result = await mcp_fn(build_context)(
+                url=test_url, timeframe=timeframe, page=1, page_size=10, max_related=10
+            )
             assert result is not None
         except Exception as e:
             pytest.fail(f"Failed with valid timeframe '{timeframe}': {e!s}")

@@ -8,6 +8,6 @@ uv run ruff check src tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 uv run ruff format --check src tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-uv run pytest -q --tb=short
+uv run pytest -q --tb=short tests/test_all_portmanteau_tools.py tests/test_config.py
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "CI passed." -ForegroundColor Green

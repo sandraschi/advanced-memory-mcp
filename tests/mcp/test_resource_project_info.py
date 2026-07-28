@@ -3,14 +3,13 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from tests.mcp.tool_invoker import mcp_fn
 from httpx import Response
 
 from advanced_memory.mcp.resources.project_info import project_info
 from advanced_memory.schemas import (
     ProjectInfoResponse,
 )
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio
@@ -99,7 +98,7 @@ async def test_project_info_tool():
 
         # Verify that call_get was called with the correct URL
         mock_call_get.assert_called_once()
-        args, kwargs = mock_call_get.call_args
+        args, _kwargs = mock_call_get.call_args
         assert args[1] == "/test-project/project/info"
 
         # Verify the result is a ProjectInfoResponse

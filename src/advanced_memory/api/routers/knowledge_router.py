@@ -21,6 +21,7 @@ from advanced_memory.deps import (
     SyncServiceDep,
     get_search_service,
 )
+from advanced_memory.models.knowledge import Entity as EntityModel
 from advanced_memory.schemas import (
     DeleteEntitiesRequest,
     DeleteEntitiesResponse,
@@ -30,12 +31,37 @@ from advanced_memory.schemas import (
 )
 from advanced_memory.schemas.base import Entity, Permalink
 from advanced_memory.schemas.request import EditEntityRequest, MoveEntityRequest
-from advanced_memory.models.knowledge import Entity as EntityModel
 from advanced_memory.services.graph_subgraph import fetch_link_subgraph
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
 ## Create endpoints
+
+
+def _coerce_tags(value: object) -> list[str]:
+    """Normalize a stored `tags` metadata value into a real list[str].
+
+    Some historically-imported entities have `tags` stored as the string
+    repr of a Python list (e.g. "['a', 'b']") instead of an actual list,
+    which crashes frontend code expecting `tags.map(...)`. Coerce any shape
+    into a clean list so API consumers never have to special-case this.
+    """
+    if isinstance(value, list):
+        return [str(t) for t in value]
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.startswith("[") and stripped.endswith("]"):
+            import ast
+
+            try:
+                parsed = ast.literal_eval(stripped)
+                if isinstance(parsed, list | tuple | set):
+                    return [str(t) for t in parsed]
+            except (ValueError, SyntaxError):
+                pass
+        # Fallback: treat as a single tag, or empty if blank
+        return [stripped] if stripped else []
+    return []
 
 
 @router.post("/entities", response_model=EntityResponse)
@@ -285,18 +311,20 @@ async def list_skills(
         folder = str(Path(e.file_path).parent) if e.file_path else ""
         if folder:
             folders.add(folder)
-        skills_list.append({
-            "id": e.permalink or str(e.id),
-            "title": e.title,
-            "description": (e.entity_metadata or {}).get("description", ""),
-            "folder": folder,
-            "tags": (e.entity_metadata or {}).get("tags", []),
-            "created": str(e.created_at),
-            "modified": str(e.updated_at),
-            "content": "",
-            "filePath": e.file_path or "",
-            "sources": 0,
-        })
+        skills_list.append(
+            {
+                "id": e.permalink or str(e.id),
+                "title": e.title,
+                "description": (e.entity_metadata or {}).get("description", ""),
+                "folder": folder,
+                "tags": _coerce_tags((e.entity_metadata or {}).get("tags", [])),
+                "created": str(e.created_at),
+                "modified": str(e.updated_at),
+                "content": "",
+                "filePath": e.file_path or "",
+                "sources": 0,
+            }
+        )
     return {"success": True, "data": {"skills": skills_list, "folders": sorted(folders)}}
 
 
@@ -310,7 +338,9 @@ async def knowledge_graph_subgraph(
     max_nodes: Annotated[int, Query(ge=10, le=5000)] = 400,
     max_edges: Annotated[int, Query(ge=10, le=20000)] = 800,
     include_unresolved: Annotated[bool, Query()] = True,
-    seed_size: Annotated[int, Query(ge=10, le=2000, description="Number of recent notes to seed BFS when no center is given")] = 200,
+    seed_size: Annotated[
+        int, Query(ge=10, le=2000, description="Number of recent notes to seed BFS when no center is given")
+    ] = 200,
 ) -> dict:
     """Bounded link graph for the vault (BFS from ``center`` or recent notes).
 

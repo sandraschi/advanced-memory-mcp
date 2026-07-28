@@ -4,9 +4,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.export_to_archive import export_to_archive
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.skip(reason="Archive tests need better mocking - not critical for core functionality")

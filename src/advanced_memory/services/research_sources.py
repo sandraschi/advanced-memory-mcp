@@ -43,7 +43,7 @@ async def web_search(query: str, max_results: int = 8) -> dict[str, Any]:
         html = resp.text
         links = re.findall(r'class="result__a"[^>]*href="([^"]+)"[^>]*>(.*?)</a>', html, re.S)
         snips = re.findall(r'class="result__snippet"[^>]*>(.*?)</(?:a|div)>', html, re.S)
-        for i, (url, title) in enumerate(links[: max_results]):
+        for i, (url, title) in enumerate(links[:max_results]):
             m = re.search(r"uddg=([^&]+)", url)
             if m:
                 url = unquote(m.group(1))

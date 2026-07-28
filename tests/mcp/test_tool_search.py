@@ -5,11 +5,10 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.mcp.tools.search import _format_search_error_response, search_notes
 from advanced_memory.schemas.search import SearchResponse
+from tests.mcp.tool_invoker import mcp_fn
 
 
 def _assert_search_md(md: str, *substrings: str) -> None:
@@ -324,9 +323,7 @@ async def test_search_e2e_write_search_delete(client):
 
     # Delete the note
     delete_result = await mcp_fn(adn_content)(operation="delete", identifier=title)
-    delete_ok = delete_result is True or (
-        isinstance(delete_result, dict) and delete_result.get("success") is True
-    )
+    delete_ok = delete_result is True or (isinstance(delete_result, dict) and delete_result.get("success") is True)
     if not delete_ok and isinstance(delete_result, str):
         delete_ok = "delete" in delete_result.lower()
     assert delete_ok, delete_result

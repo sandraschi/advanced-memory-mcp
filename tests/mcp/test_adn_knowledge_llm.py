@@ -4,9 +4,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge_legacy as adn_knowledge
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

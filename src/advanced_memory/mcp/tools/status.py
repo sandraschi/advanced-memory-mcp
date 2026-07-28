@@ -33,6 +33,23 @@ def _get_instance_role_info() -> list[str]:
         lines.append(f"- **PID**: {own_pid}")
         lines.append("- **DB mode**: read-write")
 
+    # Surface the resolved app database path and ADVANCED_MEMORY_HOME env var so
+    # multi-instance / multi-account setups (e.g. an nssm service running as a
+    # different account than the CLI/webapp) are diagnosable from status alone.
+    try:
+        from advanced_memory.config import ConfigManager
+
+        db_path = ConfigManager().config.app_database_path
+        lines.append(f"- **DB location**: {db_path}")
+    except Exception as e:  # pragma: no cover
+        lines.append(f"- **DB location**: unavailable ({e})")
+
+    home_env = os.getenv("ADVANCED_MEMORY_HOME")
+    if home_env:
+        lines.append(f"- **ADVANCED_MEMORY_HOME**: {home_env}")
+    else:
+        lines.append(f"- **ADVANCED_MEMORY_HOME**: not set (defaulting to {Path.home()})")
+
     lock_path = Path(os.getenv("ADVANCED_MEMORY_HOME", str(Path.home()))) / ".advanced-memory" / "mcp-stdio.lock"
     if lock_path.exists():
         try:

@@ -227,8 +227,11 @@ def _initialize_prompts_and_resources() -> None:
     import advanced_memory.mcp.prompts.continue_work as continue_work  # 2026-07-17
     import advanced_memory.mcp.prompts.recent_activity as recent_activity
     import advanced_memory.mcp.prompts.search as search
+    import advanced_memory.mcp.resources.notes as notes
     import advanced_memory.mcp.resources.project_info as project_info
     import advanced_memory.mcp.resources.prompt_templates as prompt_templates
+    import advanced_memory.mcp.resources.skills as skills
+    import advanced_memory.mcp.resources.status as status
     from advanced_memory.mcp import (
         prompts,
         resources,
@@ -245,10 +248,18 @@ def _initialize_prompts_and_resources() -> None:
         continue_work.continue_work,
     ]
     _resource_refs = [
-        ai_assistant_guide.ai_assistant_guide,  # Resource, despite being in prompts/
+        ai_assistant_guide.ai_assistant_guide,
         project_info.project_info,
         prompt_templates.search_prompt_template,
         prompt_templates.continue_conversation_prompt_template,
+        notes.recent_notes,
+        notes.note_file,
+        notes.daily_note,
+        status.system_status,
+        status.tool_catalog,
+        status.recent_activity,
+        skills.skill_list,
+        skills.skill_content,
     ]
 
 
@@ -260,7 +271,7 @@ if _is_stdio_mode:
     # Import individual prompt modules to register them via decorators
     try:
         import advanced_memory.mcp.prompts.continue_conversation
-        import advanced_memory.mcp.prompts.continue_work  # noqa: F401 (2026-07-17)
+        import advanced_memory.mcp.prompts.continue_work
         import advanced_memory.mcp.prompts.recent_activity
         import advanced_memory.mcp.prompts.search
     except ImportError:
@@ -270,13 +281,10 @@ if _is_stdio_mode:
     # Resources will be loaded later when server starts
     def initialize_mcp_resources():
         """Initialize MCP resources - call this when MCP server starts."""
-        try:
-            # Import resources module to register all resources via __init__.py
-            # Also import the ai_assistant_guide which is a resource in prompts
-            import advanced_memory.mcp.prompts.ai_assistant_guide
-            import advanced_memory.mcp.resources
-        except ImportError:
-            pass
+        # Call _initialize_prompts_and_resources to register everything
+        # This ensures resource references are stored for GC protection
+        # and all resource modules (notes, status, skills) are imported
+        _initialize_prompts_and_resources()
 
 else:
     # For CLI/non-MCP usage, initialize everything immediately

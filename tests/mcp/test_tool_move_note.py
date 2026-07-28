@@ -4,11 +4,10 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.move_note import _format_move_error_response, move_note
 from advanced_memory.mcp.tools.read_note import read_note
 from advanced_memory.mcp.tools.write_note import write_note
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio

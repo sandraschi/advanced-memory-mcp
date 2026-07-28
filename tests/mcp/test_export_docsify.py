@@ -4,10 +4,9 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
-from advanced_memory.mcp.tools.write_note import write_note
 from advanced_memory.mcp.tools.export_docsify import export_docsify_enhanced
+from advanced_memory.mcp.tools.write_note import write_note
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio
@@ -226,9 +225,7 @@ async def test_export_docsify_file_structure(tmp_path, config_home, app):
 
     export_path = tmp_path / "docsify_structure"
 
-    await mcp_fn(export_docsify_enhanced)(
-        export_path=str(export_path), source_folder="/structure_test", serve=False
-    )
+    await mcp_fn(export_docsify_enhanced)(export_path=str(export_path), source_folder="/structure_test", serve=False)
 
     # Verify core files exist
     core_files = [
@@ -253,9 +250,7 @@ async def test_export_docsify_index_html_validity(tmp_path, config_home, app):
 
     export_path = tmp_path / "docsify_html"
 
-    await mcp_fn(export_docsify_enhanced)(
-        export_path=str(export_path), source_folder="/html_test", serve=False
-    )
+    await mcp_fn(export_docsify_enhanced)(export_path=str(export_path), source_folder="/html_test", serve=False)
 
     index_content = (export_path / "index.html").read_text(encoding="utf-8")
 
@@ -279,9 +274,7 @@ async def test_export_docsify_sidebar_generation(tmp_path, config_home, app):
 
     export_path = tmp_path / "docsify_sidebar"
 
-    await mcp_fn(export_docsify_enhanced)(
-        export_path=str(export_path), source_folder="/sidebar_test", serve=False
-    )
+    await mcp_fn(export_docsify_enhanced)(export_path=str(export_path), source_folder="/sidebar_test", serve=False)
 
     sidebar_content = (export_path / "_sidebar.md").read_text(encoding="utf-8")
 

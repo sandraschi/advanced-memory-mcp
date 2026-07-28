@@ -4,9 +4,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.content_manager import adn_content
+from tests.mcp.tool_invoker import mcp_fn
 
 
 def _out(x) -> str:

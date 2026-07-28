@@ -5,9 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from tests.mcp.tool_invoker import mcp_fn
-
 from advanced_memory.mcp.tools.mcp import canvas
+from tests.mcp.tool_invoker import mcp_fn
 
 
 @pytest.mark.asyncio
