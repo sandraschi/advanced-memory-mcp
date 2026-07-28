@@ -336,7 +336,7 @@ class ConfigManager:
     def remove_project(self, name: str) -> None:
         """Remove a project from the configuration."""
 
-        project_name, path = self.get_project(name)
+        project_name, _path = self.get_project(name)
         if not project_name:  # pragma: no cover
             raise ValueError(f"Project '{name}' not found")
 
@@ -350,7 +350,7 @@ class ConfigManager:
 
     def set_default_project(self, name: str) -> None:
         """Set the default project."""
-        project_name, path = self.get_project(name)
+        project_name, _path = self.get_project(name)
         if not project_name:  # pragma: no cover
             raise ValueError(f"Project '{name}' not found")
 

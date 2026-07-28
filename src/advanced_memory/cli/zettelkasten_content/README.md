@@ -259,7 +259,7 @@ DEVELOPER_TEMPLATES = {
     "Git Version Control": {
         "Git - Branching": """...""",
         # ... more templates
-    }
+    },
 }
 ```
 
@@ -353,11 +353,7 @@ advanced-memory onboard
 
 ```python
 # Via Claude Desktop or MCP client
-adn_zettelmaker(
-    operation="generate",
-    category="developer",
-    topic="Python Basics"
-)
+adn_zettelmaker(operation="generate", category="developer", topic="Python Basics")
 ```
 
 **Result**: Generates all Python Basics templates into user's knowledge base
@@ -428,7 +424,6 @@ Decide which category file to add to:
 
 DEVELOPER_TEMPLATES = {
     # ... existing topic groups ...
-
     "New Topic Group": {
         "Note Title 1": """# Note Title 1
 
@@ -1067,13 +1062,13 @@ git log -- src/advanced_memory/cli/zettelkasten_content/developer.py
 
 ```python
 CATEGORY_TEMPLATES: dict[str, dict[str, str]] = {
-    "Topic Group Name": {           # Level 1: Topic group
-        "Note Title": """...""",    # Level 2: Individual note
+    "Topic Group Name": {  # Level 1: Topic group
+        "Note Title": """...""",  # Level 2: Individual note
         "Another Note": """...""",
     },
     "Another Topic Group": {
         # ...
-    }
+    },
 }
 ```
 

@@ -1,4 +1,4 @@
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 import 'scripts/just/fleet.just'
 
 # --- Dashboard ---
@@ -38,16 +38,21 @@ stats:
 install:
     Set-Location '{{justfile_directory()}}'; uv sync --group dev
 
+bootstrap: install
+    uv run pre-commit install
+    Set-Location '{{justfile_directory()}}/webapp/frontend'; npm ci; if ($LASTEXITCODE -ne 0) { npm install }
+    Write-Host "Pre-commit hooks installed." -ForegroundColor Green
+
 # ── RAG (LanceDB vector index) ─────────────────────────────────────────────────
 
 rag-gpu:
-    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu.ps1
+    @powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu.ps1
 
 rag-gpu-install:
-    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu-install.ps1
+    @powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu-install.ps1
 
 rag-cpu-install:
-    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-cpu-install.ps1
+    @powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-cpu-install.ps1
 
 # Sync status: files vs database (Rich output best in a real terminal)
 status:
@@ -315,7 +320,3 @@ build-native:
 	$env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
 	Set-Location '{{justfile_directory()}}\native'
 	npx @tauri-apps/cli build --bundles nsis
-
-# Run the CUA smoke test against the installed NSIS app
-cua-nsis-test:
-	C:\Windows\py.exe scripts/cua-smoke.py

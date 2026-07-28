@@ -309,7 +309,7 @@ async def _listen_dual_stt_operation(active_project, audio_path: str | None, rec
         # Use faster-whisper as fallback since Google Cloud requires API key
         # In production, replace with actual Google Cloud Speech API
         model = WhisperModel("base", device="cuda", compute_type="float16")
-        segments, info = model.transcribe(audio_path, beam_size=5)
+        segments, _info = model.transcribe(audio_path, beam_size=5)
 
         # Collect transcription
         command_text = " ".join([segment.text for segment in segments]).strip().lower()
@@ -719,7 +719,7 @@ async def _dual_stt_listener_background(
 
                         # PHASE 3: Google Cloud accurate transcription
                         logger.info("🎯 Dual STT: Transcribing command with Google Cloud (Whisper)...")
-                        segments, info = whisper_model.transcribe(str(temp_command_file), beam_size=5)
+                        segments, _info = whisper_model.transcribe(str(temp_command_file), beam_size=5)
                         command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                         if command_text:

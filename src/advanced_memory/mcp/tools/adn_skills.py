@@ -697,7 +697,7 @@ adn_skills(
     )
 
     # Parse frontmatter
-    frontmatter, body, parse_errors = parse_skill_frontmatter(content)
+    frontmatter, _body, parse_errors = parse_skill_frontmatter(content)
 
     # If no frontmatter, provide comprehensive repair suggestions
     if frontmatter is None:

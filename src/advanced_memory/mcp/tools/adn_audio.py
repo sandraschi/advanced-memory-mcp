@@ -223,7 +223,7 @@ async def _dictate_operation(
         logger.info(f"Transcribing audio: {audio_path}")
         # Use GPU (cuda) with float16 for maximum performance on 4090
         model = WhisperModel("base", device="cuda", compute_type="float16")
-        segments, info = model.transcribe(audio_path, beam_size=5)
+        segments, _info = model.transcribe(audio_path, beam_size=5)
 
         # Collect segments into a single string
         transcribed_text = " ".join([segment.text for segment in segments]).strip()
@@ -539,7 +539,7 @@ async def _listen_command_operation(active_project, audio_path: str | None, reco
     try:
         logger.info(f"Transcribing voice command: {audio_path}")
         model = WhisperModel("base", device="cuda", compute_type="float16")
-        segments, info = model.transcribe(audio_path, beam_size=5)
+        segments, _info = model.transcribe(audio_path, beam_size=5)
         command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
         if not command_text:
@@ -1718,7 +1718,7 @@ Then restart and try again!"""
                     sf.write(temp_audio, command_audio, sample_rate)
 
                     # Transcribe and execute
-                    segments, info = model.transcribe(str(temp_audio), beam_size=5)
+                    segments, _info = model.transcribe(str(temp_audio), beam_size=5)
                     command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                     if command_text:
@@ -1734,7 +1734,7 @@ Then restart and try again!"""
                 sf.write(temp_chunk_file, chunk, sample_rate)
 
                 # Quick transcription to check for wake word
-                segments, info = model.transcribe(str(temp_chunk_file), beam_size=5)
+                segments, _info = model.transcribe(str(temp_chunk_file), beam_size=5)
                 transcribed = " ".join([segment.text for segment in segments]).strip().lower()
 
                 if wake_word_lower in transcribed:
@@ -1925,7 +1925,7 @@ async def _wake_word_operation_background(
                     sf.write(temp_audio, command_audio, sample_rate)
 
                     # Transcribe and execute
-                    segments, info = model.transcribe(str(temp_audio), beam_size=5)
+                    segments, _info = model.transcribe(str(temp_audio), beam_size=5)
                     command_text = " ".join([segment.text for segment in segments]).strip().lower()
 
                     if command_text:
@@ -1944,7 +1944,7 @@ async def _wake_word_operation_background(
                 sf.write(temp_chunk_file, chunk, sample_rate)
 
                 # Quick transcription to check for wake word
-                segments, info = model.transcribe(str(temp_chunk_file), beam_size=5)
+                segments, _info = model.transcribe(str(temp_chunk_file), beam_size=5)
                 transcribed = " ".join([segment.text for segment in segments]).strip().lower()
 
                 if wake_word_lower in transcribed:

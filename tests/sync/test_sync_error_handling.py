@@ -136,7 +136,7 @@ async def test_sync_malformed_frontmatter_yaml(sync_service, config_home):
         f.write("This file has malformed frontmatter but valid content.\n")
 
     # Sync should handle gracefully (either parse with defaults or skip file)
-    entity, checksum = await sync_service.sync_file("bad_yaml.md", new=True)
+    _entity, _checksum = await sync_service.sync_file("bad_yaml.md", new=True)
 
     # File should either be created with default frontmatter or skipped
     # Either way, sync should not hang or crash

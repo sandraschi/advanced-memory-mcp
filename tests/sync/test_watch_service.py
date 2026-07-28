@@ -436,7 +436,7 @@ This is a test file in a directory
 
     # Check if our mock was called with any directory paths
     for call in mock_sync_file.call_args_list:
-        args, kwargs = call
+        args, _kwargs = call
         path = args[0]
         full_path = project_dir / path
         assert not full_path.is_dir(), f"sync_file should not be called with directory path: {path}"

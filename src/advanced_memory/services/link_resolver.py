@@ -37,7 +37,7 @@ class LinkResolver:
         logger.trace(f"Resolving link: {link_text}")
 
         # Clean link text and extract any alias
-        clean_text, alias = self._normalize_link_text(link_text)
+        clean_text, _alias = self._normalize_link_text(link_text)
 
         # 1. Try exact permalink match first (most efficient)
         entity = await self.entity_repository.get_by_permalink(clean_text)

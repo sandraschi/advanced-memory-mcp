@@ -310,7 +310,7 @@ async def _export_single_note(
             cwd=str(export_dir),
         )
 
-        stdout, stderr = await result.communicate()
+        _stdout, stderr = await result.communicate()
 
         # Clean up temporary file
         temp_md_path.unlink(missing_ok=True)

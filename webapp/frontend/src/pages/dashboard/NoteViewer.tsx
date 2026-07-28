@@ -17,7 +17,7 @@
   Share,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getApiBaseUrl } from "../../config/apiBase";
 import { devError } from "../../devConsole";
@@ -505,6 +505,46 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
   const handleNoteSelectRef = useRef(handleNoteSelect);
   handleNoteSelectRef.current = handleNoteSelect;
+
+  const selectedNoteIndex =
+    selectedNote != null ? filteredNotes.findIndex((n) => n.id === selectedNote.id) : -1;
+  const canGoPrevNote = selectedNoteIndex > 0;
+  const canGoNextNote =
+    selectedNoteIndex >= 0 && selectedNoteIndex < filteredNotes.length - 1;
+
+  const navigateNote = useCallback(
+    (delta: -1 | 1) => {
+      if (selectedNoteIndex < 0) {
+        return;
+      }
+      const target = filteredNotes[selectedNoteIndex + delta];
+      if (target) {
+        void handleNoteSelectRef.current(target);
+      }
+    },
+    [filteredNotes, selectedNoteIndex],
+  );
+
+  useEffect(() => {
+    if (!isFullscreen || !selectedNote) {
+      return;
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+        return;
+      }
+      if (e.key === "ArrowLeft" || e.key === "k") {
+        e.preventDefault();
+        navigateNote(-1);
+      } else if (e.key === "ArrowRight" || e.key === "j") {
+        e.preventDefault();
+        navigateNote(1);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isFullscreen, selectedNote, navigateNote]);
   /** ``project:decodedId`` so we re-open after vault project switch. */
   const lastUrlOpenKey = useRef<string | null>(null);
 
@@ -1174,6 +1214,40 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     )}
                   </div>
                   <div className="flex items-center space-x-2">
+                    {filteredNotes.length > 1 && selectedNoteIndex >= 0 && (
+                      <div
+                        className={`flex items-center gap-1 rounded-md border border-border ${
+                          isFullscreen ? "bg-muted/40 px-1" : ""
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => navigateNote(-1)}
+                          disabled={!canGoPrevNote}
+                          className="p-2 rounded-md hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                          title="Previous note (← or K)"
+                          aria-label="Previous note"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        <span
+                          className="text-xs text-muted-foreground tabular-nums px-1 min-w-[4.5rem] text-center"
+                          title="Position in filtered list"
+                        >
+                          {selectedNoteIndex + 1} / {filteredNotes.length}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => navigateNote(1)}
+                          disabled={!canGoNextNote}
+                          className="p-2 rounded-md hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                          title="Next note (→ or J)"
+                          aria-label="Next note"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
                     <button
                       onClick={() => setIsFullscreen(!isFullscreen)}
                       className="p-2 rounded-md hover:bg-accent/10 text-accent transition-colors border border-accent/20"

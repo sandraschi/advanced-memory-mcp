@@ -90,11 +90,12 @@ Some content""")
 
     # Mock the entire sync service to avoid database dependency
     with (
-        patch("advanced_memory.cli.commands.sync.SyncService") as mock_sync_service_class,
+        patch("advanced_memory.cli.commands.sync.get_sync_service", new_callable=AsyncMock) as mock_get_sync,
         patch("advanced_memory.cli.commands.sync.ProjectRepository") as mock_repo_class,
     ):
-        mock_sync_service = mock_sync_service_class.return_value
+        mock_sync_service = AsyncMock()
         mock_sync_service.sync = AsyncMock(return_value=SyncReport())
+        mock_get_sync.return_value = mock_sync_service
 
         mock_repo = mock_repo_class.return_value
         mock_repo.get_by_name = AsyncMock(return_value=test_project)

@@ -27,19 +27,19 @@ def test_open_file_or_folder_existing_file(tmp_path):
 
     if system == "Windows":
         with patch("os.startfile") as mock_start:
-            success, msg = open_file_or_folder(test_file)
+            success, _msg = open_file_or_folder(test_file)
 
             assert success is True
             assert mock_start.called
     elif system == "Darwin":
         with patch("subprocess.run") as mock_run:
-            success, msg = open_file_or_folder(test_file)
+            success, _msg = open_file_or_folder(test_file)
 
             assert success is True
             assert mock_run.called
     elif system == "Linux":
         with patch("subprocess.run") as mock_run:
-            success, msg = open_file_or_folder(test_file)
+            success, _msg = open_file_or_folder(test_file)
 
             assert success is True
             assert mock_run.called
@@ -54,19 +54,19 @@ def test_open_file_or_folder_existing_folder(tmp_path):
 
     if system == "Windows":
         with patch("os.startfile") as mock_start:
-            success, msg = open_file_or_folder(test_folder)
+            success, _msg = open_file_or_folder(test_folder)
 
             assert success is True
             assert mock_start.called
     elif system == "Darwin":
         with patch("subprocess.run") as mock_run:
-            success, msg = open_file_or_folder(test_folder)
+            success, _msg = open_file_or_folder(test_folder)
 
             assert success is True
             assert mock_run.called
     elif system == "Linux":
         with patch("subprocess.run") as mock_run:
-            success, msg = open_file_or_folder(test_folder)
+            success, _msg = open_file_or_folder(test_folder)
 
             assert success is True
             assert mock_run.called

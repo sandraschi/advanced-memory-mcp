@@ -76,7 +76,30 @@ python -m advanced_memory.mcp.server
 3. Restart Claude Desktop
 4. Check MCP server status
 
-### 2. Database Locked Errors
+### 2. Notes save via MCP but never appear in webapp (NSSM split-brain)
+
+**Platform:** Windows only — NSSM service running as `LocalSystem`.
+
+#### Symptoms
+
+- `adn_notes(write)` returns `success: true` but the note is missing in the webapp (port 10704)
+- Problem persists for days/weeks; restarting Cursor or Claude does not help
+- MCP may later return `attempt to write a readonly database` after a partial fix
+- Markdown file may exist under your user vault but `read` / search still fails (index out of sync)
+
+#### Cause
+
+NSSM backend and user-session webapp/MCP resolved **different** `Path.home()` → two `.advanced-memory` stores (often `systemprofile` vs `C:\Users\<you>`). Writes succeeded to the wrong store.
+
+#### Fix and full write-up
+
+See **[troubleshooting/BUG_REPORT_NSSM_SPLIT_BRAIN.md](troubleshooting/BUG_REPORT_NSSM_SPLIT_BRAIN.md)** — NSSM env pin, orphan recovery, HTTP daemon single-writer pattern, verification checklist.
+
+Fleet trap: [mcp-central-docs TRAPS_AND_PITFALLS §14](https://github.com/sandraschi/mcp-central-docs/blob/main/standards/TRAPS_AND_PITFALLS.md#14-nssm-services-run-as-localsystem-so-pathhome-silently-resolves-to-systemprofile---two-databases-zero-errors).
+
+Quick check: `adn_nav(operation="status")` — DB/vault paths must be under **your user profile**, not `systemprofile`.
+
+### 3. Database Locked Errors
 
 #### Symptoms
 ```
@@ -117,7 +140,7 @@ cp ~/.advanced-memory/memory.db ~/.advanced-memory/memory.db.backup
 sqlite3 ~/.advanced-memory/memory.db "PRAGMA integrity_check;"
 ```
 
-### 3. File Watcher Not Working
+### 4. File Watcher Not Working
 
 #### Symptoms
 - Files not auto-syncing
@@ -159,7 +182,7 @@ chmod -R 755 ~/Documents/notes
 }
 ```
 
-### 4. Import Failures
+### 5. Import Failures
 
 #### Symptoms
 - Import tools fail with errors
@@ -196,7 +219,7 @@ adn_import("obsidian",
     destination_folder="imported/obsidian")
 ```
 
-### 5. Search Not Working
+### 6. Search Not Working
 
 #### Symptoms
 - Search returns no results
@@ -232,7 +255,7 @@ rm ~/.advanced-memory/search_cache.db
 advanced-memory sync
 ```
 
-### 6. Export Failures
+### 7. Export Failures
 
 #### Symptoms
 - Export tools fail
@@ -267,7 +290,7 @@ pip install pandoc
 adn_export("html", export_path="~/export")
 ```
 
-### 7. Project Management Issues
+### 8. Project Management Issues
 
 #### Symptoms
 - Can't create projects

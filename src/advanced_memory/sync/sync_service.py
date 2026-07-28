@@ -255,7 +255,7 @@ class SyncService:
         # then new and modified
         for path in report.new:
             try:
-                entity, checksum = await self.sync_file(path, new=True)
+                entity, _checksum = await self.sync_file(path, new=True)
                 if entity is None:
                     logger.warning(f"Skipped new file due to errors: {path}")
             except Exception as e:  # pragma: no cover
@@ -272,7 +272,7 @@ class SyncService:
 
         for path in report.modified:
             try:
-                entity, checksum = await self.sync_file(path, new=False)
+                entity, _checksum = await self.sync_file(path, new=False)
                 if entity is None:
                     logger.warning(f"Skipped modified file due to errors: {path}")
             except Exception as e:  # pragma: no cover

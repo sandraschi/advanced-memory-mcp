@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
 
 from typer.testing import CliRunner
 
@@ -47,9 +47,10 @@ def test_info_stats():
     )
 
     # Mock the async project_info function
-    with patch("advanced_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock) as mock_func:
-        mock_func.return_value = mock_info
+    async def _mock_project_info():
+        return mock_info
 
+    with patch("advanced_memory.cli.commands.project.project_info", _mock_project_info):
         # Run the command
         result = runner.invoke(cli_app, ["project", "info"])
 
@@ -94,9 +95,10 @@ def test_info_stats_json():
     )
 
     # Mock the async project_info function
-    with patch("advanced_memory.cli.commands.project.project_info.fn", new_callable=AsyncMock) as mock_func:
-        mock_func.return_value = mock_info
+    async def _mock_project_info():
+        return mock_info
 
+    with patch("advanced_memory.cli.commands.project.project_info", _mock_project_info):
         # Run the command with --json flag
         result = runner.invoke(cli_app, ["project", "info", "--json"])
 

@@ -38,7 +38,7 @@ async def setup_test_note(entity_service, search_service) -> AsyncGenerator[dict
         - connects_to [[Another Note]]
     """)
 
-    entity, created = await entity_service.create_or_update_entity(
+    entity, _created = await entity_service.create_or_update_entity(
         EntitySchema(
             title="Test Note",
             folder="test",

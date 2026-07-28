@@ -96,7 +96,7 @@ async def test_project(config_home, engine_factory) -> Project:
         "is_default": True,
     }
 
-    engine, session_maker = engine_factory
+    _engine, session_maker = engine_factory
     project_repository = ProjectRepository(session_maker)
     project = await project_repository.create(project_data)
     return project
@@ -184,7 +184,7 @@ async def search_service(engine_factory, test_project):
     from advanced_memory.services.file_service import FileService
     from advanced_memory.services.search_service import SearchService
 
-    engine, session_maker = engine_factory
+    _engine, session_maker = engine_factory
 
     # Create repositories
     search_repository = SearchRepository(session_maker, project_id=test_project.id)

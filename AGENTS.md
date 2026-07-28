@@ -28,6 +28,8 @@ This server owns persistent state (SQLite database, LanceDB vector index). To pr
 1. Start the HTTP daemon (owns DB): `python -m advanced_memory.cli.main mcp --transport streamable-http --host 127.0.0.1 --port 10732`
 2. Stdio clients (Claude Desktop, opencode, Cursor) probe `http://127.0.0.1:10732/mcp` on startup
 3. If the daemon is alive, the stdio instance becomes a lightweight proxy via `create_proxy()` — zero DB initialization
+
+**Windows NSSM trap:** if the NSSM service runs as LocalSystem without pinned `USERPROFILE`, MCP writes can succeed while the webapp shows nothing — see [docs/troubleshooting/BUG_REPORT_NSSM_SPLIT_BRAIN.md](docs/troubleshooting/BUG_REPORT_NSSM_SPLIT_BRAIN.md).
 4. If unreachable, starts normally as a standalone server
 
 **Env var** to override the probe URL: `ADVANCED_MEMORY_HTTP_PROXY` (default: `http://127.0.0.1:10732/mcp`)

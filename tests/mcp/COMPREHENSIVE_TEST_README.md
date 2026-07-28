@@ -148,7 +148,7 @@ adn_content(
     edit_operation="find_replace",
     find_text="json",
     content="jason",
-    expected_replacements=2  # Must match actual count
+    expected_replacements=2,  # Must match actual count
 )
 ```
 

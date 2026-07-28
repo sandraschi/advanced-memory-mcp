@@ -49,7 +49,7 @@ async def test_create_entity(entity_service: EntityService, file_service: FileSe
     assert await file_service.exists(file_path)
 
     file_content, _ = await file_service.read_file(file_path)
-    _, frontmatter, doc_content = file_content.split("---", 2)
+    _, frontmatter, _doc_content = file_content.split("---", 2)
     metadata = yaml.safe_load(frontmatter)
 
     # Verify frontmatter contents
@@ -118,7 +118,7 @@ async def test_create_entity_unique_permalink(
 
     file_path = file_service.get_entity_path(entity2)
     file_content, _ = await file_service.read_file(file_path)
-    _, frontmatter, doc_content = file_content.split("---", 2)
+    _, frontmatter, _doc_content = file_content.split("---", 2)
     metadata = yaml.safe_load(frontmatter)
 
     # Verify frontmatter contents

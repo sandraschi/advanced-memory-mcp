@@ -944,8 +944,8 @@ async def test_sync_non_markdown_files_modified(sync_service, project_config, te
     report = await sync_service.sync(project_config.home)
     assert len(report.modified) == 2
 
-    pdf_file_content, pdf_checksum = await file_service.read_file(test_files["pdf"].name)
-    image_file_content, img_checksum = await file_service.read_file(test_files["image"].name)
+    _pdf_file_content, pdf_checksum = await file_service.read_file(test_files["pdf"].name)
+    _image_file_content, img_checksum = await file_service.read_file(test_files["image"].name)
 
     pdf_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["pdf"].name))
     image_entity = await sync_service.entity_repository.get_by_file_path(str(test_files["image"].name))
@@ -1130,7 +1130,7 @@ This is a test file for race condition handling.
         patch.object(sync_service.entity_repository, "update", side_effect=mock_update) as mock_update_call,
     ):
         # Call sync_regular_file
-        entity, checksum = await sync_service.sync_regular_file(
+        entity, _checksum = await sync_service.sync_regular_file(
             str(test_file.relative_to(project_config.home)), new=True
         )
 
@@ -1169,7 +1169,7 @@ This is a test file for integrity error handling.
 
     with patch.object(sync_service.entity_repository, "add", side_effect=mock_add):
         # Should re-raise the IntegrityError since it's not a file_path constraint
-        with pytest.raises(IntegrityError, match="UNIQUE constraint failed: entity.some_other_field"):
+        with pytest.raises(IntegrityError, match=r"UNIQUE constraint failed: entity.some_other_field"):
             await sync_service.sync_regular_file(str(test_file.relative_to(project_config.home)), new=True)
 
 

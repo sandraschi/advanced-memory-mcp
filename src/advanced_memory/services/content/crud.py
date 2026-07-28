@@ -81,7 +81,7 @@ async def write_note(
         logger.info(f"Detected skills folder: {folder}. Auto-generating skill frontmatter if needed.")
 
         # Check if content already has frontmatter
-        fm, body, errors = parse_skill_frontmatter(content)
+        fm, _body, _errors = parse_skill_frontmatter(content)
 
         if fm is None:
             # No frontmatter found - auto-generate it

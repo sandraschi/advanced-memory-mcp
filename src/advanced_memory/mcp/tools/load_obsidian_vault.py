@@ -247,7 +247,7 @@ async def _process_vault_import(
             content = file_path.read_text(encoding="utf-8")
 
             # Extract and process frontmatter
-            frontmatter, body = _parse_frontmatter(content)
+            _frontmatter, body = _parse_frontmatter(content)
 
             # Convert wikilinks if requested
             link_conversions = 0

@@ -110,7 +110,7 @@ def config_home(tmp_path, monkeypatch) -> Path:
 def app_config(config_home, tmp_path, monkeypatch) -> AdvancedMemoryConfig:
     """Create test app configuration."""
     # Create a basic config without depending on test_project to avoid circular dependency
-    projects = {"test-project": str(config_home)}
+    projects = {"test-project": str(config_home / ".advanced-memory" / "vault")}
     app_config = AdvancedMemoryConfig(
         env="test",
         projects=projects,
@@ -234,7 +234,7 @@ async def test_project(config_home, engine_factory) -> Project:
     project_data = {
         "name": "test-project",
         "description": "Project used as context for tests",
-        "path": str(config_home),
+        "path": str(config_home / ".advanced-memory" / "vault"),
         "is_active": True,
         "is_default": True,  # Explicitly set as the default project
     }

@@ -154,7 +154,9 @@ await adn_export(operation="pandoc", format_type="pdf", source_folder="docs/arch
 
 ```python
 # Friendly alias call (works)
-await adn_content(operation="create note", identifier="Release Checklist", tags=["release","checklist"], content="...")  # maps to write
+await adn_content(
+    operation="create note", identifier="Release Checklist", tags=["release", "checklist"], content="..."
+)  # maps to write
 
 # Bad alias (typo) – handle the structured error
 try:
@@ -396,16 +398,12 @@ Details about different Tokyo neighborhoods and their unique characteristics.
 {relations_section}
     """
 
-    result = await write_note(
-        title="Tokyo Neighborhood Guide",
-        content=content,
-        verbose=True
-    )
+    result = await write_note(title="Tokyo Neighborhood Guide", content=content, verbose=True)
 
     # You can check which relations were resolved and which are forward references
-    if result and 'relations' in result:
-        resolved = [r['to_name'] for r in result['relations'] if r.get('target_id')]
-        forward_refs = [r['to_name'] for r in result['relations'] if not r.get('target_id')]
+    if result and "relations" in result:
+        resolved = [r["to_name"] for r in result["relations"] if r.get("target_id")]
+        forward_refs = [r["to_name"] for r in result["relations"] if not r.get("target_id")]
 
         print(f"Resolved relations: {resolved}")
         print(f"Forward references that will be resolved later: {forward_refs}")
@@ -432,9 +430,9 @@ Common issues to watch for:
    response = await write_note(..., verbose=True)
    # Check for forward references (unresolved relations)
    forward_refs = []
-   for relation in response.get('relations', []):
-       if not relation.get('target_id'):
-           forward_refs.append(relation.get('to_name'))
+   for relation in response.get("relations", []):
+       if not relation.get("target_id"):
+           forward_refs.append(relation.get("to_name"))
 
    if forward_refs:
        # This is a feature, not an error! Inform the user about forward references

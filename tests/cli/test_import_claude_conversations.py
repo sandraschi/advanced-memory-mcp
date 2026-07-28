@@ -85,7 +85,6 @@ def test_import_conversations_with_custom_folder(tmp_path, sample_conversations_
     """Test import with custom conversations folder."""
     # Set up test environment
     config = get_project_config()
-    config.home = tmp_path
     conversations_folder = "chats"
 
     # Run import
@@ -103,7 +102,7 @@ def test_import_conversations_with_custom_folder(tmp_path, sample_conversations_
     assert result.exit_code == 0
 
     # Check files in custom folder
-    conv_path = tmp_path / conversations_folder / "20250105-Test_Conversation.md"
+    conv_path = config.home / conversations_folder / "20250105-Test_Conversation.md"
     assert conv_path.exists()
 
 
@@ -132,15 +131,13 @@ def test_import_conversation_with_attachments(tmp_path):
         json.dump([conversation], f)
 
     config = get_project_config()
-    # Set up environment
-    config.home = tmp_path
 
     # Run import
     result = runner.invoke(app, ["import", "claude", "conversations", str(json_file)])
     assert result.exit_code == 0
 
     # Check attachment formatting
-    conv_path = tmp_path / "conversations/20250105-Test_With_Attachments.md"
+    conv_path = config.home / "conversations/20250105-Test_With_Attachments.md"
     content = conv_path.read_text(encoding="utf-8")
     assert "**Attachment: test.txt**" in content
     assert "```" in content

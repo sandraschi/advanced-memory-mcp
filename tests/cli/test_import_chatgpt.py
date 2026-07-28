@@ -178,7 +178,6 @@ def test_import_chatgpt_with_custom_folder(tmp_path, sample_chatgpt_json, monkey
     # Set up test environment
 
     config = get_project_config()
-    config.home = tmp_path
     conversations_folder = "chats"
 
     # Run import
@@ -195,5 +194,5 @@ def test_import_chatgpt_with_custom_folder(tmp_path, sample_chatgpt_json, monkey
     assert result.exit_code == 0
 
     # Check files in custom folder
-    conv_path = tmp_path / conversations_folder / "20250111-Test_Conversation.md"
+    conv_path = config.home / conversations_folder / "20250111-Test_Conversation.md"
     assert conv_path.exists()

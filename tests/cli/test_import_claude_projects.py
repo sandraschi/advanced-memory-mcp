@@ -58,10 +58,6 @@ def test_import_projects_command_file_not_found(tmp_path):
 
 def test_import_projects_command_success(tmp_path, sample_projects_json, monkeypatch):
     """Test successful project import via command."""
-    # Set up test environment
-    config = get_project_config()
-    config.home = tmp_path
-
     # Run import
     result = runner.invoke(app, ["import", "claude", "projects", str(sample_projects_json)])
     assert result.exit_code == 0
@@ -85,7 +81,6 @@ def test_import_projects_with_base_folder(tmp_path, sample_projects_json, monkey
     """Test import with custom base folder."""
     # Set up test environment
     config = get_project_config()
-    config.home = tmp_path
     base_folder = "claude-exports"
 
     # Run import
@@ -103,7 +98,7 @@ def test_import_projects_with_base_folder(tmp_path, sample_projects_json, monkey
     assert result.exit_code == 0
 
     # Check files in base folder
-    project_dir = tmp_path / base_folder / "Test_Project"
+    project_dir = config.home / base_folder / "Test_Project"
     assert project_dir.exists()
     assert (project_dir / "docs").exists()
     assert (project_dir / "prompt-template.md").exists()
@@ -130,10 +125,6 @@ def test_import_project_without_prompt(tmp_path):
     json_file = tmp_path / "no_prompt.json"
     with open(json_file, "w", encoding="utf-8") as f:
         json.dump([project], f)
-
-    # Set up environment
-    config = get_project_config()
-    config.home = tmp_path
 
     # Run import
     result = runner.invoke(app, ["import", "claude", "projects", str(json_file)])

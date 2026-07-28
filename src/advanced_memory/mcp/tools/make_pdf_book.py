@@ -333,7 +333,7 @@ async def _generate_pdf_book(book_md_path: Path, pdf_path: Path, toc_depth: int,
             *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
-        stdout, stderr = await result.communicate()
+        _stdout, stderr = await result.communicate()
 
         if result.returncode == 0:
             return True

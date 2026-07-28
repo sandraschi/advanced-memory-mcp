@@ -224,7 +224,7 @@ async def test_delete_entities_by_type(entity_repository: EntityRepository, samp
 @pytest.mark.asyncio
 async def test_delete_entity_with_relations(entity_repository: EntityRepository, related_results):
     """Test deleting an entity cascades to its relations."""
-    source, target, relation = related_results
+    source, target, _relation = related_results
 
     # Delete source entity
     result = await entity_repository.delete(source.id)

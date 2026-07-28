@@ -501,7 +501,7 @@ import_from_archive("{archive_path}")
 
                 # Open the parent folder containing the archive
                 archive_parent = Path(archive_path).parent
-                success, msg = open_file_or_folder(archive_parent)
+                _success, _msg = open_file_or_folder(archive_parent)
                 summary += f"\n\n## 🚀 Opened Archive Location\n\n✅ Opened folder in file explorer: {archive_parent}"
 
             return summary
