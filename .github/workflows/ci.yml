@@ -1,4 +1,4 @@
-# Windows-only lightweight CI (fleet standard)
+# Fleet: mcp-central-docs/templates/ci.yml.template (repaired)
 name: CI
 
 on:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   check:
-    name: Lint and Test (Windows)
+    name: Lint & Test (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,8 +26,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: webapp/frontend/package-lock.json
       - name: Install Python dependencies
-        run: uv sync --group dev
+        run: uv sync --extra dev --group dev
 
       - name: Ruff check
         run: uv run ruff check src tests
@@ -36,4 +42,11 @@ jobs:
         run: uv run ruff format --check src tests
 
       - name: Pytest
-        run: uv run pytest -q --tb=short tests/test_all_portmanteau_tools.py tests/test_config.py
+        run: uv run python -m pytest tests/ -q --tb=short --no-cov
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: webapp/frontend
+      - name: Biome check
+        run: npm run biome:ci
+        working-directory: webapp/frontend
