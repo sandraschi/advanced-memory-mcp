@@ -94,7 +94,7 @@ foreach ($paper in $papers) {
         $metadataPath = $outputPath -replace '\.pdf$', '.json'
         $metadata | Out-File -FilePath $metadataPath -Encoding utf8
 
-        Write-Host "âœ“ Downloaded: $($paper.title)" -ForegroundColor Green
+        Write-Host "âœ" Downloaded: $($paper.title)" -ForegroundColor Green
     } catch {
         Write-Host "âœ- Error downloading $($paper.title): $_" -ForegroundColor Red
     }

@@ -14,7 +14,7 @@ function Download-Paper {
         $webClient = New-Object System.Net.WebClient
         $webClient.DownloadFile($url, $outputPath)
         if (Test-Path $outputPath) {
-            Write-Host "âœ“ Successfully downloaded $paperName" -ForegroundColor Green
+            Write-Host "âœ" Successfully downloaded $paperName" -ForegroundColor Green
             return $true
         } else {
             Write-Host "âœ- Failed to download $paperName" -ForegroundColor Red

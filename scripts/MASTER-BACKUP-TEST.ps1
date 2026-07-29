@@ -85,13 +85,13 @@ foreach ($target in $targets) {
                 $latest = $zips | Select-Object -First 1
                 $age = (Get-Date) - $latest.LastWriteTime
 
-                Write-MasterLog "    âœ“ Backup found: $($latest.Name)" "SUCCESS"
+                Write-MasterLog "    âœ" Backup found: $($latest.Name)" "SUCCESS"
                 Write-MasterLog "      Size: $([math]::Round($latest.Length/1MB, 2)) MB" "INFO"
                 Write-MasterLog "      Created: $($latest.LastWriteTime)" "INFO"
                 Write-MasterLog "      Age: $([math]::Round($age.TotalMinutes, 1)) minutes" "INFO"
 
                 if ($age.TotalMinutes -lt 10) {
-                    Write-MasterLog "      âœ“ Recently created!" "SUCCESS"
+                    Write-MasterLog "      âœ" Recently created!" "SUCCESS"
                     $backupFound = $true
                 } else {
                     Write-MasterLog "      âš  May be old backup" "WARN"
@@ -114,7 +114,7 @@ Write-MasterLog "FINAL SUMMARY" "INFO"
 Write-MasterLog "========================================" "INFO"
 
 if ($backupFound) {
-    Write-MasterLog "RESULT: âœ“ BACKUP SUCCESSFUL" "SUCCESS"
+    Write-MasterLog "RESULT: âœ" BACKUP SUCCESSFUL" "SUCCESS"
     Write-MasterLog "  Backup files were created successfully" "SUCCESS"
 } else {
     Write-MasterLog "RESULT: âœ- BACKUP FAILED" "ERROR"

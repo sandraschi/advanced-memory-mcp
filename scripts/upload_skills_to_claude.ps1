@@ -11,8 +11,8 @@
     .\scripts\upload_skills_to_claude.ps1
 #>
 
-Write-Host "`nâ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Magenta
-Write-Host "â•‘     ðŸ¤- CLAUDE SKILLS UPLOAD AUTOMATION ðŸ¤-              â•‘" -ForegroundColor Magenta
+Write-Host "`nâ•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Magenta
+Write-Host "â•'     ðŸ¤- CLAUDE SKILLS UPLOAD AUTOMATION ðŸ¤-              â•'" -ForegroundColor Magenta
 Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
 
 # Check for skill ZIPs
@@ -24,10 +24,10 @@ if (-not (Test-Path $zipDir)) {
 }
 
 $zips = Get-ChildItem $zipDir -Filter "*.zip"
-Write-Host "ðŸ“¦ Found $($zips.Count) skill ZIPs to upload`n" -ForegroundColor Cyan
+Write-Host "ðŸ"¦ Found $($zips.Count) skill ZIPs to upload`n" -ForegroundColor Cyan
 
 # Manual instructions (automation is complex)
-Write-Host "ðŸ“‹ MANUAL UPLOAD PROCESS:" -ForegroundColor Yellow
+Write-Host "ðŸ"‹ MANUAL UPLOAD PROCESS:" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "1. Open browser: https://claude.ai/settings/capabilities" -ForegroundColor White
 Write-Host "2. Click 'Add Skill' or 'Upload Skill' button" -ForegroundColor White
@@ -42,7 +42,7 @@ Write-Host "   - Drag & drop all ZIPs into upload area" -ForegroundColor White
 Write-Host ""
 
 # Open the directory for easy access
-Write-Host "ðŸ“ Opening skill-zips directory..." -ForegroundColor Cyan
+Write-Host "ðŸ" Opening skill-zips directory..." -ForegroundColor Cyan
 Start-Process explorer.exe -ArgumentList (Get-Item $zipDir).FullName
 
 # Open Claude capabilities page
@@ -50,17 +50,17 @@ Write-Host "ðŸŒ Opening Claude.ai capabilities page..." -ForegroundColor Cy
 Start-Process "https://claude.ai/settings/capabilities"
 
 Write-Host ""
-Write-Host "âœ… Directory and webpage opened!" -ForegroundColor Green
+Write-Host "âœ... Directory and webpage opened!" -ForegroundColor Green
 Write-Host ""
-Write-Host "ðŸ’¡ TIP: Upload in batches (10-20 at a time) to avoid timeouts" -ForegroundColor Cyan
+Write-Host "ðŸ'¡ TIP: Upload in batches (10-20 at a time) to avoid timeouts" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "ðŸ“Š Progress tracker:" -ForegroundColor Yellow
+Write-Host "ðŸ"Š Progress tracker:" -ForegroundColor Yellow
 Write-Host "   Total skills: $($zips.Count)" -ForegroundColor White
 Write-Host "   Uploaded: [ ] / $($zips.Count)" -ForegroundColor White
 Write-Host ""
 
 # List all ZIPs for reference
-Write-Host "ðŸ“‹ Skills to upload:" -ForegroundColor Cyan
+Write-Host "ðŸ"‹ Skills to upload:" -ForegroundColor Cyan
 $zips | ForEach-Object { Write-Host "   - $($_.Name)" -ForegroundColor Gray }
 
 Write-Host ""

@@ -31,7 +31,7 @@ foreach ($target in $targets) {
                 $age = ((Get-Date) - $latest.LastWriteTime).TotalMinutes
                 $totalBackups += $zips.Count
 
-                Write-Host "  âœ“ BACKUP FOUND!" -ForegroundColor Green
+                Write-Host "  âœ" BACKUP FOUND!" -ForegroundColor Green
                 Write-Host "    File: $($latest.Name)" -ForegroundColor Cyan
                 Write-Host "    Size: $([math]::Round($latest.Length/1MB, 2)) MB" -ForegroundColor White
                 Write-Host "    Created: $($latest.LastWriteTime)" -ForegroundColor White
@@ -75,7 +75,7 @@ if ($foundBackups.Count -gt 0) {
     $recentBackups = $foundBackups | Where-Object { $_.Recent -eq $true }
 
     if ($recentBackups.Count -gt 0) {
-        Write-Host "âœ“ SUCCESS: Recent backups created!" -ForegroundColor Green
+        Write-Host "âœ" SUCCESS: Recent backups created!" -ForegroundColor Green
         Write-Host ""
         Write-Host "Recent backups ($($recentBackups.Count) location(s)):" -ForegroundColor Green
         foreach ($backup in $recentBackups) {

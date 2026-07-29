@@ -44,13 +44,13 @@ if (-not (Test-Path $scriptPath)) {
     Write-ExecutionLog "ERROR: Backup script not found at $scriptPath" "ERROR"
     exit 1
 }
-Write-ExecutionLog "  âœ“ Backup script found: $scriptPath" "SUCCESS"
+Write-ExecutionLog "  âœ" Backup script found: $scriptPath" "SUCCESS"
 
 # Check .NET assemblies
 try {
     Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction Stop
     Add-Type -AssemblyName System.Security.Cryptography -ErrorAction Stop
-    Write-ExecutionLog "  âœ“ .NET assemblies loaded" "SUCCESS"
+    Write-ExecutionLog "  âœ" .NET assemblies loaded" "SUCCESS"
 }
 catch {
     Write-ExecutionLog "  âœ- Failed to load .NET assemblies: $_" "ERROR"
@@ -73,7 +73,7 @@ foreach ($target in $targets) {
     if ($target.Path) {
         $parentDir = Split-Path $target.Path -Parent
         if (Test-Path $parentDir -ErrorAction SilentlyContinue) {
-            Write-ExecutionLog "  âœ“ $($target.Name): Accessible" "SUCCESS"
+            Write-ExecutionLog "  âœ" $($target.Name): Accessible" "SUCCESS"
             $accessible++
         } else {
             Write-ExecutionLog "  âœ- $($target.Name): Not accessible ($parentDir)" "WARN"
@@ -152,14 +152,14 @@ foreach ($target in $targets) {
                 $latest = $zips | Select-Object -First 1
                 $backupFound = $true
 
-                Write-ExecutionLog "  âœ“ Backup found: $($latest.Name)" "SUCCESS"
+                Write-ExecutionLog "  âœ" Backup found: $($latest.Name)" "SUCCESS"
                 Write-ExecutionLog "    Size: $([math]::Round($latest.Length/1MB, 2)) MB" "INFO"
                 Write-ExecutionLog "    Date: $($latest.LastWriteTime)" "INFO"
 
                 # Check if created in last 5 minutes
                 $ageMinutes = ((Get-Date) - $latest.LastWriteTime).TotalMinutes
                 if ($ageMinutes -lt 5) {
-                    Write-ExecutionLog "    âœ“ Created recently ($([math]::Round($ageMinutes, 1)) minutes ago)" "SUCCESS"
+                    Write-ExecutionLog "    âœ" Created recently ($([math]::Round($ageMinutes, 1)) minutes ago)" "SUCCESS"
                 } else {
                     Write-ExecutionLog "    âš  Created $([math]::Round($ageMinutes, 1)) minutes ago (may be old)" "WARN"
                 }
@@ -176,7 +176,7 @@ foreach ($target in $targets) {
 Write-ExecutionLog ""
 Write-ExecutionLog "=== SUMMARY ===" "INFO"
 if ($backupFound) {
-    Write-ExecutionLog "âœ“ BACKUP SUCCESSFUL - Files created" "SUCCESS"
+    Write-ExecutionLog "âœ" BACKUP SUCCESSFUL - Files created" "SUCCESS"
 } else {
     Write-ExecutionLog "âœ- BACKUP FAILED - No files created" "ERROR"
     Write-ExecutionLog "Check error log: $script:ErrorLog" "ERROR"

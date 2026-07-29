@@ -1,4 +1,4 @@
-# Venv python for RAG — avoids `uv run` re-syncing CPU deps over GPU install.
+# Venv python for RAG - avoids `uv run` re-syncing CPU deps over GPU install.
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $venvPython = Join-Path $repoRoot ".venv\Scripts\python.exe"
 if (-not (Test-Path $venvPython)) {

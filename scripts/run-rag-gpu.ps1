@@ -1,4 +1,4 @@
-# Full RAG reindex on GPU — venv python (not uv run).
+# Full RAG reindex on GPU - venv python (not uv run).
 $ErrorActionPreference = "Stop"
 $RepoRoot = Split-Path $PSScriptRoot -Parent
 Set-Location $RepoRoot

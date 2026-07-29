@@ -19,8 +19,8 @@ param(
     [int]$BatchSize = 10
 )
 
-Write-Host "`nâ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Magenta
-Write-Host "â•‘     ðŸ¤- AUTOMATED CLAUDE SKILLS UPLOADER ðŸ¤-             â•‘" -ForegroundColor Magenta
+Write-Host "`nâ•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Magenta
+Write-Host "â•'     ðŸ¤- AUTOMATED CLAUDE SKILLS UPLOADER ðŸ¤-             â•'" -ForegroundColor Magenta
 Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
 
 # Check prerequisites
@@ -31,7 +31,7 @@ if (-not (Test-Path $zipDir)) {
 }
 
 $zips = Get-ChildItem $zipDir -Filter "*.zip" | Sort-Object Name
-Write-Host "ðŸ“¦ Found $($zips.Count) skill ZIPs`n" -ForegroundColor Cyan
+Write-Host "ðŸ"¦ Found $($zips.Count) skill ZIPs`n" -ForegroundColor Cyan
 
 # Check if Selenium module is available
 $seleniumAvailable = $null -ne (Get-Module -ListAvailable -Name Selenium)
@@ -39,15 +39,15 @@ $seleniumAvailable = $null -ne (Get-Module -ListAvailable -Name Selenium)
 if (-not $seleniumAvailable) {
     Write-Host "âš ï¸  Selenium module not installed" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "ðŸ“‹ OPTION 1: Install Selenium for Full Automation" -ForegroundColor Cyan
+    Write-Host "ðŸ"‹ OPTION 1: Install Selenium for Full Automation" -ForegroundColor Cyan
     Write-Host "   Install-Module -Name Selenium -Scope CurrentUser" -ForegroundColor Gray
     Write-Host "   Then run this script again" -ForegroundColor Gray
     Write-Host ""
-    Write-Host "ðŸ“‹ OPTION 2: Manual Upload (Recommended - Easier!)" -ForegroundColor Cyan
+    Write-Host "ðŸ"‹ OPTION 2: Manual Upload (Recommended - Easier!)" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "   1. I'll open the browser and folder" -ForegroundColor White
     Write-Host "   2. Login to Claude.ai if needed" -ForegroundColor White
-    Write-Host "   3. Go to Settings â†’ Capabilities" -ForegroundColor White
+    Write-Host "   3. Go to Settings â†' Capabilities" -ForegroundColor White
     Write-Host "   4. Drag & drop ZIPs from folder (10-20 at a time)" -ForegroundColor White
     Write-Host ""
 
@@ -58,7 +58,7 @@ if (-not $seleniumAvailable) {
     }
 
     # Manual process
-    Write-Host "`nðŸ“ Opening skill-zips directory..." -ForegroundColor Cyan
+    Write-Host "`nðŸ" Opening skill-zips directory..." -ForegroundColor Cyan
     Start-Process explorer.exe -ArgumentList (Get-Item $zipDir).FullName
 
     Start-Sleep -Seconds 2
@@ -67,29 +67,29 @@ if (-not $seleniumAvailable) {
     Start-Process "https://claude.ai/settings/capabilities"
 
     Write-Host ""
-    Write-Host "âœ… Ready for manual upload!" -ForegroundColor Green
+    Write-Host "âœ... Ready for manual upload!" -ForegroundColor Green
     Write-Host ""
-    Write-Host "ðŸ“‹ Skills to upload ($($zips.Count) total):" -ForegroundColor Cyan
+    Write-Host "ðŸ"‹ Skills to upload ($($zips.Count) total):" -ForegroundColor Cyan
 
     $i = 0
     $zips | ForEach-Object {
         $i++
         Write-Host "  $($i.ToString().PadLeft(3)). $($_.Name)" -ForegroundColor Gray
         if ($i % $BatchSize -eq 0) {
-            Write-Host "  â”€â”€â”€â”€â”€â”€â”€ Batch $([math]::Ceiling($i / $BatchSize)) complete â”€â”€â”€â”€â”€â”€â”€" -ForegroundColor Yellow
+            Write-Host "  â"€â"€â"€â"€â"€â"€â"€ Batch $([math]::Ceiling($i / $BatchSize)) complete â"€â"€â"€â"€â"€â"€â"€" -ForegroundColor Yellow
         }
     }
 
     Write-Host ""
-    Write-Host "ðŸ’¡ TIP: Select multiple ZIPs (Ctrl+Click) and upload as batch!" -ForegroundColor Cyan
-    Write-Host "ðŸ’¡ Recommended: $BatchSize skills per batch to avoid timeouts" -ForegroundColor Cyan
+    Write-Host "ðŸ'¡ TIP: Select multiple ZIPs (Ctrl+Click) and upload as batch!" -ForegroundColor Cyan
+    Write-Host "ðŸ'¡ Recommended: $BatchSize skills per batch to avoid timeouts" -ForegroundColor Cyan
     Write-Host ""
 
     exit 0
 }
 
 # FULL AUTOMATION with Selenium (if module is installed)
-Write-Host "âœ… Selenium module found - attempting full automation" -ForegroundColor Green
+Write-Host "âœ... Selenium module found - attempting full automation" -ForegroundColor Green
 Write-Host ""
 
 try {
@@ -98,7 +98,7 @@ try {
     Write-Host "ðŸŒ Starting Chrome browser..." -ForegroundColor Cyan
     $driver = Start-SeChrome -Quiet
 
-    Write-Host "ðŸ“ Navigating to Claude.ai capabilities..." -ForegroundColor Cyan
+    Write-Host "ðŸ" Navigating to Claude.ai capabilities..." -ForegroundColor Cyan
     Enter-SeUrl -Driver $driver -Url "https://claude.ai/settings/capabilities"
 
     Write-Host ""
@@ -127,7 +127,7 @@ try {
             Start-Sleep -Seconds 3
 
             $uploaded++
-            Write-Host "  âœ… Uploaded successfully" -ForegroundColor Green
+            Write-Host "  âœ... Uploaded successfully" -ForegroundColor Green
 
             # Pause between uploads to avoid rate limiting
             if ($uploaded % $BatchSize -eq 0) {
@@ -142,17 +142,17 @@ try {
     }
 
     Write-Host ""
-    Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
-    Write-Host "â•‘          ðŸ“Š UPLOAD COMPLETE! ðŸ“Š                        â•‘" -ForegroundColor Green
+    Write-Host "â•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+    Write-Host "â•'          ðŸ"Š UPLOAD COMPLETE! ðŸ"Š                        â•'" -ForegroundColor Green
     Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•" -ForegroundColor Green
     Write-Host ""
-    Write-Host "âœ… Uploaded: $uploaded" -ForegroundColor Green
+    Write-Host "âœ... Uploaded: $uploaded" -ForegroundColor Green
     Write-Host "âŒ Failed:   $failed" -ForegroundColor Red
-    Write-Host "ðŸ“Š Total:    $($zips.Count)" -ForegroundColor Cyan
+    Write-Host "ðŸ"Š Total:    $($zips.Count)" -ForegroundColor Cyan
     Write-Host ""
 
     # Keep browser open for verification
-    Write-Host "ðŸ’¡ Browser left open - verify uploads in Claude.ai" -ForegroundColor Cyan
+    Write-Host "ðŸ'¡ Browser left open - verify uploads in Claude.ai" -ForegroundColor Cyan
     Write-Host "   Press Enter to close browser..." -ForegroundColor Gray
     Read-Host
 
@@ -162,7 +162,7 @@ try {
     Write-Host ""
     Write-Host "âŒ Automation failed: $_" -ForegroundColor Red
     Write-Host ""
-    Write-Host "ðŸ’¡ Falling back to manual process..." -ForegroundColor Yellow
+    Write-Host "ðŸ'¡ Falling back to manual process..." -ForegroundColor Yellow
     Write-Host ""
 
     # Clean up
@@ -174,8 +174,8 @@ try {
     Start-Process explorer.exe -ArgumentList (Get-Item $zipDir).FullName
     Start-Process "https://claude.ai/settings/capabilities"
 
-    Write-Host "ðŸ“ Opened folder and browser for manual upload" -ForegroundColor Cyan
+    Write-Host "ðŸ" Opened folder and browser for manual upload" -ForegroundColor Cyan
 }
 
 Write-Host ""
-Write-Host "âœ… Done!`n" -ForegroundColor Green
+Write-Host "âœ... Done!`n" -ForegroundColor Green

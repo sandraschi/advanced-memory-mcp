@@ -85,7 +85,7 @@ function Auto-Fix-Issues {
     $commitMessage = "fix: auto-fix CI failures"
     $changes = @()
 
-    Write-Host "`nðŸ”§ AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
+    Write-Host "`nðŸ"§ AUTO-FIXING DETECTED ISSUES...`n" -ForegroundColor Yellow
 
     # Fix format issues
     if ($Failures.format) {
@@ -120,18 +120,18 @@ function Auto-Fix-Issues {
 
     if ($fixed) {
         $commitMessage += " (" + ($changes -join ", ") + ")"
-        Write-Host "`nâœ… Applied fixes: $($changes -join ', ')" -ForegroundColor Green
+        Write-Host "`nâœ... Applied fixes: $($changes -join ', ')" -ForegroundColor Green
     }
 
     return $fixed
 }
 
 # Main monitoring loop
-Write-Host "`nðŸ” GITHUB ACTIONS MONITOR`n" -ForegroundColor Yellow
+Write-Host "`nðŸ" GITHUB ACTIONS MONITOR`n" -ForegroundColor Yellow
 Write-Host "Repository: sandraschi/advanced-memory-mcp" -ForegroundColor White
 Write-Host "Branch: $Branch" -ForegroundColor White
-Write-Host "Auto-fix: $(if ($AutoFix) { 'ENABLED âœ…' } else { 'DISABLED âŒ' })" -ForegroundColor White
-Write-Host "Continuous: $(if ($Continuous) { 'ENABLED âœ…' } else { 'DISABLED âŒ' })" -ForegroundColor White
+Write-Host "Auto-fix: $(if ($AutoFix) { 'ENABLED âœ...' } else { 'DISABLED âŒ' })" -ForegroundColor White
+Write-Host "Continuous: $(if ($Continuous) { 'ENABLED âœ...' } else { 'DISABLED âŒ' })" -ForegroundColor White
 Write-Host "Max attempts: $MaxAttempts" -ForegroundColor White
 Write-Host "Wait time: $WaitSeconds seconds`n" -ForegroundColor White
 
@@ -171,7 +171,7 @@ do {
     }
 
     Write-Host "â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
-    Write-Host "ðŸ”„ Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
+    Write-Host "ðŸ"„ Check Attempt $attempt of $MaxAttempts (API calls: $apiCallCount)`n" -ForegroundColor Yellow
 
     # Get latest workflow run
     Write-Host "Fetching latest workflow status..." -ForegroundColor Cyan
@@ -204,8 +204,8 @@ do {
 
     # Check conclusion
     if ($conclusion -eq "success") {
-        Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
-        Write-Host "â•‘  ðŸŽ‰ WORKFLOW SUCCEEDED! ðŸŽ‰                                   â•‘" -ForegroundColor Green
+        Write-Host "â•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+        Write-Host "â•'  ðŸŽ‰ WORKFLOW SUCCEEDED! ðŸŽ‰                                   â•'" -ForegroundColor Green
         Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Green
         $success = $true
         break
@@ -236,7 +236,7 @@ do {
                 $fixed = Auto-Fix-Issues -Failures $failures
 
                 if ($fixed) {
-                    Write-Host "`nâœ… Auto-fixes applied!`n" -ForegroundColor Green
+                    Write-Host "`nâœ... Auto-fixes applied!`n" -ForegroundColor Green
 
                     # RATE LIMITING: Warn if approaching max attempts
                     if ($attempt -ge $MaxAttempts - 1) {
@@ -268,7 +268,7 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
                 }
             } else {
                 if (-not $AutoFix) {
-                    Write-Host "`nðŸ’¡ To auto-fix format/lint issues, run with -AutoFix flag`n" -ForegroundColor Yellow
+                    Write-Host "`nðŸ'¡ To auto-fix format/lint issues, run with -AutoFix flag`n" -ForegroundColor Yellow
                 }
                 Write-Host "Check details at: $runUrl`n" -ForegroundColor Cyan
                 break
@@ -287,8 +287,8 @@ Signed-off-by: CI Monitor <ci@advanced-memory.com>"
 Write-Host "â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Magenta
 
 if ($success) {
-    Write-Host "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
-    Write-Host "â•‘  ðŸŽŠ ALL WORKFLOWS SUCCEEDED! ðŸŽŠ                              â•‘" -ForegroundColor Green
+    Write-Host "â•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Green
+    Write-Host "â•'  ðŸŽŠ ALL WORKFLOWS SUCCEEDED! ðŸŽŠ                              â•'" -ForegroundColor Green
     Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Green
     exit 0
 } elseif ($attempt -ge $MaxAttempts) {

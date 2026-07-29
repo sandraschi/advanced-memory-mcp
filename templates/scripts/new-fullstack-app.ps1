@@ -72,7 +72,7 @@ Write-Host ""
 # CREATE PROJECT STRUCTURE
 # =============================================================================
 
-Write-Host "ðŸ“ Creating project structure..." -ForegroundColor Cyan
+Write-Host "ðŸ" Creating project structure..." -ForegroundColor Cyan
 
 $directories = @(
     "frontend",
@@ -495,7 +495,7 @@ $dockerCompose | Out-File -FilePath $dockerComposePath -Encoding UTF8
 # =============================================================================
 
 if ($IncludeCI) {
-    Write-Host "ðŸ”„ Setting up CI/CD pipelines..." -ForegroundColor Cyan
+    Write-Host "ðŸ"„ Setting up CI/CD pipelines..." -ForegroundColor Cyan
 
     # GitHub Actions workflow
     $workflow = @"
@@ -574,7 +574,7 @@ jobs:
 # DOCUMENTATION
 # =============================================================================
 
-Write-Host "ðŸ“š Creating documentation..." -ForegroundColor Cyan
+Write-Host "ðŸ"š Creating documentation..." -ForegroundColor Cyan
 
 # README
 $readme = @"
@@ -663,7 +663,7 @@ cd frontend
 npm test
 ```
 
-## ðŸ“Š Monitoring
+## ðŸ"Š Monitoring
 
 The application includes comprehensive monitoring:
 
@@ -676,7 +676,7 @@ The application includes comprehensive monitoring:
 
 See `docs/deployment.md` for production deployment guides.
 
-## ðŸ“ API Documentation
+## ðŸ" API Documentation
 
 Interactive API documentation is available at `/docs` when running the backend.
 
@@ -688,7 +688,7 @@ Interactive API documentation is available at `/docs` when running the backend.
 4. Add tests
 5. Submit a pull request
 
-## ðŸ“„ License
+## ðŸ"„ License
 
 MIT License - see LICENSE file for details.
 "@
@@ -728,13 +728,13 @@ cd ../frontend
 npm run dev &
 FRONTEND_PID=`$!
 
-echo "âœ… Development environment started!"
+echo "âœ... Development environment started!"
 echo "Frontend: http://localhost:3000"
 echo "Backend: http://localhost:8000"
 echo "API Docs: http://localhost:8000/docs"
 
 # Wait for user interrupt
-trap "echo 'ðŸ›‘ Shutting down...'; kill `$BACKEND_PID `$FRONTEND_PID; exit" INT
+trap "echo 'ðŸ›' Shutting down...'; kill `$BACKEND_PID `$FRONTEND_PID; exit" INT
 wait
 "@
 
@@ -821,32 +821,32 @@ $gitignore | Out-File -FilePath $gitignorePath -Encoding UTF8
 Write-Host ""
 Write-Host "ðŸŽ‰ FULLSTACK APP '$AppName' CREATED SUCCESSFULLY!" -ForegroundColor Green
 Write-Host ""
-Write-Host "ðŸ“ Project Structure:" -ForegroundColor Cyan
-Write-Host "  â”œâ”€â”€ frontend/          # React + TypeScript + Chakra UI" -ForegroundColor Yellow
-Write-Host "  â”œâ”€â”€ backend/           # FastAPI + PostgreSQL + Redis" -ForegroundColor Yellow
-Write-Host "  â”œâ”€â”€ infrastructure/    # Docker + Monitoring + Nginx" -ForegroundColor Yellow
-Write-Host "  â”œâ”€â”€ docs/              # Documentation" -ForegroundColor Yellow
-Write-Host "  â””â”€â”€ scripts/           # Utility scripts" -ForegroundColor Yellow
+Write-Host "ðŸ" Project Structure:" -ForegroundColor Cyan
+Write-Host "  â"œâ"€â"€ frontend/          # React + TypeScript + Chakra UI" -ForegroundColor Yellow
+Write-Host "  â"œâ"€â"€ backend/           # FastAPI + PostgreSQL + Redis" -ForegroundColor Yellow
+Write-Host "  â"œâ"€â"€ infrastructure/    # Docker + Monitoring + Nginx" -ForegroundColor Yellow
+Write-Host "  â"œâ"€â"€ docs/              # Documentation" -ForegroundColor Yellow
+Write-Host "  â""â"€â"€ scripts/           # Utility scripts" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "ðŸš€ Next Steps:" -ForegroundColor Cyan
 Write-Host "  1. cd $AppName" -ForegroundColor White
 Write-Host "  2. docker-compose up -d" -ForegroundColor White
 Write-Host "  3. Visit http://localhost:3000" -ForegroundColor White
 Write-Host ""
-Write-Host "ðŸ“Š Monitoring:" -ForegroundColor Cyan
+Write-Host "ðŸ"Š Monitoring:" -ForegroundColor Cyan
 Write-Host "  â€¢ Grafana: http://localhost:3001 (admin/admin)" -ForegroundColor White
 Write-Host "  â€¢ Prometheus: http://localhost:9090" -ForegroundColor White
 Write-Host "  â€¢ API Docs: http://localhost:8000/docs" -ForegroundColor White
 Write-Host ""
 Write-Host "âœ¨ Features Included:" -ForegroundColor Cyan
-Write-Host "  âœ… Modern React frontend with Chakra UI" -ForegroundColor Green
-Write-Host "  âœ… FastAPI backend with async support" -ForegroundColor Green
-Write-Host "  âœ… PostgreSQL database with migrations" -ForegroundColor Green
-Write-Host "  âœ… Redis caching and sessions" -ForegroundColor Green
-Write-Host "  âœ… Docker containerization" -ForegroundColor Green
-Write-Host "  âœ… Full monitoring stack" -ForegroundColor Green
-Write-Host "  âœ… CI/CD pipelines" -ForegroundColor Green
-Write-Host "  âœ… Comprehensive testing" -ForegroundColor Green
-Write-Host "  âœ… Production-ready configuration" -ForegroundColor Green
+Write-Host "  âœ... Modern React frontend with Chakra UI" -ForegroundColor Green
+Write-Host "  âœ... FastAPI backend with async support" -ForegroundColor Green
+Write-Host "  âœ... PostgreSQL database with migrations" -ForegroundColor Green
+Write-Host "  âœ... Redis caching and sessions" -ForegroundColor Green
+Write-Host "  âœ... Docker containerization" -ForegroundColor Green
+Write-Host "  âœ... Full monitoring stack" -ForegroundColor Green
+Write-Host "  âœ... CI/CD pipelines" -ForegroundColor Green
+Write-Host "  âœ... Comprehensive testing" -ForegroundColor Green
+Write-Host "  âœ... Production-ready configuration" -ForegroundColor Green
 Write-Host ""
 Write-Host "ðŸŽ¯ Ready to build something amazing!" -ForegroundColor Magenta

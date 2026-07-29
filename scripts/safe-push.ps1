@@ -11,8 +11,8 @@ param(
     [switch]$NoMonitor  # Skip post-push monitoring
 )
 
-Write-Host "`nâ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Cyan
-Write-Host "â•‘  ðŸš€ SAFE PUSH - BULLETPROOF CI/CD WORKFLOW ðŸš€               â•‘" -ForegroundColor Cyan
+Write-Host "`nâ•"â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•-" -ForegroundColor Cyan
+Write-Host "â•'  ðŸš€ SAFE PUSH - BULLETPROOF CI/CD WORKFLOW ðŸš€               â•'" -ForegroundColor Cyan
 Write-Host "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`n" -ForegroundColor Cyan
 
 # Step 1: Pre-Push Validation
@@ -47,7 +47,7 @@ if ($Message) {
     $commitOutput = git commit -m "$Message" 2>&1
 
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "âœ… Changes committed`n" -ForegroundColor Green
+        Write-Host "âœ... Changes committed`n" -ForegroundColor Green
     } elseif ($commitOutput -match "nothing to commit") {
         Write-Host "â„¹ï¸  No changes to commit`n" -ForegroundColor Cyan
     } else {
@@ -68,7 +68,7 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-Write-Host "âœ… Pushed to $Branch`n" -ForegroundColor Green
+Write-Host "âœ... Pushed to $Branch`n" -ForegroundColor Green
 
 # Step 4: Monitor CI (unless skipped)
 if (-not $NoMonitor) {
