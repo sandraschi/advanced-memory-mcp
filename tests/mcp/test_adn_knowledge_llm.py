@@ -4,7 +4,8 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge_legacy as adn_knowledge
+from advanced_memory.mcp.models.portmanteau import KnowledgeAnalyzeOp
+from advanced_memory.mcp.tools.adn_knowledge import adn_knowledge
 from tests.mcp.tool_invoker import mcp_fn
 
 
@@ -36,7 +37,9 @@ async def test_analyze_quality(mock_llm_client, test_project):
         ]
     )
 
-    result = await mcp_fn(adn_knowledge)(operation="analyze_quality", filters={"query": "test"}, limit=10)
+    result = await mcp_fn(adn_knowledge)(
+        KnowledgeAnalyzeOp(operation="analyze", analysis_type="analyze_quality", filters={"query": "test"}, limit=10)
+    )
     assert "Quality Analysis" in result
     assert "Test Note 1" in result
 
@@ -76,7 +79,9 @@ async def test_suggest_relationships(mock_llm_client, test_project):
         ]
     )
 
-    result = await mcp_fn(adn_knowledge)(operation="suggest_relationships", filters={"note_id": "Note A"})
+    result = await mcp_fn(adn_knowledge)(
+        KnowledgeAnalyzeOp(operation="analyze", analysis_type="suggest_relationships", filters={"note_id": "Note A"})
+    )
     assert "Relationship" in result
     assert "Note A" in result
     mock_llm_client.generate_json.assert_called_once()
@@ -109,7 +114,9 @@ async def test_find_gaps(mock_llm_client, test_project):
         }
     )
 
-    result = await mcp_fn(adn_knowledge)(operation="find_gaps", filters={"topics": ["machine-learning"]})
+    result = await mcp_fn(adn_knowledge)(
+        KnowledgeAnalyzeOp(operation="analyze", analysis_type="find_gaps", filters={"topics": ["machine-learning"]})
+    )
     assert "gap" in result.lower() or "knowledge" in result.lower()
     assert "machine-learning" in result.lower() or "machine learning" in result.lower()
 
@@ -144,7 +151,12 @@ async def test_cluster_content(mock_llm_client, test_project):
     )
 
     result = await mcp_fn(adn_knowledge)(
-        operation="cluster_content", filters={"query": "python"}, action={"num_clusters": 3}
+        KnowledgeAnalyzeOp(
+            operation="analyze",
+            analysis_type="cluster_content",
+            filters={"query": "python"},
+            action={"num_clusters": 3},
+        )
     )
     assert "Content Clustering" in result
     assert "Programming" in result
@@ -180,7 +192,9 @@ async def test_extract_insights(mock_llm_client, test_project):
         }
     )
 
-    result = await mcp_fn(adn_knowledge)(operation="extract_insights", filters={"query": "research"})
+    result = await mcp_fn(adn_knowledge)(
+        KnowledgeAnalyzeOp(operation="analyze", analysis_type="extract_insights", filters={"query": "research"})
+    )
     assert "Insight" in result
     mock_llm_client.generate_json.assert_called_once()
 
@@ -188,7 +202,9 @@ async def test_extract_insights(mock_llm_client, test_project):
 @pytest.mark.asyncio
 async def test_suggest_relationships_missing_note_id(mock_llm_client):
     """Test suggest_relationships without note_id."""
-    result = await mcp_fn(adn_knowledge)(operation="suggest_relationships", filters={})
+    result = await mcp_fn(adn_knowledge)(
+        KnowledgeAnalyzeOp(operation="analyze", analysis_type="suggest_relationships", filters={})
+    )
     assert "Error" in result
     assert "note_id" in result.lower()
 
@@ -196,6 +212,6 @@ async def test_suggest_relationships_missing_note_id(mock_llm_client):
 @pytest.mark.asyncio
 async def test_find_gaps_missing_topics(mock_llm_client):
     """Test find_gaps without topics."""
-    result = await mcp_fn(adn_knowledge)(operation="find_gaps", filters={})
+    result = await mcp_fn(adn_knowledge)(KnowledgeAnalyzeOp(operation="analyze", analysis_type="find_gaps", filters={}))
     assert "Error" in result
     assert "topics" in result.lower()

@@ -175,12 +175,13 @@ def app(app_config, project_config, engine_factory, test_project, project_sessio
 
 
 @pytest_asyncio.fixture(scope="function")
-async def search_service(engine_factory, test_project):
+async def search_service(engine_factory, test_project, app_config, config_home):
     """Create and initialize search service for integration tests."""
     from advanced_memory.markdown import EntityParser
     from advanced_memory.markdown.markdown_processor import MarkdownProcessor
     from advanced_memory.repository.entity_repository import EntityRepository
     from advanced_memory.repository.search_repository import SearchRepository
+    from advanced_memory.repository.vector_repository import VectorRepository
     from advanced_memory.services.file_service import FileService
     from advanced_memory.services.search_service import SearchService
 
@@ -195,8 +196,10 @@ async def search_service(engine_factory, test_project):
     markdown_processor = MarkdownProcessor(entity_parser)
     file_service = FileService(Path(test_project.path), markdown_processor)
 
+    vector_repository = VectorRepository(str(config_home / "vectors"), passphrase=app_config.rag_storage_passphrase)
+
     # Create and initialize search service
-    service = SearchService(search_repository, entity_repository, file_service)
+    service = SearchService(search_repository, entity_repository, vector_repository, file_service, app_config)
     await service.init_search_index()
     return service
 

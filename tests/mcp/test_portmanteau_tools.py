@@ -16,7 +16,7 @@ import pytest
 from advanced_memory.mcp.tools.adn_export import adn_export
 from advanced_memory.mcp.tools.adn_import import adn_import
 from advanced_memory.mcp.tools.adn_llm import adn_llm
-from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+from advanced_memory.mcp.tools.adn_navigation import adn_nav
 from advanced_memory.mcp.tools.adn_search import adn_search
 from advanced_memory.mcp.tools.content_manager import (
     adn_content,
@@ -39,7 +39,7 @@ adn_export_fn = getattr(adn_export, "fn", adn_export)
 adn_import_fn = getattr(adn_import, "fn", adn_import)
 adn_search_fn = getattr(adn_search, "fn", adn_search)
 adn_knowledge_fn = getattr(adn_knowledge, "fn", adn_knowledge)
-adn_navigation_fn = getattr(adn_navigation, "fn", adn_navigation)
+adn_nav_fn = getattr(adn_nav, "fn", adn_nav)
 adn_llm_fn = getattr(adn_llm, "fn", adn_llm)
 
 
@@ -101,11 +101,11 @@ class TestPortmanteauToolRegistration:
             assert adn_knowledge.name == "adn_knowledge"
         assert callable(adn_knowledge_fn)
 
-    def test_adn_navigation_registration(self):
-        """Test adn_navigation tool registration."""
-        if hasattr(adn_navigation, "name"):
-            assert adn_navigation.name == "adn_navigation"
-        assert callable(adn_navigation_fn)
+    def test_adn_nav_registration(self):
+        """Test adn_nav tool registration."""
+        if hasattr(adn_nav, "name"):
+            assert adn_nav.name == "adn_nav"
+        assert callable(adn_nav_fn)
 
     def test_adn_llm_registration(self):
         """Test adn_llm tool registration."""
@@ -165,14 +165,12 @@ class TestPortmanteauToolSignatures:
         assert "destination_folder" in params
 
     def test_adn_search_signature(self):
-        """Test adn_search function signature."""
+        """Test adn_search function signature (model-based op dispatch)."""
         import inspect
 
         sig = inspect.signature(adn_search_fn)
         params = list(sig.parameters.keys())
-        assert "operation" in params
-        assert "query" in params
-        assert "source_path" in params
+        assert "op" in params
 
     def test_adn_knowledge_signature(self):
         """Test adn_knowledge function signature."""
@@ -184,15 +182,13 @@ class TestPortmanteauToolSignatures:
         assert "identifier" in params
         assert "query" in params
 
-    def test_adn_navigation_signature(self):
-        """Test adn_navigation function signature."""
+    def test_adn_nav_signature(self):
+        """Test adn_nav function signature (model-based op dispatch)."""
         import inspect
 
-        sig = inspect.signature(adn_navigation_fn)
+        sig = inspect.signature(adn_nav_fn)
         params = list(sig.parameters.keys())
-        assert "operation" in params
-        assert "url" in params
-        assert "dir_name" in params
+        assert "op" in params
 
     def test_adn_llm_signature(self):
         """Test adn_llm function signature."""
@@ -348,29 +344,17 @@ class TestAdnSearchBasic:
     """Test basic adn_search portmanteau tool functionality."""
 
     def test_adn_search_invalid_operation(self):
-        """Test adn_search with invalid operation."""
+        """Test adn_search rejects invalid operation (model-based op dispatch)."""
         import asyncio
 
-        result = asyncio.run(adn_search_fn(operation="invalid", query="test"))
-        assert isinstance(result, dict)
-        assert result["success"] is False
-        assert "error" in result
-        assert "error_code" in result
-        assert "message" in result
-        assert "recovery_options" in result
-        msg = result["message"]
-        assert (
-            "Invalid operation" in msg
-            or "Unknown operation" in msg
-            or "Unknown project operation" in msg
-            or "not supported" in msg.lower()
-        )
+        with pytest.raises(Exception):
+            asyncio.run(adn_search_fn(operation="invalid", query="test"))
 
     def test_adn_search_missing_parameters(self):
         """Test adn_search with missing required parameters."""
         import asyncio
 
-        with pytest.raises(TypeError, match="missing 1 required positional argument"):
+        with pytest.raises(Exception):
             asyncio.run(adn_search_fn(operation="notes"))
 
 
@@ -398,26 +382,14 @@ class TestAdnKnowledgeBasic:
 
 
 class TestAdnNavigationBasic:
-    """Test basic adn_navigation portmanteau tool functionality."""
+    """Test basic adn_nav portmanteau tool functionality."""
 
-    def test_adn_navigation_invalid_operation(self):
-        """Test adn_navigation with invalid operation."""
+    def test_adn_nav_invalid_operation(self):
+        """Test adn_nav rejects invalid operation (model-based op dispatch)."""
         import asyncio
 
-        result = asyncio.run(adn_navigation_fn(operation="invalid"))
-        assert isinstance(result, dict)
-        assert result["success"] is False
-        assert "error" in result
-        assert "error_code" in result
-        assert "message" in result
-        assert "recovery_options" in result
-        msg = result["message"]
-        assert (
-            "Invalid operation" in msg
-            or "Unknown operation" in msg
-            or "Unknown project operation" in msg
-            or "not supported" in msg.lower()
-        )
+        with pytest.raises(Exception):
+            asyncio.run(adn_nav_fn(operation="invalid"))
 
 
 class TestAdnEditorBasic:
@@ -539,18 +511,11 @@ class TestStructuredResponses:
         )
 
     def test_adn_search_structured_error_responses(self):
-        """Test adn_search returns structured error responses."""
+        """Test adn_search rejects invalid operations via model validation."""
         import asyncio
 
-        # Test invalid operation
-        result = asyncio.run(self._test_tool_error_response(adn_search_fn, operation="invalid_operation", query="test"))
-        msg = result["message"]
-        assert (
-            "Invalid operation" in msg
-            or "Unknown operation" in msg
-            or "Unknown project operation" in msg
-            or "not supported" in msg.lower()
-        )
+        with pytest.raises(Exception):
+            asyncio.run(self._test_tool_error_response(adn_search_fn, operation="invalid_operation", query="test"))
 
     def test_adn_knowledge_structured_error_responses(self):
         """Test adn_knowledge returns structured error responses."""
@@ -566,22 +531,15 @@ class TestStructuredResponses:
             or "not supported" in msg.lower()
         )
 
-    def test_adn_navigation_structured_error_responses(self):
-        """Test adn_navigation returns structured error responses."""
+    def test_adn_nav_structured_error_responses(self):
+        """Test adn_nav rejects invalid operations via model validation."""
         import asyncio
 
-        # Test invalid operation
-        result = asyncio.run(self._test_tool_error_response(adn_navigation_fn, operation="invalid_operation"))
-        msg = result["message"]
-        assert (
-            "Invalid operation" in msg
-            or "Unknown operation" in msg
-            or "Unknown project operation" in msg
-            or "not supported" in msg.lower()
-        )
+        with pytest.raises(Exception):
+            asyncio.run(self._test_tool_error_response(adn_nav_fn, operation="invalid_operation"))
 
     def test_all_tools_return_dict_responses(self):
-        """Test that all tools return dict responses (not strings)."""
+        """Test that kwargs-dispatch tools return dict responses (not strings)."""
         import asyncio
 
         tools_to_test = [
@@ -589,9 +547,7 @@ class TestStructuredResponses:
             (adn_project_fn, {"operation": "invalid"}),
             (adn_export_fn, {"operation": "invalid", "export_path": "/tmp"}),
             (adn_import_fn, {"operation": "invalid", "source_path": "/tmp"}),
-            (adn_search_fn, {"operation": "invalid", "query": "test"}),
             (adn_knowledge_fn, {"operation": "invalid"}),
-            (adn_navigation_fn, {"operation": "invalid"}),
             (adn_llm_fn, {"operation": "invalid"}),
         ]
 

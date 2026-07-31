@@ -24,7 +24,7 @@ from advanced_memory.mcp.tools.adn_export import adn_export
 from advanced_memory.mcp.tools.adn_import import adn_import
 from advanced_memory.mcp.tools.adn_inbox import adn_inbox
 from advanced_memory.mcp.tools.adn_llm import adn_llm
-from advanced_memory.mcp.tools.adn_navigation import adn_navigation
+from advanced_memory.mcp.tools.adn_navigation import adn_nav
 from advanced_memory.mcp.tools.adn_search import adn_search
 from advanced_memory.mcp.tools.content_manager import adn_content
 from advanced_memory.mcp.tools.portmanteau_knowledge import adn_knowledge
@@ -103,7 +103,7 @@ def test_content_tool_docstrings_stay_short(tool_name: str, tool: object) -> Non
         ("adn_export", adn_export),
         ("adn_import", adn_import),
         ("adn_search", adn_search),
-        ("adn_navigation", adn_navigation),
+        ("adn_nav", adn_nav),
         ("adn_knowledge", adn_knowledge),
         ("adn_skills", adn_skills),
         ("adn_llm", adn_llm),

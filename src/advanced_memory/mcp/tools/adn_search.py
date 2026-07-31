@@ -16,8 +16,6 @@ from advanced_memory.mcp.tools.utils import build_error_response
 
 @mcp.tool(name="adn_search")
 async def adn_search(op: SearchOperation) -> Any:
-    _st = _time.time()
-    logger.info(f"[TIMED] enter adn_search op={getattr(op, 'operation', op)} at +0.0s")
     """
     Comprehensive search and semantic discovery for Advanced Memory.
 
@@ -61,6 +59,8 @@ async def adn_search(op: SearchOperation) -> Any:
     adn_search(operation="query", search_type="tag", text="work AND finance")
     ```
     """
+    _st = _time.time()
+    logger.info(f"[TIMED] enter adn_search op={getattr(op, 'operation', op)} at +0.0s")
     operation = op.operation
     logger.info(f"MCP tool call tool=adn_search operation={operation}")
 
