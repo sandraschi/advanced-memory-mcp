@@ -48,14 +48,14 @@ if FPDF_AVAILABLE:
             if "text" in kwargs:
                 kwargs["text"] = self._sanitize(kwargs["text"])
             elif len(args) >= 3 and isinstance(args[2], str):
-                args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+                args = (*args[:2], self._sanitize(args[2]), *args[3:])
             return super().cell(*args, **kwargs)
 
         def multi_cell(self, *args, **kwargs):
             if "text" in kwargs:
                 kwargs["text"] = self._sanitize(kwargs["text"])
             elif len(args) >= 3 and isinstance(args[2], str):
-                args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+                args = (*args[:2], self._sanitize(args[2]), *args[3:])
             return super().multi_cell(*args, **kwargs)
 
         def header(self):

@@ -668,4 +668,3 @@ class TestPDFExportIntegration:
 
             assert "PDF Export Summary" in result
             assert "**Files Exported:** 3" in result
-

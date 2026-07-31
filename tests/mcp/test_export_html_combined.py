@@ -742,4 +742,3 @@ class TestExportEdgeCases:
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
         assert "Unicode" in content
-

@@ -347,14 +347,14 @@ class TestAdnSearchBasic:
         """Test adn_search rejects invalid operation (model-based op dispatch)."""
         import asyncio
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, ValueError)):
             asyncio.run(adn_search_fn(operation="invalid", query="test"))
 
     def test_adn_search_missing_parameters(self):
         """Test adn_search with missing required parameters."""
         import asyncio
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, ValueError)):
             asyncio.run(adn_search_fn(operation="notes"))
 
 
@@ -388,7 +388,7 @@ class TestAdnNavigationBasic:
         """Test adn_nav rejects invalid operation (model-based op dispatch)."""
         import asyncio
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, ValueError)):
             asyncio.run(adn_nav_fn(operation="invalid"))
 
 
@@ -514,7 +514,7 @@ class TestStructuredResponses:
         """Test adn_search rejects invalid operations via model validation."""
         import asyncio
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, ValueError)):
             asyncio.run(self._test_tool_error_response(adn_search_fn, operation="invalid_operation", query="test"))
 
     def test_adn_knowledge_structured_error_responses(self):
@@ -535,7 +535,7 @@ class TestStructuredResponses:
         """Test adn_nav rejects invalid operations via model validation."""
         import asyncio
 
-        with pytest.raises(Exception):
+        with pytest.raises((TypeError, ValueError)):
             asyncio.run(self._test_tool_error_response(adn_nav_fn, operation="invalid_operation"))
 
     def test_all_tools_return_dict_responses(self):

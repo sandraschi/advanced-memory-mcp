@@ -325,7 +325,9 @@ Testing statistics accuracy.
 
         # Stats should be reasonable (at least 1 entity, some observations)
         assert stats["total_entities"] >= 1, f"Should have at least 1 entity, got {stats['total_entities']}"
-        assert stats["total_observations"] >= 2, f"Should have at least 2 observations, got {stats['total_observations']}"
+        assert stats["total_observations"] >= 2, (
+            f"Should have at least 2 observations, got {stats['total_observations']}"
+        )
 
 
 @pytest.mark.asyncio
@@ -359,7 +361,9 @@ async def test_create_project_with_default_flag(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a new project and set as default
         parsed = parse_text(
-            await project_op(client, "create", name="test-default-project", path="/tmp/test-default-project", set_default=True)
+            await project_op(
+                client, "create", name="test-default-project", path="/tmp/test-default-project", set_default=True
+            )
         )
 
         # Should show success and default flag
@@ -682,9 +686,7 @@ async def test_case_preservation_in_project_list(mcp_server, app):
 
         # Create all test projects
         for project_name in test_projects:
-            parsed = parse_text(
-                await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}")
-            )
+            parsed = parse_text(await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}"))
             assert parsed["success"] is True
 
         # List projects and verify each appears with its original case
@@ -763,4 +765,3 @@ async def test_session_state_consistency_after_case_switch(mcp_server, app):
         # Clean up
         await project_op(client, "switch", name="test-project")
         await project_op(client, "rm", name=project_name)
-

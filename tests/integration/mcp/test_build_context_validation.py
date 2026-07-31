@@ -75,7 +75,7 @@ async def test_build_context_invalid_urls_fail_validation(mcp_server, app):
             ('notes"quotes"', "invalid characters"),
         ]
 
-        for invalid_url, expected_error in invalid_test_cases:
+        for invalid_url, _expected_error in invalid_test_cases:
             with pytest.raises(Exception) as exc_info:
                 await build_context(client, invalid_url)
 
@@ -108,11 +108,7 @@ async def test_build_context_empty_urls_fail_validation(mcp_server, app):
 
         error_message = str(exc_info.value)
         # Should fail with validation error (empty or whitespace)
-        assert (
-            "empty or whitespace" in error_message
-            or "too_short" in error_message
-            or "value_error" in error_message
-        )
+        assert "empty or whitespace" in error_message or "too_short" in error_message or "value_error" in error_message
 
 
 @pytest.mark.asyncio

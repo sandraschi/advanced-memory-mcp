@@ -537,7 +537,10 @@ def _add_heading_anchors(html_content: str, base_anchor: str) -> str:
 
 def _get_combined_css(include_toc: bool = True) -> str:
     """Get CSS styles for combined HTML export."""
-    toc_css = "" if not include_toc else """
+    toc_css = (
+        ""
+        if not include_toc
+        else """
 .toc-nav {
     position: sticky;
     top: 20px;
@@ -595,7 +598,10 @@ def _get_combined_css(include_toc: bool = True) -> str:
     }
 }
 """
-    return "/* Combined HTML Export Styles */\n" + """
+    )
+    return (
+        "/* Combined HTML Export Styles */\n"
+        + """
 
 :root {
     --primary-color: #2c3e50;
@@ -771,7 +777,9 @@ html {
     .section-title {
         font-size: 1.5em;
     }
-}""" + toc_css
+}"""
+        + toc_css
+    )
 
 
 async def _process_html_export(notes_data: list[dict[str, Any]], export_path: Path, include_index: bool) -> str:
