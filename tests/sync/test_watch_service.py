@@ -19,9 +19,9 @@ async def create_test_file(path: Path, content: str = "test content") -> None:
 
 
 @pytest.fixture
-def watch_service(sync_service, file_service, project_config):
+def watch_service(app_config, project_repository):
     """Create watch service instance."""
-    return WatchService(sync_service, file_service, project_config)
+    return WatchService(app_config=app_config, project_repository=project_repository)
 
 
 def test_watch_service_init(watch_service, project_config):
@@ -41,9 +41,9 @@ def test_state_add_event():
     assert event.checksum == "abcd1234"
 
     # Test event limit
-    for i in range(110):
+    for i in range(60):
         state.add_event(f"test{i}.md", "new", "success")
-    assert len(state.recent_events) == 100
+    assert len(state.recent_events) == 50
 
 
 def test_state_record_error():

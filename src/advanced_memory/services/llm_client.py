@@ -315,7 +315,11 @@ def get_llm_client(provider: str | None = None, model: str | None = None) -> LLM
             if not model:
                 model = _current_model
     except (ImportError, AttributeError):
-        # Module not loaded or state not available, try config.json
+        # Module not loaded or state not available
+        pass
+
+    # Fill any remaining gaps from config.json (adn_llm not loaded, or partial state)
+    if not provider or not model:
         try:
             from advanced_memory.config import ConfigManager
 

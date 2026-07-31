@@ -1,5 +1,7 @@
 """Tests for LLM client service."""
 
+import sys
+from types import ModuleType
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -56,16 +58,21 @@ class TestLLMClient:
         import os
 
         with patch.dict(os.environ, {"OPENAI_API_KEY": "test-key"}):  # pragma: allowlist secret
-            client = LLMClient(provider="openai", model="gpt-3.5-turbo")
+            # openai is an optional dependency; inject a fake module so the
+            # import inside _generate_openai resolves without it being installed
+            fake_openai = ModuleType("openai")
+            fake_openai.AsyncOpenAI = MagicMock()
+            with patch.dict(sys.modules, {"openai": fake_openai}):
+                client = LLMClient(provider="openai", model="gpt-3.5-turbo")
 
-            with patch("openai.AsyncOpenAI") as mock_openai:
-                mock_response = MagicMock()
-                mock_response.choices = [MagicMock()]
-                mock_response.choices[0].message.content = "Test response"
-                mock_openai.return_value.chat.completions.create = AsyncMock(return_value=mock_response)
+                with patch("openai.AsyncOpenAI") as mock_openai:
+                    mock_response = MagicMock()
+                    mock_response.choices = [MagicMock()]
+                    mock_response.choices[0].message.content = "Test response"
+                    mock_openai.return_value.chat.completions.create = AsyncMock(return_value=mock_response)
 
-                result = await client.generate("Test prompt")
-                assert result == "Test response"
+                    result = await client.generate("Test prompt")
+                    assert result == "Test response"
 
     @pytest.mark.asyncio
     async def test_generate_json(self):
@@ -92,8 +99,10 @@ class TestLLMClient:
         app_config.llm_provider = "ollama"
         app_config.llm_model = "llama3"
 
-        # Mock config manager
-        with patch("advanced_memory.services.llm_client.ConfigManager") as mock_config:
+        # Ensure the adn_llm global state path is not taken (config fallback is
+        # what this test exercises), and mock where ConfigManager is imported
+        monkeypatch.delitem(sys.modules, "advanced_memory.mcp.tools.adn_llm", raising=False)
+        with patch("advanced_memory.config.ConfigManager") as mock_config:
             mock_config.return_value.config = app_config
             client = get_llm_client()
             assert client.provider == "ollama"

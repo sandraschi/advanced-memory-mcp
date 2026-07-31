@@ -1,6 +1,5 @@
 """Tests for the initialization service."""
 
-from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -27,7 +26,8 @@ async def test_initialize_database(mock_get_or_create_db, app_config):
 async def test_initialize_database_error(mock_get_or_create_db, app_config):
     """Test handling errors during database initialization."""
     mock_get_or_create_db.side_effect = Exception("Test error")
-    await initialize_database(app_config)
+    with pytest.raises(Exception, match="Test error"):
+        await initialize_database(app_config)
     mock_get_or_create_db.assert_called_once_with(app_config.database_path)
 
 
@@ -113,18 +113,16 @@ async def test_reconcile_projects_with_error_handling(mock_get_db, app_config):
         mock_project_service.synchronize_projects.assert_called_once()
 
         # Verify error was logged
-        mock_logger.error.assert_called_once_with("Error during project synchronization: Project synchronization error")
-        mock_logger.info.assert_any_call("Continuing with initialization despite synchronization error")
+        mock_logger.exception.assert_called_once_with(
+            "Project synchronization failed — continuing startup; some projects may be missing"
+        )
 
 
 @pytest.mark.asyncio
 @patch("advanced_memory.services.initialization.db.get_or_create_db")
-@patch("advanced_memory.cli.commands.sync.get_sync_service")
 @patch("advanced_memory.sync.WatchService")
-async def test_initialize_file_sync_sequential(
-    mock_watch_service_class, mock_get_sync_service, mock_get_db, app_config
-):
-    """Test file sync initialization with sequential project processing."""
+async def test_initialize_file_sync_sequential(mock_watch_service_class, mock_get_db, app_config):
+    """Test file sync initialization starts the watch service in the background."""
     # Setup mocks
     mock_session_maker = AsyncMock()
     mock_get_db.return_value = (None, mock_session_maker)
@@ -134,42 +132,26 @@ async def test_initialize_file_sync_sequential(
     mock_watch_service_class.return_value = mock_watch_service
 
     mock_repository = AsyncMock()
-    mock_project1 = MagicMock()
-    mock_project1.name = "project1"
-    mock_project1.path = "/path/to/project1"
-    mock_project1.id = 1
-
-    mock_project2 = MagicMock()
-    mock_project2.name = "project2"
-    mock_project2.path = "/path/to/project2"
-    mock_project2.id = 2
-
-    mock_sync_service = AsyncMock()
-    mock_sync_service.sync = AsyncMock()
-    mock_get_sync_service.return_value = mock_sync_service
 
     # Mock the repository
     with patch("advanced_memory.services.initialization.ProjectRepository") as mock_repo_class:
         mock_repo_class.return_value = mock_repository
-        mock_repository.get_active_projects.return_value = [mock_project1, mock_project2]
 
         # Run the function
         result = await initialize_file_sync(app_config)
 
         # Assertions
-        mock_repository.get_active_projects.assert_called_once()
+        mock_get_db.assert_called_once()
+        mock_repo_class.assert_called_once_with(mock_session_maker)
 
-        # Should call sync for each project sequentially
-        assert mock_get_sync_service.call_count == 2
-        mock_get_sync_service.assert_any_call(mock_project1)
-        mock_get_sync_service.assert_any_call(mock_project2)
+        # Should construct the watch service with the app config and repository
+        mock_watch_service_class.assert_called_once_with(
+            app_config=app_config,
+            project_repository=mock_repository,
+            quiet=True,
+        )
 
-        # Should call sync on each project
-        assert mock_sync_service.sync.call_count == 2
-        mock_sync_service.sync.assert_any_call(Path(mock_project1.path), project_name=mock_project1.name)
-        mock_sync_service.sync.assert_any_call(Path(mock_project2.path), project_name=mock_project2.name)
-
-        # Should start the watch service
+        # Should start the watch service in the background
         mock_watch_service.run.assert_called_once()
 
         # Should return None

@@ -1,13 +1,23 @@
 """Test sync error handling for corrupted and weird files."""
 
+from pathlib import Path
+
 import pytest
 
 
+@pytest.fixture
+def vault_dir(project_config) -> Path:
+    """Project vault directory (sync resolves relative paths against it)."""
+    vault = project_config.home
+    vault.mkdir(parents=True, exist_ok=True)
+    return vault
+
+
 @pytest.mark.asyncio
-async def test_sync_large_file(sync_service, config_home):
+async def test_sync_large_file(sync_service, vault_dir):
     """Test that sync skips files larger than 10MB."""
     # Create a file larger than 10MB
-    large_file = config_home / "huge.md"
+    large_file = vault_dir / "huge.md"
     with open(large_file, "w", encoding="utf-8") as f:
         # Write 11MB of content
         f.write("# Huge File\n" + "a" * (11 * 1024 * 1024))
@@ -20,10 +30,10 @@ async def test_sync_large_file(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_sync_invalid_encoding_with_frontmatter(sync_service, config_home):
+async def test_sync_invalid_encoding_with_frontmatter(sync_service, vault_dir):
     """Test that sync handles files with encoding issues but valid frontmatter."""
     # Create a file with valid frontmatter but encoding issues in content
-    bad_file = config_home / "encoding_test.md"
+    bad_file = vault_dir / "encoding_test.md"
     with open(bad_file, "w", encoding="utf-8") as f:
         # Write valid markdown (encoding errors will be handled by replace fallback)
         f.write("---\ntitle: Encoding Test\n---\n\n# Test\n\nSome content")
@@ -36,10 +46,10 @@ async def test_sync_invalid_encoding_with_frontmatter(sync_service, config_home)
 
 
 @pytest.mark.asyncio
-async def test_sync_malformed_wikilinks(sync_service, config_home):
+async def test_sync_malformed_wikilinks(sync_service, vault_dir):
     """Test that sync handles malformed wikilinks gracefully."""
     # Create file with unclosed wikilinks
-    malformed = config_home / "malformed.md"
+    malformed = vault_dir / "malformed.md"
     with open(malformed, "w", encoding="utf-8") as f:
         f.write("# Malformed\n\n")
         f.write("[[Unclosed link\n")
@@ -57,10 +67,10 @@ async def test_sync_malformed_wikilinks(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_validate_large_file(sync_service, config_home):
+async def test_validate_large_file(sync_service, vault_dir):
     """Test file validation detects large files early."""
     # Create a file larger than 10MB
-    large_file = config_home / "huge2.md"
+    large_file = vault_dir / "huge2.md"
     with open(large_file, "w", encoding="utf-8") as f:
         f.write("# Huge File\n" + "a" * (11 * 1024 * 1024))
 
@@ -72,10 +82,10 @@ async def test_validate_large_file(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_validate_bad_encoding(sync_service, config_home):
+async def test_validate_bad_encoding(sync_service, vault_dir):
     """Test file validation detects encoding issues early."""
     # Create a file with invalid UTF-8
-    bad_file = config_home / "bad_encoding2.md"
+    bad_file = vault_dir / "bad_encoding2.md"
     with open(bad_file, "wb") as f:
         f.write(b"\xff\xfe Invalid UTF-8")
 
@@ -87,10 +97,10 @@ async def test_validate_bad_encoding(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_sync_file_size_limit_prevents_hang(sync_service, config_home):
+async def test_sync_file_size_limit_prevents_hang(sync_service, vault_dir):
     """Test that file size check prevents hanging on huge files."""
     # Create a 15MB file
-    huge_file = config_home / "massive.md"
+    huge_file = vault_dir / "massive.md"
     with open(huge_file, "w", encoding="utf-8") as f:
         f.write("# Massive File\n" + "x" * (15 * 1024 * 1024))
 
@@ -102,10 +112,10 @@ async def test_sync_file_size_limit_prevents_hang(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_sync_handles_parse_errors_gracefully(sync_service, config_home):
+async def test_sync_handles_parse_errors_gracefully(sync_service, vault_dir):
     """Test that markdown parsing errors don't crash sync."""
     # Create file with potentially problematic content
-    tricky_file = config_home / "tricky.md"
+    tricky_file = vault_dir / "tricky.md"
     with open(tricky_file, "w", encoding="utf-8") as f:
         f.write("# Tricky Content\n\n")
         f.write("```yaml\n")
@@ -121,10 +131,10 @@ async def test_sync_handles_parse_errors_gracefully(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_sync_malformed_frontmatter_yaml(sync_service, config_home):
+async def test_sync_malformed_frontmatter_yaml(sync_service, vault_dir):
     """Test that sync handles malformed YAML frontmatter gracefully."""
     # Create file with invalid YAML frontmatter
-    bad_yaml = config_home / "bad_yaml.md"
+    bad_yaml = vault_dir / "bad_yaml.md"
     with open(bad_yaml, "w", encoding="utf-8") as f:
         f.write("---\n")
         f.write("title: Bad YAML\n")
@@ -146,10 +156,10 @@ async def test_sync_malformed_frontmatter_yaml(sync_service, config_home):
 
 
 @pytest.mark.asyncio
-async def test_sync_no_frontmatter(sync_service, config_home):
+async def test_sync_no_frontmatter(sync_service, vault_dir):
     """Test that sync handles files with no frontmatter."""
     # Create file without frontmatter
-    no_fm = config_home / "no_frontmatter.md"
+    no_fm = vault_dir / "no_frontmatter.md"
     with open(no_fm, "w", encoding="utf-8") as f:
         f.write("# Just Content\n\n")
         f.write("This file has no frontmatter at all.\n")

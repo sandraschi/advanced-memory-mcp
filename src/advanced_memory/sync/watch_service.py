@@ -171,6 +171,18 @@ class WatchService:
             self.state.running = False
             await self.write_status()
 
+    def _trusted_prefix_parts(self) -> frozenset[str]:
+        """Part names of ancestor directories of configured project roots.
+
+        Project vaults live under hidden directories (e.g. ``~/.advanced-memory/vault``),
+        so dot-prefixed or ignored parts that are part of the vault's own ancestor
+        chain must not cause every change under the vault to be filtered out.
+        """
+        trusted: set[str] = set()
+        for project_path in self.app_config.projects.values():
+            trusted.update(Path(project_path).resolve().parent.parts)
+        return frozenset(trusted)
+
     def filter_changes(self, change: Change, path: str) -> bool:  # pragma: no cover
         """Filter to only watch non-hidden files and directories, excluding common build/cache dirs.
 
@@ -178,9 +190,14 @@ class WatchService:
             True if the file should be watched, False if it should be ignored
         """
 
+        trusted_parts = self._trusted_prefix_parts()
+
         # Skip hidden directories and files
-        path_parts = Path(path).parts
+        path_parts = Path(path).resolve().parts
         for part in path_parts:
+            if part in trusted_parts:
+                continue
+
             if part.startswith("."):
                 return False
 

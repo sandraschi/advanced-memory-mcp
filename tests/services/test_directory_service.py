@@ -75,10 +75,10 @@ async def test_list_directory_root(directory_service: DirectoryService, test_gra
     result = await directory_service.list_directory(dir_name="/")
 
     # Should return immediate children of root (the "test" directory)
-    assert len(result) == 1
-    assert result[0].name == "test"
-    assert result[0].type == "directory"
-    assert result[0].directory_path == "/test"
+    assert len(result.nodes) == 1
+    assert result.nodes[0].name == "test"
+    assert result.nodes[0].type == "directory"
+    assert result.nodes[0].directory_path == "/test"
 
 
 @pytest.mark.asyncio
@@ -117,8 +117,8 @@ async def test_list_directory_with_glob_filter(directory_service: DirectoryServi
     # Filter for files containing "Connected"
     result = await directory_service.list_directory(dir_name="/test", file_name_glob="*Connected*")
 
-    assert len(result) == 2
-    file_names = {node.name for node in result}
+    assert len(result.nodes) == 2
+    file_names = {node.name for node in result.nodes}
     assert file_names == {"Connected_Entity_1.md", "Connected_Entity_2.md"}
 
 
@@ -162,10 +162,10 @@ async def test_list_directory_path_normalization(directory_service: DirectorySer
 
     for path in paths_to_test:
         result = await directory_service.list_directory(dir_name=path)
-        assert len(result) == len(base_result)
+        assert len(result.nodes) == len(base_result.nodes)
         # Compare by name since the objects might be different instances
-        result_names = {node.name for node in result}
-        base_names = {node.name for node in base_result}
+        result_names = {node.name for node in result.nodes}
+        base_names = {node.name for node in base_result.nodes}
         assert result_names == base_names
 
 

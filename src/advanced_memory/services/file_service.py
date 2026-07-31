@@ -22,6 +22,14 @@ from advanced_memory.utils import file_safety
 FilePath = str | Path
 
 
+def _display_path(path: Path, base_path: Path) -> str:
+    """Path relative to base for logs, falling back to absolute when outside."""
+    try:
+        return str(path.relative_to(base_path))
+    except ValueError:
+        return str(path)
+
+
 class FileService:
     """Service for handling file operations.
 
@@ -156,7 +164,7 @@ class FileService:
 
             # Log the write operation
             logger.info(
-                f"Writing file: {full_path.relative_to(self.base_path)}, "
+                f"Writing file: {_display_path(full_path, self.base_path)}, "
                 f"is_markdown={full_path.suffix.lower() == '.md'}"
             )
 
@@ -209,7 +217,7 @@ class FileService:
                     f"File too large ({file_size / 1024 / 1024:.1f}MB > {MAX_FILE_SIZE / 1024 / 1024}MB): {full_path}"
                 )
 
-            logger.debug(f"Reading file: {full_path.relative_to(self.base_path)}")
+            logger.debug(f"Reading file: {_display_path(full_path, self.base_path)}")
 
             # Read file with explicit encoding
             try:
@@ -225,7 +233,7 @@ class FileService:
             # Compute checksum of the file content
             checksum = await file_utils.compute_checksum(content)
             logger.debug(
-                f"File read completed: {full_path.relative_to(self.base_path)}, "
+                f"File read completed: {_display_path(full_path, self.base_path)}, "
                 f"size={len(content)} bytes, checksum={checksum}"
             )
 
@@ -268,7 +276,7 @@ class FileService:
             file_size = full_path.stat().st_size if full_path.is_file() else 0
             logger.info(
                 f"Deleting {'directory' if full_path.is_dir() else 'file'}: "
-                f"{full_path.relative_to(self.base_path)} (size: {file_size / 1024:.1f} KB)"
+                f"{_display_path(full_path, self.base_path)} (size: {file_size / 1024:.1f} KB)"
             )
 
             # Use the file_safety module to handle the deletion

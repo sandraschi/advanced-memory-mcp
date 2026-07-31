@@ -230,7 +230,8 @@ def test_permalink_generation():
         ("next week", False),
         ("", False),
         ("0d", True),
-        ("366d", False),
+        ("366d", True),
+        ("4000d", False),
         (1, False),
     ],
 )
@@ -382,9 +383,9 @@ class TestTimeframeParsing:
         result = validate_timeframe("1d")
         assert result == "1d"
 
-        # Test other formats get converted to days
+        # Special strings are preserved so the API keeps calendar semantics
         result = validate_timeframe("yesterday")
-        assert result == "1d"  # Yesterday is 1 day ago
+        assert result == "yesterday"
 
         # Test week format
         result = validate_timeframe("1 week ago")
@@ -400,9 +401,9 @@ class TestTimeframeParsing:
         with pytest.raises(ValueError, match="Timeframe cannot be in the future"):
             validate_timeframe("tomorrow")
 
-        # Too far in past (>365 days)
-        with pytest.raises(ValueError, match="Timeframe should be <= 1 year"):
-            validate_timeframe("2 years ago")
+        # Too far in past (>10 years)
+        with pytest.raises(ValueError, match="Timeframe should be <= 10 years"):
+            validate_timeframe("20 years ago")
 
         # Invalid format that can't be parsed
         with pytest.raises(ValueError, match="Could not parse timeframe"):
@@ -423,7 +424,7 @@ class TestTimeframeParsing:
         assert model.timeframe == "1d"
 
         model = TestModel(timeframe="yesterday")
-        assert model.timeframe == "1d"
+        assert model.timeframe == "yesterday"
 
     def test_timeframe_integration_today_vs_1d(self):
         """Test the specific bug fix: 'today' vs '1d' behavior."""
