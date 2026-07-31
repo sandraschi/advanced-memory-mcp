@@ -243,7 +243,7 @@ class TestCombinedHTMLExport:
         result = await _export_combined_html(multiple_notes, export_path, "Multiple Notes", make_toc=True)
 
         assert "Combined HTML Export Complete" in result
-        assert "Notes Combined: 3" in result
+        assert "**Notes Combined:** 3" in result
         html_file = export_path.with_suffix(".html")
         assert html_file.exists()
 
@@ -742,3 +742,4 @@ class TestExportEdgeCases:
         html_file = export_path.with_suffix(".html")
         content = html_file.read_text(encoding="utf-8")
         assert "Unicode" in content
+

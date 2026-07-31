@@ -27,6 +27,10 @@ class FileSafetyError(Exception):
 class FileSafety:
     """Safe file operations with trash and logging."""
 
+    # Track log file paths that already have a loguru sink installed, so
+    # repeated FileSafety() instantiations do not leak duplicate sinks.
+    _registered_log_sinks: set[str] = set()
+
     # Directories that should never be deleted
     PROTECTED_DIRS = {
         ".git",
@@ -72,15 +76,22 @@ class FileSafety:
         """Set up file operation logging."""
         self.log_file = self.trash_dir / "file_operations.log"
 
-        # Configure loguru logger for this module
-        logger.add(
-            self.log_file,
-            rotation="10 MB",
-            retention="30 days",
-            level="INFO",
-            format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
-            enqueue=True,
-        )
+        # Configure loguru logger for this module.
+        # Guard against duplicate sinks: every FileSafety() instance used to
+        # add a new rotating file sink on the same module logger, which leaked
+        # sinks and caused rotation races (PermissionError on Windows when a
+        # long-running daemon held the log file open).
+        _log_file_str = str(self.log_file.resolve())
+        if _log_file_str not in FileSafety._registered_log_sinks:
+            logger.add(
+                self.log_file,
+                rotation="10 MB",
+                retention="30 days",
+                level="INFO",
+                format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
+                enqueue=True,
+            )
+            FileSafety._registered_log_sinks.add(_log_file_str)
 
     def is_safe_to_delete(self, path: FilePath) -> bool:
         """Check if path is safe to delete.

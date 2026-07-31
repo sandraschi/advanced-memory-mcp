@@ -34,6 +34,30 @@ if FPDF_AVAILABLE:
             self.title = title
             self.set_auto_page_break(auto=True, margin=15)
 
+        @staticmethod
+        def _sanitize(text: object) -> str:
+            """Replace characters the core fonts (latin-1) cannot encode."""
+            s = str(text)
+            try:
+                s.encode("latin-1")
+                return s
+            except UnicodeEncodeError:
+                return "".join(c if ord(c) < 256 else "?" for c in s)
+
+        def cell(self, *args, **kwargs):
+            if "text" in kwargs:
+                kwargs["text"] = self._sanitize(kwargs["text"])
+            elif len(args) >= 3 and isinstance(args[2], str):
+                args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+            return super().cell(*args, **kwargs)
+
+        def multi_cell(self, *args, **kwargs):
+            if "text" in kwargs:
+                kwargs["text"] = self._sanitize(kwargs["text"])
+            elif len(args) >= 3 and isinstance(args[2], str):
+                args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+            return super().multi_cell(*args, **kwargs)
+
         def header(self):
             """Add header to each page."""
             self.set_font("Arial", "B", 15)
@@ -97,7 +121,7 @@ if FPDF_AVAILABLE:
                     bullet_text = line.strip()[2:]
                     # Remove markdown formatting for now
                     bullet_text = bullet_text.replace("**", "").replace("__", "")
-                    self.cell(0, 6, "• " + bullet_text, ln=1)
+                    self.cell(0, 6, "- " + bullet_text, ln=1)
                 # Numbered lists
                 elif line.strip() and line.strip()[0].isdigit() and ". " in line[:5]:
                     self.set_font("Arial", "", 12)
@@ -261,6 +285,8 @@ async def _export_single_note_pdf(note_info: dict[str, Any], export_dir: Path) -
         safe_title = safe_title.replace(" ", "_")
         if not safe_title:
             safe_title = "untitled"
+        # Truncate to stay within Windows path limits
+        safe_title = safe_title[:80].rstrip("._ ")
 
         output_path = export_dir / f"{safe_title}.pdf"
         pdf.output(str(output_path))
@@ -377,7 +403,7 @@ async def _export_combined_pdf(
                         self.set_font("Arial", "", 12)
                         self.cell(10)
                         bullet_text = line.strip()[2:].replace("**", "").replace("__", "")
-                        self.cell(0, 6, "• " + bullet_text, ln=1)
+                        self.cell(0, 6, "- " + bullet_text, ln=1)
                     elif line.strip():
                         self.set_font("Arial", "", 12)
                         text = line.strip().replace("**", "").replace("__", "")

@@ -18,6 +18,30 @@ class MarkdownPDF(FPDF):
         super().__init__()
         self.set_auto_page_break(auto=True, margin=15)
 
+    @staticmethod
+    def _sanitize(text: object) -> str:
+        """Replace characters the core fonts (latin-1) cannot encode."""
+        s = str(text)
+        try:
+            s.encode("latin-1")
+            return s
+        except UnicodeEncodeError:
+            return "".join(c if ord(c) < 256 else "?" for c in s)
+
+    def cell(self, *args, **kwargs):
+        if "text" in kwargs:
+            kwargs["text"] = self._sanitize(kwargs["text"])
+        elif len(args) >= 3 and isinstance(args[2], str):
+            args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+        return super().cell(*args, **kwargs)
+
+    def multi_cell(self, *args, **kwargs):
+        if "text" in kwargs:
+            kwargs["text"] = self._sanitize(kwargs["text"])
+        elif len(args) >= 3 and isinstance(args[2], str):
+            args = args[:2] + (self._sanitize(args[2]),) + args[3:]
+        return super().multi_cell(*args, **kwargs)
+
     def header(self):
         self.set_font("Arial", "B", 15)
         self.cell(0, 10, "Advanced Memory Export", 0, 1, "C")
@@ -71,7 +95,7 @@ class MarkdownPDF(FPDF):
             elif line.strip().startswith("- ") or line.strip().startswith("* "):
                 self.set_font("Arial", "", 12)
                 self.cell(10)
-                self.cell(0, 6, "• " + line.strip()[2:], ln=1)
+                self.cell(0, 6, "- " + line.strip()[2:], ln=1)
             # Regular text
             elif line.strip():
                 self.set_font("Arial", "", 12)

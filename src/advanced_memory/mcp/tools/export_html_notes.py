@@ -73,8 +73,12 @@ async def export_html_notes(
     try:
         export_path_obj = Path(export_path)
 
-        # Create export directory if it doesn't exist
-        export_path_obj.mkdir(parents=True, exist_ok=True)
+        # Create export directory if it doesn't exist.
+        # When combine_into_one=True the export_path is a FILE path (.html) —
+        # mkdir on it would create a directory with a .html name and the
+        # subsequent write would fail with PermissionError (Errno 13).
+        if export_path_obj.suffix != ".html":
+            export_path_obj.mkdir(parents=True, exist_ok=True)
 
         logger.info(f"Starting HTML export: {source_folder} -> {export_path}")
 
@@ -380,7 +384,7 @@ async def _export_combined_html(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{html_title}</title>
     <style>
-        {_get_combined_css()}
+        {_get_combined_css(include_toc=make_toc)}
     </style>
 </head>
 <body>
@@ -531,9 +535,67 @@ def _add_heading_anchors(html_content: str, base_anchor: str) -> str:
     return html_content
 
 
-def _get_combined_css() -> str:
+def _get_combined_css(include_toc: bool = True) -> str:
     """Get CSS styles for combined HTML export."""
-    return """/* Combined HTML Export Styles */
+    toc_css = "" if not include_toc else """
+.toc-nav {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: var(--toc-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid var(--toc-border);
+}
+
+.toc-nav h2 {
+    color: var(--primary-color);
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-list li {
+    margin: 5px 0;
+}
+
+.toc-list a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+    transition: all 0.2s;
+}
+
+.toc-list a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+.toc-level-1 { padding-left: 0; }
+.toc-level-2 { padding-left: 15px; }
+.toc-level-3 { padding-left: 30px; }
+.toc-level-4 { padding-left: 45px; }
+
+@media (max-width: 1024px) {
+    .toc-nav {
+        position: static;
+        max-height: none;
+        margin-bottom: 20px;
+    }
+}
+"""
+    return "/* Combined HTML Export Styles */\n" + """
 
 :root {
     --primary-color: #2c3e50;
@@ -588,55 +650,6 @@ body {
     color: #666;
     font-size: 0.9em;
 }
-
-.toc-nav {
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-    background: var(--toc-bg);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border: 1px solid var(--toc-border);
-}
-
-.toc-nav h2 {
-    color: var(--primary-color);
-    font-size: 1.3em;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--secondary-color);
-}
-
-.toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.toc-list li {
-    margin: 5px 0;
-}
-
-.toc-list a {
-    color: var(--secondary-color);
-    text-decoration: none;
-    display: block;
-    padding: 5px 0;
-    transition: all 0.2s;
-}
-
-.toc-list a:hover {
-    color: var(--primary-color);
-    padding-left: 5px;
-}
-
-.toc-level-1 { padding-left: 0; }
-.toc-level-2 { padding-left: 15px; }
-.toc-level-3 { padding-left: 30px; }
-.toc-level-4 { padding-left: 45px; }
 
 .combined-content {
     background: white;
@@ -740,12 +753,6 @@ html {
     .container {
         grid-template-columns: 1fr;
     }
-
-    .toc-nav {
-        position: static;
-        max-height: none;
-        margin-bottom: 20px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -764,7 +771,7 @@ html {
     .section-title {
         font-size: 1.5em;
     }
-}"""
+}""" + toc_css
 
 
 async def _process_html_export(notes_data: list[dict[str, Any]], export_path: Path, include_index: bool) -> str:

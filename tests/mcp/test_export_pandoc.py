@@ -220,14 +220,14 @@ async def test_export_pandoc_error_handling(tmp_path, mock_notes_data):
 class TestPdfEngineDefaults:
     """Test PDF engine configuration and defaults."""
 
-    def test_default_pdf_engine_is_weasyprint(self):
-        """Test that the default pdf_engine is weasyprint (pure Python, no external deps)."""
+    def test_default_pdf_engine_is_none(self):
+        """Test that the default pdf_engine is 'none' (PDF export deprecated in pandoc path)."""
         sig = inspect.signature(mcp_fn(export_pandoc))
         pdf_engine_param = sig.parameters.get("pdf_engine")
 
         assert pdf_engine_param is not None, "pdf_engine parameter not found"
-        assert pdf_engine_param.default == "weasyprint", (
-            f"Expected default pdf_engine to be 'weasyprint' (pure Python), but got '{pdf_engine_param.default}'"
+        assert pdf_engine_param.default == "none", (
+            f"Expected default pdf_engine to be 'none' (PDF via pandoc is deprecated), but got '{pdf_engine_param.default}'"
         )
 
     def test_default_self_contained_is_true(self):

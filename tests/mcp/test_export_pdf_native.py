@@ -364,7 +364,7 @@ class TestExportPDFNative:
             )
 
             assert "PDF Export Summary" in result
-            assert "Files Exported: 1" in result
+            assert "**Files Exported:** 1" in result
 
     @pytest.mark.asyncio
     async def test_export_multiple_notes(self, export_dir, multiple_notes):
@@ -379,7 +379,7 @@ class TestExportPDFNative:
             )
 
             assert "PDF Export Summary" in result
-            assert "Files Exported: 3" in result
+            assert "**Files Exported:** 3" in result
 
             # Check that all PDFs were created
             pdf_files = list(export_dir.glob("*.pdf"))
@@ -630,7 +630,7 @@ class TestPDFExportIntegration:
     """Integration tests for PDF export with real data flow."""
 
     @pytest.mark.asyncio
-    async def test_full_export_workflow(self, export_dir, entity_service, search_service):
+    async def test_full_export_workflow(self, export_dir, entity_service, search_service, file_service):
         """Test full export workflow from entity creation to PDF."""
         # Create test entities
         from advanced_memory.schemas.base import Entity as EntitySchema
@@ -650,11 +650,11 @@ class TestPDFExportIntegration:
 
         # Now export
         with patch("advanced_memory.mcp.tools.export_pdf_native._get_notes_from_folder") as mock_get:
-            # Mock to return our created entities
+            # Mock to return our created entities (content read from disk)
             mock_get.return_value = [
                 {
                     "title": entity.title,
-                    "content": entity.content,
+                    "content": await file_service.read_entity_content(entity),
                     "permalink": entity.permalink,
                 }
                 for entity in entities
@@ -667,4 +667,5 @@ class TestPDFExportIntegration:
             )
 
             assert "PDF Export Summary" in result
-            assert "Files Exported: 3" in result
+            assert "**Files Exported:** 3" in result
+
