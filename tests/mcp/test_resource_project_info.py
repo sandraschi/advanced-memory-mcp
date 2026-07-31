@@ -99,7 +99,7 @@ async def test_project_info_tool():
         # Verify that call_get was called with the correct URL
         mock_call_get.assert_called_once()
         args, _kwargs = mock_call_get.call_args
-        assert args[1] == "/test-project/project/info"
+        assert args[1] == "/api/v1/test-project/project/info"
 
         # Verify the result is a ProjectInfoResponse
         assert isinstance(result, ProjectInfoResponse)

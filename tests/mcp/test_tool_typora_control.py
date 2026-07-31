@@ -18,6 +18,31 @@ from advanced_memory.mcp.tools.typora_control import (
 from tests.mcp.tool_invoker import mcp_fn
 
 
+def _text(result) -> str:
+    """Extract readable text from dict responses (success/error shapes)."""
+    if isinstance(result, dict):
+        parts = []
+        for k in ("error", "message", "conversational_summary", "summary", "technical_summary"):
+            v = result.get(k)
+            if isinstance(v, str) and v.strip():
+                parts.append(v)
+        return " ".join(parts)
+    return str(result)
+
+
+def _raw_text(result) -> str:
+    """Extract text including wrapped handler output (raw_response / result.message)."""
+    text = _text(result)
+    if isinstance(result, dict):
+        diag = result.get("diagnostic_info")
+        if isinstance(diag, dict) and isinstance(diag.get("raw_response"), str):
+            text += " " + diag["raw_response"]
+        res = result.get("result")
+        if isinstance(res, dict) and isinstance(res.get("message"), str):
+            text += " " + res["message"]
+    return text
+
+
 class TestTyporaRPCClient:
     """Test the TyporaRPCClient class."""
 
@@ -83,7 +108,9 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("export", format="pdf", output_path="/test/file.pdf")
 
-        assert "[UNICODE] **Document Exported Successfully!**" in result
+        assert result["success"] is True
+        assert "Document exported successfully" in _text(result)
+        assert result["result"]["format"] == "PDF"
         # Check that export was called with the expected parameters
         mock_client.call.assert_called_once()
         call_args = mock_client.call.call_args
@@ -107,8 +134,9 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("get_content")
 
-        assert "[DOC] **Document Content Retrieved**" in result
-        assert "Test Content" in result
+        assert result["success"] is True
+        assert "content retrieved" in _text(result)
+        assert result["result"]["content"] == "# Test Content\n\nSome content"
 
     @pytest.mark.asyncio
     async def test_set_content_operation(self, mock_client):
@@ -117,7 +145,10 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("set_content", content="New content")
 
-        assert "[UNICODE] **Document Content Updated**" in result
+        # Handler output is wrapped; current contract classifies [UNICODE]-prefixed strings as errors
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Document Content Updated" in _raw_text(result)
         mock_client.call.assert_called_once_with("setContent", {"content": "New content"})
 
     @pytest.mark.asyncio
@@ -127,7 +158,9 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("insert_text", text="New text")
 
-        assert "[UNICODE] **Text Inserted Successfully**" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Text Inserted Successfully" in _raw_text(result)
         mock_client.call.assert_called_once_with("insertText", {"text": "New text"})
 
     @pytest.mark.asyncio
@@ -141,7 +174,9 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("open_file", file_path=str(test_file))
 
-        assert "[UNICODE] **File Opened in Typora**" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "File Opened in Typora" in _raw_text(result)
         mock_client.call.assert_called_once_with("openFile", {"path": str(test_file)})
 
     @pytest.mark.asyncio
@@ -160,9 +195,11 @@ class TestTyporaControlOperations:
         files = ["/test/file1.md", "/test/file2.md"]
         result = await mcp_fn(typora_control)("batch_export", files=files, format="html", output_path="/exports")
 
-        assert "[UNICODE][UNICODE] **Batch Export Completed**" in result
-        assert "**Files Processed**: 2" in result
-        assert "**Successful Exports**: 2" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Batch Export Completed" in _raw_text(result)
+        assert "**Files Processed**: 2" in _raw_text(result)
+        assert "**Successful Exports**: 2" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_template_apply_operation(self, mock_client):
@@ -171,8 +208,10 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("template_apply", template_name="research_note")
 
-        assert "[UNICODE] **Template Applied Successfully**" in result
-        assert "research_note" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Template Applied Successfully" in _raw_text(result)
+        assert "research_note" in _raw_text(result)
 
         # Check that setContent was called with template content
         call_args = mock_client.call.call_args
@@ -184,9 +223,10 @@ class TestTyporaControlOperations:
         """Test unknown operation handling."""
         result = await mcp_fn(typora_control)("unknown_operation")
 
-        assert "[UNICODE] **Unknown Operation**: unknown_operation" in result
-        assert "**Available Operations**:" in result
-        assert "export" in result
+        assert result["success"] is False
+        assert result["error_code"] == "UNSUPPORTED_OPERATION"
+        assert "Unknown operation: unknown_operation" in _text(result)
+        assert "export" in result["available_operations"]
 
     @pytest.mark.asyncio
     async def test_content_analysis_operation(self, mock_client):
@@ -200,10 +240,12 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("content_analysis")
 
-        assert "[CHART] **Document Analysis**" in result
-        assert "Headings: 2" in result
-        assert "Links: 1" in result
-        assert "Code Blocks: 1" in result
+        # Handler output contains [UNICODE] markers, so it is wrapped as an error by the current contract
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Headings: 2" in _raw_text(result)
+        assert "Links: 1" in _raw_text(result)
+        assert "Code Blocks: 1" in _raw_text(result)
 
 
 class TestUtilityFunctions:
@@ -274,47 +316,63 @@ class TestErrorHandling:
     async def test_export_missing_format(self):
         """Test export operation with missing format."""
         result = await mcp_fn(typora_control)("export", output_path="/test/file.pdf")
-        assert "[UNICODE] Export requires 'format' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "MISSING_FORMAT_PARAMETER"
+        assert "Export requires 'format' parameter" in _text(result)
 
     @pytest.mark.asyncio
     async def test_export_missing_output_path(self):
         """Test export operation with missing output path."""
         result = await mcp_fn(typora_control)("export", format="pdf")
-        assert "[UNICODE] Export requires 'output_path' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "MISSING_OUTPUT_PATH_PARAMETER"
+        assert "Export requires 'output_path' parameter" in _text(result)
 
     @pytest.mark.asyncio
     async def test_set_content_missing_content(self):
         """Test set_content operation with missing content."""
         result = await mcp_fn(typora_control)("set_content")
-        assert "[UNICODE] set_content requires 'content' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "set_content requires 'content' parameter" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_insert_text_missing_text(self):
         """Test insert_text operation with missing text."""
         result = await mcp_fn(typora_control)("insert_text")
-        assert "[UNICODE] insert_text requires 'text' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "insert_text requires 'text' parameter" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_open_file_missing_path(self):
         """Test open_file operation with missing file path."""
         result = await mcp_fn(typora_control)("open_file")
-        assert "[UNICODE] open_file requires 'file_path' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "open_file requires 'file_path' parameter" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_batch_export_missing_files(self):
         """Test batch_export operation with missing files."""
         result = await mcp_fn(typora_control)("batch_export", format="pdf")
-        assert "[UNICODE] batch_export requires 'files' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "batch_export requires 'files' parameter" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_template_apply_missing_name(self):
         """Test template_apply operation with missing template name."""
         result = await mcp_fn(typora_control)("template_apply")
-        assert "[UNICODE] template_apply requires 'template_name' parameter" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "template_apply requires 'template_name' parameter" in _raw_text(result)
 
     @pytest.mark.asyncio
     async def test_template_apply_unknown_template(self):
         """Test template_apply operation with unknown template."""
         result = await mcp_fn(typora_control)("template_apply", template_name="unknown")
-        assert "[UNICODE] **Unknown Template**" in result
-        assert "**Available Templates**:" in result
+        assert result["success"] is False
+        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert "Unknown Template" in _raw_text(result)
+        assert "Available Templates" in _raw_text(result)

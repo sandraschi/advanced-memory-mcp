@@ -33,7 +33,7 @@ async def test_continue_conversation_with_recent_activity(client, test_graph):
     # Check that the result contains expected content for recent activity
     assert "Continuing conversation on: Recent Activity" in result
     assert "This is a memory retrieval session" in result
-    assert "Please use the available basic-memory tools" in result
+    assert "Please use the available advanced-memory tools" in result
     assert "Next Steps" in result
 
 

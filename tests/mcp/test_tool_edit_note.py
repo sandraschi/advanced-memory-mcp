@@ -131,10 +131,12 @@ async def test_edit_note_invalid_operation(client):
         content="# Test\nContent here.",
     )
 
-    with pytest.raises(ValueError) as exc_info:
-        await mcp_fn(edit_note)(identifier="test/test-note", operation="invalid_op", content="Some content")
+    # Invalid operation now returns a structured error dict instead of raising
+    result = await mcp_fn(edit_note)(identifier="test/test-note", operation="invalid_op", content="Some content")
 
-    assert "Invalid operation 'invalid_op'" in str(exc_info.value)
+    assert result["success"] is False
+    assert result["error_code"] == "INVALID_OPERATION"
+    assert "Operation 'invalid_op' is not supported" in _edit_out(result)
 
 
 @pytest.mark.asyncio
@@ -147,10 +149,12 @@ async def test_edit_note_find_replace_missing_find_text(client):
         content="# Test\nContent here.",
     )
 
-    with pytest.raises(ValueError) as exc_info:
-        await mcp_fn(edit_note)(identifier="test/test-note", operation="find_replace", content="replacement")
+    # Missing find_text now returns a structured error dict instead of raising
+    result = await mcp_fn(edit_note)(identifier="test/test-note", operation="find_replace", content="replacement")
 
-    assert "find_text parameter is required for find_replace operation" in str(exc_info.value)
+    assert result["success"] is False
+    assert result["error_code"] == "MISSING_FIND_TEXT"
+    assert "find_replace requires both find_text and content parameters" in _edit_out(result)
 
 
 @pytest.mark.asyncio
@@ -163,10 +167,12 @@ async def test_edit_note_replace_section_missing_section(client):
         content="# Test\nContent here.",
     )
 
-    with pytest.raises(ValueError) as exc_info:
-        await mcp_fn(edit_note)(identifier="test/test-note", operation="replace_section", content="new content")
+    # Missing section now returns a structured error dict instead of raising
+    result = await mcp_fn(edit_note)(identifier="test/test-note", operation="replace_section", content="new content")
 
-    assert "section parameter is required for replace_section operation" in str(exc_info.value)
+    assert result["success"] is False
+    assert result["error_code"] == "MISSING_SECTION"
+    assert "replace_section requires a section parameter" in _edit_out(result)
 
 
 @pytest.mark.asyncio

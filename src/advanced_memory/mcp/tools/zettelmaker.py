@@ -121,11 +121,10 @@ async def adn_zettelmaker(
     if operation == "collect":
         return ToolResult(
             content=["Opening Zettel Collector for quick, off-the-cuff capture..."],
-            app=ZettelCollector(),
+            structured_content=ZettelCollector(),
         )
 
     result_text = ""
-    app_to_return = None
 
     if operation == "generate":
         result_text = await _generate_operation(category, topic, ai_generate, quality, ctx)
@@ -159,7 +158,7 @@ async def adn_zettelmaker(
             """
         ).strip()
 
-    return ToolResult(content=[result_text], app=app_to_return)
+    return ToolResult(content=[result_text])
 
 
 async def _generate_operation(

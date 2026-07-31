@@ -32,7 +32,7 @@ async def test_recent_activity_timeframe_formats(client, test_graph):
     for timeframe in valid_timeframes:
         try:
             result = await mcp_fn(recent_activity)(
-                type=["entity"], timeframe=timeframe, page=1, page_size=10, max_related=10
+                type_filter=["entity"], timeframe=timeframe, page=1, page_size=10, max_related=10
             )
             assert result is not None
         except Exception as e:
@@ -49,25 +49,25 @@ async def test_recent_activity_type_filters(client, test_graph):
     """Test that recent_activity correctly filters by types."""
 
     # Test single string type
-    result = await mcp_fn(recent_activity)(type=SearchItemType.ENTITY)
+    result = await mcp_fn(recent_activity)(type_filter=SearchItemType.ENTITY)
     assert result is not None
     assert len(result.results) > 0
     assert all(isinstance(item.primary_result, EntitySummary) for item in result.results)
 
     # Test single string type
-    result = await mcp_fn(recent_activity)(type="entity")
+    result = await mcp_fn(recent_activity)(type_filter="entity")
     assert result is not None
     assert len(result.results) > 0
     assert all(isinstance(item.primary_result, EntitySummary) for item in result.results)
 
     # Test single type
-    result = await mcp_fn(recent_activity)(type=["entity"])
+    result = await mcp_fn(recent_activity)(type_filter=["entity"])
     assert result is not None
     assert len(result.results) > 0
     assert all(isinstance(item.primary_result, EntitySummary) for item in result.results)
 
     # Test multiple types
-    result = await mcp_fn(recent_activity)(type=["entity", "observation"])
+    result = await mcp_fn(recent_activity)(type_filter=["entity", "observation"])
     assert result is not None
     assert len(result.results) > 0
     assert all(
@@ -76,7 +76,7 @@ async def test_recent_activity_type_filters(client, test_graph):
     )
 
     # Test multiple types
-    result = await mcp_fn(recent_activity)(type=[SearchItemType.ENTITY, SearchItemType.OBSERVATION])
+    result = await mcp_fn(recent_activity)(type_filter=[SearchItemType.ENTITY, SearchItemType.OBSERVATION])
     assert result is not None
     assert len(result.results) > 0
     assert all(
@@ -85,7 +85,7 @@ async def test_recent_activity_type_filters(client, test_graph):
     )
 
     # Test all types
-    result = await mcp_fn(recent_activity)(type=["entity", "observation", "relation"])
+    result = await mcp_fn(recent_activity)(type_filter=["entity", "observation", "relation"])
     assert result is not None
     assert len(result.results) > 0
     # Results can be any type
@@ -99,14 +99,14 @@ async def test_recent_activity_type_filters(client, test_graph):
 
 @pytest.mark.asyncio
 async def test_recent_activity_type_invalid(client, test_graph):
-    """Test that recent_activity correctly filters by types."""
+    """Test that invalid type filters are tolerated and fall back to all types."""
 
-    # Test single invalid string type
-    with pytest.raises(ValueError) as e:
-        await mcp_fn(recent_activity)(type="note")
-    assert str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"
+    # Invalid types no longer raise - they are logged and fall back to all types
+    result = await mcp_fn(recent_activity)(type_filter="note")
+    assert result is not None
+    assert len(result.results) > 0
 
-    # Test invalid string array type
-    with pytest.raises(ValueError) as e:
-        await mcp_fn(recent_activity)(type=["note"])
-    assert str(e.value) == "Invalid type: note. Valid types are: ['entity', 'observation', 'relation']"
+    # Invalid string array type
+    result = await mcp_fn(recent_activity)(type_filter=["note"])
+    assert result is not None
+    assert len(result.results) > 0

@@ -360,11 +360,13 @@ async def test_search_all_projects(client):
         default_project="project1",
     )
 
-    with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
-        # First call returns project list
-        # Subsequent calls return search results for each project
+    with (
+        patch("advanced_memory.mcp.tools.search.call_get") as mock_call_get,
+        patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post,
+    ):
+        # call_get returns the project list; call_post returns per-project search results
+        mock_call_get.return_value = MagicMock(json=lambda: mock_projects.model_dump())
         mock_call_post.side_effect = [
-            MagicMock(json=lambda: mock_projects.model_dump()),  # Project list
             MagicMock(
                 json=lambda: SearchResponse(
                     results=[
@@ -443,12 +445,14 @@ async def test_search_all_projects_handles_project_errors(client):
         default_project="working-project",
     )
 
-    with patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post:
-        # First call returns project list
-        # Second call succeeds (working project)
-        # Third call fails (failing project)
+    with (
+        patch("advanced_memory.mcp.tools.search.call_get") as mock_call_get,
+        patch("advanced_memory.mcp.tools.search.call_post") as mock_call_post,
+    ):
+        # call_get returns the project list; call_post succeeds for the working project,
+        # then raises for the failing project
+        mock_call_get.return_value = MagicMock(json=lambda: mock_projects.model_dump())
         mock_call_post.side_effect = [
-            MagicMock(json=lambda: mock_projects.model_dump()),
             MagicMock(
                 json=lambda: SearchResponse(
                     results=[

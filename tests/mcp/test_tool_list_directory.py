@@ -76,7 +76,7 @@ async def test_list_directory_with_markdown_filter(client, test_graph):
     result = await mcp_fn(list_directory)(dir_name="/test", file_name_glob="*.md")
 
     assert isinstance(result, str)
-    assert "Files in '/test' matching '*.md' (depth 1):" in result
+    assert "Files in '/test' matching '*.md' (depth 1) [page offset=0, limit=200]:" in result
     # All files in test_graph are markdown files
     assert "[DOC] Connected_Entity_1.md" in result
     assert "[DOC] Connected_Entity_2.md" in result
