@@ -20,14 +20,16 @@ class TestLLMClient:
 
     def test_llm_client_init_with_provider(self):
         """Test LLM client initialization with explicit provider."""
-        client = LLMClient(provider="ollama", model="llama3")
+        with patch.object(LLMClient, "_check_provider_available", return_value=True):
+            client = LLMClient(provider="ollama", model="llama3")
         assert client.provider == "ollama"
         assert client.model == "llama3"
 
     @pytest.mark.asyncio
     async def test_generate_ollama(self):
         """Test Ollama generation."""
-        client = LLMClient(provider="ollama", model="llama3", base_url="http://localhost:11434")
+        with patch.object(LLMClient, "_check_provider_available", return_value=True):
+            client = LLMClient(provider="ollama", model="llama3", base_url="http://localhost:11434")
 
         with patch("httpx.AsyncClient") as mock_client:
             mock_response = MagicMock()
@@ -41,7 +43,8 @@ class TestLLMClient:
     @pytest.mark.asyncio
     async def test_generate_lmstudio(self):
         """Test LM Studio generation."""
-        client = LLMClient(provider="lmstudio", model="local-model", base_url="http://localhost:1234")
+        with patch.object(LLMClient, "_check_provider_available", return_value=True):
+            client = LLMClient(provider="lmstudio", model="local-model", base_url="http://localhost:1234")
 
         with patch("httpx.AsyncClient") as mock_client:
             mock_response = MagicMock()
@@ -90,7 +93,8 @@ class TestLLMClient:
 
     def test_get_llm_client_with_params(self):
         """Test get_llm_client with explicit parameters."""
-        client = get_llm_client(provider="ollama", model="llama3")
+        with patch.object(LLMClient, "_check_provider_available", return_value=True):
+            client = get_llm_client(provider="ollama", model="llama3")
         assert client.provider == "ollama"
         assert client.model == "llama3"
 
@@ -104,6 +108,7 @@ class TestLLMClient:
         monkeypatch.delitem(sys.modules, "advanced_memory.mcp.tools.adn_llm", raising=False)
         with patch("advanced_memory.config.ConfigManager") as mock_config:
             mock_config.return_value.config = app_config
-            client = get_llm_client()
+            with patch.object(LLMClient, "_check_provider_available", return_value=True):
+                client = get_llm_client()
             assert client.provider == "ollama"
             assert client.model == "llama3"

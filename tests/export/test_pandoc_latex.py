@@ -10,7 +10,9 @@ def test_pandoc_latex():
     print("=" * 60)
 
     # Create test markdown
-    test_dir = Path("d:/Dev/repos/test-pdf-export")
+    import tempfile
+
+    test_dir = Path(tempfile.mkdtemp(prefix="pandoc-latex-"))
     test_dir.mkdir(exist_ok=True)
     test_md = test_dir / "test.md"
     test_pdf = test_dir / "test.pdf"

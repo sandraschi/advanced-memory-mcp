@@ -65,7 +65,9 @@ async def test_pdf_export():
 
     # Test 5: Create test markdown and try export
     print("\n5. Creating test markdown file...")
-    test_dir = Path("d:/Dev/repos/test-pdf-export")
+    import tempfile
+
+    test_dir = Path(tempfile.mkdtemp(prefix="pdf-export-"))
     test_dir.mkdir(exist_ok=True)
     test_md = test_dir / "test.md"
     test_md.write_text("""# Test Document

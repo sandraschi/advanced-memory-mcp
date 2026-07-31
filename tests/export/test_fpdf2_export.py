@@ -158,7 +158,9 @@ fpdf2 is lightweight and works!
     pdf.add_markdown(test_md)
 
     # Save
-    output_dir = Path("d:/Dev/repos/test-pdf-export")
+    import tempfile
+
+    output_dir = Path(tempfile.mkdtemp(prefix="fpdf2-export-"))
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / "test_fpdf2.pdf"
 
