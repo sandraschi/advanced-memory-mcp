@@ -1,66 +1,102 @@
 """
-Integration tests for project_management MCP tools.
+Integration tests for adn_project (migrated from project_management MCP tools).
 
 Tests the complete project management workflow: MCP client -> MCP server -> FastAPI -> project service
+
+NOTE ON MAPPING (old tool -> new op):
+- list_memory_projects()            -> adn_project op=ls
+- get_current_project()             -> adn_project op=status (name of the active project)
+- switch_project(name)              -> adn_project op=switch (name)
+- set_default_project(name)         -> adn_project op=create with set_default=True (the only way to
+                                       set a default project on the new surface; create on an
+                                       existing project is rejected as a duplicate)
+- create_memory_project(name, path) -> adn_project op=create (name, path, set_default)
+- delete_project(name)              -> adn_project op=rm (name)
+
+All responses are JSON dicts: {"success": bool, "operation": str, "summary": str, "result": {...}}.
 """
+
+import json
 
 import pytest
 from fastmcp import Client
 
 
+def parse_text(result) -> dict:
+    """Parse a JSON text response."""
+    assert len(result.content) == 1
+    assert result.content[0].type == "text"
+    return json.loads(result.content[0].text)
+
+
+async def project_op(client: Client, operation: str, **kwargs):
+    """Helper: call adn_project with an operation dict."""
+    op = {"operation": operation, **kwargs}
+    return await client.call_tool("adn_project", {"op": op})
+
+
+async def list_projects(client: Client) -> dict:
+    return parse_text(await project_op(client, "ls"))
+
+
+async def current_project(client: Client, name: str = "test-project") -> dict:
+    """adn_project status requires an explicit name; defaults to the active test project."""
+    return parse_text(await project_op(client, "status", name=name))
+
+
+async def write_note(client: Client, title: str, folder: str, content: str, tags: str | None = None):
+    """Helper: write a note through the adn_notes portmanteau."""
+    op = {"operation": "write", "title": title, "folder": folder, "content": content}
+    if tags is not None:
+        op["tags"] = tags
+    await client.call_tool("adn_notes", {"op": op})
+
+
 @pytest.mark.asyncio
 async def test_list_projects_basic_operation(mcp_server, app):
-    """Test basic list_projects operation showing available projects."""
+    """Test basic ls operation showing available projects."""
 
     async with Client(mcp_server) as client:
         # List all available projects
-        list_result = await client.call_tool(
-            "list_memory_projects",
-            {},
-        )
-
-        # Should return formatted project list
-        assert len(list_result.content) == 1
-        list_text = list_result.content[0].text
+        parsed = await list_projects(client)
 
         # Should show available projects with status indicators
-        assert "Available projects:" in list_text
-        assert "test-project" in list_text  # Our default test project
-        assert "(current, default)" in list_text or "(default)" in list_text
-        assert "Project: test-project" in list_text  # Project metadata
+        assert parsed["success"] is True
+        assert parsed["operation"] == "list"
+        assert "available projects" in parsed["technical_summary"]
+
+        project_names = [p["name"] for p in parsed["result"]["projects"]]
+        assert "test-project" in project_names  # Our default test project
+
+        # test-project should be marked as current and default
+        test_project = next(p for p in parsed["result"]["projects"] if p["name"] == "test-project")
+        assert "current" in test_project["indicators"]
+        assert "default" in test_project["indicators"]
 
 
 @pytest.mark.asyncio
 async def test_get_current_project_operation(mcp_server, app):
-    """Test get_current_project showing current project info."""
+    """Test current project status showing project info."""
 
     async with Client(mcp_server) as client:
         # Create some test content first to have stats
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Test Note",
-                "folder": "test",
-                "content": "# Test Note\n\nTest content.\n\n- [feature] Test observation",
-                "tags": "test",
-            },
+        await write_note(
+            client,
+            "Test Note",
+            "test",
+            "# Test Note\n\nTest content.\n\n- [feature] Test observation",
+            "test",
         )
 
         # Get current project info
-        current_result = await client.call_tool(
-            "get_current_project",
-            {},
-        )
+        parsed = await current_project(client)
 
-        assert len(current_result.content) == 1
-        current_text = current_result.content[0].text
-
-        # Should show current project and stats
-        assert "Current project: test-project" in current_text
-        assert "entities" in current_text
-        assert "observations" in current_text
-        assert "relations" in current_text
-        assert "Project: test-project" in current_text  # Project metadata
+        assert parsed["success"] is True
+        assert parsed["result"]["project"]["name"] == "test-project"
+        # Should show current project stats
+        assert "total_entities" in parsed["result"]["statistics"]
+        assert "total_observations" in parsed["result"]["statistics"]
+        assert "total_relations" in parsed["result"]["statistics"]
 
 
 @pytest.mark.asyncio
@@ -69,12 +105,11 @@ async def test_project_info_with_entities(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create multiple entities with observations and relations
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Entity One",
-                "folder": "stats",
-                "content": """# Entity One
+        await write_note(
+            client,
+            "Entity One",
+            "stats",
+            """# Entity One
 
 This is the first entity.
 
@@ -85,16 +120,14 @@ This is the first entity.
 ## Relations
 - relates_to [[Entity Two]]
 - implements [[Some System]]""",
-                "tags": "entity,test",
-            },
+            "entity,test",
         )
 
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Entity Two",
-                "folder": "stats",
-                "content": """# Entity Two
+        await write_note(
+            client,
+            "Entity Two",
+            "stats",
+            """# Entity Two
 
 This is the second entity.
 
@@ -104,27 +137,19 @@ This is the second entity.
 
 ## Relations
 - depends_on [[Entity One]]""",
-                "tags": "entity,test",
-            },
+            "entity,test",
         )
 
         # Get current project info to see updated stats
-        current_result = await client.call_tool(
-            "get_current_project",
-            {},
-        )
+        parsed = await current_project(client)
 
-        assert len(current_result.content) == 1
-        current_text = current_result.content[0].text
+        assert parsed["success"] is True
+        stats = parsed["result"]["statistics"]
 
-        # Should show entity and observation counts
-        assert "Current project: test-project" in current_text
         # Should show at least the entities we created
-        assert "2 entities" in current_text or "3 entities" in current_text  # May include other entities from setup
-        # Should show observations from our entities
-        assert (
-            "4 observations" in current_text or "5 observations" in current_text or "6 observations" in current_text
-        )  # Our 4 + possibly more from setup
+        assert stats["total_entities"] >= 2
+        # Should show observations from our entities (4 + possibly more from setup)
+        assert stats["total_observations"] >= 4
 
 
 @pytest.mark.asyncio
@@ -133,20 +158,12 @@ async def test_switch_project_not_found(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Try to switch to non-existent project
-        switch_result = await client.call_tool(
-            "switch_project",
-            {
-                "project_name": "non-existent-project",
-            },
-        )
-
-        assert len(switch_result.content) == 1
-        switch_text = switch_result.content[0].text
+        parsed = parse_text(await project_op(client, "switch", name="non-existent-project"))
 
         # Should show error message with available projects
-        assert "Error: Project 'non-existent-project' not found" in switch_text
-        assert "Available projects:" in switch_text
-        assert "test-project" in switch_text
+        assert parsed["success"] is False
+        assert "does not exist" in parsed["message"]
+        assert "test-project" in parsed.get("available_projects", [])
 
 
 @pytest.mark.asyncio
@@ -155,83 +172,80 @@ async def test_switch_project_to_test_project(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Switch to the same project (test-project)
-        switch_result = await client.call_tool(
-            "switch_project",
-            {
-                "project_name": "test-project",
-            },
-        )
-
-        assert len(switch_result.content) == 1
-        switch_text = switch_result.content[0].text
+        parsed = parse_text(await project_op(client, "switch", name="test-project"))
 
         # Should show successful switch
-        assert "✓ Switched to test-project project" in switch_text
-        assert "Project Summary:" in switch_text
-        assert "entities" in switch_text
-        assert "observations" in switch_text
-        assert "relations" in switch_text
-        assert "Project: test-project" in switch_text  # Project metadata
+        assert parsed["success"] is True
+        assert "Successfully switched to project 'test-project'" in parsed["technical_summary"]
+        assert parsed["result"]["project_name"] == "test-project"
+        # Project summary/statistics may be present
+        assert "statistics" in parsed["result"]
 
 
 @pytest.mark.asyncio
 async def test_set_default_project_operation(mcp_server, app):
-    """Test set_default_project functionality."""
+    """Test setting a default project.
+
+    NOTE: The new surface has no standalone set_default op. The only way to
+    set a project as default is create with set_default=True. Setting the
+    existing test-project as default again is therefore rejected as a
+    duplicate; this test verifies the create-with-set_default flow and that
+    the session switches to the new default.
+    """
 
     async with Client(mcp_server) as client:
-        # Get current project info (default)
-        current_result = await client.call_tool(
-            "get_current_project",
-            {},
+        # Set a fresh project as default via create + set_default
+        create_result = await project_op(
+            client,
+            "create",
+            name="default-target-project",
+            path="/tmp/default-target-project",
+            set_default=True,
         )
+        parsed = parse_text(create_result)
 
-        assert len(current_result.content) == 1
-        current_text = current_result.content[0].text
+        # Should show success and default flag
+        assert parsed["success"] is True
+        assert parsed["result"]["project_created"] is True
+        assert parsed["result"]["set_as_default"] is True
 
-        # Should show current project and stats
-        assert "Current project: test-project" in current_text
+        # Verify the session switched to the new default project
+        current = await current_project(client, name="default-target-project")
+        assert current["result"]["project"]["name"] == "default-target-project"
 
-        # Set test-project as default (it likely already is, but test the operation)
-        default_result = await client.call_tool(
-            "set_default_project",
-            {
-                "project_name": "test-project",
-            },
-        )
-
-        assert len(default_result.content) == 1
-        default_text = default_result.content[0].text
-
-        # Should show success message and restart instructions
-        assert "✓" in default_text  # Success indicator
-        assert "test-project" in default_text
-        assert "Restart Advanced Memory for this change to take effect" in default_text
-        assert "basic-memory mcp" in default_text
-        assert "Project: test-project" in default_text  # Project metadata
+        # NOTE: the API refuses to delete the *default* project, so no rm cleanup
+        # is possible here; the fixture is function-scoped, so this is harmless.
+        await project_op(client, "switch", name="test-project")
 
 
 @pytest.mark.asyncio
 async def test_set_default_project_not_found(mcp_server, app):
-    """Test set_default_project with non-existent project."""
+    """Test default-setting operation behavior for a non-existent project.
+
+    NOTE: The old set_default_project error path (non-existent project) is gone
+    from the new surface: create with set_default=True simply creates the
+    project and sets it as default. This test verifies that behavior.
+    """
 
     async with Client(mcp_server) as client:
-        # Try to set non-existent project as default
-        with pytest.raises(Exception) as exc_info:
-            await client.call_tool(
-                "set_default_project",
-                {
-                    "project_name": "non-existent-project",
-                },
-            )
-
-        # Should show error about non-existent project
-        error_message = str(exc_info.value)
-        assert "set_default_project" in error_message
-        assert (
-            "non-existent-project" in error_message
-            or "Invalid request" in error_message
-            or "Client error" in error_message
+        # Create a new project and set it as default
+        create_result = await project_op(
+            client,
+            "create",
+            name="non-existent-project",
+            path="/tmp/non-existent-project",
+            set_default=True,
         )
+        parsed = parse_text(create_result)
+
+        # The project is created (not an error) and set as default
+        assert parsed["success"] is True
+        assert parsed["result"]["project_created"] is True
+        assert parsed["result"]["set_as_default"] is True
+
+        # NOTE: the API refuses to delete the *default* project, so no rm cleanup
+        # is possible here; the fixture is function-scoped, so this is harmless.
+        await project_op(client, "switch", name="test-project")
 
 
 @pytest.mark.asyncio
@@ -240,21 +254,22 @@ async def test_project_management_workflow(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # 1. Check current project
-        current_result = await client.call_tool("get_current_project", {})
-        assert "test-project" in current_result.content[0].text
+        parsed = await current_project(client)
+        assert parsed["result"]["project"]["name"] == "test-project"
 
         # 2. List all projects
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert "Available projects:" in list_result.content[0].text
-        assert "test-project" in list_result.content[0].text
+        parsed = await list_projects(client)
+        assert "available projects" in parsed["technical_summary"]
+        assert "test-project" in [p["name"] for p in parsed["result"]["projects"]]
 
         # 3. Switch to same project (should work)
-        switch_result = await client.call_tool("switch_project", {"project_name": "test-project"})
-        assert "✓ Switched to test-project project" in switch_result.content[0].text
+        parsed = parse_text(await project_op(client, "switch", name="test-project"))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_name"] == "test-project"
 
         # 4. Verify we're still on the same project
-        current_result2 = await client.call_tool("get_current_project", {})
-        assert "Current project: test-project" in current_result2.content[0].text
+        parsed = await current_project(client)
+        assert parsed["result"]["project"]["name"] == "test-project"
 
 
 @pytest.mark.asyncio
@@ -262,26 +277,18 @@ async def test_project_metadata_consistency(mcp_server, app):
     """Test that all project management tools include consistent project metadata."""
 
     async with Client(mcp_server) as client:
-        # Test all project management tools and verify they include project metadata
+        # ls
+        parsed = await list_projects(client)
+        assert "test-project" in [p["name"] for p in parsed["result"]["projects"]]
 
-        # list_projects
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert "Project: test-project" in list_result.content[0].text
+        # status (current project)
+        parsed = await current_project(client)
+        assert parsed["result"]["project"]["name"] == "test-project"
 
-        # get_current_project
-        current_result = await client.call_tool("get_current_project", {})
-        assert "Project: test-project" in current_result.content[0].text
-
-        # switch_project
-        switch_result = await client.call_tool("switch_project", {"project_name": "test-project"})
-        assert "Project: test-project" in switch_result.content[0].text
-
-        # set_default_project (skip since API not working in test env)
-        # default_result = await client.call_tool(
-        #     "set_default_project",
-        #     {"project_name": "test-project"}
-        # )
-        # assert "Project: test-project" in default_result.content[0].text
+        # switch
+        parsed = parse_text(await project_op(client, "switch", name="test-project"))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_name"] == "test-project"
 
 
 @pytest.mark.asyncio
@@ -290,17 +297,15 @@ async def test_project_statistics_accuracy(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Get initial stats
-        initial_result = await client.call_tool("get_current_project", {})
-        initial_text = initial_result.content[0].text
-        assert initial_text is not None
+        initial = await current_project(client)
+        assert initial["success"] is True
 
         # Create a new entity
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Stats Test Note",
-                "folder": "stats-test",
-                "content": """# Stats Test Note
+        await write_note(
+            client,
+            "Stats Test Note",
+            "stats-test",
+            """# Stats Test Note
 
 Testing statistics accuracy.
 
@@ -310,33 +315,17 @@ Testing statistics accuracy.
 
 ## Relations
 - validates [[Project Statistics]]""",
-                "tags": "stats,test",
-            },
+            "stats,test",
         )
 
         # Get updated stats
-        updated_result = await client.call_tool("get_current_project", {})
-        updated_text = updated_result.content[0].text
-
-        # Should show project info with stats
-        assert "Current project: test-project" in updated_text
-        assert "entities" in updated_text
-        assert "observations" in updated_text
-        assert "relations" in updated_text
+        updated = await current_project(client)
+        assert updated["success"] is True
+        stats = updated["result"]["statistics"]
 
         # Stats should be reasonable (at least 1 entity, some observations)
-        import re
-
-        entity_match = re.search(r"(\d+) entities", updated_text)
-        obs_match = re.search(r"(\d+) observations", updated_text)
-
-        if entity_match:
-            entity_count = int(entity_match.group(1))
-            assert entity_count >= 1, f"Should have at least 1 entity, got {entity_count}"
-
-        if obs_match:
-            obs_count = int(obs_match.group(1))
-            assert obs_count >= 2, f"Should have at least 2 observations, got {obs_count}"
+        assert stats["total_entities"] >= 1, f"Should have at least 1 entity, got {stats['total_entities']}"
+        assert stats["total_observations"] >= 2, f"Should have at least 2 observations, got {stats['total_observations']}"
 
 
 @pytest.mark.asyncio
@@ -345,30 +334,22 @@ async def test_create_project_basic_operation(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a new project
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": "test-new-project",
-                "project_path": "/tmp/test-new-project",
-            },
-        )
-
-        assert len(create_result.content) == 1
-        create_text = create_result.content[0].text
+        parsed = parse_text(await project_op(client, "create", name="test-new-project", path="/tmp/test-new-project"))
 
         # Should show success message and project details
-        assert "✓" in create_text  # Success indicator
-        assert "test-new-project" in create_text
-        assert "Project Details:" in create_text
-        assert "Name: test-new-project" in create_text
-        assert "Path: /tmp/test-new-project" in create_text
-        assert "Project is now available for use" in create_text
-        assert "Project: test-project" in create_text  # Should still show current project
+        assert parsed["success"] is True
+        assert parsed["result"]["project_created"] is True
+        assert parsed["result"]["project_details"]["name"] == "test-new-project"
+        assert parsed["result"]["project_details"]["path"] == "/tmp/test-new-project"
+        assert parsed["result"]["set_as_default"] is False
+
+        # The session should still be on the default project
+        current = await current_project(client)
+        assert current["result"]["project"]["name"] == "test-project"
 
         # Verify project appears in project list
-        list_result = await client.call_tool("list_memory_projects", {})
-        list_text = list_result.content[0].text
-        assert "test-new-project" in list_text
+        parsed_list = await list_projects(client)
+        assert "test-new-project" in [p["name"] for p in parsed_list["result"]["projects"]]
 
 
 @pytest.mark.asyncio
@@ -377,28 +358,18 @@ async def test_create_project_with_default_flag(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a new project and set as default
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": "test-default-project",
-                "project_path": "/tmp/test-default-project",
-                "set_default": True,
-            },
+        parsed = parse_text(
+            await project_op(client, "create", name="test-default-project", path="/tmp/test-default-project", set_default=True)
         )
 
-        assert len(create_result.content) == 1
-        create_text = create_result.content[0].text
-
         # Should show success and default flag
-        assert "✓" in create_text
-        assert "test-default-project" in create_text
-        assert "Set as default project" in create_text
-        assert "Project: test-default-project" in create_text  # Should switch to new project
+        assert parsed["success"] is True
+        assert parsed["result"]["project_created"] is True
+        assert parsed["result"]["set_as_default"] is True
 
         # Verify we switched to the new project
-        current_result = await client.call_tool("get_current_project", {})
-        current_text = current_result.content[0].text
-        assert "Current project: test-default-project" in current_text
+        current = await current_project(client, name="test-default-project")
+        assert current["result"]["project"]["name"] == "test-default-project"
 
 
 @pytest.mark.asyncio
@@ -407,30 +378,16 @@ async def test_create_project_duplicate_name(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # First create a project
-        await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": "duplicate-test",
-                "project_path": "/tmp/duplicate-test-1",
-            },
-        )
+        parsed = parse_text(await project_op(client, "create", name="duplicate-test", path="/tmp/duplicate-test-1"))
+        assert parsed["success"] is True
 
-        # Try to create another project with same name
+        # Try to create another project with same name - should raise a ToolError
         with pytest.raises(Exception) as exc_info:
-            await client.call_tool(
-                "create_memory_project",
-                {
-                    "project_name": "duplicate-test",
-                    "project_path": "/tmp/duplicate-test-2",
-                },
-            )
+            await project_op(client, "create", name="duplicate-test", path="/tmp/duplicate-test-2")
 
         # Should show error about duplicate name
         error_message = str(exc_info.value)
-        assert "create_memory_project" in error_message
-        assert (
-            "duplicate-test" in error_message or "already exists" in error_message or "Invalid request" in error_message
-        )
+        assert "duplicate-test" in error_message or "already exists" in error_message
 
 
 @pytest.mark.asyncio
@@ -439,89 +396,62 @@ async def test_delete_project_basic_operation(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # First create a project to delete
-        await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": "to-be-deleted",
-                "project_path": "/tmp/to-be-deleted",
-            },
-        )
+        parsed = parse_text(await project_op(client, "create", name="to-be-deleted", path="/tmp/to-be-deleted"))
+        assert parsed["success"] is True
 
         # Verify it exists
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert "to-be-deleted" in list_result.content[0].text
+        parsed_list = await list_projects(client)
+        assert "to-be-deleted" in [p["name"] for p in parsed_list["result"]["projects"]]
 
         # Delete the project
-        delete_result = await client.call_tool(
-            "delete_project",
-            {
-                "project_name": "to-be-deleted",
-            },
-        )
-
-        assert len(delete_result.content) == 1
-        delete_text = delete_result.content[0].text
+        parsed = parse_text(await project_op(client, "rm", name="to-be-deleted"))
 
         # Should show success message
-        assert "✓" in delete_text
-        assert "to-be-deleted" in delete_text
-        assert "removed successfully" in delete_text
-        assert "Removed project details:" in delete_text
-        assert "Name: to-be-deleted" in delete_text
-        assert "Files remain on disk but project is no longer tracked" in delete_text
-        assert "Project: test-project" in delete_text  # Should show current project
+        assert parsed["success"] is True
+        assert "removed successfully" in parsed["technical_summary"]
+        assert parsed["result"]["project_deleted"] is True
+        assert parsed["result"]["deleted_project"]["name"] == "to-be-deleted"
+        # Files remain on disk but project is no longer tracked
+        assert parsed["result"]["files_preserved"] is True
 
         # Verify project no longer appears in list
-        list_result_after = await client.call_tool("list_memory_projects", {})
-        assert "to-be-deleted" not in list_result_after.content[0].text
+        parsed_list = await list_projects(client)
+        assert "to-be-deleted" not in [p["name"] for p in parsed_list["result"]["projects"]]
 
 
 @pytest.mark.asyncio
 async def test_delete_project_not_found(mcp_server, app):
-    """Test deleting a non-existent project shows error."""
+    """Test deleting a non-existent project shows error.
+
+    NOTE: The old surface raised an exception; the new surface returns a
+    structured error dict.
+    """
 
     async with Client(mcp_server) as client:
         # Try to delete non-existent project
-        with pytest.raises(Exception) as exc_info:
-            await client.call_tool(
-                "delete_project",
-                {
-                    "project_name": "non-existent-project",
-                },
-            )
+        parsed = parse_text(await project_op(client, "rm", name="non-existent-project"))
 
         # Should show error about non-existent project
-        error_message = str(exc_info.value)
-        assert "delete_project" in error_message
-        assert (
-            "non-existent-project" in error_message
-            or "not found" in error_message
-            or "Invalid request" in error_message
-        )
+        assert parsed["success"] is False
+        assert "does not exist" in parsed["message"]
 
 
 @pytest.mark.asyncio
 async def test_delete_current_project_protection(mcp_server, app):
-    """Test that deleting the current project is prevented."""
+    """Test that deleting the current project is prevented.
+
+    NOTE: The old surface raised an exception; the new surface returns a
+    structured error dict.
+    """
 
     async with Client(mcp_server) as client:
         # Try to delete the current project (test-project)
-        with pytest.raises(Exception) as exc_info:
-            await client.call_tool(
-                "delete_project",
-                {
-                    "project_name": "test-project",
-                },
-            )
+        parsed = parse_text(await project_op(client, "rm", name="test-project"))
 
         # Should show error about deleting current project
-        error_message = str(exc_info.value)
-        assert "delete_project" in error_message
-        assert (
-            "currently active" in error_message
-            or "test-project" in error_message
-            or "Switch to a different project" in error_message
-        )
+        assert parsed["success"] is False
+        assert "currently active" in parsed["message"]
+        assert "test-project" in parsed["message"]
 
 
 @pytest.mark.asyncio
@@ -533,64 +463,42 @@ async def test_project_lifecycle_workflow(mcp_server, app):
         project_path = "/tmp/lifecycle-test"
 
         # 1. Create new project
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": project_name,
-                "project_path": project_path,
-            },
-        )
-        assert "✓" in create_result.content[0].text
-        assert project_name in create_result.content[0].text
+        parsed = parse_text(await project_op(client, "create", name=project_name, path=project_path))
+        assert parsed["success"] is True
+        assert project_name in parsed["technical_summary"]
 
         # 2. Switch to the new project
-        switch_result = await client.call_tool(
-            "switch_project",
-            {
-                "project_name": project_name,
-            },
-        )
-        assert f"✓ Switched to {project_name} project" in switch_result.content[0].text
+        parsed = parse_text(await project_op(client, "switch", name=project_name))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_name"] == project_name
 
         # 3. Create content in the new project
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Lifecycle Test Note",
-                "folder": "test",
-                "content": "# Lifecycle Test\\n\\nThis note tests the project lifecycle.\\n\\n- [test] Lifecycle testing",
-                "tags": "lifecycle,test",
-            },
+        await write_note(
+            client,
+            "Lifecycle Test Note",
+            "test",
+            "# Lifecycle Test\n\nThis note tests the project lifecycle.\n\n- [test] Lifecycle testing",
+            "lifecycle,test",
         )
 
         # 4. Verify project stats show our content
-        current_result = await client.call_tool("get_current_project", {})
-        current_text = current_result.content[0].text
-        assert f"Current project: {project_name}" in current_text
-        assert "entities" in current_text
+        parsed = await current_project(client, name=project_name)
+        assert parsed["result"]["project"]["name"] == project_name
+        assert parsed["result"]["statistics"]["total_entities"] >= 1
 
         # 5. Switch back to original project
-        await client.call_tool(
-            "switch_project",
-            {
-                "project_name": "test-project",
-            },
-        )
+        parsed = parse_text(await project_op(client, "switch", name="test-project"))
+        assert parsed["success"] is True
 
         # 6. Delete the lifecycle test project
-        delete_result = await client.call_tool(
-            "delete_project",
-            {
-                "project_name": project_name,
-            },
-        )
-        assert "✓" in delete_result.content[0].text
-        assert f"{project_name}" in delete_result.content[0].text
-        assert "removed successfully" in delete_result.content[0].text
+        parsed = parse_text(await project_op(client, "rm", name=project_name))
+        assert parsed["success"] is True
+        assert "removed successfully" in parsed["technical_summary"]
+        assert parsed["result"]["deleted_project"]["name"] == project_name
 
         # 7. Verify project is gone from list
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert project_name not in list_result.content[0].text
+        parsed_list = await list_projects(client)
+        assert project_name not in [p["name"] for p in parsed_list["result"]["projects"]]
 
 
 @pytest.mark.asyncio
@@ -602,33 +510,22 @@ async def test_create_delete_project_edge_cases(mcp_server, app):
         special_name = "test-project-with-dashes"
 
         # Create project with special characters
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": special_name,
-                "project_path": f"/tmp/{special_name}",
-            },
-        )
-        assert "✓" in create_result.content[0].text
-        assert special_name in create_result.content[0].text
+        parsed = parse_text(await project_op(client, "create", name=special_name, path=f"/tmp/{special_name}"))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_details"]["name"] == special_name
 
         # Verify it appears in list
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert special_name in list_result.content[0].text
+        parsed_list = await list_projects(client)
+        assert special_name in [p["name"] for p in parsed_list["result"]["projects"]]
 
         # Delete it
-        delete_result = await client.call_tool(
-            "delete_project",
-            {
-                "project_name": special_name,
-            },
-        )
-        assert "✓" in delete_result.content[0].text
-        assert special_name in delete_result.content[0].text
+        parsed = parse_text(await project_op(client, "rm", name=special_name))
+        assert parsed["success"] is True
+        assert parsed["result"]["deleted_project"]["name"] == special_name
 
         # Verify it's gone
-        list_result_after = await client.call_tool("list_memory_projects", {})
-        assert special_name not in list_result_after.content[0].text
+        parsed_list = await list_projects(client)
+        assert special_name not in [p["name"] for p in parsed_list["result"]["projects"]]
 
 
 @pytest.mark.asyncio
@@ -638,19 +535,13 @@ async def test_case_insensitive_project_switching(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a project with mixed case name
         project_name = "Personal-Project"
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": project_name,
-                "project_path": f"/tmp/{project_name}",
-            },
-        )
-        assert "✓" in create_result.content[0].text
-        assert project_name in create_result.content[0].text
+        parsed = parse_text(await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}"))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_details"]["name"] == project_name
 
         # Verify project was created with canonical name
-        list_result = await client.call_tool("list_memory_projects", {})
-        assert project_name in list_result.content[0].text
+        parsed_list = await list_projects(client)
+        assert project_name in [p["name"] for p in parsed_list["result"]["projects"]]
 
         # Test switching with different case variations
         test_cases = [
@@ -662,37 +553,26 @@ async def test_case_insensitive_project_switching(mcp_server, app):
 
         for test_input in test_cases:
             # Switch using case-insensitive input
-            switch_result = await client.call_tool(
-                "switch_project",
-                {"project_name": test_input},
-            )
+            parsed = parse_text(await project_op(client, "switch", name=test_input))
 
             # Should succeed and show canonical name in response
-            assert "✓ Switched to" in switch_result.content[0].text
-            assert project_name in switch_result.content[0].text  # Canonical name should appear
+            assert parsed["success"] is True
+            assert parsed["result"]["project_name"] == project_name  # Canonical name should appear
             # Project summary may be unavailable in test environment
-            assert (
-                "Project Summary:" in switch_result.content[0].text
-                or "Project summary unavailable" in switch_result.content[0].text
-            )
+            assert "statistics" in parsed["result"]
 
-            # Verify get_current_project works after case-insensitive switch
-            try:
-                current_result = await client.call_tool("get_current_project", {})
-                current_text = current_result.content[0].text
+            # Verify the session is on the canonical project (via ls current_project;
+            # NOTE: adn_project status echoes the URL permalink, not the canonical name)
+            parsed_list = await list_projects(client)
+            assert parsed_list["result"]["current_project"] == project_name
 
-                # Should show canonical project name, not the input case
-                assert f"Current project: {project_name}" in current_text
-                assert "entities" in current_text or "Project: " in current_text
-            except Exception as e:
-                # In test environment, the project info API may not work properly
-                # The key test is that switch_project succeeded with canonical name
-                print(f"Note: get_current_project failed in test env: {e}")
-                pass
+            # Verify current project stats are available
+            current = await current_project(client, name=project_name)
+            assert "statistics" in current["result"]
 
         # Clean up - switch back to test project and delete the test project
-        await client.call_tool("switch_project", {"project_name": "test-project"})
-        await client.call_tool("delete_project", {"project_name": project_name})
+        await project_op(client, "switch", name="test-project")
+        await project_op(client, "rm", name=project_name)
 
 
 @pytest.mark.asyncio
@@ -702,66 +582,67 @@ async def test_case_insensitive_project_operations(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a project with capital letters
         project_name = "CamelCase-Project"
-        create_result = await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": project_name,
-                "project_path": f"/tmp/{project_name}",
-            },
-        )
-        assert "✓" in create_result.content[0].text
+        parsed = parse_text(await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}"))
+        assert parsed["success"] is True
 
-        # Switch to project using lowercase input
-        switch_result = await client.call_tool(
-            "switch_project",
-            {"project_name": "camel-case-project"},  # lowercase input
-        )
-        assert "✓ Switched to" in switch_result.content[0].text
-        assert project_name in switch_result.content[0].text  # Should show canonical name
+        # Switch to project using different-case input.
+        # NOTE: the old test used "camel-case-project"; the new surface matches
+        # by permalink/name case-insensitively (no hyphen-stripping), so the
+        # uppercase variant is used here.
+        parsed = parse_text(await project_op(client, "switch", name="CAMELCASE-PROJECT"))
+        assert parsed["success"] is True
+        assert parsed["result"]["project_name"] == project_name  # Should show canonical name
 
         # Test that MCP operations work correctly after case-insensitive switch
 
         # 1. Create a note in the switched project
         write_result = await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Case Test Note",
-                "folder": "case-test",
-                "content": "# Case Test Note\n\nTesting case-insensitive operations.\n\n- [test] Case insensitive switch\n- relates_to [[Another Note]]",
-                "tags": "case,test",
+                "op": {
+                    "operation": "write",
+                    "title": "Case Test Note",
+                    "folder": "case-test",
+                    "content": "# Case Test Note\n\nTesting case-insensitive operations.\n\n- [test] Case insensitive switch\n- relates_to [[Another Note]]",
+                    "tags": "case,test",
+                }
             },
         )
-        assert len(write_result.content) == 1
-        write_text = write_result.content[0].text
-        # write_note response includes file path with underscores, not spaces in title
-        assert "Case Test Note" in write_text or "Case_Test_Note" in write_text
+        write_parsed = parse_text(write_result)
+        assert write_parsed["success"] is True
+        assert write_parsed["result"]["title"] == "Case Test Note"
 
-        # 2. Verify get_current_project shows stats correctly
-        current_result = await client.call_tool("get_current_project", {})
-        current_text = current_result.content[0].text
-        assert f"Current project: {project_name}" in current_text
-        assert "1 entities" in current_text or "entities" in current_text
+        # 2. Verify current project stats correctly
+        # NOTE: adn_project status echoes the URL permalink as project.name, so
+        # the canonical name is verified via ls current_project instead.
+        current = await current_project(client, name=project_name)
+        assert current["result"]["project"]["name"] == "camel-case-project"  # permalink form
+        assert current["result"]["statistics"]["total_entities"] >= 1
+        parsed_list = await list_projects(client)
+        assert parsed_list["result"]["current_project"] == project_name  # canonical name
 
         # 3. Test search works in the switched project
         search_result = await client.call_tool(
-            "search_notes",
-            {"query": "case insensitive"},
+            "adn_search",
+            {"op": {"operation": "query", "text": "case insensitive"}},
         )
         assert len(search_result.content) == 1
         assert "Case Test Note" in search_result.content[0].text
 
-        # 4. Test read_note works
+        # 4. Test read works
         read_result = await client.call_tool(
-            "read_note",
-            {"identifier": "Case Test Note"},
+            "adn_notes",
+            {"op": {"operation": "read", "identifier": "Case Test Note"}},
         )
         assert len(read_result.content) == 1
-        assert "Case Test Note" in read_result.content[0].text
-        assert "case insensitive" in read_result.content[0].text.lower()
+        read_parsed = parse_text(read_result)
+        content = read_parsed["result"]["content"]
+        assert "Case Test Note" in content
+        assert "case insensitive" in content.lower()
 
         # Clean up
-        await client.call_tool("switch_project", {"project_name": "test-project"})
-        await client.call_tool("delete_project", {"project_name": project_name})
+        await project_op(client, "switch", name="test-project")
+        await project_op(client, "rm", name=project_name)
 
 
 @pytest.mark.asyncio
@@ -778,15 +659,12 @@ async def test_case_insensitive_error_handling(mcp_server, app):
         ]
 
         for test_case in non_existent_cases:
-            switch_result = await client.call_tool(
-                "switch_project",
-                {"project_name": test_case},
-            )
+            parsed = parse_text(await project_op(client, "switch", name=test_case))
 
             # Should show error for all case variations
-            assert f"Error: Project '{test_case}' not found" in switch_result.content[0].text
-            assert "Available projects:" in switch_result.content[0].text
-            assert "test-project" in switch_result.content[0].text
+            assert parsed["success"] is False
+            assert f"Project '{test_case}' does not exist" in parsed["message"]
+            assert "test-project" in parsed.get("available_projects", [])
 
 
 @pytest.mark.asyncio
@@ -804,42 +682,37 @@ async def test_case_preservation_in_project_list(mcp_server, app):
 
         # Create all test projects
         for project_name in test_projects:
-            await client.call_tool(
-                "create_memory_project",
-                {
-                    "project_name": project_name,
-                    "project_path": f"/tmp/{project_name}",
-                },
+            parsed = parse_text(
+                await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}")
             )
+            assert parsed["success"] is True
 
         # List projects and verify each appears with its original case
-        list_result = await client.call_tool("list_memory_projects", {})
-        list_text = list_result.content[0].text
+        parsed_list = await list_projects(client)
+        project_names = [p["name"] for p in parsed_list["result"]["projects"]]
 
         for project_name in test_projects:
-            assert project_name in list_text, f"Project {project_name} not found in list"
+            assert project_name in project_names, f"Project {project_name} not found in list"
 
         # Test switching to each project with different case input
         for project_name in test_projects:
             # Switch using lowercase input
             lowercase_input = project_name.lower()
-            switch_result = await client.call_tool(
-                "switch_project",
-                {"project_name": lowercase_input},
-            )
+            parsed = parse_text(await project_op(client, "switch", name=lowercase_input))
 
             # Should succeed and show original case in response
-            assert "✓ Switched to" in switch_result.content[0].text
-            assert project_name in switch_result.content[0].text  # Original case preserved
+            assert parsed["success"] is True
+            assert parsed["result"]["project_name"] == project_name  # Original case preserved
 
-            # Verify current project shows original case
-            current_result = await client.call_tool("get_current_project", {})
-            assert f"Current project: {project_name}" in current_result.content[0].text
+            # Verify the session is on the canonical project (via ls current_project;
+            # NOTE: adn_project status echoes the URL permalink, not the canonical name)
+            parsed_list = await list_projects(client)
+            assert parsed_list["result"]["current_project"] == project_name
 
         # Clean up - switch back and delete test projects
-        await client.call_tool("switch_project", {"project_name": "test-project"})
+        await project_op(client, "switch", name="test-project")
         for project_name in test_projects:
-            await client.call_tool("delete_project", {"project_name": project_name})
+            await project_op(client, "rm", name=project_name)
 
 
 @pytest.mark.asyncio
@@ -849,50 +722,45 @@ async def test_session_state_consistency_after_case_switch(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a project with specific case
         project_name = "Session-Test-Project"
-        await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": project_name,
-                "project_path": f"/tmp/{project_name}",
-            },
-        )
+        parsed = parse_text(await project_op(client, "create", name=project_name, path=f"/tmp/{project_name}"))
+        assert parsed["success"] is True
 
         # Switch using different case
-        await client.call_tool(
-            "switch_project",
-            {"project_name": "session-test-project"},  # lowercase
-        )
+        parsed = parse_text(await project_op(client, "switch", name="session-test-project"))  # lowercase
+        assert parsed["success"] is True
 
         # Perform multiple operations and verify consistency
         operations = [
             (
-                "write_note",
+                "adn_notes",
                 {
+                    "operation": "write",
                     "title": "Session Consistency Test",
                     "folder": "session",
                     "content": "# Session Test\n\n- [test] Session consistency",
                     "tags": "session,test",
                 },
             ),
-            ("get_current_project", {}),
-            ("search_notes", {"query": "session"}),
-            ("list_memory_projects", {}),
+            ("adn_project", {"operation": "status", "name": project_name}),
+            ("adn_search", {"operation": "query", "text": "session"}),
+            ("adn_project", {"operation": "ls"}),
         ]
 
-        for op_name, op_params in operations:
-            result = await client.call_tool(op_name, op_params)
+        for tool_name, op in operations:
+            result = await client.call_tool(tool_name, {"op": op})
 
             # All operations should work and reference the canonical project name
-            if op_name == "get_current_project":
-                assert f"Current project: {project_name}" in result.content[0].text
-            elif op_name == "list_memory_projects":
-                assert project_name in result.content[0].text
-                assert "(current)" in result.content[0].text or "current" in result.content[0].text.lower()
-
-            # All operations should include project metadata with canonical name
-            # FIXME
-            # assert f"Project: {project_name}" in result.content[0].text
+            if tool_name == "adn_project" and op["operation"] == "status":
+                parsed = parse_text(result)
+                # NOTE: status echoes the URL permalink form of the name
+                assert parsed["result"]["project"]["name"] == "session-test-project"
+                assert "statistics" in parsed["result"]
+            elif tool_name == "adn_project" and op["operation"] == "ls":
+                parsed = parse_text(result)
+                assert project_name in [p["name"] for p in parsed["result"]["projects"]]
+                assert parsed["result"]["current_project"] == project_name
 
         # Clean up
-        await client.call_tool("switch_project", {"project_name": "test-project"})
-        await client.call_tool("delete_project", {"project_name": project_name})
+        await project_op(client, "switch", name="test-project")
+        await project_op(client, "rm", name=project_name)
+

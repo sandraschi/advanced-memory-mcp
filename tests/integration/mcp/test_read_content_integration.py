@@ -1,56 +1,61 @@
 """
-Integration tests for read_content MCP tool.
+Integration tests for content reading via adn_notes read (migrated from read_content MCP tool).
 
-Comprehensive tests covering text files, binary files, images, error cases,
-and memory:// URL handling via the complete MCP client-server flow.
+Comprehensive tests covering text files, error cases, and memory:// URL handling
+via the complete MCP client-server flow.
+
+NOTE: The standalone read_content tool (with raw file type/content_type/encoding
+metadata) no longer exists on the wire surface. The adn_notes read operation
+returns the raw markdown (with frontmatter) of the requested note, which covers
+the same reading behaviors: by file path, by permalink, and by memory:// URL.
 """
 
 import json
 
 import pytest
 from fastmcp import Client
-from fastmcp.exceptions import ToolError
 
 
-def parse_read_content_response(mcp_result):
-    """Helper function to parse read_content MCP response."""
-    assert len(mcp_result.content) == 1
-    assert mcp_result.content[0].type == "text"
-    return json.loads(mcp_result.content[0].text)
+def read_content(client: Client, path: str) -> str:
+    """Read note content by identifier and return the raw markdown."""
+    result = client.call_tool(
+        "adn_notes",
+        {"op": {"operation": "read", "identifier": path}},
+    )
+    return result
+
+
+async def get_content_text(client: Client, path: str) -> str:
+    """Helper: read content via adn_notes read and extract the markdown body."""
+    read_result = await read_content(client, path)
+    assert len(read_result.content) == 1
+    assert read_result.content[0].type == "text"
+    parsed = json.loads(read_result.content[0].text)
+    assert parsed["success"] is True
+    return parsed["result"]["content"]
 
 
 @pytest.mark.asyncio
 async def test_read_content_markdown_file(mcp_server, app):
-    """Test reading a markdown file created by write_note."""
+    """Test reading a markdown file created by adn_notes write."""
 
     async with Client(mcp_server) as client:
         # First create a note
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Content Test",
-                "folder": "test",
-                "content": "# Content Test\n\nThis is test content with **markdown**.",
-                "tags": "test,content",
+                "op": {
+                    "operation": "write",
+                    "title": "Content Test",
+                    "folder": "test",
+                    "content": "# Content Test\n\nThis is test content with **markdown**.",
+                    "tags": "test,content",
+                }
             },
         )
 
-        # Then read the raw file content
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "test/Content_Test.md",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-
-        assert response_data["type"] == "text"
-        assert response_data["content_type"] == "text/markdown; charset=utf-8"
-        assert response_data["encoding"] == "utf-8"
-
-        content = response_data["text"]
+        # Then read the raw file content by file path
+        content = await get_content_text(client, "test/Content_Test.md")
 
         # Should contain the raw markdown with frontmatter
         assert "# Content Test" in content
@@ -67,25 +72,19 @@ async def test_read_content_by_permalink(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a note
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Permalink Test",
-                "folder": "docs",
-                "content": "# Permalink Test\n\nTesting permalink-based content reading.",
+                "op": {
+                    "operation": "write",
+                    "title": "Permalink Test",
+                    "folder": "docs",
+                    "content": "# Permalink Test\n\nTesting permalink-based content reading.",
+                }
             },
         )
 
         # Read by permalink (without .md extension)
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "docs/permalink-test",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
+        content = await get_content_text(client, "docs/permalink-test")
 
         assert "# Permalink Test" in content
         assert "Testing permalink-based content reading." in content
@@ -98,26 +97,20 @@ async def test_read_content_memory_url(mcp_server, app):
     async with Client(mcp_server) as client:
         # Create a note
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Memory URL Test",
-                "folder": "test",
-                "content": "# Memory URL Test\n\nTesting memory:// URL handling.",
-                "tags": "memory,url",
+                "op": {
+                    "operation": "write",
+                    "title": "Memory URL Test",
+                    "folder": "test",
+                    "content": "# Memory URL Test\n\nTesting memory:// URL handling.",
+                    "tags": "memory,url",
+                }
             },
         )
 
         # Read using memory:// URL
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "memory://test/memory-url-test",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
+        content = await get_content_text(client, "memory://test/memory-url-test")
 
         assert "# Memory URL Test" in content
         assert "Testing memory:// URL handling." in content
@@ -132,26 +125,20 @@ async def test_read_content_unicode_file(mcp_server, app):
         unicode_content = "# Unicode Test 🚀\n\nThis note has emoji 🎉 and unicode ♠♣♥♦\n\n测试中文内容"
 
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Unicode Content Test",
-                "folder": "test",
-                "content": unicode_content,
-                "tags": "unicode,emoji",
+                "op": {
+                    "operation": "write",
+                    "title": "Unicode Content Test",
+                    "folder": "test",
+                    "content": unicode_content,
+                    "tags": "unicode,emoji",
+                }
             },
         )
 
         # Read the content back
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "test/Unicode_Content_Test.md",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
+        content = await get_content_text(client, "test/Unicode_Content_Test.md")
 
         # All unicode content should be preserved
         assert "🚀" in content
@@ -191,26 +178,20 @@ This note has complex frontmatter and various markdown elements.
 Regular markdown content continues here."""
 
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Complex Note",
-                "folder": "docs",
-                "content": complex_content,
-                "tags": "complex,frontmatter",
+                "op": {
+                    "operation": "write",
+                    "title": "Complex Note",
+                    "folder": "docs",
+                    "content": complex_content,
+                    "tags": "complex,frontmatter",
+                }
             },
         )
 
         # Read the content back
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "docs/Complex_Note.md",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
+        content = await get_content_text(client, "docs/Complex_Note.md")
 
         # Should preserve all frontmatter and content structure
         assert "version: 1.0" in content
@@ -225,49 +206,48 @@ async def test_read_content_missing_file(mcp_server, app):
     """Test reading a file that doesn't exist."""
 
     async with Client(mcp_server) as client:
-        try:
-            await client.call_tool(
-                "read_content",
-                {
-                    "path": "nonexistent/file.md",
-                },
-            )
-            # Should not reach here - expecting an error
-            raise AssertionError("Expected error for missing file")
-        except ToolError as e:
-            # Should get an appropriate error message
-            error_msg = str(e).lower()
-            assert "not found" in error_msg or "does not exist" in error_msg
+        # Reading a missing file now returns a helpful "Note Not Found" message
+        # (the old read_content tool raised a ToolError for missing files).
+        read_result = await read_content(client, "nonexistent/file.md")
+
+        assert len(read_result.content) == 1
+        assert read_result.content[0].type == "text"
+        parsed = json.loads(read_result.content[0].text)
+        content = parsed["result"]["content"]
+
+        # Should get an appropriate not-found message
+        assert "Note Not Found" in content
+        assert "nonexistent/file.md" in content
 
 
 @pytest.mark.asyncio
 async def test_read_content_empty_file(mcp_server, app):
-    """Test reading an empty file."""
+    """Test reading a file with minimal content.
+
+    NOTE: The new adn_notes write surface rejects truly empty ``content``
+    (MISSING_PARAMS error), so the closest equivalent is a title-only note.
+    The original intent - frontmatter (title/permalink) is always present in
+    the read output - is preserved.
+    """
 
     async with Client(mcp_server) as client:
         # Create a note with minimal content
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Empty Test",
-                "folder": "test",
-                "content": "",  # Empty content
+                "op": {
+                    "operation": "write",
+                    "title": "Empty Test",
+                    "folder": "test",
+                    "content": "# Empty Test",  # Minimal content (empty content is rejected by the new surface)
+                }
             },
         )
 
         # Read the content back
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "test/Empty_Test.md",
-            },
-        )
+        content = await get_content_text(client, "test/Empty_Test.md")
 
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
-
-        # Should still have frontmatter even with empty content
+        # Should still have frontmatter with title and permalink
         assert "title: Empty Test" in content
         assert "permalink: test/empty-test" in content
 
@@ -298,26 +278,20 @@ eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
 """
 
         await client.call_tool(
-            "write_note",
+            "adn_notes",
             {
-                "title": "Large Content Note",
-                "folder": "test",
-                "content": large_content,
-                "tags": "large,content,test",
+                "op": {
+                    "operation": "write",
+                    "title": "Large Content Note",
+                    "folder": "test",
+                    "content": large_content,
+                    "tags": "large,content,test",
+                }
             },
         )
 
         # Read the content back
-        read_result = await client.call_tool(
-            "read_content",
-            {
-                "path": "test/Large_Content_Note.md",
-            },
-        )
-
-        # Parse the response
-        response_data = parse_read_content_response(read_result)
-        content = response_data["text"]
+        content = await get_content_text(client, "test/Large_Content_Note.md")
 
         # Should contain all sections
         assert "Section 1" in content
@@ -342,25 +316,19 @@ async def test_read_content_special_characters_in_filename(mcp_server, app):
 
         for title, folder in test_cases:
             await client.call_tool(
-                "write_note",
+                "adn_notes",
                 {
-                    "title": title,
-                    "folder": folder,
-                    "content": f"# {title}\n\nContent for {title}",
+                    "op": {
+                        "operation": "write",
+                        "title": title,
+                        "folder": folder,
+                        "content": f"# {title}\n\nContent for {title}",
+                    }
                 },
             )
 
             # Read the content back using the exact filename
-            read_result = await client.call_tool(
-                "read_content",
-                {
-                    "path": f"{folder}/{title}.md",
-                },
-            )
-
-            assert len(read_result.content) == 1
-            assert read_result.content[0].type == "text"
-            content = read_result.content[0].text
+            content = await get_content_text(client, f"{folder}/{title}.md")
 
             assert f"# {title}" in content
             assert f"Content for {title}" in content

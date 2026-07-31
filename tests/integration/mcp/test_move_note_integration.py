@@ -1,11 +1,53 @@
 """
-Integration tests for move_note MCP tool.
+Integration tests for adn_notes move operation (migrated from move_note MCP tool).
 
 Tests the complete move note workflow: MCP client -> MCP server -> FastAPI -> database -> file system
 """
 
+import json
+
 import pytest
 from fastmcp import Client
+
+
+async def write_note(client: Client, title: str, folder: str, content: str, tags: str | None = None):
+    """Helper: write a note through the adn_notes portmanteau."""
+    op = {"operation": "write", "title": title, "folder": folder, "content": content}
+    if tags is not None:
+        op["tags"] = tags
+    await client.call_tool("adn_notes", {"op": op})
+
+
+async def move_note(client: Client, identifier: str, destination_path: str) -> str:
+    """Move a note and return the markdown response text."""
+    result = await client.call_tool(
+        "adn_notes",
+        {"op": {"operation": "move", "identifier": identifier, "destination": destination_path}},
+    )
+    assert len(result.content) == 1
+    assert result.content[0].type == "text"
+    return result.content[0].text
+
+
+async def read_note(client: Client, identifier: str) -> str:
+    """Read a note back and return the raw content (including Note Not Found bodies)."""
+    result = await client.call_tool(
+        "adn_notes",
+        {"op": {"operation": "read", "identifier": identifier}},
+    )
+    assert len(result.content) == 1
+    parsed = json.loads(result.content[0].text)
+    return parsed["result"]["content"]
+
+
+async def search(client: Client, query: str) -> str:
+    """Run a text search and return the markdown response."""
+    result = await client.call_tool(
+        "adn_search",
+        {"op": {"operation": "query", "text": query}},
+    )
+    assert len(result.content) == 1
+    return result.content[0].text
 
 
 @pytest.mark.asyncio
@@ -14,54 +56,30 @@ async def test_move_note_basic_operation(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note to move
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Move Test Note",
-                "folder": "source",
-                "content": "# Move Test Note\n\nThis note will be moved to a new location.",
-                "tags": "test,move",
-            },
+        await write_note(
+            client,
+            "Move Test Note",
+            "source",
+            "# Move Test Note\n\nThis note will be moved to a new location.",
+            "test,move",
         )
 
         # Move the note to a new location
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Move Test Note",
-                "destination_path": "destination/moved-note.md",
-            },
-        )
+        move_text = await move_note(client, "Move Test Note", "destination/moved-note.md")
 
         # Should return successful move message
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "Move Test Note" in move_text
         assert "destination/moved-note.md" in move_text
         assert "📊 Database and search index updated" in move_text
 
         # Verify the note can be read from its new location
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "destination/moved-note.md",
-            },
-        )
-
-        content = read_result.content[0].text
+        content = await read_note(client, "destination/moved-note.md")
         assert "This note will be moved to a new location" in content
 
         # Verify the original location no longer works
-        read_original = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "source/move-test-note.md",
-            },
-        )
-
-        # Should return "Note Not Found" message
-        assert "Note Not Found" in read_original.content[0].text
+        content_original = await read_note(client, "source/move-test-note.md")
+        assert "Note Not Found" in content_original
 
 
 @pytest.mark.asyncio
@@ -70,41 +88,25 @@ async def test_move_note_using_permalink(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note to move
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Permalink Move Test",
-                "folder": "test",
-                "content": "# Permalink Move Test\n\nMoving by permalink.",
-                "tags": "test,permalink",
-            },
+        await write_note(
+            client,
+            "Permalink Move Test",
+            "test",
+            "# Permalink Move Test\n\nMoving by permalink.",
+            "test,permalink",
         )
 
         # Move using permalink
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "test/permalink-move-test",
-                "destination_path": "archive/permalink-moved.md",
-            },
-        )
+        move_text = await move_note(client, "test/permalink-move-test", "archive/permalink-moved.md")
 
         # Should successfully move
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "test/permalink-move-test" in move_text
         assert "archive/permalink-moved.md" in move_text
 
         # Verify accessibility at new location
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "archive/permalink-moved.md",
-            },
-        )
-
-        assert "Moving by permalink" in read_result.content[0].text
+        content = await read_note(client, "archive/permalink-moved.md")
+        assert "Moving by permalink" in content
 
 
 @pytest.mark.asyncio
@@ -130,41 +132,24 @@ This note has various structured content.
 ## Content
 This note demonstrates moving complex content."""
 
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Complex Note",
-                "folder": "complex",
-                "content": complex_content,
-                "tags": "test,complex,move",
-            },
+        await write_note(
+            client,
+            "Complex Note",
+            "complex",
+            complex_content,
+            "test,complex,move",
         )
 
         # Move the complex note
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Complex Note",
-                "destination_path": "moved/complex-note.md",
-            },
-        )
+        move_text = await move_note(client, "Complex Note", "moved/complex-note.md")
 
         # Should successfully move
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "Complex Note" in move_text
         assert "moved/complex-note.md" in move_text
 
         # Verify content preservation including structured data
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "moved/complex-note.md",
-            },
-        )
-
-        content = read_result.content[0].text
+        content = await read_note(client, "moved/complex-note.md")
         assert "Has structured observations" in content
         assert "implements [[Auth System]]" in content
         assert "## Observations" in content
@@ -178,41 +163,25 @@ async def test_move_note_to_nested_directory(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Nested Move Test",
-                "folder": "root",
-                "content": "# Nested Move Test\n\nThis will be moved deep.",
-                "tags": "test,nested",
-            },
+        await write_note(
+            client,
+            "Nested Move Test",
+            "root",
+            "# Nested Move Test\n\nThis will be moved deep.",
+            "test,nested",
         )
 
         # Move to a deep nested structure
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Nested Move Test",
-                "destination_path": "projects/2025/q2/work/nested-note.md",
-            },
-        )
+        move_text = await move_note(client, "Nested Move Test", "projects/2025/q2/work/nested-note.md")
 
         # Should successfully create directory structure and move
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "Nested Move Test" in move_text
         assert "projects/2025/q2/work/nested-note.md" in move_text
 
         # Verify accessibility
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "projects/2025/q2/work/nested-note.md",
-            },
-        )
-
-        assert "This will be moved deep" in read_result.content[0].text
+        content = await read_note(client, "projects/2025/q2/work/nested-note.md")
+        assert "This will be moved deep" in content
 
 
 @pytest.mark.asyncio
@@ -221,40 +190,24 @@ async def test_move_note_with_special_characters(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create note with special characters
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Special (Chars) & Symbols",
-                "folder": "special",
-                "content": "# Special (Chars) & Symbols\n\nTesting special characters in move.",
-                "tags": "test,special",
-            },
+        await write_note(
+            client,
+            "Special (Chars) & Symbols",
+            "special",
+            "# Special (Chars) & Symbols\n\nTesting special characters in move.",
+            "test,special",
         )
 
         # Move to path with special characters
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Special (Chars) & Symbols",
-                "destination_path": "archive/special-chars-note.md",
-            },
-        )
+        move_text = await move_note(client, "Special (Chars) & Symbols", "archive/special-chars-note.md")
 
         # Should handle special characters properly
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "archive/special-chars-note.md" in move_text
 
         # Verify content preservation
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "archive/special-chars-note.md",
-            },
-        )
-
-        assert "Testing special characters in move" in read_result.content[0].text
+        content = await read_note(client, "archive/special-chars-note.md")
+        assert "Testing special characters in move" in content
 
 
 @pytest.mark.asyncio
@@ -263,19 +216,11 @@ async def test_move_note_error_handling_note_not_found(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Try to move a note that doesn't exist - should return error message
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Non-existent Note",
-                "destination_path": "new/location.md",
-            },
-        )
+        move_text = await move_note(client, "Non-existent Note", "new/location.md")
 
         # Should contain error message about the failed operation
-        assert len(move_result.content) == 1
-        error_message = move_result.content[0].text
-        assert "# Move Failed" in error_message
-        assert "Non-existent Note" in error_message
+        assert "# Move Failed" in move_text
+        assert "Non-existent Note" in move_text
 
 
 @pytest.mark.asyncio
@@ -284,30 +229,20 @@ async def test_move_note_error_handling_invalid_destination(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note to attempt moving
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Invalid Dest Test",
-                "folder": "test",
-                "content": "# Invalid Dest Test\n\nThis move should fail.",
-                "tags": "test,error",
-            },
+        await write_note(
+            client,
+            "Invalid Dest Test",
+            "test",
+            "# Invalid Dest Test\n\nThis move should fail.",
+            "test,error",
         )
 
         # Try to move to absolute path (should fail) - should return error message
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Invalid Dest Test",
-                "destination_path": "/absolute/path/note.md",
-            },
-        )
+        move_text = await move_note(client, "Invalid Dest Test", "/absolute/path/note.md")
 
         # Should contain error message about the failed operation
-        assert len(move_result.content) == 1
-        error_message = move_result.content[0].text
-        assert "# Move Failed" in error_message
-        assert "/absolute/path/note.md" in error_message
+        assert "# Move Failed" in move_text
+        assert "/absolute/path/note.md" in move_text
 
 
 @pytest.mark.asyncio
@@ -316,41 +251,29 @@ async def test_move_note_error_handling_destination_exists(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create source note
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Source Note",
-                "folder": "source",
-                "content": "# Source Note\n\nThis is the source.",
-                "tags": "test,source",
-            },
+        await write_note(
+            client,
+            "Source Note",
+            "source",
+            "# Source Note\n\nThis is the source.",
+            "test,source",
         )
 
         # Create destination note that already exists at the exact path we'll try to move to
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Existing Note",
-                "folder": "destination",
-                "content": "# Existing Note\n\nThis already exists.",
-                "tags": "test,existing",
-            },
+        await write_note(
+            client,
+            "Existing Note",
+            "destination",
+            "# Existing Note\n\nThis already exists.",
+            "test,existing",
         )
 
         # Try to move source to existing destination - should return error
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Source Note",
-                "destination_path": "destination/Existing_Note.md",
-            },
-        )
+        move_text = await move_note(client, "Source Note", "destination/Existing_Note.md")
 
         # Should return error message about destination existing
-        assert len(move_result.content) == 1
-        result_text = move_result.content[0].text
-        assert "Move Failed" in result_text or "Destination already exists" in result_text
-        assert "destination/Existing_Note.md" in result_text
+        assert "Move Failed" in move_text or "Destination already exists" in move_text
+        assert "destination/Existing_Note.md" in move_text
 
 
 @pytest.mark.asyncio
@@ -359,12 +282,11 @@ async def test_move_note_preserves_search_functionality(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note with searchable content
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Searchable Note",
-                "folder": "original",
-                "content": """# Searchable Note
+        await write_note(
+            client,
+            "Searchable Note",
+            "original",
+            """# Searchable Note
 
 This note contains unique search terms:
 - quantum mechanics
@@ -377,56 +299,25 @@ This note contains unique search terms:
 
 ## Relations
 - relates_to [[AI Research]]""",
-                "tags": "search,test,move",
-            },
+            "search,test,move",
         )
 
         # Verify note is searchable before move
-        search_before = await client.call_tool(
-            "search_notes",
-            {
-                "query": "quantum mechanics",
-            },
-        )
-
-        assert len(search_before.content) > 0
-        assert "Searchable Note" in search_before.content[0].text
+        search_before = await search(client, "quantum mechanics")
+        assert "Searchable Note" in search_before
 
         # Move the note
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Searchable Note",
-                "destination_path": "research/quantum-ai-note.md",
-            },
-        )
-
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
+        move_text = await move_note(client, "Searchable Note", "research/quantum-ai-note.md")
         assert "✅ Note moved successfully" in move_text
 
         # Verify note is still searchable after move
-        search_after = await client.call_tool(
-            "search_notes",
-            {
-                "query": "quantum mechanics",
-            },
-        )
-
-        assert len(search_after.content) > 0
-        search_text = search_after.content[0].text
-        assert "quantum mechanics" in search_text
-        assert "research/quantum-ai-note.md" in search_text or "quantum-ai-note" in search_text
+        search_after = await search(client, "quantum mechanics")
+        assert "quantum mechanics" in search_after
+        assert "research/quantum-ai-note.md" in search_after or "quantum-ai-note" in search_after
 
         # Verify search by new location works
-        search_by_path = await client.call_tool(
-            "search_notes",
-            {
-                "query": "research/quantum",
-            },
-        )
-
-        assert len(search_by_path.content) > 0
+        search_by_path = await search(client, "research/quantum")
+        assert "No results found" not in search_by_path
 
 
 @pytest.mark.asyncio
@@ -435,78 +326,51 @@ async def test_move_note_using_different_identifier_formats(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create notes for different identifier tests
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Title ID Note",
-                "folder": "test",
-                "content": "# Title ID Note\n\nMove by title.",
-                "tags": "test,identifier",
-            },
+        await write_note(
+            client,
+            "Title ID Note",
+            "test",
+            "# Title ID Note\n\nMove by title.",
+            "test,identifier",
         )
 
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Permalink ID Note",
-                "folder": "test",
-                "content": "# Permalink ID Note\n\nMove by permalink.",
-                "tags": "test,identifier",
-            },
+        await write_note(
+            client,
+            "Permalink ID Note",
+            "test",
+            "# Permalink ID Note\n\nMove by permalink.",
+            "test,identifier",
         )
 
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Folder Title Note",
-                "folder": "test",
-                "content": "# Folder Title Note\n\nMove by folder/title.",
-                "tags": "test,identifier",
-            },
+        await write_note(
+            client,
+            "Folder Title Note",
+            "test",
+            "# Folder Title Note\n\nMove by folder/title.",
+            "test,identifier",
         )
 
         # Test moving by title
-        move1 = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Title ID Note",  # by title
-                "destination_path": "moved/title-moved.md",
-            },
-        )
-        assert len(move1.content) == 1
-        assert "✅ Note moved successfully" in move1.content[0].text
+        move1 = await move_note(client, "Title ID Note", "moved/title-moved.md")  # by title
+        assert "✅ Note moved successfully" in move1
 
         # Test moving by permalink
-        move2 = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "test/permalink-id-note",  # by permalink
-                "destination_path": "moved/permalink-moved.md",
-            },
-        )
-        assert len(move2.content) == 1
-        assert "✅ Note moved successfully" in move2.content[0].text
+        move2 = await move_note(client, "test/permalink-id-note", "moved/permalink-moved.md")  # by permalink
+        assert "✅ Note moved successfully" in move2
 
         # Test moving by folder/title format
-        move3 = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "test/Folder Title Note",  # by folder/title
-                "destination_path": "moved/folder-title-moved.md",
-            },
-        )
-        assert len(move3.content) == 1
-        assert "✅ Note moved successfully" in move3.content[0].text
+        move3 = await move_note(client, "test/Folder Title Note", "moved/folder-title-moved.md")  # by folder/title
+        assert "✅ Note moved successfully" in move3
 
         # Verify all notes can be accessed at their new locations
-        read1 = await client.call_tool("read_note", {"identifier": "moved/title-moved.md"})
-        assert "Move by title" in read1.content[0].text
+        content1 = await read_note(client, "moved/title-moved.md")
+        assert "Move by title" in content1
 
-        read2 = await client.call_tool("read_note", {"identifier": "moved/permalink-moved.md"})
-        assert "Move by permalink" in read2.content[0].text
+        content2 = await read_note(client, "moved/permalink-moved.md")
+        assert "Move by permalink" in content2
 
-        read3 = await client.call_tool("read_note", {"identifier": "moved/folder-title-moved.md"})
-        assert "Move by folder/title" in read3.content[0].text
+        content3 = await read_note(client, "moved/folder-title-moved.md")
+        assert "Move by folder/title" in content3
 
 
 @pytest.mark.asyncio
@@ -515,43 +379,30 @@ async def test_move_note_cross_project_detection(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a test project to simulate cross-project scenario
-        await client.call_tool(
-            "create_memory_project",
-            {
-                "project_name": "test-project-b",
-                "project_path": "/tmp/test-project-b",
-                "set_default": False,
-            },
+        create_result = await client.call_tool(
+            "adn_project",
+            {"op": {"operation": "create", "name": "test-project-b", "path": "/tmp/test-project-b"}},
         )
+        assert create_result.content[0].type == "text"
 
         # Create a note in the default project
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Cross Project Test Note",
-                "folder": "source",
-                "content": "# Cross Project Test Note\n\nThis note is in the default project.",
-                "tags": "test,cross-project",
-            },
+        await write_note(
+            client,
+            "Cross Project Test Note",
+            "source",
+            "# Cross Project Test Note\n\nThis note is in the default project.",
+            "test,cross-project",
         )
 
         # Try to move to a path that contains the other project name
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Cross Project Test Note",
-                "destination_path": "test-project-b/moved-note.md",
-            },
-        )
+        move_text = await move_note(client, "Cross Project Test Note", "test-project-b/moved-note.md")
 
         # Should detect cross-project attempt and provide helpful guidance
-        assert len(move_result.content) == 1
-        error_message = move_result.content[0].text
-        assert "Cross-Project Move Not Supported" in error_message
-        assert "test-project-b" in error_message
-        assert "switch_project" in error_message
-        assert "read_note" in error_message
-        assert "write_note" in error_message
+        assert "Cross-Project Move Not Supported" in move_text
+        assert "test-project-b" in move_text
+        assert "switch_project" in move_text
+        assert "read_note" in move_text
+        assert "write_note" in move_text
 
 
 @pytest.mark.asyncio
@@ -560,39 +411,22 @@ async def test_move_note_normal_moves_still_work(mcp_server, app):
 
     async with Client(mcp_server) as client:
         # Create a note
-        await client.call_tool(
-            "write_note",
-            {
-                "title": "Normal Move Note",
-                "folder": "source",
-                "content": "# Normal Move Note\n\nThis should move normally.",
-                "tags": "test,normal-move",
-            },
+        await write_note(
+            client,
+            "Normal Move Note",
+            "source",
+            "# Normal Move Note\n\nThis should move normally.",
+            "test,normal-move",
         )
 
         # Try a normal move that should work
-        move_result = await client.call_tool(
-            "move_note",
-            {
-                "identifier": "Normal Move Note",
-                "destination_path": "destination/normal-moved.md",
-            },
-        )
+        move_text = await move_note(client, "Normal Move Note", "destination/normal-moved.md")
 
         # Should work normally
-        assert len(move_result.content) == 1
-        move_text = move_result.content[0].text
         assert "✅ Note moved successfully" in move_text
         assert "Normal Move Note" in move_text
         assert "destination/normal-moved.md" in move_text
 
         # Verify the note can be read from its new location
-        read_result = await client.call_tool(
-            "read_note",
-            {
-                "identifier": "destination/normal-moved.md",
-            },
-        )
-
-        content = read_result.content[0].text
+        content = await read_note(client, "destination/normal-moved.md")
         assert "This should move normally" in content
