@@ -13,3 +13,7 @@ coverage.xml
 .ruff_cache/
 .mypy_cache/
 .pyright/
+
+# Playwright artifacts
+.playwright-mcp/
+
