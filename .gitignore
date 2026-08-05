@@ -17,3 +17,9 @@ coverage.xml
 # Playwright artifacts
 .playwright-mcp/
 
+
+# Runtime logs + tmp
+*.log
+tmp/
+src/.trash/
+
