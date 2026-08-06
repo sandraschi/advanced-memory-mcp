@@ -19,6 +19,7 @@ Phases:
     8. Diagnostics check (if backend exposes /api/v1/diagnostics)
     9. Cleanup: kill spawned processes
 """
+
 import argparse
 import glob
 import json
@@ -37,8 +38,16 @@ _CONFIG = {}
 
 CONNECTED_KEYWORDS = ["connected", "system online", "online", "ready"]
 CONNECTING_KEYWORDS = ["connecting", "waiting for backend", "connecting..."]
-FAIL_KEYWORDS = ["404", "not found", "error", "timeout", "internal server error",
-                 "failed to fetch", "cannot connect", "connection refused"]
+FAIL_KEYWORDS = [
+    "404",
+    "not found",
+    "error",
+    "timeout",
+    "internal server error",
+    "failed to fetch",
+    "cannot connect",
+    "connection refused",
+]
 
 
 def load_config(path=None):
@@ -80,19 +89,27 @@ def kill_stale():
     ports = [str(p) for p in (BACKEND_PORT, FRONTEND_PORT) if p]
     if not ports:
         return
-    ps = "\n".join([
-        "Get-NetTCPConnection -LocalPort " + p + " -ErrorAction SilentlyContinue "
-        "| ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
-        for p in ports
-    ]) + "\nexit 0\n"
+    ps = (
+        "\n".join(
+            [
+                "Get-NetTCPConnection -LocalPort " + p + " -ErrorAction SilentlyContinue "
+                "| ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
+                for p in ports
+            ]
+        )
+        + "\nexit 0\n"
+    )
     import tempfile
+
     fd, path = tempfile.mkstemp(suffix=".ps1")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as f:
             f.write(ps)
         subprocess.run(
             ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", path],
-            capture_output=True, timeout=15)
+            capture_output=True,
+            timeout=15,
+        )
     finally:
         try:
             os.remove(path)
@@ -113,9 +130,10 @@ def start_stack():
         try:
             log("Starting stack via start.ps1 -Headless...")
             subprocess.Popen(
-                ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass",
-                 "-File", str(start_ps1), "-Headless"],
-                cwd=str(repo_root), creationflags=subprocess.CREATE_NO_WINDOW)
+                ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(start_ps1), "-Headless"],
+                cwd=str(repo_root),
+                creationflags=subprocess.CREATE_NO_WINDOW,
+            )
             return True
         except Exception as e:
             log(f"start.ps1 -Headless failed ({e}), falling back to direct spawn")
@@ -127,10 +145,15 @@ def start_stack():
         return False
     log(f"Direct spawn fallback: python -m {module}")
     subprocess.Popen(
-        ["powershell.exe", "-NoProfile", "-Command",
-         f"Set-Location '{repo_root}'; $env:BACKEND_PORT='{BACKEND_PORT}'; "
-         f"uv run python -m {module}"],
-        cwd=str(repo_root), creationflags=subprocess.CREATE_NO_WINDOW)
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-Command",
+            f"Set-Location '{repo_root}'; $env:BACKEND_PORT='{BACKEND_PORT}'; uv run python -m {module}",
+        ],
+        cwd=str(repo_root),
+        creationflags=subprocess.CREATE_NO_WINDOW,
+    )
     return True
 
 
@@ -190,6 +213,7 @@ def find_webapp_window():
     try:
         import pywinauto
         from pywinauto import Desktop
+
         desktop = Desktop(backend="uia")
         candidates = []
         for w in desktop.windows():
@@ -230,6 +254,7 @@ def wait_connected_badge(timeout=None):
                 # OCR via tesseract
                 try:
                     import pytesseract
+
                     pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
                     text = (pytesseract.image_to_string(img) or "").lower()
                 except Exception:
@@ -253,6 +278,7 @@ def wait_connected_badge(timeout=None):
 def nav_click_through(output_dir, win):
     """Title-matching sidebar walk (same strategy as cua-smoke template v3)."""
     import pywinauto
+
     nav_routes = cfg("nav_routes", [])
     if not isinstance(nav_routes, list) or not nav_routes:
         log("No nav_routes in config — nav walk skipped")
@@ -280,7 +306,7 @@ def nav_click_through(output_dir, win):
                     log(f"Nav '{label}': no link found — skipped")
                     continue
             time.sleep(2)
-            path = os.path.join(output_dir, f"webapp-{label.lower().replace(' ','-')}.png")
+            path = os.path.join(output_dir, f"webapp-{label.lower().replace(' ', '-')}.png")
             win.capture_as_image().save(path)
             log(f"Nav '{label}': clicked + screenshot ({os.path.getsize(path)} bytes)")
         except Exception as e:
@@ -375,7 +401,7 @@ def main():
                 log(f"CRITICAL — aborting ({name})")
                 break
 
-    log(f"Result: {passed}/{passed+failed}")
+    log(f"Result: {passed}/{passed + failed}")
     sys.exit(0 if failed == 0 else 1)
 
 
