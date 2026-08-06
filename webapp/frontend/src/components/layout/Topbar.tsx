@@ -1,14 +1,42 @@
-import { HelpCircle, Menu, Terminal, Wifi, WifiOff } from "lucide-react";
+import { HelpCircle, Menu, Moon, Sun, Terminal, Wifi, WifiOff } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface TopbarProps {
   onMenuClick: () => void;
   sidebarCollapsed: boolean;
 }
 
+// EXPERIMENTAL light mode (invert hack). Not fleet standard — see styles/main.css.
+// Toggling `.dark` off the root flips the invert filter; persisted so the
+// choice survives reloads. Delete this + the CSS block to revert.
+const THEME_KEY = "amm-light-mode";
+
+function useExperimentalTheme() {
+  const [light, setLight] = useState(() => {
+    try {
+      return localStorage.getItem(THEME_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", !light);
+    try {
+      localStorage.setItem(THEME_KEY, light ? "1" : "0");
+    } catch {
+      // ignore storage errors
+    }
+  }, [light]);
+
+  return { light, toggle: () => setLight((v) => !v) };
+}
+
 export default function Topbar({ onMenuClick, sidebarCollapsed }: TopbarProps) {
   // Mock connection status - would be connected to actual service
   const isConnected = true;
+  const { light, toggle } = useExperimentalTheme();
 
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -43,6 +71,16 @@ export default function Topbar({ onMenuClick, sidebarCollapsed }: TopbarProps) {
 
         {/* Right side - Action buttons */}
         <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={toggle}
+            className="p-2 rounded-md hover:bg-muted transition-colors"
+            title={light ? "Switch to dark (experimental light mode)" : "Switch to light (experimental, ugly)"}
+            aria-label="Toggle light mode (experimental)"
+          >
+            {light ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          </button>
+
           <Link
             to="/logs"
             className="p-2 rounded-md hover:bg-muted transition-colors"

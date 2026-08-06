@@ -43,7 +43,7 @@ bootstrap: install
     Set-Location '{{justfile_directory()}}/webapp/frontend'; npm ci; if ($LASTEXITCODE -ne 0) { npm install }
     Write-Host "Pre-commit hooks installed." -ForegroundColor Green
 
-# ── RAG (LanceDB vector index) ─────────────────────────────────────────────────
+# --- RAG  LanceDB vector index ---
 
 rag-gpu:
     @powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/just/rag-gpu.ps1
@@ -313,10 +313,12 @@ backup-winrar:
 	@echo "Creating repository backup (WinRAR)..."
 	@pwsh ./scripts/backup-repo.ps1 -UseWinRAR
 
-# ── Native (Tauri) ──────────────────────────────────────────────────────────
+# --- Native  Tauri ---
 
 # Build the Tauri NSIS desktop installer (full pipeline: frontend -> Rust -> NSIS)
 build-native:
 	$env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
 	Set-Location '{{justfile_directory()}}\native'
 	npx @tauri-apps/cli build --bundles nsis
+
+# Bootstrap: install dev deps + pre-commit hook

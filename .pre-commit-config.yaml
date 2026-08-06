@@ -4,7 +4,9 @@ repos:
     hooks:
       - id: ruff
         args: [ --fix ]
+        exclude: ^(mcpb|native|scripts)/   # packaging copy + excluded dirs (see pyproject [tool.ruff] exclude)
       - id: ruff-format
+        exclude: ^(mcpb|native|scripts)/
 
   - repo: local
     hooks:
