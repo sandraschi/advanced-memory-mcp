@@ -255,6 +255,25 @@ async def _list_providers() -> dict:
         }
     )
 
+    # Check Local Llama (llama.cpp server, e.g. Muse Glimmer 30B on :11435)
+    local_llama_status = "unknown"
+    try:
+        async with httpx.AsyncClient(timeout=2.0) as client:
+            response = await client.get("http://127.0.0.1:11435/v1/models")
+            local_llama_status = "available" if response.status_code == 200 else "unavailable"
+    except Exception:
+        local_llama_status = "unavailable"
+
+    providers.append(
+        {
+            "name": "local-llama",
+            "type": "local",
+            "status": local_llama_status,
+            "default_url": "http://127.0.0.1:11435",
+            "description": "Muse Glimmer 30B via llama.cpp (multimodal, DFlash drafter)",
+        }
+    )
+
     # Check OpenAI
     openai_status = "configured" if os.getenv("OPENAI_API_KEY") else "not_configured"
     providers.append(

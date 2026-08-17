@@ -26,6 +26,12 @@ Comprehensive research and knowledge platform with web search, GitHub trawling, 
 This server owns persistent state (SQLite database, LanceDB vector index). To prevent database contention when multiple stdio clients connect concurrently, use the HTTP Daemon + Stdio Proxy pattern:
 
 1. Start the HTTP daemon (owns DB): `python -m advanced_memory.cli.main mcp --transport streamable-http --host 127.0.0.1 --port 10732`
+
+   **As of 2026-08-13 this daemon runs as the Windows service `advanced-memory-mcp-daemon`**
+   (NSSM, Automatic start, LocalSystem with pinned `ADVANCED_MEMORY_HOME` + `USERPROFILE=C:\Users\sandr`).
+   Check it with `Get-Service advanced-memory-mcp-daemon` before spawning a manual daemon —
+   if the service is down, start it (`nssm start advanced-memory-mcp-daemon`) instead of
+   running a second daemon. Logs: `logs/daemon-service-*.log`.
 2. Stdio clients (Claude Desktop, opencode, Cursor) probe `http://127.0.0.1:10732/mcp` on startup
 3. If the daemon is alive, the stdio instance becomes a lightweight proxy via `create_proxy()` — zero DB initialization
 
