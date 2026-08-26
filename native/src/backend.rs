@@ -1,4 +1,4 @@
-use std::fs::{self, OpenOptions};
+﻿use std::fs::{self, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
@@ -13,7 +13,7 @@ pub struct BackendProcess(pub Mutex<Option<Child>>);
 
 // -- PER-REPO: Customize these constants --
 const BACKEND_NAME: &str = "advanced-memory-mcp-backend.exe";
-const BACKEND_PORT: u16 = 10700;
+const BACKEND_PORT: u16 = 10705;
 const BACKEND_TAG: &str = "advanced-memory-mcp-backend-x86_64-pc-windows-msvc.exe";
 const ENV_PORT: &str = "ADVANCED_MEMORY_MCP_PORT";
 const ENV_HOST: &str = "ADVANCED_MEMORY_MCP_HOST";
