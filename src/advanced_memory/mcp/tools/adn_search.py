@@ -76,21 +76,7 @@ async def adn_search(op: SearchOperation) -> Any:
         )
 
     elif operation == "rag":
-        from advanced_memory.rag.system import get_rag_system
-
-        rag_system = get_rag_system()
-        rag_result = rag_system.query(
-            query=op.prompt,
-            n_results=op.limit,
-            include_metadata=True,
-        )
-        return {
-            "operation": "rag",
-            "prompt": op.prompt,
-            "results": rag_result,
-            "limit": op.limit,
-        }
-
+        return await _rag_query(op.prompt, op.limit, op.project)
     elif operation == "external":
         if op.source == "obsidian":
             from advanced_memory.mcp.tools.search_obsidian_vault import search_obsidian_vault
@@ -129,3 +115,70 @@ async def adn_search(op: SearchOperation) -> Any:
             error_code="INVALID_OPERATION",
             message=f"Operation {operation} is not supported.",
         )
+
+
+async def _rag_query(prompt: str | None, limit: int, project: str | None) -> Any:
+    """Semantic RAG over the LanceDB vector store.
+
+    Builds the SearchService the same way ``deps.get_search_service`` does for a
+    FastAPI request, but callable directly from the MCP tool context (the FastAPI
+    dependency function requires request-injected args and cannot be invoked bare).
+    """
+    from pathlib import Path
+
+    from advanced_memory import db
+    from advanced_memory.config import ConfigManager
+    from advanced_memory.markdown import EntityParser
+    from advanced_memory.markdown.markdown_processor import MarkdownProcessor
+    from advanced_memory.repository import EntityRepository, ProjectRepository
+    from advanced_memory.repository.search_repository import SearchRepository
+    from advanced_memory.repository.vector_repository import VectorRepository
+    from advanced_memory.services.file_service import FileService
+    from advanced_memory.services.search_service import SearchService
+
+    app_config = ConfigManager().load_config()
+
+    project_name = project
+    if not project_name:
+        try:
+            from advanced_memory.mcp.project_session import session
+
+            project_name = session.get_current_project()
+        except Exception:
+            project_name = app_config.default_project or "main"
+
+    _, session_maker = await db.get_or_create_db(app_config.database_path)
+    project_repo = ProjectRepository(session_maker)
+    proj = await project_repo.get_by_name(project_name) or await project_repo.get_by_permalink(project_name)
+    if proj is None:
+        return build_error_response(
+            error="Project not found",
+            error_code="PROJECT_NOT_FOUND",
+            message=f"Project '{project_name}' not found for RAG search.",
+        )
+
+    project_path = Path(proj.path)
+    entity_parser = EntityParser(project_path)
+    markdown_processor = MarkdownProcessor(entity_parser)
+    file_service = FileService(project_path, markdown_processor)
+
+    entity_repository = EntityRepository(session_maker, project_id=proj.id)
+    search_repository = SearchRepository(session_maker, project_id=proj.id)
+    vector_db_path = str(app_config.app_database_path.parent / "vectors")
+    vector_repository = VectorRepository(vector_db_path, passphrase=app_config.rag_storage_passphrase)
+
+    search_service = SearchService(
+        search_repository,
+        entity_repository,
+        vector_repository,
+        file_service,
+        app_config,
+    )
+
+    results = await search_service.knowledge_rag(query=prompt or "", limit=limit)
+    return {
+        "operation": "rag",
+        "prompt": prompt,
+        "results": results,
+        "limit": limit,
+    }

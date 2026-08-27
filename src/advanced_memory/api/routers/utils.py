@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from advanced_memory.models import Entity
 from advanced_memory.repository import EntityRepository
 from advanced_memory.repository.search_repository import SearchIndexRow
@@ -175,14 +177,14 @@ async def to_search_results(entity_service: EntityService, results: list[SearchI
                 score=r.score or 0.0,
                 entity=main_entity.permalink if main_entity else None,
                 content=r.content,
-                file_path=r.file_path,
+                file_path=r.file_path or "",
                 metadata=r.metadata,
                 category=r.category,
                 from_entity=from_entity.permalink if from_entity else None,
                 to_entity=to_entity.permalink if to_entity else None,
                 relation_type=r.relation_type,
-                created_at=r.created_at,
-                updated_at=r.updated_at,
+                created_at=r.created_at.isoformat() if isinstance(r.created_at, datetime) else r.created_at,
+                updated_at=r.updated_at.isoformat() if isinstance(r.updated_at, datetime) else r.updated_at,
             )
         )
     return search_results

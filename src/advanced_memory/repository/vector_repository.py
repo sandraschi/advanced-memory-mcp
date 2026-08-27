@@ -202,9 +202,11 @@ class VectorRepository:
             os.makedirs(self.db_path, exist_ok=True)
             self.db = lancedb.connect(self.db_path)
 
-        # list_tables() is the current API; table_names() was deprecated in lancedb 0.20+
-        tables = self.db.list_tables()
-        table_list = tables if isinstance(tables, list) else list(tables)
+        # list_tables() is the current API; table_names() was deprecated in lancedb 0.20+.
+        # NOTE: in lancedb 0.29+ list_tables() returns a ListTablesResponse object
+        # with a `.tables` attribute, not a plain list. Normalize to a list of names.
+        raw_tables = self.db.list_tables()
+        table_list = list(getattr(raw_tables, "tables", [])) if not isinstance(raw_tables, list) else raw_tables
 
         if self.table_name not in table_list:
             # Table is created lazily in add_documents(); avoid INFO spam on every search.
@@ -271,19 +273,38 @@ class VectorRepository:
         if self.table is None:
             return []
 
-        search_obj = None
-        if query_type == "fts":
-            search_obj = self.table.search(query, query_type="fts")
-        elif query_type == "hybrid":
-            search_obj = self.table.search(query, query_type="hybrid")
-        else:
+        # Native LanceDB hybrid search requires an embedding function registered on
+        # the table, but this store is populated with pre-computed vectors. So hybrid
+        # is implemented manually as a union of semantic (vector) and keyword (FTS) hits.
+        if query_type == "hybrid":
             query_vector = next(iter(self.embedding_model.embed([query])))
-            search_obj = self.table.search(query_vector)
+            vec_search = self.table.search(query_vector)
+            fts_search = self.table.search(query, query_type="fts")
+            if filter:
+                vec_search = vec_search.where(filter)
+                fts_search = fts_search.where(filter)
+            vec_rows = vec_search.limit(limit).to_list()
+            fts_rows = fts_search.limit(limit).to_list()
+            seen: set[str] = set()
+            results: list[dict[str, Any]] = []
+            for row in vec_rows + fts_rows:
+                row_id = row.get("id")
+                if row_id in seen:
+                    continue
+                seen.add(row_id)
+                results.append(row)
+        else:
+            search_obj = None
+            if query_type == "fts":
+                search_obj = self.table.search(query, query_type="fts")
+            else:
+                query_vector = next(iter(self.embedding_model.embed([query])))
+                search_obj = self.table.search(query_vector)
 
-        if filter:
-            search_obj = search_obj.where(filter)
+            if filter:
+                search_obj = search_obj.where(filter)
 
-        results = search_obj.limit(limit).to_list()
+            results = search_obj.limit(limit).to_list()
 
         # Decrypt results
         for res in results:
@@ -322,8 +343,8 @@ class VectorRepository:
     async def drop_table(self) -> None:
         """Drop the vector table entirely — used before a full reindex to prevent stale chunks."""
         await self.connect()
-        tables = self.db.list_tables()
-        table_list = tables if isinstance(tables, list) else list(tables)
+        raw_tables = self.db.list_tables()
+        table_list = list(getattr(raw_tables, "tables", [])) if not isinstance(raw_tables, list) else raw_tables
         if self.table_name in table_list:
             self.db.drop_table(self.table_name)
             self.table = None

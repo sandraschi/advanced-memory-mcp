@@ -101,7 +101,12 @@ class SearchService:
     def _vector_project_filter(self) -> str:
         """LanceDB predicate: current project vault chunks plus global extra-root chunks."""
         pid = int(self.repository.project_id)
-        return f"(metadata.project_id = {pid} OR metadata.rag_extra_root = true)"
+        # Only reference metadata.rag_extra_root when extra roots are actually configured;
+        # ordinary entity chunks omit that field, so referencing it makes LanceDB error
+        # ("Field rag_extra_root not found in struct").
+        if self.app_config.rag_extra_roots:
+            return f"(metadata.project_id = {pid} OR metadata.rag_extra_root = true)"
+        return f"(metadata.project_id = {pid})"
 
     async def init_search_index(self) -> None:
         """Create FTS5 virtual table if it doesn't exist."""
