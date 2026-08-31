@@ -1,14 +1,39 @@
 {
-    "product_name": "Advanced Memory MCP",
-    "install_dir": "%LOCALAPPDATA%\\Advanced Memory MCP",
-    "operator_exe": "advanced-memory-mcp-native.exe",
-    "backend_process_names": ["advanced-memory-mcp-native", "advanced-memory-mcp-backend"],
-    "backend_port": 10700,
-    "health_path": "/api/v1/health",
-    "diagnostics_path": "/api/v1/diagnostics",
-    "feature_smoke_path": "/api/v1/system/info",
-    "window_title_re": "Advanced Memory MCP",
-    "nsis_glob": "native/target/release/bundle/nsis/Advanced Memory MCP_*_x64-setup.exe",
-    "bridge_ok_text": "REST bridge reachable",
-    "uninstall_registry_filter": "*Advanced Memory MCP*"
+  "product_name": "Advanced Memory MCP",
+  "install_dir": "%LOCALAPPDATA%\\Advanced Memory MCP",
+  "operator_exe": "advanced-memory-mcp-native.exe",
+  "backend_process_names": [
+    "advanced-memory-mcp-native",
+    "advanced-memory-mcp-backend"
+  ],
+  "backend_port": 10705,
+  "health_path": "/api/v1/health",
+  "diagnostics_path": "/api/v1/diagnostics",
+  "feature_smoke_path": "/api/v1/health",
+  "window_title_re": "Advanced Memory MCP",
+  "nsis_glob": "src-tauri/target/release/bundle/nsis/Advanced Memory MCP_*_x64-setup.exe",
+  "bridge_ok_text": "REST bridge reachable",
+  "uninstall_registry_filter": "*Advanced Memory MCP*",
+  "frontend_port": 10704,
+  "nav_routes": [
+    [
+      "Dashboard",
+      "Dashboard"
+    ],
+    [
+      "Tools",
+      "Tools"
+    ],
+    [
+      "Settings",
+      "Settings"
+    ],
+    [
+      "Help",
+      "Help"
+    ]
+  ],
+  "sidebar_click_x": 30,
+  "sidebar_first_y": 90,
+  "sidebar_step_y": 55
 }
