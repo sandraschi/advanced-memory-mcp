@@ -113,8 +113,8 @@ pack:
 
 # Build macOS installer
 installer-mac:
-    cd installer && chmod +x make_icons.sh && ./make_icons.sh
-    cd installer && uv run python setup.py bdist_mac
+    cd installer; chmod +x make_icons.sh; ./make_icons.sh
+    cd installer; uv run python setup.py bdist_mac
 
 # Build Windows installer
 installer-win:
@@ -323,11 +323,5 @@ build-native:
 
 # Bootstrap: install dev deps + pre-commit hook
 
-# CUA smoke test with detailed report to reports and mcd
-cua-nsis-test:
-	uv run python scripts/cua-smoke.py --output-dir cua-reports
-	$date = Get-Date -Format "yyyy-MM-dd"; $md = "reports/cua-advanced-memory-$date.md"; if (Test-Path $md) { Copy-Item $md "D:/Dev/repos/mcp-central-docs/reports/" -Force; Write-Host "Synced $md to mcd" }
-
-cua-webapp-test:
-	uv run python scripts/cua-webapp-test.py --output-dir cua-reports
-	$date = Get-Date -Format "yyyy-MM-dd"; $md = "reports/cua-advanced-memory-$date.md"; if (Test-Path $md) { Copy-Item $md "D:/Dev/repos/mcp-central-docs/reports/" -Force; Write-Host "Synced $md to mcd" }
+# CUA tests via fleet.just (`just cua-nsis-test` / `just cua-webapp-test`),
+# which now sync reports/cua-<repo>-<date>.md to mcd like the old local recipes did.
