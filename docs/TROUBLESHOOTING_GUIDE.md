@@ -99,6 +99,36 @@ Fleet trap: [mcp-central-docs TRAPS_AND_PITFALLS §14](https://github.com/sandra
 
 Quick check: `adn_nav(operation="status")` — DB/vault paths must be under **your user profile**, not `systemprofile`.
 
+### 2a. `adn_notes` edit fails (`EDIT_FAILED`, `EntityResponse` `input_value=None`)
+
+**Fixed in 1.10.1** (2026-09-12). Affected **append**, **prepend**, **find_replace**, and **replace_section** via `adn_notes(operation="edit", ...)` or legacy `edit_note`.
+
+#### Symptoms
+
+- Edit returns `success: false`, `error_code: EDIT_FAILED`
+- Message mentions Pydantic `EntityResponse` and `input_value=None`
+- **Write** and **search** still work; only PATCH-style edits fail
+- Problem may persist across Cursor restarts until the **HTTP daemon** process is restarted
+
+#### Cause
+
+`Repository.update()` could return `None` after updating checksum metadata, so the knowledge API returned a null body and the MCP layer failed validation.
+
+#### Fix
+
+1. Upgrade to **advanced-memory-mcp 1.10.1** or newer (`git pull` in the repo; confirm `git log -1`).
+2. Restart **`advanced-memory-mcp-daemon`** (Windows NSSM service on port **10732**):
+   - Use **elevated** PowerShell: `Start-Process powershell -Verb RunAs -Wait -ArgumentList '-NoProfile','-Command','Restart-Service advanced-memory-mcp-daemon -Force'`
+   - Non-elevated restarts from agent/Cursor shells often do not reload the service (fleet TRAPS section 32).
+3. Verify `Invoke-RestMethod http://127.0.0.1:10732/health` — `git_sha` should match your commit.
+4. Reload the **memops** MCP server in Cursor (or restart Cursor).
+5. Retry edit with the **permalink** from `adn_search` (e.g. `inbox/my-note-slug`), not a guessed path.
+
+#### Related
+
+- `AGENTS.md` — HTTP daemon + stdio proxy, reload checklist
+- [mcp-central-docs TRAPS_AND_PITFALLS.md section 32](https://github.com/sandraschi/mcp-central-docs/blob/main/standards/TRAPS_AND_PITFALLS.md#32-agent-shell-restart-service-on-nssm-mcp-daemons-without-elevation---useless-retry-loop) — elevated NSSM restarts
+
 ### 3. Database Locked Errors
 
 #### Symptoms

@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1] - Note edit reload fix (2026-09-12)
+
 ### Fixed
 - **`adn_notes` / `edit_note` append (and other PATCH edits)** returning `EDIT_FAILED` with Pydantic `EntityResponse` `input_value=None`: `Repository.update()` loaded a row by id without the project filter, then re-fetched via `select_by_id()` with the filter and could get `None`, yielding a null API body. Update now loads with project scope + eager options and returns the refreshed row; `edit_entity` falls back to `get_by_file_path()` if reload fails.
+- **`edit_note`**: clearer client error when the PATCH API returns an empty JSON body (points at HTTP daemon restart).
+
+### Operations
+- After upgrading, restart the **HTTP daemon** (`advanced-memory-mcp-daemon` on Windows) so `/health` `git_sha` matches the new commit. On Goliath, NSSM service restarts require **elevated** PowerShell (see `AGENTS.md` and mcp-central-docs `TRAPS_AND_PITFALLS.md` section 32). Reload the IDE MCP connection after restart.
 
 ## [1.10.0] - Super skillmaker + capture stack (2026-07-17)
 

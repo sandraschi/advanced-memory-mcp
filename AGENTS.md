@@ -41,4 +41,18 @@ This server owns persistent state (SQLite database, LanceDB vector index). To pr
 **Env var** to override the probe URL: `ADVANCED_MEMORY_HTTP_PROXY` (default: `http://127.0.0.1:10732/mcp`)
 **Reference implementation:** `src/advanced_memory/cli/commands/mcp.py`
 
+### Reload daemon after code changes
+
+The NSSM service `advanced-memory-mcp-daemon` keeps Python loaded until SCM restart. After `git pull` or local commits:
+
+1. **Elevated** PowerShell (UAC): `Restart-Service advanced-memory-mcp-daemon -Force`
+2. Confirm `http://127.0.0.1:10732/health` shows the expected `git_sha`
+3. Reload Cursor MCP (or restart Cursor)
+
+Non-elevated `Restart-Service` from an agent shell may not reload code (useless retry loop). Fleet: mcp-central-docs `standards/TRAPS_AND_PITFALLS.md` section 32.
+
+### Note edits (`adn_notes` `operation=edit`)
+
+Use exact **title or permalink** from `adn_search` (no fuzzy match). Modes: `append`, `prepend`, `find_replace`, `replace_section`. If edits fail with `EntityResponse` / `input_value=None`, upgrade to **1.10.1+** and restart the HTTP daemon as above. Details: `docs/TROUBLESHOOTING_GUIDE.md` section 2a.
+
 Install docs: follow mcp-central-docs/standards/AGENT_INSTALL_REFERENCE.md
