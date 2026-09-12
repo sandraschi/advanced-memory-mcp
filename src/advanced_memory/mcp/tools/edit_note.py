@@ -499,7 +499,13 @@ async def edit_note(
         # Call the PATCH endpoint
         url = f"{project_url}/knowledge/entities/{identifier}"
         response = await call_patch(client, url, json=edit_data)
-        result = EntityResponse.model_validate(response.json())
+        payload = response.json()
+        if payload is None:
+            raise ValueError(
+                "Edit API returned an empty body (entity missing after update). "
+                "If this persists, restart the memops HTTP daemon and retry."
+            )
+        result = EntityResponse.model_validate(payload)
 
         # Format summary
         summary = [

@@ -162,6 +162,12 @@ async def edit_entity(
             use_regex=data.use_regex,
         )
 
+        if entity is None:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Entity '{identifier}' could not be loaded after edit",
+            )
+
         # Reindex the updated entity
         await search_service.index_entity(entity, background_tasks=background_tasks)
 

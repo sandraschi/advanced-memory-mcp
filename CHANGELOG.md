@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **`adn_notes` / `edit_note` append (and other PATCH edits)** returning `EDIT_FAILED` with Pydantic `EntityResponse` `input_value=None`: `Repository.update()` loaded a row by id without the project filter, then re-fetched via `select_by_id()` with the filter and could get `None`, yielding a null API body. Update now loads with project scope + eager options and returns the refreshed row; `edit_entity` falls back to `get_by_file_path()` if reload fails.
+
 ## [1.10.0] - Super skillmaker + capture stack (2026-07-17)
 
 ### Added

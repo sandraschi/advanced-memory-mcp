@@ -248,6 +248,10 @@ class EntityService(BaseService[EntityModel]):
 
         # Set final checksum to match file
         entity = await self.repository.update(entity.id, {"checksum": checksum})
+        if entity is None:
+            entity = await self.repository.get_by_file_path(file_path)
+        if entity is None:
+            raise EntityNotFoundError(f"Entity at {file_path} was written but could not be reloaded from the database")
 
         return entity
 
@@ -464,6 +468,12 @@ class EntityService(BaseService[EntityModel]):
 
         # Set final checksum to match file
         entity = await self.repository.update(entity.id, {"checksum": checksum})
+        if entity is None:
+            entity = await self.repository.get_by_file_path(file_path)
+        if entity is None:
+            raise EntityNotFoundError(
+                f"Entity '{identifier}' was updated on disk but could not be reloaded from the database"
+            )
 
         return entity
 

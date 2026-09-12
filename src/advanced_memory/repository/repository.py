@@ -244,7 +244,9 @@ class Repository:
         logger.debug(f"Updating {self.Model.__name__} {entity_id} with data: {entity_data}")
         async with db.scoped_session(self.session_maker) as session:
             try:
-                result = await session.execute(select(self.Model).filter(self.primary_key == entity_id))
+                query = select(self.Model).filter(self.primary_key == entity_id).options(*self.get_load_options())
+                query = self._add_project_filter(query)
+                result = await session.execute(query)
                 entity = result.scalars().one()
 
                 if isinstance(entity_data, dict):
@@ -260,7 +262,9 @@ class Repository:
                 await session.refresh(entity)  # Refresh
 
                 logger.debug(f"Updated {self.Model.__name__}: {entity_id}")
-                return await self.select_by_id(session, entity.id)  # pyright: ignore [reportAttributeAccessIssue]
+                # Return the refreshed row from this session. Re-querying via select_by_id
+                # used to return None when the initial load skipped the project filter.
+                return entity
 
             except NoResultFound:
                 logger.debug(f"No {self.Model.__name__} found to update: {entity_id}")
