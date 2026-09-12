@@ -7,14 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.10.1] - Note edit reload fix (2026-09-12)
+## [1.11.0] - Flagship native scaffold, hybrid RAG, note-edit fix (2026-09-12)
+
+### Added
+- **Tauri / NSIS scaffold** for the flagship desktop path: `src-tauri` retrofit from `native/`, Zed `Cargo.toml` preserved, CUA ports aligned (webapp **10704**, bridge **10705** per fleet port registry).
+- **Hybrid search / RAG**: vector retrieval through `SearchService`, LanceDB **0.29** compatibility, hybrid search wiring in the search stack.
 
 ### Fixed
-- **`adn_notes` / `edit_note` append (and other PATCH edits)** returning `EDIT_FAILED` with Pydantic `EntityResponse` `input_value=None`: `Repository.update()` loaded a row by id without the project filter, then re-fetched via `select_by_id()` with the filter and could get `None`, yielding a null API body. Update now loads with project scope + eager options and returns the refreshed row; `edit_entity` falls back to `get_by_file_path()` if reload fails.
-- **`edit_note`**: clearer client error when the PATCH API returns an empty JSON body (points at HTTP daemon restart).
+- **`adn_notes` / `edit_note` PATCH edits** (`append`, `prepend`, `find_replace`, `replace_section`) failing with `EDIT_FAILED` and Pydantic `EntityResponse` `input_value=None` — `Repository.update()` now loads with project scope + eager options and returns the refreshed row; `edit_entity` falls back to `get_by_file_path()` when reload fails; clearer client error on empty PATCH bodies.
+- **`BACKEND_PORT` default** `10700` → **10705** (bridge server; avoids collision with other fleet assignments).
+- **`build-native` / just**: invoke `native/build.ps1` (PyInstaller + Tauri + NSIS pipeline) instead of bare `npx tauri build`, which skipped the Python backend bundle.
+- **Session scribe** (`run-session-scribe.bat`): correct venv and script paths.
+- **CUA / Tauri templates**: sync `tauri-native` template v3 (smoke hash `0A57B885`, webapp `8FA39C30`).
+- **justfile**: chain `cd` with `;` (PowerShell-safe); drop duplicate CUA recipes now covered by `fleet.just` / `mcd-sync`.
+
+### Changed
+- **just**: CUA report targets wired to fleet `cua` recipes; accumulated scaffold/ops sync from flagship work.
+
+### Documentation
+- **`AGENTS.md`**: HTTP daemon reload after deploy (elevated NSSM restart, `/health` `git_sha`, MCP reload); note-edit identifier guidance.
+- **`docs/TROUBLESHOOTING_GUIDE.md`**: section **2a** — PATCH edit failures and daemon restart checklist (cross-link mcp-central-docs TRAPS section 32).
+- **CUA**: detailed NSIS/webapp report (2026-08-31).
 
 ### Operations
-- After upgrading, restart the **HTTP daemon** (`advanced-memory-mcp-daemon` on Windows) so `/health` `git_sha` matches the new commit. On Goliath, NSSM service restarts require **elevated** PowerShell (see `AGENTS.md` and mcp-central-docs `TRAPS_AND_PITFALLS.md` section 32). Reload the IDE MCP connection after restart.
+- After upgrade, restart **`advanced-memory-mcp-daemon`** (port **10732**) so running code and `/health` `version` / `git_sha` match this release. On Goliath, use **elevated** PowerShell for NSSM `Restart-Service` (non-elevated agent restarts may not reload the process). Reload IDE MCP after restart.
 
 ## [1.10.0] - Super skillmaker + capture stack (2026-07-17)
 
