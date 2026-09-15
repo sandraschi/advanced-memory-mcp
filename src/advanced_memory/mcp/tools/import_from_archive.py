@@ -1,5 +1,6 @@
 """Archive import tool for Advanced Memory - restores complete system from backup."""
 
+import asyncio
 import json
 import shutil
 import tempfile
@@ -180,7 +181,7 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
     if db_source.exists():
         if restore_mode == "overwrite" or not db_dest.exists():
             db_dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(db_source, db_dest)
+            await asyncio.to_thread(shutil.copy2, db_source, db_dest)
             results.append(f"[UNICODE] Database: Restored {_format_size(db_source.stat().st_size)}")
             logger.info(f"Restored database: {db_source} -> {db_dest}")
         else:
@@ -194,7 +195,7 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
     if config_source.exists():
         if restore_mode == "overwrite" or not config_dest.exists():
             config_dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(config_source, config_dest)
+            await asyncio.to_thread(shutil.copy2, config_source, config_dest)
             results.append("[UNICODE] Configuration: Restored")
             logger.info(f"Restored config: {config_source} -> {config_dest}")
         else:

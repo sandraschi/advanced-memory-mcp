@@ -1,5 +1,6 @@
 """Archive export tool for Advanced Memory - creates complete backup for migration."""
 
+import asyncio
 import json
 import shutil
 import sqlite3
@@ -38,7 +39,7 @@ def _parse_since_date(since_date: str) -> datetime:
         return datetime.min
 
 
-def _filter_database(
+async def _filter_database(
     source_db: Path,
     dest_db: Path,
     exclude_tags: list[str] | None = None,
@@ -52,8 +53,8 @@ def _filter_database(
         Tuple of (entities_kept, entities_filtered)
     """
     if not exclude_tags and not since_date and not project_ids:
-        # No filtering needed, just copy
-        shutil.copy2(source_db, dest_db)
+        # No filtering needed, just copy (whole DB — off the loop)
+        await asyncio.to_thread(shutil.copy2, source_db, dest_db)
         return (0, 0)  # Can't count without opening DB
 
     # Connect to source and create destination
@@ -276,13 +277,13 @@ async def export_to_archive(
 
                 if filtering_enabled:
                     # Apply filtering
-                    entities_kept, entities_filtered = _filter_database(
+                    entities_kept, entities_filtered = await _filter_database(
                         db_source, db_dest, exclude_tags, cutoff_date, project_ids
                     )
                     logger.info(f"Database filtered: {entities_kept} entities kept, {entities_filtered} filtered")
                 else:
                     # Simple copy
-                    shutil.copy2(db_source, db_dest)
+                    await asyncio.to_thread(shutil.copy2, db_source, db_dest)
 
                 total_files += 1
                 total_size += db_dest.stat().st_size
@@ -296,7 +297,7 @@ async def export_to_archive(
             if config_source.exists():
                 config_dest = archive_root / "config" / CONFIG_FILE_NAME
                 config_dest.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(config_source, config_dest)
+                await asyncio.to_thread(shutil.copy2, config_source, config_dest)
                 total_files += 1
                 total_size += config_source.stat().st_size
                 logger.info(f"Copied config: {config_source} -> {config_dest}")
@@ -329,7 +330,7 @@ async def export_to_archive(
                     logger.info(f"Copying project '{project_name}': {project_path} -> {dest_path}")
 
                     # Use copytree for directories
-                    shutil.copytree(project_path, dest_path, dirs_exist_ok=True)
+                    await asyncio.to_thread(shutil.copytree, project_path, dest_path, dirs_exist_ok=True)
 
                     # Count files and size for this project
                     project_files = list(dest_path.rglob("*"))

@@ -9,6 +9,7 @@ Supports conversion of:
 Requires Pandoc to be installed for .docx and .html conversion.
 """
 
+import asyncio
 import re
 import shutil
 import subprocess
@@ -87,8 +88,9 @@ class DocumentConverter:
             return self._create_placeholder(file_path, "DOCX", "Pandoc is not installed")
 
         try:
-            # Run Pandoc to convert docx to markdown
-            result = subprocess.run(
+            # Run Pandoc to convert docx to markdown (seconds per doc — off the loop)
+            result = await asyncio.to_thread(
+                subprocess.run,
                 [
                     "pandoc",
                     str(file_path),
@@ -135,8 +137,9 @@ class DocumentConverter:
             return self._create_placeholder(file_path, "HTML", "Pandoc is not installed")
 
         try:
-            # Run Pandoc to convert html to markdown
-            result = subprocess.run(
+            # Run Pandoc to convert html to markdown (seconds per doc — off the loop)
+            result = await asyncio.to_thread(
+                subprocess.run,
                 [
                     "pandoc",
                     str(file_path),
@@ -206,7 +209,8 @@ class DocumentConverter:
                     logger.error("Neither pypdf nor pdftotext available for PDF conversion")
                     return self._create_placeholder(file_path, "PDF", "PDF extraction tools not installed")
 
-                result = subprocess.run(
+                result = await asyncio.to_thread(
+                    subprocess.run,
                     ["pdftotext", str(file_path), "-"],
                     capture_output=True,
                     text=True,

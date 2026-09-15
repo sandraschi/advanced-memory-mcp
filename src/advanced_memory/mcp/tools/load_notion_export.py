@@ -1,5 +1,6 @@
 """Load Notion export tool for Advanced Memory MCP server."""
 
+import asyncio
 import re
 import zipfile
 from pathlib import Path
@@ -122,7 +123,7 @@ async def load_notion_export(
     if temp_dir and temp_dir.exists():
         import shutil
 
-        shutil.rmtree(temp_dir)
+        await asyncio.to_thread(shutil.rmtree, temp_dir)
 
     # Generate summary
     summary = "## Notion Import Complete\n\n"

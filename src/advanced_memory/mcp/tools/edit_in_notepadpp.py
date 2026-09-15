@@ -15,6 +15,7 @@ Notepad++ Features:
 For document export, use export_pandoc (FREE) instead of this editing tool.
 """
 
+import asyncio
 import os
 import shutil
 from datetime import datetime
@@ -159,7 +160,7 @@ async def import_from_notepadpp(
         if edited_content.strip() == original_content.strip():
             # Clean up workspace if requested
             if not keep_workspace:
-                shutil.rmtree(workspace_dir, ignore_errors=True)
+                await asyncio.to_thread(shutil.rmtree, workspace_dir, ignore_errors=True)
 
             return f"""[UNICODE][UNICODE] **No changes detected**
 
@@ -179,7 +180,7 @@ The content in Notepad++ workspace is identical to the original note.
 
         # Clean up workspace
         if not keep_workspace:
-            shutil.rmtree(workspace_dir, ignore_errors=True)
+            await asyncio.to_thread(shutil.rmtree, workspace_dir, ignore_errors=True)
 
         # Calculate some stats
         original_lines = len(original_content.split("\n"))

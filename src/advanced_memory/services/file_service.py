@@ -1,5 +1,6 @@
 """Service for file operations with checksum tracking and safety features."""
 
+import asyncio
 import mimetypes
 import shutil
 import time
@@ -159,7 +160,7 @@ class FileService:
             # Create a backup if the file exists and we're not forcing overwrite
             if full_path.exists() and not overwrite:
                 backup_path = full_path.with_suffix(f".{int(time.time())}.bak")
-                shutil.copy2(str(full_path), str(backup_path))
+                await asyncio.to_thread(shutil.copy2, str(full_path), str(backup_path))
                 logger.info(f"Created backup at {backup_path}")
 
             # Log the write operation
@@ -283,7 +284,7 @@ class FileService:
             if force:
                 # Bypass safety checks (dangerous!)
                 if full_path.is_dir():
-                    shutil.rmtree(full_path)
+                    await asyncio.to_thread(shutil.rmtree, full_path)
                 else:
                     full_path.unlink()
                 logger.warning(f"Force deleted (bypassed safety checks): {full_path}")

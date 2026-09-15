@@ -5,6 +5,7 @@ operations including session recording, repository checkpointing, and rewinding
 into a single tool. This ensures a clean interface for agentic audit trails.
 """
 
+import asyncio
 import subprocess
 from typing import Annotated, Literal
 
@@ -42,7 +43,8 @@ async def adn_observability(
         cwd = repo_path or "."
 
         if operation == "enable":
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 ["checkpoints", "enable"],
                 cwd=cwd,
                 capture_output=True,
@@ -54,7 +56,8 @@ async def adn_observability(
             return build_success_response("enable", {"message": "Entire.io Checkpoints enabled successfully"})
 
         elif operation == "disable":
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 ["checkpoints", "disable"],
                 cwd=cwd,
                 capture_output=True,
@@ -69,7 +72,8 @@ async def adn_observability(
             # For now, simulate listing if CLI doesn't support structured output yet
             # Real implementation would parse 'checkpoints list' (assuming it exists or reading the branch)
             # Since we are SOTA, we'll try to get real data if possible
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 [
                     "git",
                     "log",
@@ -113,7 +117,8 @@ async def adn_observability(
                     "Checkpoint ID required for rewind",
                 )
 
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 ["checkpoints", "rewind", checkpoint_id],
                 cwd=cwd,
                 capture_output=True,
@@ -125,7 +130,8 @@ async def adn_observability(
             return build_success_response("rewind", {"message": f"Workspace rewound to {checkpoint_id}"})
 
         elif operation == "clean":
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 ["checkpoints", "clean"],
                 cwd=cwd,
                 capture_output=True,
@@ -138,7 +144,8 @@ async def adn_observability(
 
         elif operation == "status":
             # Check if enabled by looking for the branch or CLI status
-            result = subprocess.run(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 ["git", "branch", "--list", "entire/checkpoints/v1"],
                 cwd=cwd,
                 capture_output=True,

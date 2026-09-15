@@ -4,6 +4,7 @@ This tool consolidates editor operations: notepadpp_edit, notepadpp_import, typo
 It reduces the number of MCP tools while maintaining full functionality.
 """
 
+import asyncio
 from typing import Any
 
 from loguru import logger
@@ -285,7 +286,7 @@ async def _notepadpp_import_operation(
             import shutil
 
             try:
-                shutil.rmtree(workspace_dir)
+                await asyncio.to_thread(shutil.rmtree, workspace_dir)
             except Exception as e:
                 return f"[UNICODE] Note updated successfully, but failed to clean workspace: {e!s}"
 
