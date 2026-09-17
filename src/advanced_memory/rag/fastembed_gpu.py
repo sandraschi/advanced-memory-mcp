@@ -105,6 +105,17 @@ def create_text_embedding(
         except Exception as exc:
             logger.warning("GPU embed init failed (%s); using CPU", exc)
 
-    model = TextEmbedding(model_name=model_name, cache_dir=cache_dir)
+    # fastembed-gpu wraps onnxruntime-gpu, whose session builder auto-selects
+    # CUDA/TensorRT by priority when no providers= is given -- omitting the
+    # arg here does NOT mean CPU-only. Session creation then succeeds (cuBLAS/
+    # cuDART resolve fine), so this "CPU fallback" silently stays on CUDA and
+    # only fails later, on the first real inference call, when a cuDNN-only
+    # kernel (e.g. the Attention node) hits missing cudnn64_9.dll. Force
+    # CPUExecutionProvider explicitly so this branch is actually CPU-only.
+    model = TextEmbedding(
+        model_name=model_name,
+        cache_dir=cache_dir,
+        providers=["CPUExecutionProvider"],
+    )
     logger.info("FastEmbed providers: %s", model.model.model.get_providers())
     return model, "cpu", batch_cpu
