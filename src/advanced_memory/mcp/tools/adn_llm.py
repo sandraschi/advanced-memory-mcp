@@ -294,15 +294,24 @@ async def _list_providers() -> dict:
         "unknown": "❓",
     }
 
-    result = "# Available LLM Providers\n\n"
+    lines = ["# Available LLM Providers", ""]
     for p in providers:
         emoji = status_emoji.get(p["status"], "❓")
-        result += f"{emoji} **{p['name']}** ({p['type']})\n"
-        result += f"   Status: {p['status']}\n"
-        result += f"   URL: {p['default_url']}\n"
-        result += f"   {p['description']}\n\n"
+        lines.append(f"{emoji} **{p['name']}** ({p['type']})")
+        lines.append(f"   Status: {p['status']}")
+        lines.append(f"   URL: {p['default_url']}")
+        lines.append(f"   {p['description']}")
+        lines.append("")
+    markdown = "\n".join(lines)
 
-    return result
+    # NOTE: must return a dict envelope, not the markdown string. FastMCP
+    # validates structured_content against the `-> dict` annotation and
+    # rejects bare strings (2026-09-19: "structured_content must be a dict").
+    return build_success_response(
+        operation="list_providers",
+        summary=f"{len(providers)} providers checked",
+        result={"providers": providers, "markdown": markdown},
+    )
 
 
 async def _list_models(provider: str, base_url: str | None = None) -> dict:
@@ -314,7 +323,12 @@ async def _list_models(provider: str, base_url: str | None = None) -> dict:
     elif provider == "openai":
         return await _list_openai_models()
     else:
-        return f"# Error\n\nUnknown provider: {provider}"
+        return build_error_response(
+            error="Unknown provider",
+            error_code="UNKNOWN_PROVIDER",
+            message=f"Unknown provider: {provider}",
+            recovery_options=["Use one of: ollama, lmstudio, openai"],
+        )
 
 
 async def _list_ollama_models(base_url: str | None = None) -> dict:
@@ -329,27 +343,55 @@ async def _list_ollama_models(base_url: str | None = None) -> dict:
                 models = data.get("models", [])
 
                 if not models:
-                    return "# Ollama Models\n\nNo models found. Install models with:\n```bash\nollama pull llama3\n```"
+                    return build_success_response(
+                        operation="list_models",
+                        summary="Ollama reachable, no models installed",
+                        result={
+                            "provider": "ollama",
+                            "models": [],
+                            "markdown": "# Ollama Models\n\nNo models found. Install models with:\n```bash\nollama pull llama3\n```",
+                        },
+                    )
 
-                result = "# Ollama Models\n\n"
+                lines = ["# Ollama Models", ""]
+                items = []
                 for model in models:
                     name = model.get("name", "Unknown")
                     size = model.get("size", 0)
                     size_gb = size / (1024**3) if size else 0
                     modified = model.get("modified_at", "")
 
-                    result += f"**{name}**\n"
-                    result += f"  Size: {size_gb:.2f} GB\n"
+                    lines.append(f"**{name}**")
+                    lines.append(f"  Size: {size_gb:.2f} GB")
                     if modified:
-                        result += f"  Modified: {modified}\n"
-                    result += "\n"
+                        lines.append(f"  Modified: {modified}")
+                    lines.append("")
+                    items.append({"name": name, "size_bytes": size, "modified_at": modified})
 
-                return result
+                return build_success_response(
+                    operation="list_models",
+                    summary=f"{len(items)} Ollama models",
+                    result={
+                        "provider": "ollama",
+                        "models": items,
+                        "markdown": "\n".join(lines),
+                    },
+                )
             else:
-                return f"# Error\n\nFailed to connect to Ollama: HTTP {response.status_code}\n\nMake sure Ollama is running: `ollama serve`"
+                return build_error_response(
+                    error="Ollama connection failed",
+                    error_code="CONNECTION_FAILED",
+                    message=f"Failed to connect to Ollama: HTTP {response.status_code}. Make sure Ollama is running: `ollama serve`",
+                    recovery_options=[f"Start Ollama (`ollama serve`), then retry at {url}"],
+                )
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to Ollama: {e!s}\n\nMake sure Ollama is running and accessible at {url}"
+        return build_error_response(
+            error="Ollama connection failed",
+            error_code="CONNECTION_FAILED",
+            message=f"Failed to connect to Ollama: {e!s}. Make sure Ollama is running and accessible at {url}",
+            recovery_options=[f"Start Ollama (`ollama serve`), then retry at {url}"],
+        )
 
 
 async def _list_lmstudio_models(base_url: str | None = None) -> dict:
@@ -364,39 +406,62 @@ async def _list_lmstudio_models(base_url: str | None = None) -> dict:
                 models = data.get("data", [])
 
                 if not models:
-                    return "# LM Studio Models\n\nNo models loaded. Load a model in LM Studio first."
+                    return build_success_response(
+                        operation="list_models",
+                        summary="LM Studio reachable, no models loaded",
+                        result={
+                            "provider": "lmstudio",
+                            "models": [],
+                            "markdown": "# LM Studio Models\n\nNo models loaded. Load a model in LM Studio first.",
+                        },
+                    )
 
-                result = "# LM Studio Models\n\n"
+                lines = ["# LM Studio Models", ""]
+                items = []
                 for model in models:
                     model_id = model.get("id", "Unknown")
-                    result += f"**{model_id}**\n"
+                    lines.append(f"**{model_id}**")
+                    items.append({"id": model_id})
 
-                return result
+                return build_success_response(
+                    operation="list_models",
+                    summary=f"{len(items)} LM Studio models",
+                    result={
+                        "provider": "lmstudio",
+                        "models": items,
+                        "markdown": "\n".join(lines),
+                    },
+                )
             else:
-                return f"# Error\n\nFailed to connect to LM Studio: HTTP {response.status_code}\n\nMake sure LM Studio server is running."
+                return build_error_response(
+                    error="LM Studio connection failed",
+                    error_code="CONNECTION_FAILED",
+                    message=f"Failed to connect to LM Studio: HTTP {response.status_code}. Make sure LM Studio server is running.",
+                    recovery_options=[f"Start the LM Studio server, then retry at {url}"],
+                )
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to LM Studio: {e!s}\n\nMake sure LM Studio server is running at {url}"
+        return build_error_response(
+            error="LM Studio connection failed",
+            error_code="CONNECTION_FAILED",
+            message=f"Failed to connect to LM Studio: {e!s}. Make sure LM Studio server is running at {url}",
+            recovery_options=[f"Start the LM Studio server, then retry at {url}"],
+        )
 
 
 async def _list_openai_models() -> dict:
     """List available OpenAI models."""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        return """# OpenAI Models
-
-**Status:** API key not configured
-
-**Setup:**
-1. Get API key from: https://platform.openai.com/api-keys
-2. Set environment variable: `export OPENAI_API_KEY=your-key-here`
-
-**Common Models:**
-- gpt-4o (latest GPT-4)
-- gpt-4-turbo
-- gpt-3.5-turbo
-- gpt-4
-"""
+        return build_error_response(
+            error="OpenAI API key not configured",
+            error_code="NOT_CONFIGURED",
+            message="OpenAI API key not configured. Get one at https://platform.openai.com/api-keys and set OPENAI_API_KEY.",
+            recovery_options=[
+                "Set the OPENAI_API_KEY environment variable",
+                "Use a local provider instead (ollama / lmstudio)",
+            ],
+        )
 
     try:
         import openai
@@ -404,17 +469,36 @@ async def _list_openai_models() -> dict:
         client = openai.OpenAI(api_key=api_key)
         models = client.models.list()
 
-        result = "# OpenAI Models\n\n"
+        lines = ["# OpenAI Models", ""]
+        items = []
         gpt_models = [m for m in models.data if "gpt" in m.id.lower()]
         for model in sorted(gpt_models, key=lambda x: x.id):
-            result += f"**{model.id}**\n"
+            lines.append(f"**{model.id}**")
+            items.append({"id": model.id})
 
-        return result
+        return build_success_response(
+            operation="list_models",
+            summary=f"{len(items)} OpenAI models",
+            result={
+                "provider": "openai",
+                "models": items,
+                "markdown": "\n".join(lines),
+            },
+        )
 
     except ImportError:
-        return "# Error\n\nOpenAI library not installed. Install with: `pip install openai`"
+        return build_error_response(
+            error="OpenAI library not installed",
+            error_code="MISSING_DEPENDENCY",
+            message="OpenAI library not installed. Install with: `pip install openai`",
+            recovery_options=["Install the openai package, or use a local provider"],
+        )
     except Exception as e:
-        return f"# Error\n\nFailed to list OpenAI models: {e!s}"
+        return build_error_response(
+            error="OpenAI listing failed",
+            error_code="EXECUTION_ERROR",
+            message=f"Failed to list OpenAI models: {e!s}",
+        )
 
 
 async def _load_model(provider: str, model: str, base_url: str | None = None, api_key: str | None = None) -> dict:
@@ -424,9 +508,23 @@ async def _load_model(provider: str, model: str, base_url: str | None = None, ap
     elif provider == "lmstudio":
         return await _load_lmstudio_model(model, base_url)
     elif provider == "openai":
-        return "# Info\n\nOpenAI models are hosted and don't need loading. Use 'select_model' to choose a model."
+        return build_success_response(
+            operation="load_model",
+            summary="OpenAI models are hosted, nothing to load",
+            result={
+                "provider": provider,
+                "model": model,
+                "loaded": False,
+                "markdown": "# Info\n\nOpenAI models are hosted and don't need loading. Use 'select_model' to choose a model.",
+            },
+        )
     else:
-        return f"# Error\n\nUnknown provider: {provider}"
+        return build_error_response(
+            error="Unknown provider",
+            error_code="UNKNOWN_PROVIDER",
+            message=f"Unknown provider: {provider}",
+            recovery_options=["Use one of: ollama, lmstudio, openai"],
+        )
 
 
 async def _load_ollama_model(model: str, base_url: str | None = None) -> dict:
@@ -442,19 +540,30 @@ async def _load_ollama_model(model: str, base_url: str | None = None) -> dict:
             )
 
             if response.status_code == 200:
-                return f"""# Model Loaded
-
-**Provider:** Ollama
-**Model:** {model}
-
-Model is now loaded and ready to use.
-"""
+                return build_success_response(
+                    operation="load_model",
+                    summary=f"Ollama model loaded: {model}",
+                    result={
+                        "provider": "ollama",
+                        "model": model,
+                        "loaded": True,
+                        "markdown": f"# Model Loaded\n\n**Provider:** Ollama\n**Model:** {model}\n\nModel is now loaded and ready to use.",
+                    },
+                )
             else:
-                error_text = response.text
-                return f"# Error\n\nFailed to load model: HTTP {response.status_code}\n\n{error_text}"
+                return build_error_response(
+                    error="Ollama load failed",
+                    error_code="LOAD_FAILED",
+                    message=f"Failed to load model: HTTP {response.status_code}\n\n{response.text}",
+                    recovery_options=["Check the model name (`ollama list`), then retry"],
+                )
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to Ollama: {e!s}\n\nMake sure Ollama is running."
+        return build_error_response(
+            error="Ollama connection failed",
+            error_code="CONNECTION_FAILED",
+            message=f"Failed to connect to Ollama: {e!s}. Make sure Ollama is running.",
+        )
 
 
 async def _load_lmstudio_model(model: str, base_url: str | None = None) -> dict:
@@ -470,69 +579,72 @@ async def _load_lmstudio_model(model: str, base_url: str | None = None) -> dict:
                 models = [m.get("id") for m in data.get("data", [])]
 
                 if model in models:
-                    return f"""# Model Available
-
-**Provider:** LM Studio
-**Model:** {model}
-
-Model is loaded and ready to use in LM Studio.
-"""
+                    return build_success_response(
+                        operation="load_model",
+                        summary=f"LM Studio model available: {model}",
+                        result={
+                            "provider": "lmstudio",
+                            "model": model,
+                            "loaded": True,
+                            "markdown": f"# Model Available\n\n**Provider:** LM Studio\n**Model:** {model}\n\nModel is loaded and ready to use in LM Studio.",
+                        },
+                    )
                 else:
-                    return f"""# Model Not Loaded
-
-**Provider:** LM Studio
-**Model:** {model}
-
-**Status:** Model not currently loaded
-
-**To load:**
-1. Open LM Studio
-2. Select the model from the sidebar
-3. Click "Start Server"
-4. The model will be available for use
-
-**Available models:** {", ".join(models) if models else "None"}
-"""
+                    available = ", ".join(models) if models else "None"
+                    return build_error_response(
+                        error="Model not loaded",
+                        error_code="MODEL_NOT_LOADED",
+                        message=f"Model not currently loaded in LM Studio: {model}. Available models: {available}",
+                        recovery_options=[
+                            "Open LM Studio, select the model from the sidebar, click Start Server",
+                        ],
+                    )
             else:
-                return f"# Error\n\nFailed to connect to LM Studio: HTTP {response.status_code}"
+                return build_error_response(
+                    error="LM Studio connection failed",
+                    error_code="CONNECTION_FAILED",
+                    message=f"Failed to connect to LM Studio: HTTP {response.status_code}",
+                )
 
     except httpx.RequestError as e:
-        return f"# Error\n\nFailed to connect to LM Studio: {e!s}\n\nMake sure LM Studio server is running."
+        return build_error_response(
+            error="LM Studio connection failed",
+            error_code="CONNECTION_FAILED",
+            message=f"Failed to connect to LM Studio: {e!s}. Make sure LM Studio server is running.",
+        )
 
 
 async def _unload_model(provider: str, model: str | None = None, base_url: str | None = None) -> dict:
     """Unload a model from memory (for local providers)."""
-    if provider == "ollama":
-        # Ollama doesn't have an explicit unload, but we can note it
-        return """# Info
-
-Ollama automatically manages memory. Models are unloaded when not in use.
-
-**To free memory:**
-- Stop using the model (it will be unloaded automatically)
-- Or restart Ollama: `ollama serve`
-"""
-    elif provider == "lmstudio":
-        return """# Info
-
-LM Studio manages model loading through its UI.
-
-**To unload:**
-1. Open LM Studio
-2. Click "Stop Server" in the sidebar
-3. The model will be unloaded from memory
-"""
-    elif provider == "openai":
-        return "# Info\n\nOpenAI models are hosted and don't need unloading."
-    else:
-        return f"# Error\n\nUnknown provider: {provider}"
+    notes = {
+        "ollama": "# Info\n\nOllama automatically manages memory. Models are unloaded when not in use.\n\n**To free memory:**\n- Stop using the model (it will be unloaded automatically)\n- Or restart Ollama: `ollama serve`",
+        "lmstudio": '# Info\n\nLM Studio manages model loading through its UI.\n\n**To unload:**\n1. Open LM Studio\n2. Click "Stop Server" in the sidebar\n3. The model will be unloaded from memory',
+        "openai": "# Info\n\nOpenAI models are hosted and don't need unloading.",
+    }
+    if provider in notes:
+        return build_success_response(
+            operation="unload_model",
+            summary=f"Unload is managed by the provider ({provider}), nothing to do",
+            result={
+                "provider": provider,
+                "model": model,
+                "loaded": False,
+                "markdown": notes[provider],
+            },
+        )
+    return build_error_response(
+        error="Unknown provider",
+        error_code="UNKNOWN_PROVIDER",
+        message=f"Unknown provider: {provider}",
+        recovery_options=["Use one of: ollama, lmstudio, openai"],
+    )
 
 
 async def _get_status() -> dict:
     """Get current LLM configuration and status."""
     global _current_provider, _current_model
 
-    result = "# LLM Status\n\n"
+    lines = ["# LLM Status", ""]
 
     # Check both in-memory state and persistent config
     from advanced_memory.config import ConfigManager
@@ -542,22 +654,37 @@ async def _get_status() -> dict:
     active_model = _current_model or config.llm_model
 
     if active_provider and active_model:
-        result += "**Current Configuration:**\n"
-        result += f"- Provider: {active_provider}\n"
-        result += f"- Model: {active_model}\n"
+        lines.append("**Current Configuration:**")
+        lines.append(f"- Provider: {active_provider}")
+        lines.append(f"- Model: {active_model}")
         if _current_provider and _current_model:
-            result += "- **Status:** Active (in-memory)\n"
+            lines.append("- **Status:** Active (in-memory)")
         elif config.llm_provider and config.llm_model:
-            result += "- **Status:** Loaded from config (will be active on next use)\n"
-        result += "\n"
+            lines.append("- **Status:** Loaded from config (will be active on next use)")
+        lines.append("")
+        configured_text = f"{active_provider}/{active_model}"
     else:
-        result += "**Current Configuration:** None\n"
-        result += "**Status:** No LLM provider configured. Use `adn_llm('select_model', ...)` to configure.\n\n"
+        lines.append("**Current Configuration:** None")
+        lines.append("**Status:** No LLM provider configured. Use `adn_llm('select_model', ...)` to configure.")
+        lines.append("")
+        configured_text = "none"
 
-    result += "**Provider Status:**\n"
-    result += await _list_providers()
+    lines.append("**Provider Status:**")
+    lines.append("")
+    providers_resp = await _list_providers()
+    providers_payload = providers_resp.get("result", {}) if isinstance(providers_resp, dict) else {}
+    lines.append(providers_payload.get("markdown", ""))
 
-    return result
+    return build_success_response(
+        operation="status",
+        summary=f"LLM status (configured: {configured_text})",
+        result={
+            "provider": active_provider,
+            "model": active_model,
+            "providers": providers_payload.get("providers", []),
+            "markdown": "\n".join(lines),
+        },
+    )
 
 
 async def _check_health(provider: str | None = None, base_url: str | None = None) -> dict:
@@ -567,7 +694,8 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
     else:
         providers_to_check = ["ollama", "lmstudio", "openai"]
 
-    result = "# LLM Provider Health Check\n\n"
+    lines = ["# LLM Provider Health Check", ""]
+    entries = []
 
     for prov in providers_to_check:
         if prov == "ollama":
@@ -576,11 +704,31 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
                 async with httpx.AsyncClient(timeout=2.0) as client:
                     response = await client.get(url)
                     if response.status_code == 200:
-                        result += f"✅ **Ollama**: Healthy (connected to {url})\n"
+                        # NOTE: /api/tags 200 proves the daemon answers, NOT that
+                        # inference works (2026-09-19: tags OK while every
+                        # /api/chat 500'd with llama-server.exe missing).
+                        # /api/ps is a cheap second signal for loaded models.
+                        loaded: list = []
+                        try:
+                            ps = await client.get((base_url or "http://localhost:11434") + "/api/ps")
+                            if ps.status_code == 200:
+                                loaded = [m.get("name") for m in ps.json().get("models", [])]
+                        except Exception:
+                            pass
+                        state, emoji = "healthy", "✅"
+                        detail = f"Reachable ({url})"
+                        if loaded:
+                            detail += f"; loaded: {', '.join(loaded)}"
+                        else:
+                            detail += "; nothing loaded (tags OK != inference OK)"
                     else:
-                        result += f"❌ **Ollama**: Unhealthy (HTTP {response.status_code})\n"
+                        state, emoji = f"unhealthy_http_{response.status_code}", "❌"
+                        detail = f"HTTP {response.status_code} from {url}"
             except Exception as e:
-                result += f"❌ **Ollama**: Unavailable ({e!s})\n"
+                state, emoji = "unavailable", "❌"
+                detail = f"Unavailable ({e!s})"
+            lines.append(f"{emoji} **Ollama**: {detail}")
+            entries.append({"provider": "ollama", "state": state, "detail": detail})
 
         elif prov == "lmstudio":
             url = (base_url or "http://localhost:1234") + "/v1/models"
@@ -588,17 +736,28 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
                 async with httpx.AsyncClient(timeout=2.0) as client:
                     response = await client.get(url)
                     if response.status_code == 200:
-                        result += f"✅ **LM Studio**: Healthy (connected to {url})\n"
+                        state, emoji = "healthy", "✅"
+                        detail = f"Healthy (connected to {url})"
                     else:
-                        result += f"❌ **LM Studio**: Unhealthy (HTTP {response.status_code})\n"
+                        state, emoji = f"unhealthy_http_{response.status_code}", "❌"
+                        detail = f"Unhealthy (HTTP {response.status_code})"
             except Exception as e:
-                result += f"❌ **LM Studio**: Unavailable ({e!s})\n"
+                state, emoji = "unavailable", "❌"
+                detail = f"Unavailable ({e!s})"
+            lines.append(f"{emoji} **LM Studio**: {detail}")
+            entries.append({"provider": "lmstudio", "state": state, "detail": detail})
 
         elif prov == "openai":
             api_key = os.getenv("OPENAI_API_KEY")
             if api_key:
-                result += "✅ **OpenAI**: Configured (API key present)\n"
+                state, emoji, detail = "configured", "✅", "Configured (API key present)"
             else:
-                result += "⚠️ **OpenAI**: Not configured (no API key)\n"
+                state, emoji, detail = "not_configured", "⚠️", "Not configured (no API key)"
+            lines.append(f"{emoji} **OpenAI**: {detail}")
+            entries.append({"provider": "openai", "state": state, "detail": detail})
 
-    return result
+    return build_success_response(
+        operation="health",
+        summary=f"Health checked: {len(entries)} providers",
+        result={"checks": entries, "markdown": "\n".join(lines)},
+    )

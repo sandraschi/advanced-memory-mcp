@@ -14,6 +14,7 @@ from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response, build_success_response
 
 
+@mcp.tool()
 async def adn_research(
     operation: Annotated[
         Literal[
@@ -104,7 +105,9 @@ async def adn_research(
                 adn_tvtropes_research,
             )
 
-            result = await adn_tvtropes_research(query)
+            # NOTE (2026-09-19): operation is required — positional query
+            # used to land in `operation` and every call failed.
+            result = await adn_tvtropes_research(operation="search_tropes", query=query, max_results=limit or 5)
             return build_success_response("tvtropes", result)
 
         elif operation == "document_ingest":
@@ -130,7 +133,9 @@ async def adn_research(
                 )
             from advanced_memory.mcp.tools.adn_rag import adn_rag
 
-            result = await adn_rag(query)
+            # NOTE (2026-09-19): operation is required — positional query
+            # used to land in `operation` and every call failed.
+            result = await adn_rag(operation="query_knowledge", query=query)
             return build_success_response("rag_query", result)
 
         elif operation == "llm_config":
@@ -140,10 +145,24 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Provider and model required for LLM config",
                 )
+            # NOTE (2026-09-19): this used to call adn_llm("configure", ...),
+            # an operation that never existed — every call failed with
+            # "Invalid operation", wrapped as success. Rewired to the real op.
+            # api_key is accepted for compatibility but not forwarded:
+            # hosted keys come from the environment (OPENAI_API_KEY).
             from advanced_memory.mcp.tools.adn_llm import adn_llm
 
-            result = await adn_llm("configure", provider=provider, model=model, api_key=api_key)
-            return build_success_response("llm_config", result)
+            # .fn when @mcp.tool decorated, direct when plain (mirrors tests/mcp/tool_invoker).
+            select = getattr(adn_llm, "fn", adn_llm)
+            inner = await select(operation="select_model", provider=provider, model=model)
+            if not isinstance(inner, dict) or not inner.get("success"):
+                return inner
+            summary = inner.get("technical_summary") or inner.get("message") or "Model selected"
+            return build_success_response(
+                "llm_config",
+                summary,
+                result=inner.get("result", {}),
+            )
 
         elif operation == "llm_generate":
             if not content:
@@ -152,10 +171,30 @@ async def adn_research(
                     "MISSING_PARAMETER",
                     "Content required for LLM generation",
                 )
-            from advanced_memory.mcp.tools.adn_llm import adn_llm
+            # NOTE (2026-09-19): this used to call adn_llm("generate", ...),
+            # an operation that never existed. Generation lives in
+            # services.llm_client, which honors the adn_llm selection
+            # (explicit provider/model here override it for this call only).
+            from advanced_memory.services.llm_client import get_llm_client
 
-            result = await adn_llm("generate", content=content)
-            return build_success_response("llm_generate", result)
+            try:
+                client = get_llm_client(provider=provider, model=model)
+                text = await client.generate(content)
+            except Exception as e:
+                return build_error_response(
+                    "LLM_GENERATION_FAILED",
+                    "GENERATION_ERROR",
+                    f"LLM generation failed: {e!s}",
+                    recovery_options=[
+                        "Check the provider is reachable (adn_llm health)",
+                        "Pick an installed model (adn_llm list_models)",
+                    ],
+                )
+            return build_success_response(
+                "llm_generate",
+                f"Generated {len(text)} chars via {client.provider}/{client.model}",
+                result={"provider": client.provider, "model": client.model, "text": text},
+            )
 
         elif operation == "research_orchestrate":
             if not query:
@@ -168,7 +207,10 @@ async def adn_research(
                 research_orchestrator,
             )
 
-            result = await research_orchestrator(query)
+            # NOTE (2026-09-19): operation+topic are required — positional
+            # query used to land in `operation` and every call failed.
+            # research_plan needs only a topic, hence the default.
+            result = await research_orchestrator(operation="research_plan", topic=query)
             return build_success_response("research_orchestrate", result)
 
         else:
@@ -183,5 +225,5 @@ async def adn_research(
         return build_error_response("VALIDATION_ERROR", "VALIDATION_ERROR", f"Operation failed: {e!s}")
 
 
-# Decommissioned in favor of namespaced research/search apps (FastMCP 3.2 GA)
-# register_portmanteau_tool(mcp, adn_research)
+# Registered live via @mcp.tool + server.py import (2026-09-19).
+# The register_portmanteau_tool helper referenced here never existed.

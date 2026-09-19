@@ -9,13 +9,22 @@ from tests.mcp.tool_invoker import mcp_fn
 
 
 def _text(result) -> str:
-    """Extract readable text from dict responses (success/error shapes)."""
+    """Extract readable text from dict envelope responses (success/error shapes).
+
+    Helpers return build_success_response() envelopes with human-readable
+    markdown at result.markdown; dig that out too.
+    """
     if isinstance(result, dict):
         parts = []
         for k in ("error", "message", "conversational_summary", "summary", "technical_summary"):
             v = result.get(k)
             if isinstance(v, str) and v.strip():
                 parts.append(v)
+        nested = result.get("result")
+        if isinstance(nested, dict):
+            md = nested.get("markdown")
+            if isinstance(md, str) and md.strip():
+                parts.append(md)
         return " ".join(parts)
     return str(result)
 
@@ -103,6 +112,33 @@ class TestAdnLLM:
             result = await mcp_fn(adn_llm)(operation="health")
             text = _text(result)
             assert "Health" in text
+
+    @pytest.mark.asyncio
+    async def test_all_operations_return_dict_envelope(self):
+        """Regression (2026-09-19): helpers returned bare markdown strings while
+        the tool declares `-> dict`, so FastMCP rejected every call with
+        'structured_content must be a dict or None'. Every op must return a dict."""
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_response = MagicMock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {"models": []}
+            mock_client.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_response)
+            mock_client.return_value.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
+
+            cases = [
+                {"operation": "list_providers"},
+                {"operation": "list_models", "provider": "ollama"},
+                {"operation": "list_models", "provider": "lmstudio"},
+                {"operation": "list_models", "provider": "nope"},
+                {"operation": "status"},
+                {"operation": "health"},
+                {"operation": "load_model", "provider": "openai", "model": "gpt-4o"},
+                {"operation": "unload_model", "provider": "ollama"},
+                {"operation": "unload_model", "provider": "nope"},
+            ]
+            for kwargs in cases:
+                result = await mcp_fn(adn_llm)(**kwargs)
+                assert isinstance(result, dict), f"{kwargs} returned {type(result)}"
 
     @pytest.mark.asyncio
     async def test_invalid_operation(self):

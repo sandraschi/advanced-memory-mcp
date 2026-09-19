@@ -157,6 +157,7 @@ import advanced_memory.mcp.tools.adn_system
 import advanced_memory.mcp.tools.adn_typora
 import advanced_memory.mcp.tools.adn_zettel
 import advanced_memory.mcp.tools.make_skill_advanced  # super skillmaker: research-first skill creation (re-enabled 2026-07-17)
+import advanced_memory.mcp.tools.portmanteau_research  # adn_research: web/arxiv/github/tvtropes + rag/document/research + llm_config/llm_generate (registered 2026-09-19)
 import advanced_memory.mcp.tools.query_logs
 
 for _optional_tool in ("adn_checkpoint", "adn_wiki"):
