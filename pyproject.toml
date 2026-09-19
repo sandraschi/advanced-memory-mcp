@@ -231,6 +231,9 @@ ignore_no_config = true
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+# PyInstaller spec files are packaging DSL (undefined globals by design),
+# not importable modules — never lint them (2026-09-19: ruff loop on commit).
+exclude = ["*.spec"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "S", "UP", "RUF"]
