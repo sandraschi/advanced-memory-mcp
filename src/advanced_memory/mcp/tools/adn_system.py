@@ -82,5 +82,9 @@ async def adn_system(op: SystemOperation) -> Any:
         )
     elif operation == "sync":
         return await _adn_system_impl(operation="sync_status")
+    elif operation == "reindex":
+        from advanced_memory.mcp.tools.adn_search import _rag_reindex
+
+        return await _rag_reindex(op.project, "full")
     else:
         return f"Error: Unsupported operation {operation}"

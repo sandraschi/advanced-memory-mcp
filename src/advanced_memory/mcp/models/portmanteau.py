@@ -422,7 +422,16 @@ class SearchExternalOp(BaseOp):
     max_results: Annotated[int, Field(description="Limit on returned items")] = 10
 
 
-SearchOperation = Annotated[SearchQueryOp | SearchRagOp | SearchExternalOp, Field(discriminator="operation")]
+class SearchReindexOp(BaseOp):
+    operation: Literal["reindex"]
+    mode: Annotated[
+        Literal["full", "incremental"], Field(description="Reindexing scope: 'full' (rebuild) or 'incremental'")
+    ] = "full"
+
+
+SearchOperation = Annotated[
+    SearchQueryOp | SearchRagOp | SearchExternalOp | SearchReindexOp, Field(discriminator="operation")
+]
 
 # --- PROJECT DOMAIN ---
 
@@ -495,8 +504,14 @@ class SystemSyncOp(BaseModel):
     operation: Literal["sync"]
 
 
+class SystemReindexOp(BaseOp):
+    operation: Literal["reindex"]
+    focus: Annotated[str | None, Field(description="Reindexing target ('rag', 'db', or 'all')")] = "rag"
+
+
 SystemOperation = Annotated[
-    SystemStatusOp | SystemHelpOp | SystemWorkflowOp | SystemExternalOp | SystemSyncOp, Field(discriminator="operation")
+    SystemStatusOp | SystemHelpOp | SystemWorkflowOp | SystemExternalOp | SystemSyncOp | SystemReindexOp,
+    Field(discriminator="operation"),
 ]
 
 # --- TYPORA DOMAIN ---
