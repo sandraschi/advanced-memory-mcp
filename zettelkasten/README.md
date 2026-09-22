@@ -226,6 +226,22 @@ adn_zettelmaker("generate", template_path="zettelkasten/user-templates/my-templa
 
 ---
 
+## Provenance & review (2026-09-22)
+
+Every indexed note carries two metadata fields, visible in search results:
+
+- `source`: `agent` for notes created through the API/MCP tools, `filesystem`
+  for files that appeared on disk. An explicit frontmatter value is preserved.
+- `file_mtime`: ISO timestamp of when the file last hit disk.
+
+Agent API writes default to the project's `inbox/` folder. Review flow: search
+for `source: agent` notes you have not seen, glance at them, then move or link
+them into the main graph. Notes that arrive while the MCP server is down (or
+that an agent writes straight to disk) get `source: filesystem` — treat
+unfamiliar ones the same way.
+
+---
+
 ## See Also
 
 - **Template Guide**: `templates/README.md`

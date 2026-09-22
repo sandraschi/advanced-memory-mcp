@@ -569,8 +569,21 @@ class SyncService:
         # after relation processing is complete
         final_checksum = await self.file_service.compute_checksum(path)
 
-        # set checksum
-        await self.entity_repository.update(entity.id, {"checksum": final_checksum})
+        # set checksum + provenance. file_mtime answers "when did this hit
+        # disk"; source defaults to filesystem when frontmatter does not say
+        # otherwise (API-written notes carry source: agent from
+        # schema_to_markdown). Runs for both create and update paths.
+        def _stat_mtime() -> float:
+            return file_path.stat().st_mtime
+
+        try:
+            mtime_iso = datetime.fromtimestamp(await asyncio.to_thread(_stat_mtime), tz=datetime.UTC).isoformat()
+        except OSError:
+            mtime_iso = ""
+        meta = dict(entity.entity_metadata or {})
+        meta["file_mtime"] = mtime_iso
+        meta.setdefault("source", "filesystem")
+        await self.entity_repository.update(entity.id, {"checksum": final_checksum, "entity_metadata": meta})
 
         logger.debug(
             f"Markdown sync completed: path={path}, entity_id={entity.id}, "

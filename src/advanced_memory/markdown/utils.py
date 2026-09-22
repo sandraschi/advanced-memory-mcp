@@ -89,6 +89,12 @@ async def schema_to_markdown(schema: Any) -> Post:
         content_frontmatter.update(entity_metadata)
         entity_metadata = content_frontmatter
 
+    # Provenance: schema_to_markdown is only called from the API create/update
+    # path (entity_service), never from filesystem sync. So a note built here
+    # was written by an agent/tool. Default source accordingly; an explicit
+    # frontmatter value (e.g. source: human) is preserved.
+    entity_metadata.setdefault("source", "agent")
+
     # Remove special fields for ordered frontmatter
     for field in ["type", "title", "permalink"]:
         entity_metadata.pop(field, None)
