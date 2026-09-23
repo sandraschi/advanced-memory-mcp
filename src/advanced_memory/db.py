@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.pool import NullPool
 
 from advanced_memory.config import AdvancedMemoryConfig, ConfigManager
 from advanced_memory.repository.search_repository import SearchRepository
@@ -113,7 +114,18 @@ def _create_engine_and_session(
     engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
     # SQLite (both MEMORY and FILESYSTEM) doesn't support pooling parameters
     # These parameters are only valid for PostgreSQL, MySQL, etc.
-    # SQLite uses aiosqlite with NullPool which doesn't support pool_size/max_overflow
+
+    # NullPool for filesystem SQLite: without it, SQLAlchemy's async engine defaults
+    # to AsyncAdaptedQueuePool, which reuses connections across requests. A connection
+    # checked out by a cancelled asyncio task (client disconnect, MCP session teardown)
+    # never gets returned to that pool - it sits there holding an open SQLite read
+    # transaction indefinitely, which blocks WAL checkpointing for every other process
+    # sharing this db file until the whole thing looks like a readonly/locked database.
+    # NullPool opens and closes a real connection per checkout, so there is nothing to
+    # leak. Does not apply to MEMORY (in-memory db_type used by tests), where NullPool
+    # would silently reset to an empty database on every new connection.
+    if db_type == DatabaseType.FILESYSTEM:
+        engine_kwargs["poolclass"] = NullPool
 
     engine = create_async_engine(db_url, **engine_kwargs)
 
@@ -199,10 +211,11 @@ async def engine_session_factory(
     # Add connection pooling for better concurrency (not for in-memory databases)
     engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
     if db_type != DatabaseType.MEMORY:
-        # Only add pool settings for file-based databases
-        # In-memory databases use StaticPool which doesn't support these parameters
-        engine_kwargs["pool_size"] = 5  # Keep 5 connections ready
-        engine_kwargs["max_overflow"] = 10  # Allow 10 extra connections under load
+        # NullPool, not a sized QueuePool: see the matching comment in
+        # _create_engine_and_session for why - a pooled connection checked out
+        # by a cancelled asyncio task never gets returned, and ends up holding
+        # a stale SQLite read transaction that blocks WAL checkpoints fleet-wide.
+        engine_kwargs["poolclass"] = NullPool
 
     _engine = create_async_engine(db_url, **engine_kwargs)
 

@@ -1,17 +1,21 @@
 """Management router for advanced-memory API."""
 
 import asyncio
+import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Request
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from advanced_memory.config import ConfigManager
-from advanced_memory.deps import ProjectRepositoryDep, SyncServiceDep
+from advanced_memory.config import WATCH_STATUS_JSON, ConfigManager
 from advanced_memory.services.sync_status_service import sync_status_tracker
 
 router = APIRouter(prefix="/management", tags=["management"])
+
+# A running watcher that hasn't scanned in this long is presumed wedged, not idle.
+WATCH_STALE_THRESHOLD_SECONDS = 900  # 15 minutes
 
 
 class RagExtraRootsPayload(BaseModel):
@@ -24,7 +28,57 @@ class WatchStatusResponse(BaseModel):
     """Response model for watch status."""
 
     running: bool
-    """Whether the watch service is currently running."""
+    """Whether the watch service is currently running (in-process asyncio task check)."""
+
+    start_time: str | None = None
+    """When the watch service (re)started, from watch-status.json."""
+
+    last_scan: str | None = None
+    """Timestamp of the most recent filesystem scan, from watch-status.json."""
+
+    synced_files: int = 0
+    """Files synced in the most recent scan."""
+
+    error_count: int = 0
+    """Cumulative watch-service error count since start_time."""
+
+    last_error: str | None = None
+    """Most recent watch-service error message, if any."""
+
+    stale: bool = False
+    """True when running=true but last_scan is older than the stale threshold -
+    the watcher process is alive but not actually making progress (the exact
+    failure mode that let a reindex sit stalled for 5+ hours with no visible sign)."""
+
+    recent_events: list[dict] = Field(default_factory=list)
+    """Last few filesystem sync events (path, action, status, timestamp)."""
+
+
+def _read_watch_status_file() -> dict:
+    """Read watch-status.json if present; returns {} on any error (missing/corrupt file
+    should degrade the KPI display, not break the status endpoint)."""
+    try:
+        status_file = Path.home() / ".advanced-memory" / WATCH_STATUS_JSON
+        if not status_file.exists():
+            return {}
+        with open(status_file, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:  # pragma: no cover
+        logger.warning(f"Could not read watch-status.json: {e}")
+        return {}
+
+
+def _is_stale(running: bool, last_scan: str | None) -> bool:
+    if not running or not last_scan:
+        return False
+    try:
+        last_scan_dt = datetime.fromisoformat(last_scan.replace("Z", "+00:00"))
+        if last_scan_dt.tzinfo is None:
+            last_scan_dt = last_scan_dt.replace(tzinfo=UTC)
+        age_seconds = (datetime.now(UTC) - last_scan_dt).total_seconds()
+        return age_seconds > WATCH_STALE_THRESHOLD_SECONDS
+    except Exception:  # pragma: no cover
+        return False
 
 
 @router.get("/sync/status")
@@ -53,66 +107,89 @@ async def get_file_sync_status() -> dict:
     }
 
 
+def _build_watch_status_response(running: bool) -> WatchStatusResponse:
+    """Merge the live in-process running check with watch-status.json's history,
+    so the API (and every UI/tool built on it) can tell 'alive and stuck' apart
+    from 'alive and working' instead of just reporting a bare running flag."""
+    data = _read_watch_status_file()
+    last_scan = data.get("last_scan")
+    return WatchStatusResponse(
+        running=running,
+        start_time=data.get("start_time"),
+        last_scan=last_scan,
+        synced_files=data.get("synced_files", 0),
+        error_count=data.get("error_count", 0),
+        last_error=data.get("last_error"),
+        stale=_is_stale(running, last_scan),
+        recent_events=data.get("recent_events", [])[-5:],
+    )
+
+
+def _get_sync_task(request: Request) -> asyncio.Task | None:
+    # BUG (fixed): this used to read/write a separate `app.state.watch_task` that
+    # nothing else in the app ever touched. The real watcher started at boot is
+    # `app.state.sync_task` (see lifespan() in api/app.py, initialize_file_sync).
+    # `watch_task` was always None unless this router itself set it, which it could
+    # never do without a 422 (start_watch_service's dependency chain pulled in a
+    # project-scoped repository that needs a {project} path param this route
+    # doesn't have) - so Start/Stop/Status here were watching a phantom that was
+    # permanently disconnected from the process actually indexing the vault.
+    return getattr(request.app.state, "sync_task", None)
+
+
 @router.get("/watch/status", response_model=WatchStatusResponse)
 async def get_watch_status(request: Request) -> WatchStatusResponse:
     """Get the current status of the watch service."""
-    watch_task = getattr(request.app.state, "watch_task", None)
-    return WatchStatusResponse(running=watch_task is not None and not watch_task.done())
+    sync_task = _get_sync_task(request)
+    running = sync_task is not None and not sync_task.done()
+    return _build_watch_status_response(running)
 
 
 @router.post("/watch/start", response_model=WatchStatusResponse)
-async def start_watch_service(
-    request: Request, project_repository: ProjectRepositoryDep, sync_service: SyncServiceDep
-) -> WatchStatusResponse:
+async def start_watch_service(request: Request) -> WatchStatusResponse:
     """Start the watch service if it's not already running."""
+    from advanced_memory.services.initialization import initialize_file_sync
+    from advanced_memory.utils.task_logging import attach_task_failure_logging
 
-    # needed because of circular imports from sync -> app
-    from advanced_memory.sync import WatchService
-    from advanced_memory.sync.background_sync import create_background_sync_task
-
-    watch_existing = getattr(request.app.state, "watch_task", None)
-    if watch_existing is not None and not watch_existing.done():
+    existing = _get_sync_task(request)
+    if existing is not None and not existing.done():
         # Watch service is already running
-        return WatchStatusResponse(running=True)
+        return _build_watch_status_response(True)
 
     app_config = ConfigManager().config
 
-    # Create and start a new watch service
     logger.info("Starting watch service via management API")
-
-    # Get services needed for the watch task
-    watch_service = WatchService(
-        app_config=app_config,
-        project_repository=project_repository,
+    sync_task = asyncio.create_task(
+        initialize_file_sync(app_config),
+        name="api_initialize_file_sync",
     )
+    attach_task_failure_logging(sync_task, "api_initialize_file_sync")
+    request.app.state.sync_task = sync_task
 
-    # Create and store the task
-    watch_task = create_background_sync_task(sync_service, watch_service)
-    request.app.state.watch_task = watch_task
-
-    return WatchStatusResponse(running=True)
+    return _build_watch_status_response(True)
 
 
 @router.post("/watch/stop", response_model=WatchStatusResponse)
 async def stop_watch_service(request: Request) -> WatchStatusResponse:  # pragma: no cover
     """Stop the watch service if it's running."""
-    watch_task = getattr(request.app.state, "watch_task", None)
-    if watch_task is None or watch_task.done():
+    sync_task = _get_sync_task(request)
+    if sync_task is None or sync_task.done():
         # Watch service is not running
-        return WatchStatusResponse(running=False)
+        return _build_watch_status_response(False)
 
     # Cancel the running task
     logger.info("Stopping watch service via management API")
-    watch_task.cancel()
+    sync_task.cancel()
 
     # Wait for it to be properly cancelled
     try:
-        await watch_task
+        await sync_task
     except asyncio.CancelledError:
+        logger.debug("Sync task cancelled via API")  # expected path, not an error
         pass
 
-    request.app.state.watch_task = None
-    return WatchStatusResponse(running=False)
+    request.app.state.sync_task = None
+    return _build_watch_status_response(False)
 
 
 @router.get("/llm-config")
@@ -141,7 +218,8 @@ async def put_llm_config(request: Request):
 
         _adn_llm_mod._current_provider = config.llm_provider
         _adn_llm_mod._current_model = config.llm_model
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Live adn_llm session update skipped: {e}")
         pass
     return {"success": True, "provider": config.llm_provider, "model": config.llm_model}
 

@@ -387,6 +387,25 @@ async def _get_diagnostic_status() -> str:
                 except Exception:
                     status_lines.append(f"- **Start Time**: {start_time_str}")
 
+            last_scan_str = watch_data.get("last_scan")
+            synced_files = watch_data.get("synced_files", 0)
+            if last_scan_str:
+                status_lines.append(f"- **Last Scan**: {last_scan_str} ({synced_files} files synced)")
+                try:
+                    last_scan = datetime.fromisoformat(last_scan_str.replace("Z", "+00:00"))
+                    last_scan_age_seconds = (datetime.now() - last_scan).total_seconds()
+                    # 900s threshold matches WATCH_STALE_THRESHOLD_SECONDS in
+                    # management_router.py - keep both in sync if this changes.
+                    if running and last_scan_age_seconds > 900:
+                        status_lines.append(
+                            f"- **STALE**: watcher reports running but last scan was "
+                            f"{last_scan_age_seconds / 60:.0f} minutes ago - it is likely wedged, "
+                            "not idle. A wedged watcher can block SQLite WAL checkpoints for every "
+                            "process sharing this database. Restart the advanced-memory-mcp service."
+                        )
+                except Exception:
+                    pass
+
             # Check for stability issues
             if error_count > 5:
                 status_lines.append(f"- **âš ï¸ Stability Issue**: High error count ({error_count})")
