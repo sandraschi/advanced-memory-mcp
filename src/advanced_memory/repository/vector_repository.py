@@ -34,7 +34,10 @@ def _get_fastembed_cache_dir() -> Path:
                 cache_dir.mkdir(parents=True, exist_ok=True)
                 return cache_dir
             curr = curr.parent
-    except Exception:
+    except Exception as e:
+        # Noisy on purpose: a failed cache-dir probe silently redirects embeddings
+        # to CWD/temp, scattering large model files across disks.
+        logger.debug(f"Fastembed cache dir probe failed ({e}), falling back")
         pass
 
     # Fallback to current directory or system temp

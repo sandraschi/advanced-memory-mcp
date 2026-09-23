@@ -58,6 +58,7 @@ def _coerce_tags(value: object) -> list[str]:
                 if isinstance(parsed, list | tuple | set):
                     return [str(t) for t in parsed]
             except (ValueError, SyntaxError):
+                logger.debug(f"Tag value not a Python literal, treating as plain tag: {stripped!r}")
                 pass
         # Fallback: treat as a single tag, or empty if blank
         return [stripped] if stripped else []

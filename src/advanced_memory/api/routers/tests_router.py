@@ -91,7 +91,8 @@ async def run_tests(body: RunTestsRequest) -> RunTestsResponse:
             try:
                 proc.kill()
                 await asyncio.wait_for(proc.wait(), timeout=5.0)
-            except Exception:
+            except Exception as e:
+                logger.debug("Test subprocess kill failed during timeout cleanup: %s", e)
                 pass
         logger.warning("Test run timed out after %s seconds", body.timeout_seconds)
         raise HTTPException(
