@@ -150,30 +150,50 @@ async def health_check():
 
 
 @app.post("/api/shutdown")
-async def graceful_shutdown(request: Request):
-    """Trigger a clean process exit for external restart orchestration.
+async def graceful_shutdown():
+    """Ask uvicorn to exit; best-effort, not a guaranteed clean shutdown.
 
     Unprefixed (not /api/v1/shutdown) to match the path
     mcp-central-docs/scripts/Invoke-FleetWebappStart.ps1 already calls for
     every fleet repo before restarting an NSSM-managed backend - that script
-    silently falls back to a bare Restart-Service when this 404s, which is
-    why the gap went unnoticed. Self-sends SIGTERM after the response flushes
-    so uvicorn's normal signal handling runs the ASGI lifespan shutdown
-    (cancels watch/sync tasks, calls db.shutdown_db()) exactly as it would
-    for `sc.exe stop` - just without an ~8s wait for a hard stop first.
+    previously got a 404 here and fell back straight to Restart-Service,
+    which is why the gap went unnoticed.
+
+    KNOWN LIMITATION, not fully solved: os.kill(getpid(), SIGTERM) does
+    nothing under this repo's actual NSSM deployment (Windows delivers a
+    self-raised SIGTERM via GenerateConsoleCtrlEvent, which needs an
+    attached console; a true Windows Service, Session 0, has none - verified
+    live, works instantly against a console-attached dev instance, silently
+    no-ops against the NSSM-managed one). Calling uvicorn's installed
+    handler directly (signal.getsignal(SIGTERM) then call it as a plain
+    function - no OS signal delivery involved) was the fix for that, and IS
+    the theoretically correct mechanism: uvicorn's handle_exit just sets
+    Server.should_exit = True, and diagnostics confirmed live that this call
+    genuinely lands on the real, running Server object (should_exit reads
+    back True immediately after). Despite that, the NSSM-hosted process
+    still does not terminate - main_loop's 0.1s should_exit poll should pick
+    it up per uvicorn's own source, and it doesn't, for a reason not
+    root-caused (loguru's own file-sink logging is separately unreliable
+    here - same log-rotation PermissionError seen throughout this repo's
+    test suite - which blocked tracing further into the shutdown sequence).
+
+    Left in place because it's harmless either way: the calling script waits
+    up to ~8s for the port to go quiet after this response, then calls
+    Restart-Service/nssm restart UNCONDITIONALLY regardless of whether that
+    happened - so an actual restart is always guaranteed by the existing
+    fallback path, this just may not skip that external step the way it's
+    meant to.
     """
-    import asyncio
-    import os
     import signal
 
-    async def _self_terminate() -> None:
-        await asyncio.sleep(0.2)  # let the response reach the caller first
-        os.kill(os.getpid(), signal.SIGTERM)
+    handler = signal.getsignal(signal.SIGTERM)
+    if not callable(handler):
+        logger.warning("No SIGTERM handler installed (not running under uvicorn's own server) - no-op")
+        return {"status": "no handler installed, not shutting down"}
 
     logger.info("Graceful shutdown requested via /api/shutdown")
-    # Held on app.state so the task isn't garbage-collected before it fires.
-    request.app.state.shutdown_task = asyncio.create_task(_self_terminate())
-    return {"status": "shutting down"}
+    handler(signal.SIGTERM, None)
+    return {"status": "shutdown requested"}
 
 
 @app.exception_handler(RequestValidationError)
