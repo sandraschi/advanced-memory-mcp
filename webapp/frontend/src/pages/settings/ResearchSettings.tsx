@@ -44,8 +44,11 @@ export default function ResearchSettings({ onChange = () => {} }: ResearchSettin
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="label">Max Results per Source</label>
+            <label htmlFor="research-max-results" className="label">
+              Max Results per Source
+            </label>
             <input
+              id="research-max-results"
               type="number"
               defaultValue="50"
               min="1"
@@ -56,8 +59,11 @@ export default function ResearchSettings({ onChange = () => {} }: ResearchSettin
           </div>
 
           <div>
-            <label className="label">Research Timeout (seconds)</label>
+            <label htmlFor="research-timeout" className="label">
+              Research Timeout (seconds)
+            </label>
             <input
+              id="research-timeout"
               type="number"
               defaultValue="30"
               min="5"

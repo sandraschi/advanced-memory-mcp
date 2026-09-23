@@ -1,5 +1,5 @@
 import { ArrowLeft, Clock, Download, Filter, RefreshCw, Search, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getApiBaseUrl } from "../../config/apiBase";
@@ -33,7 +33,7 @@ export default function LoggerPage() {
   const [timeFilter, setTimeFilter] = useState<"all" | "1h" | "6h" | "24h" | "custom">("all");
   const logContainerRef = useRef<HTMLDivElement>(null);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       setLoadError(null);
       const response = await fetch(logsApiUrl());
@@ -54,13 +54,13 @@ export default function LoggerPage() {
         `Could not reach the Advanced Memory HTTP API. From the webapp folder run .\\start.ps1 (starts uvicorn on 127.0.0.1:10705 and Vite on 10704). Tried: ${logsApiUrl()}`,
       );
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchLogs();
     const interval = setInterval(fetchLogs, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLogs]);
 
   const filteredLogs = useMemo(() => {
     let filtered = logs.filter((log) => levelFilters[log.level]);
@@ -97,6 +97,8 @@ export default function LoggerPage() {
     return filtered;
   }, [logs, levelFilters, searchQuery, timeFilter]);
 
+  // Intentional: re-scroll whenever the visible list changes (Biome cannot see the intent).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll on new log lines by design
   useEffect(() => {
     if (autoScroll && logContainerRef.current) {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;

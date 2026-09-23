@@ -248,13 +248,11 @@ export default function VaultStats() {
               Recent (sample)
             </h2>
             <ul className="space-y-2 text-xs font-mono text-muted-foreground">
-              {((activity.recently_updated as unknown[]) || [])
-                .slice(0, 6)
-                .map((row: any, i: number) => (
-                  <li key={i}>
-                    {row?.title || row?.permalink || JSON.stringify(row).slice(0, 80)}
-                  </li>
-                ))}
+              {((activity.recently_updated as unknown[]) || []).slice(0, 6).map((row: any) => (
+                <li key={row?.permalink || row?.title || JSON.stringify(row).slice(0, 80)}>
+                  {row?.title || row?.permalink || JSON.stringify(row).slice(0, 80)}
+                </li>
+              ))}
             </ul>
           </section>
 
