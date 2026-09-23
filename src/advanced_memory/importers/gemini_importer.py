@@ -182,6 +182,7 @@ class GeminiImporter(Importer):
                             # Try unix timestamp as string
                             return float(value)
                         except ValueError:
+                            logger.debug("Unparseable timestamp value %r, returning None", value)
                             pass
         return None
 

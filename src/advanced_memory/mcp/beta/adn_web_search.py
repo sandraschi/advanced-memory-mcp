@@ -10,6 +10,7 @@ time-sensitive information that LLMs may not have access to, such as:
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import Any, Literal
 
 import aiohttp
@@ -56,7 +57,26 @@ class WebSearchResponse(BaseModel):
 
 
 # Provider configurations
+# NOTE (2026-09-20): DuckDuckGo Instant Answer API (api.duckduckgo.com) is not a
+# full search index - it returns RelatedTopics for entities and nothing for news.
+# Local OpenSERP (http://127.0.0.1:7000, Docker karust/openserp) is preferred.
+def _openserp_base_url() -> str:
+    import os
+
+    return os.getenv("OPENSERP_BASE_URL", "http://127.0.0.1:7000").rstrip("/")
+
+
 SEARCH_PROVIDERS = {
+    "openserp": SearchProvider(
+        name="OpenSERP",
+        base_url=_openserp_base_url(),
+        search_endpoint="/mega/search?text={query}&mode=any&engines=bing,duckduckgo,google",
+        results_key="results",
+        title_key="title",
+        url_key="url",
+        snippet_key="snippet",
+        date_key=None,
+    ),
     "duckduckgo": SearchProvider(
         name="DuckDuckGo",
         base_url="https://api.duckduckgo.com",
@@ -87,13 +107,23 @@ SEARCH_PROVIDERS = {
         snippet_key="snippet",
         date_key="datePublished",
     ),
+    "tavily": SearchProvider(
+        name="Tavily",
+        base_url="https://api.tavily.com",
+        search_endpoint="/search",
+        results_key="results",
+        title_key="title",
+        url_key="url",
+        snippet_key="content",
+        date_key="published_date",
+    ),
 }
 
 
 @mcp.tool
 async def adn_web_search(
     query: str,
-    provider: Literal["duckduckgo", "serpapi", "bing", "auto"] = "auto",
+    provider: Literal["openserp", "tavily", "duckduckgo", "serpapi", "bing", "auto"] = "auto",
     max_results: int = 10,
     time_filter: Literal["any", "day", "week", "month", "year"] = "any",
     include_news: bool = False,
@@ -112,10 +142,12 @@ async def adn_web_search(
     for comprehensive web research capabilities.
 
     SEARCH PROVIDERS:
-    - duckduckgo: Free, privacy-focused search (default)
+    - openserp: Local OpenSERP OSS (preferred, no key, OPENSERP_BASE_URL)
+    - tavily: Tavily AI search (requires TAVILY_API_KEY, POST + extract-ready)
+    - duckduckgo: Free Instant Answer API (entities only, no news)
     - serpapi: Google search via SerpApi (requires API key)
     - bing: Microsoft Bing search (requires API key)
-    - auto: Automatically select best available provider
+    - auto: Automatically select best available provider (openserp first)
 
     TIME FILTERS:
     - any: No time restriction
@@ -168,6 +200,7 @@ async def adn_web_search(
 
     try:
         import time
+        from datetime import datetime, timezone
 
         start_time = time.time()
 
@@ -178,7 +211,9 @@ async def adn_web_search(
                 "error": f"Provider '{provider}' not available or not configured",
                 "available_providers": list(SEARCH_PROVIDERS.keys()),
                 "suggestions": [
-                    "Use 'duckduckgo' for free search",
+                    "Use 'openserp' for local search (needs OpenSERP on OPENSERP_BASE_URL)",
+                    "Configure TAVILY_API_KEY for AI-friendly cloud search",
+                    "Use 'duckduckgo' for free entity lookup",
                     "Configure SERPAPI_API_KEY for Google search",
                     "Configure BING_API_KEY for Bing search",
                 ],
@@ -209,7 +244,7 @@ async def adn_web_search(
             "time_filter": time_filter,
             "total_results": len(processed_results),
             "results": [result.model_dump() for result in processed_results],
-            "search_timestamp": "2025-12-02",  # Current date
+            "search_timestamp": datetime.now(UTC).isoformat(),
             "execution_time_seconds": round(execution_time, 2),
             "filters_applied": {
                 "relevance_threshold": relevance_threshold,
@@ -238,8 +273,8 @@ async def _select_provider(provider_name: str) -> SearchProvider | None:
     """Select and configure the appropriate search provider."""
 
     if provider_name == "auto":
-        # Try providers in order of preference
-        for provider_key in ["duckduckgo", "serpapi", "bing"]:
+        # Try providers in order of preference (local OpenSERP first)
+        for provider_key in ["openserp", "tavily", "duckduckgo", "serpapi", "bing"]:
             provider = SEARCH_PROVIDERS[provider_key]
             if await _is_provider_available(provider):
                 return provider
@@ -258,9 +293,14 @@ async def _select_provider(provider_name: str) -> SearchProvider | None:
 async def _is_provider_available(provider: SearchProvider) -> bool:
     """Check if a search provider is available and configured."""
 
-    # DuckDuckGo is always available (no API key needed)
-    if provider.name == "DuckDuckGo":
+    # OpenSERP local and DuckDuckGo are always available (no API key needed)
+    if provider.name in ("OpenSERP", "DuckDuckGo"):
         return True
+
+    if provider.name == "Tavily":
+        import os
+
+        return bool(os.getenv("TAVILY_API_KEY"))
 
     # Check for API keys for paid providers
     if provider.name == "SerpApi":
@@ -303,8 +343,40 @@ async def _execute_search(provider: SearchProvider, query: str, max_results: int
 
     try:
         async with aiohttp.ClientSession() as session:
+            # Tavily uses POST with JSON body
+            if provider.name == "Tavily":
+                import os
+
+                api_key = os.getenv("TAVILY_API_KEY")
+                if not api_key:
+                    raise ValueError("TAVILY_API_KEY not configured")
+                payload: dict[str, Any] = {
+                    "api_key": api_key,
+                    "query": query,
+                    "search_depth": "advanced",
+                    "max_results": max_results,
+                    "include_answer": False,
+                }
+                async with session.post(
+                    f"{provider.base_url}{provider.search_endpoint}",
+                    json=payload,
+                    headers={"User-Agent": "Advanced-Memory-MCP/1.0"},
+                    timeout=30,
+                ) as response:
+                    if response.status != 200:
+                        raise ValueError(f"Search API returned status {response.status}")
+                    data = await response.json()
+                    return data.get("results", [])[:max_results]
+
             # Build search URL
-            if provider.name == "DuckDuckGo":
+            if provider.name == "OpenSERP":
+                url = (
+                    f"{provider.base_url}"
+                    f"{provider.search_endpoint.format(query=urllib.parse.quote(query))}"
+                    f"&limit={max_results}"
+                )
+
+            elif provider.name == "DuckDuckGo":
                 url = f"{provider.base_url}{provider.search_endpoint.format(query=urllib.parse.quote(query))}"
 
             elif provider.name == "SerpApi":
@@ -344,7 +416,7 @@ async def _execute_search(provider: SearchProvider, query: str, max_results: int
                 if provider.name == "DuckDuckGo":
                     return data.get("RelatedTopics", [])[:max_results]
 
-                elif provider.name in ["SerpApi", "Bing Web Search"]:
+                elif provider.name in ["OpenSERP", "Tavily", "SerpApi", "Bing Web Search"]:
                     results_key = provider.results_key
                     if "." in results_key:
                         # Handle nested keys like "webPages.value"
@@ -434,7 +506,7 @@ def _calculate_relevance_score(title: str, snippet: str, threshold: float) -> fl
     score = 0.5  # Base score
 
     # Boost for recent content indicators
-    if any(word in text for word in ["2024", "2025", "recent", "latest", "new"]):
+    if any(word in text for word in ["2025", "2026", "recent", "latest", "new"]):
         score += 0.1
 
     # Boost for authoritative sources

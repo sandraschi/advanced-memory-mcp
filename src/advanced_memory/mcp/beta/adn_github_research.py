@@ -459,7 +459,8 @@ async def _get_readme_preview(session: aiohttp.ClientSession, repo_full_name: st
                 content = base64.b64decode(data["content"]).decode("utf-8")
                 # Return first 500 characters
                 return content[:500] + "..." if len(content) > 500 else content
-    except Exception:
+    except Exception as e:
+        logger.debug(f"README preview failed for {repo_full_name}: {e}")
         pass
     return None
 
@@ -478,7 +479,8 @@ async def _get_file_content_limited(
 
                     content = base64.b64decode(data["content"]).decode("utf-8")
                     return content[:max_chars] + "..." if len(content) > max_chars else content
-    except Exception:
+    except Exception as e:
+        logger.debug(f"File preview failed for {repo_full_name}/{file_path}: {e}")
         pass
     return None
 
