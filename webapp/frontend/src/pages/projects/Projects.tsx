@@ -123,6 +123,7 @@ export default function Projects() {
         </div>
 
         <button
+          type="button"
           onClick={() => setShowCreate(!showCreate)}
           className={`btn ${showCreate ? "btn-outline" : "btn-primary"} flex items-center space-x-2`}
         >
@@ -136,8 +137,11 @@ export default function Projects() {
           <h2 className="text-xl font-semibold mb-4">Create New Project</h2>
           <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Project Name</label>
+              <label htmlFor="proj-name" className="text-sm font-medium">
+                Project Name
+              </label>
               <input
+                id="proj-name"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="e.g. Robotics Research"
@@ -146,8 +150,11 @@ export default function Projects() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Filesystem Path</label>
+              <label htmlFor="proj-path" className="text-sm font-medium">
+                Filesystem Path
+              </label>
               <input
+                id="proj-path"
                 value={newPath}
                 onChange={(e) => setNewPath(e.target.value)}
                 placeholder="e.g. D:\Notes\Robotics"
@@ -156,8 +163,11 @@ export default function Projects() {
               />
             </div>
             <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-medium">Description (Optional)</label>
+              <label htmlFor="proj-desc" className="text-sm font-medium">
+                Description (Optional)
+              </label>
               <textarea
+                id="proj-desc"
                 value={newDesc}
                 onChange={(e) => setNewDesc(e.target.value)}
                 placeholder="Briefly describe this project's scope..."
@@ -192,7 +202,7 @@ export default function Projects() {
           <ShieldAlert className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-xl font-bold text-red-400">Error Loading Projects</h3>
           <p className="text-muted-foreground mt-2">{error}</p>
-          <button onClick={fetchProjects} className="btn btn-outline btn-sm mt-6">
+          <button type="button" onClick={fetchProjects} className="btn btn-outline btn-sm mt-6">
             Try Again
           </button>
         </div>
@@ -216,6 +226,7 @@ export default function Projects() {
                   <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     {!project.is_default && (
                       <button
+                        type="button"
                         onClick={() => setDeleteConfirm(project.name)}
                         className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors"
                         title="Delete project"
@@ -237,6 +248,7 @@ export default function Projects() {
 
                 <div className="flex items-center justify-between mt-auto">
                   <button
+                    type="button"
                     onClick={() => handleSwitch(project.name)}
                     disabled={project.is_default}
                     className={`btn btn-sm ${project.is_default ? "btn-ghost cursor-default text-accent font-bold" : "btn-outline hover:bg-accent/10"} px-4`}
@@ -267,6 +279,7 @@ export default function Projects() {
                   </p>
                   <div className="flex space-x-3 w-full">
                     <button
+                      type="button"
                       onClick={() => {
                         setDeleteConfirm(null);
                         setDeleteConfirmedOnce(false);
@@ -276,6 +289,7 @@ export default function Projects() {
                       Cancel
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDelete(project.name)}
                       className="flex-1 btn btn-sm bg-red-600 hover:bg-red-700 text-white border-transparent"
                     >
@@ -290,6 +304,7 @@ export default function Projects() {
           {/* Empty State / Quick Add */}
           {projects.length < 6 && projects.length > 0 && (
             <button
+              type="button"
               onClick={() => setShowCreate(true)}
               className="card border-dashed border-2 border-border/50 hover:border-accent/40 hover:bg-accent/5 transition-all flex flex-col items-center justify-center p-8 space-y-3 min-h-[250px]"
             >

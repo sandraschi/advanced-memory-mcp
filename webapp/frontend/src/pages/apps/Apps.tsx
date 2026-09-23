@@ -11,7 +11,7 @@ import {
   Shield,
   Smartphone,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiService } from "../../services/api";
 
 interface AppConfig {
@@ -85,7 +85,7 @@ const APPS: AppConfig[] = [
 export default function Apps() {
   const [health, setHealth] = useState<Record<number, "online" | "offline" | "checking">>({});
 
-  const checkHealth = async (port: number) => {
+  const checkHealth = useCallback(async (port: number) => {
     setHealth((prev) => ({ ...prev, [port]: "checking" }));
     try {
       const response = await apiService.checkAppHealth(port);
@@ -93,12 +93,12 @@ export default function Apps() {
     } catch {
       setHealth((prev) => ({ ...prev, [port]: "offline" }));
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Initial health check
-    APPS.forEach((app) => checkHealth(app.port));
-  }, []);
+    for (const app of APPS) checkHealth(app.port);
+  }, [checkHealth]);
 
   return (
     <div className="space-y-8">
@@ -108,7 +108,10 @@ export default function Apps() {
           <h1 className="text-3xl font-bold tracking-tight">Sibling Webapps</h1>
         </div>
         <button
-          onClick={() => APPS.forEach((app) => checkHealth(app.port))}
+          type="button"
+          onClick={() => {
+            for (const app of APPS) checkHealth(app.port);
+          }}
           className="btn btn-secondary flex items-center space-x-2 py-2"
         >
           <Activity className="h-4 w-4" />

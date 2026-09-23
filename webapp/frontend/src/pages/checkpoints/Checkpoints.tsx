@@ -51,7 +51,9 @@ export default function Checkpoints() {
       if (response.success) {
         setStatus(response.data);
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   useEffect(() => {
@@ -63,7 +65,10 @@ export default function Checkpoints() {
     if (!labelInput.trim()) return;
     setCreating(true);
     try {
-      await apiService.callMCPTool("adn_checkpoint", { operation: "create", label: labelInput.trim() });
+      await apiService.callMCPTool("adn_checkpoint", {
+        operation: "create",
+        label: labelInput.trim(),
+      });
       setLabelInput("");
       await fetchSnapshots();
       await fetchStatus();
@@ -74,30 +79,46 @@ export default function Checkpoints() {
     }
   }, [labelInput, fetchSnapshots, fetchStatus]);
 
-  const handleRollback = useCallback(async (snapshotId: string) => {
-    if (!confirm(`Roll back to snapshot "${snapshotId}"? A pre-rollback snapshot will be created automatically.`)) {
-      return;
-    }
-    try {
-      const response = await apiService.callMCPTool("adn_checkpoint", { operation: "rollback", snapshot_id: snapshotId });
-      if (response.success) {
-        await fetchSnapshots();
-        await fetchStatus();
+  const handleRollback = useCallback(
+    async (snapshotId: string) => {
+      if (
+        !confirm(
+          `Roll back to snapshot "${snapshotId}"? A pre-rollback snapshot will be created automatically.`,
+        )
+      ) {
+        return;
       }
-    } catch (error) {
-      console.error("Failed to rollback:", error);
-    }
-  }, [fetchSnapshots, fetchStatus]);
+      try {
+        const response = await apiService.callMCPTool("adn_checkpoint", {
+          operation: "rollback",
+          snapshot_id: snapshotId,
+        });
+        if (response.success) {
+          await fetchSnapshots();
+          await fetchStatus();
+        }
+      } catch (error) {
+        console.error("Failed to rollback:", error);
+      }
+    },
+    [fetchSnapshots, fetchStatus],
+  );
 
-  const handleDelete = useCallback(async (snapshotId: string) => {
-    if (!confirm(`Delete snapshot "${snapshotId}"?`)) return;
-    try {
-      await apiService.callMCPTool("adn_checkpoint", { operation: "delete", snapshot_id: snapshotId });
-      await fetchSnapshots();
-    } catch (error) {
-      console.error("Failed to delete snapshot:", error);
-    }
-  }, [fetchSnapshots]);
+  const handleDelete = useCallback(
+    async (snapshotId: string) => {
+      if (!confirm(`Delete snapshot "${snapshotId}"?`)) return;
+      try {
+        await apiService.callMCPTool("adn_checkpoint", {
+          operation: "delete",
+          snapshot_id: snapshotId,
+        });
+        await fetchSnapshots();
+      } catch (error) {
+        console.error("Failed to delete snapshot:", error);
+      }
+    },
+    [fetchSnapshots],
+  );
 
   const selectedSnapshot = snapshots.find((s) => s.snapshot_id === selectedId);
 
@@ -138,11 +159,16 @@ export default function Checkpoints() {
               onKeyDown={(e) => e.key === "Enter" && handleCreate()}
             />
             <button
+              type="button"
               onClick={handleCreate}
               disabled={creating || !labelInput.trim()}
               className="btn btn-sm btn-primary text-[10px] uppercase tracking-wider py-1.5 px-3 flex items-center space-x-1.5"
             >
-              {creating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
+              {creating ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Zap className="h-3 w-3" />
+              )}
               <span>{creating ? "Saving..." : "Snapshot"}</span>
             </button>
           </div>
@@ -173,12 +199,15 @@ export default function Checkpoints() {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-12 space-y-3 opacity-40">
                   <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
-                  <span className="text-[10px] uppercase tracking-widest font-bold">Loading...</span>
+                  <span className="text-[10px] uppercase tracking-widest font-bold">
+                    Loading...
+                  </span>
                 </div>
               ) : filtered.length > 0 ? (
                 filtered.map((s) => (
                   <button
                     key={s.snapshot_id}
+                    type="button"
                     onClick={() => setSelectedId(s.snapshot_id)}
                     className={`w-full text-left p-4 rounded-xl border transition-all ${
                       selectedId === s.snapshot_id
@@ -188,10 +217,14 @@ export default function Checkpoints() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
-                        <Database className={`h-3.5 w-3.5 ${selectedId === s.snapshot_id ? "text-amber-400" : "text-muted-foreground"}`} />
+                        <Database
+                          className={`h-3.5 w-3.5 ${selectedId === s.snapshot_id ? "text-amber-400" : "text-muted-foreground"}`}
+                        />
                         <code className="text-[10px] font-mono opacity-50">{s.snapshot_id}</code>
                       </div>
-                      <span className="text-[9px] text-muted-foreground font-mono">{s.created_at}</span>
+                      <span className="text-[9px] text-muted-foreground font-mono">
+                        {s.created_at}
+                      </span>
                     </div>
                     <p className="text-xs font-medium leading-tight line-clamp-2 mb-2">{s.label}</p>
                     <div className="flex items-center justify-between opacity-60">
@@ -201,14 +234,18 @@ export default function Checkpoints() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Zap className="h-3 w-3 text-amber-400" />
-                        <span className="text-[9px]">{s.observation_count + s.relation_count} relations</span>
+                        <span className="text-[9px]">
+                          {s.observation_count + s.relation_count} relations
+                        </span>
                       </div>
                     </div>
                   </button>
                 ))
               ) : (
                 <div className="text-center py-12 opacity-40">
-                  <p className="text-[10px] uppercase tracking-widest font-bold">No snapshots yet</p>
+                  <p className="text-[10px] uppercase tracking-widest font-bold">
+                    No snapshots yet
+                  </p>
                   <p className="text-[9px] mt-1">Enter a label above and click Snapshot</p>
                 </div>
               )}
@@ -222,8 +259,8 @@ export default function Checkpoints() {
             </div>
             <p className="text-[10px] text-amber-100/60 leading-relaxed">
               Snapshots freeze the full knowledge graph state (entities, observations, relations).
-              Rollback restores to a previous state with automatic pre-rollback backup.
-              No external CLI dependencies.
+              Rollback restores to a previous state with automatic pre-rollback backup. No external
+              CLI dependencies.
             </p>
           </div>
         </div>
@@ -240,6 +277,7 @@ export default function Checkpoints() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
+                      type="button"
                       onClick={() => handleRollback(selectedId)}
                       className="btn btn-sm btn-outline text-[9px] uppercase tracking-wider py-1.5 px-3 flex items-center space-x-1.5 border-red-500/30 text-red-400"
                     >
@@ -247,6 +285,7 @@ export default function Checkpoints() {
                       <span>Rollback</span>
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDelete(selectedId)}
                       className="btn btn-sm btn-outline text-[9px] uppercase tracking-wider py-1.5 px-3 flex items-center space-x-1.5 border-red-500/30 text-red-400"
                     >
@@ -286,15 +325,21 @@ export default function Checkpoints() {
                     </div>
                     <div className="grid grid-cols-3 gap-3">
                       <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-center">
-                        <p className="text-2xl font-bold text-amber-400">{selectedSnapshot?.entity_count ?? 0}</p>
+                        <p className="text-2xl font-bold text-amber-400">
+                          {selectedSnapshot?.entity_count ?? 0}
+                        </p>
                         <p className="text-[10px] text-muted-foreground mt-1">Entities</p>
                       </div>
                       <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-center">
-                        <p className="text-2xl font-bold text-amber-400">{selectedSnapshot?.observation_count ?? 0}</p>
+                        <p className="text-2xl font-bold text-amber-400">
+                          {selectedSnapshot?.observation_count ?? 0}
+                        </p>
                         <p className="text-[10px] text-muted-foreground mt-1">Observations</p>
                       </div>
                       <div className="p-4 bg-white/5 border border-white/5 rounded-xl text-center">
-                        <p className="text-2xl font-bold text-amber-400">{selectedSnapshot?.relation_count ?? 0}</p>
+                        <p className="text-2xl font-bold text-amber-400">
+                          {selectedSnapshot?.relation_count ?? 0}
+                        </p>
                         <p className="text-[10px] text-muted-foreground mt-1">Relations</p>
                       </div>
                     </div>

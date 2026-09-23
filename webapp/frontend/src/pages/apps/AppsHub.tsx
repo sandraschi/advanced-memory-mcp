@@ -11,7 +11,7 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiService } from "../../services/api";
 
 interface AppCard {
@@ -29,7 +29,7 @@ export default function AppsHub() {
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
 
-  const scanFleet = async () => {
+  const scanFleet = useCallback(async () => {
     setIsScanning(true);
     try {
       const response = await apiService.getApps();
@@ -41,11 +41,11 @@ export default function AppsHub() {
     } finally {
       setIsScanning(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     scanFleet();
-  }, []);
+  }, [scanFleet]);
 
   const filteredApps = apps.filter(
     (app) =>
@@ -74,6 +74,7 @@ export default function AppsHub() {
                 </span>
               </div>
               <button
+                type="button"
                 onClick={scanFleet}
                 disabled={isScanning}
                 className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all disabled:opacity-50"
@@ -100,6 +101,7 @@ export default function AppsHub() {
               {["All", "MCP Servers", "Web Apps", "APIs"].map((f) => (
                 <button
                   key={f}
+                  type="button"
                   onClick={() => setTypeFilter(f)}
                   className={`px-5 py-2.5 rounded-xl text-[10px] uppercase font-bold tracking-widest transition-all ${
                     typeFilter === f
@@ -184,7 +186,10 @@ export default function AppsHub() {
                         Encrypted
                       </span>
                     </div>
-                    <button className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 hover:text-amber-400 group/btn transition-colors">
+                    <button
+                      type="button"
+                      className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 hover:text-amber-400 group/btn transition-colors"
+                    >
                       <span>Connect</span>
                       <ExternalLink className="h-3 w-3 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
                     </button>

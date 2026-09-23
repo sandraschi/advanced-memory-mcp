@@ -150,6 +150,7 @@ export default function AudioHub() {
               </div>
 
               <button
+                type="button"
                 onClick={handleRecord}
                 className={`w-full py-4 rounded-xl flex items-center justify-center space-x-3 transition-all ${
                   isRecording
@@ -174,12 +175,13 @@ export default function AudioHub() {
 
           {/* Archives List */}
           <div className="flex-1 flex flex-col min-h-0 space-y-2 overflow-y-auto pr-1 scrollbar-thin">
-            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-2">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-2">
               Recent Archives
-            </label>
+            </span>
             {recordings.map((r) => (
               <button
                 key={r.id}
+                type="button"
                 onClick={() => setSelectedId(r.id)}
                 className={`w-full text-left p-4 rounded-xl border transition-all ${
                   selectedId === r.id
@@ -214,6 +216,7 @@ export default function AudioHub() {
                     </h3>
                   </div>
                   <button
+                    type="button"
                     onClick={() => handleDelete(selectedId)}
                     className="p-2 hover:bg-red-500/10 text-red-400 rounded-lg transition-colors"
                   >
@@ -223,10 +226,10 @@ export default function AudioHub() {
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center">
                       <FileText className="h-3 w-3 mr-2" />
                       STT Transcript
-                    </label>
+                    </span>
                     <p className="text-sm leading-relaxed text-muted-foreground bg-black/20 p-4 rounded-xl border border-white/5 italic">
                       "{selectedRecording?.transcript}"
                     </p>
@@ -234,10 +237,10 @@ export default function AudioHub() {
 
                   {selectedRecording?.distillation ? (
                     <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 flex items-center">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 flex items-center">
                         <Sparkles className="h-3 w-3 mr-2" />
                         Distilled Insight
-                      </label>
+                      </span>
                       <div className="bg-emerald-500/5 border border-emerald-500/20 p-5 rounded-2xl relative group">
                         <div className="absolute top-0 right-0 p-3 opacity-20">
                           <Wand2 className="h-12 w-12 text-emerald-400" />
@@ -249,6 +252,7 @@ export default function AudioHub() {
                     </div>
                   ) : (
                     <button
+                      type="button"
                       onClick={handleDistill}
                       disabled={isDistilling}
                       className="w-full py-8 border-2 border-dashed border-white/5 rounded-2xl hover:border-emerald-500/20 hover:bg-emerald-500/5 transition-all group flex flex-col items-center justify-center space-y-3"
