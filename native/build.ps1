@@ -1,3 +1,7 @@
+param(
+    [switch]$SkipFrontend,
+    [switch]$SkipSidecar
+)
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
 $RepoName = Split-Path -Leaf $Root
@@ -8,7 +12,9 @@ New-Item -ItemType Directory -Force -Path $ResourceDir, $DevDir | Out-Null
 
 Write-Host "=== ${RepoName} Tauri Release Build ===" -ForegroundColor Cyan
 
-# Step 1: TypeScript lint gate + frontend build
+# Step 1: TypeScript lint gate + frontend build (skip on resume; Tauri
+# beforeBuildCommand rebuilds anyway before bundling).
+if (-not $SkipFrontend) {
 $frontendDirs = @("web_sota", "webapp/frontend", "webapp")
 foreach ($dir in $frontendDirs) {
     $frontend = Join-Path $Root $dir
@@ -35,8 +41,11 @@ foreach ($dir in $frontendDirs) {
         break
     }
 }
+} # end if (-not $SkipFrontend)
 
-# Step 2: PyInstaller backend (onefile)
+# Step 2: PyInstaller backend (onefile). Skipped on resume (dist exe + smoke
+# already proven); Step 3 embed below still runs so resources stay correct.
+if (-not $SkipSidecar) {
 Write-Host "-> [2/4] PyInstaller backend..." -ForegroundColor Yellow
 $specFile = "$Root\${RepoName}-backend.spec"
 if (Test-Path $specFile) {
@@ -115,6 +124,7 @@ foreach ($bad in @("cachetools", "isatty", "No module named", "_strptime", "Trac
     if ($smokeErrText -match [regex]::Escape($bad)) { throw "Frozen smoke stderr contains '$bad' - bundle is broken" }
 }
 Remove-Item $smokeErr -Force -ErrorAction SilentlyContinue
+} # end if (-not $SkipSidecar)
 
 # Step 3: Embed in Tauri resources (+ dev fallback)
 Write-Host "-> [3/4] Embedding backend..." -ForegroundColor Yellow
