@@ -31,39 +31,60 @@ const personalities = [
 ];
 
 const examplePrompts = [
-  { group: "Memory", prompts: [
-    "Search my knowledge graph for recent insights on AI safety",
-    "What did I work on last week?",
-    "Create a new note about transformer architectures",
-  ]},
-  { group: "Research", prompts: [
-    "Summarize the latest arXiv papers on LLM alignment",
-    "Find connected papers on multi-agent systems",
-    "Compare these two research approaches",
-  ]},
-  { group: "Zettelkasten", prompts: [
-    "Show me recent Zettelkasten notes",
-    "Create a new Zettel linking AI and cognition",
-    "Find orphan notes that need connections",
-  ]},
+  {
+    group: "Memory",
+    prompts: [
+      "Search my knowledge graph for recent insights on AI safety",
+      "What did I work on last week?",
+      "Create a new note about transformer architectures",
+    ],
+  },
+  {
+    group: "Research",
+    prompts: [
+      "Summarize the latest arXiv papers on LLM alignment",
+      "Find connected papers on multi-agent systems",
+      "Compare these two research approaches",
+    ],
+  },
+  {
+    group: "Zettelkasten",
+    prompts: [
+      "Show me recent Zettelkasten notes",
+      "Create a new Zettel linking AI and cognition",
+      "Find orphan notes that need connections",
+    ],
+  },
 ];
 
 function loadHistory(): Message[] {
-  try { const raw = localStorage.getItem(HISTORY_KEY); return raw ? JSON.parse(raw) : []; } catch { return []; }
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
 }
 
 export default function Chat() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = loadHistory();
-    return saved.length > 0 ? saved : [{
-      role: "assistant",
-      content: "Hello Sandra. I am your Advanced Memory Research Assistant. I am now configured for standard local LLM operations.",
-      timestamp: new Date(),
-    }];
+    return saved.length > 0
+      ? saved
+      : [
+          {
+            role: "assistant",
+            content:
+              "Hello Sandra. I am your Advanced Memory Research Assistant. I am now configured for standard local LLM operations.",
+            timestamp: new Date(),
+          },
+        ];
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [personality, setPersonality] = useState(() => localStorage.getItem(PERSONALITY_KEY) || "sandra");
+  const [personality, setPersonality] = useState(
+    () => localStorage.getItem(PERSONALITY_KEY) || "sandra",
+  );
   const [refine, setRefine] = useState(false);
   const [models, setModels] = useState<any[]>([]);
   const [selectedModel, setSelectedModel] = useState("qwen2.5-coder:latest");
@@ -71,13 +92,21 @@ export default function Chat() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+  // Intentional: re-scroll whenever messages change (Biome cannot see the intent).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll on new messages by design
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Persist messages
   useEffect(() => {
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-MAX_HISTORY))); } catch {}
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-MAX_HISTORY)));
+    } catch {}
   }, [messages]);
-  useEffect(() => { localStorage.setItem(PERSONALITY_KEY, personality); }, [personality]);
+  useEffect(() => {
+    localStorage.setItem(PERSONALITY_KEY, personality);
+  }, [personality]);
 
   // Load available models on mount
   useEffect(() => {
@@ -86,8 +115,9 @@ export default function Chat() {
         const response = await apiService.getLLMModels();
         if (response.success && Array.isArray(response.data)) {
           setModels(response.data);
-          if (!response.data.some((m: any) => m.name === selectedModel) && response.data.length > 0) {
-            setSelectedModel(response.data[0].name);
+          const first = response.data[0];
+          if (!response.data.some((m) => m.name === selectedModel) && first) {
+            setSelectedModel(first.name);
           }
         }
       } catch (error) {
@@ -95,18 +125,16 @@ export default function Chat() {
       }
     };
     fetchModels();
-  }, []);
+  }, [selectedModel]);
 
-  // Skill fetch
+  // Skill fetch (first skill shown as context badge)
   useEffect(() => {
     (async () => {
       try {
-        const r = await fetch("/api/skills");
-        if (r.ok) {
-          const data = await r.json();
-          const skills = data?.skills ?? [];
-          if (skills.length > 0) setSkillName(skills[0].name || skills[0]);
-        }
+        const res = await apiService.getSkills();
+        const skills = res.success ? (res.data?.skills ?? []) : [];
+        const first = skills[0];
+        if (first) setSkillName(first.title || first.id);
       } catch {}
     })();
   }, []);
@@ -121,19 +149,28 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await apiService.chatQuery(input, { personality, model: selectedModel, refine });
+      const response = await apiService.chatQuery(input, {
+        personality,
+        model: selectedModel,
+        refine,
+      });
       const assistantMessage: Message = {
         role: "assistant",
-        content: response.success ? response.data : response.error || "I encountered an error processing your query.",
+        content: response.success
+          ? response.data
+          : response.error || "I encountered an error processing your query.",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      setMessages((prev) => [...prev, {
-        role: "assistant",
-        content: "Failed to communicate with the local LLM engine. Ensure Ollama is running.",
-        timestamp: new Date(),
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Failed to communicate with the local LLM engine. Ensure Ollama is running.",
+          timestamp: new Date(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -141,10 +178,14 @@ export default function Chat() {
 
   const exportChat = () => {
     if (messages.length === 0) return;
-    const lines = messages.map((m) => `[${m.timestamp.toISOString()}] ${m.role === "user" ? "You" : "AI"}: ${m.content}`);
+    const lines = messages.map(
+      (m) => `[${m.timestamp.toISOString()}] ${m.role === "user" ? "You" : "AI"}: ${m.content}`,
+    );
     const blob = new Blob([lines.join("\n\n---\n\n")], { type: "text/plain" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-    a.download = `memops-chat-${new Date().toISOString().slice(0, 10)}.txt`; a.click();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `memops-chat-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
   };
 
   return (
@@ -153,7 +194,11 @@ export default function Chat() {
         <div className="flex items-center space-x-3">
           <MessageSquare className="h-8 w-8 text-accent" />
           <h1 className="text-3xl font-bold tracking-tight">Standard Chat</h1>
-          {skillName && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded font-mono">skill:{skillName}</span>}
+          {skillName && (
+            <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded font-mono">
+              skill:{skillName}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -165,20 +210,42 @@ export default function Chat() {
           >
             {models.length > 0 ? (
               models.map((m: any) => (
-                <option key={m.name} value={m.name}>{m.name}</option>
+                <option key={m.name} value={m.name}>
+                  {m.name}
+                </option>
               ))
             ) : (
               <option>No models found</option>
             )}
           </select>
 
-          <button data-testid="chat-export" onClick={exportChat} disabled={messages.length === 0}
-            className="p-2 text-muted-foreground hover:text-green-400 disabled:opacity-30 transition-colors" title="Export chat">
+          <button
+            data-testid="chat-export"
+            type="button"
+            onClick={exportChat}
+            disabled={messages.length === 0}
+            className="p-2 text-muted-foreground hover:text-green-400 disabled:opacity-30 transition-colors"
+            title="Export chat"
+          >
             <Download className="h-5 w-5" />
           </button>
 
-          <button data-testid="chat-clear" onClick={() => { setMessages([{ role: "assistant", content: "Conversation cleared. How can I help you now?", timestamp: new Date() }]); localStorage.removeItem(HISTORY_KEY); }}
-            className="p-2 text-muted-foreground hover:text-red-400 transition-colors" title="Clear conversation">
+          <button
+            data-testid="chat-clear"
+            type="button"
+            onClick={() => {
+              setMessages([
+                {
+                  role: "assistant",
+                  content: "Conversation cleared. How can I help you now?",
+                  timestamp: new Date(),
+                },
+              ]);
+              localStorage.removeItem(HISTORY_KEY);
+            }}
+            className="p-2 text-muted-foreground hover:text-red-400 transition-colors"
+            title="Clear conversation"
+          >
             <Trash2 className="h-5 w-5" />
           </button>
         </div>
@@ -187,16 +254,24 @@ export default function Chat() {
       {/* Config Bar */}
       <div className="flex flex-wrap items-center gap-4 mb-6 bg-card/30 p-3 rounded-xl border border-white/5">
         <div className="flex items-center space-x-2">
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Personality:</span>
-          <div className="flex bg-background/50 rounded-lg p-1 border border-white/10" data-testid="personality-select">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Personality:
+          </span>
+          <div
+            className="flex bg-background/50 rounded-lg p-1 border border-white/10"
+            data-testid="personality-select"
+          >
             {personalities.map((p) => {
               const Icon = p.icon;
               return (
                 <button
                   key={p.id}
+                  type="button"
                   onClick={() => setPersonality(p.id)}
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs transition-all ${
-                    personality === p.id ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    personality === p.id
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                   title={p.description}
                 >
@@ -210,27 +285,47 @@ export default function Chat() {
 
         <div className="flex items-center space-x-2 border-l border-white/10 pl-4 ml-auto">
           <label className="flex items-center space-x-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full p-0.5 transition-colors ${refine ? "bg-accent" : "bg-muted"}`}>
-              <div className={`w-3 h-3 rounded-full bg-white transition-transform ${refine ? "translate-x-4" : "translate-x-0"}`} />
+            <div
+              className={`w-8 h-4 rounded-full p-0.5 transition-colors ${refine ? "bg-accent" : "bg-muted"}`}
+            >
+              <div
+                className={`w-3 h-3 rounded-full bg-white transition-transform ${refine ? "translate-x-4" : "translate-x-0"}`}
+              />
             </div>
-            <input type="checkbox" className="hidden" checked={refine} onChange={(e) => setRefine(e.target.checked)} />
-            <span className="text-xs font-medium group-hover:text-accent transition-colors">Refine Prompt</span>
+            <input
+              type="checkbox"
+              className="hidden"
+              checked={refine}
+              onChange={(e) => setRefine(e.target.checked)}
+            />
+            <span className="text-xs font-medium group-hover:text-accent transition-colors">
+              Refine Prompt
+            </span>
           </label>
         </div>
       </div>
 
-      <div data-testid="chat-messages" className="flex-1 overflow-y-auto pr-4 space-y-6 mb-6 scrollbar-thin">
+      <div
+        data-testid="chat-messages"
+        className="flex-1 overflow-y-auto pr-4 space-y-6 mb-6 scrollbar-thin"
+      >
         {messages.length === 0 && (
           <div className="text-center text-muted-foreground text-sm pt-8">
             <p>Ask about your knowledge graph, research, or notes.</p>
             <div data-testid="example-prompts" className="mt-6 max-w-lg mx-auto space-y-3">
               {examplePrompts.map((group) => (
                 <div key={group.group}>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground text-left mb-1.5 px-1">{group.group}</p>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground text-left mb-1.5 px-1">
+                    {group.group}
+                  </p>
                   <div className="flex flex-wrap gap-1.5 justify-center">
                     {group.prompts.map((p) => (
-                      <button key={p} onClick={() => setInput(p)}
-                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors text-left">
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setInput(p)}
+                        className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors text-left"
+                      >
                         {p}
                       </button>
                     ))}
@@ -240,19 +335,36 @@ export default function Chat() {
             </div>
           </div>
         )}
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`flex max-w-[80%] space-x-3 ${msg.role === "user" ? "flex-row-reverse space-x-reverse" : ""}`}>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${
-                msg.role === "user" ? "bg-accent/10 border-accent/20 text-accent" : "bg-gold/10 border-gold/20 text-gold"
-              }`}>
+        {messages.map((msg) => (
+          <div
+            key={`${msg.role}-${msg.timestamp instanceof Date ? msg.timestamp.getTime() : String(msg.timestamp)}-${msg.content.slice(0, 24)}`}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`flex max-w-[80%] space-x-3 ${msg.role === "user" ? "flex-row-reverse space-x-reverse" : ""}`}
+            >
+              <div
+                className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${
+                  msg.role === "user"
+                    ? "bg-accent/10 border-accent/20 text-accent"
+                    : "bg-gold/10 border-gold/20 text-gold"
+                }`}
+              >
                 {msg.role === "user" ? <User className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
               </div>
-              <div className={`p-4 rounded-2xl shadow-sm ${
-                msg.role === "user" ? "bg-accent text-accent-foreground" : "bg-card border border-white/5 text-foreground"
-              }`}>
-                <div className="whitespace-pre-wrap leading-relaxed prose prose-invert prose-sm">{msg.content}</div>
-                <div className={`text-[10px] mt-2 opacity-50 ${msg.role === "user" ? "text-right" : ""}`}>
+              <div
+                className={`p-4 rounded-2xl shadow-sm ${
+                  msg.role === "user"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-card border border-white/5 text-foreground"
+                }`}
+              >
+                <div className="whitespace-pre-wrap leading-relaxed prose prose-invert prose-sm">
+                  {msg.content}
+                </div>
+                <div
+                  className={`text-[10px] mt-2 opacity-50 ${msg.role === "user" ? "text-right" : ""}`}
+                >
                   {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
               </div>

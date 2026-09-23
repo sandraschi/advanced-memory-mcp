@@ -1,5 +1,5 @@
 import { Brain, ChevronRight, Database, Folder, Loader2, Search, Sparkles, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiService } from "../../services/api";
 
 interface SemanticChunk {
@@ -73,6 +73,22 @@ export default function SearchDeep() {
 
   const closeNote = () => setNoteModal(null);
 
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dialogOpen = noteModal !== null || noteLoading;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (dialogOpen && !dialog.open) {
+      try {
+        dialog.showModal();
+      } catch {
+        /* already open */
+      }
+    } else if (!dialogOpen && dialog.open) {
+      dialog.close();
+    }
+  }, [dialogOpen]);
+
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Search Header */}
@@ -132,6 +148,7 @@ export default function SearchDeep() {
             ].map((filter) => (
               <button
                 key={filter}
+                type="button"
                 onClick={() =>
                   setActiveFilters((prev) =>
                     prev.includes(filter) ? prev.filter((f) => f !== filter) : [...prev, filter],
@@ -183,15 +200,11 @@ export default function SearchDeep() {
 
               <div className="space-y-4">
                 {results.map((result, idx) => (
-                  <div
+                  <button
                     key={`${result.entity_id}-${idx}`}
-                    className="group relative bg-white/2 border border-white/5 hover:border-white/10 p-8 rounded-3xl transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-1 cursor-pointer"
-                    role="button"
-                    tabIndex={0}
+                    type="button"
+                    className="group relative block w-full text-left bg-white/2 border border-white/5 hover:border-white/10 p-8 rounded-3xl transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-1 cursor-pointer"
                     onClick={() => result.permalink && openNote(result.permalink)}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && result.permalink && openNote(result.permalink)
-                    }
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="space-y-2">
@@ -225,19 +238,12 @@ export default function SearchDeep() {
                       {result.snippet}
                     </p>
                     {result.permalink && (
-                      <button
-                        type="button"
-                        className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 hover:text-amber-400 group/btn transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openNote(result.permalink!);
-                        }}
-                      >
+                      <span className="flex items-center space-x-2 text-[10px] uppercase font-bold tracking-widest text-amber-500 group-hover/btn:text-amber-400 transition-colors">
                         <span>Show full note</span>
                         <ChevronRight className="h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
-                      </button>
+                      </span>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -277,43 +283,43 @@ export default function SearchDeep() {
         </div>
       </div>
 
-      {/* Full note modal */}
-      {(noteModal !== null || noteLoading) && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-          onClick={closeNote}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="bg-background border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col m-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-4 border-b border-white/5">
-              <h2 className="text-lg font-bold truncate">{noteModal?.title ?? "Loading..."}</h2>
-              <button
-                type="button"
-                onClick={closeNote}
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6">
-              {noteLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
-                </div>
-              ) : noteModal ? (
-                <pre className="whitespace-pre-wrap font-sans text-sm text-muted-foreground leading-relaxed">
-                  {noteModal.content}
-                </pre>
-              ) : null}
-            </div>
+      {/* Full note dialog (native modal: Esc + backdrop close, focus-trapped).
+          Backdrop click is progressive enhancement; keyboard users close via
+          Esc (native) or the Close button, so no extra key handler. */}
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: Esc + Close button cover keyboard */}
+      <dialog
+        ref={dialogRef}
+        onClose={closeNote}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) closeNote();
+        }}
+        className="bg-background border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] p-0 m-auto text-foreground backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      >
+        <div className="flex flex-col max-h-[85vh]">
+          <div className="flex items-center justify-between p-4 border-b border-white/5">
+            <h2 className="text-lg font-bold truncate">{noteModal?.title ?? "Loading..."}</h2>
+            <button
+              type="button"
+              onClick={closeNote}
+              className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-6">
+            {noteLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+              </div>
+            ) : noteModal ? (
+              <pre className="whitespace-pre-wrap font-sans text-sm text-muted-foreground leading-relaxed">
+                {noteModal.content}
+              </pre>
+            ) : null}
           </div>
         </div>
-      )}
+      </dialog>
     </div>
   );
 }

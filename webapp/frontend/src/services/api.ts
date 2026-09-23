@@ -179,10 +179,19 @@ class ApiService {
     }
   }
 
-  async getLLMModels(): Promise<ApiResponse<any[]>> {
+  async getLLMModels(): Promise<ApiResponse<{ name: string }[]>> {
+    // No backend route serves this; query Ollama directly like Settings does.
     try {
-      const response = await this.client.get("/llm/models");
-      return response.data;
+      const response = await fetch("http://localhost:11434/api/tags");
+      if (!response.ok) return { success: false, error: "Ollama not reachable" };
+      const body = (await response.json()) as { models?: { name?: string }[] };
+      const models = Array.isArray(body.models)
+        ? body.models
+            .map((m) => String(m?.name ?? ""))
+            .filter((n) => n.length > 0)
+            .map((name) => ({ name }))
+        : [];
+      return { success: true, data: models };
     } catch (error) {
       return { success: false, error: "Failed to fetch LLM models" };
     }
@@ -368,8 +377,21 @@ class ApiService {
       const response = await this.client.get(
         `/${encodeURIComponent(this.activeProject)}/knowledge/skills${params}`,
       );
-      const skills = response.data.skills || response.data || [];
-      return { success: true, data: { skills, folders: [] } };
+      // Backend returns the {success, data: {skills, folders}} envelope; older
+      // shapes were bare. Normalize so callers always get arrays.
+      const body = response.data as {
+        skills?: unknown;
+        folders?: unknown;
+        data?: { skills?: unknown; folders?: unknown };
+      };
+      const inner = body?.data ?? body;
+      const skills = Array.isArray(inner?.skills)
+        ? inner.skills
+        : Array.isArray(inner)
+          ? inner
+          : [];
+      const folders = Array.isArray(inner?.folders) ? inner.folders : [];
+      return { success: true, data: { skills, folders } };
     } catch (error) {
       return { success: false, error: "Failed to fetch skills" };
     }
@@ -531,7 +553,21 @@ class ApiService {
         query,
         limit,
       });
-      return response.data;
+      // Backend returns a bare SemanticSearchResponse ({chunks: [...]}), NOT the
+      // {success, data} envelope. Normalize here so callers can rely on ApiResponse.
+      const body = response.data as
+        | { chunks?: unknown; data?: { chunks?: unknown } }
+        | null
+        | undefined;
+      const chunks = (body?.chunks ?? body?.data?.chunks ?? []) as Array<{
+        entity_id: number;
+        permalink: string | null;
+        title: string;
+        snippet: string;
+        chunk_text: string;
+        score: number;
+      }>;
+      return { success: true, data: { chunks } };
     } catch (error) {
       return { success: false, error: "Semantic search failed" };
     }
@@ -544,7 +580,26 @@ class ApiService {
     try {
       const path = `/${encodeURIComponent(project)}/knowledge/entities/${encodeURIComponent(permalink)}/content`;
       const response = await this.client.get(path);
-      return response.data;
+      // Backend returns a bare NoteContentResponse ({title, permalink, content}),
+      // NOT the {success, data} envelope. Normalize to ApiResponse.
+      const body = response.data as {
+        title?: unknown;
+        permalink?: unknown;
+        content?: unknown;
+        data?: { title?: unknown; permalink?: unknown; content?: unknown };
+      };
+      const note = body?.data ?? body;
+      if (!note || typeof note.content !== "string") {
+        return { success: false, error: "Note has no readable content" };
+      }
+      return {
+        success: true,
+        data: {
+          title: String(note.title ?? ""),
+          permalink: (note.permalink as string | null) ?? null,
+          content: note.content,
+        },
+      };
     } catch (error) {
       return { success: false, error: "Failed to load note content" };
     }
@@ -603,7 +658,8 @@ class ApiService {
       });
       return { success: true, data: response.data };
     } catch (error: any) {
-      const detail = error?.response?.data?.detail ?? error?.message ?? "Failed to load recent activity";
+      const detail =
+        error?.response?.data?.detail ?? error?.message ?? "Failed to load recent activity";
       return { success: false, error: String(detail) };
     }
   }
@@ -712,7 +768,8 @@ class ApiService {
       }
       return { success: false, error: "Unexpected response from rag-extra-roots" };
     } catch (error: any) {
-      const detail = error?.response?.data?.detail ?? error?.message ?? "Failed to load RAG extra roots";
+      const detail =
+        error?.response?.data?.detail ?? error?.message ?? "Failed to load RAG extra roots";
       return { success: false, error: String(detail) };
     }
   }
@@ -726,7 +783,8 @@ class ApiService {
       }
       return { success: false, error: "Unexpected response from rag-extra-roots" };
     } catch (error: any) {
-      const detail = error?.response?.data?.detail ?? error?.message ?? "Failed to save RAG extra roots";
+      const detail =
+        error?.response?.data?.detail ?? error?.message ?? "Failed to save RAG extra roots";
       return { success: false, error: String(detail) };
     }
   }
