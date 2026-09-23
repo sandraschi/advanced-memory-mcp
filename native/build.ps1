@@ -15,6 +15,9 @@ foreach ($dir in $frontendDirs) {
     if (Test-Path "$frontend\package.json") {
         Write-Host "-> [1/4] Building frontend ($dir)..." -ForegroundColor Yellow
         Push-Location $frontend
+        # Production API base: no Vite proxy in dist/, so bake the absolute backend URL
+        # (must match BACKEND_PORT in native/src/backend.rs + CSP connect-src).
+        $env:VITE_API_URL = "http://127.0.0.1:10705/api/v1"
         npm install --silent 2>$null
 
         Write-Host "  tsc --noEmit..." -ForegroundColor Gray
@@ -38,6 +41,19 @@ Write-Host "-> [2/4] PyInstaller backend..." -ForegroundColor Yellow
 $specFile = "$Root\${RepoName}-backend.spec"
 if (Test-Path $specFile) {
     Push-Location $Root
+    # NEVER `uv run pyinstaller`: that resolves to the global uv-tool environment,
+    # which cannot see the project's venv packages (fastmcp, uvicorn, ...) and
+    # silently produces a broken binary. Always the venv exe (fleet pitfall).
+    $pyiExe = "$Root\.venv\Scripts\pyinstaller.exe"
+    if (-not (Test-Path $pyiExe)) {
+        Write-Host "  Installing pyinstaller into project venv..." -ForegroundColor Yellow
+        uv add --dev pyinstaller pefile altgraph
+        uv sync
+    }
+    if (-not (Test-Path $pyiExe)) { throw "No pyinstaller at $pyiExe after install" }
+    # Pre-clean: a stale locked exe from a previous build breaks the rebuild (WinError 32).
+    Get-Process "${RepoName}-backend" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+    Remove-Item "$Root\dist\${RepoName}-backend.exe" -Force -ErrorAction SilentlyContinue
     # Patch fastmcp to not crash on missing metadata (dist-info stripped below)
     $fm = "$Root\.venv\Lib\site-packages\fastmcp\__init__.py"
     if (Test-Path $fm) {
@@ -52,12 +68,53 @@ if (Test-Path $specFile) {
             Write-Host "  Patched fastmcp metadata fallback" -ForegroundColor Yellow
         }
     }
-    uv run pyinstaller "$specFile" --clean --noconfirm
+    & $pyiExe "$specFile" --clean --noconfirm
     if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed with exit code $LASTEXITCODE" }
     Pop-Location
 } else {
     Write-Host "  WARNING: spec file not found at $specFile - using existing backend exe if present" -ForegroundColor DarkYellow
 }
+
+# Gate 0: backend exe must exist and be a real bundle (>= 5MB, not a runt).
+$builtExe = "$Root\dist\${RepoName}-backend.exe"
+if (-not (Test-Path $builtExe)) { throw "Backend exe missing at $builtExe - PyInstaller step failed" }
+$exeMB = (Get-Item $builtExe).Length / 1MB
+if ($exeMB -lt 5) { throw "Backend exe is only $([math]::Round($exeMB, 2)) MB - runt build, refusing to bundle" }
+Write-Host "  Backend exe size gate OK: $([math]::Round($exeMB, 1)) MB" -ForegroundColor Green
+
+# Phase 2 smoke: run the FROZEN binary, hit /health + a real data route.
+Write-Host "-> [2b/4] Frozen sidecar smoke..." -ForegroundColor Yellow
+$smokePort = 11999
+$smokeErr = "$Root\dist\pyi-smoke-stderr.log"
+$smokeProc = Start-Process -FilePath $builtExe -NoNewWindow -PassThru `
+    -RedirectStandardError $smokeErr `
+    -Environment @{ ADVANCED_MEMORY_MCP_PORT = "$smokePort"; ADVANCED_MEMORY_MCP_HOST = "127.0.0.1"; ADVANCED_MEMORY_MCP_TAURI = "1" }
+try {
+    $ready = $false
+    for ($i = 0; $i -lt 30; $i++) {
+        Start-Sleep -Seconds 2
+        Write-Host "  waiting for frozen backend... ($((($i + 1) * 2))s)" -ForegroundColor DarkGray
+        if ($smokeProc.HasExited) { break }
+        try {
+            $h = Invoke-WebRequest "http://127.0.0.1:$smokePort/api/v1/health" -UseBasicParsing -TimeoutSec 3
+            if ($h.StatusCode -eq 200) { $ready = $true; break }
+        } catch {}
+    }
+    if (-not $ready) {
+        $errText = Get-Content $smokeErr -Raw -ErrorAction SilentlyContinue
+        throw "Frozen backend never became healthy on :$smokePort (exited=$($smokeProc.HasExited)). Stderr:`n$errText"
+    }
+    $feat = Invoke-WebRequest "http://127.0.0.1:$smokePort/api/v1/projects" -UseBasicParsing -TimeoutSec 10
+    if ($feat.StatusCode -ne 200 -or $feat.Content -notmatch "main") { throw "Frozen backend /projects did not return project data" }
+    Write-Host "  Frozen smoke OK: /health 200 + /projects has data" -ForegroundColor Green
+} finally {
+    if (-not $smokeProc.HasExited) { Stop-Process -Id $smokeProc.Id -Force -ErrorAction SilentlyContinue }
+}
+$smokeErrText = Get-Content $smokeErr -Raw -ErrorAction SilentlyContinue
+foreach ($bad in @("cachetools", "isatty", "No module named", "_strptime", "Traceback (most recent call last)", "FileNotFoundError")) {
+    if ($smokeErrText -match [regex]::Escape($bad)) { throw "Frozen smoke stderr contains '$bad' - bundle is broken" }
+}
+Remove-Item $smokeErr -Force -ErrorAction SilentlyContinue
 
 # Step 3: Embed in Tauri resources (+ dev fallback)
 Write-Host "-> [3/4] Embedding backend..." -ForegroundColor Yellow
