@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   ArrowLeft,
   Eye,
   EyeOff,
@@ -11,7 +12,17 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { KnowledgeModelExplainer } from "../../components/KnowledgeModelExplainer";
-import { apiService } from "../../services/api";
+import { apiService, type WatchStatusPayload } from "../../services/api";
+
+function timeAgo(iso: string | null): string {
+  if (!iso) return "never";
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return iso;
+  const seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
+  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  return `${(seconds / 3600).toFixed(1)}h ago`;
+}
 
 type ProjectRow = { name: string; path: string; is_default?: boolean };
 
@@ -35,6 +46,7 @@ export default function VaultSync() {
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [targetName, setTargetName] = useState("");
   const [watchRunning, setWatchRunning] = useState<boolean | null>(null);
+  const [watchStatus, setWatchStatus] = useState<WatchStatusPayload | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -69,8 +81,10 @@ export default function VaultSync() {
     const res = await apiService.getWatchStatus();
     if (res.success && res.data) {
       setWatchRunning(res.data.running);
+      setWatchStatus(res.data);
     } else {
       setWatchRunning(null);
+      setWatchStatus(null);
     }
   }, []);
 
@@ -439,6 +453,52 @@ export default function VaultSync() {
           Watches the vault folder and applies changes into the database while the API process stays
           up.
         </p>
+
+        {watchStatus?.stale && (
+          <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-950/30 px-3 py-2 text-xs text-amber-200">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              Watcher reports running but the last scan was {timeAgo(watchStatus.last_scan)} - it is
+              likely wedged, not idle. A wedged watcher can hold a stale SQLite transaction that
+              blocks WAL checkpoints for every process sharing this database. Restart the
+              advanced-memory-mcp service, or use Stop watch / Start watch below.
+            </span>
+          </div>
+        )}
+
+        {watchStatus && (
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-md border border-border/60 bg-muted/10 px-3 py-2 text-xs sm:grid-cols-4">
+            <div>
+              <dt className="text-muted-foreground">Last scan</dt>
+              <dd className={watchStatus.stale ? "font-medium text-amber-400" : "font-medium"}>
+                {timeAgo(watchStatus.last_scan)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Files synced</dt>
+              <dd className="font-medium">{watchStatus.synced_files}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Errors</dt>
+              <dd className={watchStatus.error_count > 5 ? "font-medium text-red-400" : "font-medium"}>
+                {watchStatus.error_count}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Started</dt>
+              <dd className="font-medium">{timeAgo(watchStatus.start_time)}</dd>
+            </div>
+            {watchStatus.last_error && (
+              <div className="col-span-2 sm:col-span-4">
+                <dt className="text-muted-foreground">Last error</dt>
+                <dd className="break-all font-mono text-[11px] text-red-300">
+                  {watchStatus.last_error}
+                </dd>
+              </div>
+            )}
+          </dl>
+        )}
+
         <div className="flex flex-wrap gap-2">
           <button
             type="button"

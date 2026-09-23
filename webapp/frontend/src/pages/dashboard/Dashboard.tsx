@@ -1,7 +1,9 @@
 import {
   Activity,
+  AlertTriangle,
   Book,
   Brain,
+  FolderSync,
   Globe,
   RefreshCw,
   Search,
@@ -11,9 +13,19 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiService } from "../../services/api";
+import { apiService, type WatchStatusPayload } from "../../services/api";
 import ResearchCard from "./ResearchCard";
 import SkillCard from "./SkillCard";
+
+function timeAgo(iso: string | null): string {
+  if (!iso) return "never";
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return iso;
+  const seconds = Math.max(0, Math.floor((Date.now() - then) / 1000));
+  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  return `${(seconds / 3600).toFixed(1)}h ago`;
+}
 
 interface ResearchItem {
   id: string;
@@ -35,16 +47,18 @@ export default function Dashboard() {
   const [recentResearch, setRecentResearch] = useState<ResearchItem[]>([]);
   const [recentSkills, setRecentSkills] = useState<SkillItem[]>([]);
   const [systemStatus, setSystemStatus] = useState<any>(null);
+  const [watchStatus, setWatchStatus] = useState<WatchStatusPayload | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadData = async () => {
     setIsRefreshing(true);
     try {
-      const [researchResponse, skillsResponse, statusResponse] = await Promise.all([
+      const [researchResponse, skillsResponse, statusResponse, watchResponse] = await Promise.all([
         apiService.getRecentResearch(),
         apiService.getRecentSkills(),
         apiService.getSystemStatus(),
+        apiService.getWatchStatus(),
       ]);
 
       if (researchResponse?.success) {
@@ -58,6 +72,10 @@ export default function Dashboard() {
       if (statusResponse?.success) {
         setSystemStatus(statusResponse.data);
       }
+
+      if (watchResponse?.success && watchResponse.data) {
+        setWatchStatus(watchResponse.data);
+      }
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
     } finally {
@@ -68,6 +86,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData();
+    // Index sync state can go stale between full dashboard reloads; poll it on
+    // its own so a wedged watcher shows up here without a manual refresh.
+    const t = setInterval(async () => {
+      const res = await apiService.getWatchStatus();
+      if (res.success && res.data) setWatchStatus(res.data);
+    }, 30_000);
+    return () => clearInterval(t);
   }, []);
 
   const handleRefresh = () => {
@@ -227,7 +252,7 @@ export default function Dashboard() {
             <RefreshCw className="h-5 w-5 animate-spin text-slate-500" />
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             <div className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.05] transition-all">
               <div className="flex items-center">
                 <Globe className="h-5 w-5 text-indigo-400 mr-4" />
@@ -266,6 +291,46 @@ export default function Dashboard() {
               </div>
               <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
             </div>
+
+            <Link
+              to="/vault/sync"
+              className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.05] transition-all"
+            >
+              <div className="flex items-center">
+                {watchStatus?.stale ? (
+                  <AlertTriangle className="h-5 w-5 text-amber-400 mr-4" />
+                ) : (
+                  <FolderSync className="h-5 w-5 text-indigo-400 mr-4" />
+                )}
+                <div>
+                  <p className="text-sm font-bold text-slate-100">Index Sync</p>
+                  <p
+                    className={`text-xs mt-1 uppercase tracking-wider ${
+                      watchStatus?.stale ? "text-amber-400" : "text-slate-500"
+                    }`}
+                  >
+                    {watchStatus == null
+                      ? "—"
+                      : watchStatus.stale
+                        ? `Stalled - last scan ${timeAgo(watchStatus.last_scan)}`
+                        : watchStatus.running
+                          ? `Last scan ${timeAgo(watchStatus.last_scan)}`
+                          : "Watcher stopped"}
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`w-2.5 h-2.5 rounded-full ${
+                  watchStatus == null
+                    ? "bg-slate-600"
+                    : watchStatus.stale
+                      ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.6)]"
+                      : watchStatus.running
+                        ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                        : "bg-slate-500"
+                }`}
+              ></div>
+            </Link>
           </div>
         )}
       </div>

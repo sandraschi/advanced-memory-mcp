@@ -15,6 +15,27 @@ interface ApiResponse<T = any> {
   message?: string;
 }
 
+/** Mirrors WatchStatusResponse in advanced_memory/api/routers/management_router.py. */
+export interface WatchStatusPayload {
+  running: boolean;
+  start_time: string | null;
+  last_scan: string | null;
+  synced_files: number;
+  error_count: number;
+  last_error: string | null;
+  /** running=true but last_scan is older than the server's stale threshold - the
+   * watcher process is alive but not making progress (a wedged SQLite connection,
+   * not an idle watcher). */
+  stale: boolean;
+  recent_events: Array<{
+    timestamp: string;
+    path: string;
+    action: string;
+    status: string;
+    error: string | null;
+  }>;
+}
+
 interface LLMProvider {
   name: string;
   type: "local" | "hosted";
@@ -731,7 +752,7 @@ class ApiService {
     }
   }
 
-  async getWatchStatus(): Promise<ApiResponse<{ running: boolean }>> {
+  async getWatchStatus(): Promise<ApiResponse<WatchStatusPayload>> {
     try {
       const response = await this.client.get("/management/watch/status");
       return { success: true, data: response.data };
@@ -764,7 +785,7 @@ class ApiService {
     }
   }
 
-  async startWatch(): Promise<ApiResponse<{ running: boolean }>> {
+  async startWatch(): Promise<ApiResponse<WatchStatusPayload>> {
     try {
       const response = await this.client.post("/management/watch/start");
       return { success: true, data: response.data };
@@ -774,7 +795,7 @@ class ApiService {
     }
   }
 
-  async stopWatch(): Promise<ApiResponse<{ running: boolean }>> {
+  async stopWatch(): Promise<ApiResponse<WatchStatusPayload>> {
     try {
       const response = await this.client.post("/management/watch/stop");
       return { success: true, data: response.data };
