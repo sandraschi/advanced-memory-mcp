@@ -131,6 +131,30 @@ async def _dispatch_content_operations(
 
     _t0 = _time.time()
     logger.info(f"[TIMED] enter {mcp_tool}.{operation} at +0.0s")
+
+    # write_note/edit_note/delete_note/move_note each check IS_READONLY themselves,
+    # but this dispatcher's own write/quick paths (_write_operation,
+    # _quick_capture_operation) call the knowledge API directly instead of
+    # delegating to a guarded .fn, bypassing that check entirely - confirmed live:
+    # a read-only stdio session could write through adn_notes(operation="write")
+    # while adn_notes(operation="delete") correctly blocked. Gate every mutating
+    # operation here once instead of chasing each new one individually.
+    _MUTATING_OPERATIONS = {
+        "write",
+        "edit",
+        "edit_tags",
+        "quick",
+        "daily",
+        "move",
+        "delete",
+        "enhance",
+        "generate",
+    }
+    if operation in _MUTATING_OPERATIONS:
+        from advanced_memory.readonly import IS_READONLY, READONLY_ERROR
+
+        if IS_READONLY:
+            return READONLY_ERROR
     # Parameter aliasing for compatibility with standalone tools
     # results_per_page -> page_size (for compatibility with search_notes tool)
     if results_per_page is not None and page_size == 10:  # Only if default value

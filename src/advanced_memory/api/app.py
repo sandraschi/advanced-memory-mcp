@@ -149,6 +149,33 @@ async def health_check():
     return {"status": "ok"}
 
 
+@app.post("/api/shutdown")
+async def graceful_shutdown(request: Request):
+    """Trigger a clean process exit for external restart orchestration.
+
+    Unprefixed (not /api/v1/shutdown) to match the path
+    mcp-central-docs/scripts/Invoke-FleetWebappStart.ps1 already calls for
+    every fleet repo before restarting an NSSM-managed backend - that script
+    silently falls back to a bare Restart-Service when this 404s, which is
+    why the gap went unnoticed. Self-sends SIGTERM after the response flushes
+    so uvicorn's normal signal handling runs the ASGI lifespan shutdown
+    (cancels watch/sync tasks, calls db.shutdown_db()) exactly as it would
+    for `sc.exe stop` - just without an ~8s wait for a hard stop first.
+    """
+    import asyncio
+    import os
+    import signal
+
+    async def _self_terminate() -> None:
+        await asyncio.sleep(0.2)  # let the response reach the caller first
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    logger.info("Graceful shutdown requested via /api/shutdown")
+    # Held on app.state so the task isn't garbage-collected before it fires.
+    request.app.state.shutdown_task = asyncio.create_task(_self_terminate())
+    return {"status": "shutting down"}
+
+
 @app.exception_handler(RequestValidationError)
 async def request_validation_handler(  # pragma: no cover
     request: Request, exc: RequestValidationError
