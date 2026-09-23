@@ -5,7 +5,7 @@ import os
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from loguru import logger
@@ -577,7 +577,7 @@ class SyncService:
             return file_path.stat().st_mtime
 
         try:
-            mtime_iso = datetime.fromtimestamp(await asyncio.to_thread(_stat_mtime), tz=datetime.UTC).isoformat()
+            mtime_iso = datetime.fromtimestamp(await asyncio.to_thread(_stat_mtime), tz=UTC).isoformat()
         except OSError:
             mtime_iso = ""
         meta = dict(entity.entity_metadata or {})
