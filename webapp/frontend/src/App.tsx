@@ -7,7 +7,6 @@ import AudioHub from "./pages/audio/AudioHub";
 import Chat from "./pages/chat/Chat";
 import Checkpoints from "./pages/checkpoints/Checkpoints";
 import ControlRoom from "./pages/dashboard/ControlRoom";
-import WikiPage from "./pages/wiki/WikiPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import GraphCanvas from "./pages/dashboard/GraphCanvas";
 import KnowledgeGraph from "./pages/dashboard/KnowledgeGraph";
@@ -31,6 +30,7 @@ import LoggerPage from "./pages/system/LoggerPage";
 import VaultStats from "./pages/system/VaultStats";
 import VaultSync from "./pages/system/VaultSync";
 import Tests from "./pages/tests/Tests";
+import WikiPage from "./pages/wiki/WikiPage";
 import ZettelMaster from "./pages/zettelkasten/ZettelMaster";
 import { apiService } from "./services/api";
 
@@ -74,7 +74,9 @@ function App() {
         };
         const contentStr = typeof d.content === "string" ? d.content : "";
         const wordCount =
-          typeof d.wordCount === "number" ? d.wordCount : Math.max(0, Math.round(contentStr.length / 5));
+          typeof d.wordCount === "number"
+            ? d.wordCount
+            : Math.max(0, Math.round(contentStr.length / 5));
         const readingTime =
           typeof d.readingTime === "number"
             ? d.readingTime

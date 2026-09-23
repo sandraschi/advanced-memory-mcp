@@ -81,7 +81,12 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps)
             </span>
           )}
         </div>
-        <button type="button" onClick={onToggleCollapse} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all" title={isCollapsed ? "Expand" : "Collapse"}>
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-all"
+          title={isCollapsed ? "Expand" : "Collapse"}
+        >
           {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
@@ -138,7 +143,6 @@ export default function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps)
           </NavLink>
         </div>
       </nav>
-
     </aside>
   );
 }

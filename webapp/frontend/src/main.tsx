@@ -32,7 +32,11 @@ class ErrorBoundary extends React.Component<
             <p className="text-muted-foreground mb-4">
               Something went wrong. Please refresh the page.
             </p>
-            <button onClick={() => window.location.reload()} className="btn btn-primary">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="btn btn-primary"
+            >
               Refresh Page
             </button>
           </div>

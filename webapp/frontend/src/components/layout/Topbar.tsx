@@ -1,6 +1,6 @@
 import { HelpCircle, Menu, Moon, Sun, Terminal, Wifi, WifiOff } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -44,6 +44,7 @@ export default function Topbar({ onMenuClick, sidebarCollapsed }: TopbarProps) {
         {/* Left side - Menu button and connection status */}
         <div className="flex items-center">
           <button
+            type="button"
             onClick={onMenuClick}
             className="p-2 rounded-md hover:bg-muted transition-colors"
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -75,7 +76,11 @@ export default function Topbar({ onMenuClick, sidebarCollapsed }: TopbarProps) {
             type="button"
             onClick={toggle}
             className="p-2 rounded-md hover:bg-muted transition-colors"
-            title={light ? "Switch to dark (experimental light mode)" : "Switch to light (experimental, ugly)"}
+            title={
+              light
+                ? "Switch to dark (experimental light mode)"
+                : "Switch to light (experimental, ugly)"
+            }
             aria-label="Toggle light mode (experimental)"
           >
             {light ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}

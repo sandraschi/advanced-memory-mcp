@@ -83,6 +83,7 @@ export default function MetadataSidebar({
     >
       {/* Toggle Button */}
       <button
+        type="button"
         onClick={onToggle}
         className="absolute top-4 -left-10 z-10 p-2 bg-card border border-border rounded-l-md hover:bg-muted transition-colors"
         title={isOpen ? "Close metadata panel" : "Open metadata panel"}
@@ -111,6 +112,7 @@ export default function MetadataSidebar({
             ].map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 flex items-center justify-center p-3 text-sm font-medium transition-colors ${
                   activeTab === tab.id
@@ -246,17 +248,24 @@ export default function MetadataSidebar({
                   </h3>
                   <div className="space-y-2">
                     <button
+                      type="button"
                       onClick={onEdit}
                       className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
                     >
                       <Edit className="h-4 w-4" />
                       <span className="text-sm">Edit Note</span>
                     </button>
-                    <button className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left">
+                    <button
+                      type="button"
+                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
+                    >
                       <Eye className="h-4 w-4" />
                       <span className="text-sm">View Raw</span>
                     </button>
-                    <button className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left">
+                    <button
+                      type="button"
+                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
+                    >
                       <Share className="h-4 w-4" />
                       <span className="text-sm">Share Link</span>
                     </button>
@@ -284,6 +293,7 @@ export default function MetadataSidebar({
                     {exportFormats.map((format) => (
                       <button
                         key={format.id}
+                        type="button"
                         onClick={async () => {
                           if (!note) return;
                           setExportLoading(format.id);
@@ -305,7 +315,7 @@ export default function MetadataSidebar({
                         <span className="text-sm">{format.icon}</span>
                         <span className="text-sm">{format.label}</span>
                         {exportLoading === format.id && (
-                          <div className="ml-auto animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                          <div className="ml-auto animate-spin rounded-full h-4 w-4 border-b-2 border-current" />
                         )}
                       </button>
                     ))}
@@ -319,6 +329,7 @@ export default function MetadataSidebar({
                     Danger Zone
                   </h3>
                   <button
+                    type="button"
                     onClick={onDelete}
                     className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-red-500/10 hover:text-red-500 transition-colors text-left text-red-500"
                   >
