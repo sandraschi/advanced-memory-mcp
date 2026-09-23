@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { KnowledgeModelExplainer } from "../../components/KnowledgeModelExplainer";
-import { apiService, type WatchStatusPayload } from "../../services/api";
+import { type WatchStatusPayload, apiService } from "../../services/api";
 
 function timeAgo(iso: string | null): string {
   if (!iso) return "never";
@@ -102,12 +102,12 @@ export default function VaultSync() {
     return () => clearInterval(t);
   }, [pollWatch]);
 
-  const clearSyncPoll = () => {
+  const clearSyncPoll = useCallback(() => {
     if (syncPollRef.current) {
       clearInterval(syncPollRef.current);
       syncPollRef.current = null;
     }
-  };
+  }, []);
 
   const startSyncPoll = () => {
     clearSyncPoll();
@@ -267,7 +267,7 @@ export default function VaultSync() {
         clearInterval(reindexTimerRef.current);
       }
     };
-  }, []);
+  }, [clearSyncPoll]);
 
   const scanRow = syncStatus?.projects?.find((p) => p.project_name === targetName);
   const scanPct =
@@ -338,12 +338,13 @@ export default function VaultSync() {
           Extra RAG folders (LanceDB)
         </h2>
         <p className="text-xs text-muted-foreground">
-          Absolute folders on the <strong className="text-foreground/90">machine running the API</strong> whose{" "}
+          Absolute folders on the{" "}
+          <strong className="text-foreground/90">machine running the API</strong> whose{" "}
           <code className="rounded bg-muted/80 px-1">.md</code>,{" "}
           <code className="rounded bg-muted/80 px-1">.mdx</code>, and{" "}
-          <code className="rounded bg-muted/80 px-1">.txt</code> files are chunked into the vector index on{" "}
-          <strong className="text-foreground/90">Rebuild search index</strong>. These chunks are included in semantic
-          search for every vault project.
+          <code className="rounded bg-muted/80 px-1">.txt</code> files are chunked into the vector
+          index on <strong className="text-foreground/90">Rebuild search index</strong>. These
+          chunks are included in semantic search for every vault project.
         </p>
         {ragPickerNote ? (
           <p className="rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
@@ -480,7 +481,9 @@ export default function VaultSync() {
             </div>
             <div>
               <dt className="text-muted-foreground">Errors</dt>
-              <dd className={watchStatus.error_count > 5 ? "font-medium text-red-400" : "font-medium"}>
+              <dd
+                className={watchStatus.error_count > 5 ? "font-medium text-red-400" : "font-medium"}
+              >
                 {watchStatus.error_count}
               </dd>
             </div>

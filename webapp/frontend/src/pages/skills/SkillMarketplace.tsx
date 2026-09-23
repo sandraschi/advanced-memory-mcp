@@ -42,9 +42,7 @@ export default function SkillMarketplace() {
   const [activeTab, setActiveTab] = useState<"clawhub" | "local" | "news">("clawhub");
   const [openclawOnline, setOpenclawOnline] = useState(true);
   const [viewMode, setViewMode] = useState<"list" | "detail">("list");
-  const [scrubbingLog] = useState<
-    { id: string; status: string; details: string }[]
-  >([]);
+  const [scrubbingLog] = useState<{ id: string; status: string; details: string }[]>([]);
 
   useEffect(() => {
     loadAll();
@@ -148,6 +146,7 @@ export default function SkillMarketplace() {
       <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
         <div className="flex items-center justify-between">
           <button
+            type="button"
             onClick={() => setViewMode("list")}
             className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors group"
           >
@@ -179,6 +178,7 @@ export default function SkillMarketplace() {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => importSkill(selectedSkill)}
                   disabled={isImporting === selectedSkill || importedSkills.has(selectedSkill)}
                   className="btn btn-primary flex items-center space-x-2"
@@ -290,7 +290,7 @@ export default function SkillMarketplace() {
           >
             <span
               className={`w-1.5 h-1.5 rounded-full mr-1.5 ${openclawOnline ? "bg-emerald-400" : "bg-red-400"}`}
-            ></span>
+            />
             {openclawOnline ? "ClawHub Online" : "ClawHub Offline"}
           </span>
         </div>
@@ -321,6 +321,7 @@ export default function SkillMarketplace() {
         ].map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md text-sm font-medium transition-all ${
               activeTab === tab.id
@@ -382,6 +383,7 @@ export default function SkillMarketplace() {
                     <p className="text-xs text-muted-foreground mb-4">OpenClaw workspace skill</p>
                     <div className="flex items-center space-x-2">
                       <button
+                        type="button"
                         onClick={() => viewSkill(skill.name)}
                         className="btn btn-sm btn-outline flex items-center space-x-1 text-xs"
                       >
@@ -389,6 +391,7 @@ export default function SkillMarketplace() {
                         <span>View</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => importSkill(skill.name)}
                         disabled={isImporting === skill.name || importedSkills.has(skill.name)}
                         className="btn btn-sm btn-primary flex items-center space-x-1 text-xs"
@@ -445,9 +448,9 @@ export default function SkillMarketplace() {
               {news.length === 0 ? (
                 <p className="text-center text-muted-foreground py-12">No news available.</p>
               ) : (
-                news.map((item, i) => (
+                news.map((item) => (
                   <a
-                    key={i}
+                    key={item.url || item.title}
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"

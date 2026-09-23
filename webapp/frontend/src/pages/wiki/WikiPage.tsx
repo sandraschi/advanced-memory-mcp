@@ -55,21 +55,27 @@ export default function WikiPage() {
     try {
       const r = await fetch(`${API}/api/v1/wiki/status`);
       if (r.ok) setStatus(await r.json());
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const fetchIndex = useCallback(async () => {
     try {
       const r = await fetch(`${API}/api/v1/wiki/index`);
       if (r.ok) setIndex(await r.json());
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const fetchPage = useCallback(async (permalink: string) => {
     try {
       const r = await fetch(`${API}/api/v1/wiki/page/${encodeURIComponent(permalink)}`);
       if (r.ok) setPage(await r.json());
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   useEffect(() => {
@@ -81,11 +87,14 @@ export default function WikiPage() {
     })();
   }, [fetchStatus, fetchIndex]);
 
-  const handleSelect = useCallback(async (permalink: string) => {
-    setSelectedPermalink(permalink);
-    setPage(null);
-    await fetchPage(permalink);
-  }, [fetchPage]);
+  const handleSelect = useCallback(
+    async (permalink: string) => {
+      setSelectedPermalink(permalink);
+      setPage(null);
+      await fetchPage(permalink);
+    },
+    [fetchPage],
+  );
 
   const handleCompile = useCallback(async () => {
     setCompiling(true);
@@ -100,7 +109,9 @@ export default function WikiPage() {
         await fetchStatus();
         await fetchIndex();
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     setCompiling(false);
   }, [fetchStatus, fetchIndex]);
 
@@ -144,12 +155,17 @@ export default function WikiPage() {
             </div>
           )}
           <button
+            type="button"
             onClick={handleCompile}
             disabled={compiling}
             className="btn btn-sm btn-outline text-[10px] uppercase tracking-wider py-1.5 px-3 flex items-center space-x-1.5"
             data-testid="wiki-recompile"
           >
-            {compiling ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+            {compiling ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3 w-3" />
+            )}
             <span>{compiling ? "Compiling..." : "Recompile"}</span>
           </button>
         </div>
@@ -180,6 +196,7 @@ export default function WikiPage() {
                 filteredPages.map((p) => (
                   <button
                     key={p.permalink}
+                    type="button"
                     onClick={() => handleSelect(p.permalink)}
                     className={`w-full text-left p-3 rounded-xl border transition-all ${
                       selectedPermalink === p.permalink
@@ -192,7 +209,9 @@ export default function WikiPage() {
                         <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                         <span className="text-xs font-medium truncate">{p.title}</span>
                       </div>
-                      <span className="text-[9px] text-muted-foreground shrink-0 ml-2">{p.entity_type}</span>
+                      <span className="text-[9px] text-muted-foreground shrink-0 ml-2">
+                        {p.entity_type}
+                      </span>
                     </div>
                     {p.link_count > 0 && (
                       <div className="flex items-center space-x-1 mt-1.5 ml-5.5">
@@ -224,7 +243,9 @@ export default function WikiPage() {
               <div className="p-4 border-b border-white/5 flex items-center justify-between shrink-0 bg-white/5">
                 <div className="flex items-center space-x-3">
                   <FileText className="h-4 w-4 text-amber-400" />
-                  <h3 className="text-xs font-bold uppercase tracking-widest">{selectedPermalink}</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest">
+                    {selectedPermalink}
+                  </h3>
                 </div>
               </div>
 
@@ -247,6 +268,7 @@ export default function WikiPage() {
               </p>
               {!index && (
                 <button
+                  type="button"
                   onClick={handleCompile}
                   disabled={compiling}
                   className="mt-4 btn btn-sm btn-primary flex items-center space-x-1.5"

@@ -98,6 +98,7 @@ export default function ZettelMaster() {
           </div>
         </div>
         <button
+          type="button"
           onClick={handleNew}
           className="btn btn-primary flex items-center space-x-2 shadow-lg shadow-emerald-500/20"
         >
@@ -124,6 +125,7 @@ export default function ZettelMaster() {
             {filteredZettels.map((z) => (
               <button
                 key={z.id}
+                type="button"
                 onClick={() => handleSelect(z)}
                 className={`w-full text-left p-4 rounded-xl border transition-all group ${
                   selectedId === z.id
@@ -177,6 +179,7 @@ export default function ZettelMaster() {
                   />
                   <div className="flex items-center space-x-2 ml-4">
                     <button
+                      type="button"
                       onClick={handleSave}
                       className="p-2 hover:bg-emerald-500/10 text-emerald-400 rounded-lg transition-colors"
                       title="Save changes"
@@ -184,6 +187,7 @@ export default function ZettelMaster() {
                       <Save className="h-5 w-5" />
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDelete(selectedId)}
                       className="p-2 hover:bg-red-500/10 text-red-400 rounded-lg transition-colors"
                       title="Delete zettel"
@@ -243,6 +247,7 @@ export default function ZettelMaster() {
                   return (
                     <button
                       key={linkId}
+                      type="button"
                       onClick={() => handleSelect(linkedZ)}
                       className="w-full text-left p-3 bg-white/5 border border-white/5 rounded-lg hover:border-emerald-500/20 transition-all group"
                     >

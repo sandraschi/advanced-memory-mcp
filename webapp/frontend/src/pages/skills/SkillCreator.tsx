@@ -190,10 +190,10 @@ export default function SkillCreator() {
         setSavedSuccessfully(true);
         setStatusMessage("Skill saved to your knowledge base!");
       } else {
-        setStatusMessage("Failed to save: " + (response.error || "Unknown error"));
+        setStatusMessage(`Failed to save: ${response.error || "Unknown error"}`);
       }
     } catch (error: any) {
-      setStatusMessage("Save failed: " + (error.message || "Unknown error"));
+      setStatusMessage(`Save failed: ${error.message || "Unknown error"}`);
     }
   };
 
@@ -219,6 +219,7 @@ export default function SkillCreator() {
       {/* Mode Selector */}
       <div className="flex space-x-1 bg-muted p-1 rounded-lg w-fit">
         <button
+          type="button"
           onClick={() => {
             setCreatorMode("guided");
             setStatus("idle");
@@ -234,6 +235,7 @@ export default function SkillCreator() {
           AI-Guided
         </button>
         <button
+          type="button"
           onClick={() => {
             setCreatorMode("advanced");
             setStatus("idle");
@@ -255,11 +257,12 @@ export default function SkillCreator() {
         <div className="space-y-5">
           <div className="bg-card border border-border rounded-lg p-5 space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2 flex items-center">
+              <label htmlFor="sc-desc" className="block text-sm font-medium mb-2 flex items-center">
                 <Target className="h-4 w-4 mr-2 text-muted-foreground" />
                 Describe Your Skill
               </label>
               <textarea
+                id="sc-desc"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g., I need a skill for analyzing Python code quality, detecting anti-patterns, and suggesting refactoring improvements..."
@@ -270,14 +273,15 @@ export default function SkillCreator() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2 flex items-center">
+                <span className="block text-sm font-medium mb-2 flex items-center">
                   <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
                   Skill Type
-                </label>
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   {skillTypes.map((st) => (
                     <button
                       key={st.id}
+                      type="button"
                       onClick={() => setSkillType(st.id)}
                       className={`p-2 rounded-md border text-left text-xs transition-all ${
                         skillType === st.id
@@ -293,11 +297,15 @@ export default function SkillCreator() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 flex items-center">
+                <label
+                  htmlFor="sc-tags"
+                  className="block text-sm font-medium mb-2 flex items-center"
+                >
                   <Tag className="h-4 w-4 mr-2 text-muted-foreground" />
                   Tags (comma-separated)
                 </label>
                 <input
+                  id="sc-tags"
                   type="text"
                   value={targetTags}
                   onChange={(e) => setTargetTags(e.target.value)}
@@ -308,6 +316,7 @@ export default function SkillCreator() {
             </div>
 
             <button
+              type="button"
               onClick={handleGuidedGenerate}
               disabled={status === "generating"}
               className="w-full px-4 py-3 bg-accent text-accent-foreground rounded-md text-sm font-medium hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center justify-center"
@@ -328,8 +337,11 @@ export default function SkillCreator() {
         <div className="space-y-5">
           <div className="bg-card border border-border rounded-lg p-5 space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Skill Name</label>
+              <label htmlFor="sc-name" className="block text-sm font-medium mb-2">
+                Skill Name
+              </label>
               <input
+                id="sc-name"
                 type="text"
                 value={advancedName}
                 onChange={(e) => setAdvancedName(e.target.value)}
@@ -339,8 +351,11 @@ export default function SkillCreator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Skill Content (Markdown)</label>
+              <label htmlFor="sc-content" className="block text-sm font-medium mb-2">
+                Skill Content (Markdown)
+              </label>
               <textarea
+                id="sc-content"
                 value={advancedContent}
                 onChange={(e) => setAdvancedContent(e.target.value)}
                 placeholder="# My Skill&#10;&#10;## Overview&#10;Detailed skill instructions..."
@@ -350,11 +365,15 @@ export default function SkillCreator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 flex items-center">
+              <label
+                htmlFor="sc-adv-tags"
+                className="block text-sm font-medium mb-2 flex items-center"
+              >
                 <Tag className="h-4 w-4 mr-2 text-muted-foreground" />
                 Tags
               </label>
               <input
+                id="sc-adv-tags"
                 type="text"
                 value={advancedTags}
                 onChange={(e) => setAdvancedTags(e.target.value)}
@@ -366,6 +385,7 @@ export default function SkillCreator() {
             {/* Advanced Parameters */}
             <div>
               <button
+                type="button"
                 onClick={() => setShowAdvancedParams(!showAdvancedParams)}
                 className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
@@ -388,6 +408,7 @@ export default function SkillCreator() {
             </div>
 
             <button
+              type="button"
               onClick={handleAdvancedCreate}
               disabled={status === "generating"}
               className="w-full px-4 py-3 bg-accent text-accent-foreground rounded-md text-sm font-medium hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center justify-center"
@@ -432,6 +453,7 @@ export default function SkillCreator() {
             </div>
             <div className="flex items-center space-x-2">
               <button
+                type="button"
                 onClick={copyToClipboard}
                 className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 title="Copy to clipboard"
@@ -440,6 +462,7 @@ export default function SkillCreator() {
               </button>
               {!savedSuccessfully && (
                 <button
+                  type="button"
                   onClick={handleSaveSkill}
                   className="px-3 py-1.5 bg-accent text-accent-foreground rounded-md text-sm font-medium hover:bg-accent/90 transition-colors flex items-center"
                 >
@@ -459,9 +482,9 @@ export default function SkillCreator() {
           {/* Tags */}
           {generatedSkill.tags.length > 0 && (
             <div className="px-4 py-2 border-b border-border flex items-center flex-wrap gap-1.5">
-              {generatedSkill.tags.map((tag, i) => (
+              {generatedSkill.tags.map((tag) => (
                 <span
-                  key={i}
+                  key={tag}
                   className="px-2 py-0.5 bg-muted rounded-full text-xs text-muted-foreground"
                 >
                   {tag}
