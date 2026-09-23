@@ -7,7 +7,9 @@ This module provides safe alternatives to standard file operations that:
 4. Support recovery of deleted files
 """
 
+import os
 import shutil
+import time
 from datetime import datetime
 from fnmatch import fnmatch
 from pathlib import Path
@@ -74,7 +76,14 @@ class FileSafety:
 
     def setup_logging(self) -> None:
         """Set up file operation logging."""
-        self.log_file = self.trash_dir / "file_operations.log"
+        # Per-process sink file: the API server (:10705), the MCP daemon
+        # (:10732) and any CLI all import this module. Sharing one rotating
+        # file across processes breaks rotation on Windows — os.rename fails
+        # with PermissionError WinError 32 because the other process holds the
+        # file open, and then EVERY subsequent write retries the rotation and
+        # spams a traceback (2026-09-23 outage). One file per PID = each
+        # process rotates only a file it alone holds.
+        self.log_file = self.trash_dir / f"file_operations_{os.getpid()}.log"
 
         # Configure loguru logger for this module.
         # Guard against duplicate sinks: every FileSafety() instance used to
@@ -92,6 +101,28 @@ class FileSafety:
                 enqueue=True,
             )
             FileSafety._registered_log_sinks.add(_log_file_str)
+            self._prune_stale_process_logs()
+
+    def _prune_stale_process_logs(self) -> None:
+        """Delete orphaned per-PID log files older than 30 days.
+
+        Loguru's retention only manages the current sink's own lineage, so
+        PID-suffixed files from dead processes would accumulate. Best-effort:
+        locked files (a live process holding one) are skipped, never fatal.
+        """
+        cutoff = time.time() - 30 * 24 * 3600
+        try:
+            _live = sorted(self.trash_dir.glob("file_operations_*.log"))
+        except OSError:
+            return
+        for path in _live:
+            try:
+                if path.resolve() == self.log_file.resolve():
+                    continue
+                if path.stat().st_mtime < cutoff:
+                    path.unlink()
+            except OSError:
+                continue
 
     def is_safe_to_delete(self, path: FilePath) -> bool:
         """Check if path is safe to delete.
