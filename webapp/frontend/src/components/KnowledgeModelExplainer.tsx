@@ -17,20 +17,21 @@ export function KnowledgeModelExplainer({ className = "" }: { className?: string
         </li>
         <li>
           <span className="font-medium text-foreground">Keyword search (FTS)</span> — SQLite
-          full-text index. Powers quick filtering in the <strong className="text-foreground/90">Note Vault</strong>{" "}
-          list and text-style API search.
+          full-text index. Powers quick filtering in the{" "}
+          <strong className="text-foreground/90">Note Vault</strong> list and text-style API search.
         </li>
         <li>
           <span className="font-medium text-foreground">Semantic search (LanceDB)</span> — vector
-          chunks for “meaning” retrieval and hybrid search. Use <strong className="text-foreground/90">Semantic Search</strong>{" "}
-          to try it; use <strong className="text-foreground/90">Vault sync → Rebuild search index</strong> to
+          chunks for “meaning” retrieval and hybrid search. Use{" "}
+          <strong className="text-foreground/90">Semantic Search</strong> to try it; use{" "}
+          <strong className="text-foreground/90">Vault sync → Rebuild search index</strong> to
           refresh FTS <em>and</em> vectors after big imports.
         </li>
         <li>
-          <span className="font-medium text-foreground">Extra RAG folders</span> — optional absolute paths on the
-          API host (e.g. a central docs repo) listed under{" "}
-          <strong className="text-foreground/90">Vault sync → Extra RAG folders</strong>; they are chunked into
-          LanceDB on the next full reindex and searched alongside your vault.
+          <span className="font-medium text-foreground">Extra RAG folders</span> — optional absolute
+          paths on the API host (e.g. a central docs repo) listed under{" "}
+          <strong className="text-foreground/90">Vault sync → Extra RAG folders</strong>; they are
+          chunked into LanceDB on the next full reindex and searched alongside your vault.
         </li>
       </ul>
     </div>

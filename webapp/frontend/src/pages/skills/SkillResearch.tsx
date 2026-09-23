@@ -134,6 +134,7 @@ export default function SkillResearch() {
             return (
               <button
                 key={key}
+                type="button"
                 onClick={() => setActiveSource(key)}
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   activeSource === key
@@ -158,6 +159,7 @@ export default function SkillResearch() {
             className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent"
           />
           <button
+            type="button"
             onClick={handleSearch}
             disabled={isSearching || !query.trim()}
             className="px-6 py-3 bg-accent text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center"
@@ -187,6 +189,7 @@ export default function SkillResearch() {
             <h2 className="text-lg font-semibold">Found {results.length} results</h2>
             {selectedResults.size > 0 && (
               <button
+                type="button"
                 onClick={handleCreateSkill}
                 disabled={isCreating}
                 className="flex items-center px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
@@ -205,6 +208,12 @@ export default function SkillResearch() {
             <div
               key={result.id}
               onClick={() => toggleSelect(result.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleSelect(result.id);
+                }
+              }}
               className={`bg-card border rounded-lg p-4 transition-all cursor-pointer ${
                 selectedResults.has(result.id)
                   ? "border-accent ring-1 ring-accent"
