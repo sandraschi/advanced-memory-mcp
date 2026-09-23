@@ -1,5 +1,5 @@
 import { Activity, Cpu, Database, HardDrive, Loader2, Terminal, Timer } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getApiBaseUrl } from "../../config/apiBase";
 
 interface SystemStatus {
@@ -28,12 +28,15 @@ export default function ControlRoom() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchStatus = async () => {
+  const fetchStatus = useCallback(async () => {
     setIsLoading(true);
     setError("");
     try {
       const r = await fetch(`${getApiBaseUrl()}/system/status`);
-      if (!r.ok) { setError(`HTTP ${r.status}`); return; }
+      if (!r.ok) {
+        setError(`HTTP ${r.status}`);
+        return;
+      }
       const d = await r.json();
       setStatus(d);
     } catch (e) {
@@ -41,9 +44,11 @@ export default function ControlRoom() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => { fetchStatus(); }, []);
+  useEffect(() => {
+    fetchStatus();
+  }, [fetchStatus]);
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden relative animate-in fade-in duration-700">

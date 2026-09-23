@@ -56,8 +56,8 @@ export default function ResearchCard({ research }: ResearchCardProps) {
         </div>
 
         <div className="flex flex-wrap gap-1 mt-2">
-          {research.sources.map((source, index) => (
-            <span key={index} className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-md">
+          {research.sources.map((source) => (
+            <span key={source} className="text-xs px-2 py-1 bg-accent/10 text-accent rounded-md">
               {source}
             </span>
           ))}

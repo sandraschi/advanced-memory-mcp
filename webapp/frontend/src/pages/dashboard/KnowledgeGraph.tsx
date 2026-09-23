@@ -74,6 +74,9 @@ export default function KnowledgeGraph() {
     }
   }, [centerInput, depth, maxNodes]);
 
+  // Deliberate mount-only fetch: center/depth/nodes inputs apply via the Load button,
+  // not per keystroke (fetchGraphData identity changes with every keystroke).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: explicit Load button by design
   useEffect(() => {
     fetchGraphData();
   }, []);
@@ -103,8 +106,11 @@ export default function KnowledgeGraph() {
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Center (permalink, optional)</label>
+            <label htmlFor="kg-center" className="text-xs text-muted-foreground">
+              Center (permalink, optional)
+            </label>
             <input
+              id="kg-center"
               type="text"
               value={centerInput}
               onChange={(e) => setCenterInput(e.target.value)}
@@ -113,8 +119,11 @@ export default function KnowledgeGraph() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Depth</label>
+            <label htmlFor="kg-depth" className="text-xs text-muted-foreground">
+              Depth
+            </label>
             <select
+              id="kg-depth"
               value={depth}
               onChange={(e) => setDepth(Number(e.target.value))}
               className="rounded-md border border-border bg-background px-2 py-2 text-sm"
@@ -127,8 +136,11 @@ export default function KnowledgeGraph() {
             </select>
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Max nodes</label>
+            <label htmlFor="kg-maxnodes" className="text-xs text-muted-foreground">
+              Max nodes
+            </label>
             <select
+              id="kg-maxnodes"
               value={maxNodes}
               onChange={(e) => setMaxNodes(Number(e.target.value))}
               className="rounded-md border border-border bg-background px-2 py-2 text-sm"

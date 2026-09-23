@@ -11,9 +11,9 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiService, type WatchStatusPayload } from "../../services/api";
+import { type WatchStatusPayload, apiService } from "../../services/api";
 import ResearchCard from "./ResearchCard";
 import SkillCard from "./SkillCard";
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsRefreshing(true);
     try {
       const [researchResponse, skillsResponse, statusResponse, watchResponse] = await Promise.all([
@@ -82,7 +82,7 @@ export default function Dashboard() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -93,7 +93,7 @@ export default function Dashboard() {
       if (res.success && res.data) setWatchStatus(res.data);
     }, 30_000);
     return () => clearInterval(t);
-  }, []);
+  }, [loadData]);
 
   const handleRefresh = () => {
     loadData();
@@ -112,18 +112,27 @@ export default function Dashboard() {
             checklists and write-ups into skills your assistant can load.
           </p>
           <div className="flex gap-4 flex-wrap">
-            <Link to="/notes" className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+            <Link
+              to="/notes"
+              className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+            >
               Browse Notes
             </Link>
-            <Link to="/skills" className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">
+            <Link
+              to="/skills"
+              className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+            >
               View Skills
             </Link>
-            <Link to="/recents" className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95">
+            <Link
+              to="/recents"
+              className="px-6 py-2.5 rounded-xl bg-white/5 text-slate-300 font-medium border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+            >
               Recent Activity
             </Link>
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 blur-[120px] rounded-full -mr-20 -mt-20"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 blur-[120px] rounded-full -mr-20 -mt-20" />
       </div>
 
       {/* Quick Actions */}
@@ -179,6 +188,7 @@ export default function Dashboard() {
               </div>
               <h2 className="text-lg font-bold tracking-tight text-white">Recent research</h2>
               <button
+                type="button"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
                 aria-label="Refresh"
@@ -263,7 +273,7 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
             </div>
 
             <div className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.05] transition-all">
@@ -272,11 +282,13 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-bold text-slate-100">Knowledge Base</p>
                   <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
-                    {systemStatus?.knowledge_base_size ? `${systemStatus.knowledge_base_size} Notes Integrated` : "—"}
+                    {systemStatus?.knowledge_base_size
+                      ? `${systemStatus.knowledge_base_size} Notes Integrated`
+                      : "—"}
                   </p>
                 </div>
               </div>
-              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
             </div>
 
             <div className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl hover:bg-white/[0.05] transition-all">
@@ -289,7 +301,7 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
             </div>
 
             <Link
@@ -329,7 +341,7 @@ export default function Dashboard() {
                         ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
                         : "bg-slate-500"
                 }`}
-              ></div>
+              />
             </Link>
           </div>
         )}

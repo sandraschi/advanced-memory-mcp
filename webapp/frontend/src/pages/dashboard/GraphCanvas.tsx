@@ -10,9 +10,9 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import ForceGraph2D from "react-force-graph-2d";
 import ForceGraph3D from "react-force-graph-3d";
+import { Link } from "react-router-dom";
 import apiService from "../../services/api";
 
 interface GraphNode {
@@ -57,8 +57,7 @@ export default function GraphCanvas() {
         const nodes: GraphNode[] = response.data.nodes.map((n: any) => ({
           id: n.id,
           name: n.label ?? n.id,
-          group:
-            n.type === "unresolved" ? "research" : n.entity_type === "note" ? "topic" : "core",
+          group: n.type === "unresolved" ? "research" : n.entity_type === "note" ? "topic" : "core",
           val: 6,
         }));
         const links: GraphLink[] = response.data.links.map((l: any) => ({
@@ -77,9 +76,12 @@ export default function GraphCanvas() {
     }
   }, []);
 
+  // Deliberate mount-only fetch: seedSize changes apply via the Reload buttons,
+  // not per slider tick (would spam the graph API while dragging).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: explicit Reload by design
   useEffect(() => {
     fetchGraph(seedSize);
-  }, []); // only on mount
+  }, []);
 
   const filteredNodes = useMemo(() => {
     if (!searchTerm.trim()) return graphData.nodes;
@@ -91,7 +93,8 @@ export default function GraphCanvas() {
     if (!searchTerm.trim()) return graphData.links;
     const validIds = new Set(filteredNodes.map((n) => n.id));
     return graphData.links.filter(
-      (l) => validIds.has(typeof l.source === "string" ? l.source : (l.source as any).id) &&
+      (l) =>
+        validIds.has(typeof l.source === "string" ? l.source : (l.source as any).id) &&
         validIds.has(typeof l.target === "string" ? l.target : (l.target as any).id),
     );
   }, [graphData.links, filteredNodes, searchTerm]);
@@ -141,7 +144,10 @@ export default function GraphCanvas() {
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden relative">
       {/* Header / Stats Overlay */}
-      <div className="absolute top-6 left-6 z-10 space-y-4 pointer-events-none" style={{ width: "240px" }}>
+      <div
+        className="absolute top-6 left-6 z-10 space-y-4 pointer-events-none"
+        style={{ width: "240px" }}
+      >
         <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-5 rounded-2xl pointer-events-auto">
           <div className="flex items-center space-x-3 mb-4">
             <div className="p-2 bg-amber-500/20 rounded-lg">
@@ -194,6 +200,7 @@ export default function GraphCanvas() {
         {/* Viewport Controls */}
         <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-2 rounded-xl flex items-center space-x-1 pointer-events-auto">
           <button
+            type="button"
             onClick={handleResetView}
             className="p-2 hover:bg-white/5 rounded-lg transition-colors text-muted-foreground hover:text-white"
             title="Reset View"
@@ -202,7 +209,11 @@ export default function GraphCanvas() {
           </button>
           <div className="w-px h-4 bg-white/10 mx-1" />
           <button
-            onClick={() => { setSeedSize(500); fetchGraph(500); }}
+            type="button"
+            onClick={() => {
+              setSeedSize(500);
+              fetchGraph(500);
+            }}
             className="p-2 hover:bg-white/5 rounded-lg transition-colors text-muted-foreground hover:text-white"
             title="Reload 500"
           >
@@ -210,6 +221,7 @@ export default function GraphCanvas() {
           </button>
           <div className="w-px h-4 bg-white/10 mx-1" />
           <button
+            type="button"
             onClick={() => setShowSeedSlider(!showSeedSlider)}
             className={`p-2 rounded-lg transition-colors ${
               showSeedSlider
@@ -222,6 +234,7 @@ export default function GraphCanvas() {
           </button>
           <div className="w-px h-4 bg-white/10 mx-1" />
           <button
+            type="button"
             onClick={() => setMode3d(!mode3d)}
             className={`p-2 rounded-lg transition-colors ${
               mode3d
@@ -237,10 +250,14 @@ export default function GraphCanvas() {
         {/* Seed Size Slider */}
         {showSeedSlider && (
           <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-4 rounded-2xl pointer-events-auto">
-            <label className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground block mb-2">
+            <label
+              htmlFor="graph-seed-size"
+              className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground block mb-2"
+            >
               Seed Size: {seedSize}
             </label>
             <input
+              id="graph-seed-size"
               type="range"
               min={50}
               max={2000}
@@ -254,6 +271,7 @@ export default function GraphCanvas() {
               <span>2000</span>
             </div>
             <button
+              type="button"
               onClick={() => fetchGraph(seedSize)}
               disabled={loading}
               className="mt-3 w-full py-1.5 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-lg text-[10px] uppercase font-bold tracking-wider text-amber-400 transition-colors flex items-center justify-center gap-1.5 disabled:opacity-40"
@@ -303,9 +321,7 @@ export default function GraphCanvas() {
           <div className="flex items-center justify-center h-full">
             <div className="flex flex-col items-center space-y-4 opacity-50">
               <Activity className="h-12 w-12 text-amber-500 animate-pulse" />
-              <p className="text-xs uppercase tracking-[0.3em] font-bold">
-                Loading graph...
-              </p>
+              <p className="text-xs uppercase tracking-[0.3em] font-bold">Loading graph...</p>
             </div>
           </div>
         ) : mode3d ? (
@@ -388,7 +404,9 @@ export default function GraphCanvas() {
                   <span className="text-[9px] text-muted-foreground uppercase font-bold block">
                     Connections
                   </span>
-                  <span className="text-sm font-mono font-bold text-amber-500">{neighborCount}</span>
+                  <span className="text-sm font-mono font-bold text-amber-500">
+                    {neighborCount}
+                  </span>
                 </div>
                 <div className="bg-white/5 rounded-lg p-2">
                   <span className="text-[9px] text-muted-foreground uppercase font-bold block">
