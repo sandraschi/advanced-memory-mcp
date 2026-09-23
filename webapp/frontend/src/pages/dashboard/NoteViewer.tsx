@@ -77,9 +77,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   /** FastAPI (from start.ps1 / uvicorn) — this page does not start it. */
-  const [backendReachable, setBackendReachable] = useState<"checking" | "online" | "offline">(
-    "checking",
-  );
+  const [backendReachable, setBackendReachable] = useState<
+    "checking" | "retrying" | "online" | "offline"
+  >("checking");
   const [listError, setListError] = useState<string>("");
   const [showFilters, setShowFilters] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -119,33 +119,43 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   /** Background polls must not flip the UI offline on one slow or dropped /health (common under load). */
   const HEALTH_TIMEOUT_MS = 10_000;
 
+  /** Attempts (ms) between /health retries. Covers a backend restart gap (~6 s)
+      before the UI declares offline, so a restart no longer latches the red panel. */
+  const PROBE_RETRY_DELAYS_MS = [0, 2_000, 5_000];
+
   const probeBackend = async (opts?: { silent?: boolean }): Promise<boolean> => {
     const silent = Boolean(opts?.silent);
-    try {
-      if (!silent) {
-        setBackendReachable("checking");
-      }
-      const healthUrl = `${getApiBaseUrl()}/health`;
-      const response = await fetch(healthUrl, {
-        method: "GET",
-        signal: AbortSignal.timeout(HEALTH_TIMEOUT_MS),
-      });
-      const ok = response.ok;
-      if (ok) {
-        setBackendReachable("online");
-        return true;
-      }
-      if (!silent) {
-        setBackendReachable("offline");
-      }
-      return false;
-    } catch (error) {
-      DEBUG && devError("Backend health check failed:", error);
-      if (!silent) {
-        setBackendReachable("offline");
-      }
-      return false;
+    if (!silent) {
+      setBackendReachable("checking");
     }
+    const healthUrl = `${getApiBaseUrl()}/health`;
+    for (let attempt = 0; attempt < PROBE_RETRY_DELAYS_MS.length; attempt += 1) {
+      if (attempt > 0) {
+        if (!silent) {
+          setBackendReachable("retrying");
+        }
+        const delay = PROBE_RETRY_DELAYS_MS[attempt] ?? 0;
+        await new Promise((resolve) => {
+          window.setTimeout(resolve, delay);
+        });
+      }
+      try {
+        const response = await fetch(healthUrl, {
+          method: "GET",
+          signal: AbortSignal.timeout(HEALTH_TIMEOUT_MS),
+        });
+        if (response.ok) {
+          setBackendReachable("online");
+          return true;
+        }
+      } catch (error) {
+        DEBUG && devError("Backend health check failed:", error);
+      }
+    }
+    if (!silent) {
+      setBackendReachable("offline");
+    }
+    return false;
   };
 
   const mapRecentToNote = (primary: Record<string, unknown>): Note | null => {
@@ -827,17 +837,19 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 className={`w-2 h-2 rounded-full ${
                   backendReachable === "online"
                     ? "bg-green-500"
-                    : backendReachable === "checking"
-                      ? "bg-amber-500 animate-pulse"
-                      : "bg-red-500"
+                    : backendReachable === "offline"
+                      ? "bg-red-500"
+                      : "bg-amber-500 animate-pulse"
                 }`}
               />
               <span className="text-xs text-muted-foreground">
-                {backendReachable === "checking"
-                  ? "Checking backend…"
-                  : backendReachable === "online"
-                    ? "Backend online"
-                    : "Backend offline"}
+                {backendReachable === "online"
+                  ? "Backend online"
+                  : backendReachable === "offline"
+                    ? "Backend offline"
+                    : backendReachable === "retrying"
+                      ? "Retrying backend…"
+                      : "Checking backend…"}
               </span>
             </div>
           </div>
