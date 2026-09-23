@@ -24,7 +24,14 @@ export default defineConfig({
       credentials: true
     },
     hmr: {
-      host: '0.0.0.0', // HMR over Tailnet
+      // No host override: 0.0.0.0 is a bind-only address, never a valid thing
+      // for a browser to connect its HMR websocket to - hardcoding it here
+      // broke HMR for every client (local and Tailnet alike), which is why
+      // the console showed a permanent "WebSocket connection to
+      // ws://0.0.0.0:24678 failed" on every page load. Omitting `host`
+      // makes Vite's client fall back to `location.hostname`, which is
+      // exactly right for both local (127.0.0.1/localhost) and Tailnet
+      // (whatever hostname the browser actually used to load the page).
       port: 24678
     }
   },
