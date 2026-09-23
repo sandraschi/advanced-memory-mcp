@@ -99,11 +99,12 @@ export default function BatchImport() {
       <div className="card p-6 bg-muted/20 border-white/5 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-2">
-            <label className="text-sm font-medium flex items-center">
+            <label htmlFor="batch-scan-path" className="text-sm font-medium flex items-center">
               <FolderSearch className="h-4 w-4 mr-2" />
               Repository Root Path
             </label>
             <input
+              id="batch-scan-path"
               value={scanPath}
               onChange={(e) => setScanPath(e.target.value)}
               className="w-full bg-background border border-border rounded-md px-4 py-2 outline-none focus:ring-2 focus:ring-accent/50"
@@ -111,11 +112,12 @@ export default function BatchImport() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center">
+            <label htmlFor="batch-months" className="text-sm font-medium flex items-center">
               <Calendar className="h-4 w-4 mr-2" />
               Recency Filter
             </label>
             <select
+              id="batch-months"
               value={months}
               onChange={(e) => setMonths(Number(e.target.value))}
               className="w-full bg-background border border-border rounded-md px-4 py-2 outline-none cursor-pointer"
@@ -131,6 +133,7 @@ export default function BatchImport() {
 
         <div className="flex justify-end">
           <button
+            type="button"
             onClick={handleScan}
             disabled={isScanning || !scanPath}
             className="btn btn-primary px-8 flex items-center space-x-2 shadow-lg shadow-accent/20"
@@ -149,6 +152,7 @@ export default function BatchImport() {
         <div className="space-y-4 animate-in zoom-in-95 duration-300">
           <div className="flex items-center justify-between px-2 text-sm text-muted-foreground">
             <button
+              type="button"
               onClick={toggleSelectAll}
               className="flex items-center space-x-2 hover:text-foreground transition-colors"
             >
@@ -166,10 +170,11 @@ export default function BatchImport() {
           <div className="card overflow-hidden">
             <div className="max-h-96 overflow-y-auto divide-y divide-white/5">
               {scannedFiles.map((file) => (
-                <div
+                <button
                   key={file.path}
+                  type="button"
                   onClick={() => toggleSelect(file.path)}
-                  className={`p-4 flex items-center space-x-4 cursor-pointer hover:bg-white/5 transition-colors ${selectedPaths.has(file.path) ? "bg-accent/5" : ""}`}
+                  className={`w-full text-left p-4 flex items-center space-x-4 cursor-pointer hover:bg-white/5 transition-colors ${selectedPaths.has(file.path) ? "bg-accent/5" : ""}`}
                 >
                   {selectedPaths.has(file.path) ? (
                     <CheckSquare className="h-5 w-5 text-accent" />
@@ -189,13 +194,14 @@ export default function BatchImport() {
                       {new Date(file.modified).toLocaleDateString()}
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
 
           <div className="flex justify-center pt-4">
             <button
+              type="button"
               onClick={handleImport}
               disabled={isImporting || selectedPaths.size === 0}
               className="btn btn-primary btn-lg flex items-center space-x-3 px-12 group"
@@ -222,8 +228,8 @@ export default function BatchImport() {
           </p>
 
           <div className="max-h-64 overflow-y-auto text-left space-y-2 mb-8 bg-black/20 p-4 rounded-md border border-white/5">
-            {results.map((res, i) => (
-              <div key={i} className="flex items-center space-x-2 text-xs">
+            {results.map((res) => (
+              <div key={res.path} className="flex items-center space-x-2 text-xs">
                 {res.success ? (
                   <CheckSquare className="h-3 w-3 text-accent" />
                 ) : (
@@ -236,7 +242,7 @@ export default function BatchImport() {
             ))}
           </div>
 
-          <button onClick={() => setResults(null)} className="btn btn-outline">
+          <button type="button" onClick={() => setResults(null)} className="btn btn-outline">
             Start New Import
           </button>
         </div>

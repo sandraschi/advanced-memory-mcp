@@ -45,8 +45,11 @@ export default function ExportSettings({ onChange = () => {} }: ExportSettingsPr
 
         <div className="space-y-4">
           <div>
-            <label className="label">Base Directory</label>
+            <label htmlFor="export-base-dir" className="label">
+              Base Directory
+            </label>
             <input
+              id="export-base-dir"
               type="text"
               defaultValue="~/Desktop/advanced-memory-exports"
               className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
@@ -58,15 +61,18 @@ export default function ExportSettings({ onChange = () => {} }: ExportSettingsPr
           </div>
 
           <div>
-            <label className="label">File Naming Pattern</label>
+            <label htmlFor="export-naming" className="label">
+              File Naming Pattern
+            </label>
             <input
+              id="export-naming"
               type="text"
               defaultValue="{project}-{timestamp}"
               className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
               onChange={onChange}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Variables: {`{project}`}, {`{timestamp}`}, {`{format}`}
+              Variables: {"{project}"}, {"{timestamp}"}, {"{format}"}
             </p>
           </div>
         </div>

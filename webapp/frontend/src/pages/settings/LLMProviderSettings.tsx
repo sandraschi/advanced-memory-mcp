@@ -124,7 +124,7 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
         "Content-Type": "application/json",
       };
       if (apiKey) {
-        headers["Authorization"] = `Bearer ${apiKey}`;
+        headers.Authorization = `Bearer ${apiKey}`;
       }
 
       const response = await fetch(`${url}/models`, { headers });
@@ -273,8 +273,11 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="label">Active Provider</label>
+            <label htmlFor="llm-provider" className="label">
+              Active Provider
+            </label>
             <select
+              id="llm-provider"
               value={selectedProvider}
               onChange={(e) => {
                 setSelectedProvider(e.target.value);
@@ -292,8 +295,11 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
           </div>
 
           <div>
-            <label className="label">Active Model</label>
+            <label htmlFor="llm-model" className="label">
+              Active Model
+            </label>
             <select
+              id="llm-model"
               value={selectedModel}
               onChange={(e) => {
                 setSelectedModel(e.target.value);
@@ -328,6 +334,7 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Provider Status</h2>
           <button
+            type="button"
             onClick={handleRefreshProviders}
             disabled={isLoading}
             className="btn btn-outline btn-sm"
@@ -392,8 +399,11 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
 
           <div className="flex items-center space-x-4">
             <div className="flex-1">
-              <label className="label">Model to Manage</label>
+              <label htmlFor="llm-manage-model" className="label">
+                Model to Manage
+              </label>
               <select
+                id="llm-manage-model"
                 value={selectedModel}
                 onChange={(e) => {
                   setSelectedModel(e.target.value);
@@ -413,6 +423,7 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
 
             <div className="flex space-x-2 pt-6">
               <button
+                type="button"
                 onClick={handleLoadModel}
                 disabled={!selectedModel || isLoading}
                 className="btn btn-primary flex items-center"
@@ -422,6 +433,7 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
               </button>
 
               <button
+                type="button"
                 onClick={handleUnloadModel}
                 disabled={!selectedModel || isLoading}
                 className="btn btn-outline flex items-center"
@@ -441,8 +453,11 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
 
           <div className="space-y-4">
             <div>
-              <label className="label">API Key</label>
+              <label htmlFor="llm-api-key" className="label">
+                API Key
+              </label>
               <input
+                id="llm-api-key"
                 type="password"
                 placeholder={`Enter ${currentProvider.name.toUpperCase()} API key`}
                 className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
@@ -464,8 +479,11 @@ export default function LLMProviderSettings({ onChange = () => {} }: LLMProvider
             </div>
 
             <div>
-              <label className="label">Custom API Base URL (Optional)</label>
+              <label htmlFor="llm-base-url" className="label">
+                Custom API Base URL (Optional)
+              </label>
               <input
+                id="llm-base-url"
                 type="url"
                 placeholder="https://api.openai.com/v1"
                 className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"

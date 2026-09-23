@@ -4,8 +4,8 @@ import {
   Database,
   FileText,
   FlaskConical,
-  Globe,
   Github,
+  Globe,
   Info,
   Layers,
   Loader2,
@@ -30,7 +30,9 @@ export default function ResearchLab() {
   const [isResearching, setIsResearching] = useState(false);
   const [results, setResults] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [relatedNotes, setRelatedNotes] = useState<Array<{ title: string; id: string; snippet: string }>>([]);
+  const [relatedNotes, setRelatedNotes] = useState<
+    Array<{ title: string; id: string; snippet: string }>
+  >([]);
   const [searchingRelated, setSearchingRelated] = useState(false);
 
   const sourceOptions = [
@@ -48,19 +50,26 @@ export default function ResearchLab() {
   };
 
   useEffect(() => {
-    if (!topic.trim()) { setRelatedNotes([]); return; }
+    if (!topic.trim()) {
+      setRelatedNotes([]);
+      return;
+    }
     const t = setTimeout(async () => {
       setSearchingRelated(true);
       try {
         const r = await apiService.searchNotes(topic, 1, 10);
         if (r.success && r.data?.notes) {
-          setRelatedNotes(r.data.notes.map((n) => ({
-            title: n.title,
-            id: n.id,
-            snippet: (n.content || "").slice(0, 120),
-          })));
+          setRelatedNotes(
+            r.data.notes.map((n) => ({
+              title: n.title,
+              id: n.id,
+              snippet: (n.content || "").slice(0, 120),
+            })),
+          );
         }
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       setSearchingRelated(false);
     }, 400);
     return () => clearTimeout(t);
@@ -153,11 +162,15 @@ export default function ResearchLab() {
         <div className="w-80 shrink-0 space-y-4 flex flex-col overflow-y-auto pr-1">
           <div className="card p-5 bg-muted/20 border-white/5 space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-semibold flex items-center uppercase tracking-wider text-muted-foreground">
+              <label
+                htmlFor="research-topic"
+                className="text-xs font-semibold flex items-center uppercase tracking-wider text-muted-foreground"
+              >
                 <Settings2 className="h-3.5 w-3.5 mr-2" />
                 Configuration
               </label>
               <input
+                id="research-topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && runResearch()}
@@ -167,13 +180,14 @@ export default function ResearchLab() {
             </div>
 
             <div className="space-y-3">
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Sources
-              </label>
+              </span>
               <div className="space-y-2">
                 {sourceOptions.map((opt) => (
                   <button
                     key={opt.id}
+                    type="button"
                     onClick={() => toggleSource(opt.id)}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all text-xs ${
                       sources.has(opt.id)
@@ -196,6 +210,7 @@ export default function ResearchLab() {
             </div>
 
             <button
+              type="button"
               onClick={runResearch}
               disabled={isResearching || !topic.trim() || sources.size === 0}
               className="w-full btn btn-primary py-2.5 flex items-center justify-center space-x-2 shadow-lg shadow-purple-500/20"
@@ -270,9 +285,9 @@ export default function ResearchLab() {
 
             {results && !isResearching && (
               <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-300">
-                {getSnippets().map((snippet, i) => (
+                {getSnippets().map((snippet) => (
                   <div
-                    key={i}
+                    key={`${snippet.source}-${snippet.title}`}
                     className="card p-5 hover:border-purple-500/20 transition-all bg-black/20 group"
                   >
                     <div className="flex items-start justify-between mb-3">
@@ -317,7 +332,9 @@ export default function ResearchLab() {
                 <Layers className="h-4 w-4 text-pink-400" />
                 <h3 className="text-xs font-bold uppercase tracking-widest">Related Notes</h3>
               </div>
-              {searchingRelated && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+              {searchingRelated && (
+                <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+              )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -342,7 +359,9 @@ export default function ResearchLab() {
                   >
                     <p className="text-xs font-medium truncate">{note.title}</p>
                     {note.snippet && (
-                      <p className="text-[10px] text-muted-foreground line-clamp-2 mt-1">{note.snippet}</p>
+                      <p className="text-[10px] text-muted-foreground line-clamp-2 mt-1">
+                        {note.snippet}
+                      </p>
                     )}
                   </Link>
                 ))

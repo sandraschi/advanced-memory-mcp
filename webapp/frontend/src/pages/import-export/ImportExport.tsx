@@ -63,6 +63,7 @@ export default function ImportExport() {
       <div className="card">
         <div className="flex border-b border-white/10">
           <button
+            type="button"
             onClick={() => {
               setActiveTab("import");
               setResult(null);
@@ -79,6 +80,7 @@ export default function ImportExport() {
             )}
           </button>
           <button
+            type="button"
             onClick={() => {
               setActiveTab("export");
               setResult(null);
@@ -100,8 +102,11 @@ export default function ImportExport() {
           {activeTab === "import" ? (
             <form onSubmit={handleImport} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Source Format</label>
+                <label htmlFor="imp-format" className="text-sm font-medium">
+                  Source Format
+                </label>
                 <select
+                  id="imp-format"
                   value={format}
                   onChange={(e) => setFormat(e.target.value)}
                   className="w-full bg-background border border-white/10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -117,8 +122,11 @@ export default function ImportExport() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Source Path</label>
+                <label htmlFor="imp-path" className="text-sm font-medium">
+                  Source Path
+                </label>
                 <input
+                  id="imp-path"
                   type="text"
                   value={path}
                   onChange={(e) => setPath(e.target.value)}
@@ -144,8 +152,11 @@ export default function ImportExport() {
           ) : (
             <form onSubmit={handleExport} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Export Format</label>
+                <label htmlFor="exp-format" className="text-sm font-medium">
+                  Export Format
+                </label>
                 <select
+                  id="exp-format"
                   value={format}
                   onChange={(e) => setFormat(e.target.value)}
                   className="w-full bg-background border border-white/10 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -161,8 +172,11 @@ export default function ImportExport() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Destination Path</label>
+                <label htmlFor="exp-path" className="text-sm font-medium">
+                  Destination Path
+                </label>
                 <input
+                  id="exp-path"
                   type="text"
                   value={path}
                   onChange={(e) => setPath(e.target.value)}
