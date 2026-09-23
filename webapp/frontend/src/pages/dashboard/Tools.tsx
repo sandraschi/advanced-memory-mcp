@@ -11,7 +11,7 @@ import {
   Terminal,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiService } from "../../services/api";
 
 // ToolHelp and ToolCategory are actually parsed from helpContent markdown now
@@ -21,7 +21,7 @@ export default function Tools() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
 
-  const fetchHelp = async () => {
+  const fetchHelp = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await apiService.callMCPTool("help", {
@@ -36,11 +36,11 @@ export default function Tools() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchHelp();
-  }, []);
+  }, [fetchHelp]);
 
   const parseHelpContent = (content: string) => {
     // Simple parser for the markdown help content
@@ -82,6 +82,7 @@ export default function Tools() {
 
         <div className="flex items-center space-x-4">
           <button
+            type="button"
             onClick={fetchHelp}
             title="Refresh Documentation"
             aria-label="Refresh Documentation"
@@ -119,6 +120,7 @@ export default function Tools() {
               {tools.map((tool) => (
                 <button
                   key={tool.title}
+                  type="button"
                   onClick={() => setSelectedTool(tool.title)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all group ${
                     selectedTool === tool.title

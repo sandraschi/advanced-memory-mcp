@@ -25,9 +25,12 @@ export default function SkillStudio() {
           <Wrench className="h-12 w-12 mx-auto mb-4" />
           <h3 className="text-lg font-bold mb-2">Not Yet Available</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            The Skill Studio requires a backend synthesis API that has not been
-            connected yet. Use the <Link to="/skills" className="text-amber-400 hover:underline">Skills page</Link> to browse existing skills,
-            or create skills via the MCP tools.
+            The Skill Studio requires a backend synthesis API that has not been connected yet. Use
+            the{" "}
+            <Link to="/skills" className="text-amber-400 hover:underline">
+              Skills page
+            </Link>{" "}
+            to browse existing skills, or create skills via the MCP tools.
           </p>
         </div>
       </div>

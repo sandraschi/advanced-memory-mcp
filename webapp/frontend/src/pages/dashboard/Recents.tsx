@@ -34,7 +34,9 @@ export default function Recents() {
     try {
       const pr = await apiService.getProjects();
       if (pr.success && Array.isArray(pr.data) && pr.data.length > 0) {
-        const def = (pr.data as { name: string; is_default?: boolean }[]).find((p) => p.is_default)?.name;
+        const def = (pr.data as { name: string; is_default?: boolean }[]).find(
+          (p) => p.is_default,
+        )?.name;
         const pick = def || pr.data[0]?.name;
         if (pick) apiService.activeProject = pick;
       }

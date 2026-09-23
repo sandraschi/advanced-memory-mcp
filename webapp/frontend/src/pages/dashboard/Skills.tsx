@@ -11,7 +11,7 @@
   Trash2,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiService } from "../../services/api";
 
 interface Skill {
@@ -55,7 +55,7 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
 
   // No mock data — empty state shown when API unavailable
 
-  const loadSkills = async () => {
+  const loadSkills = useCallback(async () => {
     setIsLoading(true);
     try {
       const folderParam = currentFolder === "all" ? undefined : currentFolder;
@@ -86,11 +86,11 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
       setFilteredSkills([]);
       setIsLoading(false);
     }
-  };
+  }, [currentFolder]);
 
   useEffect(() => {
     loadSkills();
-  }, [currentFolder]);
+  }, [loadSkills]);
 
   useEffect(() => {
     // Filter skills based on search query
@@ -139,6 +139,7 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gold-400">Skills</h2>
             <button
+              type="button"
               onClick={handleCreateSkill}
               className="p-2 bg-gold-600 hover:bg-gold-700 rounded-lg transition-colors"
               title="Create new skill"
@@ -149,8 +150,14 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
 
           {/* Folder selector */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Skill Collection</label>
+            <label
+              htmlFor="skill-collection"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
+              Skill Collection
+            </label>
             <select
+              id="skill-collection"
               value={currentFolder}
               onChange={(e) => setCurrentFolder(e.target.value)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
@@ -182,21 +189,24 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
             <div className="p-4 text-center text-gray-400">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500 mx-auto mb-2" />
               Loading skills...
             </div>
           ) : filteredSkills.length === 0 ? (
             <div className="p-4 text-center text-gray-400">
               <Bot className="w-12 h-12 mx-auto mb-2 text-gray-500" />
-              {searchQuery ? "No skills match your search" : "No skills available. Create skills via MCP tools (adn_skills) or the skill creator."}
+              {searchQuery
+                ? "No skills match your search"
+                : "No skills available. Create skills via MCP tools (adn_skills) or the skill creator."}
             </div>
           ) : (
             <div className="p-2">
               {filteredSkills.map((skill) => (
-                <div
+                <button
                   key={skill.id}
+                  type="button"
                   onClick={() => handleSkillSelect(skill)}
-                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${
+                  className={`block w-full text-left p-3 mb-2 rounded-lg cursor-pointer transition-colors border ${
                     selectedSkill?.id === skill.id
                       ? "bg-gold-600 border-gold-500"
                       : "bg-gray-700 border-gray-600 hover:bg-gray-650"
@@ -228,7 +238,7 @@ export default function Skills({ selectedSkillId, onSkillSelect }: SkillsProps) 
                       <Sparkles className="w-5 h-5 text-gold-400" />
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -265,6 +275,7 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
+              type="button"
               onClick={onClose}
               className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
             >
@@ -276,10 +287,10 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
+            <button type="button" className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
               <Download className="w-5 h-5" />
             </button>
-            <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
+            <button type="button" className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
               <Share className="w-5 h-5" />
             </button>
           </div>
@@ -321,8 +332,8 @@ function SkillViewer({ skill, onClose }: { skill: Skill; onClose: () => void }) 
           <div className="mt-8">
             <h2 className="text-xl font-bold text-white mb-4">Modules</h2>
             <div className="space-y-4">
-              {skill.modules.map((module, index) => (
-                <div key={index} className="bg-gray-800 rounded-lg p-4">
+              {skill.modules.map((module) => (
+                <div key={module.name} className="bg-gray-800 rounded-lg p-4">
                   <h3 className="text-lg font-medium text-gold-400 mb-2">{module.name}</h3>
                   <pre className="whitespace-pre-wrap text-gray-300 text-sm">{module.content}</pre>
                 </div>
@@ -411,6 +422,7 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">Create New Skill</h2>
             <button
+              type="button"
               onClick={onClose}
               className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
             >
@@ -435,6 +447,7 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
                 <option value="lmstudio">LM Studio (Local)</option>
               </select>
               <button
+                type="button"
                 onClick={generateSkillContent}
                 disabled={isGenerating || !selectedLLM || !formData.title}
                 className="px-4 py-2 bg-gold-600 hover:bg-gold-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center space-x-2"
@@ -449,8 +462,13 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
           {/* Form Tabs */}
           <div className="mb-6">
             <div className="flex space-x-1">
-              <button className="px-4 py-2 bg-gold-600 text-white rounded-lg">Overview</button>
-              <button className="px-4 py-2 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-lg">
+              <button type="button" className="px-4 py-2 bg-gold-600 text-white rounded-lg">
+                Overview
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-lg"
+              >
                 Modules
               </button>
             </div>
@@ -459,8 +477,11 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
           {/* Overview Tab */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+              <label htmlFor="skill-title" className="block text-sm font-medium text-gray-300 mb-2">
+                Title
+              </label>
               <input
+                id="skill-title"
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
@@ -470,8 +491,11 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+              <label htmlFor="skill-desc" className="block text-sm font-medium text-gray-300 mb-2">
+                Description
+              </label>
               <input
+                id="skill-desc"
                 type="text"
                 value={formData.description}
                 onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
@@ -481,8 +505,14 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Folder</label>
+              <label
+                htmlFor="skill-folder"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
+                Folder
+              </label>
               <select
+                id="skill-folder"
                 value={formData.folder}
                 onChange={(e) => setFormData((prev) => ({ ...prev, folder: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent"
@@ -495,10 +525,11 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="skill-tags" className="block text-sm font-medium text-gray-300 mb-2">
                 Tags (comma-separated)
               </label>
               <input
+                id="skill-tags"
                 type="text"
                 value={formData.tags}
                 onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value }))}
@@ -508,10 +539,14 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="skill-overview"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Overview Content
               </label>
               <textarea
+                id="skill-overview"
                 value={formData.overview}
                 onChange={(e) => setFormData((prev) => ({ ...prev, overview: e.target.value }))}
                 rows={10}
@@ -521,8 +556,14 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">When to Use</label>
+              <label
+                htmlFor="skill-whentouse"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
+                When to Use
+              </label>
               <textarea
+                id="skill-whentouse"
                 value={formData.whenToUse}
                 onChange={(e) => setFormData((prev) => ({ ...prev, whenToUse: e.target.value }))}
                 rows={3}
@@ -536,6 +577,8 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
           <div className="hidden">
             <div className="space-y-4">
               {modules.map((module, index) => (
+                // Positional editing list (name is user-typed); index is the only stable key.
+                // biome-ignore lint/suspicious/noArrayIndexKey: name edits would remount inputs
                 <div key={index} className="p-4 bg-gray-700 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
                     <input
@@ -546,6 +589,7 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
                       className="flex-1 px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg text-white mr-3"
                     />
                     <button
+                      type="button"
                       onClick={() => removeModule(index)}
                       className="p-2 text-red-400 hover:bg-red-900 rounded-lg"
                     >
@@ -562,6 +606,7 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
                 </div>
               ))}
               <button
+                type="button"
                 onClick={addModule}
                 className="w-full py-2 border-2 border-dashed border-gray-600 rounded-lg text-gray-400 hover:border-gold-500 hover:text-gold-400 transition-colors flex items-center justify-center space-x-2"
               >
@@ -575,12 +620,14 @@ ${formData.whenToUse || "Apply this skill when working on related development ta
         {/* Footer */}
         <div className="p-6 border-t border-gray-700 flex justify-end space-x-3">
           <button
+            type="button"
             onClick={onClose}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors"
           >
             Cancel
           </button>
           <button
+            type="button"
             onClick={handleSubmit}
             className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-lg transition-colors flex items-center space-x-2"
           >
