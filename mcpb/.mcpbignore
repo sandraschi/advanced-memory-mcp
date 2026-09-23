@@ -32,7 +32,8 @@ mcpb/verify_pack.py
 pack.ps1
 verify_pack.py
 
-# Non-MCP components detected in this repo
+# Non-MCP components (webapp, native, scripts)
 webapp/
 native/
+web_sota/
 scripts/

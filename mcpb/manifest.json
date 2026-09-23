@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.2",
   "name": "advanced-memory-mcp",
-  "version": "1.8.1",
+  "version": "1.11.0",
   "description": "Comprehensive research and knowledge platform with web search, GitHub trawling, arXiv academic research, TV Tropes narrative analysis, document ingestion, RAG vector search, and research-driven skill creation",
   "author": { "name": "sandraschi" },
   "server": {

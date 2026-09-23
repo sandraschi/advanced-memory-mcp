@@ -13,12 +13,19 @@ try:
     # Run MCP server with HTTP transport
     # Note: 'am' is an alias for 'advanced_memory.cli.main:app'
     from advanced_memory.cli.main import app
-
-    app(["mcp", "--transport", "streamable-http", "--port", "10850"])
 except ImportError as e:
     print(f"Import error: {e}")
     print("Make sure the package is installed with: pip install -e .")
     sys.exit(1)
-except Exception as e:
-    print(f"Error running server: {e}")
-    sys.exit(1)
+
+
+def main() -> None:
+    try:
+        app(["mcp", "--transport", "streamable-http", "--port", "10850"])
+    except Exception as e:
+        print(f"Error running server: {e}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
