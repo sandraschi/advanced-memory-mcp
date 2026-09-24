@@ -338,3 +338,111 @@ async def validate_rag_extra_roots(body: RagExtraRootsPayload) -> dict:
             continue
         items.append({"path": s, "ok": ok, "resolved": resolved})
     return {"success": True, "data": {"items": items}}
+
+
+# ---------------------------------------------------------------------------
+# SkillStudio v1 (see docs/SKILL_STUDIO_SPEC.md). Thin wrappers over the
+# skills/studio subtree; the routers own no studio logic.
+# ---------------------------------------------------------------------------
+
+
+@router.get("/skills-studio/scenarios")
+async def studio_scenario_list(skill_id: str | None = None) -> dict:
+    """List graded trigger scenarios, optionally per skill."""
+    from advanced_memory.skills.studio import repository
+
+    rows = await repository.scenario_list(skill_id)
+    return {"success": True, "data": {"scenarios": rows}}
+
+
+@router.post("/skills-studio/scenarios")
+async def studio_scenario_create(request: Request) -> dict:
+    """Add a graded trigger scenario."""
+    from advanced_memory.skills.studio import repository
+
+    body = await request.json()
+    prompt = (body.get("prompt") or "").strip()
+    skill_id = (body.get("skill_id") or "").strip()
+    if not prompt or not skill_id:
+        return {"success": False, "error": "skill_id and prompt required"}
+    row = await repository.scenario_create(
+        skill_id, prompt, bool(body.get("should_fire", True)), body.get("notes")
+    )
+    return {"success": True, "data": {"scenario": row}}
+
+
+@router.delete("/skills-studio/scenarios/{scenario_id}")
+async def studio_scenario_delete(scenario_id: int) -> dict:
+    """Delete a scenario."""
+    from advanced_memory.skills.studio import repository
+
+    ok = await repository.scenario_delete(scenario_id)
+    return {"success": ok, "data": {"deleted": ok}}
+
+
+@router.post("/skills-studio/lab-runs")
+async def studio_lab_run(request: Request) -> dict:
+    """Judge all scenarios for a skill (slow: one LLM call per scenario)."""
+    from advanced_memory.skills.studio import lab
+
+    body = await request.json()
+    skill_id = (body.get("skill_id") or "").strip()
+    if not skill_id:
+        return {"success": False, "error": "skill_id required"}
+    return await lab.run_lab(skill_id, body.get("model"))
+
+
+@router.get("/skills-studio/lab-runs")
+async def studio_lab_history(skill_id: str, limit: int = 10) -> dict:
+    """Past runs with scores."""
+    from advanced_memory.skills.studio import repository
+
+    rows = await repository.run_history(skill_id, max(1, min(limit, 50)))
+    return {"success": True, "data": {"runs": rows}}
+
+
+@router.get("/skills-studio/telemetry")
+async def studio_telemetry(skill_id: str | None = None, since: str | None = None, limit: int = 200) -> dict:
+    """Door telemetry events plus per-type counts."""
+    from advanced_memory.skills.studio import repository, telemetry
+
+    if not telemetry.enabled():
+        return {"success": True, "data": {"events": [], "counts": {}, "disabled": True}}
+    rows = await repository.event_list(skill_id, since, max(1, min(limit, 500)))
+    counts = await repository.event_counts(skill_id)
+    return {"success": True, "data": {"events": rows, "counts": counts}}
+
+
+@router.post("/skills-studio/distill/preview")
+async def studio_distill_preview(request: Request) -> dict:
+    """Draft a skill section from discussion:/issue:/note: source (no write)."""
+    from advanced_memory.skills.studio import distill
+
+    body = await request.json()
+    skill_id = (body.get("skill_id") or "").strip()
+    source = (body.get("source") or "").strip()
+    if not skill_id or not source:
+        return {"success": False, "error": "skill_id and source required"}
+    return await distill.distill_preview(skill_id, source)
+
+
+@router.post("/skills-studio/distill/apply")
+async def studio_distill_apply(request: Request) -> dict:
+    """Approved write of a distill job (backup kept)."""
+    from advanced_memory.skills.studio import distill
+
+    body = await request.json()
+    try:
+        job_id = int(body.get("job_id", 0))
+    except (TypeError, ValueError):
+        return {"success": False, "error": "job_id required"}
+    return await distill.distill_apply(job_id, body.get("draft_md"))
+
+
+@router.get("/skills-studio/distill/jobs")
+async def studio_distill_jobs(state: str | None = None) -> dict:
+    """Distill job list."""
+    from advanced_memory.skills.studio import repository
+
+    rows = await repository.job_list(state)
+    return {"success": True, "data": {"jobs": rows}}

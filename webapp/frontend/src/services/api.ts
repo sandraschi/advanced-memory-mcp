@@ -107,6 +107,75 @@ interface SkillResult {
   sources: number;
 }
 
+export interface StudioScenario {
+  id: number;
+  skill_id: string;
+  prompt: string;
+  should_fire: boolean;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface StudioVerdict {
+  scenario_id: number;
+  prompt: string;
+  should_fire: boolean;
+  fired: boolean;
+}
+
+export interface StudioLabResult {
+  skill_id: string;
+  model: string;
+  precision: number;
+  recall: number;
+  run_id: number;
+  verdicts: StudioVerdict[];
+}
+
+export interface StudioLabRun {
+  id: number;
+  skill_id: string;
+  model: string;
+  precision: number;
+  recall: number;
+  verdicts: StudioVerdict[];
+  created_at: string;
+}
+
+export interface StudioTelemetryEvent {
+  id: number;
+  skill_id: string;
+  event: string;
+  section: string | null;
+  created_at: string;
+}
+
+export interface StudioTelemetryData {
+  events: StudioTelemetryEvent[];
+  counts: Record<string, number>;
+  disabled?: boolean;
+}
+
+export interface StudioDistillPreview {
+  job_id: number;
+  draft_md: string;
+  source_title: string;
+}
+
+export interface StudioDistillApplied {
+  path: string;
+  backup: string;
+}
+
+export interface StudioDistillJob {
+  id: number;
+  skill_id: string;
+  source: string;
+  draft_md: string;
+  state: string;
+  created_at: string;
+}
+
 class ApiService {
   private client: AxiosInstance;
   private _baseURL = "";
@@ -1005,6 +1074,111 @@ class ApiService {
       return response.data;
     } catch (error) {
       return { success: false, error: `Failed to call ${toolName}` };
+    }
+  }
+  // SkillStudio v1 (trigger lab + distiller). Backend: /management/skills-studio/*.
+  async studioScenarios(skillId?: string): Promise<ApiResponse<{ scenarios: StudioScenario[] }>> {
+    try {
+      const q = skillId ? `?skill_id=${encodeURIComponent(skillId)}` : "";
+      const response = await this.client.get(`/management/skills-studio/scenarios${q}`);
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to fetch scenarios" };
+    }
+  }
+
+  async studioScenarioCreate(
+    skillId: string,
+    prompt: string,
+    shouldFire: boolean,
+    notes?: string,
+  ): Promise<ApiResponse<{ scenario: StudioScenario }>> {
+    try {
+      const response = await this.client.post("/management/skills-studio/scenarios", {
+        skill_id: skillId,
+        prompt,
+        should_fire: shouldFire,
+        notes,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to create scenario" };
+    }
+  }
+
+  async studioScenarioDelete(scenarioId: number): Promise<ApiResponse<{ deleted: boolean }>> {
+    try {
+      const response = await this.client.delete(`/management/skills-studio/scenarios/${scenarioId}`);
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to delete scenario" };
+    }
+  }
+
+  async studioLabRun(skillId: string, model?: string): Promise<ApiResponse<StudioLabResult>> {
+    try {
+      const response = await this.client.post("/management/skills-studio/lab-runs", {
+        skill_id: skillId,
+        model,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Lab run failed" };
+    }
+  }
+
+  async studioLabHistory(skillId: string, limit = 10): Promise<ApiResponse<{ runs: StudioLabRun[] }>> {
+    try {
+      const response = await this.client.get(
+        `/management/skills-studio/lab-runs?skill_id=${encodeURIComponent(skillId)}&limit=${limit}`,
+      );
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to fetch lab history" };
+    }
+  }
+
+  async studioTelemetry(skillId?: string): Promise<ApiResponse<StudioTelemetryData>> {
+    try {
+      const q = skillId ? `?skill_id=${encodeURIComponent(skillId)}` : "";
+      const response = await this.client.get(`/management/skills-studio/telemetry${q}`);
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to fetch telemetry" };
+    }
+  }
+
+  async studioDistillPreview(skillId: string, source: string): Promise<ApiResponse<StudioDistillPreview>> {
+    try {
+      const response = await this.client.post("/management/skills-studio/distill/preview", {
+        skill_id: skillId,
+        source,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Distill preview failed" };
+    }
+  }
+
+  async studioDistillApply(jobId: number, draftMd?: string): Promise<ApiResponse<StudioDistillApplied>> {
+    try {
+      const response = await this.client.post("/management/skills-studio/distill/apply", {
+        job_id: jobId,
+        draft_md: draftMd,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Distill apply failed" };
+    }
+  }
+
+  async studioDistillJobs(state?: string): Promise<ApiResponse<{ jobs: StudioDistillJob[] }>> {
+    try {
+      const q = state ? `?state=${encodeURIComponent(state)}` : "";
+      const response = await this.client.get(`/management/skills-studio/distill/jobs${q}`);
+      return response.data;
+    } catch (error) {
+      return { success: false, error: "Failed to fetch distill jobs" };
     }
   }
 }

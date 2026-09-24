@@ -94,6 +94,16 @@ async def adn_skills(op: SkillsOperation) -> dict:
     return {"success": ok, "content": text}
 
 
+async def _studio_telemetry(identifier: str | None, event: str, section: str | None = None) -> None:
+    """Door telemetry for SkillStudio (best-effort, never breaks callers)."""
+    try:
+        from advanced_memory.skills.studio import telemetry as _telemetry
+
+        await _telemetry.log_event(str(identifier or ""), event, section)
+    except Exception as exc:
+        logger.debug(f"studio telemetry skipped: {exc}")
+
+
 async def _dispatch_skills_operation(op: SkillsOperation, operation: str, project: str | None):
     """Route an adn_skills operation to its implementation (may return dict or Markdown str)."""
     # Route to appropriate operation
@@ -109,15 +119,21 @@ async def _dispatch_skills_operation(op: SkillsOperation, operation: str, projec
     elif operation == "list":
         return await _list_operation(op.category, op.page, op.page_size, project)
     elif operation == "activate":
-        return await _activate_operation(op.identifier, op.scope, project)
+        result = await _activate_operation(op.identifier, op.scope, project)
+        await _studio_telemetry(op.identifier, "activate")
+        return result
     elif operation == "deactivate":
         return await _deactivate_operation(op.identifier, op.all, project)
     elif operation == "active":
         return await _active_operation(op.verbose, project)
     elif operation == "load_section":
-        return await _load_section_operation(op.identifier, op.section, project)
+        result = await _load_section_operation(op.identifier, op.section, project)
+        await _studio_telemetry(op.identifier, "load_section", op.section)
+        return result
     elif operation == "load_resource":
-        return await _load_resource_operation(op.identifier, op.resource, project)
+        result = await _load_resource_operation(op.identifier, op.resource, project)
+        await _studio_telemetry(op.identifier, "load_resource", op.resource)
+        return result
     elif operation == "import_from_github":
         return await _import_from_github_operation(op.repository, None, op.branch, op.category, project)
     elif operation == "distill_from_wikipedia":
@@ -1882,8 +1898,8 @@ adn_skills("create", skill_name="{identifier}", description="...")
 
 Resource path must be within the skill directory.
 Path traversal (../) is not allowed."""
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.debug(f"skill resource path resolve skipped: {exc}")
 
     if not resource_path.exists():
         # List available resources
