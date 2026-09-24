@@ -192,7 +192,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=4.1.0" },
     { name = "pytest-mock", specifier = ">=3.12.0" },
     { name = "pytest-xdist", specifier = ">=3.0.0" },
-    { name = "ruff", specifier = ">=0.16.0,<0.17" },
+    { name = "ruff", specifier = "==0.16.0" },
     { name = "safety", specifier = ">=3.0.0" },
     { name = "twine", specifier = ">=5.0.0" },
     { name = "types-setuptools", specifier = ">=69.0.0" },
