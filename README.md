@@ -19,6 +19,8 @@
 - **What** — A **FastMCP 3.2 GA** server (Python 3.12+) exposing **79 tools across 12 Industrial Portmanteaus** (`audio`, `inbox`, `skills`, `zettel`, `nav`, `notes`, `search`, `knowledge`, `project`, `system`, `mcp`, `typora`). Optimized with **2026 Industrial Docstrings** (Rationale-First) and **Discriminated Unions** for high-fidelity tool selection in Antigravity/Cursor.
 - **How** — **Connect** the MCP server from your client ([installation](docs/INSTALLATION.md), then [usage](docs/USAGE.md)). Optionally run the **[webapp](webapp/README.md)** for a browser UI on top of the same backend.
 
+**Questions, improv ideas, "what if it also did X"?** → [Discussions](https://github.com/sandraschi/advanced-memory-mcp/discussions) — Q&A for support, Ideas for anything you'd improve but wouldn't file a whole Issue for. Bugs still go to [Issues](https://github.com/sandraschi/advanced-memory-mcp/issues).
+
 ---
 
 ## Quick Start
