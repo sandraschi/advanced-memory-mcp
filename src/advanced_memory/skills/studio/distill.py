@@ -28,7 +28,9 @@ def _gh_graphql(query: str) -> dict[str, Any]:
     """
     proc = subprocess.run(
         ["gh", "api", "graphql", "-f", f"query={query}"],
-        capture_output=True, text=True, timeout=60,
+        capture_output=True,
+        text=True,
+        timeout=60,
     )
     if proc.returncode != 0:
         raise RuntimeError(
@@ -118,7 +120,10 @@ async def distill_preview(skill_id: str, source: str) -> dict[str, Any]:
             text = fetch_note_text(source)
             title = source
         else:
-            return {"success": False, "error": f"Unknown source '{source}'. Use discussion:<n>, issue:<n>, note:<path>."}
+            return {
+                "success": False,
+                "error": f"Unknown source '{source}'. Use discussion:<n>, issue:<n>, note:<path>.",
+            }
     except (ValueError, RuntimeError, FileNotFoundError, OSError) as exc:
         logger.warning(f"studio distill fetch failed: {exc}")
         return {"success": False, "error": str(exc)}

@@ -12,9 +12,7 @@ from loguru import logger
 from advanced_memory.services.llm_client import LLMClient
 from advanced_memory.skills.studio import repository, skillsource
 
-JUDGE_SYSTEM = (
-    "You route user requests to skills. Answer with exactly one word: FIRE or SKIP."
-)
+JUDGE_SYSTEM = "You route user requests to skills. Answer with exactly one word: FIRE or SKIP."
 
 
 def judge_prompt(description: str, toc: list[str], scenario: str) -> str:
@@ -69,16 +67,21 @@ async def run_lab(skill_id: str, model: str | None = None) -> dict[str, Any]:
             logger.warning(f"studio lab judge failed: {exc}")
             raw = "SKIP"
         fired = parse_verdict(raw)
-        verdicts.append({
-            "scenario_id": sc["id"],
-            "prompt": sc["prompt"],
-            "should_fire": bool(sc["should_fire"]),
-            "fired": fired,
-        })
+        verdicts.append(
+            {
+                "scenario_id": sc["id"],
+                "prompt": sc["prompt"],
+                "should_fire": bool(sc["should_fire"]),
+                "fired": fired,
+            }
+        )
     scores = score_verdicts(verdicts)
     record = await repository.run_record(
-        skill_id=skill_id, model=str(used_model),
-        precision=scores["precision"], recall=scores["recall"], verdicts=verdicts,
+        skill_id=skill_id,
+        model=str(used_model),
+        precision=scores["precision"],
+        recall=scores["recall"],
+        verdicts=verdicts,
     )
     return {
         "success": True,
