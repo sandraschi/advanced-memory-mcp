@@ -89,6 +89,54 @@ async def test_create_entity_file_exists(entity_service: EntityService, file_ser
 
 
 @pytest.mark.asyncio
+async def test_create_entity_self_heals_orphan_file(
+    entity_service: EntityService, file_service: FileService, entity_repository: EntityRepository
+):
+    """BUG-048 regression: a file on disk with no matching DB row (left behind by
+    a write that wrote the file then failed before the DB entity was committed)
+    must not permanently block every future write to that path. create_entity
+    should detect the file has no DB entity, clean up the orphan, and proceed."""
+    entity_data = EntitySchema(
+        title="Orphan Entity",
+        folder="",
+        entity_type="test",
+        content="orphaned content, no db row",
+    )
+
+    # Simulate the failure mode directly: write the file to disk without ever
+    # creating the DB row, exactly like a create_entity call that crashed
+    # between file_service.write_file() and the DB commit.
+    file_path = Path("Orphan_Entity.md")
+    await file_service.write_file(
+        file_path, "---\ntitle: Orphan Entity\ntype: test\n---\n\norphaned content, no db row"
+    )
+    assert await file_service.exists(file_path)
+    assert await entity_repository.get_by_file_path(file_path) is None
+
+    # This must self-heal (delete the orphan, create fresh) rather than raise
+    # EntityCreationError("already exists") forever.
+    entity = await entity_service.create_entity(entity_data)
+
+    assert entity.title == "Orphan Entity"
+    db_entity = await entity_repository.get_by_file_path(file_path)
+    assert db_entity is not None
+    assert db_entity.id == entity.id
+
+
+@pytest.mark.asyncio
+async def test_create_entity_real_conflict_still_raises(entity_service: EntityService, file_service: FileService):
+    """The self-heal must not swallow a genuine conflict: if a file exists AND
+    a real DB entity already backs it, creating again must still raise, not
+    silently delete real content."""
+    entity_data = EntitySchema(title="Real Entity", folder="", entity_type="test", content="first")
+    await entity_service.create_entity(entity_data)
+
+    entity_data_again = EntitySchema(title="Real Entity", folder="", entity_type="test", content="second")
+    with pytest.raises(EntityCreationError):
+        await entity_service.create_entity(entity_data_again)
+
+
+@pytest.mark.asyncio
 async def test_create_entity_unique_permalink(
     project_config,
     entity_service: EntityService,

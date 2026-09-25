@@ -29,11 +29,8 @@ from advanced_memory.api.routers import (
     wiki_router,
 )
 from advanced_memory.config import ConfigManager
-from advanced_memory.services.initialization import initialize_app, initialize_file_sync
-from advanced_memory.utils.task_logging import (
-    attach_task_failure_logging,
-    chain_asyncio_exception_handler,
-)
+from advanced_memory.services.initialization import initialize_app
+from advanced_memory.utils.task_logging import chain_asyncio_exception_handler
 
 
 @asynccontextmanager
@@ -59,16 +56,21 @@ async def lifespan(app: FastAPI):  # pragma: no cover
         logger.debug(f"Configured projects: {app_config.projects}")
         await initialize_app(app_config)
 
-        logger.info(f"Sync changes enabled: {app_config.sync_changes}")
-        if app_config.sync_changes:
-            sync_task = asyncio.create_task(
-                initialize_file_sync(app_config),
-                name="api_initialize_file_sync",
-            )
-            attach_task_failure_logging(sync_task, "api_initialize_file_sync")
-            app.state.sync_task = sync_task
-        else:
-            logger.info("Sync changes disabled. Skipping file sync service.")
+        # File-sync/watch ownership is centralized on the MCP daemon
+        # (advanced-memory-mcp-daemon / cli.main mcp), which already starts
+        # its own watcher via initialize_file_sync regardless of transport.
+        # This REST API process used to ALSO start an independent watcher
+        # here, so every file change was processed by two uncoordinated
+        # watchers in two separate processes racing the same SQLite DB -
+        # the root cause behind edits intermittently failing with stale-read
+        # / already-updated errors. The API's own direct entity writes
+        # (PUT/PATCH routes) don't need a watcher; they call entity_service
+        # directly. Only reintroduce a watcher here if the daemon is ever
+        # made optional - see BUG-048 / advanced-memory-mcp CLAUDE.md.
+        logger.info(
+            f"Sync changes enabled: {app_config.sync_changes} "
+            "(file watching owned by the MCP daemon, not this API process)"
+        )
 
         yield
     finally:

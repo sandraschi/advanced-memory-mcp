@@ -124,7 +124,24 @@ class EntityService(BaseService[EntityModel]):
         file_path = Path(schema.file_path)
 
         if await self.file_service.exists(file_path):
-            raise EntityCreationError(f"file for entity {schema.folder}/{schema.title} already exists: {file_path}")
+            # File exists on disk but create_or_update_entity's link_resolver lookup
+            # found no matching DB entity (that's the only way we got routed here
+            # instead of update_entity). That combination means this is an orphan
+            # file from a previous write that wrote content to disk and then failed
+            # before the DB row was created/committed - e.g. an exception in
+            # create_entity_from_markdown or update_entity_relations, or a
+            # concurrent-process race on the sqlite file. Confirm there's really no
+            # DB row (not just a link_resolver miss) before self-healing, since
+            # deleting a file backing a real entity would be data loss.
+            existing_db_entity = await self.repository.get_by_file_path(file_path)
+            if existing_db_entity is None:
+                logger.warning(
+                    f"Orphan file with no DB entity found at {file_path} - "
+                    "cleaning up from a previous failed write and retrying creation"
+                )
+                await self.file_service.delete_file(file_path, force=True)
+            else:
+                raise EntityCreationError(f"file for entity {schema.folder}/{schema.title} already exists: {file_path}")
 
         # Parse content frontmatter to check for user-specified permalink and entity_type
         content_markdown = None
@@ -162,17 +179,37 @@ class EntityService(BaseService[EntityModel]):
         final_content = frontmatter.dumps(post, sort_keys=False)
         checksum = await self.file_service.write_file(file_path, final_content)
 
-        # parse entity from file
-        entity_markdown = await self.entity_parser.parse_file(file_path)
+        # From here on, the file exists on disk but the DB row isn't durable yet.
+        # If anything below fails, roll back the file write so a retry doesn't hit
+        # the "file already exists" guard above against a DB row that was never
+        # created - a write must be all-or-nothing, not a file with no matching
+        # entity that no read/delete path can find.
+        try:
+            # parse entity from file
+            entity_markdown = await self.entity_parser.parse_file(file_path)
 
-        # create entity
-        created = await self.create_entity_from_markdown(file_path, entity_markdown)
+            # create entity
+            created = await self.create_entity_from_markdown(file_path, entity_markdown)
 
-        # add relations
-        entity = await self.update_entity_relations(created.file_path, entity_markdown)
+            # add relations
+            entity = await self.update_entity_relations(created.file_path, entity_markdown)
+            if entity is None:
+                raise EntityCreationError(
+                    f"Entity at {file_path} was created but could not be reloaded "
+                    "to attach relations - DB row missing immediately after commit"
+                )
 
-        # Set final checksum to mark complete
-        return await self.repository.update(entity.id, {"checksum": checksum})
+            # Set final checksum to mark complete
+            result = await self.repository.update(entity.id, {"checksum": checksum})
+            if result is None:
+                raise EntityCreationError(
+                    f"Entity at {file_path} was created but the final checksum update found no row"
+                )
+            return result
+        except Exception:
+            logger.error(f"Entity creation failed after file write for {file_path} - rolling back orphan file")
+            await self.file_service.delete_file(file_path, force=True)
+            raise
 
     async def update_entity(self, entity: EntityModel, schema: EntitySchema) -> EntityModel:
         """Update an entity's content and metadata."""
@@ -336,6 +373,11 @@ class EntityService(BaseService[EntityModel]):
         from advanced_memory.sync.sync_service import normalize_file_path
 
         db_entity = await self.repository.get_by_file_path(normalize_file_path(str(file_path)))
+        if db_entity is None:
+            raise EntityNotFoundError(
+                f"No DB entity found for file_path {file_path!r} while updating observations - "
+                "the entity row that should already exist for this file is missing"
+            )
 
         # Clear observations for entity
         await self.observation_repository.delete_by_fields(entity_id=db_entity.id)
@@ -374,6 +416,11 @@ class EntityService(BaseService[EntityModel]):
         logger.debug(f"Updating relations for entity: {path}")
 
         db_entity = await self.repository.get_by_file_path(path)
+        if db_entity is None:
+            raise EntityNotFoundError(
+                f"No DB entity found for file_path {path!r} while updating relations - "
+                "the entity row that should have just been created/updated is missing"
+            )
 
         # Clear existing relations first
         await self.relation_repository.delete_outgoing_relations_from_entity(db_entity.id)
