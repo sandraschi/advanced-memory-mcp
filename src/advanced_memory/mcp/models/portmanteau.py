@@ -509,8 +509,27 @@ class SystemReindexOp(BaseOp):
     focus: Annotated[str | None, Field(description="Reindexing target ('rag', 'db', or 'all')")] = "rag"
 
 
+class SystemRestartOp(BaseModel):
+    operation: Literal["restart"]
+    confirm: Annotated[
+        bool,
+        Field(
+            description=(
+                "Must be true. Safety gate against an accidental/hallucinated call - this exits "
+                "the current server process."
+            )
+        ),
+    ] = False
+
+
 SystemOperation = Annotated[
-    SystemStatusOp | SystemHelpOp | SystemWorkflowOp | SystemExternalOp | SystemSyncOp | SystemReindexOp,
+    SystemStatusOp
+    | SystemHelpOp
+    | SystemWorkflowOp
+    | SystemExternalOp
+    | SystemSyncOp
+    | SystemReindexOp
+    | SystemRestartOp,
     Field(discriminator="operation"),
 ]
 

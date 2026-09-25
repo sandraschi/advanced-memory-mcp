@@ -34,6 +34,13 @@ async def adn_system(op: SystemOperation) -> Any:
     - workflow: Triggers the autonomous execution engine to solve complex goals.
     - external_bridge: Enables Advanced Memory to call tools on OTHER MCP servers.
     - sync: Reports on the real-time file synchronization and indexing engine.
+    - restart: Exits this server process (confirm=true required) so the MCP
+      client respawns a fresh one. Use when this instance is stuck as a
+      local writer instead of proxying to the HTTP daemon (check status
+      first: "Stdio lock: held by this instance" + "Role: writer" on a
+      stdio-transport instance is the sign) - a fresh process re-runs its
+      startup probe against the daemon. Not a replacement for `sc.exe
+      stop`/`start` on an NSSM-managed instance.
 
     ---------------------------------------------------------------------------
     [PARAMETERS]
@@ -86,5 +93,7 @@ async def adn_system(op: SystemOperation) -> Any:
         from advanced_memory.mcp.tools.adn_search import _rag_reindex
 
         return await _rag_reindex(op.project, "full")
+    elif operation == "restart":
+        return await _adn_system_impl(operation="restart", confirm=op.confirm)
     else:
         return f"Error: Unsupported operation {operation}"
