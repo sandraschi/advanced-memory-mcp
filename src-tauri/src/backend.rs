@@ -96,20 +96,29 @@ pub fn materialize_backend(app: &AppHandle) -> Result<PathBuf, String> {
     Ok(bundled)
 }
 
-/// True if something on 127.0.0.1:port is not just bound but actually
-/// answering HTTP requests - i.e. a live, healthy backend, not a zombie
-/// that crashed mid-request and left the port bound with nothing behind it.
+/// The real health/status endpoint this backend actually serves - not just
+/// "does anything answer at /", but this app's own documented health
+/// contract. See port_holder_is_responsive's doc comment for why a bare
+/// TCP connect or a generic "any HTTP response to any path" check isn't
+/// enough: a process returning 404/500 to everything, or stuck mid-init
+/// with a bound listener but no working request handler, would pass either
+/// of those weaker checks and still get wrongly treated as healthy.
+const HEALTH_PATH: &str = "/api/v1/system/status";
+
+/// True if the backend at 127.0.0.1:port answers its own real health
+/// endpoint with HTTP 200 - i.e. is actually healthy, not just "a process
+/// is bound to this port" or "something answered a request, any request."
 ///
 /// A bare TCP connect isn't enough to justify skipping the kill+spawn below:
 /// a hung or crashing process can still hold the port open while answering
-/// nothing. So this sends a minimal HTTP request and only counts the port
-/// as "already serving" if *any* HTTP response comes back within the
-/// timeout - the exact status code and path don't matter (every repo's
-/// health route differs), only that something is genuinely alive and
-/// speaking HTTP. Force-killing is still the right move for a port held by
-/// a truly unresponsive process; this only protects a *healthy* holder
-/// (almost always the NSSM-managed service) from being killed just for
-/// existing, which was the actual bug in free_port below.
+/// nothing. Hitting an arbitrary path and accepting any HTTP response isn't
+/// enough either: a process wedged mid-startup, or one that 500s on
+/// everything, would pass that check too. This hits HEALTH_PATH
+/// specifically and requires the actual 200 status this app's health route
+/// returns on success. Force-killing is still the right move for a port
+/// held by a truly unhealthy process; this only protects a *genuinely
+/// healthy* holder (almost always the NSSM-managed service) from being
+/// killed just for existing, which was the actual bug in free_port below.
 fn port_holder_is_responsive(port: u16) -> bool {
     let addr = match ("127.0.0.1", port).to_socket_addrs() {
         Ok(mut addrs) => match addrs.next() {
@@ -124,12 +133,18 @@ fn port_holder_is_responsive(port: u16) -> bool {
     };
     let _ = stream.set_read_timeout(Some(Duration::from_millis(1500)));
     let _ = stream.set_write_timeout(Some(Duration::from_millis(500)));
-    let request = format!("GET / HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nConnection: close\r\n\r\n");
+    let request = format!("GET {HEALTH_PATH} HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nConnection: close\r\n\r\n");
     if stream.write_all(request.as_bytes()).is_err() {
         return false; // connected but can't even send - treat as a zombie
     }
-    let mut buf = [0u8; 16];
-    matches!(stream.read(&mut buf), Ok(n) if n > 0 && buf[..n].starts_with(b"HTTP/"))
+    let mut buf = [0u8; 64];
+    let n = match stream.read(&mut buf) {
+        Ok(n) if n > 0 => n,
+        _ => return false,
+    };
+    // Status line looks like "HTTP/1.1 200 OK\r\n..." - the second
+    // whitespace-separated token is the status code.
+    String::from_utf8_lossy(&buf[..n]).split_whitespace().nth(1) == Some("200")
 }
 
 fn free_port(port: u16) {
