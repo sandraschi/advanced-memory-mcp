@@ -522,11 +522,52 @@ class SystemRestartOp(BaseModel):
     ] = False
 
 
+class SystemInterServerOp(BaseOp):
+    """Agentic multi-tool workflow via FastMCP sampling (SEP-1577): the
+    client's own LLM autonomously chooses and chains tool calls to satisfy
+    `goal`, using the tools named in `tools`. Requires a client that
+    supports sampling - check with `sampling_status` first if unsure."""
+
+    operation: Literal["inter_server"]
+    goal: Annotated[str, Field(description="The workflow prompt / objective for the sampling agent")]
+    tools: Annotated[
+        list[str] | None,
+        Field(description="Tool names the sampling agent may use, or omit/['full'] for no restriction"),
+    ] = None
+    max_iterations: Annotated[int, Field(description="Max sampling loop iterations", ge=1, le=25)] = 5
+
+
+class SystemSamplingStatusOp(BaseModel):
+    """Reports whether the current client session supports FastMCP
+    sampling-with-tools (SEP-1577) - call before `inter_server` or
+    `batch_process` if unsure whether they'll actually work."""
+
+    operation: Literal["sampling_status"]
+
+
+class SystemBatchProcessOp(BaseOp):
+    """Intelligent batch processing over a list of knowledge-base items:
+    the client's LLM analyses each item and chooses the right operation
+    for it, via FastMCP sampling. Requires a sampling-capable client."""
+
+    operation: Literal["batch_process"]
+    items: Annotated[list[dict], Field(description="Items to process, e.g. [{'title': 'Note A'}, {'title': 'Note B'}]")]
+    goal: Annotated[str, Field(description="The processing goal applied across all items")]
+    operations: Annotated[
+        list[str] | None,
+        Field(description="Knowledge operations available to apply, or omit/['full'] for no restriction"),
+    ] = None
+    strategy: Annotated[Literal["parallel", "sequential"], Field(description="Batch execution strategy")] = "parallel"
+
+
 SystemOperation = Annotated[
     SystemStatusOp
     | SystemHelpOp
     | SystemWorkflowOp
     | SystemExternalOp
+    | SystemInterServerOp
+    | SystemSamplingStatusOp
+    | SystemBatchProcessOp
     | SystemSyncOp
     | SystemReindexOp
     | SystemRestartOp,

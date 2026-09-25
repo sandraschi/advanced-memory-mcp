@@ -6,6 +6,7 @@ It reduces the number of MCP tools while maintaining full functionality.
 
 from typing import Any
 
+from fastmcp import Context
 from loguru import logger
 
 from advanced_memory.mcp.mcp_instance import mcp
@@ -13,7 +14,7 @@ from advanced_memory.mcp.models.portmanteau import SystemOperation
 
 
 @mcp.tool(name="adn_system")
-async def adn_system(op: SystemOperation) -> Any:
+async def adn_system(op: SystemOperation, ctx: Context | None = None) -> Any:
     """
     Central control plane and orchestration for the Antigravity fleet.
 
@@ -34,6 +35,14 @@ async def adn_system(op: SystemOperation) -> Any:
     - workflow: Triggers the autonomous execution engine to solve complex goals.
     - external_bridge: Enables Advanced Memory to call tools on OTHER MCP servers.
     - sync: Reports on the real-time file synchronization and indexing engine.
+    - inter_server: Agentic multi-tool workflow via FastMCP sampling
+      (SEP-1577) - the client's own LLM chooses and chains tool calls to
+      satisfy a goal. Requires a sampling-capable client; check
+      sampling_status first if unsure.
+    - sampling_status: Reports whether the current client session supports
+      sampling-with-tools. Call before inter_server/batch_process if unsure.
+    - batch_process: Intelligent processing over a list of items - the
+      client's LLM picks the right operation per item via sampling.
     - restart: Exits this server process (confirm=true required) so the MCP
       client respawns a fresh one. Use when this instance is stuck as a
       local writer instead of proxying to the HTTP daemon (check status
@@ -52,6 +61,12 @@ async def adn_system(op: SystemOperation) -> Any:
     - server (str, optional): Target external MCP server (e.g., 'speech-mcp').
     - tool (str, optional): Specific tool to call on the external server.
     - args (dict, optional): JSON parameters for the external tool call.
+    - tools (list[str], optional): Tool names available to the sampling agent (inter_server).
+    - max_iterations (int, optional): Max sampling loop iterations, default 5 (inter_server).
+    - items (list[dict], optional): Items to process, e.g. [{'title': 'Note A'}] (batch_process).
+    - operations (list[str], optional): Knowledge operations available (batch_process).
+    - strategy (str, optional): 'parallel' or 'sequential', default 'parallel' (batch_process).
+    - confirm (bool, optional): Must be true to actually restart (restart).
 
     ---------------------------------------------------------------------------
     [EXAMPLES]
@@ -65,6 +80,13 @@ async def adn_system(op: SystemOperation) -> Any:
         server="browser-mcp",
         tool="search_web",
         args={"query": "FastMCP 3.2 release notes"}
+    )
+
+    # Batch-process a set of notes with the client's own LLM choosing the operation per item
+    adn_system(
+        operation="batch_process",
+        items=[{"title": "Note A"}, {"title": "Note B"}],
+        goal="Tag each note with its primary topic and add a one-line summary observation.",
     )
     ```
     """
@@ -81,7 +103,7 @@ async def adn_system(op: SystemOperation) -> Any:
         return await _adn_system_impl(
             operation="workflow",
             topic=op.goal,
-            ctx=None,  # Context injection happens at implementation level if needed
+            ctx=ctx,
         )
     elif operation == "external_bridge":
         return await _adn_system_impl(
@@ -95,5 +117,24 @@ async def adn_system(op: SystemOperation) -> Any:
         return await _rag_reindex(op.project, "full")
     elif operation == "restart":
         return await _adn_system_impl(operation="restart", confirm=op.confirm)
+    elif operation == "inter_server":
+        return await _adn_system_impl(
+            operation="inter_server",
+            topic=op.goal,
+            tools=op.tools,
+            max_iterations=op.max_iterations,
+            ctx=ctx,
+        )
+    elif operation == "sampling_status":
+        return await _adn_system_impl(operation="sampling_status", ctx=ctx)
+    elif operation == "batch_process":
+        return await _adn_system_impl(
+            operation="batch_process",
+            topic=op.goal,
+            items=op.items,
+            operations=op.operations,
+            strategy=op.strategy,
+            ctx=ctx,
+        )
     else:
         return f"Error: Unsupported operation {operation}"

@@ -38,6 +38,17 @@ async def adn_system(
     parameters: Annotated[dict | None, Field(description="Tool parameters")] = None,
     topic: Annotated[str | None, Field(description="Topic for operations")] = None,
     confirm: Annotated[bool, Field(description="Must be true to actually restart")] = False,
+    tools: Annotated[
+        list[str] | None, Field(description="Tool names available to the sampling agent (inter_server)")
+    ] = None,
+    max_iterations: Annotated[int, Field(description="Max sampling loop iterations (inter_server)")] = 5,
+    items: Annotated[
+        list[dict] | None, Field(description="Items to process, e.g. [{'title': '...'}] (batch_process)")
+    ] = None,
+    operations: Annotated[
+        list[str] | None, Field(description="Knowledge operations available for batch processing")
+    ] = None,
+    strategy: Annotated[str, Field(description="'parallel' or 'sequential' (batch_process)")] = "parallel",
     ctx: object = None,  # FastMCP injects Context here for sampling operations
 ) -> dict:
     """Unified portmanteau for system management and external integrations.
@@ -96,7 +107,8 @@ async def adn_system(
             # _acw is the raw async coroutine function — call it directly
             result = await _acw(
                 workflow_prompt=topic,
-                available_tools=["full"],
+                available_tools=tools or ["full"],
+                max_iterations=max_iterations,
                 ctx=ctx,
             )
             return build_success_response("inter_server", result)
@@ -114,7 +126,13 @@ async def adn_system(
                 return build_error_response(
                     "VALIDATION_ERROR",
                     "MISSING_PARAMETER",
-                    "Topic required for batch processing",
+                    "Processing goal (topic) required for batch processing",
+                )
+            if not items:
+                return build_error_response(
+                    "VALIDATION_ERROR",
+                    "MISSING_PARAMETER",
+                    "items required for batch processing, e.g. [{'title': 'Note A'}, {'title': 'Note B'}]",
                 )
 
             from advanced_memory.mcp.tools.inter_server_tools import (
@@ -122,9 +140,10 @@ async def adn_system(
             )
 
             result = await _ibp(
-                items=[{"title": topic}],
+                items=items,
                 processing_goal=topic,
-                available_operations=["full"],
+                available_operations=operations or ["full"],
+                batch_strategy=strategy,
                 ctx=ctx,
             )
             return build_success_response("batch_process", result)
