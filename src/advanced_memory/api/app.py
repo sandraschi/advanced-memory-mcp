@@ -151,6 +151,18 @@ async def health_check():
     return {"status": "ok"}
 
 
+@app.get("/health")
+async def health_check_root():
+    """Unprefixed fleet-standard health probe.
+
+    fleet-watchdog.ps1 polls /health on every managed backend; without this
+    alias it gets a 404, declares the service DEAD, and restarts it every
+    cycle - each NSSM restart snapshots stdout/stderr to a new timestamped
+    file in logs/ (2026-09: ~70 restarts/day -> 145k files).
+    """
+    return {"status": "ok"}
+
+
 @app.post("/api/shutdown")
 async def graceful_shutdown():
     """Ask uvicorn to exit; best-effort, not a guaranteed clean shutdown.
