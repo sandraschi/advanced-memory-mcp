@@ -10,7 +10,7 @@ time-sensitive information that LLMs may not have access to, such as:
 
 from __future__ import annotations
 
-from datetime import UTC
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 import aiohttp
@@ -157,7 +157,7 @@ async def adn_web_search(
     - year: Last 365 days
 
     SPECIALIZED USE CASES:
-    - Medical research: "glioblastoma treatment advances 2024"
+    - Medical research: "glioblastoma treatment advances" (time_filter="year")
     - Political news: "Trump Greenland complications latest developments"
     - Conspiracy analysis: "Kennedy assassination latest debunking evidence"
 
@@ -176,7 +176,7 @@ async def adn_web_search(
     Examples:
         # Medical research search
         await adn_web_search(
-            "brain tumor glioblastoma latest treatments 2024",
+            "brain tumor glioblastoma latest treatments",
             provider="auto",
             time_filter="year",
             max_results=15
@@ -506,7 +506,8 @@ def _calculate_relevance_score(title: str, snippet: str, threshold: float) -> fl
     score = 0.5  # Base score
 
     # Boost for recent content indicators
-    if any(word in text for word in ["2025", "2026", "recent", "latest", "new"]):
+    year = datetime.now(UTC).year
+    if any(word in text for word in [str(year - 1), str(year), "recent", "latest", "new"]):
         score += 0.1
 
     # Boost for authoritative sources

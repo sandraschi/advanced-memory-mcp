@@ -2,14 +2,21 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Literal
+from zoneinfo import ZoneInfo
 
 from loguru import logger
 from pydantic import BaseModel, Field
 
 from advanced_memory.mcp.mcp_instance import mcp
 from advanced_memory.mcp.tools.utils import build_error_response
+
+
+def _vienna_now() -> datetime:
+    """Real current time (fleet-local); never hardcode dates or years."""
+    return datetime.now(ZoneInfo("Europe/Vienna"))
 
 
 class SkillRequirements(BaseModel):
@@ -1054,7 +1061,7 @@ name: {skill_name}
 description: Current expert knowledge on {topic} based on latest research
 category: specialized
 version: 1.0.0
-last_researched: 2025-12-02
+last_researched: {_vienna_now().date().isoformat()}
 research_sources: {len(research_data.get("results", []))}
 ---
 
@@ -1387,10 +1394,11 @@ def _generate_research_queries(topic: str) -> list[str]:
 
     # Convert topic to lowercase for processing
     topic_lower = topic.lower()
+    year = _vienna_now().year
 
     # Base queries for all topics
     queries = [
-        f"{topic} latest research developments 2024 2025",
+        f"{topic} latest research developments {year - 1} {year}",
         f"{topic} current best practices and methods",
         f"{topic} recent advancements and breakthroughs",
     ]
@@ -1400,7 +1408,7 @@ def _generate_research_queries(topic: str) -> list[str]:
         queries.extend(
             [
                 f"{topic} clinical trials latest results",
-                f"{topic} new treatment options 2024",
+                f"{topic} new treatment options {year}",
                 f"{topic} medical research breakthroughs recent",
             ]
         )
@@ -1427,7 +1435,7 @@ def _generate_research_queries(topic: str) -> list[str]:
     if "greenland" in topic_lower and "trump" in topic_lower:
         queries.extend(
             [
-                "Trump Greenland complications latest news 2024",
+                f"Trump Greenland complications latest news {year}",
                 "Greenland Trump real estate issues current status",
                 "Trump Greenland investment problems recent developments",
             ]
@@ -1437,8 +1445,8 @@ def _generate_research_queries(topic: str) -> list[str]:
     if any(word in topic_lower for word in ["brain", "tumor", "cancer", "glioblastoma"]):
         queries.extend(
             [
-                "brain tumor glioblastoma latest treatments 2024",
-                "glioblastoma clinical trials new drugs 2025",
+                f"brain tumor glioblastoma latest treatments {year}",
+                f"glioblastoma clinical trials new drugs {year}",
                 "brain cancer immunotherapy advances current",
             ]
         )
@@ -1507,7 +1515,7 @@ def _format_research_for_skill(research_data: dict[str, Any]) -> str:
         formatted_research += "\n### Additional Resources\n\n"
         formatted_research += "\n\n".join(other_sources[:2])
 
-    formatted_research += "\n\n*Research conducted on: 2025-12-02*"
+    formatted_research += f"\n\n*Research conducted on: {_vienna_now().date().isoformat()}*"
     formatted_research += f"\n*Sources analyzed: {len(results)}*"
 
     return formatted_research
@@ -1669,7 +1677,7 @@ async def _perform_github_research(topic: str) -> dict[str, Any]:
             "code_results": all_code_results[:10],  # Top 10 code results
             "total_repositories_found": len(unique_repositories),
             "total_code_results_found": len(all_code_results),
-            "search_timestamp": "2025-12-02",
+            "search_timestamp": _vienna_now().isoformat(),
         }
 
     except Exception as e:
@@ -1867,7 +1875,7 @@ async def _perform_arxiv_research(topic: str) -> dict[str, Any]:
             "topic": topic,
             "papers": unique_papers[:15],  # Top 15 most relevant papers
             "total_papers_found": len(unique_papers),
-            "search_timestamp": "2025-12-02",
+            "search_timestamp": _vienna_now().isoformat(),
         }
 
     except Exception as e:
@@ -1934,8 +1942,9 @@ def _generate_arxiv_queries(topic: str) -> list[str]:
         )
 
     # Always include recent research
-    queries.append(f"{topic} 2024")
-    queries.append(f"{topic} 2025")
+    year = _vienna_now().year
+    queries.append(f"{topic} {year - 1}")
+    queries.append(f"{topic} {year}")
 
     return queries[:5]  # Limit to 5 queries
 
@@ -2052,7 +2061,7 @@ def _format_arxiv_for_skill(arxiv_data: dict[str, Any]) -> str:
             avg_authors = sum(author_counts) / len(author_counts)
             formatted_arxiv += f"**Collaboration Patterns**: Average {avg_authors:.1f} authors per paper\n\n"
 
-    formatted_arxiv += "*arXiv research analysis conducted on: 2025-12-02*\n"
+    formatted_arxiv += f"*arXiv research analysis conducted on: {_vienna_now().date().isoformat()}*\n"
     formatted_arxiv += f"*Academic papers analyzed: {len(papers)}*\n"
 
     return formatted_arxiv
@@ -2089,7 +2098,7 @@ async def _perform_tvtropes_research(topic: str) -> dict[str, Any]:
             "topic": topic,
             "research_type": research_type,
             "tvtropes_data": result,
-            "search_timestamp": "2025-12-02",
+            "search_timestamp": _vienna_now().isoformat(),
             "compliance_note": "TV Tropes research respects terms of service. Manual verification recommended.",
         }
 
@@ -2240,7 +2249,7 @@ def _format_tvtropes_for_skill(tvtropes_data: dict[str, Any]) -> str:
     formatted_tropes += "- Results provided as research guidance and inspiration\n"
     formatted_tropes += "- Manual verification at tvtropes.org strongly recommended\n\n"
 
-    formatted_tropes += "*TV Tropes research conducted on: 2025-12-02*\n"
+    formatted_tropes += f"*TV Tropes research conducted on: {_vienna_now().date().isoformat()}*\n"
     formatted_tropes += "*All analysis respects TV Tropes terms of service*\n"
 
     return formatted_tropes

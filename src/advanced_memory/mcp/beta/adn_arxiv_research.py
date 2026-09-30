@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from typing import Any, Literal
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 
 import aiohttp
 from loguru import logger
@@ -128,7 +130,7 @@ async def adn_arxiv_research(
         await adn_arxiv_research(
             "analyze_research_trends",
             category="cs.AI",
-            date_range="2024"
+            date_range="<current year>"
         )
 
         # Study quantum computing foundations
@@ -165,7 +167,7 @@ async def adn_arxiv_research(
                 "category": category,
                 "total_results": len(processed_papers),
                 "papers": processed_papers,
-                "search_timestamp": "2025-12-02",
+                "search_timestamp": datetime.now(ZoneInfo("Europe/Vienna")).isoformat(),
             }
 
         elif operation == "get_paper_details":
@@ -215,7 +217,7 @@ async def adn_arxiv_research(
                 "category": category,
                 "total_results": len(processed_papers),
                 "papers": processed_papers,
-                "search_timestamp": "2025-12-02",
+                "search_timestamp": datetime.now(ZoneInfo("Europe/Vienna")).isoformat(),
             }
 
         elif operation == "find_recent_papers":
@@ -236,7 +238,7 @@ async def adn_arxiv_research(
                 "query": search_query,
                 "total_results": len(processed_papers),
                 "recent_papers": processed_papers,
-                "search_timestamp": "2025-12-02",
+                "search_timestamp": datetime.now(ZoneInfo("Europe/Vienna")).isoformat(),
             }
 
         elif operation == "analyze_research_trends":
@@ -261,7 +263,7 @@ async def adn_arxiv_research(
                 "query": search_query,
                 "total_papers_analyzed": len(papers_data.get("entries", [])),
                 "trends": trends,
-                "analysis_timestamp": "2025-12-02",
+                "analysis_timestamp": datetime.now(ZoneInfo("Europe/Vienna")).isoformat(),
             }
 
         elif operation == "get_paper_abstract":
