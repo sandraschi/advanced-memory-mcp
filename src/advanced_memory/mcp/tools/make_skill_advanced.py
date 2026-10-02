@@ -375,7 +375,7 @@ async def _analyze_requirements_operation(sampling_client, topic: str, quality: 
             "topic": topic,
             "requirements": requirements.model_dump(),
             "quality_level": quality,
-            "analysis_timestamp": "2025-12-02",  # Current date
+            "analysis_timestamp": _vienna_now().isoformat(),
             "confidence_score": 0.85,  # Estimated based on LLM quality
         }
 
@@ -442,7 +442,7 @@ description: Comprehensive guide to {topic}
 category: technical
 version: 1.0.0
 confidence: medium
-last_validated: 2025-12-02
+last_validated: {_vienna_now().date().isoformat()}
 ---
 
 # {topic.title()}
@@ -489,7 +489,7 @@ Additional resources and further reading.
         "generated_content": skill_content,
         "content_length": len(skill_content),
         "quality_level": quality,
-        "generation_timestamp": "2025-12-02",
+        "generation_timestamp": _vienna_now().isoformat(),
     }
 
 
@@ -545,7 +545,7 @@ async def _validate_skill_operation(sampling_client, skill_path: str) -> dict[st
             "overall_quality_score": round(overall_score, 2),
             "issues_count": len(validation.issues_found),
             "suggestions_count": len(validation.improvement_suggestions),
-            "validation_timestamp": "2025-12-02",
+            "validation_timestamp": _vienna_now().isoformat(),
         }
 
     except Exception as e:
@@ -608,7 +608,7 @@ async def _enhance_skill_operation(sampling_client, skill_path: str, enhancement
             "sections_added": len(enhancement.additional_sections),
             "examples_improved": len(enhancement.improved_examples),
             "cross_references_added": len(enhancement.cross_references),
-            "enhancement_timestamp": "2025-12-02",
+            "enhancement_timestamp": _vienna_now().isoformat(),
         }
 
     except Exception as e:
@@ -695,7 +695,7 @@ async def _create_complete_skill_operation(
         "initial_validation": validation_result,
         "final_validation": final_validation,
         "enhancements_applied": validation_result["overall_quality_score"] < 0.8,
-        "creation_timestamp": "2025-12-02",
+        "creation_timestamp": _vienna_now().isoformat(),
     }
 
 
@@ -759,7 +759,7 @@ async def _iterative_improvement_operation(
         "final_validation": final_validation,
         "improvement_achieved": final_validation["overall_quality_score"],
         "enhancement_focus": enhancement_focus,
-        "improvement_timestamp": "2025-12-02",
+        "improvement_timestamp": _vienna_now().isoformat(),
     }
 
 
@@ -848,7 +848,7 @@ async def _process_source_documents_rag(source_documents: list[str], topic: str)
             "documents_processed": len(processed_documents),
             "total_documents": len(source_documents),
             "document_results": processed_documents,
-            "processing_timestamp": "2025-12-02",
+            "processing_timestamp": _vienna_now().isoformat(),
             "method": "rag",
         }
 
@@ -942,7 +942,7 @@ async def _format_documents_for_skill_rag(document_data: dict[str, Any], topic: 
         logger.warning(f"Failed to add topic-specific RAG analysis: {e}")
         formatted_docs += "\n*Note: Topic-specific analysis unavailable due to RAG query error.*\n\n"
 
-    formatted_docs += "\n*RAG-enhanced document analysis completed on: 2025-12-02*"
+    formatted_docs += f"\n*RAG-enhanced document analysis completed on: {_vienna_now().date().isoformat()}*"
     formatted_docs += f"\n*Documents processed: {len(document_results)}*"
 
     return formatted_docs
@@ -1111,7 +1111,7 @@ Comprehensive, research-backed guide to {topic} incorporating the latest develop
         "time_filter": web_search_time_filter,
         "sources_filter": web_sources_filter,
         "source_documents": source_documents,
-        "creation_timestamp": "2025-12-02",
+        "creation_timestamp": _vienna_now().isoformat(),
     }
 
 
@@ -1549,7 +1549,7 @@ async def _process_source_documents(source_documents: list[str]) -> dict[str, An
             "documents_processed": len(processed_documents),
             "total_documents": len(source_documents),
             "document_analyses": processed_documents,
-            "processing_timestamp": "2025-12-02",
+            "processing_timestamp": _vienna_now().isoformat(),
         }
 
     except Exception as e:
@@ -1614,7 +1614,7 @@ def _format_documents_for_skill(document_data: dict[str, Any]) -> str:
                 if content_preview:
                     formatted_docs += f"```\n{content_preview}...\n```\n\n"
 
-    formatted_docs += "\n*Primary source analysis completed on: 2025-12-02*"
+    formatted_docs += f"\n*Primary source analysis completed on: {_vienna_now().date().isoformat()}*"
     formatted_docs += f"\n*Documents analyzed: {len(analyses)}*"
 
     return formatted_docs
@@ -1827,7 +1827,7 @@ def _format_github_for_skill(github_data: dict[str, Any]) -> str:
         if total_stars > 0:
             formatted_github += f"**Community Interest**: {total_stars} total stars across analyzed repositories\n\n"
 
-    formatted_github += "*GitHub analysis conducted on: 2025-12-02*\n"
+    formatted_github += f"*GitHub analysis conducted on: {_vienna_now().date().isoformat()}*\n"
     formatted_github += f"*Repositories analyzed: {len(repositories)}*\n"
     formatted_github += f"*Code examples found: {len(code_results)}*\n"
 
