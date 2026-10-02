@@ -103,7 +103,7 @@ def render_known_gaps() -> str:
             """# Known Gaps & Validation Tasks
 
 ## Critical gaps
-- ❌ Fresh web research has not been captured after the Oct 2024 training cutoff.
+- ❌ Fresh web research has not been captured after the model's knowledge cutoff (check the research checklist for the latest verified source date).
 - ❌ Source log has not been updated in the research checklist.
 - ❌ Domain expert review pending.
 

@@ -660,7 +660,7 @@ Claims supported by data and citations.
 
 ```
 ❌ Unsupported: "Everyone knows social media is harmful."
-✅ Supported: "Recent studies show correlation between social media use and anxiety (Smith, 2023; Jones, 2024)."
+✅ Supported: "Recent studies show correlation between social media use and anxiety (Smith, 2025; Jones, 2026)."
 ```
 
 ### 3. Objective Tone
@@ -744,8 +744,8 @@ Concluding: These benefits make Zettelkasten particularly effective for complex 
 
 **APA Style**:
 ```
-Smith (2023) found that...
-Recent research shows... (Smith, 2023; Jones, 2024).
+Smith (2025) found that...
+Recent research shows... (Smith, 2025; Jones, 2026).
 ```
 
 **MLA Style**:
@@ -758,13 +758,13 @@ Recent research shows... (Smith 45; Jones 78).
 
 **APA**:
 ```
-Smith, J. (2023). Title of article. Journal Name, 12(3), 45-67.
+Smith, J. (2025). Title of article. Journal Name, 12(3), 45-67.
 https://doi.org/10.1234/example
 ```
 
 **MLA**:
 ```
-Smith, John. "Title of Article." Journal Name, vol. 12, no. 3, 2023, pp. 45-67.
+Smith, John. "Title of Article." Journal Name, vol. 12, no. 3, 2025, pp. 45-67.
 ```
 
 ## Common Mistakes
@@ -1131,7 +1131,7 @@ Quantitative synthesis of study results.
 ### 1. Define Scope
 ```
 ❌ Too Broad: "Everything about AI"
-✅ Focused: "Impact of large language models on education (2020-2024)"
+✅ Focused: "Impact of large language models on education (2022-2026)"
 ```
 
 **Questions to Answer**:
@@ -1191,7 +1191,7 @@ AND empirical  # Include only empirical studies
 
 #### Organization
 ```markdown
-# Smith et al. (2023) - ML in Education
+# Smith et al. (2025) - ML in Education
 
 ## RQ
 How do students interact with LLM-based tutoring?
@@ -1213,7 +1213,7 @@ How do students interact with LLM-based tutoring?
 
 ## Notes
 Connects to [[Student Learning Strategies]]
-Contradicts [[Johnson 2022]] on over-reliance
+Contradicts [[Johnson 2024]] on over-reliance
 ```
 
 ### 5. Analyze and Synthesize
@@ -1227,17 +1227,17 @@ Contradicts [[Johnson 2022]] on over-reliance
 #### Organize Themes
 ```
 # Theme 1: Benefits of LLMs in Education
-- Smith (2023): Improved engagement
-- Jones (2024): Better outcomes
-- Lee (2024): Accessibility
+- Smith (2025): Improved engagement
+- Jones (2026): Better outcomes
+- Lee (2026): Accessibility
 
 # Theme 2: Concerns
-- Brown (2023): Over-reliance
-- Davis (2024): Critical thinking
+- Brown (2025): Over-reliance
+- Davis (2026): Critical thinking
 
 # Theme 3: Best Practices
-- Wilson (2023): Scaffolding
-- Miller (2024): Metacognitive prompts
+- Wilson (2025): Scaffolding
+- Miller (2026): Metacognitive prompts
 ```
 
 ### 6. Write Review
@@ -1316,17 +1316,17 @@ Contradicts [[Johnson 2022]] on over-reliance
 ### Synthesize, Don't Just Summarize
 ```
 ❌ Summary: "Smith found X. Jones found Y. Lee found Z."
-✅ Synthesis: "Three studies examining LLMs in education (Jones, 2024; Lee, 2024; Smith, 2023) consistently reported improved engagement, though effects varied by student prior knowledge."
+✅ Synthesis: "Three studies examining LLMs in education (Jones, 2026; Lee, 2026; Smith, 2025) consistently reported improved engagement, though effects varied by student prior knowledge."
 ```
 
 ### Compare and Contrast
 ```
-While early studies emphasized benefits (Smith, 2020; Jones, 2021), recent research highlights potential drawbacks (Brown, 2023; Davis, 2024), suggesting a more nuanced understanding has emerged.
+While early studies emphasized benefits (Smith, 2022; Jones, 2023), recent research highlights potential drawbacks (Brown, 2025; Davis, 2026), suggesting a more nuanced understanding has emerged.
 ```
 
 ### Identify Gaps
 ```
-Despite extensive research on LLMs for language learning, few studies have examined their effectiveness for STEM education, particularly in mathematics (notable exception: Wilson, 2024).
+Despite extensive research on LLMs for language learning, few studies have examined their effectiveness for STEM education, particularly in mathematics (notable exception: Wilson, 2026).
 ```
 
 ## Related Concepts
