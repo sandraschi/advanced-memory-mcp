@@ -75,7 +75,7 @@ async def test_create_entity_file_exists(entity_service: EntityService, file_ser
     assert await file_service.exists(file_path)
 
     file_content, _ = await file_service.read_file(file_path)
-    assert "---\ntitle: Test Entity\ntype: test\npermalink: test-entity\n---\n\nfirst" == file_content
+    assert "---\ntitle: Test Entity\ntype: test\npermalink: test-entity\nsource: agent\n---\n\nfirst" == file_content
 
     entity_data = EntitySchema(
         title="Test Entity",
@@ -121,6 +121,28 @@ async def test_create_entity_self_heals_orphan_file(
     db_entity = await entity_repository.get_by_file_path(file_path)
     assert db_entity is not None
     assert db_entity.id == entity.id
+
+
+@pytest.mark.asyncio
+async def test_create_entity_cancelled_mid_write_rolls_back_file(
+    entity_service: EntityService, file_service: FileService, monkeypatch
+):
+    """A client timeout cancels the request task. CancelledError is a BaseException,
+    so an `except Exception` rollback is skipped and leaves an orphan file with no DB
+    row (seen live: a timed-out adn_notes write left the .md on disk, then the retry
+    failed). The rollback must run on cancellation too."""
+    import asyncio
+
+    async def _cancelled(*_args, **_kwargs):
+        raise asyncio.CancelledError
+
+    monkeypatch.setattr(entity_service, "create_entity_from_markdown", _cancelled)
+    entity_data = EntitySchema(title="Cancelled Entity", folder="", entity_type="test", content="body")
+
+    with pytest.raises(asyncio.CancelledError):
+        await entity_service.create_entity(entity_data)
+
+    assert not await file_service.exists(Path("Cancelled_Entity.md"))
 
 
 @pytest.mark.asyncio
@@ -499,6 +521,7 @@ async def test_create_with_content(entity_service: EntityService, file_service: 
         title: Git Workflow Guide
         type: test
         permalink: git-workflow-guide
+        source: agent
         ---
 
         # Git Workflow Guide
@@ -549,6 +572,7 @@ async def test_update_with_content(entity_service: EntityService, file_service: 
             title: Git Workflow Guide
             type: test
             permalink: test/git-workflow-guide
+            source: agent
             ---
 
             # Git Workflow Guide
@@ -618,7 +642,11 @@ async def test_update_with_content(entity_service: EntityService, file_service: 
     file_content, _ = await file_service.read_file(file_path)
 
     # assert content is in file
-    assert update_content.strip() == file_content
+    # API-written notes carry a `source: agent` provenance line in frontmatter
+    expected_update = update_content.replace(
+        "permalink: git-workflow-guide\n---", "permalink: git-workflow-guide\nsource: agent\n---", 1
+    )
+    assert expected_update.strip() == file_content
 
 
 @pytest.mark.asyncio

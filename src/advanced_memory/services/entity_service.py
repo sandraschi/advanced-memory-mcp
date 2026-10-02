@@ -1,5 +1,6 @@
 """Service for managing entities in the database."""
 
+import asyncio
 import re
 from collections.abc import Sequence
 from pathlib import Path
@@ -206,9 +207,12 @@ class EntityService(BaseService[EntityModel]):
                     f"Entity at {file_path} was created but the final checksum update found no row"
                 )
             return result
-        except Exception:
+        except BaseException:
+            # BaseException, not Exception: a client timeout cancels this task with
+            # CancelledError, which would otherwise skip the rollback and orphan the file.
+            # shield() so the cleanup itself survives a second cancellation.
             logger.error(f"Entity creation failed after file write for {file_path} - rolling back orphan file")
-            await self.file_service.delete_file(file_path, force=True)
+            await asyncio.shield(self.file_service.delete_file(file_path, force=True))
             raise
 
     async def update_entity(self, entity: EntityModel, schema: EntitySchema) -> EntityModel:
