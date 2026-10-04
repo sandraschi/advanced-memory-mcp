@@ -605,25 +605,20 @@ def sanitize_unicode_content(content: str) -> str:
     """
     Sanitize Unicode characters that cause JSON parsing issues in Claude Desktop.
     """
+    # Canonical table: mcp-central-docs/standards/rules/ascii_output_hygiene.md
     replacements = {
-        "[UNICODE]": "[OK]",
-        "[UNICODE][UNICODE]": "[WARNING]",
-        "[TARGET]": "[TARGET]",
-        "[FIX]": "[FIX]",
-        "[FAST]": "[FAST]",
-        "[LAUNCH]": "[LAUNCH]",
-        "[SUCCESS]": "[SUCCESS]",
-        "[FOLDER]": "[FOLDER]",
-        "[NOTE]": "[NOTE]",
-        "[LIST]": "[LIST]",
-        "[UNICODE]YZ[UNICODE]": "[TARGET]",
-        '[UNICODE]Y"[UNICODE]': "[FIX]",
-        '[UNICODE]Y"<': "[INFO]",
-        "[UNICODE]Ys?": "[STATUS]",
-        '[UNICODE]Y"^': "[METRIC]",
-        "s[UNICODE]": "[NEXT]",
-        "o.": "[OK]",
-        "?": "[CHECK]",
+        "✅": "[OK]",
+        "❌": "[ERROR]",
+        "⚠️": "[WARNING]",
+        "—": "-",
+        "–": "-",
+        "�": "-",
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+        "•": "-",
+        "→": "->",
     }
     sanitized = content
     for unicode_char, ascii_replacement in replacements.items():

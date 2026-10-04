@@ -145,9 +145,8 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("set_content", content="New content")
 
-        # Handler output is wrapped; current contract classifies [UNICODE]-prefixed strings as errors
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        # Handler success string is wrapped as success (only "[ERROR]"-prefixed strings are errors)
+        assert result["success"] is True
         assert "Document Content Updated" in _raw_text(result)
         mock_client.call.assert_called_once_with("setContent", {"content": "New content"})
 
@@ -158,8 +157,7 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("insert_text", text="New text")
 
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert result["success"] is True
         assert "Text Inserted Successfully" in _raw_text(result)
         mock_client.call.assert_called_once_with("insertText", {"text": "New text"})
 
@@ -174,8 +172,7 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("open_file", file_path=str(test_file))
 
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert result["success"] is True
         assert "File Opened in Typora" in _raw_text(result)
         mock_client.call.assert_called_once_with("openFile", {"path": str(test_file)})
 
@@ -195,8 +192,7 @@ class TestTyporaControlOperations:
         files = ["/test/file1.md", "/test/file2.md"]
         result = await mcp_fn(typora_control)("batch_export", files=files, format="html", output_path="/exports")
 
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert result["success"] is True
         assert "Batch Export Completed" in _raw_text(result)
         assert "**Files Processed**: 2" in _raw_text(result)
         assert "**Successful Exports**: 2" in _raw_text(result)
@@ -208,8 +204,7 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("template_apply", template_name="research_note")
 
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        assert result["success"] is True
         assert "Template Applied Successfully" in _raw_text(result)
         assert "research_note" in _raw_text(result)
 
@@ -240,9 +235,8 @@ class TestTyporaControlOperations:
 
         result = await mcp_fn(typora_control)("content_analysis")
 
-        # Handler output contains [UNICODE] markers, so it is wrapped as an error by the current contract
-        assert result["success"] is False
-        assert result["error_code"] == "TYPORA_HANDLER_ERROR"
+        # Analysis output is a success string, so it is wrapped as success
+        assert result["success"] is True
         assert "Headings: 2" in _raw_text(result)
         assert "Links: 1" in _raw_text(result)
         assert "Code Blocks: 1" in _raw_text(result)

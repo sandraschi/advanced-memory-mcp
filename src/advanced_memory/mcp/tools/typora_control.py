@@ -142,7 +142,7 @@ async def typora_control(
         if isinstance(handler_result, dict):
             return handler_result
         # String result - wrap it
-        if "[UNICODE]" in handler_result or "[DOC]" in handler_result:
+        if handler_result.startswith("[ERROR]"):
             # Error-like string
             return build_error_response(
                 error="typora_operation_error",
@@ -380,14 +380,14 @@ async def _handle_get_content() -> dict:
 async def _handle_set_content(content: str | None) -> dict | str:
     """Replace entire document content."""
     if content is None:
-        return "[UNICODE] set_content requires 'content' parameter"
+        return "[ERROR] set_content requires 'content' parameter"
 
     result = await typora_client.call("setContent", {"content": content})
 
     if not result["success"]:
-        return f"[UNICODE] **Content Update Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Content Update Failed**\n\nError: {result['error']}"
 
-    return f"""[UNICODE] **Document Content Updated**
+    return f"""[OK] **Document Content Updated**
 
 **New Content Length**: {len(content)} characters
 **Lines**: {len(content.split(chr(10)))}
@@ -398,7 +398,7 @@ async def _handle_set_content(content: str | None) -> dict | str:
 async def _handle_insert_text(text: str | None, position: str | None) -> dict:
     """Insert text at cursor position."""
     if text is None:
-        return "[UNICODE] insert_text requires 'text' parameter"
+        return "[ERROR] insert_text requires 'text' parameter"
 
     insert_params = {"text": text}
     if position:
@@ -407,9 +407,9 @@ async def _handle_insert_text(text: str | None, position: str | None) -> dict:
     result = await typora_client.call("insertText", insert_params)
 
     if not result["success"]:
-        return f"[UNICODE] **Text Insertion Failed**\n\nError: {result['error']}\n\n**Check**:\n[UNICODE] Document is open in Typora\n[UNICODE] Cursor position is valid"
+        return f"[ERROR] **Text Insertion Failed**\n\nError: {result['error']}\n\n**Check**:\n- Document is open in Typora\n- Cursor position is valid"
 
-    return f"""[UNICODE] **Text Inserted Successfully**
+    return f"""[OK] **Text Inserted Successfully**
 
 **Inserted Text**: {text[:50]}{"..." if len(text) > 50 else ""}
 **Position**: {position or "current cursor"}
@@ -422,7 +422,7 @@ async def _handle_get_cursor() -> dict:
     result = await typora_client.call("getCursor")
 
     if not result["success"]:
-        return f"[UNICODE] **Cursor Info Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Cursor Info Failed**\n\nError: {result['error']}"
 
     cursor_info = result["result"]
     return f"""[LOCATION] **Cursor Position**
@@ -434,33 +434,33 @@ async def _handle_get_cursor() -> dict:
 **Selected Text Length**: {cursor_info.get("selectedTextLength", 0)} characters
 
 **Use this info for**:
-[UNICODE] Precise text insertion with `insert_text`
-[UNICODE] Understanding current editing context"""
+- Precise text insertion with `insert_text`
+- Understanding current editing context"""
 
 
 async def _handle_open_file(file_path: str | None) -> dict:
     """Open a file in Typora."""
     if file_path is None:
-        return "[UNICODE] open_file requires 'file_path' parameter"
+        return "[ERROR] open_file requires 'file_path' parameter"
 
     file_path_obj = Path(file_path)
     if not file_path_obj.exists():
-        return f"[UNICODE] **File Not Found**\n\nPath: {file_path}\n\n**Check**:\n[UNICODE] File exists at specified path\n[UNICODE] Path is absolute or correct relative path"
+        return f"[ERROR] **File Not Found**\n\nPath: {file_path}\n\n**Check**:\n- File exists at specified path\n- Path is absolute or correct relative path"
 
     result = await typora_client.call("openFile", {"path": str(file_path_obj)})
 
     if not result["success"]:
-        return f"[UNICODE] **File Open Failed**\n\nError: {result['error']}\n\n**Check**:\n[UNICODE] File is accessible\n[UNICODE] Typora can read the file format"
+        return f"[ERROR] **File Open Failed**\n\nError: {result['error']}\n\n**Check**:\n- File is accessible\n- Typora can read the file format"
 
-    return f"""[UNICODE] **File Opened in Typora**
+    return f"""[OK] **File Opened in Typora**
 
 **Path**: {file_path}
 **Name**: {file_path_obj.name}
 
 **Ready for**:
-[UNICODE] Export operations
-[UNICODE] Content manipulation
-[UNICODE] Editing workflows"""
+- Export operations
+- Content manipulation
+- Editing workflows"""
 
 
 async def _handle_save_file() -> dict:
@@ -468,9 +468,9 @@ async def _handle_save_file() -> dict:
     result = await typora_client.call("saveFile")
 
     if not result["success"]:
-        return f"[UNICODE] **Save Failed**\n\nError: {result['error']}\n\n**Check**:\n[UNICODE] Document is open\n[UNICODE] File path is writable\n[UNICODE] Sufficient disk space"
+        return f"[ERROR] **Save Failed**\n\nError: {result['error']}\n\n**Check**:\n- Document is open\n- File path is writable\n- Sufficient disk space"
 
-    return "[UNICODE] **File Saved Successfully**"
+    return "[OK] **File Saved Successfully**"
 
 
 async def _handle_new_file() -> dict:
@@ -478,14 +478,14 @@ async def _handle_new_file() -> dict:
     result = await typora_client.call("newFile")
 
     if not result["success"]:
-        return f"[UNICODE] **New File Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **New File Failed**\n\nError: {result['error']}"
 
-    return """[UNICODE] **New Document Created**
+    return """[OK] **New Document Created**
 
 **Ready for**:
-[UNICODE] Content insertion with `set_content` or `insert_text`
-[UNICODE] Template application with `template_apply`
-[UNICODE] Saving with `save_file`"""
+- Content insertion with `set_content` or `insert_text`
+- Template application with `template_apply`
+- Saving with `save_file`"""
 
 
 async def _handle_get_metadata() -> dict:
@@ -493,14 +493,14 @@ async def _handle_get_metadata() -> dict:
     result = await typora_client.call("getMetadata")
 
     if not result["success"]:
-        return f"[UNICODE] **Metadata Retrieval Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Metadata Retrieval Failed**\n\nError: {result['error']}"
 
     metadata = result["result"]
 
     # Format metadata for display
     formatted_metadata = []
     for key, value in metadata.items():
-        formatted_metadata.append(f"[UNICODE] **{key}**: {value}")
+        formatted_metadata.append(f"- **{key}**: {value}")
 
     return f"""[LIST] **Document Metadata**
 
@@ -512,15 +512,15 @@ async def _handle_get_metadata() -> dict:
 async def _handle_set_metadata(options: dict[str, Any]) -> dict:
     """Set document metadata."""
     if not options:
-        return "[UNICODE] set_metadata requires metadata options (e.g., {'title': 'New Title'})"
+        return "[ERROR] set_metadata requires metadata options (e.g., {'title': 'New Title'})"
 
     result = await typora_client.call("setMetadata", options)
 
     if not result["success"]:
-        return f"[UNICODE] **Metadata Update Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Metadata Update Failed**\n\nError: {result['error']}"
 
     updated_fields = list(options.keys())
-    return f"""[UNICODE] **Metadata Updated**
+    return f"""[OK] **Metadata Updated**
 
 **Fields Updated**: {", ".join(updated_fields)}
 
@@ -530,7 +530,7 @@ async def _handle_set_metadata(options: dict[str, Any]) -> dict:
 async def _handle_search_replace(find_text: str | None, replace_text: str | None, options: dict[str, Any]) -> dict:
     """Search and replace text."""
     if find_text is None:
-        return "[UNICODE] search_replace requires 'find_text' parameter"
+        return "[ERROR] search_replace requires 'find_text' parameter"
 
     params = {
         "findText": find_text,
@@ -544,12 +544,12 @@ async def _handle_search_replace(find_text: str | None, replace_text: str | None
     result = await typora_client.call("searchReplace", params)
 
     if not result["success"]:
-        return f"[UNICODE] **Search/Replace Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Search/Replace Failed**\n\nError: {result['error']}"
 
     replace_info = result["result"]
     replacements = replace_info.get("replacements", 0)
 
-    return f"""[UNICODE] **Search and Replace Completed**
+    return f"""[OK] **Search and Replace Completed**
 
 **Search Term**: "{find_text}"
 **Replace With**: "{replace_text or "(empty)"}"
@@ -564,7 +564,7 @@ async def _handle_get_themes() -> dict:
     result = await typora_client.call("getThemes")
 
     if not result["success"]:
-        return f"[UNICODE] **Theme List Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Theme List Failed**\n\nError: {result['error']}"
 
     themes = result["result"].get("themes", [])
     current_theme = result["result"].get("current", "Unknown")
@@ -574,8 +574,8 @@ async def _handle_get_themes() -> dict:
 
     theme_list = []
     for theme in themes:
-        marker = " [UNICODE] CURRENT" if theme == current_theme else ""
-        theme_list.append(f"[UNICODE] {theme}{marker}")
+        marker = " <- CURRENT" if theme == current_theme else ""
+        theme_list.append(f"- {theme}{marker}")
 
     return f"""[ART] **Available Themes**
 
@@ -587,14 +587,14 @@ async def _handle_get_themes() -> dict:
 async def _handle_set_theme(theme: str | None) -> dict:
     """Change theme."""
     if theme is None:
-        return "[UNICODE] set_theme requires 'theme' parameter"
+        return "[ERROR] set_theme requires 'theme' parameter"
 
     result = await typora_client.call("setTheme", {"theme": theme})
 
     if not result["success"]:
-        return f"[UNICODE] **Theme Change Failed**\n\nError: {result['error']}\n\n**Check**:\n[UNICODE] Theme name is valid (use `get_themes` to list)\n[UNICODE] Theme files exist"
+        return f"[ERROR] **Theme Change Failed**\n\nError: {result['error']}\n\n**Check**:\n- Theme name is valid (use `get_themes` to list)\n- Theme files exist"
 
-    return f"""[UNICODE] **Theme Changed**
+    return f"""[OK] **Theme Changed**
 
 **New Theme**: {theme}
 
@@ -606,10 +606,10 @@ async def _handle_toggle_sidebar(visible: bool | None) -> dict:
     result = await typora_client.call("toggleSidebar", {"visible": visible})
 
     if not result["success"]:
-        return f"[UNICODE] **Sidebar Toggle Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Sidebar Toggle Failed**\n\nError: {result['error']}"
 
     action = "shown" if visible else "hidden" if visible is False else "toggled"
-    return f"""[UNICODE] **Sidebar {action.capitalize()}**
+    return f"""[OK] **Sidebar {action.capitalize()}**
 
 **Use `visible=true/false` to explicitly show/hide**"""
 
@@ -619,10 +619,10 @@ async def _handle_toggle_toolbar(visible: bool | None) -> dict:
     result = await typora_client.call("toggleToolbar", {"visible": visible})
 
     if not result["success"]:
-        return f"[UNICODE] **Toolbar Toggle Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Toolbar Toggle Failed**\n\nError: {result['error']}"
 
     action = "shown" if visible else "hidden" if visible is False else "toggled"
-    return f"""[UNICODE] **Toolbar {action.capitalize()}**
+    return f"""[OK] **Toolbar {action.capitalize()}**
 
 **Use `visible=true/false` to explicitly show/hide**"""
 
@@ -635,11 +635,11 @@ async def _handle_batch_export(
 ) -> dict:
     """Export multiple files."""
     if not files:
-        return "[UNICODE] batch_export requires 'files' parameter (list of file paths)"
+        return "[ERROR] batch_export requires 'files' parameter (list of file paths)"
     if not format:
-        return "[UNICODE] batch_export requires 'format' parameter"
+        return "[ERROR] batch_export requires 'format' parameter"
     if not output_path:
-        return "[UNICODE] batch_export requires 'output_path' parameter (output directory)"
+        return "[ERROR] batch_export requires 'output_path' parameter (output directory)"
 
     output_dir = Path(output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -652,7 +652,7 @@ async def _handle_batch_export(
             # Open file
             open_result = await typora_client.call("openFile", {"path": file_path})
             if not open_result["success"]:
-                results.append(f"[UNICODE] {Path(file_path).name}: Failed to open - {open_result['error']}")
+                results.append(f"[ERROR] {Path(file_path).name}: Failed to open - {open_result['error']}")
                 continue
 
             # Brief pause for loading - configurable via environment
@@ -674,15 +674,15 @@ async def _handle_batch_export(
             )
 
             if export_result["success"]:
-                results.append(f"[UNICODE] {export_filename}: Exported successfully")
+                results.append(f"[OK] {export_filename}: Exported successfully")
                 successful_exports += 1
             else:
-                results.append(f"[UNICODE] {export_filename}: Export failed - {export_result['error']}")
+                results.append(f"[ERROR] {export_filename}: Export failed - {export_result['error']}")
 
         except Exception as e:
-            results.append(f"[UNICODE] {Path(file_path).name}: Error - {e!s}")
+            results.append(f"[ERROR] {Path(file_path).name}: Error - {e!s}")
 
-    return f"""[UNICODE][UNICODE] **Batch Export Completed**
+    return f"""**Batch Export Completed**
 
 **Files Processed**: {len(files)}
 **Successful Exports**: {successful_exports}
@@ -700,7 +700,7 @@ async def _handle_content_analysis() -> dict:
     result = await typora_client.call("getContent")
 
     if not result["success"]:
-        return f"[UNICODE] **Content Analysis Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Content Analysis Failed**\n\nError: {result['error']}"
 
     content = result["result"]
     if not content:
@@ -725,23 +725,23 @@ async def _handle_content_analysis() -> dict:
     return f"""[CHART] **Document Analysis**
 
 **Basic Stats**:
-[UNICODE] Total Lines: {len(lines)}
-[UNICODE] Word Count: {word_count}
-[UNICODE] Character Count: {char_count}
+- Total Lines: {len(lines)}
+- Word Count: {word_count}
+- Character Count: {char_count}
 
 **Content Elements**:
-[UNICODE] Headings: {len(headings)}
-[UNICODE] Links: {links}
-[UNICODE] Code Blocks: {code_blocks // 2} (paired)
-[UNICODE] Images: {images}
+- Headings: {len(headings)}
+- Links: {links}
+- Code Blocks: {code_blocks // 2} (paired)
+- Images: {images}
 
 **Heading Structure**:
-{chr(10).join(f"[UNICODE] Level {level}: {count} headings" for level, count in sorted(heading_levels.items()))}
+{chr(10).join(f"- Level {level}: {count} headings" for level, count in sorted(heading_levels.items()))}
 
 **Document Health**:
-[UNICODE] Has content: {"[UNICODE]" if content.strip() else "[UNICODE]"}
-[UNICODE] Has structure: {"[UNICODE]" if headings else "[UNICODE]"}
-[UNICODE] Has links: {"[UNICODE]" if links > 0 else "[UNICODE]"}"""
+- Has content: {"yes" if content.strip() else "no"}
+- Has structure: {"yes" if headings else "no"}
+- Has links: {"yes" if links > 0 else "no"}"""
 
 
 async def _handle_link_validation() -> dict:
@@ -749,7 +749,7 @@ async def _handle_link_validation() -> dict:
     result = await typora_client.call("getContent")
 
     if not result["success"]:
-        return f"[UNICODE] **Link Validation Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Link Validation Failed**\n\nError: {result['error']}"
 
     content = result["result"]
     lines = content.split("\n")
@@ -804,12 +804,10 @@ async def _handle_link_validation() -> dict:
 
         if is_valid:
             valid_links += 1
-            validation_results.append(f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url}")
+            validation_results.append(f"[OK] Line {link['line']}: {link['text']} -> {url}")
         else:
             broken_links += 1
-            validation_results.append(
-                f"[UNICODE] Line {link['line']}: {link['text']} [UNICODE] {url} ({', '.join(issues)})"
-            )
+            validation_results.append(f"[ERROR] Line {link['line']}: {link['text']} -> {url} ({', '.join(issues)})")
 
     return f"""[LINK] **Link Validation Results**
 
@@ -821,15 +819,15 @@ async def _handle_link_validation() -> dict:
 {chr(10).join(validation_results)}
 
 **Actions Available**:
-[UNICODE] Manual fix broken links
-[UNICODE] Use `search_replace` to batch fix link patterns
-[UNICODE] Consider using Advanced Memory link resolution for [[WikiLinks]]"""
+- Manual fix broken links
+- Use `search_replace` to batch fix link patterns
+- Consider using Advanced Memory link resolution for [[WikiLinks]]"""
 
 
 async def _handle_template_apply(template_name: str | None, options: dict[str, Any]) -> dict:
     """Apply an Advanced Memory template to the document."""
     if template_name is None:
-        return "[UNICODE] template_apply requires 'template_name' parameter"
+        return "[ERROR] template_apply requires 'template_name' parameter"
 
     # For now, provide common templates. In future, could integrate with actual Advanced Memory templates
     templates = {
@@ -987,12 +985,12 @@ async def _handle_template_apply(template_name: str | None, options: dict[str, A
 
     if template_name not in templates:
         available_templates = ", ".join(templates.keys())
-        return f"""[UNICODE] **Unknown Template**
+        return f"""[ERROR] **Unknown Template**
 
 Template '{template_name}' not found.
 
 **Available Templates**:
-[UNICODE] {available_templates}
+- {available_templates}
 
 **Usage**: typora_control("template_apply", template_name="research_note")"""
 
@@ -1007,23 +1005,23 @@ Template '{template_name}' not found.
     result = await typora_client.call("setContent", {"content": template_content})
 
     if not result["success"]:
-        return f"[UNICODE] **Template Application Failed**\n\nError: {result['error']}"
+        return f"[ERROR] **Template Application Failed**\n\nError: {result['error']}"
 
-    return f"""[UNICODE] **Template Applied Successfully**
+    return f"""[OK] **Template Applied Successfully**
 
 **Template**: {template_name}
 **Content Length**: {len(template_content)} characters
 
 **Template includes**:
-[UNICODE] Structured sections and placeholders
-[UNICODE] Professional formatting
-[UNICODE] Action items and checklists
-[UNICODE] Tagging suggestions
+- Structured sections and placeholders
+- Professional formatting
+- Action items and checklists
+- Tagging suggestions
 
 **Next Steps**:
-[UNICODE] Replace [placeholders] with actual content
-[UNICODE] Customize sections as needed
-[UNICODE] Save with `save_file`"""
+- Replace [placeholders] with actual content
+- Customize sections as needed
+- Save with `save_file`"""
 
 
 async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> dict:
@@ -1031,11 +1029,11 @@ async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> dict:
     # Get current content
     content_result = await typora_client.call("getContent")
     if not content_result["success"]:
-        return f"[UNICODE] **Sync Failed - Content Retrieval**\n\nError: {content_result['error']}"
+        return f"[ERROR] **Sync Failed - Content Retrieval**\n\nError: {content_result['error']}"
 
     content = content_result["result"]
     if not content:
-        return "[UNICODE] **Sync Failed - No Content**\n\nDocument appears to be empty"
+        return "[ERROR] **Sync Failed - No Content**\n\nDocument appears to be empty"
 
     # Get metadata
     metadata_result = await typora_client.call("getMetadata")
@@ -1046,7 +1044,7 @@ async def _handle_sync_to_advanced_memory(options: dict[str, Any]) -> dict:
             title = metadata["title"]
 
     # For now, provide guidance. In future, could directly call Advanced Memory APIs
-    return f"""[UNICODE][UNICODE] **Ready to Sync to Advanced Memory**
+    return f"""**Ready to Sync to Advanced Memory**
 
 **Document Title**: {title}
 **Content Length**: {len(content)} characters
@@ -1138,15 +1136,15 @@ async def get_typora_status() -> dict[str, Any]:
             if metadata_result["success"]:
                 metadata = metadata_result["result"]
                 status["current_file"] = metadata.get("filePath")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Typora status: getMetadata failed: {e!s}")
 
         # Get theme
         try:
             theme_result = await typora_client.call("getThemes")
             if theme_result["success"]:
                 status["theme"] = theme_result["result"].get("current")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Typora status: getThemes failed: {e!s}")
 
     return status

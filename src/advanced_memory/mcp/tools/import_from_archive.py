@@ -36,7 +36,7 @@ async def import_from_archive(
     try:
         archive_path = Path(archive_path)
         if not archive_path.exists():
-            return f"[UNICODE] **Archive Not Found**\n\nFile does not exist: {archive_path}"
+            return f"[ERROR] **Archive Not Found**\n\nFile does not exist: {archive_path}"
 
         config_manager = ConfigManager()
         config = config_manager.load_config()
@@ -56,9 +56,7 @@ async def import_from_archive(
             # Validate archive structure
             archive_root = extract_path / "basic-memory-backup"
             if not archive_root.exists():
-                return (
-                    "[UNICODE] **Invalid Archive**\n\nArchive root directory not found. Expected: basic-memory-backup/"
-                )
+                return "[ERROR] **Invalid Archive**\n\nArchive root directory not found. Expected: basic-memory-backup/"
 
             # Read metadata
             metadata_file = archive_root / "metadata.json"
@@ -78,7 +76,7 @@ async def import_from_archive(
             backup_path = None
             if backup_existing:
                 backup_path = await _create_backup(config_manager)
-                backup_info = f"\n\n[UNICODE][UNICODE] **Backup Created:** {backup_path}"
+                backup_info = f"\n\n**Backup Created:** {backup_path}"
 
             # Restore components
             results = await _restore_components(archive_root, config_manager, restore_mode)
@@ -86,23 +84,23 @@ async def import_from_archive(
             # Update project registry
             await _update_project_registry(archive_root, config_manager)
 
-            success_count = sum(1 for r in results if r.startswith("[UNICODE]"))
+            success_count = sum(1 for r in results if r.startswith("[OK]"))
             total_count = len(results)
 
-            return f"""[UNICODE][UNICODE] **Advanced Memory Archive Import Complete!**
+            return f"""**Advanced Memory Archive Import Complete!**
 
 **Archive Details:**
 - [FOLDER] Source: {archive_path}
 - [CHART] Version: {metadata.get("version", "unknown")}
 - [DOC] Files: {metadata.get("total_files", "unknown")}
-- [UNICODE][UNICODE][UNICODE] Projects: {len(metadata.get("projects_exported", []))}
+- Projects: {len(metadata.get("projects_exported", []))}
 
 **Restoration Results:**
 {chr(10).join(results)}
 
 **Summary:**
-[UNICODE] Successful: {success_count}/{total_count}
-[UNICODE][UNICODE] Mode: {restore_mode}
+[OK] Successful: {success_count}/{total_count}
+Mode: {restore_mode}
 {backup_info}
 
 **Next Steps:**
@@ -116,7 +114,7 @@ If issues occur, restore from backup: `{backup_path if backup_existing else "No 
 
     except Exception as e:
         logger.error(f"Error importing archive: {e}")
-        return f"[UNICODE] **Archive Import Failed**\n\nError: {e!s}"
+        return f"[ERROR] **Archive Import Failed**\n\nError: {e!s}"
 
 
 async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
@@ -128,27 +126,27 @@ async def _preview_import(archive_root: Path, metadata: dict, config) -> str:
     if db_path.exists():
         preview_lines.append(f"[CHART] Database: {_format_size(db_path.stat().st_size)} (would replace existing)")
     else:
-        preview_lines.append("[UNICODE] Database: Not found in archive")
+        preview_lines.append("[ERROR] Database: Not found in archive")
 
     # Check configuration
     config_path = archive_root / "config" / CONFIG_FILE_NAME
     if config_path.exists():
-        preview_lines.append("[UNICODE][UNICODE] Configuration: Would be restored")
+        preview_lines.append("Configuration: Would be restored")
     else:
-        preview_lines.append("[UNICODE][UNICODE] Configuration: Not found in archive")
+        preview_lines.append("Configuration: Not found in archive")
 
     # Check projects
     projects_dir = archive_root / "projects"
     if projects_dir.exists():
         project_dirs = [d for d in projects_dir.iterdir() if d.is_dir()]
-        preview_lines.append(f"[UNICODE][UNICODE][UNICODE] Projects ({len(project_dirs)}):")
+        preview_lines.append(f"Projects ({len(project_dirs)}):")
         for project_dir in project_dirs:
             files = list(project_dir.rglob("*"))
             file_count = len([f for f in files if f.is_file()])
             size = sum(f.stat().st_size for f in files if f.is_file())
             preview_lines.append(f"  - {project_dir.name}: {file_count} files, {_format_size(size)}")
     else:
-        preview_lines.append("[UNICODE] Projects: No projects directory found")
+        preview_lines.append("[ERROR] Projects: No projects directory found")
 
     return f"""[SEARCH] **Archive Import Preview** (DRY RUN)
 
@@ -182,12 +180,12 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
         if restore_mode == "overwrite" or not db_dest.exists():
             db_dest.parent.mkdir(parents=True, exist_ok=True)
             await asyncio.to_thread(shutil.copy2, db_source, db_dest)
-            results.append(f"[UNICODE] Database: Restored {_format_size(db_source.stat().st_size)}")
+            results.append(f"[OK] Database: Restored {_format_size(db_source.stat().st_size)}")
             logger.info(f"Restored database: {db_source} -> {db_dest}")
         else:
-            results.append("[UNICODE][UNICODE] Database: Skipped (existing file)")
+            results.append("[SKIP] Database: Skipped (existing file)")
     else:
-        results.append("[UNICODE] Database: Not found in archive")
+        results.append("[ERROR] Database: Not found in archive")
 
     # Restore configuration
     config_source = archive_root / "config" / CONFIG_FILE_NAME
@@ -196,12 +194,12 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
         if restore_mode == "overwrite" or not config_dest.exists():
             config_dest.parent.mkdir(parents=True, exist_ok=True)
             await asyncio.to_thread(shutil.copy2, config_source, config_dest)
-            results.append("[UNICODE] Configuration: Restored")
+            results.append("[OK] Configuration: Restored")
             logger.info(f"Restored config: {config_source} -> {config_dest}")
         else:
-            results.append("[UNICODE][UNICODE] Configuration: Skipped (existing file)")
+            results.append("[SKIP] Configuration: Skipped (existing file)")
     else:
-        results.append("[UNICODE] Configuration: Not found in archive")
+        results.append("[ERROR] Configuration: Not found in archive")
 
     # Restore projects
     projects_dir = archive_root / "projects"
@@ -215,7 +213,7 @@ async def _restore_components(archive_root: Path, config_manager: ConfigManager,
             results.append(f"[FOLDER] Project '{project_dir.name}': {file_count} files detected")
             logger.info(f"Project '{project_dir.name}' ready for restoration")
     else:
-        results.append("[UNICODE] Projects: No projects directory found")
+        results.append("[ERROR] Projects: No projects directory found")
 
     return results
 
