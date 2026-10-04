@@ -171,10 +171,14 @@ def mcp(
             restore_stdout()
             sys.stdout.flush()
 
+            from fastmcp import Client
             from fastmcp.server import create_proxy
 
             logger.info(f"HTTP memops found at {HTTP_PROXY_URL} - proxying tool calls")
-            _proxied = create_proxy(HTTP_PROXY_URL, name="Advanced Memory MCP")
+            # BUG-062: bare create_proxy(url) builds a timeout-less forwarding Client,
+            # so one stalled daemon call wedges the stdio session forever while the
+            # host fires useless 60s timeouts. 55s lands inside read_timeout_seconds.
+            _proxied = create_proxy(Client(HTTP_PROXY_URL, timeout=55), name="Advanced Memory MCP")
             _proxied.run(transport="stdio")
             return
 

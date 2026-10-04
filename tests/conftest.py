@@ -54,6 +54,10 @@ def pytest_configure(config):
     """Early configuration of the test environment."""
     # Force full tools mode for all tests to ensure integration tests pass
     os.environ["ADVANCED_MEMORY_FULL_TOOLS_MODE"] = "true"
+    # Eager indexing for deterministic tests: index_entity() runs inline
+    # instead of fire-and-forget (production default avoids the host tool
+    # timeout; tests need the index populated before asserting).
+    os.environ["ADVANCED_MEMORY_SYNC_INDEX"] = "1"
 
 
 @pytest.fixture

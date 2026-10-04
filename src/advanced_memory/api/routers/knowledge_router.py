@@ -65,6 +65,16 @@ def _coerce_tags(value: object) -> list[str]:
     return []
 
 
+async def _resolve_relations_logged(sync_service, permalink: str | None) -> None:
+    """Background-task wrapper: resolve forward refs without failing the write."""
+    try:
+        await sync_service.resolve_relations()
+        logger.debug(f"Resolved relations after creating entity: {permalink}")
+    except Exception as e:
+        # Don't fail the write if relation resolution fails
+        logger.warning(f"Failed to resolve relations after entity creation: {e}")
+
+
 @router.post("/entities", response_model=EntityResponse)
 async def create_entity(
     data: Entity,
@@ -121,15 +131,12 @@ async def create_or_update_entity(
     # reindex
     await search_service.index_entity(entity, background_tasks=background_tasks)
 
-    # Attempt immediate relation resolution when creating new entities
-    # This helps resolve forward references when related entities are created in the same session
+    # Attempt relation resolution when creating new entities (forward refs
+    # created in the same session). Full unresolved-relation scan + per-link
+    # resolution is seconds on large vaults, so it rides BackgroundTasks with
+    # indexing instead of blocking the write response past the host timeout.
     if created:
-        try:
-            await sync_service.resolve_relations()
-            logger.debug(f"Resolved relations after creating entity: {entity.permalink}")
-        except Exception as e:  # pragma: no cover
-            # Don't fail the entire request if relation resolution fails
-            logger.warning(f"Failed to resolve relations after entity creation: {e}")
+        background_tasks.add_task(_resolve_relations_logged, sync_service, entity.permalink)
 
     result = EntityResponse.model_validate(entity)
 

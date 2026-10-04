@@ -1,5 +1,6 @@
 """Vector repository for semantic search using LanceDB."""
 
+import asyncio
 import base64
 import os
 import shutil
@@ -220,6 +221,14 @@ class VectorRepository:
         else:
             self.table = self.db.open_table(self.table_name)
 
+    def _embed_texts(self, texts: list[str], batch: int) -> list[Any]:
+        """Blocking batched embed (runs in a worker thread via to_thread)."""
+        all_embeddings: list[Any] = []
+        for start in range(0, len(texts), batch):
+            chunk = texts[start : start + batch]
+            all_embeddings.extend(list(self.embedding_model.embed(chunk)))
+        return all_embeddings
+
     async def add_documents(self, documents: list[dict[str, Any]]):
         """Add documents to the vector store.
 
@@ -235,13 +244,13 @@ class VectorRepository:
 
         await self.connect()
 
-        # Generate embeddings (batched)
+        # Generate embeddings (batched). ONNX embed calls are blocking CPU work
+        # (and the first call lazily loads the model, seconds under RAM
+        # pressure), so run them in a worker thread to keep the event loop
+        # responsive for concurrent tool calls.
         texts = [doc["text"] for doc in documents]
         batch = self._embed_batch_size
-        all_embeddings: list[Any] = []
-        for start in range(0, len(texts), batch):
-            chunk = texts[start : start + batch]
-            all_embeddings.extend(list(self.embedding_model.embed(chunk)))
+        all_embeddings: list[Any] = await asyncio.to_thread(self._embed_texts, texts, batch)
 
         data = []
         for doc, emb in zip(documents, all_embeddings, strict=False):

@@ -1,7 +1,9 @@
 """Service for search operations."""
 
 import ast
+import asyncio
 import hashlib
+import os
 from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
@@ -97,6 +99,10 @@ class SearchService:
         self.vector_repository = vector_repository
         self.file_service = file_service
         self.app_config = app_config
+        # Fire-and-forget index tasks scheduled when no FastAPI BackgroundTasks
+        # is available (stdio standalone / ASGI-local). Strong refs prevent
+        # GC-cancellation mid-index; done-callback drops them to avoid leaks.
+        self._pending_index_tasks: set[asyncio.Task[None]] = set()
 
     def _vector_project_filter(self) -> str:
         """LanceDB predicate: current project vault chunks plus global extra-root chunks."""
@@ -122,11 +128,16 @@ class SearchService:
 
         # Clear LanceDB vector table to prevent stale/duplicate chunks on full reindex
         await self.vector_repository.drop_table()
-        # Reindex all entities
+        # Reindex all entities (await inline: reindex is itself the background
+        # job, so fire-and-forget here would race the table drop above and
+        # report "complete" before chunks land).
         logger.debug("Indexing entities")
         entities: Sequence[Entity] = await self.entity_repository.find_all()
         for entity in entities:
-            await self.index_entity(entity, background_tasks)
+            if background_tasks is not None:
+                background_tasks.add_task(self.index_entity_data, entity)
+            else:
+                await self.index_entity_data(entity)
 
         # Vector indexing is handled inside index_entity
         await self.index_rag_extra_roots()
@@ -497,10 +508,26 @@ class SearchService:
         entity: Entity,
         background_tasks: BackgroundTasks | None = None,
     ) -> None:
-        if background_tasks:
+        # Fast-return: vector indexing lazily loads the ONNX embedding model
+        # (seconds under RAM pressure) plus LanceDB writes. Awaiting it in the
+        # request path pushed note writes past the host 60s tool timeout while
+        # the write itself succeeded in the background (client timeout, server
+        # finished). Never block the write response on indexing.
+        if background_tasks is not None:
             background_tasks.add_task(self.index_entity_data, entity)
-        else:
+            return
+        if os.getenv("ADVANCED_MEMORY_SYNC_INDEX") == "1":
             await self.index_entity_data(entity)
+            return
+        task = asyncio.create_task(self._index_entity_logged(entity))
+        self._pending_index_tasks.add(task)
+        task.add_done_callback(self._pending_index_tasks.discard)
+
+    async def _index_entity_logged(self, entity: Entity) -> None:
+        try:
+            await self.index_entity_data(entity)
+        except Exception:
+            logger.exception("Background index failed", entity_id=entity.id)
 
     async def index_entity_data(
         self,
