@@ -335,14 +335,14 @@ recent_activity()    # Check recent changes
 - Knowledge graph visualization
 - Smart suggestions and connections
 
-### [UNICODE][UNICODE] **Import from Everywhere**
+### **Import from Everywhere**
 - **Obsidian**: Vaults, canvas files, and search
 - **Joplin**: Export files with metadata
 - **Notion**: HTML and Markdown exports
 - **Evernote**: ENEX XML files with attachments
 - **Typora**: Round-trip rich editing
 
-### [UNICODE][UNICODE] **Export to Anywhere**
+### **Export to Anywhere**
 - **HTML**: With live Mermaid diagrams
 - **Docsify**: Documentation sites
 - **Joplin**: Cross-platform notes
@@ -355,7 +355,7 @@ recent_activity()    # Check recent changes
 - **File Attachments**: Images, documents, and media
 - **Tag System**: Organize content by topics
 
-### [UNICODE][UNICODE] **AI Integration**
+### **AI Integration**
 - Seamless Claude Desktop integration
 - Context-aware suggestions
 - Smart content generation
@@ -372,12 +372,12 @@ recent_activity()    # Check recent changes
 
 ## Getting Started Checklist
 
-- [UNICODE] Install and configure Advanced Memory
-- [UNICODE] Check sync status with `sync_status()`
-- [UNICODE] Import existing notes from other apps
-- [UNICODE] Create your first knowledge network
-- [UNICODE] Explore Mermaid diagrams
-- [UNICODE] Set up Typora for rich editing
+- [OK] Install and configure Advanced Memory
+- [OK] Check sync status with `sync_status()`
+- [PENDING] Import existing notes from other apps
+- [PENDING] Create your first knowledge network
+- [PENDING] Explore Mermaid diagrams
+- [PENDING] Set up Typora for rich editing
 
 Your enhanced Advanced Memory is ready to revolutionize how you manage knowledge! [LAUNCH]"""
 
@@ -604,7 +604,7 @@ Advanced Memory implements a **graph-based knowledge representation** where:
 
 #### Relationships
 - **Edges** connecting entities
-- Bidirectional links (`[[Entity Name]]` [UNICODE] `[[Entity B]]`)
+- Bidirectional links (`[[Entity Name]]` <-> `[[Entity B]]`)
 - Inferred from content patterns
 - Support for typed relationships
 
@@ -633,17 +633,17 @@ Advanced Memory implements a **graph-based knowledge representation** where:
 
 #### Import Phase
 ```
-Raw Content [UNICODE] Parser [UNICODE] Entity Extraction [UNICODE] Link Resolution [UNICODE] Storage
+Raw Content -> Parser -> Entity Extraction -> Link Resolution -> Storage
 ```
 
 #### Sync Phase
 ```
-File Changes [UNICODE] Content Analysis [UNICODE] Graph Updates [UNICODE] Search Index [UNICODE] Ready
+File Changes -> Content Analysis -> Graph Updates -> Search Index -> Ready
 ```
 
 #### Query Phase
 ```
-User Query [UNICODE] Search Engine [UNICODE] Graph Traversal [UNICODE] Result Ranking [UNICODE] Response
+User Query -> Search Engine -> Graph Traversal -> Result Ranking -> Response
 ```
 
 ## Claude Desktop Integration
@@ -796,16 +796,16 @@ class ConfigManager:
 #### Project Structure
 ```
 advanced-memory/
-[UNICODE][UNICODE][UNICODE] src/advanced_memory/
-[UNICODE]   [UNICODE][UNICODE][UNICODE] cli/commands/mcp.py      # MCP server entry point
-[UNICODE]   [UNICODE][UNICODE][UNICODE] mcp/tools/               # Tool implementations
-[UNICODE]   [UNICODE][UNICODE][UNICODE] models/                  # Database models
-[UNICODE]   [UNICODE][UNICODE][UNICODE] schemas/                  # API schemas
-[UNICODE]   [UNICODE][UNICODE][UNICODE] repository/              # Data access
-[UNICODE]   [UNICODE][UNICODE][UNICODE] services/                # Business logic
-[UNICODE][UNICODE][UNICODE] tests/                       # Test suite
-[UNICODE][UNICODE][UNICODE] docs/                        # Documentation
-[UNICODE][UNICODE][UNICODE] pyproject.toml              # Project configuration
+|-- src/advanced_memory/
+|   |-- cli/commands/mcp.py      # MCP server entry point
+|   |-- mcp/tools/               # Tool implementations
+|   |-- models/                  # Database models
+|   |-- schemas/                  # API schemas
+|   |-- repository/              # Data access
+|   `-- services/                # Business logic
+|-- tests/                       # Test suite
+|-- docs/                        # Documentation
+`-- pyproject.toml              # Project configuration
 ```
 
 ## Development Workflow
@@ -1069,8 +1069,8 @@ Advanced Memory automatically identifies **entities** in your content:
 ### Relationship Building
 When you mention entities in your notes, Advanced Memory creates **bidirectional links**:
 ```
-Note A mentions [[Entity X]] [UNICODE] Link created: A [UNICODE] X
-Note B mentions [[Entity X]] [UNICODE] Link created: B [UNICODE] X
+Note A mentions [[Entity X]] -> Link created: A <-> X
+Note B mentions [[Entity X]] -> Link created: B <-> X
 Result: A, B, and X are all connected in the knowledge graph
 ```
 
@@ -1206,7 +1206,7 @@ Advanced Memory implements a **labeled property graph** where:
 
 #### Path Finding
 ```
-Entity A [UNICODE] Entity B [UNICODE] Entity C
+Entity A -> Entity B -> Entity C
 Shortest path queries for relationship discovery
 ```
 
@@ -1232,13 +1232,13 @@ Shortest path queries for relationship discovery
 
 2. **Normalization**: Case-insensitive matching
    ```
-   "John Smith" [UNICODE] "john smith" [UNICODE] "JOHN SMITH"
+   "John Smith" = "john smith" = "JOHN SMITH"
    ```
 
 3. **Disambiguation**: Context-aware resolution
    ```
-   [[John]] in dev team [UNICODE] John Developer
-   [[John]] in sales team [UNICODE] John Sales
+   [[John]] in dev team -> John Developer
+   [[John]] in sales team -> John Sales
    ```
 
 ### Relationship Inference
@@ -1255,7 +1255,7 @@ Shortest path queries for relationship discovery
 
 #### Transitive Closure
 ```
-A [UNICODE] B and B [UNICODE] C implies A [UNICODE] C (weaker relationship)
+A -> B and B -> C implies A -> C (weaker relationship)
 ```
 
 ## Search Integration
@@ -1456,8 +1456,8 @@ import_from_typora() - Import edited content back
 ### Natural Language Commands
 **Good examples:**
 ```
-[UNICODE] "Create a note about the new API endpoints"
-[UNICODE] "Make a note or something about APIs"
+[OK] "Create a note about the new API endpoints"
+[ERROR] "Make a note or something about APIs"
 ```
 
 **Claude will:**
@@ -1509,14 +1509,14 @@ Claude helps create structured content:
 
 ### Clear Intent Communication
 ```
-[UNICODE] "Search my notes for information about React hooks"
-[UNICODE] "Find stuff about React"
+[OK] "Search my notes for information about React hooks"
+[ERROR] "Find stuff about React"
 ```
 
 ### Specific Context
 ```
-[UNICODE] "Create a summary of the project status"
-[UNICODE] "Tell me about the project"
+[OK] "Create a summary of the project status"
+[ERROR] "Tell me about the project"
 ```
 
 ### Iterative Refinement
@@ -1614,21 +1614,21 @@ async def tool_name(params) -> Result:
 #### Natural Language Processing
 1. **Intent Classification**: Map user requests to tool calls
    ```
-   "find my notes about coffee" [UNICODE] search_notes(query="coffee")
-   "create a meeting summary" [UNICODE] write_note(title="Meeting Summary", ...)
+   "find my notes about coffee" -> search_notes(query="coffee")
+   "create a meeting summary" -> write_note(title="Meeting Summary", ...)
    ```
 
 2. **Parameter Extraction**: Pull structured data from text
    ```
    "notes about the React project in docs folder"
-   [UNICODE] search_notes(query="React", folder="docs/")
+   -> search_notes(query="React", folder="docs/")
    ```
 
 3. **Context Integration**: Use conversation history
    ```
    Previous: search_notes(query="project")
    Current: "show me the first result"
-   [UNICODE] read_note("first-result-permalink")
+   -> read_note("first-result-permalink")
    ```
 
 #### Tool Orchestration
@@ -2214,10 +2214,10 @@ export_evernote_compatible("migration/evernote/")
 - **Media**: Attachments and images handled
 
 ### Format Conversion
-- **Obsidian wikilinks** [UNICODE] Advanced Memory entity links
-- **Joplin notebooks** [UNICODE] Advanced Memory folders
-- **Notion pages** [UNICODE] Advanced Memory entities
-- **Evernote notes** [UNICODE] Advanced Memory markdown
+- **Obsidian wikilinks** -> Advanced Memory entity links
+- **Joplin notebooks** -> Advanced Memory folders
+- **Notion pages** -> Advanced Memory entities
+- **Evernote notes** -> Advanced Memory markdown
 
 ### Relationship Mapping
 - **Explicit links** preserved across platforms
@@ -2442,10 +2442,10 @@ edit_in_typora("API Documentation", workspace="api-v2-docs")
 
 # Group related edits
 workspace/
-[UNICODE][UNICODE][UNICODE] api-v2-docs/
-[UNICODE]   [UNICODE][UNICODE][UNICODE] API Documentation.md
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Authentication Guide.md
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Error Handling.md
+|-- api-v2-docs/
+|   |-- API Documentation.md
+|   |-- Authentication Guide.md
+|   `-- Error Handling.md
 ```
 
 ### Content Workflow
@@ -2560,7 +2560,7 @@ load_obsidian_vault("path/to/obsidian-vault", folder="obsidian-archive")
 **What it does:**
 1. **Scans vault structure**: Finds all markdown files
 2. **Preserves folders**: Maintains directory hierarchy
-3. **Converts wikilinks**: `[[Note Title]]` [UNICODE] Advanced Memory entity links
+3. **Converts wikilinks**: `[[Note Title]]` -> Advanced Memory entity links
 4. **Handles frontmatter**: YAML metadata preserved
 5. **Processes attachments**: Images and files referenced correctly
 
@@ -2579,10 +2579,10 @@ load_obsidian_canvas("canvas-file.canvas", folder="canvas-imports")
 ```
 
 **Canvas structure conversion:**
-- **Text nodes** [UNICODE] Individual notes with content
-- **File nodes** [UNICODE] References to existing content
-- **Link nodes** [UNICODE] Entity relationships
-- **Group nodes** [UNICODE] Folder organization
+- **Text nodes** -> Individual notes with content
+- **File nodes** -> References to existing content
+- **Link nodes** -> Entity relationships
+- **Group nodes** -> Folder organization
 
 ## Link Conversion Examples
 
@@ -2668,9 +2668,9 @@ search_obsidian_vault(
 | Feature | Obsidian | Advanced Memory |
 |---------|----------|--------------|
 | **Link Syntax** | `[[Note Title]]` | `[[Entity Name]]` |
-| **Bidirectional** | [UNICODE] Manual graph | [UNICODE] Automatic |
-| **Transclusion** | [UNICODE] Embed content | [UNICODE] (by design) |
-| **Graph View** | [UNICODE] Visual | [UNICODE] Mermaid diagrams |
+| **Bidirectional** | [OK] Manual graph | [OK] Automatic |
+| **Transclusion** | [OK] Embed content | [ERROR] (by design) |
+| **Graph View** | [OK] Visual | [OK] Mermaid diagrams |
 | **Link Types** | Basic | Typed relationships |
 
 ### Content Features
@@ -2679,7 +2679,7 @@ search_obsidian_vault(
 |---------|----------|--------------|
 | **Plugins** | 500+ community | Built-in AI integration |
 | **Themes** | Extensive | Clean, focused |
-| **Mobile App** | [UNICODE] Native | [UNICODE] (web-first) |
+| **Mobile App** | [OK] Native | [ERROR] (web-first) |
 | **Collaboration** | Limited | AI-assisted |
 | **Search** | Full-text + links | Semantic + AI-enhanced |
 
@@ -2840,7 +2840,7 @@ search_joplin_vault("export/path", "meeting notes", file_type="json")
 
 #### Step 1: Export from Joplin
 1. Open Joplin desktop application
-2. Go to **File** [UNICODE] **Export** [UNICODE] **JSON**
+2. Go to **File** -> **Export** -> **JSON**
 3. Choose notebooks to export
 4. Save to a folder
 
@@ -2878,7 +2878,7 @@ export_joplin_notes("team-docs", folder="project-docs")
 
 ## Data Structure Mapping
 
-### Joplin [UNICODE] Advanced Memory
+### Joplin -> Advanced Memory
 
 | Joplin Concept | Advanced Memory Equivalent |
 |----------------|------------------------|
@@ -2889,7 +2889,7 @@ export_joplin_notes("team-docs", folder="project-docs")
 | **Attachment** | File reference |
 | **Todo items** | Task lists in markdown |
 
-### Advanced Memory [UNICODE] Joplin
+### Advanced Memory -> Joplin
 
 | Advanced Memory | Joplin Export |
 |--------------|---------------|
@@ -3073,41 +3073,41 @@ search_notion_vault("export/path", "project status", file_type="html")
 Notion's HTML exports are complex with nested div structures and custom classes.
 
 **What gets converted:**
-- **Page titles** [UNICODE] Note titles
-- **Text blocks** [UNICODE] Markdown paragraphs
-- **Headings** [UNICODE] Markdown headers (# ## ###)
-- **Lists** [UNICODE] Markdown bullet/numbered lists
-- **Tables** [UNICODE] Markdown table syntax
-- **Links** [UNICODE] Markdown link syntax
-- **Images** [UNICODE] Image references
+- **Page titles** -> Note titles
+- **Text blocks** -> Markdown paragraphs
+- **Headings** -> Markdown headers (# ## ###)
+- **Lists** -> Markdown bullet/numbered lists
+- **Tables** -> Markdown table syntax
+- **Links** -> Markdown link syntax
+- **Images** -> Image references
 
 **Advanced features:**
-- **Database views** [UNICODE] Structured table representations
-- **Toggle blocks** [UNICODE] Collapsible sections
-- **Callouts** [UNICODE] Blockquote formatting
-- **Math equations** [UNICODE] LaTeX preservation
+- **Database views** -> Structured table representations
+- **Toggle blocks** -> Collapsible sections
+- **Callouts** -> Blockquote formatting
+- **Math equations** -> LaTeX preservation
 
 ### Hierarchy Preservation
 ```
 Notion Structure:
 Workspace
-[UNICODE][UNICODE][UNICODE] Project Alpha
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Planning
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Tasks
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Meeting Notes
-[UNICODE][UNICODE][UNICODE] Project Beta
-    [UNICODE][UNICODE][UNICODE] Research
-    [UNICODE][UNICODE][UNICODE] Documentation
+|-- Project Alpha
+|   |-- Planning
+|   |-- Tasks
+|   `-- Meeting Notes
+`-- Project Beta
+    |-- Research
+    `-- Documentation
 
 Advanced Memory Structure:
 notion-import/
-[UNICODE][UNICODE][UNICODE] Project Alpha/
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Planning.md
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Tasks.md
-[UNICODE]   [UNICODE][UNICODE][UNICODE] Meeting Notes.md
-[UNICODE][UNICODE][UNICODE] Project Beta/
-    [UNICODE][UNICODE][UNICODE] Research.md
-    [UNICODE][UNICODE][UNICODE] Documentation.md
+|-- Project Alpha/
+|   |-- Planning.md
+|   |-- Tasks.md
+|   `-- Meeting Notes.md
+`-- Project Beta/
+    |-- Research.md
+    `-- Documentation.md
 ```
 
 ## Content Conversion Examples
@@ -3156,7 +3156,7 @@ Markdown:
 
 2. **Import to Notion**:
    - Open Notion workspace
-   - Click **Import** [UNICODE] **Markdown & CSV**
+   - Click **Import** -> **Markdown & CSV**
    - Select exported files
    - Choose import location
 
@@ -3166,13 +3166,13 @@ Markdown:
 
 ### Semantic Link Handling
 When exporting to Notion, Advanced Memory's semantic links are converted to:
-- **Explicit links**: `[[Entity Name]]` [UNICODE] `[Entity Name](entity-link)`
+- **Explicit links**: `[[Entity Name]]` -> `[Entity Name](entity-link)`
 - **Relationship preservation**: Maintains connection context
 - **Cross-reference maintenance**: Links remain navigable
 
 ### Metadata Integration
 - **Frontmatter conversion**: YAML metadata becomes Notion properties
-- **Tag preservation**: Advanced Memory tags [UNICODE] Notion tags
+- **Tag preservation**: Advanced Memory tags -> Notion tags
 - **Date handling**: Creation/modification dates maintained
 - **Author information**: Preserved where available
 
@@ -3357,10 +3357,10 @@ search_evernote_vault("export/path", "research notes", file_type="enex")
 
 ### Content Conversion
 Evernote's HTML content gets converted to clean markdown:
-- **Rich text** [UNICODE] Standard markdown formatting
-- **Lists and tables** [UNICODE] Markdown equivalents
-- **Embedded images** [UNICODE] File references
-- **Links** [UNICODE] Markdown link syntax
+- **Rich text** -> Standard markdown formatting
+- **Lists and tables** -> Markdown equivalents
+- **Embedded images** -> File references
+- **Links** -> Markdown link syntax
 
 ## Detailed Import Process
 
@@ -3403,7 +3403,7 @@ Markdown: **Bold** and *italic* text
 
 ### Lists and Tasks
 ```
-Evernote: [UNICODE] Task item with checkbox
+Evernote: - Task item with checkbox
 Markdown: - [ ] Task item with checkbox
 ```
 
@@ -3443,7 +3443,7 @@ Markdown: ![Image](attachments/image.jpg)
 
 2. **Import to Evernote**:
    - Open Evernote application
-   - Go to **File** [UNICODE] **Import Notes**
+   - Go to **File** -> **Import Notes**
    - Select **Evernote XML (.enex)** format
    - Choose the exported .enex file
    - Select target notebook

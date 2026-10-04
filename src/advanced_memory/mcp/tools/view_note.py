@@ -58,4 +58,4 @@ async def view_note(identifier: str, page: int = 1, page_size: int = 10, project
             <instructions>
             Create an artifact using the returned artifact content to display the note in a readable format.
             </instructions>
-            {artifact}\n\n[UNICODE] Note displayed as artifact: **{title}**""")
+            {artifact}\n\n[OK] Note displayed as artifact: **{title}**""")

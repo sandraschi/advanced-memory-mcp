@@ -53,7 +53,7 @@ async def test_view_note_basic_functionality(app):
     assert "This is test content for viewing." in result
 
     # Should have confirmation message
-    assert "[UNICODE] Note displayed as artifact" in result
+    assert "[OK] Note displayed as artifact" in result
 
 
 @pytest.mark.asyncio
@@ -78,7 +78,7 @@ async def test_view_note_with_frontmatter_title(app):
 
     # Should extract title from frontmatter
     assert 'title="Frontmatter Title"' in result
-    assert "[UNICODE] Note displayed as artifact: **Frontmatter Title**" in result
+    assert "[OK] Note displayed as artifact: **Frontmatter Title**" in result
 
 
 @pytest.mark.asyncio
@@ -94,7 +94,7 @@ async def test_view_note_with_heading_title(app):
 
     # Should extract title from heading
     assert 'title="Heading Title"' in result
-    assert "[UNICODE] Note displayed as artifact: **Heading Title**" in result
+    assert "[OK] Note displayed as artifact: **Heading Title**" in result
 
 
 @pytest.mark.asyncio
@@ -125,7 +125,7 @@ async def test_view_note_by_permalink(app):
     # Should work with permalink
     assert '<artifact identifier="note-' in result
     assert "Content for permalink test." in result
-    assert "[UNICODE] Note displayed as artifact" in result
+    assert "[OK] Note displayed as artifact" in result
 
 
 @pytest.mark.asyncio
@@ -143,7 +143,7 @@ async def test_view_note_with_memory_url(app):
     # Should work with memory:// URL
     assert '<artifact identifier="note-' in result
     assert "Testing memory:// URL handling in view_note" in result
-    assert "[UNICODE] Note displayed as artifact" in result
+    assert "[OK] Note displayed as artifact" in result
 
 
 @pytest.mark.asyncio
@@ -171,7 +171,7 @@ async def test_view_note_pagination(app):
     # Should work with pagination
     assert '<artifact identifier="note-' in result
     assert "Content for pagination test." in result
-    assert "[UNICODE] Note displayed as artifact" in result
+    assert "[OK] Note displayed as artifact" in result
 
 
 @pytest.mark.asyncio
@@ -185,7 +185,7 @@ async def test_view_note_project_parameter(app):
     # Should work with project parameter
     assert '<artifact identifier="note-' in result
     assert "Content for project test." in result
-    assert "[UNICODE] Note displayed as artifact" in result
+    assert "[OK] Note displayed as artifact" in result
 
 
 @pytest.mark.asyncio
@@ -225,7 +225,7 @@ async def test_view_note_fallback_identifier_as_title(app):
 
     # Should use identifier as fallback title
     assert 'title="Simple Note"' in result
-    assert "[UNICODE] Note displayed as artifact: **Simple Note**" in result
+    assert "[OK] Note displayed as artifact: **Simple Note**" in result
 
 
 @pytest.mark.asyncio
@@ -257,7 +257,7 @@ async def test_view_note_direct_success(mock_call_get):
     assert '<artifact identifier="note-' in result
     assert 'title="Test Note"' in result
     assert "This is a test note." in result
-    assert "[UNICODE] Note displayed as artifact: **Test Note**" in result
+    assert "[OK] Note displayed as artifact: **Test Note**" in result
 
 
 @pytest.mark.asyncio
@@ -293,4 +293,4 @@ async def test_view_note_title_search_fallback(mock_call_get):
     assert '<artifact identifier="note-' in result
     assert 'title="Test Note"' in result
     assert "This is a test note." in result
-    assert "[UNICODE] Note displayed as artifact: **Test Note**" in result
+    assert "[OK] Note displayed as artifact: **Test Note**" in result

@@ -1,6 +1,6 @@
 """Edit in Notepad++ tool for Advanced Memory MCP server.
 
-[UNICODE] FREE & Open Source Alternative to Typora!
+[OK] FREE & Open Source Alternative to Typora!
 This tool enables editing Advanced Memory notes in Notepad++, a powerful free code editor
 with excellent markdown support through plugins.
 
@@ -53,7 +53,7 @@ async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = N
         # Get the note content
         original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
-            return f"[UNICODE] Note '{note_identifier}' not found or empty."
+            return f"[ERROR] Note '{note_identifier}' not found or empty."
 
         # Setup workspace
         workspace_dir = Path(workspace_path) if workspace_path else Path("notepadpp-workspace")
@@ -75,7 +75,7 @@ async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = N
         # Open in Notepad++
         notepadpp_path = _find_notepadpp_executable()
         if not notepadpp_path:
-            return "[UNICODE] Notepad++ not found. Please install Notepad++ from https://notepad-plus-plus.org/"
+            return "[ERROR] Notepad++ not found. Please install Notepad++ from https://notepad-plus-plus.org/"
 
         # Launch Notepad++ with the file
         import subprocess
@@ -84,9 +84,9 @@ async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = N
             subprocess.Popen([str(notepadpp_path), str(md_file)])
             logger.info(f"Opened {md_file} in Notepad++")
         except Exception as e:
-            return f"[UNICODE] Failed to open Notepad++: {e!s}"
+            return f"[ERROR] Failed to open Notepad++: {e!s}"
 
-        return f"""[UNICODE] **Note exported to Notepad++ workspace!**
+        return f"""[OK] **Note exported to Notepad++ workspace!**
 
 **Workspace:** `{workspace_dir}`
 **File:** `{md_file.name}`
@@ -106,7 +106,7 @@ async def edit_in_notepadpp(note_identifier: str, workspace_path: str | None = N
 
     except Exception as e:
         logger.error(f"Error in edit_in_notepadpp: {e}")
-        return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
+        return f"[ERROR] Error exporting note to Notepad++: {e!s}"
 
 
 # @mcp.tool
@@ -139,14 +139,14 @@ async def import_from_notepadpp(
         # Setup workspace
         workspace_dir = Path(workspace_path) if workspace_path else Path("notepadpp-workspace")
         if not workspace_dir.exists():
-            return f"[UNICODE] Workspace directory not found: {workspace_dir}"
+            return f"[ERROR] Workspace directory not found: {workspace_dir}"
 
         # Find the edited file
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
 
         if not md_file.exists():
-            return f"[UNICODE] Edited file not found: {md_file}"
+            return f"[ERROR] Edited file not found: {md_file}"
 
         # Read edited content
         edited_content = md_file.read_text(encoding="utf-8")
@@ -154,7 +154,7 @@ async def import_from_notepadpp(
         # Get original content for comparison
         original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
-            return f"[UNICODE] Original note '{note_identifier}' not found."
+            return f"[ERROR] Original note '{note_identifier}' not found."
 
         # Check if content changed
         if edited_content.strip() == original_content.strip():
@@ -162,7 +162,7 @@ async def import_from_notepadpp(
             if not keep_workspace:
                 await asyncio.to_thread(shutil.rmtree, workspace_dir, ignore_errors=True)
 
-            return f"""[UNICODE][UNICODE] **No changes detected**
+            return f"""[INFO] **No changes detected**
 
 The content in Notepad++ workspace is identical to the original note.
 {f"Workspace preserved at: {workspace_dir}" if keep_workspace else "Workspace cleaned up."}"""
@@ -176,7 +176,7 @@ The content in Notepad++ workspace is identical to the original note.
             entity_type="note",
         )
         if not success:
-            return "[UNICODE] Failed to update the note with edited content."
+            return "[ERROR] Failed to update the note with edited content."
 
         # Clean up workspace
         if not keep_workspace:
@@ -187,17 +187,17 @@ The content in Notepad++ workspace is identical to the original note.
         edited_lines = len(edited_content.split("\n"))
         line_diff = edited_lines - original_lines
 
-        return f"""[UNICODE] **Note successfully imported from Notepad++!**
+        return f"""[OK] **Note successfully imported from Notepad++!**
 
 **Updated:** `{note_identifier}`
-**Lines:** {original_lines} [UNICODE] {edited_lines} ({"+" if line_diff > 0 else ""}{line_diff})
+**Lines:** {original_lines} -> {edited_lines} ({"+" if line_diff > 0 else ""}{line_diff})
 {f"**Workspace preserved:** `{workspace_dir}`" if keep_workspace else "**Workspace cleaned up**"}
 
-**Your edits have been saved to Advanced Memory!** [NOTE][UNICODE]"""
+**Your edits have been saved to Advanced Memory!** [NOTE]"""
 
     except Exception as e:
         logger.error(f"Error in import_from_notepadpp: {e}")
-        return f"[UNICODE] Error importing note from Notepad++: {e!s}"
+        return f"[ERROR] Error importing note from Notepad++: {e!s}"
 
 
 def _find_notepadpp_executable() -> Path | None:
