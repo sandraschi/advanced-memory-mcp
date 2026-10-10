@@ -182,8 +182,8 @@ async def _notepadpp_edit_operation(
             result = subprocess.run(["where", "notepad++"], capture_output=True, text=True, shell=False)
             if result.returncode == 0 and result.stdout.strip():
                 return Path(result.stdout.strip().split("\n")[0])
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"notepad++ PATH lookup failed: {e}")
 
         return None
 
@@ -191,7 +191,7 @@ async def _notepadpp_edit_operation(
         # Get the note content
         original_content = await (mcp_read_note.fn if hasattr(mcp_read_note, "fn") else mcp_read_note)(note_identifier)
         if not original_content:
-            return f"[UNICODE] Note '{note_identifier}' not found or empty."
+            return f"[ERROR] Note '{note_identifier}' not found or empty."
 
         # Setup workspace
         workspace_dir = Path(workspace_path) if workspace_path else Path("notepadpp-workspace")
@@ -212,15 +212,15 @@ async def _notepadpp_edit_operation(
         # Open in Notepad++
         notepadpp_path = _find_notepadpp_executable()
         if not notepadpp_path:
-            return "[UNICODE] Notepad++ not found. Please install Notepad++ from https://notepad-plus-plus.org/"
+            return "[ERROR] Notepad++ not found. Please install Notepad++ from https://notepad-plus-plus.org/"
 
         # Launch Notepad++ with the file
         try:
             subprocess.Popen([str(notepadpp_path), str(md_file)])
         except Exception as e:
-            return f"[UNICODE] Failed to open Notepad++: {e!s}"
+            return f"[ERROR] Failed to open Notepad++: {e!s}"
 
-        return f"""[UNICODE] **Note exported to Notepad++ workspace!**
+        return f"""**Note exported to Notepad++ workspace!**
 
 **Workspace:** `{workspace_dir}`
 **File:** `{md_file.name}`
@@ -239,7 +239,7 @@ async def _notepadpp_edit_operation(
 **Note:** Notepad++ is completely FREE and open source! [SUCCESS]"""
 
     except Exception as e:
-        return f"[UNICODE] Error exporting note to Notepad++: {e!s}"
+        return f"[ERROR] Error exporting note to Notepad++: {e!s}"
 
 
 async def _notepadpp_import_operation(
@@ -260,14 +260,14 @@ async def _notepadpp_import_operation(
         # Setup workspace
         workspace_dir = Path(workspace_path) if workspace_path else Path("notepadpp-workspace")
         if not workspace_dir.exists():
-            return f"[UNICODE] Workspace directory not found: {workspace_dir}"
+            return f"[ERROR] Workspace directory not found: {workspace_dir}"
 
         # Find the edited file
         safe_title = _sanitize_filename(note_identifier)
         md_file = workspace_dir / f"{safe_title}.md"
 
         if not md_file.exists():
-            return f"[UNICODE] Edited file not found: {md_file}"
+            return f"[ERROR] Edited file not found: {md_file}"
 
         # Read the edited content
         edited_content = md_file.read_text(encoding="utf-8")
@@ -288,9 +288,9 @@ async def _notepadpp_import_operation(
             try:
                 await asyncio.to_thread(shutil.rmtree, workspace_dir)
             except Exception as e:
-                return f"[UNICODE] Note updated successfully, but failed to clean workspace: {e!s}"
+                return f"[WARNING] Note updated successfully, but failed to clean workspace: {e!s}"
 
-        return f"""[UNICODE] **Note imported back to Advanced Memory!**
+        return f"""**Note imported back to Advanced Memory!**
 
 **Updated Note:** {note_identifier}
 **Source File:** {md_file}
@@ -299,7 +299,7 @@ async def _notepadpp_import_operation(
 **Note:** All metadata and relationships have been preserved. [SUCCESS]"""
 
     except Exception as e:
-        return f"[UNICODE] Error importing note from Notepad++: {e!s}"
+        return f"[ERROR] Error importing note from Notepad++: {e!s}"
 
 
 async def _typora_control_operation(
@@ -331,32 +331,32 @@ async def _typora_control_operation(
         elif typora_operation == "set_content":
             return await _handle_typora_set_content(typora_content)
         else:
-            return f"[UNICODE] **Typora Control**\n\nOperation '{typora_operation}' not yet implemented in portmanteau tool.\n\n**Available operations**:\n- export: Export document to various formats\n- get_content: Get current document content\n- set_content: Replace document content\n\n**Note**: Full Typora integration requires the json_rpc plugin."
+            return f"[INFO] **Typora Control**\n\nOperation '{typora_operation}' not yet implemented in portmanteau tool.\n\n**Available operations**:\n- export: Export document to various formats\n- get_content: Get current document content\n- set_content: Replace document content\n\n**Note**: Full Typora integration requires the json_rpc plugin."
     except Exception as e:
-        return f"[UNICODE] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {e!s}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
+        return f"[ERROR] **Typora Control Error**\n\nOperation '{typora_operation}' failed: {e!s}\n\n**Troubleshooting**:\n- Ensure Typora is running\n- Install json_rpc plugin\n- Check port 8888 availability\n- Restart Typora if needed"
 
 
 async def _handle_typora_export(format: str | None, output_path: str | None, options: dict[str, Any] | None) -> str:
     """Handle basic Typora export."""
     if not format:
-        return "[UNICODE] Export requires 'format' parameter (pdf, html, docx, etc.)"
+        return "[ERROR] Export requires 'format' parameter (pdf, html, docx, etc.)"
     if not output_path:
-        return "[UNICODE] Export requires 'output_path' parameter"
+        return "[ERROR] Export requires 'output_path' parameter"
 
-    return f"[UNICODE] **Typora Export**\n\nExport functionality requires Typora with json_rpc plugin.\n\n**Requested**: {format} → {output_path}\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin in Typora settings\n4. Restart Typora\n\nThen use the full typora_control tool for complete functionality."
+    return f"[INFO] **Typora Export**\n\nExport functionality requires Typora with json_rpc plugin.\n\n**Requested**: {format} -> {output_path}\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin in Typora settings\n4. Restart Typora\n\nThen use the full typora_control tool for complete functionality."
 
 
 async def _handle_typora_get_content() -> str:
     """Handle Typora get content."""
-    return "[UNICODE] **Typora Content Access**\n\nGet content functionality requires Typora with json_rpc plugin.\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin\n4. Restart Typora\n\nUse the full typora_control tool for complete functionality."
+    return "[INFO] **Typora Content Access**\n\nGet content functionality requires Typora with json_rpc plugin.\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin\n4. Restart Typora\n\nUse the full typora_control tool for complete functionality."
 
 
 async def _handle_typora_set_content(content: str | None) -> str:
     """Handle Typora set content."""
     if not content:
-        return "[UNICODE] Set content requires 'content' parameter"
+        return "[ERROR] Set content requires 'content' parameter"
 
-    return "[UNICODE] **Typora Content Update**\n\nSet content functionality requires Typora with json_rpc plugin.\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin\n4. Restart Typora\n\nUse the full typora_control tool for complete functionality."
+    return "[INFO] **Typora Content Update**\n\nSet content functionality requires Typora with json_rpc plugin.\n\n**Setup Required**:\n1. Install Typora\n2. Install json_rpc plugin\n3. Enable plugin\n4. Restart Typora\n\nUse the full typora_control tool for complete functionality."
 
 
 async def _canvas_create_operation(

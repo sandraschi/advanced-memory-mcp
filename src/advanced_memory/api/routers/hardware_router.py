@@ -124,8 +124,8 @@ async def optimize_model_params(params: dict[str, Any]) -> dict[str, Any]:
                 vram_available_gb = (mem_info.total - mem_info.used) / (1024**3)
                 gpu_detected = True
             pynvml.nvmlShutdown()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"NVML GPU probe failed, assuming no GPU: {e}")
 
     recommendations = []
     optimized_params = actual_params.copy()

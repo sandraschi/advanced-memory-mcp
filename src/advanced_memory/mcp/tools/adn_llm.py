@@ -713,8 +713,8 @@ async def _check_health(provider: str | None = None, base_url: str | None = None
                             ps = await client.get((base_url or "http://localhost:11434") + "/api/ps")
                             if ps.status_code == 200:
                                 loaded = [m.get("name") for m in ps.json().get("models", [])]
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            logger.debug(f"/api/ps probe failed: {e}")
                         state, emoji = "healthy", "✅"
                         detail = f"Reachable ({url})"
                         if loaded:

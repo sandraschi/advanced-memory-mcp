@@ -199,8 +199,8 @@ if bridge_urls:
             try:
                 mcp.add_provider(create_proxy(url))
                 _bridge_proxies.append(url)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning(f"Failed to register bridge proxy {url}: {e}")
 
 # Store references to prompts and resources to prevent garbage collection
 # This follows FastMCP 2.12+ best practices for prompt/resource registration
