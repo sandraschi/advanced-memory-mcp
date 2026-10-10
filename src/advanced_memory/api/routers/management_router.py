@@ -365,9 +365,7 @@ async def studio_scenario_create(request: Request) -> dict:
     skill_id = (body.get("skill_id") or "").strip()
     if not prompt or not skill_id:
         return {"success": False, "error": "skill_id and prompt required"}
-    row = await repository.scenario_create(
-        skill_id, prompt, bool(body.get("should_fire", True)), body.get("notes")
-    )
+    row = await repository.scenario_create(skill_id, prompt, bool(body.get("should_fire", True)), body.get("notes"))
     return {"success": True, "data": {"scenario": row}}
 
 

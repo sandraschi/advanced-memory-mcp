@@ -52,6 +52,18 @@ def _stdio_single_instance_lock():
         yield
 
 
+# Single-writer enforcement lives in advanced_memory.mcp.stdio_guard so BOTH
+# stdio entrypoints (this CLI and mcp/server.py __main__) share one
+# implementation. Import here for backward-compat re-export only.
+from advanced_memory.mcp.stdio_guard import (
+    DEFAULT_HTTP_PROXY_URL,
+    _daemon_git_sha,
+    _die,
+    _own_git_sha,
+    _version_gate_or_exit,
+)
+
+
 @app.command()
 def mcp(
     transport: str = typer.Option("stdio", help="Transport type: stdio, streamable-http, or sse"),
@@ -122,9 +134,13 @@ def mcp(
         if transport != "stdio":
             logger.info("Started file sync in background")
 
-    # Probe for existing HTTP memops if ADVANCED_MEMORY_HTTP_PROXY is explicitly set
-    HTTP_PROXY_URL = os.getenv("ADVANCED_MEMORY_HTTP_PROXY")
-    if HTTP_PROXY_URL and transport == "stdio":
+    # Single-writer enforcement (SPEC_SINGLE_WRITER, BUG-048). stdio clients
+    # must proxy to the NSSM daemon: a silent local writer plus the daemon is
+    # two writers on one SQLite vault (timeouts, phantom notes). Unset proxy
+    # env falls back to the default daemon URL - it NEVER means "writer".
+    HTTP_PROXY_URL = os.getenv("ADVANCED_MEMORY_HTTP_PROXY", DEFAULT_HTTP_PROXY_URL)
+    STANDALONE = os.getenv("ADVANCED_MEMORY_STANDALONE", "0").strip() == "1"
+    if transport == "stdio":
         _probe_ok = False
         try:
             import httpx
@@ -151,12 +167,30 @@ def mcp(
                     f"{_probe.status_code}, falling back to local instance"
                 )
         except Exception as _probe_err:
+            logger.error(f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r})")
+
+        if not _probe_ok and not IS_READONLY and not STANDALONE:
+            _die(
+                f"advanced-memory daemon unreachable at {HTTP_PROXY_URL} and "
+                "ADVANCED_MEMORY_STANDALONE is not set - refusing to start a second "
+                "local writer (would corrupt the vault; see SPEC_SINGLE_WRITER). "
+                "Start it: nssm start advanced-memory-mcp-daemon",
+                code=2,
+            )
+        elif not _probe_ok and IS_READONLY:
             logger.error(
-                f"HTTP proxy probe to {HTTP_PROXY_URL} failed ({_probe_err!r}), falling back to local instance"
+                f"Daemon unreachable at {HTTP_PROXY_URL} - continuing as LOCAL READER "
+                "(read-only mode cannot corrupt the vault)"
+            )
+        elif not _probe_ok and STANDALONE:
+            logger.warning(
+                "ADVANCED_MEMORY_STANDALONE=1 - starting EXPLICIT local writer. "
+                "Make sure no daemon or other writer is running on this vault."
             )
 
         if _probe_ok:
-            # CRITICAL: restore real stdout BEFORE starting the stdio proxy.
+            if not IS_READONLY:
+                _version_gate_or_exit(HTTP_PROXY_URL)  # CRITICAL: restore real stdout BEFORE starting the stdio proxy.
             # During imports sys.stdout is replaced with DevNullStdout (which has
             # no .buffer); FastMCP's stdio transport requires sys.stdout.buffer
             # for JSON-RPC. This block used to live inside the probe try-block:

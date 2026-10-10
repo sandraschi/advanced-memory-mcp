@@ -1,6 +1,9 @@
 import asyncio
 import datetime
+import json
+import os
 import sqlite3
+import time
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from enum import Enum, auto
@@ -40,6 +43,133 @@ sqlite3.register_converter("datetime", _convert_datetime)
 _engine: AsyncEngine | None = None
 _session_maker: async_sessionmaker[AsyncSession] | None = None
 _migrations_completed: bool = False
+
+
+# Single-writer enforcement (SPEC_SINGLE_WRITER rule 4, BUG-048). One SQLite
+# vault, one writer process. The lock below is held by the OS on an open file
+# descriptor kept for process lifetime: a second writer fails LOUDLY at engine
+# creation instead of contending silently (write timeouts, phantom index
+# entries). A crashed holder releases the lock via the OS itself, so the lock
+# can never go stale from a dead process - the only failure mode is a loud
+# startup error naming the live holder, never silent corruption.
+_WRITER_LOCK_FDS: dict[str, object] = {}
+_WRITER_LOCK_NAME = ".writer.lock"
+
+
+def _pid_alive(pid: int) -> bool:
+    """Best-effort process liveness check (for error messages only)."""
+    try:
+        import psutil
+
+        return psutil.pid_exists(pid)
+    except ImportError:  # pragma: no cover
+        pass
+    try:  # Windows stdlib fallback, no extra deps
+        import ctypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        handle = kernel32.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
+        if not handle:
+            return False
+        kernel32.CloseHandle(handle)
+        return True
+    except Exception:  # pragma: no cover
+        return True  # fail-safe: assume alive, die loudly, never risk two writers
+
+
+def _read_lock_owner(fh) -> dict:
+    # Owner record is an append-only claim log (one JSON object per line);
+    # the live holder is the last valid entry. Never overwrite it in place:
+    # any write() to this file drops the MSVCRT region lock (verified
+    # 2026-10-05: lock-then-write lets a second process lock - silent
+    # two-writer corruption, exactly what this lock exists to prevent).
+    try:
+        fh.seek(0)
+        raw = fh.read()
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf-8", errors="ignore")
+        owner: dict = {}
+        for line in raw.splitlines():
+            try:
+                parsed = json.loads(line)
+                if isinstance(parsed, dict):
+                    owner = parsed
+            except ValueError:
+                continue
+        return owner
+    except Exception:
+        return {}
+
+
+def _raise_locked(lock_path: Path, owner: dict) -> None:
+    holder = owner.get("pid", "unknown")
+    since = owner.get("started", "unknown time")
+    alive = _pid_alive(holder) if isinstance(holder, int) else "unknown"
+    raise RuntimeError(
+        f"advanced-memory vault is already opened for writing by PID {holder} "
+        f"(since {since}, alive={alive}). Two writers corrupt the index (BUG-048). "
+        f"If that process is a stale memops stdio server, kill it - every stdio "
+        f"client must proxy the daemon (SPEC_SINGLE_WRITER). Lock: {lock_path}"
+    )
+
+
+def claim_writer_lock(db_path: Path, db_type: "DatabaseType") -> None:
+    """Claim exclusive writer ownership of the vault holding db_path.
+
+    No-ops for in-memory DBs and read-only mode (readers never take the lock).
+    Reentrant within one process (engine created twice keeps one lock).
+    Raises RuntimeError naming the live holder when another writer owns it.
+    """
+    from advanced_memory.readonly import IS_READONLY
+
+    if db_type != DatabaseType.FILESYSTEM or IS_READONLY:
+        return
+    lock_path = Path(db_path).resolve().parent / _WRITER_LOCK_NAME
+    key = os.path.normcase(str(lock_path))
+    if key in _WRITER_LOCK_FDS:
+        return  # same process already holds it
+
+    try:
+        fh = open(lock_path, "a+b")
+    except OSError as e:
+        raise RuntimeError(f"advanced-memory: cannot open writer lock {lock_path}: {e}") from e
+
+    # Stamp our claim BEFORE locking (append-only; a racer may append after us
+    # but only one process wins the region lock below). Writes must never
+    # happen after locking - any write() drops the MSVCRT region lock.
+    try:
+        with open(lock_path, "ab") as stamp:
+            stamp.write(
+                (json.dumps({"pid": os.getpid(), "started": time.strftime("%Y-%m-%d %H:%M:%S")}) + "\n").encode("utf-8")
+            )
+    except OSError as e:
+        fh.close()
+        raise RuntimeError(f"advanced-memory: cannot stamp writer lock {lock_path}: {e}") from e
+
+    try:
+        # CRITICAL: seek(0) first. MSVCRT locking() locks at the CURRENT file
+        # position, and "a+b" opens positioned at EOF: without this, parent and
+        # child lock different offsets on any non-empty file and both "succeed"
+        # (14-case matrix verified 2026-10-05 - silent two-writer corruption).
+        # Everybody locks byte [0,1), always.
+        fh.seek(0)
+        if os.name == "nt":
+            import msvcrt
+
+            msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+        else:  # pragma: no cover - POSIX fallback
+            import fcntl
+
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        owner = _read_lock_owner(fh)
+        fh.close()
+        _raise_locked(lock_path, owner)
+
+    # The lock fd is never written or closed for process lifetime. fh stays in
+    # _WRITER_LOCK_FDS so the descriptor (and the OS lock on it) survives.
+    _WRITER_LOCK_FDS[key] = fh
+    logger.info(f"Claimed vault writer lock: {lock_path} (pid {os.getpid()})")
 
 
 class DatabaseType(Enum):
@@ -101,6 +231,10 @@ def _create_engine_and_session(
     # raises an OperationalError immediately rather than silently corrupting state.
     if IS_READONLY and db_type == DatabaseType.FILESYSTEM:
         db_url = f"sqlite+aiosqlite:///file:{db_path}?mode=ro&uri=true"
+
+    # Single writer per vault (SPEC_SINGLE_WRITER rule 4): die loudly here if
+    # another writer owns it, instead of contending silently downstream.
+    claim_writer_lock(db_path, db_type)
 
     logger.debug(f"Creating engine for db_url: {db_url}")
 
@@ -200,6 +334,9 @@ async def engine_session_factory(
     global _engine, _session_maker, _migrations_completed
 
     db_url = DatabaseType.get_db_url(db_path, db_type)
+    # Same single-writer claim as _create_engine_and_session (covers the
+    # explicit-FILESYSTEM test path; MEMORY stays lock-free).
+    claim_writer_lock(db_path, db_type)
     logger.debug(f"Creating engine for db_url: {db_url}")
 
     # Configure SQLite with timeout and WAL mode for better concurrency

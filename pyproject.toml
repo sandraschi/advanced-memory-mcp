@@ -95,9 +95,15 @@ build-backend = "hatchling.build"
 [tool.pytest.ini_options]
 pythonpath = ["src", "tests"]
 # Default: capture stdout/stderr (avoids megabytes of loguru DEBUG on green runs). Use ``pytest -s`` when you need live prints.
-addopts = "-v"
+addopts = "-v --cov=advanced_memory --cov-report=term-missing --cov-fail-under=40"
 testpaths = ["tests"]
 asyncio_mode = "strict"
+markers = [
+    "unit: fast unit tests",
+    "integration: integration tests (may need live services)",
+    "slow: slow tests (deselect with '-m \"not slow\"')",
+    "serial: tests that must run serially",
+]
 filterwarnings = [
     "ignore::DeprecationWarning:.*datetime.datetime.utcnow",
     "ignore::DeprecationWarning:.*datetime adapter",
@@ -233,7 +239,9 @@ line-length = 120
 target-version = "py312"
 # PyInstaller spec files are packaging DSL (undefined globals by design),
 # not importable modules — never lint them (2026-09-19: ruff loop on commit).
-exclude = ["*.spec"]
+# temp-anthropic-*/scratch hold vendored course notebooks and throwaway probes,
+# not repo source — just lint must stay green without touching them.
+exclude = ["*.spec", "temp-anthropic-courses", "temp-anthropic-skills", "scratch"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "S", "UP", "RUF"]
