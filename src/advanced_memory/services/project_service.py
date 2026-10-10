@@ -747,8 +747,8 @@ class ProjectService:
         if watch_status_path.exists():
             try:
                 watch_status = json.loads(watch_status_path.read_text(encoding="utf-8"))
-            except Exception:  # pragma: no cover
-                pass
+            except Exception as e:  # pragma: no cover
+                logger.debug(f"Ignoring unreadable watch status file: {e}")
 
         return SystemStatus(
             version=advanced_memory.__version__,

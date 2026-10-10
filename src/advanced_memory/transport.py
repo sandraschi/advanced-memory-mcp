@@ -257,8 +257,8 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
                     ).stdout.strip()
                     if sha:
                         return sha
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"git rev-parse fallback failed: {e}")
                 # SYSTEM-context fallback: read .git/HEAD directly (git's
                 # dubious-ownership check rejects other-user repos).
                 try:

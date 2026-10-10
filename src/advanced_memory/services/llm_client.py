@@ -63,8 +63,8 @@ class LLMClient:
                 response = client.get("http://localhost:11434/api/tags")
                 if response.status_code == 200:
                     return "ollama"
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Ollama probe failed: {e}")
 
         # Try LM Studio
         try:
@@ -74,8 +74,8 @@ class LLMClient:
                     data = response.json()
                     if data.get("data"):  # Has at least one model loaded
                         return "lmstudio"
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"LM Studio probe failed: {e}")
 
         # Try OpenAI
         if os.getenv("OPENAI_API_KEY"):
@@ -109,8 +109,8 @@ class LLMClient:
                         for name in installed:
                             if "embed" not in name and ":cloud" not in name:
                                 return name
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Installed-model probe failed, using default: {e}")
             return "llama3.2:3b"
 
         defaults = {
@@ -328,8 +328,8 @@ def get_llm_client(provider: str | None = None, model: str | None = None) -> LLM
                 provider = config.llm_provider
             if not model and config.llm_model:
                 model = config.llm_model
-        except Exception:
+        except Exception as e:
             # Config not available, use defaults
-            pass
+            logger.debug(f"LLM config unavailable, using defaults: {e}")
 
     return LLMClient(provider=provider, model=model)
