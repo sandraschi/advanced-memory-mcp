@@ -52,7 +52,7 @@ def check_tools_registration():
         from advanced_memory.mcp.server import mcp
 
         async def _collect_tools():
-            tools = await mcp.get_tools()
+            tools = await mcp.list_tools()
             return tools
 
         tools = asyncio.run(_collect_tools())

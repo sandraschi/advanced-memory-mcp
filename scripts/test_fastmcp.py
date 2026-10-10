@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test FastMCP features"""
 
+import asyncio
+
 from fastmcp import FastMCP
 
 # Check if multiline descriptions work
@@ -16,8 +18,8 @@ def test_tool():
     return "test"
 
 
-# Check the tool registration
-tools = server.get_tools()
+# Check the tool registration (FastMCP 3.x: list_tools, async)
+tools = asyncio.run(server.list_tools())
 if tools:
     tool = tools[0]
     desc = tool.description or ""
