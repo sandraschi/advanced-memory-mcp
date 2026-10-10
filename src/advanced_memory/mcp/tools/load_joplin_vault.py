@@ -252,8 +252,8 @@ async def _process_joplin_import(
                         logger.info(f"Skipping existing note: {dest_path}")
                         stats["skipped_files"] += 1
                         continue
-                except Exception:
-                    pass  # Continue with import if search fails
+                except Exception as e:
+                    logger.debug(f"Duplicate search failed, importing anyway: {e}")
 
             # Get title from metadata or content
             title = metadata.get("title", _extract_title_from_content(content))

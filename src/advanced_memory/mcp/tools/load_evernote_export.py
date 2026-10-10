@@ -379,7 +379,8 @@ def _process_enex_attachments(
             # Decode base64 data
             try:
                 attachment_data = base64.b64decode(data_elem.text.strip())
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Skipping undecodable attachment in note {note_title!r}: {e}")
                 continue
 
             # Create safe filename

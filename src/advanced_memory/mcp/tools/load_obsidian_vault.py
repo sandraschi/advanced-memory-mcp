@@ -240,8 +240,8 @@ async def _process_vault_import(
                         logger.info(f"Skipping existing file: {dest_path}")
                         stats["skipped_files"] += 1
                         continue
-                except Exception:
-                    pass  # Continue with import if search fails
+                except Exception as e:
+                    logger.debug(f"Duplicate search failed, importing anyway: {e}")
 
             # Read and process file content
             content = file_path.read_text(encoding="utf-8")
