@@ -41,8 +41,8 @@ def scan_repo(repo_path: Path) -> dict:
                 result["files_with_description"].append(str(py_file.relative_to(repo_path)))
                 result["total_count"] += len(matches)
 
-        except Exception:
-            pass  # Skip files that can't be read
+        except Exception as e:
+            print(f"Skipping unreadable file {py_file}: {e}")
 
     return result
 

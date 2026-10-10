@@ -85,16 +85,18 @@ def main() -> int:
         # Give server a moment to boot before we write
         time.sleep(2.0)
 
-        send({
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "initialize",
-            "params": {
-                "protocolVersion": "2025-06-18",
-                "capabilities": {},
-                "clientInfo": {"name": "handshake-test", "version": "0.0.1"},
-            },
-        })
+        send(
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-06-18",
+                    "capabilities": {},
+                    "clientInfo": {"name": "handshake-test", "version": "0.0.1"},
+                },
+            }
+        )
         init_resp = recv_json(60.0)
         if init_resp is None:
             print("[harness] FAIL: no initialize response within 60s", file=sys.stderr)
@@ -126,8 +128,8 @@ def main() -> int:
     finally:
         try:
             proc.stdin.close()
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[harness] stdin close failed: {e}", file=sys.stderr)
         try:
             proc.terminate()
             proc.wait(timeout=3)

@@ -65,7 +65,7 @@ def _validate(skill_dir: Path):
     from advanced_memory.services.skill_creator import validate_skill_agentskills
 
     try:
-        ok, warnings, checks = validate_skill_agentskills(skill_dir)
+        ok, warnings, _checks = validate_skill_agentskills(skill_dir)
         return ok, warnings
     except Exception as exc:
         return False, [f"validator error: {exc}"]
@@ -104,9 +104,11 @@ def cmd_inventory(_args) -> int:
                 noncompliant += 1
             total += 1
             print(f"  {s.name:44s} {size:6d}B  {' '.join(marks) or 'ok':14s} {status[:40]}")
-    top = [d for d in SKILLS_ROOT.iterdir() if d.is_dir() and (d / 'SKILL.md').exists()]
-    print(f"\nTotals: {total} nested skills ({thin} thin, {noncompliant} noncompliant), "
-          f"{len(top)} top-level (Claude-discoverable)")
+    top = [d for d in SKILLS_ROOT.iterdir() if d.is_dir() and (d / "SKILL.md").exists()]
+    print(
+        f"\nTotals: {total} nested skills ({thin} thin, {noncompliant} noncompliant), "
+        f"{len(top)} top-level (Claude-discoverable)"
+    )
     return 0
 
 
@@ -166,8 +168,10 @@ def cmd_enrich(args) -> int:
             )
         )
         ok = result.get("success") and result.get("spec_compliant")
-        print(f"  -> success={result.get('success')} compliant={result.get('spec_compliant')} "
-              f"coverage={result.get('coverage_score')}")
+        print(
+            f"  -> success={result.get('success')} compliant={result.get('spec_compliant')} "
+            f"coverage={result.get('coverage_score')}"
+        )
         if not ok:
             # restore original rather than leave a worse artifact
             shutil.copy2(s / "SKILL.md.pre-factory", md)

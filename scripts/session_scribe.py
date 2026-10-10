@@ -54,8 +54,8 @@ def _load_state() -> dict:
         if "last_run" in data:
             data.setdefault("sessions", {})
             return data
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"scribe: state file unreadable, starting fresh: {e}", file=sys.stderr)
     return {
         "last_run": (_now() - timedelta(hours=DEFAULT_LOOKBACK_HOURS)).isoformat(),
         "sessions": {},
@@ -65,9 +65,7 @@ def _load_state() -> dict:
 def _save_state(ts: datetime, sessions: dict[str, int]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     trimmed = dict(sorted(sessions.items())[-200:])  # bound the map
-    STATE_FILE.write_text(
-        json.dumps({"last_run": ts.isoformat(), "sessions": trimmed}), encoding="utf-8"
-    )
+    STATE_FILE.write_text(json.dumps({"last_run": ts.isoformat(), "sessions": trimmed}), encoding="utf-8")
 
 
 def _find_transcripts(since: datetime) -> list[Path]:
@@ -143,11 +141,7 @@ def _digest_session(path: Path, seen: int = 0) -> dict | None:
                 elif etype == "assistant":
                     n_assistant += 1
                     if isinstance(content, list):
-                        n_tools += sum(
-                            1
-                            for i in content
-                            if isinstance(i, dict) and i.get("type") == "tool_use"
-                        )
+                        n_tools += sum(1 for i in content if isinstance(i, dict) and i.get("type") == "tool_use")
     except OSError:
         return None
 
@@ -207,8 +201,7 @@ def _llm_bullets(digests: list[dict]) -> dict[str, str]:
             prompt = (
                 f"User requests from one dev session ({d['n_user']} messages, "
                 f"{d['n_tools']} tool calls). Summarize the work in 3-5 terse "
-                "bullet points naming repos/tools mentioned. Bullets only, no preamble.\n\n"
-                + material[:4000]
+                "bullet points naming repos/tools mentioned. Bullets only, no preamble.\n\n" + material[:4000]
             )
             out = await llm.generate(
                 prompt=prompt,
@@ -224,12 +217,13 @@ def _llm_bullets(digests: list[dict]) -> dict[str, str]:
             for d in digests[:MAX_LLM_SESSIONS]:
                 try:
                     await _one(d)
-                except Exception:
+                except Exception as e:
+                    print(f"scribe: digest failed for {d}: {e}", file=sys.stderr)
                     continue
 
         asyncio.run(_all())
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"scribe: batch summarize failed: {e}", file=sys.stderr)
     return summaries
 
 
