@@ -397,10 +397,10 @@ class TestReadContentEdgeCases:
                 # If not blocked by security validation, may fail at API level
                 # which is also acceptable
 
-            except Exception:
+            except Exception as e:
                 # Exception due to API failure or other issues is acceptable
                 # as long as no actual traversal occurs
-                pass
+                print(f"Acceptable API-level failure for {attack_path}: {e}")
 
     @pytest.mark.asyncio
     async def test_read_content_null_byte_injection(self, client):

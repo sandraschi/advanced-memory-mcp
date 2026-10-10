@@ -121,9 +121,9 @@ def verify_not_production():
                     f"Megatest cannot run with production projects.",
                     returncode=1,
                 )
-    except Exception:
+    except Exception as e:
         # No config yet - safe to proceed
-        pass
+        print(f"No config found, proceeding with megatest defaults ({e})")
 
     print("\n" + "=" * 60)
     print("🛡️  MEGATEST SAFETY CHECK: PASSED")

@@ -862,13 +862,8 @@ async def test_note_delete(app):
         assert "Deleted" in _out(result) or "deleted" in _out(result).lower()
 
         # Verify it's gone (should return error or empty)
-        try:
-            await mcp_fn(adn_content)(operation="read", identifier="Delete Test Note")
-            # If we get here, note still exists - that's a failure
-            raise AssertionError("Note should have been deleted but still exists")
-        except Exception:
-            # Expected - note should not exist
-            pass
+        gone_content = await mcp_fn(adn_content)(operation="read", identifier="Delete Test Note")
+        assert "Not Found" in str(gone_content)
 
         report.log_test("CRUD - Delete Note", True)
         return result

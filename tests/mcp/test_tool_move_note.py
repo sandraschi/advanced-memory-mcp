@@ -30,11 +30,8 @@ async def test_move_note_success(app, client):
     assert "✅ Note moved successfully" in result
 
     # Verify original location no longer exists
-    try:
-        await mcp_fn(read_note)("source/test-note")
-        raise AssertionError("Original note should not exist after move")
-    except Exception:
-        pass  # Expected - note should not exist at original location
+    gone_content = await mcp_fn(read_note)("source/test-note")
+    assert "Not Found" in gone_content
 
     # Verify note exists at new location with same content
     content = await mcp_fn(read_note)("target/moved-note")
@@ -262,11 +259,8 @@ async def test_move_note_rename_only(client):
     )
 
     # Verify original is gone
-    try:
-        await mcp_fn(read_note)("test/original-name")
-        raise AssertionError("Original note should not exist after rename")
-    except Exception:
-        pass  # Expected
+    gone_content = await mcp_fn(read_note)("test/original-name")
+    assert "Not Found" in gone_content
 
     # Verify new name exists with same content
     content = await mcp_fn(read_note)("test/new-name")
