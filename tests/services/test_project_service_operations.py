@@ -100,8 +100,8 @@ async def test_update_project_path(project_service: ProjectService, tmp_path, co
                 if project:
                     await project_service.repository.delete(project.id)
                 config_manager.remove_project(test_project)
-            except Exception:
-                pass
+            except Exception as cleanup_e:
+                print(f"Teardown cleanup failed for {test_project}: {cleanup_e}")
 
 
 @pytest.mark.asyncio

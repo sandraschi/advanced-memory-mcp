@@ -104,8 +104,8 @@ async def test_project_operations_sync_methods(
         if test_project_name in project_service.projects:
             try:
                 config_manager.remove_project(test_project_name)
-            except Exception:
-                pass
+            except Exception as cleanup_e:
+                print(f"Teardown cleanup also failed for {test_project_name}: {cleanup_e}")
         raise e
 
 
@@ -522,8 +522,8 @@ async def test_synchronize_projects_normalizes_project_names(project_service: Pr
                     # Try to clean up manually if remove_project fails
                     try:
                         config_manager.remove_project(name)
-                    except Exception:
-                        pass
+                    except Exception as cleanup_e:
+                        print(f"Manual cleanup also failed for {name}: {cleanup_e}")
 
                     # Remove from database
                     db_project = await project_service.repository.get_by_name(name)
@@ -583,8 +583,8 @@ async def test_synchronize_projects_handles_case_sensitivity_bug(project_service
                     # Manual cleanup if needed
                     try:
                         config_manager.remove_project(name)
-                    except Exception:
-                        pass
+                    except Exception as cleanup_e:
+                        print(f"Manual cleanup also failed for {name}: {cleanup_e}")
 
                     db_project = await project_service.repository.get_by_name(name)
                     if db_project:
