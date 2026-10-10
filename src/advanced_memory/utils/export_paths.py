@@ -94,8 +94,8 @@ def _get_desktop_path() -> Path | None:
             xdg_desktop = Path(result.stdout.strip())
             if xdg_desktop.exists():
                 return xdg_desktop
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"xdg-user-dir desktop probe failed: {e}")
 
     return None
 
@@ -138,8 +138,8 @@ def _get_documents_path() -> Path | None:
             xdg_docs = Path(result.stdout.strip())
             if xdg_docs.exists():
                 return xdg_docs
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"xdg-user-dir documents probe failed: {e}")
 
     return None
 

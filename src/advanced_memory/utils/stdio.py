@@ -91,7 +91,7 @@ def suppress_nuclear_loguru():
         # Replace loguru logger module with no-op
         if "loguru" not in sys.modules:
             sys.modules["loguru"] = type("Module", (), {"logger": NoOpLogger()})()
-    except Exception:
+    except Exception:  # noqa: S110 - silence is the contract of this function
         pass
 
 
