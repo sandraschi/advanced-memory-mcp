@@ -5,6 +5,7 @@ import platform
 from pathlib import Path
 from typing import Annotated
 
+from loguru import logger
 from pydantic import Field
 
 from advanced_memory.config import ConfigManager
@@ -403,8 +404,8 @@ async def _get_diagnostic_status() -> str:
                             "not idle. A wedged watcher can block SQLite WAL checkpoints for every "
                             "process sharing this database. Restart the advanced-memory-mcp service."
                         )
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"Watcher stale-check failed, skipping: {e}")
 
             # Check for stability issues
             if error_count > 5:

@@ -498,15 +498,15 @@ def _format_search_results(
             try:
                 created_dt = datetime.fromtimestamp(metadata["created_time"] / 1000)
                 output_lines.append(f"**Created:** {created_dt.strftime('%Y-%m-%d %H:%M')}")
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Skipping unparseable created_time {metadata.get('created_time')}: {e}")
 
         if "updated_time" in metadata:
             try:
                 updated_dt = datetime.fromtimestamp(metadata["updated_time"] / 1000)
                 output_lines.append(f"**Updated:** {updated_dt.strftime('%Y-%m-%d %H:%M')}")
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Skipping unparseable updated_time {metadata.get('updated_time')}: {e}")
 
         # Add notebook info
         notebook_path = _get_notebook_path(file_info["md"], metadata)

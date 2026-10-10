@@ -180,8 +180,8 @@ Always preserve the original meaning and key information. For biographical updat
         if has_frontmatter(enhanced_content):
             try:
                 enhanced_content = remove_frontmatter(enhanced_content)
-            except Exception:
-                pass  # Use as-is if parse fails
+            except Exception as e:
+                logger.debug(f"Frontmatter parse failed, using content as-is: {e}")
 
         # Update the note with enhanced content (replace_body preserves frontmatter)
         from advanced_memory.mcp.tools.edit_note import edit_note
