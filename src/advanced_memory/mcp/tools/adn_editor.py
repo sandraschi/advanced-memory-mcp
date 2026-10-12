@@ -210,7 +210,7 @@ async def _notepadpp_edit_operation(
         md_file.write_text(original_content, encoding="utf-8")
 
         # Open in Notepad++
-        notepadpp_path = _find_notepadpp_executable()
+        notepadpp_path = await asyncio.to_thread(_find_notepadpp_executable)
         if not notepadpp_path:
             return "[ERROR] Notepad++ not found. Please install Notepad++ from https://notepad-plus-plus.org/"
 

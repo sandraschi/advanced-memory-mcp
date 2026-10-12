@@ -4,6 +4,7 @@ This tool exports Advanced Memory notes to HTML format with a simple,
 clean design suitable for web viewing or sharing.
 """
 
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -105,7 +106,7 @@ async def export_html_notes(
                     export_path_obj if export_path_obj.suffix == ".html" else export_path_obj.with_suffix(".html")
                 )
                 if combined_file.exists():
-                    success, msg = open_file_or_folder(combined_file)
+                    success, msg = await asyncio.to_thread(open_file_or_folder, combined_file)
                     result += "\n\n" + format_open_result(success, msg, combined_file)
             return result
 
@@ -120,13 +121,13 @@ async def export_html_notes(
 
             index_file = export_path_obj / "index.html"
             if index_file.exists():
-                success, msg = open_file_or_folder(index_file)
+                success, msg = await asyncio.to_thread(open_file_or_folder, index_file)
                 result += "\n\n" + format_open_result(success, msg, index_file)
         elif show_after_export:
             from advanced_memory.utils.file_opener import open_file_or_folder
 
             # No index, just open the folder
-            success, msg = open_file_or_folder(export_path_obj)
+            success, msg = await asyncio.to_thread(open_file_or_folder, export_path_obj)
             result += f"\n\n## 🚀 Opened Folder\n\n✅ Opened HTML files in file explorer: {export_path_obj}"
 
         return result

@@ -162,11 +162,11 @@ adn_export("pdf", export_path="...", source_folder="...")
             export_dir = Path(export_path)
             # Open the first file (or the folder if multiple)
             if len(exported_files) == 1:
-                success, msg = open_file_or_folder(exported_files[0])
+                success, msg = await asyncio.to_thread(open_file_or_folder, exported_files[0])
                 summary += "\n\n" + format_open_result(success, msg, exported_files[0])
             else:
                 # Multiple files - open the folder
-                success, msg = open_file_or_folder(export_dir)
+                success, msg = await asyncio.to_thread(open_file_or_folder, export_dir)
                 summary += (
                     f"\n\n## 🚀 Opened Folder\n\n✅ Opened {len(exported_files)} files in file explorer: {export_dir}"
                 )
