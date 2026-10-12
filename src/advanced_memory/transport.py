@@ -285,7 +285,7 @@ async def run_server_async(mcp_app, args: argparse.Namespace | None = None, serv
                     except Exception:
                         return "unknown"
 
-            _sha = _git_sha()
+            _sha = await asyncio.to_thread(_git_sha)
             _ver = _pkg_version()
 
             @app.get("/health")
