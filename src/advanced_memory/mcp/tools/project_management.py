@@ -54,9 +54,9 @@ async def list_memory_projects(ctx: Context | None = None, _compatibility: str |
             indicators.append("default")
 
         if indicators:
-            result += f"[UNICODE] {project.name} ({', '.join(indicators)})\n"
+            result += f"- {project.name} ({', '.join(indicators)})\n"
         else:
-            result += f"[UNICODE] {project.name}\n"
+            result += f"- {project.name}\n"
 
     return add_project_metadata(result, current)
 
@@ -190,13 +190,13 @@ async def get_current_project(ctx: Context | None = None, _compatibility: str | 
     )
     project_info = ProjectInfoResponse.model_validate(response.json())
 
-    result += f"[UNICODE] {project_info.statistics.total_entities} entities\n"
-    result += f"[UNICODE] {project_info.statistics.total_observations} observations\n"
-    result += f"[UNICODE] {project_info.statistics.total_relations} relations\n"
+    result += f"- {project_info.statistics.total_entities} entities\n"
+    result += f"- {project_info.statistics.total_observations} observations\n"
+    result += f"- {project_info.statistics.total_relations} relations\n"
 
     default_project = session.get_default_project()
     if current_project != default_project:
-        result += f"[UNICODE] Default project: {default_project}\n"
+        result += f"- Default project: {default_project}\n"
 
     return add_project_metadata(result, current_project)
 

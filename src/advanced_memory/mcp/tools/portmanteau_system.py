@@ -63,7 +63,14 @@ async def adn_system(
         if operation == "status":
             from advanced_memory.mcp.tools.status import status as _status_fn
 
-            result = await _status_fn(level or "basic", focus)
+            # Normalize deprecated aliases from older clients:
+            # 'detailed' -> 'intermediate', 'expert' -> 'advanced'.
+            _level = (level or "basic").lower()
+            if _level == "detailed":
+                _level = "intermediate"
+            elif _level == "expert":
+                _level = "advanced"
+            result = await _status_fn(_level, focus)
             return build_success_response("status", result)
 
         elif operation == "sync_status":

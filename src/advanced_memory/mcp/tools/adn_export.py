@@ -534,10 +534,10 @@ async def _repo_export(export_path: str, repo_path: str | None, show_after_expor
         repo_root = Path.cwd()
 
     if not repo_root.exists():
-        return f"[UNICODE] **Error: Repository path not found**\n\nPath: {repo_root}"
+        return f"[ERROR] **Error: Repository path not found**\n\nPath: {repo_root}"
 
     if not repo_root.is_dir():
-        return f"[UNICODE] **Error: Repository path is not a directory**\n\nPath: {repo_root}"
+        return f"[ERROR] **Error: Repository path is not a directory**\n\nPath: {repo_root}"
 
     logger.info(f"Exporting repository: {repo_root} → {export_path}")
 
@@ -713,15 +713,15 @@ async def _repo_export(export_path: str, repo_path: str | None, show_after_expor
             size_bytes /= 1024.0
         return f"{size_bytes:.1f} PB"
 
-    result = f"""[UNICODE][UNICODE] **Repository Export Complete!**
+    result = f"""**Repository Export Complete!**
 
 **Archive Details:**
 - [FOLDER] Location: {export_path_obj}
 - [CHART] Size: {_format_size(final_size)}
 - [DOC] Files: {file_count}
-- [UNICODE] Repository: {repo_root}
-- [UNICODE] .gitignore files parsed: {len(gitignore_files)}
-- [UNICODE] ZIP64 format: {needs_zip64}
+- Repository: {repo_root}
+- .gitignore files parsed: {len(gitignore_files)}
+- ZIP64 format: {needs_zip64}
 
 **Contents:**
 - All files from repository root
@@ -751,12 +751,12 @@ Or use: `unzip {export_path_obj.name}` (Linux/macOS)
 
 async def _evernote_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Evernote export operation."""
-    return f"[UNICODE] **Evernote Export**\n\nEvernote export functionality requires the full export_evernote_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_evernote_compatible tool for complete functionality."
+    return f"[INFO] **Evernote Export**\n\nEvernote export functionality requires the full export_evernote_compatible tool.\n\n**Requested**: {source_folder} -> {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_evernote_compatible tool for complete functionality."
 
 
 async def _notion_export(export_path: str, source_folder: str, include_subfolders: bool, project: str | None) -> str:
     """Handle Notion export operation."""
-    return f"[UNICODE] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} → {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
+    return f"[INFO] **Notion Export**\n\nNotion export functionality requires the full export_notion_compatible tool.\n\n**Requested**: {source_folder} -> {export_path}\n**Include subfolders**: {include_subfolders}\n\nUse the individual export_notion_compatible tool for complete functionality."
 
 
 async def _skills_export(

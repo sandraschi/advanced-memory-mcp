@@ -1,5 +1,6 @@
 """Router for knowledge graph operations."""
 
+import asyncio
 from pathlib import Path
 from typing import Annotated
 
@@ -75,6 +76,27 @@ async def _resolve_relations_logged(sync_service, permalink: str | None) -> None
         logger.warning(f"Failed to resolve relations after entity creation: {e}")
 
 
+# Fire-and-forget registry: Starlette BackgroundTasks run BEFORE the response
+# is sent, so seconds-long relation resolution on large vaults pushed note
+# writes past the host 60s tool timeout (write landed, client timed out).
+# asyncio.create_task returns immediately; the set keeps tasks alive.
+_FIRE_AND_FORGET_TASKS: set[asyncio.Task] = set()
+
+
+def _spawn_logged(coro, *, what: str) -> None:
+    task = asyncio.create_task(coro)
+    _FIRE_AND_FORGET_TASKS.add(task)
+
+    def _done(t: asyncio.Task) -> None:
+        _FIRE_AND_FORGET_TASKS.discard(t)
+        if t.cancelled():
+            logger.warning(f"Background {what} cancelled")
+        elif exc := t.exception():
+            logger.warning(f"Background {what} failed: {exc}")
+
+    task.add_done_callback(_done)
+
+
 @router.post("/entities", response_model=EntityResponse)
 async def create_entity(
     data: Entity,
@@ -87,8 +109,9 @@ async def create_entity(
 
     entity = await entity_service.create_entity(data)
 
-    # reindex
-    await search_service.index_entity(entity, background_tasks=background_tasks)
+    # Reindex fire-and-forget (see create_or_update_entity: never block the
+    # write response on ONNX/LanceDB indexing).
+    await search_service.index_entity(entity)
     result = EntityResponse.model_validate(entity)
 
     logger.info(
@@ -128,15 +151,21 @@ async def create_or_update_entity(
     entity, created = await entity_service.create_or_update_entity(data)
     response.status_code = 201 if created else 200
 
-    # reindex
-    await search_service.index_entity(entity, background_tasks=background_tasks)
+    # Reindex fire-and-forget (never pass BackgroundTasks: Starlette awaits
+    # those before sending the response, and ONNX/LanceDB indexing takes
+    # seconds - that pushed writes past the host 60s timeout).
+    await search_service.index_entity(entity)
 
     # Attempt relation resolution when creating new entities (forward refs
     # created in the same session). Full unresolved-relation scan + per-link
-    # resolution is seconds on large vaults, so it rides BackgroundTasks with
-    # indexing instead of blocking the write response past the host timeout.
+    # resolution is seconds on large vaults. It MUST NOT ride Starlette
+    # BackgroundTasks (they run before the response is sent) - fire-and-forget
+    # so the write response returns immediately.
     if created:
-        background_tasks.add_task(_resolve_relations_logged, sync_service, entity.permalink)
+        _spawn_logged(
+            _resolve_relations_logged(sync_service, entity.permalink),
+            what=f"resolve_relations({entity.permalink})",
+        )
 
     result = EntityResponse.model_validate(entity)
 

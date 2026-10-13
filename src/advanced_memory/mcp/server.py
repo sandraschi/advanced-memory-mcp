@@ -393,6 +393,16 @@ if __name__ == "__main__":
     # FastMCP 2.14.4+: stdio (default for IDEs) or http/sse for web/remote
     # CRITICAL: show_banner=False prevents FastMCP from writing banner to stdout
     if transport == "stdio":
+        # Single-writer enforcement (SPEC_SINGLE_WRITER, BUG-048): this second
+        # stdio entrypoint (alongside cli/commands/mcp.py) must proxy to the
+        # daemon like every other stdio launcher. enforce_single_writer_stdio
+        # runs the proxy (blocking) and returns True - then exit instead of
+        # running a local server. Returns False only for readers / explicit
+        # standalone; a read-write launch with unreachable daemon exits(2).
+        from advanced_memory.mcp.stdio_guard import enforce_single_writer_stdio
+
+        if enforce_single_writer_stdio(server):
+            sys.exit(0)
         server.run(show_banner=False)
     else:
         if transport in ("http", "sse"):

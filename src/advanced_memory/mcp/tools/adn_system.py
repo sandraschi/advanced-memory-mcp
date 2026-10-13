@@ -54,7 +54,7 @@ async def adn_system(op: SystemOperation, ctx: Context | None = None) -> Any:
     ---------------------------------------------------------------------------
     [PARAMETERS]
     - operation (str): The system task (status, help, workflow, external_bridge, sync).
-    - level (str, optional): Detail depth for status/help ('basic', 'detailed', 'expert').
+    - level (str, optional): Detail depth for status/help ('basic', 'intermediate', 'advanced', 'diagnostic').
     - focus (str, optional): Specific area for status reports (e.g., 'db', 'audio').
     - topic (str, optional): Subject for help documentation.
     - goal (str, optional): The high-level objective for an autonomous workflow.

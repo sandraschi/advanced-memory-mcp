@@ -477,7 +477,12 @@ ProjectOperation = Annotated[
 class SystemStatusOp(BaseModel):
     operation: Literal["status"]
     focus: Annotated[str | None, Field(description="Specific area of focus (e.g., 'db', 'audio', 'memory')")] = None
-    level: Annotated[Literal["basic", "detailed", "expert"], Field(description="Depth of the status report")] = "basic"
+    # Levels must match status.py: basic / intermediate / advanced / diagnostic.
+    # 'detailed' and 'expert' kept as deprecated aliases (mapped to intermediate/advanced).
+    level: Annotated[
+        Literal["basic", "intermediate", "advanced", "diagnostic", "detailed", "expert"],
+        Field(description="Depth of the status report"),
+    ] = "basic"
 
 
 class SystemHelpOp(BaseModel):

@@ -284,7 +284,7 @@ async def _canvas_import(
     project: str | None,
 ) -> str:
     """Handle Canvas import operation."""
-    return f"[UNICODE] **Canvas Import**\n\nCanvas import functionality requires the full load_canvas tool.\n\n**Requested**: {source_path} → {destination_folder}\n**Create missing files**: {create_missing_files}\n\nUse the individual load_canvas tool for complete functionality."
+    return f"[INFO] **Canvas Import**\n\nCanvas import functionality requires the full load_canvas tool.\n\n**Requested**: {source_path} -> {destination_folder}\n**Create missing files**: {create_missing_files}\n\nUse the individual load_canvas tool for complete functionality."
 
 
 async def _claude_skills_import(

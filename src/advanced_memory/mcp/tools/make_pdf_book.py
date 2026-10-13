@@ -60,7 +60,7 @@ async def make_pdf_book(
         # Get notes for the book
         notes_data = await _get_book_notes(source_folder, tag_filter, include_subfolders, project)
         if not notes_data:
-            return f"[UNICODE] No notes found in folder '{source_folder}' for book creation."
+            return f"[ERROR] No notes found in folder '{source_folder}' for book creation."
 
         # Create temporary book markdown file
         book_md_path = await _create_book_markdown(notes_data, book_title, author, output_dir)
@@ -76,7 +76,7 @@ async def make_pdf_book(
             total_pages = _estimate_page_count(notes_data)
             total_words = sum(len(note["content"].split()) for note in notes_data)
 
-            return f"""[UNICODE] **PDF Book Created Successfully!**
+            return f"""[OK] **PDF Book Created Successfully!**
 
 [BOOK] **Book Details:**
 - **Title:** {book_title}
@@ -91,18 +91,18 @@ async def make_pdf_book(
 - **Size:** {_get_file_size(pdf_path)}
 
 [BOOKS] **Book Features:**
-- [UNICODE] Professional title page
-- [UNICODE] Table of contents (depth: {toc_depth})
-- [UNICODE] Chapter-based organization
-- [UNICODE] Proper page formatting
-- [UNICODE] Book-style layout
+- [OK] Professional title page
+- [OK] Table of contents (depth: {toc_depth})
+- [OK] Chapter-based organization
+- [OK] Proper page formatting
+- [OK] Book-style layout
 
 **Ready to share your knowledge book!** [SUCCESS][BOOK]"""
         else:
-            return "[UNICODE] PDF book creation failed. Check that Pandoc and LaTeX are installed."
+            return "[ERROR] PDF book creation failed. Check that Pandoc and LaTeX are installed."
 
     except Exception as e:
-        return f"[UNICODE] Error creating PDF book: {e!s}"
+        return f"[ERROR] Error creating PDF book: {e!s}"
 
 
 async def _get_book_notes(
