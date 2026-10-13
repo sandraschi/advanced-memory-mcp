@@ -7,7 +7,7 @@
     HealthPath   = '/api/v1/health'
     WebRoot      = 'webapp\frontend'
     Backend = @{
-        Kind          = 'uvicorn'
+        Kind          = 'nssm'
         UvicornTarget = 'advanced_memory.server:app'
         Env           = @{ WEB_PORT = '10705' }
     }
