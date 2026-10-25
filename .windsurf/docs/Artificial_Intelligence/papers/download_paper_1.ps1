@@ -8,7 +8,7 @@ $category = "transformers"
 $arxivId = "1706.03762"
 
 # Setup paths
-$basePath = "D:\Dev\repos\mywienerlinien\.windsurf\docs\3_ai\papers"
+$basePath = "D:\Dev\repos\publictransport-mcp\.windsurf\docs\3_ai\papers"
 $outputDir = Join-Path $basePath $category
 $fileName = $paperTitle -replace '[^\w]', '_'
 $fileName = $fileName + ".pdf"

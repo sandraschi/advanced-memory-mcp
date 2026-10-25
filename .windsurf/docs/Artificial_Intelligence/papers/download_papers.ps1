@@ -51,7 +51,7 @@ function New-PaperMetadata {
 }
 
 # Main script execution
-$basePath = "D:\\Dev\\repos\\mywienerlinien\\.windsurf\\docs\\3_ai\\papers"
+$basePath = "D:\\Dev\\repos\\publictransport-mcp\\.windsurf\\docs\\3_ai\\papers"
 $papers = @(
     # Foundational Papers
     @{

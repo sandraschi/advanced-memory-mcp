@@ -1,5 +1,5 @@
 # Update README files with detailed content
-$basePath = "D:\Dev\repos\mywienerlinien\.windsurf\docs\6_software"
+$basePath = "D:\Dev\repos\publictransport-mcp\.windsurf\docs\6_software"
 
 # Content templates for different categories
 $contentTemplates = @{

@@ -1,7 +1,7 @@
 # Script to download all seminal AI papers
 
 # Base paths
-$basePath = "D:\Dev\repos\mywienerlinien\.windsurf\docs\3_ai\papers"
+$basePath = "D:\Dev\repos\publictransport-mcp\.windsurf\docs\3_ai\papers"
 
 # List of papers to download
 $papers = @(

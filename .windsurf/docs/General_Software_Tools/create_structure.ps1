@@ -1,5 +1,5 @@
 # Create missing directories and README files for 6_software
-$basePath = "D:\Dev\repos\mywienerlinien\.windsurf\docs\6_software"
+$basePath = "D:\Dev\repos\publictransport-mcp\.windsurf\docs\6_software"
 
 # Create directories
 $directories = @(
