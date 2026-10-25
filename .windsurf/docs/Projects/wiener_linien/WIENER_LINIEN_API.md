@@ -123,7 +123,7 @@ if response.status_code == 200:
    - Language: JavaScript (React)
 
 2. **Wiener Linien Live Map**
-   - Repository: `mywienerlinien` (this project)
+   - Repository: `publictransport-mcp` (this project)
    - Description: Interactive map with real-time vehicle positions
    - Stars: 45+
    - Language: Python (Flask), JavaScript
