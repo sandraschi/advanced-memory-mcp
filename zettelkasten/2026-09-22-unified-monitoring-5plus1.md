@@ -13,7 +13,7 @@ repo honors (GET `/metrics` in Prometheus text + structured logs) plus a
 **central stack** the fleet provides (unified Prometheus/Grafana/Loki).
 Per-repo Prometheus/Grafana/Loki triples are legacy. New repos onboard to
 unified; existing per-project stacks (deepfang-*, avatarmcp-*, tailscale-loki,
-mywienerlinien) stay - each belongs to its repo's own five-layer stack
+publictransport-mcp) stay - each belongs to its repo's own five-layer stack
 (verified via compose labels), so killing them would break those projects.
 
 Documented in `sandraschi/WHY_FLEET.md` section 3c and
