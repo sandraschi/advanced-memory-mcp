@@ -46,6 +46,7 @@ async def test_write_note(app):
         tags:
         - test
         - documentation
+        source: agent
         ---
 
         # Test
@@ -71,6 +72,7 @@ async def test_write_note_no_tags(app):
     title: Simple Note
     type: note
     permalink: test/simple-note
+    source: agent
     ---
 
     Just some text
@@ -127,6 +129,7 @@ async def test_write_note_update_existing(app):
         tags:
         - test
         - documentation
+        source: agent
         ---
 
         # Test
@@ -408,6 +411,7 @@ async def test_write_note_preserves_content_frontmatter(app):
         tags:
         - test
         - documentation
+        source: agent
         ---
 
         # Test
@@ -507,6 +511,7 @@ async def test_write_note_with_custom_entity_type(app):
     tags:
     - guide
     - documentation
+    source: agent
     ---
 
     # Guide Content

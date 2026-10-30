@@ -51,7 +51,7 @@ async def test_note_unicode_content(app):
         # Created note
         file_path: test/Unicode_Test.md
         permalink: test/unicode-test
-        checksum: 272389cd
+        checksum: 02c25134
         """).strip()
         in result
     )

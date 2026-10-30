@@ -151,6 +151,7 @@ async def test_get_resource_observation(client, project_config, entity_repositor
 title: Test Entity
 type: test
 permalink: test/test-entity
+source: agent
 ---
 
 # Test Content
@@ -248,6 +249,7 @@ async def test_get_resource_entities_pagination(client, project_config, entity_r
 title: Related Entity
 type: test
 permalink: test/related-entity
+source: agent
 ---
 
 # Related Content

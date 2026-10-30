@@ -681,6 +681,7 @@ async def test_edit_entity_prepend(client: AsyncClient, project_url):
 title: Test Note
 type: note
 permalink: test/test-note
+source: agent
 ---
 
 Prepended content
