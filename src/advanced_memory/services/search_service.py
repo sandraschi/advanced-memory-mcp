@@ -245,6 +245,11 @@ class SearchService:
             else None
         )
 
+        def _as_dt(value: datetime | str | None) -> datetime | None:
+            if not value:
+                return None
+            return value if isinstance(value, datetime) else parse(value)
+
         # Perform keyword search in SQLite
         results, total_count = await self.repository.search(
             search_text=query.text,
@@ -258,10 +263,19 @@ class SearchService:
             tags=query.tags,
             limit=limit,
             offset=offset,
+            sort=query.sort,
+            created_from=_as_dt(query.created_from),
+            created_to=_as_dt(query.created_to),
+            modified_from=_as_dt(query.modified_from),
+            modified_to=_as_dt(query.modified_to),
         )
 
+        # An explicit sort is a strict SQL ordering over the whole filtered set. Merging
+        # vector hits would interleave unordered rows into it and break paging, so skip it.
+        explicit_sort = query.sort is not None and query.sort != "relevance"
+
         # If query has text, augment with vector results or perform hybrid search
-        if query.text and not query.permalink and not query.permalink_match:
+        if query.text and not query.permalink and not query.permalink_match and not explicit_sort:
             try:
                 project_filter = self._vector_project_filter()
 

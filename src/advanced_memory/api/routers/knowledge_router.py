@@ -6,7 +6,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response
 from loguru import logger
-from sqlalchemy import select
+from pydantic import BaseModel
+from sqlalchemy import and_, func, or_, select
 
 from advanced_memory.deps import (
     AppConfigDep,
@@ -23,6 +24,7 @@ from advanced_memory.deps import (
     get_search_service,
 )
 from advanced_memory.models.knowledge import Entity as EntityModel
+from advanced_memory.models.knowledge import Relation as RelationModel
 from advanced_memory.schemas import (
     DeleteEntitiesRequest,
     DeleteEntitiesResponse,
@@ -275,6 +277,83 @@ async def move_entity(
 
 
 ## Read endpoints
+
+
+class BacklinkItem(BaseModel):
+    """One note that links to the requested note."""
+
+    permalink: str | None
+    file_path: str
+    title: str
+    relation_type: str
+    #: True when the relation row points at this entity by id. False means a forward
+    #: reference that was matched by target name (the link target text equals this
+    #: note's title/permalink/file name but was never resolved to an entity id).
+    resolved: bool
+
+
+class BacklinksResponse(BaseModel):
+    identifier: str
+    total: int
+    backlinks: list[BacklinkItem]
+
+
+@router.get("/backlinks/{identifier:path}", response_model=BacklinksResponse)
+async def get_backlinks(
+    link_resolver: LinkResolverDep,
+    session_maker: SessionMakerDep,
+    project_id: ProjectIdDep,
+    identifier: str,
+    limit: Annotated[int, Query(ge=1, le=1000)] = 200,
+) -> BacklinksResponse:
+    """Notes that link TO ``identifier``, read from the relation table (exact, not a text guess).
+
+    Includes resolved relations (``to_id`` = this note) and unresolved forward references
+    whose target name matches this note's title, permalink, or file name.
+    """
+    entity = await link_resolver.resolve_link(identifier)
+    if not entity:
+        raise HTTPException(status_code=404, detail=f"Entity {identifier} not found")
+
+    names: set[str] = {entity.title.strip().lower()} if entity.title else set()
+    if entity.permalink:
+        names.add(entity.permalink.strip().lower())
+    if entity.file_path:
+        path = Path(entity.file_path)
+        names.add(path.stem.strip().lower())
+        names.add(path.with_suffix("").as_posix().strip().lower())
+
+    unresolved_match = and_(RelationModel.to_id.is_(None), func.lower(RelationModel.to_name).in_(names))
+    stmt = (
+        select(RelationModel, EntityModel)
+        .join(EntityModel, RelationModel.from_id == EntityModel.id)
+        .where(
+            EntityModel.project_id == project_id,
+            RelationModel.from_id != entity.id,
+            or_(RelationModel.to_id == entity.id, unresolved_match) if names else RelationModel.to_id == entity.id,
+        )
+        .order_by(func.lower(EntityModel.title), RelationModel.relation_type)
+    )
+    async with session_maker() as session:
+        rows = (await session.execute(stmt)).all()
+
+    seen: set[tuple[int, str]] = set()
+    items: list[BacklinkItem] = []
+    for relation, source in rows:
+        key = (source.id, relation.relation_type)
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append(
+            BacklinkItem(
+                permalink=source.permalink,
+                file_path=source.file_path or "",
+                title=source.title,
+                relation_type=relation.relation_type,
+                resolved=relation.to_id is not None,
+            )
+        )
+    return BacklinksResponse(identifier=identifier, total=len(items), backlinks=items[:limit])
 
 
 @router.get("/entities/{identifier:path}/content", response_model=NoteContentResponse)

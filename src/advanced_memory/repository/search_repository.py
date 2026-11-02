@@ -16,6 +16,32 @@ from advanced_memory.models.search import CREATE_SEARCH_INDEX
 from advanced_memory.schemas.search import SearchItemType
 from advanced_memory.utils import sanitize_filename
 
+# Sort keys -> SQL expression. The key set is fixed here (never interpolated from input),
+# and julianday() makes mixed "T"/space timestamp formats compare correctly.
+_SORT_EXPRESSIONS: dict[str, str] = {
+    "modified": "julianday(COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')))",
+    "created": "julianday(NULLIF(trim(created_at), ''))",
+    "title": "lower(title)",
+}
+
+
+def _explicit_order_clause(sort: str | None) -> str | None:
+    """Build an ORDER BY for ``sort`` ("<field>_<asc|desc>"), or None for default ordering.
+
+    Missing values always sort last. permalink/id are stable tie-breakers so
+    pagination never repeats or skips rows that share a date or title.
+    """
+    if not sort or sort == "relevance":
+        return None
+    field, _, direction = sort.rpartition("_")
+    expression = _SORT_EXPRESSIONS.get(field)
+    if expression is None or direction not in ("asc", "desc"):
+        return None
+    return (
+        f"ORDER BY ({expression} IS NULL) ASC, {expression} {direction.upper()}, "
+        "lower(title) ASC, permalink ASC, id ASC"
+    )
+
 
 def _sqlite_time_bound(dt: datetime) -> str:
     """Normalize bound datetime for SQLite julianday()/comparisons (naive UTC wall clock)."""
@@ -376,8 +402,16 @@ class SearchRepository:
         search_item_types: list[SearchItemType] | None = None,
         limit: int = 10,
         offset: int = 0,
+        sort: str | None = None,
+        created_from: datetime | None = None,
+        created_to: datetime | None = None,
+        modified_from: datetime | None = None,
+        modified_to: datetime | None = None,
     ) -> tuple[list[SearchIndexRow], int]:
         """Search across all indexed content with fuzzy matching.
+
+        ``sort`` (see ``SearchSort``) overrides the default ordering and is applied in SQL
+        before LIMIT/OFFSET, so it orders the whole filtered set, not just one page.
 
         Returns:
             Tuple of (list of search results, total count of all matching results)
@@ -465,6 +499,19 @@ class SearchRepository:
                 "(nullif(trim(created_at), '') IS NOT NULL AND julianday(created_at) < julianday(:before_date))"
             )
 
+        # Single-column inclusive range filters (rows missing the date never match a bound).
+        created_expr = _SORT_EXPRESSIONS["created"]
+        modified_expr = _SORT_EXPRESSIONS["modified"]
+        for name, bound, expr, op in (
+            ("created_from", created_from, created_expr, ">="),
+            ("created_to", created_to, created_expr, "<="),
+            ("modified_from", modified_from, modified_expr, ">="),
+            ("modified_to", modified_to, modified_expr, "<="),
+        ):
+            if bound:
+                params[name] = _sqlite_time_bound(bound)
+                conditions.append(f"{expr} {op} julianday(:{name})")
+
         # Handle tag filter (notes must have ALL specified tags)
         if tags:
             seen_tag_keys: set[str] = set()
@@ -509,7 +556,11 @@ class SearchRepository:
             title
         )
 
-        if has_fts_relevance:
+        explicit_order = _explicit_order_clause(sort)
+
+        if explicit_order:
+            order_clause = explicit_order
+        elif has_fts_relevance:
             order_clause = (
                 "ORDER BY bm25(search_index) ASC, "
                 "COALESCE(NULLIF(trim(updated_at), ''), NULLIF(trim(created_at), '')) DESC"

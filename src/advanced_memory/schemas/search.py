@@ -8,10 +8,24 @@ The search system supports three primary modes:
 
 from datetime import datetime
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, field_validator
 
 from advanced_memory.schemas.base import Permalink
+
+# Explicit result ordering. Applied in SQL before LIMIT/OFFSET, so "oldest first"
+# means oldest of the whole filtered set, not of the current page. Rows with no
+# date sort last in either direction. "relevance" keeps the legacy behavior.
+SearchSort = Literal[
+    "relevance",
+    "modified_desc",
+    "modified_asc",
+    "created_desc",
+    "created_asc",
+    "title_asc",
+    "title_desc",
+]
 
 
 class SearchItemType(StrEnum):
@@ -55,7 +69,17 @@ class SearchQuery(BaseModel):
     before_date: datetime | str | None = None  # Time-based filter (until this date/time)
     tags: list[str] | None = None  # Filter by tags (notes must have ALL specified tags)
 
-    @field_validator("after_date", "before_date")
+    # Inclusive range filters on a single date column (unlike after_date, which matches
+    # "created OR updated since", and before_date, which only looks at created).
+    created_from: datetime | str | None = None
+    created_to: datetime | str | None = None
+    modified_from: datetime | str | None = None  # updated_at, falling back to created_at
+    modified_to: datetime | str | None = None
+
+    # Ordering (not a search criterion: a query with only `sort` still has no_criteria() True)
+    sort: SearchSort | None = None
+
+    @field_validator("after_date", "before_date", "created_from", "created_to", "modified_from", "modified_to")
     @classmethod
     def validate_date(cls, v: datetime | str | None) -> str | None:
         """Convert datetime to ISO format if needed."""
@@ -71,6 +95,10 @@ class SearchQuery(BaseModel):
             and self.text is None
             and self.after_date is None
             and self.before_date is None
+            and self.created_from is None
+            and self.created_to is None
+            and self.modified_from is None
+            and self.modified_to is None
             and self.types is None
             and self.entity_types is None
             and self.tags is None
