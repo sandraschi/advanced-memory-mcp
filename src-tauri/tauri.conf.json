@@ -5,7 +5,7 @@
     "identifier": "com.sandraschi.advanced-memory-mcp",
     "build": {
         "frontendDist": "../webapp/dist",
-        "beforeBuildCommand": "pwsh -NoProfile -Command \"$env:VITE_API_URL='http://127.0.0.1:10705'; npm --prefix ../webapp/frontend run build; Copy-Item '..\\webapp\\frontend\\dist' '..\\webapp\\dist' -Recurse -Force\""
+        "beforeBuildCommand": "pwsh -NoProfile -Command \"$env:VITE_API_URL='http://127.0.0.1:10705'; bun --cwd ../webapp/frontend run build; if ($LASTEXITCODE -ne 0) { exit 1 }; Remove-Item '..\\webapp\\dist' -Recurse -Force -ErrorAction SilentlyContinue; Copy-Item '..\\webapp\\frontend\\dist' '..\\webapp\\dist' -Recurse -Force\""
     },
     "app": {
         "windows": [
