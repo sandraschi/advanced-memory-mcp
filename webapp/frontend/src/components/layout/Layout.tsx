@@ -7,8 +7,6 @@ interface LayoutProps {
   children: React.ReactNode;
   showMetadataSidebar?: boolean;
   selectedNoteMetadata?: any;
-  onMetadataExport?: (format: string, noteId: string) => Promise<void>;
-  onMetadataEdit?: () => void;
   onMetadataDelete?: () => void;
 }
 
@@ -16,8 +14,6 @@ export default function Layout({
   children,
   showMetadataSidebar = false,
   selectedNoteMetadata,
-  onMetadataExport,
-  onMetadataEdit,
   onMetadataDelete,
 }: LayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -53,8 +49,6 @@ export default function Layout({
           isOpen={metadataSidebarOpen}
           onToggle={() => setMetadataSidebarOpen(!metadataSidebarOpen)}
           note={selectedNoteMetadata}
-          onExport={onMetadataExport}
-          onEdit={onMetadataEdit}
           onDelete={onMetadataDelete}
         />
       )}

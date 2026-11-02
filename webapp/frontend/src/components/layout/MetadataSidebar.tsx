@@ -1,18 +1,21 @@
 import {
+  ArrowDownLeft,
+  ArrowUpRight,
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
-  Edit,
-  Eye,
   FileText,
   Link,
-  Share,
   Tag,
   Trash2,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiService } from "../../services/api";
+import { confirmAndDeleteNote } from "../notes/noteActions";
+import { type ExportFormat, downloadNote, emitVault, extractWikiLinks } from "../notes/noteUtils";
 
 interface NoteMetadata {
   id: string;
@@ -25,28 +28,132 @@ interface NoteMetadata {
   backlinks: number;
   readingTime: number;
   fileSize: string;
+  /** Raw markdown, needed here to list this note's own outgoing [[wikilinks]]. */
+  content?: string;
 }
 
 interface MetadataSidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   note?: NoteMetadata | null;
-  onExport?: ((format: string, noteId: string) => Promise<void>) | undefined;
-  onEdit?: (() => void) | undefined;
   onDelete?: (() => void) | undefined;
+}
+
+interface ConnectionRow {
+  id: string;
+  label: string;
+  direction: "outgoing" | "incoming";
+  /** "written" = a [[wikilink]] in this note's own text, not yet checked against the index.
+   *  "relation" = a stored relation row. "backlink" = another note whose stored relation points here (exact, from the index). */
+  kind: "written" | "relation" | "backlink";
 }
 
 export default function MetadataSidebar({
   isOpen,
   onToggle,
   note,
-  onExport,
-  onEdit,
   onDelete,
 }: MetadataSidebarProps) {
   const [activeTab, setActiveTab] = useState<"metadata" | "connections" | "actions">("metadata");
-  const [exportLoading, setExportLoading] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string>("");
+  const [connections, setConnections] = useState<ConnectionRow[]>([]);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
+  const [connectionsError, setConnectionsError] = useState("");
+  const [copyFeedback, setCopyFeedback] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  // Load real connections whenever the selected note changes - a wikilink this
+  // note's own text points at, a stored relation on either side, and (as a
+  // best-effort fallback) other notes whose full text appears to mention this
+  // one. There is no single "connections" endpoint on the backend, so this
+  // merges three different, imperfect sources rather than faking one tidy list.
+  useEffect(() => {
+    const noteId = note?.id;
+    const noteContent = note?.content ?? "";
+    if (!noteId) {
+      setConnections([]);
+      setConnectionsError("");
+      return;
+    }
+    let cancelled = false;
+    setConnectionsLoading(true);
+    setConnectionsError("");
+
+    const written: ConnectionRow[] = extractWikiLinks(noteContent).map((link) => ({
+      id: link.target,
+      label: link.label,
+      direction: "outgoing" as const,
+      kind: "written" as const,
+    }));
+
+    (async () => {
+      const [relRes, backRes] = await Promise.all([
+        apiService.getNoteRelations(noteId),
+        apiService.getBacklinks(noteId),
+      ]);
+      if (cancelled) return;
+
+      const rows: ConnectionRow[] = [...written];
+      let hadError = false;
+
+      if (relRes.success && Array.isArray(relRes.data)) {
+        for (const rel of relRes.data) {
+          if (rel.from_id === noteId) {
+            rows.push({
+              id: rel.to_id,
+              label: `${rel.relation_type} -> ${rel.to_id}`,
+              direction: "outgoing",
+              kind: "relation",
+            });
+          } else if (rel.to_id === noteId) {
+            rows.push({
+              id: rel.from_id,
+              label: `${rel.from_id} ${rel.relation_type}`,
+              direction: "incoming",
+              kind: "relation",
+            });
+          }
+        }
+      } else {
+        hadError = true;
+      }
+
+      if (backRes.success && Array.isArray(backRes.data)) {
+        for (const b of backRes.data) {
+          if (b.permalink === noteId) continue;
+          rows.push({
+            id: b.permalink,
+            label: b.title || b.permalink,
+            direction: "incoming",
+            kind: "backlink",
+          });
+        }
+      } else {
+        hadError = true;
+      }
+
+      // De-dupe same id+direction (a relation and a mention can point at the same note).
+      const seen = new Set<string>();
+      const deduped = rows.filter((r) => {
+        const key = `${r.direction}:${r.id}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      setConnections(deduped);
+      setConnectionsError(
+        hadError
+          ? "Could not load all link data (is the API restarted with the backlinks route?); showing what is available."
+          : "",
+      );
+      setConnectionsLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [note?.id, note?.content]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -58,26 +165,62 @@ export default function MetadataSidebar({
     });
   };
 
-  const exportFormats = [
-    { id: "markdown", label: "Markdown (.md)", icon: "📝" },
-    { id: "html", label: "HTML (.html)", icon: "🌐" },
-    { id: "pdf", label: "PDF (.pdf)", icon: "📄" },
-    { id: "json", label: "JSON (.json)", icon: "💾" },
-    { id: "txt", label: "Plain Text (.txt)", icon: "📄" },
+  const exportFormats: Array<{ id: ExportFormat; label: string }> = [
+    { id: "markdown", label: "Markdown (.md)" },
+    { id: "html", label: "HTML (.html)" },
+    { id: "pdf", label: "PDF (print dialog)" },
+    { id: "json", label: "JSON (.json)" },
+    { id: "txt", label: "Plain Text (.txt)" },
   ];
 
-  const mockConnections = [
-    { id: "1", title: "Brain Surgery Techniques", type: "outgoing" },
-    { id: "2", title: "Chemotherapy Protocols", type: "outgoing" },
-    { id: "3", title: "Patient Recovery Notes", type: "incoming" },
-    { id: "4", title: "Clinical Trial Data", type: "outgoing" },
-    { id: "5", title: "Medical Research Papers", type: "incoming" },
-  ];
+  const runExport = (format: (typeof exportFormats)[number]) => {
+    if (!note) return;
+    if (!note.content) {
+      setExportMessage("Failed: note body is not loaded yet");
+    } else {
+      const err = downloadNote(format.id, {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        ...(note.tags ? { tags: note.tags } : {}),
+        created: note.created,
+        modified: note.modified,
+      });
+      setExportMessage(err ? `Failed: ${err}` : `Exported as ${format.label}`);
+    }
+    window.setTimeout(() => setExportMessage(""), 5000);
+  };
+
+  const handleCopyPermalink = async () => {
+    if (!note) return;
+    try {
+      await navigator.clipboard.writeText(note.id);
+      setCopyFeedback("Copied");
+    } catch {
+      setCopyFeedback("Copy failed");
+    }
+    window.setTimeout(() => setCopyFeedback(""), 1500);
+  };
+
+  const handleDelete = async () => {
+    if (!note || deleting) return;
+    setDeleting(true);
+    try {
+      const result = await confirmAndDeleteNote(note.id, note.title);
+      if (result.deleted) {
+        onDelete?.();
+      } else if (result.error) {
+        window.alert(result.error);
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <div
       className={`
-      bg-card border-l border-border flex flex-col transition-all duration-300 ease-in-out
+      relative bg-card border-l border-border flex flex-col transition-all duration-300 ease-in-out
       ${isOpen ? "w-80" : "w-0"}
     `}
     >
@@ -85,7 +228,7 @@ export default function MetadataSidebar({
       <button
         type="button"
         onClick={onToggle}
-        className="absolute top-4 -left-10 z-10 p-2 bg-card border border-border rounded-l-md hover:bg-muted transition-colors"
+        className="absolute top-20 -left-10 z-10 p-2 bg-card border border-border rounded-l-md hover:bg-muted transition-colors"
         title={isOpen ? "Close metadata panel" : "Open metadata panel"}
       >
         {isOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -190,11 +333,15 @@ export default function MetadataSidebar({
                   </h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="text-center p-3 bg-muted/50 rounded-md">
-                      <div className="text-lg font-bold text-accent">{note.connections}</div>
+                      <div className="text-lg font-bold text-accent">
+                        {connections.filter((c) => c.direction === "outgoing").length}
+                      </div>
                       <div className="text-xs text-muted-foreground">Outgoing Links</div>
                     </div>
                     <div className="text-center p-3 bg-muted/50 rounded-md">
-                      <div className="text-lg font-bold text-accent">{note.backlinks}</div>
+                      <div className="text-lg font-bold text-accent">
+                        {connections.filter((c) => c.direction === "incoming").length}
+                      </div>
                       <div className="text-xs text-muted-foreground">Backlinks</div>
                     </div>
                   </div>
@@ -209,31 +356,47 @@ export default function MetadataSidebar({
                   Note Connections
                 </h3>
 
-                <div className="space-y-3">
-                  {mockConnections.map((connection) => (
-                    <div
-                      key={connection.id}
-                      className="flex items-center space-x-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
-                    >
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          connection.type === "outgoing" ? "bg-green-500" : "bg-blue-500"
-                        }`}
-                      />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium truncate">{connection.title}</p>
-                        <p className="text-xs text-muted-foreground capitalize">
-                          {connection.type}
-                        </p>
-                      </div>
+                {connectionsLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-accent" />
+                  </div>
+                ) : (
+                  <>
+                    {connectionsError && (
+                      <p className="text-xs text-amber-500 mb-3">{connectionsError}</p>
+                    )}
+                    <div className="space-y-2">
+                      {connections.map((conn) => (
+                        <button
+                          type="button"
+                          key={`${conn.direction}:${conn.id}`}
+                          onClick={() => emitVault({ type: "open", id: conn.id })}
+                          className="w-full text-left flex items-start gap-3 p-2 rounded-md hover:bg-muted/50"
+                          title={`Open ${conn.id}`}
+                        >
+                          {conn.direction === "outgoing" ? (
+                            <ArrowUpRight className="h-4 w-4 mt-0.5 text-green-500 shrink-0" />
+                          ) : (
+                            <ArrowDownLeft className="h-4 w-4 mt-0.5 text-blue-500 shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{conn.label}</p>
+                            <p className="text-xs text-muted-foreground capitalize">
+                              {conn.direction}
+                              {conn.kind === "written" ? " · link in this note" : ""}
+                              {conn.kind === "backlink" ? " · backlink" : ""}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                {mockConnections.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No connections found
-                  </p>
+                    {connections.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-8">
+                        No connections found
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -249,25 +412,11 @@ export default function MetadataSidebar({
                   <div className="space-y-2">
                     <button
                       type="button"
-                      onClick={onEdit}
+                      onClick={handleCopyPermalink}
                       className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
                     >
-                      <Edit className="h-4 w-4" />
-                      <span className="text-sm">Edit Note</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
-                    >
-                      <Eye className="h-4 w-4" />
-                      <span className="text-sm">View Raw</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
-                    >
-                      <Share className="h-4 w-4" />
-                      <span className="text-sm">Share Link</span>
+                      <Copy className="h-4 w-4" />
+                      <span className="text-sm">{copyFeedback || "Copy Permalink"}</span>
                     </button>
                   </div>
                 </div>
@@ -281,7 +430,7 @@ export default function MetadataSidebar({
                   {exportMessage && (
                     <div
                       className={`mb-3 p-2 rounded-md text-sm ${
-                        exportMessage.includes("Failed") || exportMessage.includes("Error")
+                        exportMessage.startsWith("Failed")
                           ? "bg-red-500/10 text-red-400 border border-red-500/20"
                           : "bg-green-500/10 text-green-400 border border-green-500/20"
                       }`}
@@ -294,29 +443,10 @@ export default function MetadataSidebar({
                       <button
                         key={format.id}
                         type="button"
-                        onClick={async () => {
-                          if (!note) return;
-                          setExportLoading(format.id);
-                          setExportMessage("");
-                          try {
-                            await onExport?.(format.id, note.id);
-                            setExportMessage(`Successfully exported as ${format.label}`);
-                            setTimeout(() => setExportMessage(""), 5000);
-                          } catch (error) {
-                            setExportMessage(`Failed to export as ${format.label}`);
-                            setTimeout(() => setExportMessage(""), 5000);
-                          } finally {
-                            setExportLoading(null);
-                          }
-                        }}
-                        disabled={exportLoading === format.id}
+                        onClick={() => runExport(format)}
                         className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left disabled:opacity-50"
                       >
-                        <span className="text-sm">{format.icon}</span>
                         <span className="text-sm">{format.label}</span>
-                        {exportLoading === format.id && (
-                          <div className="ml-auto animate-spin rounded-full h-4 w-4 border-b-2 border-current" />
-                        )}
                       </button>
                     ))}
                   </div>
@@ -330,11 +460,12 @@ export default function MetadataSidebar({
                   </h3>
                   <button
                     type="button"
-                    onClick={onDelete}
-                    className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-red-500/10 hover:text-red-500 transition-colors text-left text-red-500"
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-red-500/10 hover:text-red-500 transition-colors text-left text-red-500 disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
-                    <span className="text-sm">Delete Note</span>
+                    <span className="text-sm">{deleting ? "Deleting..." : "Delete Note"}</span>
                   </button>
                 </div>
               </div>

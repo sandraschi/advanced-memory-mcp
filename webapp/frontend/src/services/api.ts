@@ -94,6 +94,59 @@ function normalizeNoteTags(raw: unknown): string[] {
   return [];
 }
 
+/** Sort orders the backend applies over the whole matching set. */
+export type NoteSort =
+  | "relevance"
+  | "modified_desc"
+  | "modified_asc"
+  | "created_desc"
+  | "created_asc"
+  | "title_asc"
+  | "title_desc";
+
+export interface NoteSearchOptions {
+  tags?: string[];
+  sort?: NoteSort;
+  /** YYYY-MM-DD bounds, inclusive. */
+  createdFrom?: string;
+  createdTo?: string;
+  modifiedFrom?: string;
+  modifiedTo?: string;
+}
+
+export interface NoteBacklink {
+  permalink: string;
+  title: string;
+  relation_type: string;
+  /** false = the link target was written but never resolved to an existing note. */
+  resolved: boolean;
+}
+
+/** One search hit as a NoteResult, or null for an index orphan with nothing to open. */
+function searchRowToNote(r: Record<string, any>): NoteResult | null {
+  // Some entities have no permalink but always have a file path that resolves.
+  const id = String(r.permalink || r.file_path || "");
+  if (!id) return null;
+  return {
+    id,
+    title: String(r.title ?? id),
+    content: String(r.content || r.content_snippet || ""),
+    created: r.created_at || new Date().toISOString(),
+    modified: r.updated_at || new Date().toISOString(),
+    tags: normalizeNoteTags(r.metadata?.tags),
+    wordCount: 0,
+    connections: 0,
+    backlinks: 0,
+    readingTime: 0,
+    fileSize: "",
+  };
+}
+
+/** FastAPI puts the useful message in ``detail``; fall back to a fixed string. */
+function errorDetail(error: unknown, fallback: string): string {
+  const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data?.detail;
+  return typeof detail === "string" && detail ? detail : fallback;
+}
 interface SkillResult {
   id: string;
   title: string;
@@ -347,93 +400,190 @@ class ApiService {
     }
   }
 
+  /** Stored relations for a note (``GET /{project}/knowledge/entities/{permalink}``). */
+  async getNoteRelations(
+    noteId: string,
+  ): Promise<
+    ApiResponse<Array<{ from_id: string; to_id: string; relation_type: string; to_name?: string }>>
+  > {
+    try {
+      const path = `/${encodeURIComponent(this.activeProject)}/knowledge/entities/${encodeURIComponent(noteId)}`;
+      const response = await this.client.get(path);
+      const rels = Array.isArray(response.data?.relations) ? response.data.relations : [];
+      return { success: true, data: rels };
+    } catch (error) {
+      return { success: false, error: "Failed to fetch note relations" };
+    }
+  }
+
+  /**
+   * Resolve a permalink, file path or title to a note row, searching the whole
+   * project (not just the loaded page). Returns null when nothing matches.
+   */
+  async findNote(identifier: string): Promise<NoteResult | null> {
+    const wanted = identifier.trim().toLowerCase();
+    if (!wanted) return null;
+    const attempts: Array<Record<string, unknown>> = [
+      { permalink: identifier.trim(), entity_types: ["entity"] },
+      { title: identifier.trim(), entity_types: ["entity"] },
+    ];
+    for (const body of attempts) {
+      try {
+        const response = await this.client.post(
+          `/${encodeURIComponent(this.activeProject)}/search/?page=1&page_size=5`,
+          body,
+        );
+        const rows = (response.data?.results || []) as Array<Record<string, any>>;
+        const hit =
+          rows.find(
+            (r) =>
+              String(r.title ?? "").toLowerCase() === wanted ||
+              String(r.permalink ?? "").toLowerCase() === wanted,
+          ) ?? rows[0];
+        const note = hit ? searchRowToNote(hit) : null;
+        if (note) return note;
+      } catch {
+        /* try the next strategy */
+      }
+    }
+    return null;
+  }
+
+  /** Exact backlinks from the relation table (``GET .../knowledge/backlinks/{id}``). */
+  async getBacklinks(noteId: string): Promise<ApiResponse<NoteBacklink[]>> {
+    try {
+      const path = `/${encodeURIComponent(this.activeProject)}/knowledge/backlinks/${encodeURIComponent(noteId)}`;
+      const response = await this.client.get(path);
+      const items = (
+        Array.isArray(response.data?.backlinks) ? response.data.backlinks : []
+      ) as Array<{
+        permalink?: string | null;
+        file_path?: string | null;
+        title?: string | null;
+        relation_type?: string | null;
+        resolved?: boolean;
+      }>;
+      return {
+        success: true,
+        data: items.map((b) => ({
+          permalink: String(b.permalink || b.file_path || ""),
+          title: String(b.title || b.permalink || b.file_path || ""),
+          relation_type: String(b.relation_type || "links_to"),
+          resolved: Boolean(b.resolved),
+        })),
+      };
+    } catch (error) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      return {
+        success: false,
+        error:
+          status === 404
+            ? "Backlink index unavailable (note not found, or the API needs a restart to load the route)"
+            : errorDetail(error, "Failed to fetch backlinks"),
+      };
+    }
+  }
+
+  /**
+   * Search the project's notes. Sort, tags and date bounds are all applied by the
+   * backend over the whole matching set, so "oldest first" means oldest of every
+   * match, not of the page that happens to be loaded.
+   */
   async searchNotes(
     query: string,
     page = 1,
     limit = 50,
-    tags?: string[],
+    options: NoteSearchOptions = {},
   ): Promise<ApiResponse<{ notes: NoteResult[]; total: number; page: number; pages: number }>> {
     try {
       const q = (query || "").trim();
-      // Backend returns nothing when all criteria are null; glob lists indexed notes.
-      const body: Record<string, any> = q ? { text: q } : { permalink_match: "*" };
-      if (tags && tags.length > 0) body.tags = tags;
+      // Notes only: observation and relation index rows are fragments, not documents.
+      const body: Record<string, unknown> = { entity_types: ["entity"] };
+      if (q) body.text = q;
+      if (options.tags && options.tags.length > 0) body.tags = options.tags;
+      // "relevance" only means something when there is a text query.
+      if (options.sort && (options.sort !== "relevance" || q)) body.sort = options.sort;
+      if (options.createdFrom) body.created_from = options.createdFrom;
+      if (options.createdTo) body.created_to = `${options.createdTo}T23:59:59.999999`;
+      if (options.modifiedFrom) body.modified_from = options.modifiedFrom;
+      if (options.modifiedTo) body.modified_to = `${options.modifiedTo}T23:59:59.999999`;
 
       const response = await this.client.post(
         `/${encodeURIComponent(this.activeProject)}/search/?page=${page}&page_size=${limit}`,
         body,
       );
-      const results = response.data.results || [];
+      const results = (response.data.results || []) as Array<Record<string, any>>;
 
-      const notes = results.map((r: any) => ({
-        id: r.permalink || r.file_path,
-        title: r.title,
-        content: r.content || r.content_snippet || "",
-        created: r.created_at || new Date().toISOString(),
-        modified: r.updated_at || new Date().toISOString(),
-        tags: normalizeNoteTags(r.metadata?.tags),
-        wordCount: 0,
-        connections: 0,
-      }));
+      const notes: NoteResult[] = [];
+      for (const r of results) {
+        const note = searchRowToNote(r);
+        if (note) notes.push(note);
+      }
 
       const total = response.data.total_results || 0;
       const pages = Math.ceil(total / limit) || 1;
 
       return { success: true, data: { notes, total, page, pages } };
     } catch (error) {
-      return { success: false, error: "Failed to search notes" };
+      return { success: false, error: errorDetail(error, "Failed to search notes") };
     }
   }
 
-  async createNote(note: { title: string; content: string; tags?: string[] }): Promise<
-    ApiResponse<NoteResult>
-  > {
+  /** Create a markdown note (``POST .../knowledge/entities``). */
+  async createNote(note: {
+    title: string;
+    folder: string;
+    content: string;
+  }): Promise<ApiResponse<{ permalink: string; title: string }>> {
     try {
-      const response = await this.client.post("/notes", note);
-      return response.data;
+      const response = await this.client.post(
+        `/${encodeURIComponent(this.activeProject)}/knowledge/entities`,
+        {
+          title: note.title,
+          folder: note.folder,
+          content: note.content,
+          entity_type: "note",
+          content_type: "text/markdown",
+        },
+      );
+      return {
+        success: true,
+        data: {
+          permalink: String(response.data?.permalink ?? ""),
+          title: String(response.data?.title ?? note.title),
+        },
+      };
     } catch (error) {
-      return { success: false, error: "Failed to create note" };
+      return { success: false, error: errorDetail(error, "Failed to create note") };
     }
   }
 
-  async updateNote(
+  /** Replace a note's body (``PATCH .../knowledge/entities/{id}`` with ``replace_body``). */
+  async updateNoteBody(
     noteId: string,
-    updates: Partial<{ title: string; content: string; tags: string[] }>,
-  ): Promise<ApiResponse<NoteResult>> {
+    content: string,
+  ): Promise<ApiResponse<{ permalink: string }>> {
     try {
-      const response = await this.client.put(`/notes/${noteId}`, updates);
-      return response.data;
+      const response = await this.client.patch(
+        `/${encodeURIComponent(this.activeProject)}/knowledge/entities/${encodeURIComponent(noteId)}`,
+        { operation: "replace_body", content },
+      );
+      return { success: true, data: { permalink: String(response.data?.permalink ?? noteId) } };
     } catch (error) {
-      return { success: false, error: "Failed to update note" };
+      return { success: false, error: errorDetail(error, "Failed to save note") };
     }
   }
 
+  /** Delete a note and its index rows (``DELETE .../knowledge/entities/{id}``). */
   async deleteNote(noteId: string): Promise<ApiResponse> {
     try {
-      const response = await this.client.delete(`/notes/${noteId}`);
-      return response.data;
+      const response = await this.client.delete(
+        `/${encodeURIComponent(this.activeProject)}/knowledge/entities/${encodeURIComponent(noteId)}`,
+      );
+      if (response.data?.deleted) return { success: true };
+      return { success: false, error: "The API did not delete the note (not found?)" };
     } catch (error) {
-      return { success: false, error: "Failed to delete note" };
-    }
-  }
-
-  async getNoteConnections(
-    noteId: string,
-  ): Promise<ApiResponse<{ outgoing: any[]; incoming: any[] }>> {
-    try {
-      const response = await this.client.get(`/notes/${noteId}/connections`);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: "Failed to fetch note connections" };
-    }
-  }
-
-  async exportNote(noteId: string, format: string): Promise<ApiResponse<{ url: string }>> {
-    try {
-      const response = await this.client.post(`/notes/${noteId}/export`, { format });
-      return response.data;
-    } catch (error) {
-      return { success: false, error: "Failed to export note" };
+      return { success: false, error: errorDetail(error, "Failed to delete note") };
     }
   }
 
@@ -1108,7 +1258,9 @@ class ApiService {
 
   async studioScenarioDelete(scenarioId: number): Promise<ApiResponse<{ deleted: boolean }>> {
     try {
-      const response = await this.client.delete(`/management/skills-studio/scenarios/${scenarioId}`);
+      const response = await this.client.delete(
+        `/management/skills-studio/scenarios/${scenarioId}`,
+      );
       return response.data;
     } catch (error) {
       return { success: false, error: "Failed to delete scenario" };
@@ -1127,7 +1279,10 @@ class ApiService {
     }
   }
 
-  async studioLabHistory(skillId: string, limit = 10): Promise<ApiResponse<{ runs: StudioLabRun[] }>> {
+  async studioLabHistory(
+    skillId: string,
+    limit = 10,
+  ): Promise<ApiResponse<{ runs: StudioLabRun[] }>> {
     try {
       const response = await this.client.get(
         `/management/skills-studio/lab-runs?skill_id=${encodeURIComponent(skillId)}&limit=${limit}`,
@@ -1148,7 +1303,10 @@ class ApiService {
     }
   }
 
-  async studioDistillPreview(skillId: string, source: string): Promise<ApiResponse<StudioDistillPreview>> {
+  async studioDistillPreview(
+    skillId: string,
+    source: string,
+  ): Promise<ApiResponse<StudioDistillPreview>> {
     try {
       const response = await this.client.post("/management/skills-studio/distill/preview", {
         skill_id: skillId,
@@ -1160,7 +1318,10 @@ class ApiService {
     }
   }
 
-  async studioDistillApply(jobId: number, draftMd?: string): Promise<ApiResponse<StudioDistillApplied>> {
+  async studioDistillApply(
+    jobId: number,
+    draftMd?: string,
+  ): Promise<ApiResponse<StudioDistillApplied>> {
     try {
       const response = await this.client.post("/management/skills-studio/distill/apply", {
         job_id: jobId,

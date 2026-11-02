@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Apps from "./pages/apps/Apps";
@@ -92,6 +92,7 @@ function App() {
           backlinks: typeof d.backlinks === "number" ? d.backlinks : 0,
           readingTime,
           fileSize: d.fileSize ?? `${(contentStr.length * 0.001).toFixed(1)} KB`,
+          content: contentStr,
         });
         return;
       }
@@ -101,36 +102,13 @@ function App() {
     }
   };
 
-  const handleMetadataExport = async (format: string) => {
-    if (!selectedNoteId) return;
-
-    try {
-      const response = await apiService.exportNote(selectedNoteId, format);
-      if (response.success && response.data?.url) {
-        // Trigger download
-        const link = document.createElement("a");
-        link.href = response.data.url;
-        link.download = `note-${selectedNoteId}.${format}`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        throw new Error("Export failed");
-      }
-    } catch (error) {
-      console.error("Export failed:", error);
-      throw error;
-    }
-  };
-
-  const handleMetadataEdit = () => {
-    // editing note - handler invoked
-    // TODO: Implement edit functionality
-  };
-
+  // The sidebar has already deleted the note and confirmed with the
+  // user; this just drops the now-dead selection. Known gap: NoteViewer owns its
+  // list state, so the deleted row stays visible until the list is next reloaded
+  // (page change, search, or Refresh).
   const handleMetadataDelete = () => {
-    // deleting note - handler invoked
-    // TODO: Implement delete functionality
+    setSelectedNoteId(undefined);
+    setSelectedNoteMetadata(null);
   };
 
   return (
@@ -150,8 +128,6 @@ function App() {
           <Layout
             showMetadataSidebar={true}
             selectedNoteMetadata={selectedNoteMetadata}
-            onMetadataExport={handleMetadataExport}
-            onMetadataEdit={handleMetadataEdit}
             onMetadataDelete={handleMetadataDelete}
           >
             <NoteViewer selectedNoteId={selectedNoteId} onNoteSelect={handleNoteSelect} />

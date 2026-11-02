@@ -85,7 +85,9 @@ export default function SkillStudio() {
                 }`}
               >
                 <span className="block">{tab.name}</span>
-                <span className="block text-xs opacity-70 mt-0.5 font-normal">{tab.description}</span>
+                <span className="block text-xs opacity-70 mt-0.5 font-normal">
+                  {tab.description}
+                </span>
               </button>
             ))}
           </nav>

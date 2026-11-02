@@ -1,4 +1,5 @@
-﻿import {
+import {
+  AlignLeft,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -8,22 +9,48 @@
   FileText,
   Filter,
   Folder,
+  GripVertical,
   List,
   Maximize2,
   Minimize2,
   MoreVertical,
   Network,
+  PanelRightOpen,
+  Pencil,
+  Plus,
   Search,
   Share,
+  Trash2,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import Markdown from "../../components/Markdown";
+import Markdown, { type MarkdownHeading } from "../../components/Markdown";
+import NoteEditor from "../../components/notes/NoteEditor";
+import { confirmAndDeleteNote, copyText, noteDeepLink } from "../../components/notes/noteActions";
+import {
+  type ExportFormat,
+  VAULT_EVENT,
+  type VaultEvent,
+  downloadNote,
+  folderOf,
+  fullDate as formatDate,
+  loadPref,
+  noteTags,
+  savePref,
+  snippet,
+  wordCount,
+} from "../../components/notes/noteUtils";
 import { getApiBaseUrl } from "../../config/apiBase";
 import { devError } from "../../devConsole";
 import { useBackendAutoReconnect } from "../../hooks/useBackendAutoReconnect";
-import { apiService } from "../../services/api";
+import { type NoteSort, apiService } from "../../services/api";
 import {
   UVICORN_RESTART_LINE,
   WEBAPP_START_FROM_ROOT,
@@ -31,25 +58,20 @@ import {
 } from "../../utils/backendRecovery";
 
 const DEBUG = import.meta.env.DEV;
+/** List-page standard (WEBAPP_SOTA_STANDARDS.md): 20 rows per page by default. */
+const PAGE_SIZE = 20;
+const LIST_WIDTH_KEY = "am.notes.listWidth";
+const READER_WIDTH_KEY = "am.notes.readerWidth";
+const LIST_WIDTH_MIN = 240;
+const LIST_WIDTH_MAX = 560;
 
-/** API / list state may still carry non-array tags; never assume `.tags` is an array. */
-function noteTags(note: { tags?: unknown }): string[] {
-  if (Array.isArray(note.tags)) {
-    return note.tags as string[];
-  }
-  if (typeof note.tags === "string" && note.tags.trim()) {
-    try {
-      const p = JSON.parse(note.tags) as unknown;
-      if (Array.isArray(p)) {
-        return p.map((x) => String(x)).filter((t) => t.length > 0);
-      }
-    } catch {
-      return [note.tags.trim()];
-    }
-    return [note.tags.trim()];
-  }
-  return [];
-}
+const EXPORT_FORMATS: ReadonlyArray<{ id: ExportFormat; label: string }> = [
+  { id: "markdown", label: "Markdown (.md)" },
+  { id: "html", label: "HTML (.html)" },
+  { id: "pdf", label: "PDF (print dialog)" },
+  { id: "json", label: "JSON (.json)" },
+  { id: "txt", label: "Plain text (.txt)" },
+];
 
 interface Note {
   id: string;
@@ -86,9 +108,9 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
   // View Mode State
   const [viewMode, setViewMode] = useState<"list" | "tree">("list");
-  const [sortBy, setSortBy] = useState<
-    "modified_desc" | "modified_asc" | "title_asc" | "title_desc"
-  >("modified_desc");
+  const [sortBy, setSortBy] = useState<NoteSort>("modified_desc");
+  /** Until the user picks a sort, a text search ranks by relevance and browsing by newest. */
+  const [sortChosen, setSortChosen] = useState(false);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   // Pagination State
@@ -107,14 +129,84 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   const [vaultProject, setVaultProject] = useState("");
   const [recoveryCopied, setRecoveryCopied] = useState<null | "uvicorn" | "start">(null);
 
+  // Reader layout: resizable list width, a wide/comfortable reader toggle, and the
+  // live outline for the note currently open (populated by Markdown's onHeadings).
+  const [listWidth, setListWidth] = useState(() => loadPref(LIST_WIDTH_KEY, 320));
+  const [readerWide, setReaderWide] = useState(() => loadPref(READER_WIDTH_KEY, false));
+  const [showOutline, setShowOutline] = useState(false);
+  const [headings, setHeadings] = useState<MarkdownHeading[]>([]);
+
+  // Editor, source view, header menus, and the transient status toast.
+  const [editorMode, setEditorMode] = useState<null | "edit" | "create">(null);
+  const [rawView, setRawView] = useState(false);
+  const [menu, setMenu] = useState<null | "export" | "more">(null);
+  const [notice, setNotice] = useState("");
+  /** Id whose full body has been fetched; selectedNote.content is only a snippet until then. */
+  const [bodyLoadedId, setBodyLoadedId] = useState<string | null>(null);
+  const editorDirtyRef = useRef(false);
+  const noticeTimer = useRef<number | undefined>(undefined);
+  const selectedNoteRef = useRef<Note | null>(null);
+  selectedNoteRef.current = selectedNote;
+  const onNoteSelectRef = useRef(onNoteSelect);
+  onNoteSelectRef.current = onNoteSelect;
+
+  const flash = (message: string) => {
+    setNotice(message);
+    window.clearTimeout(noticeTimer.current);
+    noticeTimer.current = window.setTimeout(() => setNotice(""), 2800);
+  };
+
+  /** What the backend is actually asked for: explicit pick, else relevance when searching. */
+  const effectiveSort: NoteSort = sortChosen ? sortBy : searchQuery.trim() ? "relevance" : sortBy;
+
   /** Bumps on effect cleanup (Strict Mode remount, /notes unmount) so stale loadNotes cannot clear a good list. */
   const listFetchGen = useRef(0);
   const notesRef = useRef<Note[]>([]);
   const totalNotesRef = useRef(0);
   const currentPageRef = useRef(1);
+  const listWidthRef = useRef(listWidth);
   notesRef.current = notes;
   totalNotesRef.current = totalNotes;
   currentPageRef.current = currentPage;
+  listWidthRef.current = listWidth;
+
+  // Notes-list / reader divider drag. Tracked with refs (not state) so the global
+  // mousemove listener below is registered once, not re-subscribed on every pixel.
+  const isResizingList = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(listWidth);
+
+  const handleListResizeStart = (e: ReactMouseEvent) => {
+    e.preventDefault();
+    isResizingList.current = true;
+    dragStartX.current = e.clientX;
+    dragStartWidth.current = listWidthRef.current;
+    document.body.style.cursor = "col-resize";
+  };
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!isResizingList.current) return;
+      const delta = e.clientX - dragStartX.current;
+      const next = Math.min(
+        LIST_WIDTH_MAX,
+        Math.max(LIST_WIDTH_MIN, dragStartWidth.current + delta),
+      );
+      setListWidth(next);
+    };
+    const onUp = () => {
+      if (!isResizingList.current) return;
+      isResizingList.current = false;
+      document.body.style.cursor = "";
+      savePref(LIST_WIDTH_KEY, listWidthRef.current);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
 
   /** Background polls must not flip the UI offline on one slow or dropped /health (common under load). */
   const HEALTH_TIMEOUT_MS = 10_000;
@@ -158,61 +250,6 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     return false;
   };
 
-  const mapRecentToNote = (primary: Record<string, unknown>): Note | null => {
-    const title = String(primary.title ?? primary.permalink ?? "Untitled");
-    const permalink = String(primary.permalink ?? "");
-    if (!permalink) return null;
-    const content = typeof primary.content === "string" ? primary.content : "";
-    const tags = Array.isArray(primary.tags) ? (primary.tags as string[]) : [];
-    const created =
-      typeof primary.created_at === "string" ? primary.created_at : new Date().toISOString();
-    const modified = typeof primary.updated_at === "string" ? primary.updated_at : created;
-    return {
-      id: permalink,
-      title,
-      content,
-      tags,
-      created,
-      modified,
-      wordCount: Math.max(0, Math.round(content.length / 5)),
-      connections: 0,
-    };
-  };
-
-  const loadRecentNotes = async (page = 1) => {
-    const response = await apiService.getMemoryRecent({
-      timeframe: "90d",
-      depth: 2,
-      page,
-      pageSize: 100,
-    });
-    if (!response.success || !response.data) {
-      return { error: response.error || "Could not load recent notes" };
-    }
-    const rows = response.data.results;
-    if (!Array.isArray(rows)) {
-      return { error: "Unexpected response from memory/recent" };
-    }
-    const notesData: Note[] = [];
-    const allTags = new Set<string>();
-    for (const item of rows) {
-      const primary = item.primary_result;
-      if (!primary || typeof primary !== "object") continue;
-      const t = primary.type;
-      if (t !== "entity" && t !== "observation") continue;
-      const note = mapRecentToNote(primary as Record<string, unknown>);
-      if (note) {
-        notesData.push(note);
-        for (const tag of note.tags) allTags.add(tag);
-      }
-    }
-    const total =
-      typeof response.data.metadata?.total === "number"
-        ? response.data.metadata.total
-        : notesData.length;
-    return { notesData, allTags, total };
-  };
-
   const loadNotes = async (page = 1, opts?: { skipHealthProbe?: boolean }) => {
     const myGen = ++listFetchGen.current;
     const stillCurrent = () => myGen === listFetchGen.current;
@@ -248,55 +285,42 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
         }
       }
 
-      const pageSize = 100;
-      const hasSearch = searchQuery.trim() !== "";
-
+      // Search, tags, date bounds and sort are all applied by the backend over the whole
+      // matching set, so page N of "oldest first" really is the Nth slice of every match.
+      // An empty query lists every note; there is no recency window.
       try {
-        if (!hasSearch) {
-          // Use recents API for default view (newest first)
-          const recent = await loadRecentNotes(page);
-          if (!stillCurrent()) return;
+        const response = await apiService.searchNotes(searchQuery, page, PAGE_SIZE, {
+          tags: selectedTags,
+          sort: effectiveSort,
+          createdFrom: dateCreatedFrom,
+          createdTo: dateCreatedTo,
+          modifiedFrom: dateModifiedFrom,
+          modifiedTo: dateModifiedTo,
+        });
 
-          if (recent.error) {
-            setListError(recent.error);
-          } else if (recent.notesData) {
-            setNotes(recent.notesData);
-            setFilteredNotes(recent.notesData);
-            setCurrentPage(page);
-            setTotalPages(Math.ceil(recent.total / pageSize) || 1);
-            setTotalNotes(recent.total);
-            setBackendReachable("online");
-            setAvailableTags(Array.from(recent.allTags).sort());
-            setIsLoading(false);
-            return;
-          }
-        } else {
-          // Use search API when query is active
-          const response = await apiService.searchNotes(searchQuery, page, pageSize, selectedTags);
+        if (!stillCurrent()) return;
 
-          if (!stillCurrent()) return;
+        if (response.success && Array.isArray(response.data?.notes)) {
+          const notesData = response.data.notes;
+          setNotes(notesData);
+          setFilteredNotes(notesData);
+          setCurrentPage(response.data.page || page);
+          setTotalPages(response.data.pages || 1);
+          setTotalNotes(response.data.total ?? notesData.length);
+          setBackendReachable("online");
 
-          if (response.success && Array.isArray(response.data?.notes)) {
-            const notesData = response.data.notes;
-            setNotes(notesData);
-            setFilteredNotes(notesData);
-            setCurrentPage(response.data.page || page);
-            setTotalPages(response.data.pages || 1);
-            setTotalNotes(response.data.total ?? notesData.length);
-            setBackendReachable("online");
-
-            const allTags = new Set<string>();
+          // Tag choices accumulate across pages and filters (the API has no tag list).
+          setAvailableTags((prev) => {
+            const allTags = new Set<string>(prev);
             for (const note of notesData) {
-              if (Array.isArray(note.tags)) {
-                for (const tag of note.tags) allTags.add(tag);
-              }
+              for (const tag of noteTags(note)) allTags.add(tag);
             }
-            setAvailableTags(Array.from(allTags).sort());
-            setIsLoading(false);
-            return;
-          }
-          setListError(response.error || "Could not load notes from the API.");
+            return Array.from(allTags).sort();
+          });
+          setIsLoading(false);
+          return;
         }
+        setListError(response.error || "Could not load notes from the API.");
       } catch (apiError) {
         devError("API call failed:", apiError);
         setListError("Could not load notes from the API.");
@@ -401,89 +425,51 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     await loadNotes(1);
   };
 
-  // Apply all filters (search, tags, dates)
-  const applyFilters = useCallback(
-    (notesList: Note[]) => {
-      let filtered = notesList;
-
-      // Search filter
-      if (searchQuery.trim() !== "") {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter((note) => {
-          const title = String(note.title ?? "").toLowerCase();
-          const body = String(note.content ?? "").toLowerCase();
-          const tags = noteTags(note);
-          return (
-            title.includes(q) ||
-            body.includes(q) ||
-            tags.some((tag) => String(tag).toLowerCase().includes(q))
-          );
-        });
-      }
-
-      // Tag filter
-      if (selectedTags.length > 0) {
-        filtered = filtered.filter((note) => {
-          const tags = noteTags(note);
-          return selectedTags.some((selectedTag) => tags.includes(selectedTag));
-        });
-      }
-
-      // Date filters
-      if (dateCreatedFrom) {
-        const fromDate = new Date(dateCreatedFrom);
-        filtered = filtered.filter((note) => new Date(note.created) >= fromDate);
-      }
-      if (dateCreatedTo) {
-        const toDate = new Date(dateCreatedTo);
-        toDate.setHours(23, 59, 59, 999); // End of day
-        filtered = filtered.filter((note) => new Date(note.created) <= toDate);
-      }
-      if (dateModifiedFrom) {
-        const fromDate = new Date(dateModifiedFrom);
-        filtered = filtered.filter((note) => new Date(note.modified) >= fromDate);
-      }
-      if (dateModifiedTo) {
-        const toDate = new Date(dateModifiedTo);
-        toDate.setHours(23, 59, 59, 999); // End of day
-        filtered = filtered.filter((note) => new Date(note.modified) <= toDate);
-      }
-
-      return filtered;
-    },
-    [searchQuery, selectedTags, dateCreatedFrom, dateCreatedTo, dateModifiedFrom, dateModifiedTo],
-  );
-
+  // Search text, tags, date bounds and sort are all applied by the backend, so any change
+  // reloads page 1 (debounced). Nothing is filtered or re-sorted in the browser: that would
+  // only ever reorder the single page that happens to be loaded.
+  const filterKey = JSON.stringify([
+    searchQuery,
+    selectedTags,
+    dateCreatedFrom,
+    dateCreatedTo,
+    dateModifiedFrom,
+    dateModifiedTo,
+    effectiveSort,
+  ]);
+  const lastFilterKey = useRef(filterKey);
   useEffect(() => {
-    const filtered = applyFilters(notes);
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "modified_desc":
-          return new Date(b.modified).getTime() - new Date(a.modified).getTime();
-        case "modified_asc":
-          return new Date(a.modified).getTime() - new Date(b.modified).getTime();
-        case "title_asc":
-          return (a.title || "").localeCompare(b.title || "");
-        case "title_desc":
-          return (b.title || "").localeCompare(a.title || "");
-        default:
-          return 0;
-      }
-    });
-    setFilteredNotes(sorted);
-  }, [notes, sortBy, applyFilters]);
+    if (lastFilterKey.current === filterKey) return;
+    lastFilterKey.current = filterKey;
+    const timer = window.setTimeout(() => {
+      void loadNotesRef.current(1, { skipHealthProbe: true });
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [filterKey]);
 
   useEffect(() => {
     // Select note based on selectedNoteId prop
     if (selectedNoteId) {
       const note = notes.find((n) => n.id === selectedNoteId);
       if (note) {
-        setSelectedNote(note);
+        // Keep the open note (it carries the full body); a list reload only has snippets.
+        setSelectedNote((prev) => (prev && prev.id === note.id ? prev : note));
       }
     }
   }, [selectedNoteId, notes]);
 
   const handleNoteSelect = async (note: Note) => {
+    const switching = selectedNoteRef.current?.id !== note.id;
+    if (switching && editorMode && editorDirtyRef.current) {
+      if (!window.confirm("Discard your unsaved edits?")) return;
+    }
+    if (switching) {
+      setEditorMode(null);
+      editorDirtyRef.current = false;
+      setRawView(false);
+      setBodyLoadedId(null);
+      setMenu(null);
+    }
     setSelectedNote(note);
     onNoteSelect?.(note.id);
 
@@ -504,6 +490,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
               }
             : prev,
         );
+        setBodyLoadedId(note.id);
       }
     } catch (error) {
       // Keep the basic note data if API call fails
@@ -513,17 +500,105 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
   const handleNoteSelectRef = useRef(handleNoteSelect);
   handleNoteSelectRef.current = handleNoteSelect;
 
+  /**
+   * Open a note by permalink, file path or title. Looks in the loaded page first, then asks
+   * the backend, so links work for notes that are not on the current page.
+   */
+  const openById = async (identifier: string) => {
+    const wanted = identifier.split("#")[0]?.trim() ?? "";
+    if (!wanted) return;
+    const lower = wanted.toLowerCase();
+    const local =
+      notesRef.current.find((n) => n.id.toLowerCase() === lower) ??
+      notesRef.current.find((n) => n.title.toLowerCase() === lower);
+    const found = local ?? (await apiService.findNote(wanted));
+    if (found) {
+      await handleNoteSelectRef.current(found);
+    } else {
+      flash(`No note found for "${wanted}"`);
+    }
+  };
+  const openByIdRef = useRef(openById);
+  openByIdRef.current = openById;
+
   /** Follow a [[wikilink]] clicked inside the reading panel. */
   const handleWikiLink = (target: string) => {
-    const t = target.split("#")[0]?.trim().toLowerCase();
-    if (!t) return;
-    const found =
-      notes.find((n) => n.id.toLowerCase() === t) ??
-      notes.find((n) => n.title.toLowerCase() === t) ??
-      notes.find((n) => n.title.toLowerCase().endsWith(`/${t}`));
-    if (found) {
-      void handleNoteSelect(found);
+    void openById(target);
+  };
+
+  // The sidebar, editor and header menus announce changes on a window event so the list,
+  // the open note and the sidebar stay consistent without prop drilling.
+  useEffect(() => {
+    const onVault = (e: Event) => {
+      const d = (e as CustomEvent<VaultEvent>).detail;
+      if (!d) return;
+      if (d.type === "open") {
+        void openByIdRef.current(d.id);
+        return;
+      }
+      void loadNotesRef.current(currentPageRef.current, { skipHealthProbe: true });
+      const cur = selectedNoteRef.current;
+      if (d.type === "deleted" && cur && cur.id === d.id) {
+        setSelectedNote(null);
+        setEditorMode(null);
+        editorDirtyRef.current = false;
+        onNoteSelectRef.current?.("");
+      } else if (d.type === "saved" && cur && cur.id === d.id) {
+        void handleNoteSelectRef.current(cur);
+      }
+    };
+    window.addEventListener(VAULT_EVENT, onVault);
+    return () => window.removeEventListener(VAULT_EVENT, onVault);
+  }, []);
+
+  // Close the export / more menus on outside click or Escape.
+  useEffect(() => {
+    if (!menu) return;
+    const onDown = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement | null)?.closest?.("[data-menu-root]")) setMenu(null);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenu(null);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menu]);
+
+  const bodyReady = selectedNote != null && bodyLoadedId === selectedNote.id;
+
+  const runExport = (format: ExportFormat) => {
+    setMenu(null);
+    if (!selectedNote) return;
+    if (!bodyReady) {
+      flash("Still loading the full note, try again in a moment");
+      return;
     }
+    const error = downloadNote(format, selectedNote);
+    flash(error ?? `Exported as ${format === "markdown" ? "Markdown" : format.toUpperCase()}`);
+  };
+
+  const copyWithFlash = async (text: string, okMessage: string) => {
+    setMenu(null);
+    flash((await copyText(text)) ? okMessage : "Copy failed: clipboard not available");
+  };
+
+  const deleteSelected = async () => {
+    setMenu(null);
+    if (!selectedNote) return;
+    const result = await confirmAndDeleteNote(selectedNote.id, selectedNote.title);
+    if (result.error) flash(result.error);
+  };
+
+  const startNewNote = () => {
+    if (editorMode && editorDirtyRef.current && !window.confirm("Discard your unsaved edits?")) {
+      return;
+    }
+    editorDirtyRef.current = false;
+    setEditorMode("create");
   };
 
   const selectedNoteIndex =
@@ -594,29 +669,8 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
     }
     lastUrlOpenKey.current = openKey;
 
-    const fromList = notesRef.current.find((n) => n.id === trimmed);
-    const stub: Note = {
-      id: trimmed,
-      title: trimmed,
-      content: "",
-      tags: [],
-      created: new Date().toISOString(),
-      modified: new Date().toISOString(),
-      wordCount: 0,
-      connections: 0,
-    };
-    void handleNoteSelectRef.current(fromList ?? stub);
+    void openByIdRef.current(trimmed);
   }, [searchParams, vaultProject]);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   // Tree building helper
   interface TreeNode {
@@ -797,10 +851,10 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <input
               type="text"
-              placeholder="Search notes... (press Enter)"
+              placeholder="Search notes (updates as you type)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && loadNotes(1)}
+              onKeyDown={(e) => e.key === "Enter" && loadNotes(1, { skipHealthProbe: true })}
               className="w-full bg-zinc-900 border border-zinc-700 rounded-lg pl-10 pr-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:ring-1 focus:ring-amber-500/30"
             />
           </div>
@@ -828,7 +882,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
           <div className="flex items-center space-x-4">
             <div className="text-sm text-muted-foreground whitespace-nowrap">
               {filteredNotes.length > 0
-                ? `${(currentPage - 1) * 50 + 1} - ${Math.min(currentPage * 50, totalNotes)} of ${totalNotes}`
+                ? `${(currentPage - 1) * PAGE_SIZE + 1} - ${Math.min(currentPage * PAGE_SIZE, totalNotes)} of ${totalNotes}`
                 : "0"}{" "}
               notes
             </div>
@@ -861,7 +915,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {/* Tags Filter */}
               <div>
-                <span className="label">Tags</span>
+                <span className="label">Tags (notes must have all selected)</span>
                 <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
                   {availableTags.map((tag) => (
                     <button
@@ -955,9 +1009,17 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
 
       {/* Notes List and Content - min-h-0 so this row gets bounded height and content can scroll */}
       <div className="flex-1 flex min-h-0 overflow-hidden relative">
+        {notice && (
+          <output className="absolute top-3 right-4 z-40 rounded-md border border-border bg-card px-3 py-2 text-sm shadow-lg">
+            {notice}
+          </output>
+        )}
         {/* Notes List */}
         {!isFullscreen && (
-          <div className="w-80 min-h-0 border-r border-border flex flex-col animate-in slide-in-from-left duration-300">
+          <div
+            className="min-h-0 border-r border-border flex flex-col shrink-0 animate-in slide-in-from-left duration-300"
+            style={{ width: listWidth }}
+          >
             <div className="p-4 border-b border-border flex justify-between items-center gap-2">
               <h2 className="font-semibold flex items-center gap-2 flex-wrap shrink-0">
                 Notes{" "}
@@ -969,16 +1031,34 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                 </span>
               </h2>
               <div className="flex items-center gap-1.5">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                  className="bg-muted/50 border border-border rounded px-1.5 py-1 text-[10px] uppercase tracking-wider outline-none cursor-pointer"
-                  title="Sort notes"
+                <button
+                  type="button"
+                  onClick={startNewNote}
+                  className="p-1.5 rounded-md bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-colors"
+                  title="New note"
+                  aria-label="New note"
                 >
-                  <option value="modified_desc">Newest</option>
-                  <option value="modified_asc">Oldest</option>
-                  <option value="title_asc">A-Z</option>
-                  <option value="title_desc">Z-A</option>
+                  <Plus className="w-4 h-4" />
+                </button>
+                <select
+                  value={effectiveSort}
+                  onChange={(e) => {
+                    setSortBy(e.target.value as NoteSort);
+                    setSortChosen(true);
+                  }}
+                  className="bg-muted/50 border border-border rounded px-1.5 py-1 text-xs outline-none cursor-pointer max-w-[9.5rem]"
+                  title="Sorts every matching note, not just this page"
+                  aria-label="Sort notes"
+                >
+                  <option value="relevance" disabled={!searchQuery.trim()}>
+                    Best match
+                  </option>
+                  <option value="modified_desc">Modified: newest</option>
+                  <option value="modified_asc">Modified: oldest</option>
+                  <option value="created_desc">Created: newest</option>
+                  <option value="created_asc">Created: oldest</option>
+                  <option value="title_asc">Title: A-Z</option>
+                  <option value="title_desc">Title: Z-A</option>
                 </select>
                 <div className="flex bg-muted/50 p-1 rounded-md">
                   <button
@@ -1161,13 +1241,14 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                                   {note.title}
                                 </h3>
                                 <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                                  {note.content}
+                                  {snippet(note.content)}
                                 </p>
                                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                                   <span>{formatDate(note.modified)}</span>
                                   <div className="flex items-center space-x-2">
-                                    <span>{note.wordCount} words</span>
-                                    <span>{note.connections} links</span>
+                                    <span className="truncate max-w-[9rem]" title={note.id}>
+                                      {folderOf(note.id) || "(top level)"}
+                                    </span>
                                   </div>
                                 </div>
                                 {rowTags.length > 0 && (
@@ -1232,9 +1313,43 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
           </div>
         )}
 
+        {/* Drag handle between the notes list and the reader. */}
+        {!isFullscreen && (
+          <button
+            type="button"
+            onMouseDown={handleListResizeStart}
+            aria-label="Resize notes list"
+            title="Drag to resize"
+            className="w-1.5 shrink-0 cursor-col-resize bg-transparent hover:bg-accent/30 active:bg-accent/40 transition-colors relative group"
+          >
+            <GripVertical className="h-4 w-4 text-muted-foreground/40 group-hover:text-muted-foreground absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          </button>
+        )}
+
         {/* Note Content - min-h-0 so flex child can shrink and scroll */}
         <div className="flex-1 flex flex-col min-h-0">
-          {selectedNote ? (
+          {editorMode ? (
+            <NoteEditor
+              key={editorMode === "create" ? "new-note" : selectedNote?.id}
+              noteId={editorMode === "edit" ? selectedNote?.id : undefined}
+              noteTitle={editorMode === "edit" ? selectedNote?.title : undefined}
+              onDirtyChange={(d) => {
+                editorDirtyRef.current = d;
+              }}
+              onSaved={(id) => {
+                // Edits stay open after a save; a freshly created note switches to reading it.
+                if (editorMode === "create") {
+                  setEditorMode(null);
+                  editorDirtyRef.current = false;
+                  void openByIdRef.current(id);
+                }
+              }}
+              onClose={() => {
+                setEditorMode(null);
+                editorDirtyRef.current = false;
+              }}
+            />
+          ) : selectedNote ? (
             <>
               {/* Note Header */}
               <div className="p-6 border-b border-border shrink-0">
@@ -1244,7 +1359,7 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <span>Created: {formatDate(selectedNote.created)}</span>
                       <span>Modified: {formatDate(selectedNote.modified)}</span>
-                      <span>{selectedNote.wordCount} words</span>
+                      {bodyReady && <span>{wordCount(selectedNote.content)} words</span>}
                     </div>
                     {noteTags(selectedNote).length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-3">
@@ -1296,6 +1411,38 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     )}
                     <button
                       type="button"
+                      onClick={() => setShowOutline((v) => !v)}
+                      className={`p-2 rounded-md transition-colors border ${
+                        showOutline
+                          ? "bg-accent/10 text-accent border-accent/20"
+                          : "border-transparent hover:bg-muted"
+                      }`}
+                      title={showOutline ? "Hide outline" : "Show outline"}
+                      aria-pressed={showOutline}
+                    >
+                      <AlignLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setReaderWide((w) => {
+                          const next = !w;
+                          savePref(READER_WIDTH_KEY, next);
+                          return next;
+                        })
+                      }
+                      className={`p-2 rounded-md transition-colors border ${
+                        readerWide
+                          ? "bg-accent/10 text-accent border-accent/20"
+                          : "border-transparent hover:bg-muted"
+                      }`}
+                      title={readerWide ? "Comfortable width" : "Full width"}
+                      aria-pressed={readerWide}
+                    >
+                      <PanelRightOpen className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setIsFullscreen(!isFullscreen)}
                       className="p-2 rounded-md hover:bg-accent/10 text-accent transition-colors border border-accent/20"
                       title={isFullscreen ? "Exit Fullscreen" : "Fullscreen View"}
@@ -1308,39 +1455,151 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
                     </button>
                     <button
                       type="button"
-                      className="p-2 rounded-md hover:bg-muted transition-colors"
-                      title="View"
+                      onClick={() => setEditorMode("edit")}
+                      className="p-2 rounded-md hover:bg-accent/10 text-accent transition-colors border border-accent/20"
+                      title="Edit note"
+                      aria-label="Edit note"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRawView((v) => !v)}
+                      aria-pressed={rawView}
+                      className={`p-2 rounded-md transition-colors border ${
+                        rawView
+                          ? "bg-accent/10 text-accent border-accent/20"
+                          : "border-transparent hover:bg-muted"
+                      }`}
+                      title={rawView ? "Show rendered note" : "Show markdown source"}
+                      aria-label={rawView ? "Show rendered note" : "Show markdown source"}
                     >
                       <Eye className="h-4 w-4" />
                     </button>
+                    <div className="relative" data-menu-root>
+                      <button
+                        type="button"
+                        onClick={() => setMenu((m) => (m === "export" ? null : "export"))}
+                        aria-haspopup="menu"
+                        aria-expanded={menu === "export"}
+                        className="p-2 rounded-md hover:bg-muted transition-colors"
+                        title="Export"
+                        aria-label="Export"
+                      >
+                        <Download className="h-4 w-4" />
+                      </button>
+                      {menu === "export" && (
+                        <div
+                          role="menu"
+                          className="absolute right-0 top-full mt-1 z-30 w-48 rounded-md border border-border bg-card shadow-lg py-1"
+                        >
+                          {EXPORT_FORMATS.map((f) => (
+                            <button
+                              key={f.id}
+                              type="button"
+                              role="menuitem"
+                              onClick={() => runExport(f.id)}
+                              className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted"
+                            >
+                              {f.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <button
                       type="button"
+                      onClick={() =>
+                        void copyWithFlash(
+                          noteDeepLink(selectedNote.id),
+                          "Link copied to clipboard",
+                        )
+                      }
                       className="p-2 rounded-md hover:bg-muted transition-colors"
-                      title="Export"
-                    >
-                      <Download className="h-4 w-4" />
-                    </button>
-                    <button
-                      type="button"
-                      className="p-2 rounded-md hover:bg-muted transition-colors"
-                      title="Share"
+                      title="Copy link to this note"
+                      aria-label="Copy link to this note"
                     >
                       <Share className="h-4 w-4" />
                     </button>
-                    <button
-                      type="button"
-                      className="p-2 rounded-md hover:bg-muted transition-colors"
-                      title="More"
-                    >
-                      <MoreVertical className="h-4 w-4" />
-                    </button>
+                    <div className="relative" data-menu-root>
+                      <button
+                        type="button"
+                        onClick={() => setMenu((m) => (m === "more" ? null : "more"))}
+                        aria-haspopup="menu"
+                        aria-expanded={menu === "more"}
+                        className="p-2 rounded-md hover:bg-muted transition-colors"
+                        title="More"
+                        aria-label="More actions"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </button>
+                      {menu === "more" && (
+                        <div
+                          role="menu"
+                          className="absolute right-0 top-full mt-1 z-30 w-56 rounded-md border border-border bg-card shadow-lg py-1"
+                        >
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => void copyWithFlash(selectedNote.id, "Permalink copied")}
+                            className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted"
+                          >
+                            Copy permalink
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() =>
+                              void copyWithFlash(`[[${selectedNote.title}]]`, "Wikilink copied")
+                            }
+                            className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted"
+                          >
+                            Copy as [[wikilink]]
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            disabled={!bodyReady}
+                            onClick={() =>
+                              void copyWithFlash(selectedNote.content, "Markdown copied")
+                            }
+                            className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted disabled:opacity-40"
+                          >
+                            Copy markdown
+                          </button>
+                          <div className="my-1 border-t border-border" />
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => void deleteSelected()}
+                            className="w-full text-left px-3 py-1.5 text-sm text-red-500 hover:bg-red-500/10 flex items-center gap-2"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Delete note
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Note Content - fills remaining height and scrolls */}
               <div className="flex-1 min-h-0 overflow-auto p-6 scrollbar-thin scrollbar-thumb-white/10">
-                <Markdown content={selectedNote.content} onWikiLink={handleWikiLink} />
+                <div className={readerWide ? "" : "max-w-3xl mx-auto"}>
+                  {rawView ? (
+                    <pre className="whitespace-pre-wrap break-words font-mono text-[13px] leading-6 text-slate-300">
+                      {selectedNote.content}
+                    </pre>
+                  ) : (
+                    <Markdown
+                      content={selectedNote.content}
+                      onWikiLink={handleWikiLink}
+                      variant="reader"
+                      onHeadings={setHeadings}
+                    />
+                  )}
+                </div>
               </div>
             </>
           ) : (
@@ -1355,6 +1614,39 @@ export default function NoteViewer({ selectedNoteId, onNoteSelect }: NoteViewerP
             </div>
           )}
         </div>
+
+        {/* Outline - headings of the open note, click to jump. */}
+        {showOutline && selectedNote && !editorMode && !rawView && !isFullscreen && (
+          <div className="w-56 shrink-0 border-l border-border overflow-auto p-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              Outline
+            </h4>
+            {headings.length === 0 ? (
+              <p className="text-xs text-muted-foreground">No headings in this note.</p>
+            ) : (
+              <nav className="space-y-0.5">
+                {headings.map((h) => (
+                  <button
+                    key={h.id}
+                    type="button"
+                    onClick={() =>
+                      document.getElementById(h.id)?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      })
+                    }
+                    className={`block w-full text-left text-xs truncate rounded px-2 py-1 text-muted-foreground hover:bg-muted/60 hover:text-foreground ${
+                      h.level >= 3 ? "pl-5" : h.level === 2 ? "pl-2.5" : ""
+                    }`}
+                    title={h.text}
+                  >
+                    {h.text}
+                  </button>
+                ))}
+              </nav>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
