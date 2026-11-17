@@ -28,3 +28,6 @@ src/.trash/
 # on every pack. Never hand-edit, never commit.
 mcpb/src/
 
+
+data/fastembed_cache/
+skill-zips/
