@@ -117,8 +117,9 @@ app.post('/stop-all', (req, res) => {
 
 // Start the auto-start service - bind to all interfaces for Tailnet access
 const PORT = parseInt(process.env.ADN_AUTOSTART_PORT, 10) || 10735
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`ADN Auto-Start Service running on http://0.0.0.0:${PORT} (Tailnet accessible)`)
+const HOST = process.env.ADN_HOST || '127.0.0.1'
+app.listen(PORT, HOST, () => {
+  console.log(`ADN Auto-Start Service running on http://${HOST}:${PORT}`)
   console.log(`POST /start-all to start all services`)
   console.log(`POST /stop-all to stop all services`)
 })

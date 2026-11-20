@@ -1721,8 +1721,9 @@ async function startServer() {
   });
 
   // Start the server
-  const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`ADN MCP Bridge Server running on http://0.0.0.0:${PORT} (Tailnet accessible)`);
+  const HOST = process.env.ADN_HOST || '127.0.0.1';
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`ADN MCP Bridge Server running on http://${HOST}:${PORT}`);
     addLog('INFO', 'External MCP servers initialized on startup. Initializing ADN MCP server...', 'bridge');
 
     // Initialize ADN MCP server immediately on startup

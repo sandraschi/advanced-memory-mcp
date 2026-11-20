@@ -81,8 +81,9 @@ app.post('/stop-bridge', (req, res) => {
 
 // Start the startup service - bind to all interfaces for Tailnet access
 const PORT = parseInt(process.env.ADN_STARTUP_PORT, 10) || 10733
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`ADN Startup Service running on http://0.0.0.0:${PORT} (Tailnet accessible)`)
+const HOST = process.env.ADN_HOST || '127.0.0.1'
+app.listen(PORT, HOST, () => {
+  console.log(`ADN Startup Service running on http://${HOST}:${PORT}`)
   console.log(`POST /start-bridge to start the bridge server`)
   console.log(`POST /stop-bridge to stop the bridge server`)
 })

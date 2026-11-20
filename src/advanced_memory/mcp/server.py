@@ -255,7 +255,7 @@ if __name__ == "__main__":
     transport = resolve_transport(args)
 
     # Override host/port defaults for advanced-memory-mcp
-    host = args.host or os.environ.get("MCP_HOST", "0.0.0.0")
+    host = args.host or os.environ.get("MCP_HOST", "127.0.0.1")
     port = args.port or int(os.environ.get("MCP_HTTP_PORT", os.environ.get("MCP_PORT", "10703")))
 
     # For HTTP/SSE, restore stdout so server logs are visible (no stdio JSON-RPC)
@@ -411,7 +411,15 @@ if __name__ == "__main__":
 
             app.add_middleware(
                 CORSMiddleware,
-                allow_origins=["*"],
+                allow_origins=[
+                    "http://127.0.0.1:10704",
+                    "http://localhost:10704",
+                    "http://127.0.0.1:10705",
+                    "http://localhost:10705",
+                    "tauri://localhost",
+                    "http://tauri.localhost",
+                    "https://tauri.localhost",
+                ],
                 allow_credentials=True,
                 allow_methods=["*"],
                 allow_headers=["*"],

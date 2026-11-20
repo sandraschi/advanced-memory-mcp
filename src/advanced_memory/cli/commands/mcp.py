@@ -67,9 +67,7 @@ from advanced_memory.mcp.stdio_guard import (
 @app.command()
 def mcp(
     transport: str = typer.Option("stdio", help="Transport type: stdio, streamable-http, or sse"),
-    host: str = typer.Option(  # nosec B104 - binding to 0.0.0.0 is intentional for LAN access
-        "0.0.0.0", help="Host for HTTP transports (use 0.0.0.0 to allow external connections)"
-    ),
+    host: str = typer.Option("127.0.0.1", help="Host for HTTP transports (default 127.0.0.1)"),
     port: int = typer.Option(8000, help="Port for HTTP transports"),
     path: str = typer.Option("/mcp", help="Path prefix for streamable-http transport"),
     agentic: bool = typer.Option(
