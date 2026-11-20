@@ -1,108 +1,22 @@
 # Security Policy
 
-## 🛡️ Supported Versions
+## Reporting a vulnerability
 
-We release patches for security vulnerabilities in the following versions:
+Please report security problems **privately** through GitHub's private vulnerability reporting:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+1. Open the repository's **Security** tab.
+2. Click **Report a vulnerability**.
 
-## 🚨 Reporting a Vulnerability
+Direct link: https://github.com/sandraschi/advanced-memory-mcp/security/advisories/new
 
-We take security vulnerabilities seriously. If you discover a security vulnerability, please follow these steps:
+Please do **not** open a public issue, discussion or pull request for a security problem, and do not include working exploits or real secrets in anything public.
 
-### 1. **DO NOT** create a public GitHub issue
-Security vulnerabilities should be reported privately to avoid exposing users to potential risks.
+## What happens next
 
-### 2. Send us an email
-Please email us at: [security@advanced-memory-mcp.com](mailto:security@advanced-memory-mcp.com)
+- You will get an acknowledgement in the private advisory thread.
+- Confirmed issues are fixed and published as a GitHub Security Advisory (with a CVE where appropriate), crediting you unless you prefer otherwise.
+- We follow coordinated disclosure and are happy to agree on a timeline with you.
 
-Include the following information:
-- Description of the vulnerability
-- Steps to reproduce the issue
-- Potential impact
-- Any suggested fixes (if you have them)
+## Scope
 
-### 3. Response Timeline
-- **Initial Response**: Within 48 hours
-- **Status Update**: Within 7 days
-- **Resolution**: Within 30 days (depending on complexity)
-
-### 4. Disclosure Process
-- We will work with you to understand and resolve the issue quickly
-- Once the issue is resolved, we will publish a security advisory
-- We will credit you for the discovery (unless you prefer to remain anonymous)
-
-## 🔒 Security Best Practices
-
-### For Users
-- Always use the latest version of Advanced Memory MCP
-- Keep your Claude Desktop application updated
-- Use strong, unique passwords for any external services
-- Regularly backup your knowledge base
-- Be cautious when importing content from untrusted sources
-
-### For Developers
-- Follow secure coding practices
-- Validate all user inputs
-- Use parameterized queries to prevent injection attacks
-- Implement proper error handling
-- Regular security audits and dependency updates
-
-## 🛠️ Security Measures
-
-### Data Protection
-- All data is stored locally on your machine
-- No data is transmitted to external servers (except when explicitly importing/exporting)
-- File permissions are respected and enforced
-- Sensitive information is not logged
-
-### Code Security
-- Regular dependency vulnerability scanning
-- Automated security testing in CI/CD pipeline
-- Code review process for all changes
-- Static analysis tools (Bandit, Safety, Semgrep)
-
-### Infrastructure Security
-- Secure development practices
-- Regular security updates
-- Minimal dependency footprint
-- Clear separation of concerns
-
-## 🔍 Security Tools
-
-We use the following tools to maintain security:
-
-- **Bandit**: Python security linter
-- **Safety**: Dependency vulnerability scanner
-- **Semgrep**: Static analysis for security issues
-- **Trivy**: Container and filesystem vulnerability scanner
-- **CodeQL**: GitHub's semantic code analysis
-
-## 📋 Security Checklist
-
-Before each release, we verify:
-- [ ] No known security vulnerabilities in dependencies
-- [ ] All security tests pass
-- [ ] Code review completed
-- [ ] Input validation implemented
-- [ ] Error handling secure
-- [ ] No sensitive data in logs
-- [ ] File permissions correct
-
-## 🏆 Security Acknowledgments
-
-We appreciate security researchers who help us improve the security of Advanced Memory MCP. Contributors will be acknowledged in our security advisories unless they prefer to remain anonymous.
-
-## 📞 Contact
-
-For security-related questions or concerns:
-- **Email**: [security@advanced-memory-mcp.com](mailto:security@advanced-memory-mcp.com)
-- **GitHub**: Create a private security advisory
-- **Response Time**: Within 48 hours
-
----
-
-*Last updated: October 2024*
+These projects are mostly MCP servers and tools that run locally with the privileges of the user who starts them. Issues that let a client, an agent or prompt-injected content reach beyond a tool's intended scope (for example file access outside a configured directory, command execution, or credential exposure) are in scope.
